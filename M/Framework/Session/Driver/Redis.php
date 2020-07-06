@@ -6,7 +6,7 @@
  * 网站：www.aiweline.com/bbs.aiweline.com
  * 工具：PhpStorm
  * 日期：2020/7/6
- * 时间：15:14
+ * 时间：17:52
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
@@ -15,12 +15,13 @@ namespace M\Framework\Session\Driver;
 
 use M\Framework\Session\SessionInterface;
 
-class Mysql implements SessionInterface,DriverInterface
+class Redis implements SessionInterface, DriverInterface
 {
 
     public function __construct(array $config)
     {
     }
+
     function set($name, $value)
     {
         // TODO: Implement set() method.
@@ -40,4 +41,5 @@ class Mysql implements SessionInterface,DriverInterface
     {
         // TODO: Implement des() method.
     }
+
 }

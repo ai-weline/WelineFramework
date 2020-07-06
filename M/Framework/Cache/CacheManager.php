@@ -13,21 +13,49 @@
 namespace M\Framework\Cache;
 
 
+use M\Framework\App\Etc;
+
 class CacheManager
 {
+    const driver_NAMESPACE = 'M\\Framework\\Cache\\Driver\\';
     private static CacheManager $instance;
+    private array $config;
 
     private function __clone()
     {
-
     }
 
     private function __construct()
     {
+        $this->config = Etc::getInstance()->getConfig('cache');
     }
 
-    static function getInstance()
+    /**
+     * @DESC         |获取实例
+     *
+     * 参数区：
+     *
+     * @return CacheManager
+     */
+    static function getInstance(): CacheManager
     {
-    
+        if (!isset(self::$instance)) self::$instance = new self();
+        return self::$instance;
+    }
+
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     * @param string $driver
+     * @return CacheInterface
+     */
+    public function create(string $driver = ''): CacheInterface
+    {
+        if (empty($driver) && isset($this->config['default'])) {
+            $driver = $this->config['default'];
+        }
+        $driver_class = self::driver_NAMESPACE . ucfirst($driver);
+        return new $driver_class($this->config['drivers'][$driver]);
     }
 }

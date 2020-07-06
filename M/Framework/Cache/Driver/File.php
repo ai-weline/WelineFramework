@@ -13,10 +13,9 @@
 namespace M\Framework\Cache\Driver;
 
 
-
 use M\Framework\Cache\CacheInterface;
 
-class File implements CacheInterface
+class File implements CacheInterface, DriverInterface
 {
 
     /**
@@ -24,6 +23,13 @@ class File implements CacheInterface
      * 缓存文件的地址，例如/var/html/projects/var/cache/
      */
     public string $cachePath;
+
+    public function __construct(array $config)
+    {
+        $this->cachePath = BP . $config['path'] ?? APP_PATH . 'var/cache/';
+        if (!is_dir($this->cachePath)) mkdir($this->cachePath, 0770);
+    }
+
 
     /**
      * @DESC         |从给定键生成规范化缓存键

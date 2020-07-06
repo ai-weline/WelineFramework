@@ -14,8 +14,10 @@ namespace Aiweline\HelloWorld\Controller;
 
 
 use Aiweline\HelloWorld\Model\AiwelineHelloWorld;
+use M\Framework\App\Cache;
 use M\Framework\App\Controller\FrontendController;
 use M\Framework\App\Exception;
+use M\Framework\App\Session;
 
 class HelloWorld extends FrontendController
 {
@@ -83,5 +85,29 @@ class HelloWorld extends FrontendController
         $data = $model->getDb()->query("select * from {$model->getTable()}");
         $this->assign('data',$data);
         $this->fetch();
+    }
+
+    /**
+     * @DESC         |session测试
+     *
+     * 参数区：
+     *
+     */
+    function session(){
+        $session = (new Session())->session();
+        $session->set('test',56);
+        p($session->get('test'));
+    }
+
+    /**
+     * @DESC         |cache测试
+     *
+     * 参数区：
+     *
+     */
+    function cache(){
+        $cache = (new Cache())->cache();
+        $cache->set('111',8888);
+        p($cache->get('111'));
     }
 }

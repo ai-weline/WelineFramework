@@ -131,7 +131,7 @@ abstract class CliAbstract implements CommandInterface
     {
         // 扫描所有命令
 
-        $file_path = Etc::path_MODULES_FILE;
+        $file_path = Etc::path_COMMANDS_FILE;
         if (is_file($file_path)) return include $file_path;
 
         $file = new File();

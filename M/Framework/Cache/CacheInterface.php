@@ -15,6 +15,7 @@ namespace M\Framework\Cache;
 
 interface CacheInterface
 {
+
     /**
      * @DESC         |从给定键生成规范化缓存键。
      *
@@ -121,6 +122,7 @@ interface CacheInterface
      * @return mixed
      */
     public function flush();
+
     /**
      * @DESC         |从缓存中删除所有键的值。（清理缓存）
      *

@@ -13,7 +13,41 @@
 namespace M\Framework\Session\Driver;
 
 
-class File
-{
+use M\Framework\Session\SessionInterface;
 
+class File implements SessionInterface, DriverInterface
+{
+    private string $session_path;
+
+    public function __construct(array $config)
+    {
+        $this->session_path = BP . $config['path'] ?? BP . 'var/session/';
+        if (!is_dir($this->session_path)) mkdir($this->session_path, 0770);
+        ini_set('session.save_path', $this->session_path);
+        session_start();
+    }
+
+    function set($name, $value)
+    {
+        $_SESSION[$name] = $value;
+    }
+
+    function get($name)
+    {
+        if (isset($_SESSION[$name]))
+            return $_SESSION[$name];
+        else
+            return false;
+    }
+
+    function del($name)
+    {
+        unset($_SESSION[$name]);
+    }
+
+    function des()
+    {
+        $_SESSION = array();
+        session_destroy();
+    }
 }

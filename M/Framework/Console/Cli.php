@@ -60,6 +60,9 @@ class Cli extends CliAbstract
      */
     private function recommendCommand(array $commands)
     {
+        // 没有任何参数
+        if(!isset($this->argv[0])) exit($this->execute());
+
         $arg0 = trim($this->argv[0]);
         $command_group_arr = explode(':', $arg0);
         $command_group_arr = array_reverse($command_group_arr);

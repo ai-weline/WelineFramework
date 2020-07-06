@@ -13,46 +13,53 @@
 namespace M\Framework\Session;
 
 
+use M\Framework\App\Etc;
+use M\Framework\Cache\CacheInterface;
+use M\Framework\Cache\CacheManager;
+
 class SessionManager
 {
-    function __construct()
+    const driver_NAMESPACE = 'M\\Framework\\Session\\Driver\\';
+    private static SessionManager $instance;
+    private array $config;
+
+    private function __clone()
     {
     }
 
-    function Session()
+    private function __construct()
     {
-        session_start();
+        ini_set('session.save_handler', 'use');
+        $this->config = Etc::getInstance()->getConfig('session');
     }
 
-    function set($name, $value)
+    /**
+     * @DESC         |获取实例
+     *
+     * 参数区：
+     *
+     * @return SessionManager
+     */
+    static function getInstance(): SessionManager
     {
-        $_SESSION[$name] = $value;
+        if (!isset(self::$instance)) self::$instance = new self();
+        return self::$instance;
     }
 
-    function get($name)
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     * @param string $driver
+     * @return SessionInterface
+     */
+    public function create(string $driver = ''): SessionInterface
     {
-        if (isset($_SESSION[$name]))
-            return $_SESSION[$name];
-        else
-            return false;
-    }
-
-    function del($name)
-    {
-        unset($_SESSION[$name]);
-    }
-
-    function des()
-    {
-        $_SESSION = array();
-        session_destroy();
-    }
-
-    function save_prefs()
-    {
-        global $db, $auth;
-        $prefs = serialize($this->prefs);
-        $db->query("UPDATE condra_users SET prefs = '$prefs' WHERE id = '{$auth->id}'");
+        if (empty($driver) && isset($this->config['default'])) {
+            $driver = $this->config['default'];
+        }
+        $driver_class = self::driver_NAMESPACE . ucfirst($driver);
+        return new $driver_class($this->config['drivers'][$driver]);
     }
 
 }
