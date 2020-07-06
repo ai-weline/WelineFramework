@@ -1,0 +1,44 @@
+#!/usr/bin/php
+<?php
+if (PHP_SAPI !== 'cli') {
+    echo chr(27) . '[34m bin/m' . chr(27) . '[31m  ??? CLI ??????' . chr(27) . '[0m' . PHP_EOL;
+    exit(1);
+}
+
+try {
+    require __DIR__ . '/../app/bootstrap.php';
+} catch (Exception $e) {
+    $chr = chr(27);
+    echo <<<CLI_E
+{$chr}[34m CLI 异常
+{$chr}[31m文件：{$e->getFile()}
+行数：{$e->getLine()}
+消息：{$e->getMessage()} 
+{$chr}[0m
+CLI_E;
+    exit(1);
+}
+try {
+    $application = new M\Framework\Console\Cli('M?? CLI', $argv);
+    $application->run();
+} catch (Exception $e) {
+    $chr = chr(27);
+    while ($e) {
+        $code = (in_array('getErrorCode',get_class_methods($e)))?$e->getErrorCode():'?????';
+        echo <<<CLI_E
+{$chr}[34m CLI 异常
+{$chr}[31m 文件{$e->getFile()}
+行数{$e->getLine()}
+消息{$e->getMessage()}
+{$chr}[31m追踪
+{$e->getTraceAsString()}
+{$chr}[0m
+{$chr}[36m代码
+{$code}
+{$chr}[0m
+CLI_E;
+        echo "\n\n";
+        $e = $e->getPrevious();
+    }
+    exit(0);
+}

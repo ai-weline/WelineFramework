@@ -1,0 +1,34 @@
+{
+  "name": "aiweline/m",
+  "description": "微蓝M框架！",
+  "type": "project",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Aiweline",
+      "email": "aiweline@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-iconv": "*",
+    "ext-json": "*",
+    "ext-pdo": "*",
+    "topthink/think-orm": "^2.0",
+    "ext-exif": "*",
+    "ext-fileinfo": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "M\\": "M",
+      "": "app/code/"
+    }
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
+  }
+}
