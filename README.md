@@ -3,15 +3,24 @@
 #### 介绍
 微蓝M框架！
 
+1、代码可移植性。
+代码可安装到其他同框架的项目中。一个代码应用目录位置位于项目下的app/code中。模块中可设置Api目录,Controller目录，view目录等以及必须的register.php注册文件。
+其中的每个应用可以移植安装。
+
+2、无缝集成TP6的ORM,更加符合国人开发逻辑。
+
+3、前后端集成到一个module中，做到一个需求一个module。
+
 #### 软件架构
-PHP>=7.4
-
-
+PHP>=7.4(强类型编写)
+composer
+nginx/apache
 #### 安装教程
 
 1.  WEB项目部署
-2.  xxxx
-3.  xxxx
+2.  无需设置繁杂的nginx设置，仅设置项目目录为部署目录即可。
+3.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
+4.  模块卸载命令 bin/m module:remove 此命令删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
 
 #### 使用说明
 
