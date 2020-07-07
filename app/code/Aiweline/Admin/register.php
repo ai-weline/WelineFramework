@@ -5,17 +5,16 @@
  * 网名：秋风雁飞(可以百度看看)
  * 网站：www.aiweline.com/bbs.aiweline.com
  * 工具：PhpStorm
- * 日期：2020/7/5
- * 时间：17:45
+ * 日期：2020/6/10
+ * 时间：21:33
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
-namespace M\Framework\App\Controller;
+use \M\Framework\Register\Register;
 
-
-use M\Framework\Controller\PcController;
-
-class FrontendController extends PcController
-{
-
-}
+Register::register(
+    Register::MODULE,
+    __DIR__,
+    '1.1.0',
+    '<a href="bbs.aiweline.com">Admin模块</a>'
+);

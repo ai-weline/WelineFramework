@@ -55,6 +55,7 @@ class Core
     {
         // 读取url
         $url = trim($this->base_request->getUrl(), '/');
+        if (empty($url)) $url = 'index/index';// 找不到则访问默认控制器
         if ($this->request_area === \M\Framework\Router\DataInterface::area_BACKEND)
             $url = str_replace(Etc::getInstance()->getConfig('admin', ''), '', $url);
         $url = trim($url, '/');
@@ -67,7 +68,7 @@ class Core
         // 开发模式
         if (DEBUG) throw new Exception('未知的路由！');
         // 404
-       $this->noRoute();
+        $this->noRoute();
     }
 
     /**
@@ -169,7 +170,8 @@ class Core
      * 参数区：
      *
      */
-    function noRoute(){
+    function noRoute()
+    {
         http_response_code(404);
         exit(0);
     }

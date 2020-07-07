@@ -15,7 +15,7 @@ namespace M\Framework\App\Controller;
 
 use M\Framework\Controller\PcController;
 
-class FrontendController extends PcController
+class BackendController extends PcController
 {
 
 }

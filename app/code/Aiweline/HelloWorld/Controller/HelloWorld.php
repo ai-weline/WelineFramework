@@ -94,7 +94,9 @@ class HelloWorld extends FrontendController
      *
      */
     function session(){
-        $session = (new FrontendSession())->getSession();
+        $frontSession = new FrontendSession();
+        p('是否登录:'.($frontSession->isLogin()?'是':'否'),1);
+        $session = $frontSession->getSession();
         $session->set('test',123);
         p($session->get('test'));
     }
