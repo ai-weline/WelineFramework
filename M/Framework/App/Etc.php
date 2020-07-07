@@ -88,8 +88,8 @@ class Etc
      * 参数区：
      *
      * @param string $name
-     * @param array $default
-     * @return array
+     * @param  $default
+     * @return array|string
      */
     function getConfig(string $name = '', $default = array())
     {

@@ -10,6 +10,7 @@
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 return [
+    'admin'=>'admin123',
     'db' => [
         'default' => 'mysql',
         'connections' => [

@@ -16,13 +16,15 @@ namespace M\Framework\Router;
 use finfo;
 use M\Framework\App\Etc;
 use M\Framework\App\Exception;
-use M\Framework\Http\Request;
+use M\Framework\Http\Request\BaseRequest;
 
-class Core extends Request\BaseRequest
+class Core
 {
     const dir_static = 'static';
     private ?Etc $_etc;
     private static Core $instance;
+    private BaseRequest $base_request;
+    private string $request_area;
 
     private function __clone()
     {
@@ -32,6 +34,8 @@ class Core extends Request\BaseRequest
     private function __construct()
     {
         $this->_etc = Etc::getInstance();
+        $this->base_request = BaseRequest::getInstance();
+        $this->request_area = $this->base_request->getRequestArea();
     }
 
     final static function getInstance()
@@ -49,17 +53,21 @@ class Core extends Request\BaseRequest
      */
     function start()
     {
-        // Api
-        $this->api();
+        // 读取url
+        $url = trim($this->base_request->getUrl(), '/');
+        if ($this->request_area === \M\Framework\Router\DataInterface::area_BACKEND)
+            $url = str_replace(Etc::getInstance()->getConfig('admin', ''), '', $url);
+        $url = trim($url, '/');
+        // API
+        $this->Api($url);
         // PC
-        $this->pc();
+        $this->Pc($url);
         // 静态资源
-        if ($this->staticFile()) return;
+        if ($this->StaticFile($url)) return;
         // 开发模式
         if (DEBUG) throw new Exception('未知的路由！');
         // 404
-        http_response_code(404);
-        exit(0);
+       $this->noRoute();
     }
 
     /**
@@ -67,9 +75,10 @@ class Core extends Request\BaseRequest
      *
      * 参数区：
      *
+     * @param string $url
      * @throws Exception
      */
-    public function api()
+    public function Api(string &$url)
     {
         // 检测api路由
         if (file_exists(Etc::path_API_ROUTER_FILE)) {
@@ -78,8 +87,7 @@ class Core extends Request\BaseRequest
                 $class = json_decode(json_encode($class['class']));
                 $router = strstr($router, '::', true);
                 $router = trim($router, '/');
-                $url = strtolower(trim($this->getUrl(), '/'));
-                if ($url === $router && $class->request_method === $this->getMethod()) {
+                if ($url === $router && $class->request_method === $this->base_request->getMethod()) {
                     $dispatch = new $class->name();
                     $method = $class->method;
                     if ((int)method_exists($dispatch, $method)) {
@@ -99,9 +107,10 @@ class Core extends Request\BaseRequest
      *
      * 参数区：
      *
+     * @param string $url
      * @throws Exception
      */
-    public function pc()
+    public function Pc(string &$url)
     {
         // 检测api路由
         if (file_exists(Etc::path_PC_ROUTER_FILE)) {
@@ -109,7 +118,6 @@ class Core extends Request\BaseRequest
             foreach ($routers as $router => $class) {
                 $class = json_decode(json_encode($class['class']));
                 $router = trim($router, '/');
-                $url = strtolower(trim($this->getUrl(), DIRECTORY_SEPARATOR));
                 // 是否无控制方法
                 $url_no_ctl = count(explode(DIRECTORY_SEPARATOR, $url)) == 1;
                 $url = ($url_no_ctl) ? $url . DIRECTORY_SEPARATOR . 'index' : $url;
@@ -118,7 +126,7 @@ class Core extends Request\BaseRequest
                     $dispatch = new $class->name();
                     $method = ($url_no_ctl) ? 'index' : $class->method;
                     if ((int)method_exists($dispatch, $method)) {
-//                        echo call_user_func(array($dispatch, $method), $this->_request->getParams());
+//                        echo call_user_func(array($dispatch, $method)/*, $_GET*/);
                         echo call_user_func(array($dispatch, $method));
                         exit(0);
                     } else {
@@ -134,11 +142,12 @@ class Core extends Request\BaseRequest
      *
      * 参数区：
      *
+     * @param string $url
      * @return bool|mixed
      */
-    public function staticFile()
+    public function StaticFile(string &$url)
     {
-        $filename = APP_PATH . trim($this->getUrl(), DIRECTORY_SEPARATOR);
+        $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
         if (is_file($filename)) {
             $filename_arr = explode('.', $filename);
             $file_ext = end($filename_arr);
@@ -152,5 +161,16 @@ class Core extends Request\BaseRequest
             return readfile($filename);
         };
         return false;
+    }
+
+    /**
+     * @DESC         | 无路由
+     *
+     * 参数区：
+     *
+     */
+    function noRoute(){
+        http_response_code(404);
+        exit(0);
     }
 }

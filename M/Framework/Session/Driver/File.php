@@ -13,25 +13,48 @@
 namespace M\Framework\Session\Driver;
 
 
-use M\Framework\Session\SessionInterface;
-
-class File implements SessionInterface, DriverInterface
+class File extends AbstractSessionDriverHandle
 {
-    private string $session_path;
+    private string $sessionPath;
 
-    public function __construct(array $config)
+    /**
+     * File 初始函数...
+     * @param array $config
+     */
+    function __construct(array $config)
     {
-        $this->session_path = BP . $config['path'] ?? BP . 'var/session/';
-        if (!is_dir($this->session_path)) mkdir($this->session_path, 0770);
-        ini_set('session.save_path', $this->session_path);
+        parent::__construct($config);
+        $this->sessionPath = BP . $config['path'] ?? BP . 'var/session/';
+        if (!is_dir($this->sessionPath)) mkdir($this->sessionPath, 0700);
+        ini_set('session.save_handler', 'files');
+        ini_set('session.save_path', $this->sessionPath);
         session_start();
     }
 
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     * @param $name
+     * @param $value
+     * @return bool
+     */
     function set($name, $value)
     {
         $_SESSION[$name] = $value;
+        if ($_SESSION[$name]) return true;
+        return false;
     }
 
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     * @param $name
+     * @return bool|mixed
+     */
     function get($name)
     {
         if (isset($_SESSION[$name]))
@@ -40,14 +63,41 @@ class File implements SessionInterface, DriverInterface
             return false;
     }
 
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     * @param $name
+     * @return bool
+     */
     function del($name)
     {
         unset($_SESSION[$name]);
+        return true;
     }
 
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     * @return bool
+     */
     function des()
     {
         $_SESSION = array();
-        session_destroy();
+        return session_destroy();
+    }
+
+    function open()
+    {
+        return true;
+    }
+
+    function gc(int $sessMaxLifeTime)
+    {
+        ini_set("session.gc_maxlifetime", $sessMaxLifeTime);
+        return true;
     }
 }

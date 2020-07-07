@@ -16,6 +16,7 @@ namespace M\Framework\Session;
 use M\Framework\App\Etc;
 use M\Framework\Cache\CacheInterface;
 use M\Framework\Cache\CacheManager;
+use M\Framework\Router\DataInterface;
 
 class SessionManager
 {
@@ -29,7 +30,6 @@ class SessionManager
 
     private function __construct()
     {
-        ini_set('session.save_handler', 'use');
         $this->config = Etc::getInstance()->getConfig('session');
     }
 
@@ -51,6 +51,7 @@ class SessionManager
      *
      * 参数区：
      * @param string $driver
+     * @param string $area
      * @return SessionInterface
      */
     public function create(string $driver = ''): SessionInterface

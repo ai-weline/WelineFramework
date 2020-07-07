@@ -13,9 +13,10 @@
 namespace M\Framework\Http\Request;
 
 
-use M\Framework\Http\RequestInterface;
+use M\Framework\App\Etc;
+use M\Framework\Router\DataInterface;
 
-class RequestAbstract
+abstract class RequestAbstract
 {
     const HEADER = 'header';
     const HEADER_KEYS = [
@@ -40,6 +41,23 @@ class RequestAbstract
         'windowsce', 'palm', 'operamini', 'operamobi', 'openwave',
         'nexusone', 'cldc', 'midp', 'wap', 'mobile'
     ];
+
+    /**
+     * @DESC         |获取请求区域
+     *
+     * 参数区：
+     *
+     * @return string
+     */
+    function getRequestArea()
+    {
+        $url_arr = explode(DIRECTORY_SEPARATOR, trim($this->getUrl(), '/'));
+        $admin_flag = Etc::getInstance()->getConfig('admin', '');
+        if (empty($admin_flag)) return DataInterface::area_FROMTEND;
+        if (is_bool(strpos(array_shift($url_arr), $admin_flag, 0)))
+            return DataInterface::area_FROMTEND;
+        return DataInterface::area_BACKEND;
+    }
 
     /**
      * @DESC         |方法描述
@@ -136,7 +154,7 @@ class RequestAbstract
     {
         $uri = $this->getUri();
         $url_exp = explode('?', $uri);
-        return array_shift($url_exp);
+        return trim(array_shift($url_exp), DIRECTORY_SEPARATOR);
     }
 
     function getBaseUrl(): string

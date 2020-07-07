@@ -15,7 +15,7 @@ namespace M\Framework\Session\Driver;
 
 use M\Framework\Session\SessionInterface;
 
-class Redis implements SessionInterface, DriverInterface
+class Redis extends AbstractSessionDriverHandle implements  DriverInterface
 {
 
     public function __construct(array $config)
@@ -42,4 +42,13 @@ class Redis implements SessionInterface, DriverInterface
         // TODO: Implement des() method.
     }
 
+    function open()
+    {
+        // TODO: Implement open() method.
+    }
+
+    function gc(int $sessMaxLifeTime)
+    {
+        // TODO: Implement gc() method.
+    }
 }

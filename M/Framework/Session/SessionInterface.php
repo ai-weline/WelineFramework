@@ -15,8 +15,23 @@ namespace M\Framework\Session;
 
 interface SessionInterface
 {
-    function set($name,$value);
+    function open();
+
+    function set($name, $value);
+
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     * @param $name
+     * @return mixed
+     */
     function get($name);
+
     function del($name);
+
     function des();
+
+    function gc(int $sessMaxLifeTime);
 }

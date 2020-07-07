@@ -17,6 +17,5 @@ interface DriverInterface
 {
     const driver_FILE = 'file';
     const driver_REDIS = 'redis';
-
     function __construct(array $config);
 }

@@ -15,12 +15,9 @@ namespace M\Framework\Session\Driver;
 
 use M\Framework\Session\SessionInterface;
 
-class Mysql implements SessionInterface,DriverInterface
+class Mysql extends AbstractSessionDriverHandle implements DriverInterface
 {
 
-    public function __construct(array $config)
-    {
-    }
     function set($name, $value)
     {
         // TODO: Implement set() method.
@@ -39,5 +36,15 @@ class Mysql implements SessionInterface,DriverInterface
     function des()
     {
         // TODO: Implement des() method.
+    }
+
+    function open()
+    {
+        // TODO: Implement open() method.
+    }
+
+    function gc(int $sessMaxLifeTime)
+    {
+        // TODO: Implement gc() method.
     }
 }

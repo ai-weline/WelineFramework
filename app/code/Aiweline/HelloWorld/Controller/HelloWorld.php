@@ -17,7 +17,7 @@ use Aiweline\HelloWorld\Model\AiwelineHelloWorld;
 use M\Framework\App\Cache;
 use M\Framework\App\Controller\FrontendController;
 use M\Framework\App\Exception;
-use M\Framework\App\Session;
+use M\Framework\App\Session\FrontendSession;
 
 class HelloWorld extends FrontendController
 {
@@ -94,8 +94,8 @@ class HelloWorld extends FrontendController
      *
      */
     function session(){
-        $session = (new Session())->session();
-        $session->set('test',56);
+        $session = (new FrontendSession())->getSession();
+        $session->set('test',123);
         p($session->get('test'));
     }
 

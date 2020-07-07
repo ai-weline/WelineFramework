@@ -15,5 +15,27 @@ namespace M\Framework\Http\Request;
 
 class BaseRequest extends RequestAbstract
 {
+    private static BaseRequest $instance;
 
+    private function __clone()
+    {
+        // TODO: Implement __clone() method.
+    }
+
+    private function __construct()
+    {
+    }
+
+    /**
+     * @DESC         |获取实例
+     *
+     * 参数区：
+     *
+     * @return BaseRequest
+     */
+    public static function getInstance(): BaseRequest
+    {
+        if (!isset(self::$instance)) self::$instance = new self();
+        return self::$instance;
+    }
 }
