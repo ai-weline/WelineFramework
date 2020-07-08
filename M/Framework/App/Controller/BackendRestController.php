@@ -13,10 +13,9 @@
 namespace M\Framework\App\Controller;
 
 
-use M\Framework\Controller\Core;
-use M\Framework\Http\Request;
+use M\Framework\Controller\AbstractRestController;
 
-class RestController extends Core
+class BackendRestController extends AbstractRestController
 {
     /**
      * @DESC         |登录

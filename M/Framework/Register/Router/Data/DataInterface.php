@@ -20,6 +20,7 @@ interface DataInterface
     const register_file = 'register.php';
     const register_param = [
         'type' => null,
+        'area' => null,
         'module' => null,
         'router' => null,
         'class' => null,

@@ -38,11 +38,12 @@ class Upgrade extends CommandAbstract
      * @param array $args
      * @return mixed|void
      */
-    public function execute($args=array())
+    public function execute($args = array())
     {
         // 删除路由文件
-        exec('rm '.ETC::path_API_ROUTER_FILE);
-        exec('rm '.ETC::path_PC_ROUTER_FILE);
+        foreach (Etc::router_files_PATH as $path) {
+            if (is_file($path)) exec('rm ' . $path);
+        }
         // 扫描代码
         $scanner = new AppScanner();
         $apps = $scanner->scanAppModules();
@@ -52,13 +53,13 @@ class Upgrade extends CommandAbstract
         $all_modules = [];
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {
-                $all_modules[$vendor.'_'.$name] = $register;
+                $all_modules[$vendor . '_' . $name] = $register;
                 require APP_PATH . $register;
             }
         }
         // 更新模块
         $module_list = require Etc::path_MODULES_FILE;
-        $module_list = array_intersect_key($module_list,$all_modules);
+        $module_list = array_intersect_key($module_list, $all_modules);
 
         $helper = new Data();
         $helper->updateModules($module_list);

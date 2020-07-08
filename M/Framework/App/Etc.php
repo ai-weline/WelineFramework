@@ -21,8 +21,19 @@ class Etc
     const path_ENV_FILE = APP_ETC_PATH . 'env.php';
     const path_MODULES_FILE = APP_ETC_PATH . 'modules.php';
     const path_COMMANDS_FILE = APP_ETC_PATH . 'generated/commands.php';
-    const path_API_ROUTER_FILE = APP_ETC_PATH . 'generated/api_routers.php';
-    const path_PC_ROUTER_FILE = APP_ETC_PATH . 'generated/pc_routers.php';
+    // 路由
+    const path_BACKEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated/routers/backend_rest_api.php';
+    const path_FRONTEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated/routers/frontend_rest_api.php';
+    const path_BACKEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated/routers/backend_pc.php';
+    const path_FRONTEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated/routers/frontend_pc.php';
+
+    const router_files_PATH = [
+        self::path_BACKEND_REST_API_ROUTER_FILE,
+        self::path_FRONTEND_REST_API_ROUTER_FILE,
+        self::path_BACKEND_PC_ROUTER_FILE,
+        self::path_FRONTEND_PC_ROUTER_FILE,
+    ];
+    // 翻译词典
     const path_TRANSLATE_WORDS_FILE = APP_ETC_PATH . 'generated/language.php';
 
     // 日志

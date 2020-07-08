@@ -14,7 +14,7 @@ namespace M\Framework\Http\Request;
 
 
 use M\Framework\App\Etc;
-use M\Framework\Router\DataInterface;
+use M\Framework\Controller\Data\DataInterface;
 
 abstract class RequestAbstract
 {
@@ -53,10 +53,16 @@ abstract class RequestAbstract
     {
         $url_arr = explode(DIRECTORY_SEPARATOR, trim($this->getUrl(), '/'));
         $admin_flag = Etc::getInstance()->getConfig('admin', '');
-        if (empty($admin_flag)) return DataInterface::area_FROMTEND;
-        if (is_bool(strpos(array_shift($url_arr), $admin_flag, 0)))
-            return DataInterface::area_FROMTEND;
-        return DataInterface::area_BACKEND;
+        $api_admin_flag = Etc::getInstance()->getConfig('api_admin', '');
+        $first_level_url = array_shift($url_arr);
+        if ($first_level_url == $admin_flag)
+        {
+            return DataInterface::type_pc_BACKEND;
+        }
+        if ($first_level_url == $api_admin_flag){
+            return DataInterface::type_api_REST_BACKEND;
+        }
+        return 'frontend';
     }
 
     /**

@@ -58,13 +58,14 @@ class Core
         if (empty($url)) $url = 'index/index';// 找不到则访问默认控制器
         if ($this->request_area === \M\Framework\Router\DataInterface::area_BACKEND)
             $url = str_replace(Etc::getInstance()->getConfig('admin', ''), '', $url);
+            $url = str_replace(Etc::getInstance()->getConfig('api_admin', ''), '', $url);
         $url = trim($url, '/');
+        // 静态资源
+        if ($this->StaticFile($url)) return;
         // API
         $this->Api($url);
         // PC
         $this->Pc($url);
-        // 静态资源
-        if ($this->StaticFile($url)) return;
         // 开发模式
         if (DEBUG) throw new Exception('未知的路由！');
         // 404
@@ -82,8 +83,11 @@ class Core
     public function Api(string &$url)
     {
         // 检测api路由
-        if (file_exists(Etc::path_API_ROUTER_FILE)) {
-            $routers = include Etc::path_API_ROUTER_FILE;
+        $router_filepath = Etc::path_FRONTEND_REST_API_ROUTER_FILE;
+        if (\M\Framework\Controller\Data\DataInterface::type_api_REST_BACKEND === $this->request_area)
+            $router_filepath = Etc::path_BACKEND_REST_API_ROUTER_FILE;
+        if (file_exists($router_filepath)) {
+            $routers = include $router_filepath;
             foreach ($routers as $router => $class) {
                 $class = json_decode(json_encode($class['class']));
                 $router = strstr($router, '::', true);
@@ -114,8 +118,11 @@ class Core
     public function Pc(string &$url)
     {
         // 检测api路由
-        if (file_exists(Etc::path_PC_ROUTER_FILE)) {
-            $routers = include Etc::path_PC_ROUTER_FILE;
+        $router_filepath = Etc::path_FRONTEND_PC_ROUTER_FILE;
+        if (\M\Framework\Controller\Data\DataInterface::type_pc_BACKEND === $this->request_area)
+            $router_filepath = Etc::path_BACKEND_PC_ROUTER_FILE;
+        if (is_file($router_filepath)) {
+            $routers = include $router_filepath;
             foreach ($routers as $router => $class) {
                 $class = json_decode(json_encode($class['class']));
                 $router = trim($router, '/');

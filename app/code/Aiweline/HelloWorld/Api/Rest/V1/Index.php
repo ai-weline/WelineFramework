@@ -13,9 +13,9 @@
 namespace Aiweline\HelloWorld\Api\Rest\V1;
 
 
-use M\Framework\App\Controller\RestController;
+use M\Framework\App\Controller\FrontendRestController;
 
-class Index extends RestController
+class Index extends FrontendRestController
 {
 
     function getIndex()

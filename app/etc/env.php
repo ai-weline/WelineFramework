@@ -11,6 +11,7 @@
  */
 return [
     'admin'=>'admin123',
+    'api_admin'=>'rest_admin',
     'db' => [
         'default' => 'mysql',
         'connections' => [

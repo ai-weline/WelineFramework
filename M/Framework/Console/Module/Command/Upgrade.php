@@ -52,10 +52,10 @@ class Upgrade extends CommandAbstract
      * @return mixed|void
      * @throws \M\Framework\App\Exception
      */
-    public function execute($args=array())
+    public function execute($args = array())
     {
-        // 删除路由文件
-        @exec('rm '.ETC::path_COMMANDS_FILE);
+        // 删除命令文件
+        if (is_file(ETC::path_COMMANDS_FILE)) exec('rm ' . ETC::path_COMMANDS_FILE);
 
         $commands = $this->scan();
 
@@ -127,9 +127,9 @@ class Upgrade extends CommandAbstract
                         $command = trim($command, ':');
                         if ($command) {
                             // FIXME unset 还是保留 unset浪费资源
-                            $command_class_path = $command_class_position->getCommandPath($module_name,$command);
+                            $command_class_path = $command_class_position->getCommandPath($module_name, $command);
                             $command_class = new $command_class_path();
-                            $commands[str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir).'#'.$module_name)][$command] = $command_class->getTip();
+                            $commands[str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir) . '#' . $module_name)][$command] = $command_class->getTip();
                         }
                     }
                 }

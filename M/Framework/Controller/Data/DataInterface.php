@@ -17,7 +17,8 @@ interface DataInterface
 {
     const dir='Controller';
 
-    const type_FRONTEND='FrontendController';
-    const type_BACKEND='BackendController';
-    const type_REST='RestController';
+    const type_pc_FRONTEND='FrontendController';
+    const type_pc_BACKEND='BackendController';
+    const type_api_REST_FRONTEND='FrontendRestController';
+    const type_api_REST_BACKEND='BackendRestController';
 }

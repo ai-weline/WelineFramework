@@ -42,12 +42,13 @@ class Data
      * 参数区：
      *
      * @param array $routers
+     * @param string $path
      * @throws \M\Framework\App\Exception
      */
-    function updatePcRouters(array &$routers)
+    function updatePcRouters(string $path,array &$routers)
     {
         $file = new File();
-        $file->open(Etc::path_PC_ROUTER_FILE, $file::mode_w_add);
+        $file->open($path, $file::mode_w_add);
         $text = '<?php return ' . var_export($routers, true) . ';';
         $file->write($text);
         $file->close();
@@ -58,18 +59,19 @@ class Data
      *
      * 参数区：
      *
+     * @param string $path
      * @param array $api
      * @throws \M\Framework\App\Exception
      */
-    function updateApiRouters(array &$api)
+    function updateApiRouters(string $path,array &$api)
     {
         $routers[$api['router']] = $api['rule'];
-        if (is_file(Etc::path_API_ROUTER_FILE)) {
-            $file_routers = require Etc::path_API_ROUTER_FILE;
-            $routers = array_merge($file_routers,$routers);
+        if (is_file($path)) {
+            $file_routers = require $path;
+            $routers = array_merge($file_routers, $routers);
         }
         $file = new File();
-        $file->open(Etc::path_API_ROUTER_FILE, $file::mode_w_add);
+        $file->open($path, $file::mode_w_add);
         $text = '<?php return ' . var_export($routers, true) . ';';
         $file->write($text);
         $file->close();

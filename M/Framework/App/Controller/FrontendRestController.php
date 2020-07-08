@@ -5,15 +5,17 @@
  * 网名：秋风雁飞(可以百度看看)
  * 网站：www.aiweline.com/bbs.aiweline.com
  * 工具：PhpStorm
- * 日期：2020/7/7
- * 时间：18:10
+ * 日期：2020/6/27
+ * 时间：16:54
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
-namespace M\Framework\Router\Data;
+namespace M\Framework\App\Controller;
 
 
-class AttributeInterface
+use M\Framework\Controller\AbstractRestController;
+
+class FrontendRestController extends AbstractRestController
 {
 
 }

@@ -54,8 +54,12 @@ class Data extends AbstractHelper
                     $baseRouter = strtolower(array_pop($apiDirArray));
                     $apiClassName = $apiFile->getNamespace() . '\\' . $apiFile->getFilename();
                     $apiClass = new $apiClassName();
+
                     // 删除父类方法：注册控制器方法
-                    foreach ($this->removeParentMethods($apiClass) as $method) {
+                    $ctl_data = $this->removeParentMethods($apiClass);
+                    $ctl_methods = $ctl_data['methods'];
+                    $ctl_area = $ctl_data['area'];
+                    foreach ($ctl_methods as $method) {
                         // 分析请求方法
                         $request_method_split_array = preg_split("/(?=[A-Z])/", $method);
                         $request_method = strtoupper(array_shift($request_method_split_array));
@@ -64,6 +68,7 @@ class Data extends AbstractHelper
                         // 路由注册
                         $routerRegister::register(Register::ROUTER, array(
                             'type' => DataInterface::type_API,
+                            'area' => $ctl_area,
                             'module' => $name,
                             'router' => $baseRouter . DIRECTORY_SEPARATOR . '::' . $request_method,
                             'class' => $apiClassName,
@@ -72,24 +77,27 @@ class Data extends AbstractHelper
                         ));
                     }
                 }
-            }
-            // PC路由
-            if (strstr($dir, Handle::pc_DIR)) {
+            } // PC路由
+            elseif (strstr($dir, Handle::pc_DIR)) {
                 foreach ($Files as $controllerFile) {
                     $controllerDirArray = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
                     $baseRouter = strtolower(array_pop($controllerDirArray));
                     $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
                     $controllerClass = new $controllerClassName();
                     // 删除父类方法：注册控制器方法
-                    foreach ($this->removeParentMethods($controllerClass) as $method) {
+                    $ctl_data = $this->removeParentMethods($controllerClass);
+                    $ctl_methods = $ctl_data['methods'];
+                    $ctl_area = $ctl_data['area'];
+                    foreach ($ctl_methods as $method) {
                         // 分析请求方法
                         $request_method_split_array = preg_split("/(?=[A-Z])/", $method);
                         $request_method = array_shift($request_method_split_array);
                         $request_method = $request_method ? $request_method : RequestInterface::GET;
                         if (!in_array($request_method, RequestInterface::METHODS)) $request_method = RequestInterface::GET;
-                        // 路由注册
+                        // TODO 路由注册前后端路由区分
                         $routerRegister::register(Register::ROUTER, array(
                             'type' => DataInterface::type_PC,
+                            'area' => $ctl_area,
                             'module' => $name,
                             'router' => $baseRouter . DIRECTORY_SEPARATOR . $method,
                             'class' => $controllerClassName,
@@ -134,6 +142,9 @@ class Data extends AbstractHelper
      */
     private function removeParentMethods(object $class)
     {
+        // 默认前端控制器
+        $ctl_area = \M\Framework\Controller\Data\DataInterface::type_pc_FRONTEND;
+
         $reflect = new \ReflectionClass($class);
         $controller_methods = [];
         foreach ($reflect->getMethods() as $method) {
@@ -141,13 +152,15 @@ class Data extends AbstractHelper
         }
         // 存在父类则过滤父类方法
         if ($parent_class = $reflect->getParentClass()) {
+            $parent_class_arr = explode('\\',$parent_class->getName());
+            $ctl_area = array_pop($parent_class_arr);
             $parent_methods = [];
             foreach ($parent_class->getMethods() as $method) {
                 $parent_methods[] = $method->getName();
             }
             $controller_methods = array_diff($controller_methods, $parent_methods);
         }
-        return $controller_methods;
+        return ['area' => $ctl_area, 'methods' => $controller_methods];
     }
 
     /**
