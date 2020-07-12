@@ -11,16 +11,23 @@
 
 3、前后端集成到一个module中，做到一个需求一个module。
 
+4、代码模块化，接口以及传统路由分前后台。包括接口，具有后台接口入口，后台url入口。
+
+5、配置文件统一化。文件位置：app/etc/env.php
+
 #### 软件架构
 PHP>=7.4(强类型编写)
 composer
 nginx/apache
 #### 安装教程
-
+一、项目安装
 1.  WEB项目部署
 2.  无需设置繁杂的nginx（项目中有样例设置，include到配置中就可以）或者Apache设置（针对Apache项目中编写有伪静态），仅设置项目目录为部署目录即可。
-3.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
-4.  模块卸载命令 bin/m module:remove 此命令备份模块并删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
+
+二、代码安装
+1.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
+2.  模块安装命令 bin/m module:disable <module_name> 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
+3.  模块卸载命令 bin/m module:remove <module_name> 此命令备份模块并删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
 
 #### 使用说明
 
