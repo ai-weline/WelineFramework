@@ -6,6 +6,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 try {
+    define('DEBUG', true);
     require __DIR__ . '/../app/bootstrap.php';
 } catch (Exception $e) {
     $chr = chr(27);
@@ -24,7 +25,7 @@ try {
 } catch (Exception $e) {
     $chr = chr(27);
     while ($e) {
-        $code = (in_array('getErrorCode',get_class_methods($e)))?$e->getErrorCode():'?????';
+        $code = (in_array('getErrorCode', get_class_methods($e))) ? $e->getErrorCode() : '?????';
         echo <<<CLI_E
 {$chr}[34m CLI 异常
 {$chr}[31m 文件{$e->getFile()}

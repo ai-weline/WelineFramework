@@ -51,7 +51,7 @@ class Data extends AbstractHelper
             if (strstr($dir, Handle::api_DIR)) {
                 foreach ($Files as $apiFile) {
                     $apiDirArray = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
-                    $baseRouter = strtolower(array_pop($apiDirArray));
+                    $baseRouter = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
                     $apiClassName = $apiFile->getNamespace() . '\\' . $apiFile->getFilename();
                     $apiClass = new $apiClassName();
 
@@ -70,7 +70,7 @@ class Data extends AbstractHelper
                             'type' => DataInterface::type_API,
                             'area' => $ctl_area,
                             'module' => $name,
-                            'router' => $baseRouter . DIRECTORY_SEPARATOR . '::' . $request_method,
+                            'router' => $baseRouter . '/' . '::' . $request_method,
                             'class' => $apiClassName,
                             'method' => $method,
                             'request_method' => $request_method
@@ -81,7 +81,7 @@ class Data extends AbstractHelper
             elseif (strstr($dir, Handle::pc_DIR)) {
                 foreach ($Files as $controllerFile) {
                     $controllerDirArray = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
-                    $baseRouter = strtolower(array_pop($controllerDirArray));
+                    $baseRouter = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
                     $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
                     $controllerClass = new $controllerClassName();
                     // 删除父类方法：注册控制器方法
@@ -94,12 +94,11 @@ class Data extends AbstractHelper
                         $request_method = array_shift($request_method_split_array);
                         $request_method = $request_method ? $request_method : RequestInterface::GET;
                         if (!in_array($request_method, RequestInterface::METHODS)) $request_method = RequestInterface::GET;
-                        // TODO 路由注册前后端路由区分
                         $routerRegister::register(Register::ROUTER, array(
                             'type' => DataInterface::type_PC,
                             'area' => $ctl_area,
                             'module' => $name,
-                            'router' => $baseRouter . DIRECTORY_SEPARATOR . $method,
+                            'router' => $baseRouter . '/' . $method,
                             'class' => $controllerClassName,
                             'method' => $method,
                             'request_method' => $request_method
@@ -152,7 +151,7 @@ class Data extends AbstractHelper
         }
         // 存在父类则过滤父类方法
         if ($parent_class = $reflect->getParentClass()) {
-            $parent_class_arr = explode('\\',$parent_class->getName());
+            $parent_class_arr = explode('\\', $parent_class->getName());
             $ctl_area = array_pop($parent_class_arr);
             $parent_methods = [];
             foreach ($parent_class->getMethods() as $method) {

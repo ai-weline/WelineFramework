@@ -12,6 +12,7 @@
 
 namespace M\Framework;
 
+use M\Framework\App\Helper;
 use M\Framework\Router\Core as RouterCore;
 
 class App
@@ -38,5 +39,17 @@ class App
         if (!$this->isCli()) {
             RouterCore::getInstance()->start();
         }
+    }
+
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     * @return Helper
+     */
+    static function helper():Helper
+    {
+        return new App\Helper();
     }
 }

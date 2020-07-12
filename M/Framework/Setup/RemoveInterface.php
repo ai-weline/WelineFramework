@@ -15,5 +15,5 @@ namespace M\Framework\Setup;
 
 interface RemoveInterface
 {
-    function setup(Data\Setup $setup, Data\Context $context);
+    function setup(Data\Setup $setup, Data\Context $context):void ;
 }

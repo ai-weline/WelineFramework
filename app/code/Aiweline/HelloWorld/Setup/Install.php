@@ -29,10 +29,9 @@ class Install implements InstallInterface
      *
      * @param Data\Setup $setup
      * @param Data\Context $context
-     * @return string
      * @throws Exception
      */
-    function setup(Data\Setup $setup, Data\Context $context)
+    function setup(Data\Setup $setup, Data\Context $context): void
     {
         $context->getPrinter()->note('执行安装...');
         $setup->getDb()

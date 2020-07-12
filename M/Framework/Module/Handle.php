@@ -183,11 +183,10 @@ class Handle implements HandleInterface
                     $setup_file_arr = explode(APP_PATH, $setup_file);
                     $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
                     $setup = new $file_namespace();
-                    $result = $setup->setup($this->setup_tool, $this->setup_context);
-                    $this->printer->note("{$result}");
+                    $setup->setup($this->setup_tool, $this->setup_context);
                 }
+                $this->printer->success(str_pad($name, 45) . '已安装！');
             }
-            $this->printer->success(str_pad($name, 45) . '已安装！');
         }
     }
 

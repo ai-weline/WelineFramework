@@ -49,17 +49,8 @@ abstract class AbstractRestController extends Core
                 $data = trim($data, ',');
                 break;
             case self::fetch_XML:
-                header('Content-Type:application/xml');
-                $data .= "<xml>";
-                foreach ($this->_data as $key => $val) {
-                    if (is_numeric($val)) {
-                        $data .= "<$key>$val</$key>";
-                    } else {
-                        // TODO 多维数组 $val可能是数组
-                        $data .= "<$key><![CDATA[$val]]></$key>"
-                    };
-                }
-                $data .= "</xml>";
+                header("Content-type: text/xml; charset=UTF-8");
+                $data = $this->setXml($this->_data);
                 break;
             case self::fetch_JSON:
             default:
@@ -68,5 +59,24 @@ abstract class AbstractRestController extends Core
                 break;
         }
         return $data;
+    }
+
+    private function setXml(array $data)
+    {
+        $xml = "<xml>";
+        foreach ($data as $key => $val) {
+            if (is_numeric($val)) {
+                $xml .= "<$key>$val</$key>";
+            } elseif (is_array($val)) {
+                // TODO 多维数组 $val可能是数组
+                $xml_ = str_replace('<xml>', '', $this->setXml($val));
+                $xml_ = str_replace('</xml>', '', $xml_);
+                $xml .= "<$key>{$xml_}</$key>";
+            } else {
+                $xml .= "<$key><![CDATA[$val]]></$key>";
+            }
+        }
+        $xml .= "</xml>";
+        return $xml;
     }
 }

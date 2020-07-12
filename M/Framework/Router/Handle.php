@@ -52,7 +52,7 @@ class Handle
      */
     function register(array $routerParam)
     {
-        //TODO API路由更新之后最后一条路由问题
+
         switch ($routerParam['type']) {
             case DataInterface::type_API:
                 $path = '';

@@ -20,12 +20,12 @@ class Etc
     // 路径
     const path_ENV_FILE = APP_ETC_PATH . 'env.php';
     const path_MODULES_FILE = APP_ETC_PATH . 'modules.php';
-    const path_COMMANDS_FILE = APP_ETC_PATH . 'generated/commands.php';
+    const path_COMMANDS_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'commands.php';
     // 路由
-    const path_BACKEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated/routers/backend_rest_api.php';
-    const path_FRONTEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated/routers/frontend_rest_api.php';
-    const path_BACKEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated/routers/backend_pc.php';
-    const path_FRONTEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated/routers/frontend_pc.php';
+    const path_BACKEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'routers'.DIRECTORY_SEPARATOR.'backend_rest_api.php';
+    const path_FRONTEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'routers'.DIRECTORY_SEPARATOR.'frontend_rest_api.php';
+    const path_BACKEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'routers'.DIRECTORY_SEPARATOR.'backend_pc.php';
+    const path_FRONTEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'routers'.DIRECTORY_SEPARATOR.'frontend_pc.php';
 
     const router_files_PATH = [
         self::path_BACKEND_REST_API_ROUTER_FILE,
@@ -34,7 +34,7 @@ class Etc
         self::path_FRONTEND_PC_ROUTER_FILE,
     ];
     // 翻译词典
-    const path_TRANSLATE_WORDS_FILE = APP_ETC_PATH . 'generated/language.php';
+    const path_TRANSLATE_WORDS_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'language.php';
 
     // 日志
     const log_path_ERROR = 'error';

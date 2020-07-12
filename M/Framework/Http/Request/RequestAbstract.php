@@ -51,15 +51,13 @@ abstract class RequestAbstract
      */
     function getRequestArea()
     {
-        $url_arr = explode(DIRECTORY_SEPARATOR, trim($this->getUrl(), '/'));
-        $admin_flag = Etc::getInstance()->getConfig('admin', '');
-        $api_admin_flag = Etc::getInstance()->getConfig('api_admin', '');
+        $url_arr = explode('/', trim($this->getUrl(), '/'));
         $first_level_url = array_shift($url_arr);
-        if ($first_level_url == $admin_flag)
+        if ($first_level_url === Etc::getInstance()->getConfig('admin', ''))
         {
             return DataInterface::type_pc_BACKEND;
         }
-        if ($first_level_url == $api_admin_flag){
+        if ($first_level_url == Etc::getInstance()->getConfig('api_admin', '')){
             return DataInterface::type_api_REST_BACKEND;
         }
         return 'frontend';
@@ -160,7 +158,7 @@ abstract class RequestAbstract
     {
         $uri = $this->getUri();
         $url_exp = explode('?', $uri);
-        return trim(array_shift($url_exp), DIRECTORY_SEPARATOR);
+        return array_shift($url_exp);
     }
 
     function getBaseUrl(): string

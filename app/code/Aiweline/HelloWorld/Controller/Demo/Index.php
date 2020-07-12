@@ -5,21 +5,21 @@
  * 网名：秋风雁飞(可以百度看看)
  * 网站：www.aiweline.com/bbs.aiweline.com
  * 工具：PhpStorm
- * 日期：2020/7/7
- * 时间：23:15
+ * 日期：2020/7/11
+ * 时间：17:49
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
-namespace Aiweline\Admin\Controller;
+namespace Aiweline\HelloWorld\Controller\Demo;
 
 
+use M\Framework\App\Controller\FrontendController;
 
-use M\Framework\App\Controller\BackendController;
-
-class Index extends BackendController
+class Index extends FrontendController
 {
     function index()
     {
-        p('admin首页！');
+        p('demo/index');
+        return 'demo/index';
     }
 }

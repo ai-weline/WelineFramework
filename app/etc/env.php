@@ -29,7 +29,7 @@ return [
                 // 数据库连接端口
                 'hostport' => '',
                 // 数据库连接参数
-                'options' => [PDO::ATTR_PERSISTENT => true],
+                'params' => [PDO::ATTR_PERSISTENT => true],
                 // 数据库编码默认采用utf8
                 'charset' => 'utf8',
                 // 数据库表前缀

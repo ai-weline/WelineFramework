@@ -65,7 +65,7 @@ class Scan
                         $file->setDirname($pathInfo['dirname']);
                         $file->setExtension($pathInfo['extension']);
                         $file->setOrigin($filename);
-                        $file->setNamespace(str_replace('/', '\\', dirname($relateFilename)));
+                        $file->setNamespace(str_replace(DIRECTORY_SEPARATOR, '\\', dirname($relateFilename)));
                         $file->setRelate($relateFilename);
                         $file->setSize(filesize($filename));
                         $file->setType(filetype($filename));

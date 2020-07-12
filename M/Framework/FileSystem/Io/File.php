@@ -51,7 +51,7 @@ class File
      */
     function open(string $filename, string $mode = self::mode_a_add)
     {
-        $position = strrpos($filename, '/');
+        $position = strrpos($filename, DIRECTORY_SEPARATOR);
         $path = substr($filename, 0, $position);
         if (!file_exists($path)) {
             mkdir($path, 0770, true);

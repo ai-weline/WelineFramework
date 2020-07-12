@@ -54,18 +54,22 @@ class Core
     function start()
     {
         // 读取url
-        $url = trim($this->base_request->getUrl(), '/');
-        if (empty($url)) $url = 'index/index';// 找不到则访问默认控制器
-        if ($this->request_area === \M\Framework\Router\DataInterface::area_BACKEND)
-            $url = str_replace(Etc::getInstance()->getConfig('admin', ''), '', $url);
-            $url = str_replace(Etc::getInstance()->getConfig('api_admin', ''), '', $url);
-        $url = trim($url, '/');
-        // 静态资源
-        if ($this->StaticFile($url)) return;
+        $url = $this->base_request->getUrl();
+        // 前后台路由处理
+        if ($this->request_area !== \M\Framework\Router\DataInterface::area_FROMTEND) {
+            if (trim($url, '/') === '/' . $this->_etc->getConfig('admin', '')) $url .= '/index/index';
+            if (trim($url, '/') === '/' . $this->_etc->getConfig('api_admin', '')) $url .= '/index/index';
+            $url = str_replace($this->_etc->getConfig('admin', ''), '', $url);
+            $url = str_replace($this->_etc->getConfig('api_admin', ''), '', $url);
+        }
+        if ('/' === $url) $url = '/index/index';// 找不到则访问默认控制器
         // API
         $this->Api($url);
         // PC
         $this->Pc($url);
+
+        // 静态资源
+        if ($this->StaticFile($url)) return;
         // 开发模式
         if (DEBUG) throw new Exception('未知的路由！');
         // 404
@@ -88,13 +92,11 @@ class Core
             $router_filepath = Etc::path_BACKEND_REST_API_ROUTER_FILE;
         if (file_exists($router_filepath)) {
             $routers = include $router_filepath;
-            foreach ($routers as $router => $class) {
-                $class = json_decode(json_encode($class['class']));
-                $router = strstr($router, '::', true);
-                $router = trim($router, '/');
-                if ($url === $router && $class->request_method === $this->base_request->getMethod()) {
+            if (isset($routers[$url])) {
+                $class = json_decode(json_encode($routers[$url]['class']));
+                if ($class->request_method === $this->base_request->getMethod()) {
                     $dispatch = new $class->name();
-                    $method = $class->method;
+                    $method = $class->method ? $class->method : 'index';
                     if ((int)method_exists($dispatch, $method)) {
 //                        echo call_user_func(array($dispatch, $method), $this->getParams());
                         echo call_user_func(array($dispatch, $method));
@@ -123,23 +125,18 @@ class Core
             $router_filepath = Etc::path_BACKEND_PC_ROUTER_FILE;
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
-            foreach ($routers as $router => $class) {
-                $class = json_decode(json_encode($class['class']));
-                $router = trim($router, '/');
-                // 是否无控制方法
-                $url_no_ctl = count(explode(DIRECTORY_SEPARATOR, $url)) == 1;
-                $url = ($url_no_ctl) ? $url . DIRECTORY_SEPARATOR . 'index' : $url;
-                if ($url === $router) {
-                    // 检测注册方法
-                    $dispatch = new $class->name();
-                    $method = ($url_no_ctl) ? 'index' : $class->method;
-                    if ((int)method_exists($dispatch, $method)) {
+            if (isset($routers[$url])) {
+                $class = json_decode(json_encode($routers[$url]['class']));
+
+                // 检测注册方法
+                $dispatch = new $class->name();
+                $method = $class->method ? $class->method : 'index';
+                if ((int)method_exists($dispatch, $method)) {
 //                        echo call_user_func(array($dispatch, $method)/*, $_GET*/);
-                        echo call_user_func(array($dispatch, $method));
-                        exit(0);
-                    } else {
-                        throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
-                    }
+                    echo call_user_func(array($dispatch, $method));
+                    exit(0);
+                } else {
+                    throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
                 }
             }
         }
@@ -156,6 +153,8 @@ class Core
     public function StaticFile(string &$url)
     {
         $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
+        // 阻止读取其他文件
+        if (is_bool(strpos($filename, \M\Framework\View\Data\DataInterface::dir))) $this->noRoute();
         if (is_file($filename)) {
             $filename_arr = explode('.', $filename);
             $file_ext = end($filename_arr);

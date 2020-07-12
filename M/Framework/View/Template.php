@@ -217,7 +217,7 @@ class Template
                 break;
         }
         $path = $path . DIRECTORY_SEPARATOR;
-        if (!is_dir($path)) mkdir($path, 0770);
+        if (!is_dir($path)) mkdir($path, 0770,true);
         return $path;
     }
 

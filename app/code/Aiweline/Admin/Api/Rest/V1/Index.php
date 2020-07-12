@@ -17,9 +17,10 @@ use M\Framework\App\Controller\BackendRestController;
 
 class Index extends BackendRestController
 {
-function index(){
-    $data = ['name'=>'后台rest接口！','method'=>$this->_request->getParams()];
-    $this->assign($data);
-    return $this->fetch(self::fetch_XML);
-}
+    function index()
+    {
+        $data = ['name' => '后台rest接口！', 'params' => $this->_request->getParams()];
+        $this->assign($data);
+        return $this->fetch(self::fetch_XML);
+    }
 }

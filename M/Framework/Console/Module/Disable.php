@@ -20,7 +20,7 @@ class Disable extends CommandAbstract
 
     public function execute($args=array())
     {
-        // TODO: Implement execute() method.
+        p($args);
     }
 
     public function getTip(): string

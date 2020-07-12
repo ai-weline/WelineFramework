@@ -4,6 +4,7 @@
     'module' => 'Aiweline_HelloWorld',
     'class' => 
     array (
+      'area' => 'FrontendRestController',
       'name' => 'Aiweline\\HelloWorld\\Api\\Rest\\V1\\Index',
       'method' => 'getIndex',
       'request_method' => 'GET',
@@ -14,6 +15,7 @@
     'module' => 'Aiweline_HelloWorld',
     'class' => 
     array (
+      'area' => 'FrontendRestController',
       'name' => 'Aiweline\\HelloWorld\\Api\\Rest\\V1\\Index',
       'method' => 'postIndex',
       'request_method' => 'POST',
@@ -24,6 +26,7 @@
     'module' => 'Aiweline_HelloWorld',
     'class' => 
     array (
+      'area' => 'FrontendRestController',
       'name' => 'Aiweline\\HelloWorld\\Api\\Rest\\V1\\Index',
       'method' => 'putIndex',
       'request_method' => 'PUT',
@@ -34,6 +37,7 @@
     'module' => 'Aiweline_HelloWorld',
     'class' => 
     array (
+      'area' => 'FrontendRestController',
       'name' => 'Aiweline\\HelloWorld\\Api\\Rest\\V1\\Index',
       'method' => 'deleteIndex',
       'request_method' => 'DELETE',
@@ -44,6 +48,7 @@
     'module' => 'Aiweline_HelloWorld',
     'class' => 
     array (
+      'area' => 'FrontendRestController',
       'name' => 'Aiweline\\HelloWorld\\Api\\Rest\\V1\\Index',
       'method' => 'updateIndex',
       'request_method' => 'UPDATE',

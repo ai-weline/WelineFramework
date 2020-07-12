@@ -1,1 +1,10 @@
- 
+ <IfModule mod_rewrite.c>
+   Options +FollowSymlinks -Multiviews
+   #  表示重写引擎开
+   RewriteEngine on
+   RewriteCond %{REQUEST_FILENAME} !-d
+   RewriteCond %{REQUEST_FILENAME} !-f
+   #  这两家话的意思是请求的文件或路径是不存在的，如果文件或路径存在将返回已经存在的文件或路径。
+   #^(.*)$意思是匹配当前URL任意字符，表示任意单个字符，.表示任意单个字符，*表示匹配0次或者N次
+   RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+ </IfModule>

@@ -80,6 +80,6 @@ class Remove extends CommandAbstract
      */
     public function getTip(): string
     {
-        return "移除模块以及模块数据！";
+        return "移除模块以及模块数据！并执行卸载脚本（如果有）";
     }
 }

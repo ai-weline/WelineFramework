@@ -30,6 +30,8 @@ class Cli extends CliAbstract
      */
     function run()
     {
+        // 没有任何参数
+        if (!isset($this->argv[0])) exit($this->execute());
         $class = $this->checkCommand();
         switch (count($this->argv)) {
             case 1:
@@ -57,11 +59,12 @@ class Cli extends CliAbstract
      * 参数区：
      *
      * @param array $commands
+     * @throws Exception
      */
     private function recommendCommand(array $commands)
     {
         // 没有任何参数
-        if(!isset($this->argv[0])) exit($this->execute());
+        if (!isset($this->argv[0])) exit($this->execute());
 
         $arg0 = trim($this->argv[0]);
         $command_group_arr = explode(':', $arg0);
@@ -109,14 +112,13 @@ class Cli extends CliAbstract
             $this->recommendCommand($commands);
             $this->printer->error('无效命令：' . $arg0);
         }
-
         // 获取类的真实路径和命名空间位置
         if ($command_path !== self::core_FRAMEWORK_NAMESPACE) {
             $command_class_real_path = APP_PATH . $command_path;
         } else {
             $command_class_real_path = BP . $command_path;
         }
-        $command_real_path = str_replace('\\', '/', $command_class_real_path) . str_replace('\\', '/', $this->getCommandPath($arg0)) . '.php';
+        $command_real_path = str_replace('\\', DIRECTORY_SEPARATOR, $command_class_real_path) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getCommandPath($arg0)) . '.php';
         $command_class_path = $command_path . $this->getCommandPath($arg0);
         if (file_exists($command_real_path)) {
             return new $command_class_path();

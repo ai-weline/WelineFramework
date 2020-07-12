@@ -13,14 +13,11 @@
 namespace M\Framework\Console\Module;
 
 
+use M\Framework\App;
 use M\Framework\App\Etc;
 use M\Framework\Console\CommandAbstract;
-use M\Framework\Console\ConsoleException;
 use M\Framework\FileSystem\App\Scanner as AppScanner;
-use M\Framework\FileSystem\Io\File;
-use M\Framework\Module\Handle;
 use M\Framework\Module\Helper\Data;
-use M\Framework\Output\Cli\Printing;
 
 class Upgrade extends CommandAbstract
 {
@@ -42,7 +39,7 @@ class Upgrade extends CommandAbstract
     {
         // 删除路由文件
         foreach (Etc::router_files_PATH as $path) {
-            if (is_file($path)) exec('rm ' . $path);
+            if (is_file($path)) exec(App::helper()->getConversionCommand('rm', ' ') . $path);
         }
         // 扫描代码
         $scanner = new AppScanner();
