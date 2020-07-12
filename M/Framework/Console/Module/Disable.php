@@ -14,13 +14,29 @@ namespace M\Framework\Console\Module;
 
 
 use M\Framework\Console\CommandAbstract;
+use M\Framework\Module\Helper\Data;
 
 class Disable extends CommandAbstract
 {
 
-    public function execute($args=array())
+    public function execute($args = array())
     {
-        p($args);
+        $command = array_shift($args);
+        $module_list = include APP_ETC_PATH . 'modules.php';
+        if (!empty($args)) {
+            foreach ($args as $module) {
+                if (isset($module_list[$module])) {
+                    $module_list[$module]['status'] = 0;
+                    $this->printer->printing('已禁用！', $this->printer->colorize($module, $this->printer::ERROR), $this->printer::ERROR);
+                    $this->printer->printList([$module => $module_list[$module]], '=>');
+                } else $this->printer->error('不存在的模块:' . $module);
+            }
+            // 更新模块信息
+            $helper = new Data();
+            $helper->updateModules($module_list);
+            $upgrade = new Upgrade();
+            $upgrade->execute();
+        } else $this->printer->printList([$command => ['禁用提示：' => $this->printer->colorize('请输入要禁用的模块', $this->printer::ERROR)]]);
     }
 
     public function getTip(): string

@@ -218,7 +218,7 @@ class Data extends AbstractHelper
      */
     function isUpgrade(array &$modules, string $name, string $version): bool
     {
-        if (!isset($modules[$name]['version']) || version_compare($version, $modules[$name]['version'])) {
+        if (version_compare($version, $modules[$name]['version'],'>')) {
             $modules[$name]['version'] = $version;
             return true;
         }

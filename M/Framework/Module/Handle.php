@@ -137,7 +137,7 @@ class Handle implements HandleInterface
             // 是否更新模块：是则加载模块下的Setup模块下的文件进行更新
             if ($this->helper->isUpgrade($this->modules, $name, $version)) {
                 $this->printer->note("扩展{$name}升级中...");
-                $this->printer->error(__('升级') . $this->modules[$name]['version'] . __('到') . $version);
+                $this->printer->setup(__('升级') . $this->modules[$name]['version'] . __('到') . $version);
                 foreach (\M\Framework\Setup\Data\DataInterface::upgrade_FILES as $upgrade_FILE) {
                     $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $upgrade_FILE . '.php';
                     if (file_exists($setup_file)) {

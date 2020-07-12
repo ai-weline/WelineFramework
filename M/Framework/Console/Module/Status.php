@@ -19,10 +19,17 @@ use M\Framework\Console\CommandInterface;
 class Status extends CommandAbstract
 {
 
-    public function execute($args=array())
+    public function execute($args = array())
     {
-        $module_list = include APP_ETC_PATH.'modules.php';
-        $this->printer->printList($module_list,'=>');
+        array_shift($args);
+        $module_list = include APP_ETC_PATH . 'modules.php';
+        if (!empty($args)) {
+            foreach ($args as $module) {
+                if (isset($module_list[$module])) {
+                    $this->printer->printList([$module=>$module_list[$module]], '=>');
+                } else $this->printer->error(__('不存在的模块:') . $module);
+            }
+        } else $this->printer->printList($module_list, '=>');
     }
 
     public function getTip(): string

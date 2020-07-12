@@ -34,6 +34,24 @@ interface PrintInterface extends \M\Framework\Output\PrintInterface
     public function error($data = 'CLI Error!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
 
     /**
+     * @DESC         |CLI 升级信息打印
+     *
+     * @Author       秋枫雁飞
+     * @Email        aiweline@qq.com
+     * @Forum        https://bbs.aiweline.com
+     * @Description  此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+     *
+     * 参数区：
+     *
+     * @param string $data
+     * @param string $message
+     * @param string $color
+     * @param int $pad_length
+     * @return mixed
+     */
+    public function setup($data = 'CLI Error!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
+
+    /**
      * @DESC         |CLI 成功打印
      *
      * @Author       秋枫雁飞

@@ -39,6 +39,27 @@ abstract class AbstractPrint implements PrintInterface
     }
 
     /**
+     * @DESC         |错误
+     *
+     * @Author       秋枫雁飞
+     * @Email        aiweline@qq.com
+     * @Forum        https://bbs.aiweline.com
+     * @Description  此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+     *
+     * 参数区：
+     *
+     * @param array|string $data
+     * @param string $message
+     * @param string $color
+     * @param int $pad_length
+     * @return mixed|void
+     */
+    public function setup($data = 'CLI Red!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
+    {
+        $this->doPrint($data, $message, self::ERROR);
+    }
+
+    /**
      * @DESC         |成功
      *
      * @Author       秋枫雁飞
@@ -122,6 +143,7 @@ abstract class AbstractPrint implements PrintInterface
      */
     private function doPrint($data, $message, $color, $pad_length = 0)
     {
+        $message = $message ? $this->colorize($message, $color) : '';
         if (is_array($data)) {
             foreach ($data as $msg) {
                 $this->printing($msg, $message, $color, $pad_length);
@@ -175,9 +197,10 @@ COMMAND_LIST;
         foreach ($data as $key => $datum) {
             if (strstr($key, $flag)) {
                 $key = explode($flag, $key);
-                $key = str_pad($key[0], $pad_length/1.5) . 'module # ' . (str_replace('\\', '_', $key[1]));
+                $key = str_pad($key[0], $pad_length / 1.5) . 'module # ' . (str_replace('\\', '_', $key[1]));
             }
             $doc_tmp .= $this->colorize($key, self::WARNING) . PHP_EOL;
+            if (is_string($datum)) $doc_tmp .= $this->colorize($datum, self::NOTE) . PHP_EOL;
             if (is_array($datum))
                 foreach ($datum as $datum_key => $datum_value) {
                     if (is_object($datum_value)) $datum_value = json_encode($datum_value);

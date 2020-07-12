@@ -18,9 +18,9 @@ nginx/apache
 #### 安装教程
 
 1.  WEB项目部署
-2.  无需设置繁杂的nginx设置，仅设置项目目录为部署目录即可。
+2.  无需设置繁杂的nginx（项目中有样例设置，include到配置中就可以）或者Apache设置（针对Apache项目中编写有伪静态），仅设置项目目录为部署目录即可。
 3.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
-4.  模块卸载命令 bin/m module:remove 此命令删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
+4.  模块卸载命令 bin/m module:remove 此命令备份模块并删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
 
 #### 使用说明
 

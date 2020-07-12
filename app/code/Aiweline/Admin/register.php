@@ -15,6 +15,6 @@ use \M\Framework\Register\Register;
 Register::register(
     Register::MODULE,
     __DIR__,
-    '1.1.0',
+    '1.0.0',
     '<a href="bbs.aiweline.com">Admin模块</a>'
 );
