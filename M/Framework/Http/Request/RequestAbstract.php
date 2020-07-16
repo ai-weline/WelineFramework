@@ -53,11 +53,10 @@ abstract class RequestAbstract
     {
         $url_arr = explode('/', trim($this->getUrl(), '/'));
         $first_level_url = array_shift($url_arr);
-        if ($first_level_url === Etc::getInstance()->getConfig('admin', ''))
-        {
+        if ($first_level_url === Etc::getInstance()->getConfig('admin', '')) {
             return DataInterface::type_pc_BACKEND;
         }
-        if ($first_level_url == Etc::getInstance()->getConfig('api_admin', '')){
+        if ($first_level_url == Etc::getInstance()->getConfig('api_admin', '')) {
             return DataInterface::type_api_REST_BACKEND;
         }
         return 'frontend';
@@ -79,6 +78,7 @@ abstract class RequestAbstract
     protected function getServer(string $key = null)
     {
         $filter = RequestFilter::getInstance();
+        $filter->init();
         if ($key) {
             switch ($key) {
                 case self::HEADER:
@@ -90,7 +90,6 @@ abstract class RequestAbstract
         } else {
             $params = $_SERVER;
         }
-        $params = $filter->safeFilter($params);
         return $params;
     }
 

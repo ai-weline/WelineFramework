@@ -35,7 +35,8 @@ function p($data, bool $pass = false, int $trace_deep = 2): void
     }
     foreach ($parent_call_info as $key => $item) {
         $key = str_pad($key, 12, '-', STR_PAD_BOTH);
-        !$isCli ? print_r("<b style='color: dodgerblue'>{$key}</b>  :  <b style='color: darkred'>{$item}</b>" . PHP_EOL) : print_r("{$key}   {$item}". PHP_EOL);
+        $item_str = is_string($item)?$item:json_encode($item);
+        !$isCli ? print_r("<b style='color: dodgerblue'>{$key}</b>  :  <b style='color: darkred'>{$item_str}</b>" . PHP_EOL) : print_r("{$key}   {$item}". PHP_EOL);
     }
     !$isCli ? print_r('<h3 style="color: chocolate">调试信息：</h3>') : print_r('调试信息：');
     if (is_object($data)) {

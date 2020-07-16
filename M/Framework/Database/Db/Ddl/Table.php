@@ -24,6 +24,8 @@ class Table
      */
     const column_type_BOOLEAN = 'boolean';
 
+    const column_type_VARCHAR = 'varchar';
+
     const column_type_SMALLINT = 'smallint';
 
     const column_type_INTEGER = 'integer';
@@ -68,9 +70,11 @@ class Table
     private array $_indexes;
 
 
+    private string $type;
     private string $table;
+    private string $prefix;
     private string $comment;
-    private string $constraints;
+    private string $constraints = '';
     private string $additional = 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;';
     private DbManager $db;
 
@@ -84,9 +88,9 @@ class Table
     {
         $this->db = new DbManager();
         $db = $this->db->getConfig();
-        $type = $db['default'];
-        $prefix = $db['connections'][$type]['prefix'] ?? '';
-        $this->table = $prefix . $table;
+        $this->type = $db['default'];
+        $this->prefix = $db['connections'][$this->type]['prefix'] ?? '';
+        $this->table = $this->prefix . $table;
         $this->comment = "COMMENT '{$comment}'";
     }
 
@@ -102,7 +106,8 @@ class Table
      */
     public function addColumn(string $field_name, string $type, string $length, string $options, string $comment): Table
     {
-        $this->_fields[] = "`{$field_name}` {$type}({$length}) {$options} COMMENT '{$comment}'," . PHP_EOL;
+        $type_length = $length ? "{$type}({$length})" : $type;
+        $this->_fields[] = "`{$field_name}` {$type_length} {$options} COMMENT '{$comment}'," . PHP_EOL;
         return $this;
     }
 
@@ -116,7 +121,6 @@ class Table
      * @param string $name
      * @param string|array $column
      * @return Table
-     * @throws Exception
      */
     public function addIndex(string $type, string $name, $column): Table
     {
@@ -138,12 +142,12 @@ class Table
                 break;
             case self::index_type_MULTI:
                 $type_of_column = getType($column);
-                if (!is_array($column)) throw new Exception(self::index_type_MULTI . __('：此索引的column需要array类型,当前类型') . "{$type_of_column}" . ' 例如：[ID,NAME(19),AGE]');
+                if (!is_array($column)) new Exception(self::index_type_MULTI . __('：此索引的column需要array类型,当前类型') . "{$type_of_column}" . ' 例如：[ID,NAME(19),AGE]');
                 $column = implode(',', $column);
                 $this->_indexes[] = "INDEX {$name}($column)," . PHP_EOL;
                 break;
             default:
-                throw new Exception(__("未知的索引类型：") . $type);
+                new Exception(__("未知的索引类型：") . $type);
         }
         return $this;
     }
@@ -207,8 +211,58 @@ CREATE TABLE {$this->table}(
  {$this->constraints}
 ){$this->comment} {$this->additional}
 createSQL;
+//        if (DEBUG) p($sql, 1);
         return $this->db->query($sql);
 
+    }
+
+    /**
+     * @DESC         |修改表
+     *
+     * 参数区：
+     * @param string $sql
+     * @return mixed
+     */
+    function alert(string $sql)
+    {
+        return $this->db->query($sql);
+    }
+
+    /**
+     * @DESC         |查询
+     *
+     * 参数区：
+     *
+     * @param string $sql
+     * @return mixed
+     */
+    function query(string $sql)
+    {
+        return $this->db->query($sql);
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrefix(): string
+    {
+        return $this->prefix;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTable(): string
+    {
+        return $this->table;
     }
 
 }

@@ -69,6 +69,7 @@ class HelloWorld extends FrontendController
 
     function model(){
         $model = new AiwelineHelloWorld();
+        p('链接类型：'.$model->getDb()->getConfig('default'),1);
         $data = $model->getDb()->query("select * from {$model->getTable()}");
         p($data);
         p($model->insert([

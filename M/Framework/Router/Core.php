@@ -92,18 +92,18 @@ class Core
             $router_filepath = Etc::path_BACKEND_REST_API_ROUTER_FILE;
         if (file_exists($router_filepath)) {
             $routers = include $router_filepath;
-            if (isset($routers[$url])) {
-                $class = json_decode(json_encode($routers[$url]['class']));
-                if ($class->request_method === $this->base_request->getMethod()) {
-                    $dispatch = new $class->name();
-                    $method = $class->method ? $class->method : 'index';
-                    if ((int)method_exists($dispatch, $method)) {
+            $method = '/::' . strtoupper($this->base_request->getMethod());
+            if (isset($routers[$url . $method]) || isset($routers[$url . '/index' . $method])) {
+                $router = isset($routers[$url . $method]) ? $routers[$url . $method] : $routers[$url . '/index' . $method];
+                $class = json_decode(json_encode($router['class']));
+                $dispatch = new $class->name();
+                $method = $class->method ? $class->method : 'index';
+                if ((int)method_exists($dispatch, $method)) {
 //                        echo call_user_func(array($dispatch, $method), $this->getParams());
-                        echo call_user_func(array($dispatch, $method));
-                        exit(0);
-                    } else {
-                        throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
-                    }
+                    echo call_user_func(array($dispatch, $method));
+                    exit(0);
+                } else {
+                    throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
                 }
             }
         }
@@ -125,8 +125,9 @@ class Core
             $router_filepath = Etc::path_BACKEND_PC_ROUTER_FILE;
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
-            if (isset($routers[$url])) {
-                $class = json_decode(json_encode($routers[$url]['class']));
+            if (isset($routers[$url]) || isset($routers[$url . '/index'])) {
+                $router = isset($routers[$url]) ? $routers[$url] : $routers[$url . '/index'];
+                $class = json_decode(json_encode($router['class']));
 
                 // 检测注册方法
                 $dispatch = new $class->name();

@@ -51,14 +51,11 @@ class Template
      * Template 初始函数...
      * @param Request $request
      * @param string $view_dir
-     * @param string $statics_dir
-     * @param string $template_dir
-     * @param string $compile_dir
-     * @throws Exception
      */
     public function __construct(Request &$request, string $view_dir)
 
     {
+        $this->arr_var['title'] = $request->getModuleName();
         $this->_request = $request;
         $this->view_dir = $view_dir;
         $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
@@ -72,13 +69,16 @@ class Template
      * 参数区：
      *
      * @param $filepath
+     * @return string
      */
     function getViewFile($filepath)
     {
-        $path = $this->view_dir  . $filepath;
-        if (!file_exists($path) && DEBUG) throw new Exception('文件不存在！位置：' . $path);
+        $path = $this->view_dir . $filepath;
+        if (!file_exists($path) && DEBUG) new Exception('文件不存在！位置：' . $path);
+        $this->fetch($filepath);
         return $path;
     }
+
 
     /**
      * @DESC         |方法描述
@@ -105,7 +105,7 @@ class Template
     private function getUrlPath(string $real_path): string
     {
 //        $base = $this->_request->getBaseHost() . DIRECTORY_SEPARATOR;
-        $dir_arr = explode(APP_PATH,$real_path);
+        $dir_arr = explode(APP_PATH, $real_path);
         return DIRECTORY_SEPARATOR . array_pop($dir_arr);
     }
 
@@ -130,7 +130,6 @@ class Template
      *
      * @param string $fileName
      * @return bool|void
-     * @throws Exception
      */
     public function fetch(string $fileName)
     {
@@ -144,22 +143,30 @@ class Template
             if ($file_dir) $file_dir .= DIRECTORY_SEPARATOR;
         }
         // 检测模板文件
-        $tplFile = $this->template_dir . $fileName . self::file_ext;
+        if (substr(strrchr($fileName, '.'), 1)) {
+            $tplFile = $this->view_dir . $fileName;
+        } else {
+            $tplFile = $this->template_dir . $fileName . self::file_ext;
+        }
         if (!file_exists($tplFile)) {
-            if (Etc::getInstance()->isDebug()) throw new Exception('模板文件：' . $tplFile . '不存在！');
+            if (DEBUG) new Exception('模板文件：' . $tplFile . '不存在！');
             return false;
         }
         //定义编译合成的文件 加了前缀 和路径 和后缀名.phtml
         $baseComFileDir = $this->compile_dir . ($file_dir ? $file_dir : '');
-        if (!is_dir($baseComFileDir)) mkdir($baseComFileDir, 0770);// 检测目录是否存在,不存在则建立
-        $comFileName = $baseComFileDir . "com_" . $file_name . self::file_ext;
-        if (!file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+        if (!is_dir($baseComFileDir)) mkdir($baseComFileDir, 0770, true);// 检测目录是否存在,不存在则建立
+
+        if (substr(strrchr($fileName, '.'), 1)) {
+            $comFileName = $baseComFileDir . "com_" . $file_name;
+        } else {
+            $comFileName = $baseComFileDir . "com_" . $file_name . self::file_ext;
+        }
+        if (DEBUG || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中
         }
         //包含编译后的文件
-        define('__STATIC__', $this->getUrlPath($this->statics_dir));
         require $comFileName;
     }
 
@@ -183,10 +190,9 @@ class Template
         $content = preg_replace($pattern, $replacement, $content);
         // <php></php>标签
         $patterns = array(
-            '<php>'=>'<?php ',
-            '</php>'=>'?>'
+            '__STATIC__' => $this->getUrlPath($this->statics_dir),
         );
-        foreach ($patterns as $tag=>$replace) {
+        foreach ($patterns as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);
         }
         return $content;
@@ -217,7 +223,7 @@ class Template
                 break;
         }
         $path = $path . DIRECTORY_SEPARATOR;
-        if (!is_dir($path)) mkdir($path, 0770,true);
+        if (!is_dir($path)) mkdir($path, 0770, true);
         return $path;
     }
 

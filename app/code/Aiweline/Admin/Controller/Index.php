@@ -18,8 +18,16 @@ use M\Framework\App\Controller\BackendController;
 
 class Index extends BackendController
 {
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     * @return bool
+     * @throws \M\Framework\App\Exception
+     */
     function index()
     {
-        p('admin首页！');
+        return $this->fetch();
     }
 }

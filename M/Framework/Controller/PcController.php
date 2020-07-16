@@ -72,7 +72,6 @@ class PcController extends Core
             $fileName = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $parent_call_info['function'];
         };
         return $this->_template->fetch($fileName);
-
     }
 
     /**
