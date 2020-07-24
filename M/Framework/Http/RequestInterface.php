@@ -30,9 +30,12 @@ interface RequestInterface
     ];
 
     const CONTENT_TYPE = [
-        'json'=>'application/json',
-        'xml'=>'application/xml',
+        'json' => 'application/json',
+        'xml' => 'application/xml',
     ];
+
+    const auth_TYPE_BEARER = 'bearer';
+    const auth_TYPE_BASIC_AUTH = 'basic';
 
     /**
      * @DESC         |获取服务server
@@ -50,7 +53,8 @@ interface RequestInterface
      *
      * @return string
      */
-    function getUri():string;
+    function getUri(): string;
+
     /**
      * @DESC         |获取内容类型
      *
@@ -66,9 +70,29 @@ interface RequestInterface
      * 参数区：
      *
      * @param string|null $key
-     * @return array
+     * @return array|null
      */
-    function getHeader(string $key = null): array;
+    function getHeader(string $key = null);
+
+    /**
+     * @DESC         |获取Auth验证,默认方式 Bearer
+     *
+     * 参数区：
+     *
+     * @param string $auth_type
+     * @return array|string|null
+     */
+    function getAuth(string $auth_type = self::auth_TYPE_BEARER);
+
+    /**
+     * @DESC         |API_KEY验证
+     *
+     * 参数区：
+     *
+     * @param string $key
+     * @return string
+     */
+    function getApiKey(string $key):string;
 
     /**
      * @DESC         |获取传统键值对参数
@@ -152,7 +176,7 @@ interface RequestInterface
      *
      * @return string
      */
-    function getMethod():string;
+    function getMethod(): string;
 
     /**
      * @DESC         |获取路径
@@ -161,7 +185,7 @@ interface RequestInterface
      *
      * @return string
      */
-    function getBaseUri():string;
+    function getBaseUri(): string;
 
     /**
      * @DESC         |获取基础URL
@@ -170,5 +194,5 @@ interface RequestInterface
      *
      * @return string
      */
-    function getBaseHost():string;
+    function getBaseHost(): string;
 }

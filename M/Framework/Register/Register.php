@@ -28,12 +28,14 @@ class Register implements RegisterInterface
      *
      * 参数区：
      *
+     * @param string $identity
      * @param string $type
      * @param array|string $param
      * @param string $version
      * @param string $description
      * @return mixed
      * @throws ConsoleException
+     * @throws \M\Framework\App\Exception
      */
     static function register(string $type, $param, string $version = '', string $description = '')
     {

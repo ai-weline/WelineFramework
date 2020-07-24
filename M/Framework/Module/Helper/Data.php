@@ -31,12 +31,14 @@ class Data extends AbstractHelper
      * 参数区：
      *
      * @param array $modules
-     * @param $name
+     * @param string $name
+     * @param string $router
      * @return array
+     * @throws \M\Framework\App\Exception
      * @throws \M\Framework\Console\ConsoleException
      * @throws \ReflectionException
      */
-    function registerModuleRouter(array &$modules, $name)
+    function registerModuleRouter(array &$modules, string $name, string $router)
     {
         if ($this->isDisabled($modules, $name)) return [];// 禁用则不进行注册
 
@@ -62,7 +64,9 @@ class Data extends AbstractHelper
                     foreach ($ctl_methods as $method) {
                         // 分析请求方法
                         $request_method_split_array = preg_split("/(?=[A-Z])/", $method);
-                        $request_method = strtoupper(array_shift($request_method_split_array));
+                        $request_method = array_shift($request_method_split_array);
+                        $class_method = strtolower(str_replace($request_method, '', $method));
+                        $request_method = strtoupper($request_method);
                         $request_method = $request_method ? $request_method : RequestInterface::GET;
                         if (!in_array($request_method, RequestInterface::METHODS)) $request_method = RequestInterface::GET;
                         // 路由注册
@@ -70,7 +74,7 @@ class Data extends AbstractHelper
                             'type' => DataInterface::type_API,
                             'area' => $ctl_area,
                             'module' => $name,
-                            'router' => $baseRouter . '/' . '::' . $request_method,
+                            'router' => $baseRouter . ($class_method ? '/' . $class_method : '') . '::' . $request_method,
                             'class' => $apiClassName,
                             'method' => $method,
                             'request_method' => $request_method
@@ -82,6 +86,7 @@ class Data extends AbstractHelper
                 foreach ($Files as $controllerFile) {
                     $controllerDirArray = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
                     $baseRouter = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
+                    $baseRouter = $router . ($baseRouter ?? '');
                     $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
                     $controllerClass = new $controllerClassName();
                     // 删除父类方法：注册控制器方法
@@ -218,7 +223,7 @@ class Data extends AbstractHelper
      */
     function isUpgrade(array &$modules, string $name, string $version): bool
     {
-        if (version_compare($version, $modules[$name]['version'],'>')) {
+        if (version_compare($version, $modules[$name]['version'], '>')) {
             $modules[$name]['version'] = $version;
             return true;
         }

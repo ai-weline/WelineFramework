@@ -24,6 +24,7 @@ class Install implements InstallInterface
     const table_NEWS_CATEGORY = 'aiweline_news_category';
     const table_NEWS = 'aiweline_news';
     const table_NEWS_POST = 'aiweline_news_post';
+    const table_NEWS_USER = 'aiweline_news_user';
 
     function setup(Data\Setup $setup, Data\Context $context): void
     {
@@ -54,17 +55,11 @@ class Install implements InstallInterface
             '',
             '信息'
         )->addColumn(
-            'build_time',
-            Table::column_type_TIMESTAMP,
-            '',
-            'NOT NULL',
-            '来源建立时间'
-        )->addColumn(
             'create_time',
             Table::column_type_DATETIME,
             '',
             'NOT NULL DEFAULT CURRENT_TIMESTAMP',
-            '来源建立时间'
+            '建立时间'
         )->addIndex(
             Table::index_type_FULLTEXT,
             'name',
@@ -120,6 +115,12 @@ class Install implements InstallInterface
             'primary key NOT NULL AUTO_INCREMENT',
             'ID'
         )->addColumn(
+            'source_id',
+            Table::column_type_INTEGER,
+            11,
+            'NOT NULL',
+            '资源ID'
+        )->addColumn(
             'category_id',
             Table::column_type_INTEGER,
             11,
@@ -132,13 +133,19 @@ class Install implements InstallInterface
             'NOT NULL',
             '新闻标题'
         )->addColumn(
+            'author',
+            Table::column_type_VARCHAR,
+            '20',
+            'NOT NULL',
+            '作者'
+        )->addColumn(
             'abstract',
             Table::column_type_VARCHAR,
             '120',
             'NOT NULL',
             '新闻摘要'
         )->addColumn(
-            'build_time',
+            'pushtime',
             Table::column_type_TIMESTAMP,
             '',
             '',
@@ -251,5 +258,69 @@ class Install implements InstallInterface
   partition p_end values less than MAXVALUE 
 )"
         )*/->create();
+        /**新闻用户表*/
+        $printer->warning('安装数据库表：' . self::table_NEWS_USER);
+        $table = $setup->getDb()->createTable(
+            self::table_NEWS_USER,
+            '新闻用户表'
+        );
+//        $foreign_table = $table->getPrefix().self::table_NEWS;
+        $table->addColumn(
+            'id',
+            Table::column_type_INTEGER,
+            11,
+            'primary key NOT NULL AUTO_INCREMENT',
+            '用户ID'
+        )->addColumn(
+            'name',
+            Table::column_type_VARCHAR,
+            12,
+            'NOT NULL',
+            '姓名'
+        )->addColumn(
+            'pw',
+            Table::column_type_VARCHAR,
+            18,
+            'NOT NULL',
+            '密码'
+        )->addColumn(
+            'email',
+            Table::column_type_VARCHAR,
+            60,
+            'NOT NULL',
+            '邮箱'
+        )->addColumn(
+            'token',
+            Table::column_type_TEXT,
+            256,
+            'NULL',
+            '令牌'
+        )->addColumn(
+            'login_time',
+            Table::column_type_DATETIME,
+            '',
+            'NULL',
+            '登录时间'
+        )->addColumn(
+            'expire_time',
+            Table::column_type_DATETIME,
+            '',
+            'NULL',
+            'token过期时间'
+        )->addColumn(
+            'create_time',
+            Table::column_type_DATETIME,
+            '',
+            'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+            '创建时间'
+        )->addIndex(
+            Table::index_type_DEFAULT,
+            'id',
+            'id'
+        )->addIndex(
+            Table::index_type_FULLTEXT,
+            'name',
+            'name'
+        )->create();
     }
 }

@@ -1,5 +1,5 @@
 <?php return array (
-  '/rest/v1/index/::GET' => 
+  '/Rest/v1/Index/::GET' =>
   array (
     'module' => 'Aiweline_HelloWorld',
     'class' => 
@@ -10,7 +10,7 @@
       'request_method' => 'GET',
     ),
   ),
-  '/rest/v1/index/::POST' => 
+  '/Rest/v1/Index/::POST' =>
   array (
     'module' => 'Aiweline_HelloWorld',
     'class' => 
@@ -21,7 +21,7 @@
       'request_method' => 'POST',
     ),
   ),
-  '/rest/v1/index/::PUT' => 
+  '/Rest/v1/Index/::PUT' =>
   array (
     'module' => 'Aiweline_HelloWorld',
     'class' => 
@@ -32,7 +32,7 @@
       'request_method' => 'PUT',
     ),
   ),
-  '/rest/v1/index/::DELETE' => 
+  '/Rest/v1/Index/::DELETE' =>
   array (
     'module' => 'Aiweline_HelloWorld',
     'class' => 
@@ -43,7 +43,7 @@
       'request_method' => 'DELETE',
     ),
   ),
-  '/rest/v1/index/::UPDATE' => 
+  '/Rest/v1/Index/::UPDATE' =>
   array (
     'module' => 'Aiweline_HelloWorld',
     'class' => 

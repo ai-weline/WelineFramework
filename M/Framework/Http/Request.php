@@ -77,22 +77,25 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return self::$instance;
     }
 
-    function getHeader(string $key = null): array
+    function getHeader(string $key = null)
     {
-        return $this->getServer(self::HEADER);
+        if (empty($key)) return $this->getServer(self::HEADER);
+        return $this->getServer('HTTP_' . strtoupper($key));
     }
 
     function getParam(string $key)
     {
         parse_str($this->getServer('QUERY_STRING'), $params);
         array_shift($params);
-        return $params;
+        return isset($params[$key]) ? $params[$key] : null;
     }
 
     function getParams()
     {
         parse_str($this->getServer('QUERY_STRING'), $params);
         array_shift($params);
+        $params = array_merge($params,$_POST);
+        $params = array_merge($params,$_GET);
         return $params;
     }
 
@@ -143,5 +146,22 @@ class Request extends Request\RequestAbstract implements RequestInterface
          * 重载方法
          */
         return parent::getServer($key);
+    }
+
+    function getAuth(string $auth_type = 'bearer')
+    {
+        switch ($auth_type) {
+            case self::auth_TYPE_BEARER:
+                return str_replace('Bearer ', '', $this->getHeader('Authorization'));
+            case self::auth_TYPE_BASIC_AUTH:
+                return array('USER' => $this->getServer('PHP_AUTH_USER'), 'PW' => $this->getServer('PHP_AUTH_PW'));
+            default:
+                return null;
+        }
+    }
+
+    function getApiKey(string $key): string
+    {
+        return $this->getHeader($key);
     }
 }

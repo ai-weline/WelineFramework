@@ -33,7 +33,7 @@ class AbstractHelper
      * @param string $param_str
      * @return string
      */
-    function getConversionCommand(string $linux_command, string $param_str = ''): string
+    function getConversionCommand(string $linux_command, string $param_str = ' '): string
     {
         if ('Linux' === PHP_OS) return $linux_command . $param_str;
         $common_commands = array(

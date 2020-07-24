@@ -75,7 +75,7 @@ abstract class AbstractPrint implements PrintInterface
     {
         if ($this->file == null) $this->file = new File();
         $this->file->open($log_path);
-        $this->file->write("【{$type}】".$content);
+        $this->file->write("【{$type}】".$content.PHP_EOL);
         $this->file->close();
     }
 }

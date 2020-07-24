@@ -13,6 +13,8 @@
 namespace M\Framework\Http\Request;
 
 
+use M\Framework\Http\Response;
+
 class BaseRequest extends RequestAbstract
 {
     private static BaseRequest $instance;

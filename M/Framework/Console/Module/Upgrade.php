@@ -39,7 +39,7 @@ class Upgrade extends CommandAbstract
     {
         // 删除路由文件
         foreach (Etc::router_files_PATH as $path) {
-            if (is_file($path)) exec(App::helper()->getConversionCommand('rm', ' ') . $path);
+            if (is_file($path)) exec(App::helper()->getConversionCommand('rm -f') . $path);
         }
         // 扫描代码
         $scanner = new AppScanner();

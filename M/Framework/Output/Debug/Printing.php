@@ -18,7 +18,7 @@ use M\Framework\FileSystem\Io\File;
 
 class Printing extends AbstractPrint
 {
-    private $etc;
+    private ?Etc $etc;
 
     function __construct()
     {
@@ -30,13 +30,13 @@ class Printing extends AbstractPrint
      *
      * 参数区：
      *
-     * @param string $message
+     * @param $message
      * @param int $message_type
      * @param string $log_path
      */
-    function debug(string $message, string $log_path = null, int $message_type = 3)
+    function debug($message, string $log_path = null, int $message_type = 3)
     {
         if ($log_path == null) $log_path = $this->etc->getLogPath(Etc::log_path_ERROR);
-        $this->write($log_path, $message, $message_type);
+        $this->write($log_path, is_array($message) ? var_export($message, true) : $message, $message_type);
     }
 }

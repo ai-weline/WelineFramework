@@ -19,7 +19,7 @@ class Index extends FrontendController
 {
     function index()
     {
-        p('demo/index');
-        return 'demo/index';
+        p('demo/Index');
+        return 'demo/Index';
     }
 }

@@ -122,6 +122,7 @@ abstract class AbstractPrint extends \M\Framework\Output\AbstractPrint implement
      */
     public function doPrint($data, $message, $color, $pad_length = 0)
     {
+        if(DEBUG) error_log();
         if (is_array($data)) {
             foreach ($data as $msg) {
                 $this->printing($msg, $message, $color, $pad_length);

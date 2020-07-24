@@ -55,14 +55,22 @@ class Core
     {
         // 读取url
         $url = $this->base_request->getUrl();
+        $head_url = trim($url, '/');
+        $head_url_array = explode('/', $head_url);
+        $router = array_shift($head_url_array);
+        $url = str_replace($router, '', $head_url);
         // 前后台路由处理
         if ($this->request_area !== \M\Framework\Router\DataInterface::area_FROMTEND) {
-            if (trim($url, '/') === '/' . $this->_etc->getConfig('admin', '')) $url .= '/index/index';
-            if (trim($url, '/') === '/' . $this->_etc->getConfig('api_admin', '')) $url .= '/index/index';
+            if (trim($url, '/') === '/' . $this->_etc->getConfig('admin', '')) $url .= '/Index/Index';
+            if (trim($url, '/') === '/' . $this->_etc->getConfig('api_admin', '')) $url .= '/Index/Index';
             $url = str_replace($this->_etc->getConfig('admin', ''), '', $url);
             $url = str_replace($this->_etc->getConfig('api_admin', ''), '', $url);
         }
-        if ('/' === $url) $url = '/index/index';// 找不到则访问默认控制器
+        if ('' === $url) {// 找不到则访问默认控制器
+            $url = $router . '/Index/Index';
+        } else {
+            $url = $router . $url;
+        }
         // API
         $this->Api($url);
         // PC
@@ -73,7 +81,7 @@ class Core
         // 开发模式
         if (DEBUG) throw new Exception('未知的路由！');
         // 404
-        $this->noRoute();
+        $this->base_request->getResponse()->noRouter();
     }
 
     /**
@@ -84,20 +92,21 @@ class Core
      * @param string $url
      * @throws Exception
      */
-    public function Api(string &$url)
+    public function Api(string $url)
     {
+        $url = strtolower($url);
         // 检测api路由
         $router_filepath = Etc::path_FRONTEND_REST_API_ROUTER_FILE;
         if (\M\Framework\Controller\Data\DataInterface::type_api_REST_BACKEND === $this->request_area)
             $router_filepath = Etc::path_BACKEND_REST_API_ROUTER_FILE;
         if (file_exists($router_filepath)) {
             $routers = include $router_filepath;
-            $method = '/::' . strtoupper($this->base_request->getMethod());
-            if (isset($routers[$url . $method]) || isset($routers[$url . '/index' . $method])) {
-                $router = isset($routers[$url . $method]) ? $routers[$url . $method] : $routers[$url . '/index' . $method];
+            $method = '::' . strtoupper($this->base_request->getMethod());
+            if (isset($routers[$url . $method]) || isset($routers[$url . '/Index' . $method])) {
+                $router = isset($routers[$url . $method]) ? $routers[$url . $method] : $routers[$url . '/Index' . $method];
                 $class = json_decode(json_encode($router['class']));
                 $dispatch = new $class->name();
-                $method = $class->method ? $class->method : 'index';
+                $method = $class->method ? $class->method : 'Index';
                 if ((int)method_exists($dispatch, $method)) {
 //                        echo call_user_func(array($dispatch, $method), $this->getParams());
                     echo call_user_func(array($dispatch, $method));
@@ -117,21 +126,22 @@ class Core
      * @param string $url
      * @throws Exception
      */
-    public function Pc(string &$url)
+    public function Pc(string $url)
     {
+        $url = strtolower($url);
         // 检测api路由
         $router_filepath = Etc::path_FRONTEND_PC_ROUTER_FILE;
         if (\M\Framework\Controller\Data\DataInterface::type_pc_BACKEND === $this->request_area)
             $router_filepath = Etc::path_BACKEND_PC_ROUTER_FILE;
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
-            if (isset($routers[$url]) || isset($routers[$url . '/index'])) {
-                $router = isset($routers[$url]) ? $routers[$url] : $routers[$url . '/index'];
+            if (isset($routers[$url]) || isset($routers[$url . '/Index'])) {
+                $router = isset($routers[$url]) ? $routers[$url] : $routers[$url . '/Index'];
                 $class = json_decode(json_encode($router['class']));
 
                 // 检测注册方法
                 $dispatch = new $class->name();
-                $method = $class->method ? $class->method : 'index';
+                $method = $class->method ? $class->method : 'Index';
                 if ((int)method_exists($dispatch, $method)) {
 //                        echo call_user_func(array($dispatch, $method)/*, $_GET*/);
                     echo call_user_func(array($dispatch, $method));
@@ -155,7 +165,7 @@ class Core
     {
         $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
         // 阻止读取其他文件
-        if (is_bool(strpos($filename, \M\Framework\View\Data\DataInterface::dir))) $this->noRoute();
+        if (is_bool(strpos($filename, \M\Framework\View\Data\DataInterface::dir))) $this->base_request->getResponse()->noRouter();
         if (is_file($filename)) {
             $filename_arr = explode('.', $filename);
             $file_ext = end($filename_arr);
@@ -169,17 +179,5 @@ class Core
             return readfile($filename);
         };
         return false;
-    }
-
-    /**
-     * @DESC         | 无路由
-     *
-     * 参数区：
-     *
-     */
-    function noRoute()
-    {
-        http_response_code(404);
-        exit(0);
     }
 }

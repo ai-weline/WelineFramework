@@ -15,23 +15,11 @@ namespace M\Framework\Http\Request;
 
 use M\Framework\App\Etc;
 use M\Framework\Controller\Data\DataInterface;
+use M\Framework\Http\Response;
 
 abstract class RequestAbstract
 {
     const HEADER = 'header';
-    const HEADER_KEYS = [
-        "USER" => null,
-        "HOME" => null,
-        "HTTP_COOKIE" => null,
-        "HTTP_ACCEPT_LANGUAGE" => null,
-        "HTTP_ACCEPT_ENCODING" => null,
-        "HTTP_ACCEPT" => null,
-        "HTTP_USER_AGENT" => null,
-        "HTTP_UPGRADE_INSECURE_REQUESTS" => null,
-        "HTTP_CACHE_CONTROL" => null,
-        "HTTP_PROXY_CONNECTION" => null,
-        "HTTP_HOST" => null
-    ];
 
     const MOBILE_DEVICE_HEADERS = [
         'nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc',
@@ -82,7 +70,12 @@ abstract class RequestAbstract
         if ($key) {
             switch ($key) {
                 case self::HEADER:
-                    $params = array_intersect_key($_SERVER, self::HEADER_KEYS);
+                    $params = [];
+                    foreach ($_SERVER as $name => $value) {
+                        if (substr($name, 0, 5) == 'HTTP_') {
+                            $params[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+                        }
+                    }
                     break;
                 default:
                     $params = isset($_SERVER[$key]) ? $_SERVER[$key] : null;
@@ -177,5 +170,17 @@ abstract class RequestAbstract
     function getBaseHost(): string
     {
         return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('HTTP_HOST');
+    }
+
+    /**
+     * @DESC         |获取响应类
+     *
+     * 参数区：
+     *
+     * @return Response
+     */
+    function getResponse():Response
+    {
+        return Response::getInstance();
     }
 }

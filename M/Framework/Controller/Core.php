@@ -15,16 +15,23 @@ namespace M\Framework\Controller;
 
 use M\Framework\App\Exception;
 use M\Framework\Http\Request;
+use M\Framework\Output\Debug\Printing;
 use M\Framework\View\Data\DataInterface;
 use ReflectionObject;
 
 class Core implements Data\DataInterface
 {
     protected Request $_request;
+    protected Printing $_debug;
     function __construct()
     {
         $ctl_class = explode('\\', get_class($this));
         $module_path = array_shift($ctl_class) . '\\' . array_shift($ctl_class);
         $this->_request = Request::getInstance($module_path);
+        $this->_debug=new Printing();
+    }
+
+    function noRouter(){
+
     }
 }

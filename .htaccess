@@ -9,6 +9,6 @@
       #^(.*)$意思是匹配当前URL任意字符，表示任意单个字符，
       #.表示任意单个字符，*表示匹配0次或者N次
    RewriteCond $1 !^(pub/images|robots.txt)
-   # RewriteCond $1 !^(index.php|images|robots.txt)
+   # RewriteCond $1 !^(Index.php|images|robots.txt)
    RewriteRule ^(.*)$ index.php?/$1 [QSA,PT,L]
  </IfModule>

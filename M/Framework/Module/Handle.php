@@ -14,6 +14,7 @@ namespace M\Framework\Module;
 
 
 use M\Framework\App\Etc;
+use M\Framework\App\Exception;
 use M\Framework\Console\ConsoleException;
 use M\Framework\Console\Module\Upgrade;
 use M\Framework\FileSystem\App\Scanner;
@@ -21,6 +22,7 @@ use M\Framework\FileSystem\Io\File;
 use M\Framework\Helper\AbstractHelper;
 use M\Framework\Helper\HandleInterface;
 use M\Framework\Module\Helper\Data;
+use M\Framework\Module\Must\DataInterface;
 use M\Framework\Output\Cli\Printing;
 use M\Framework\Setup\Helper\Data as SetupHelper;
 
@@ -126,10 +128,23 @@ class Handle implements HandleInterface
      */
     public function register(string $name, string $version, string $description)
     {
-        if (!isset($this->setup_tool)) $this->setup_tool = new \M\Framework\Setup\Data\Setup();
-        $this->setup_context = new \M\Framework\Setup\Data\Context($name, $version);
         // 模块路径
         $module_path = APP_PATH . $this->helper->moduleNameToPath($this->modules, $name) . DIRECTORY_SEPARATOR;
+        // 检测文件完整
+        $router = '';
+        foreach (DataInterface::files as $filename) {
+            $filepath = $module_path . $filename;
+            if (!is_file($filepath)) throw new Exception($filepath . ' 文件不存在！');
+            if ($filename == DataInterface::file_etc_Env) {
+                $env = (array)require $filepath;
+                if (!isset($env['router'])) throw new Exception($filepath . ' 文件中未配置router！');
+                $router = $env['router'];
+            };
+        }
+
+        if (!isset($this->setup_tool)) $this->setup_tool = new \M\Framework\Setup\Data\Setup();
+        $this->setup_context = new \M\Framework\Setup\Data\Context($name, $version);
+
         $setup_dir = $module_path . \M\Framework\Setup\Data\DataInterface::dir;
 
         // 已经存在模块则更新
@@ -159,7 +174,7 @@ class Handle implements HandleInterface
                 return;
             }
             // 更新路由
-            $this->helper->registerModuleRouter($this->modules, $name);
+            $this->helper->registerModuleRouter($this->modules, $name, $router);
             echo $this->printer->success(str_pad($name, 45) . '已更新！');
         } else {
             $this->printer->note("扩展{$name}安装中...");
@@ -167,6 +182,7 @@ class Handle implements HandleInterface
             $moduleData = array(
                 'status' => 1,
                 'version' => $version ? $version : '1.0.0',
+                'router' => $router ?? '',
                 'description' => $description ? $description : '',
                 'path' => $this->helper->moduleNameToPath($this->modules, $name)
             );
@@ -174,7 +190,7 @@ class Handle implements HandleInterface
             // 更新模块
             $this->helper->updateModules($this->modules);
             // 更新路由
-            $this->helper->registerModuleRouter($this->modules, $name);
+            $this->helper->registerModuleRouter($this->modules, $name, $router);
             // 安装模块：加载模块下的Setup模块下的安装文件进行安装
             foreach (\M\Framework\Setup\Data\DataInterface::install_FILES as $install_FILE) {
                 $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $install_FILE . '.php';

@@ -19,46 +19,36 @@ abstract class AbstractRestController extends Core
     const fetch_XML = 'xml';
     const fetch_STRING = 'string';
 
-    private array $_data;
-
     /**
      * @DESC         |方法描述
      *
      * 参数区：
      *
-     * @param string|array $key
-     * @param $value
+     * @param $data
+     * @param string $type
+     * @return false|string
      */
-    function assign($key, $value = null)
+    function fetch($data, string $type = self::fetch_JSON)
     {
-        if (is_string($key)) {
-            $this->_data[$key] = $value;
-        } elseif (is_array($key)) {
-            $this->_data = $key;
-        }
-    }
-
-    function fetch(string $type = self::fetch_JSON)
-    {
-        $data = null;
+        $result = null;
         switch ($type) {
             case self::fetch_STRING:
-                foreach ($this->_data as $key => $datum) {
-                    $data .= $key . ':' . $datum . ',';
+                foreach ($data as $key => $datum) {
+                    $result .= $key . ':' . $datum . ',';
                 }
-                $data = trim($data, ',');
+                $result = trim($data, ',');
                 break;
             case self::fetch_XML:
                 header("Content-type: text/xml; charset=UTF-8");
-                $data = $this->setXml($this->_data);
+                $result = $this->setXml($data);
                 break;
             case self::fetch_JSON:
             default:
                 header('Content-Type:application/json');
-                $data = json_encode($this->_data);
+                $result = json_encode($data);
                 break;
         }
-        return $data;
+        return $result;
     }
 
     private function setXml(array $data)

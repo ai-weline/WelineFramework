@@ -13,7 +13,43 @@
 namespace M\Framework\Http;
 
 // TODO 完善返回
+use M\Framework\Http\Request\BaseRequest;
+
 class Response implements ResponseInterface
 {
+    private static Response $instance;
 
+    private function __clone()
+    {
+        // TODO: Implement __clone() method.
+    }
+
+    private function __construct()
+    {
+    }
+
+    /**
+     * @DESC         |获取实例
+     *
+     * 参数区：
+     *
+     * @return Response
+     */
+    public static function getInstance(): Response
+    {
+        if (!isset(self::$instance)) self::$instance = new self();
+        return self::$instance;
+    }
+
+    /**]
+     * @DESC         |无路由
+     *
+     * 参数区：
+     *
+     */
+    function noRouter()
+    {
+        http_response_code(404);
+        exit(0);
+    }
 }

@@ -10,7 +10,7 @@
     'module:status' => '获取模块列表',
     'module:upgrade' => '升级模块',
   ),
-  'article#Aiweline\\HelloWorld' => 
+  'article#Aiweline\\Index' =>
   array (
     'article:get' => 'getTip(111111111)',
   ),

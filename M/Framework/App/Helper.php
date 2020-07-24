@@ -17,5 +17,14 @@ use M\Framework\Helper\AbstractHelper;
 
 class Helper extends AbstractHelper
 {
-
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     */
+    function getValidator()
+    {
+        p('等待开发！');
+    }
 }

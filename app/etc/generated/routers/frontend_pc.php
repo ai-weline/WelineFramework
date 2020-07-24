@@ -1,22 +1,22 @@
 <?php return array (
-  '/demo/index/index' => 
+  '/demo/Index/Index' =>
   array (
     'module' => 'Aiweline_HelloWorld',
     'class' => 
     array (
       'area' => 'FrontendController',
       'name' => 'Aiweline\\HelloWorld\\Controller\\Demo\\Index',
-      'method' => 'index',
+      'method' => 'Index',
     ),
   ),
-  '/helloworld/index' => 
+  '/helloworld/Index' =>
   array (
     'module' => 'Aiweline_HelloWorld',
     'class' => 
     array (
       'area' => 'FrontendController',
       'name' => 'Aiweline\\HelloWorld\\Controller\\HelloWorld',
-      'method' => 'index',
+      'method' => 'Index',
     ),
   ),
   '/helloworld/p' => 
@@ -79,14 +79,14 @@
       'method' => 'cache',
     ),
   ),
-  '/index/index' => 
+  '/Index/Index' =>
   array (
     'module' => 'Aiweline_HelloWorld',
     'class' => 
     array (
       'area' => 'FrontendController',
       'name' => 'Aiweline\\HelloWorld\\Controller\\Index',
-      'method' => 'index',
+      'method' => 'Index',
     ),
   ),
   '/todo/ok' => 

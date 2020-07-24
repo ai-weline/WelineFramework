@@ -20,26 +20,26 @@ class Index extends FrontendRestController
 
     function getIndex()
     {
-        return 'Hello rest api!--》getIndex';
+        return 'Hello Rest api!--》getIndex';
     }
 
     function postIndex()
     {
-        return 'Hello rest api!--》postIndex';
+        return 'Hello Rest api!--》postIndex';
     }
 
     function putIndex()
     {
-        return 'Hello rest api!--》putIndex';
+        return 'Hello Rest api!--》putIndex';
     }
 
     function deleteIndex()
     {
-        return 'Hello rest api!--》putIndex';
+        return 'Hello Rest api!--》putIndex';
     }
 
     function updateIndex()
     {
-        return 'Hello rest api!--》updateIndex';
+        return 'Hello Rest api!--》updateIndex';
     }
 }
