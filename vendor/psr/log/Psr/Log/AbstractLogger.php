@@ -123,6 +123,6 @@ abstract class AbstractLogger implements LoggerInterface
      */
     public function debug($message, array $context = array())
     {
-        $this->log(LogLevel::DEBUG, $message, $context);
+        $this->log(LogLevel::DEV, $message, $context);
     }
 }

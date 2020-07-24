@@ -74,7 +74,7 @@ class Template
     function getViewFile($filepath)
     {
         $path = $this->view_dir . $filepath;
-        if (!file_exists($path) && DEBUG) new Exception('文件不存在！位置：' . $path);
+        if (!file_exists($path) && DEV) new Exception('文件不存在！位置：' . $path);
         $this->fetch($filepath);
         return $path;
     }
@@ -149,7 +149,7 @@ class Template
             $tplFile = $this->template_dir . $fileName . self::file_ext;
         }
         if (!file_exists($tplFile)) {
-            if (DEBUG) new Exception('模板文件：' . $tplFile . '不存在！');
+            if (DEV) new Exception('模板文件：' . $tplFile . '不存在！');
             return false;
         }
         //定义编译合成的文件 加了前缀 和路径 和后缀名.phtml
@@ -161,7 +161,7 @@ class Template
         } else {
             $comFileName = $baseComFileDir . "com_" . $file_name . self::file_ext;
         }
-        if (DEBUG || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+        if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中

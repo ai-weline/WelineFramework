@@ -23,15 +23,17 @@ class Core implements Data\DataInterface
 {
     protected Request $_request;
     protected Printing $_debug;
+
     function __construct()
     {
         $ctl_class = explode('\\', get_class($this));
         $module_path = array_shift($ctl_class) . '\\' . array_shift($ctl_class);
         $this->_request = Request::getInstance($module_path);
-        $this->_debug=new Printing();
+        $this->_debug = new Printing();
     }
 
-    function noRouter(){
-
+    function noRouter()
+    {
+        return $this->_request->getResponse()->noRouter();
     }
 }

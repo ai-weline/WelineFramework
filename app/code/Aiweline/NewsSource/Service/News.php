@@ -134,10 +134,10 @@ class News
      *
      * @param int $page
      * @param int $pageSize
+     * @return \think\Collection
      */
     function getNews(int $page, int $pageSize)
     {
-        // TODO 获取新闻资源
         $news_mode = new AiwelineNews();
         $start = ($page - 1) * $pageSize;
         $end = $page * $pageSize;

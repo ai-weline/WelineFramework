@@ -13,7 +13,7 @@
 use M\Framework\App;
 
 // 调试模式
-defined('DEBUG') ?: define('DEBUG', false);
+defined('DEV') ?: define('DEV', false);
 // 项目根目录
 define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 框架根目录
@@ -36,7 +36,7 @@ try {
     exit('应用启动失败：' . $exception->getTrace());
 }
 //报告错误
-DEBUG ? error_reporting(E_ALL) : error_reporting(0);
+DEV ? error_reporting(E_ALL) : error_reporting(0);
 // 助手函数
 require BP . '/app/etc/functions.php';
 // 启动应用

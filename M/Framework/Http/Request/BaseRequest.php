@@ -26,6 +26,7 @@ class BaseRequest extends RequestAbstract
 
     private function __construct()
     {
+        parent::__construct();
     }
 
     /**

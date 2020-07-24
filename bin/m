@@ -6,7 +6,7 @@ if (PHP_SAPI !== 'cli') {
 }
 
 try {
-    define('DEBUG', true);
+    define('DEV', true);
     require __DIR__ . '/../app/bootstrap.php';
 } catch (Exception $e) {
     $chr = chr(27);

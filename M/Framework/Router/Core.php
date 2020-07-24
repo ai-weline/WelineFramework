@@ -25,6 +25,8 @@ class Core
     private static Core $instance;
     private BaseRequest $base_request;
     private string $request_area;
+    private string $area_router;
+    private string $is_admin;
 
     private function __clone()
     {
@@ -36,6 +38,8 @@ class Core
         $this->_etc = Etc::getInstance();
         $this->base_request = BaseRequest::getInstance();
         $this->request_area = $this->base_request->getRequestArea();
+        $this->area_router = $this->base_request->getAreaRouter();
+        $this->is_admin = ($this->request_area !== \M\Framework\Router\DataInterface::area_FROMTEND);
     }
 
     final static function getInstance()
@@ -43,6 +47,7 @@ class Core
         if (!isset(self::$instance)) self::$instance = new self();
         return self::$instance;
     }
+
 
     /**
      * @DESC         |路由处理
@@ -55,31 +60,36 @@ class Core
     {
         // 读取url
         $url = $this->base_request->getUrl();
-        $head_url = trim($url, '/');
-        $head_url_array = explode('/', $head_url);
-        $router = array_shift($head_url_array);
-        $url = str_replace($router, '', $head_url);
         // 前后台路由处理
-        if ($this->request_area !== \M\Framework\Router\DataInterface::area_FROMTEND) {
-            if (trim($url, '/') === '/' . $this->_etc->getConfig('admin', '')) $url .= '/Index/Index';
-            if (trim($url, '/') === '/' . $this->_etc->getConfig('api_admin', '')) $url .= '/Index/Index';
-            $url = str_replace($this->_etc->getConfig('admin', ''), '', $url);
-            $url = str_replace($this->_etc->getConfig('api_admin', ''), '', $url);
+        if ($this->is_admin) {
+            if ($this->area_router === $this->_etc->getConfig('admin', '')) {
+                $url = str_replace($this->area_router, '', $url);
+                $url = trim($url, '/');
+                if ('' == $url) {
+                    $url .= '/Index/Index';
+                }
+            } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
+                $url = str_replace($this->area_router, '', $url);
+                $url = trim($url, '/');
+                if ('' == $url) {
+                    $url .= '/Index/Index';
+                }
+            }
         }
-        if ('' === $url) {// 找不到则访问默认控制器
-            $url = $router . '/Index/Index';
-        } else {
-            $url = $router . $url;
+        if ('/' === $url) {// 找不到则访问默认控制器
+            $url = '/Index/Index';
         }
+        $url = trim($url,'/');
+
         // API
         $this->Api($url);
         // PC
         $this->Pc($url);
 
         // 静态资源
-        if ($this->StaticFile($url)) return;
+        if (DEV) if ($this->StaticFile($url)) return;
         // 开发模式
-        if (DEBUG) throw new Exception('未知的路由！');
+        if (DEV) throw new Exception('未知的路由！');
         // 404
         $this->base_request->getResponse()->noRouter();
     }
@@ -97,7 +107,8 @@ class Core
         $url = strtolower($url);
         // 检测api路由
         $router_filepath = Etc::path_FRONTEND_REST_API_ROUTER_FILE;
-        if (\M\Framework\Controller\Data\DataInterface::type_api_REST_BACKEND === $this->request_area)
+        $is_api_admin = $this->request_area === \M\Framework\Controller\Data\DataInterface::type_api_REST_BACKEND;
+        if ($is_api_admin)
             $router_filepath = Etc::path_BACKEND_REST_API_ROUTER_FILE;
         if (file_exists($router_filepath)) {
             $routers = include $router_filepath;
@@ -116,6 +127,8 @@ class Core
                 }
             }
         }
+        // 如果是API后端请求，找不到路由就直接404
+        if ($is_api_admin) $this->base_request->getResponse()->noRouter();
     }
 
     /**
@@ -131,7 +144,8 @@ class Core
         $url = strtolower($url);
         // 检测api路由
         $router_filepath = Etc::path_FRONTEND_PC_ROUTER_FILE;
-        if (\M\Framework\Controller\Data\DataInterface::type_pc_BACKEND === $this->request_area)
+        $is_pc_admin = $this->request_area === \M\Framework\Controller\Data\DataInterface::type_pc_BACKEND;
+        if ($is_pc_admin)
             $router_filepath = Etc::path_BACKEND_PC_ROUTER_FILE;
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
@@ -151,6 +165,8 @@ class Core
                 }
             }
         }
+        // 如果是PC后端请求，找不到路由就直接404
+        if ($is_pc_admin) $this->base_request->getResponse()->noRouter();
     }
 
     /**

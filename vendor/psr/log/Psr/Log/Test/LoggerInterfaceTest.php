@@ -61,7 +61,7 @@ abstract class LoggerInterfaceTest extends TestCase
             LogLevel::WARNING => array(LogLevel::WARNING, 'message of level warning with context: {user}'),
             LogLevel::NOTICE => array(LogLevel::NOTICE, 'message of level notice with context: {user}'),
             LogLevel::INFO => array(LogLevel::INFO, 'message of level info with context: {user}'),
-            LogLevel::DEBUG => array(LogLevel::DEBUG, 'message of level debug with context: {user}'),
+            LogLevel::DEV => array(LogLevel::DEV, 'message of level debug with context: {user}'),
         );
     }
 

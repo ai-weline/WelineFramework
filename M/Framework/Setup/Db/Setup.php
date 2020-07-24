@@ -15,6 +15,7 @@ namespace M\Framework\Setup\Db;
 
 use M\Framework\Database\Db\Ddl\Table;
 use M\Framework\Database\DbManager;
+use think\db\exception\PDOException;
 
 class Setup extends DbManager
 {
@@ -30,5 +31,47 @@ class Setup extends DbManager
     function createTable(string $table_name, string $comment)
     {
         return new Table($table_name, $comment);
+    }
+
+    /**
+     * @DESC         |获取前缀
+     *
+     * 参数区：
+     *
+     */
+    function getTablePrefix(): string
+    {
+        return $this->getConfig('prefix') ?? '';
+    }
+
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     * @param string $table
+     * @return bool
+     */
+    function tableExist(string $table): bool
+    {
+        $table = $this->getTable($table);
+        try {
+            $this->query("desc {$table}");
+            return true;
+        } catch (PDOException $exception) {
+            return false;
+        }
+    }
+
+    /**
+     * @DESC         |获取表名
+     *
+     * 参数区：
+     *
+     * @param string $name
+     * @return string
+     */
+    function getTable(string $name = ''):string
+    {
+        return $this->getTablePrefix() . $name;
     }
 }

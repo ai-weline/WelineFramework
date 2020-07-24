@@ -30,6 +30,14 @@ abstract class RequestAbstract
         'nexusone', 'cldc', 'midp', 'wap', 'mobile'
     ];
 
+    private string $area_router;
+
+    function __construct()
+    {
+        $url_arr = explode('/', trim($this->getUrl(), '/'));
+        $this->area_router = array_shift($url_arr);
+    }
+
     /**
      * @DESC         |获取请求区域
      *
@@ -39,15 +47,26 @@ abstract class RequestAbstract
      */
     function getRequestArea()
     {
-        $url_arr = explode('/', trim($this->getUrl(), '/'));
-        $first_level_url = array_shift($url_arr);
-        if ($first_level_url === Etc::getInstance()->getConfig('admin', '')) {
+
+        if ($this->area_router === Etc::getInstance()->getConfig('admin', '')) {
             return DataInterface::type_pc_BACKEND;
         }
-        if ($first_level_url == Etc::getInstance()->getConfig('api_admin', '')) {
+        if ($this->area_router == Etc::getInstance()->getConfig('api_admin', '')) {
             return DataInterface::type_api_REST_BACKEND;
         }
         return 'frontend';
+    }
+
+    /**
+     * @DESC         |获取
+     *
+     * 参数区：
+     *
+     * @return mixed|string
+     */
+    function getAreaRouter()
+    {
+        return $this->area_router;
     }
 
     /**
@@ -179,7 +198,7 @@ abstract class RequestAbstract
      *
      * @return Response
      */
-    function getResponse():Response
+    function getResponse(): Response
     {
         return Response::getInstance();
     }

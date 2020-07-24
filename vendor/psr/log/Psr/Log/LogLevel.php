@@ -14,5 +14,5 @@ class LogLevel
     const WARNING   = 'warning';
     const NOTICE    = 'notice';
     const INFO      = 'info';
-    const DEBUG     = 'debug';
+    const DEV     = 'debug';
 }

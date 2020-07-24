@@ -17,7 +17,8 @@
     "ext-pdo": "*",
     "topthink/think-orm": "^2.0",
     "ext-exif": "*",
-    "ext-fileinfo": "*"
+    "ext-fileinfo": "*",
+    "phpunit/phpunit": "^9.2"
   },
   "autoload": {
     "psr-4": {

@@ -87,7 +87,7 @@ class Core extends \Exception
      */
     function note()
     {
-        if (DEBUG) {
+        if (DEV) {
             echo $this->prepareHtmlMessage();
         } else {
             print_r('运行警告：请联系管理员进行修复！日志：var/log/note.log'.($this->isCli()?PHP_EOL:"<br>"));
@@ -105,7 +105,7 @@ class Core extends \Exception
     function warning()
     {
         $log_path = $this->etc->getLogPath($this->etc::log_path_WARNING);
-        if (DEBUG) {
+        if (DEV) {
             echo $this->prepareHtmlMessage();
         } else {
             print_r('运行警告：请联系管理员进行修复！日志：var/log/warning.log'.($this->isCli()?PHP_EOL:"<br>"));
@@ -121,7 +121,7 @@ class Core extends \Exception
      */
     public function exception()
     {
-        if (DEBUG) {
+        if (DEV) {
             echo $this->prepareHtmlMessage();
         } else {
             print_r('程序异常：请联系管理员进行修复！日志：var/log/exception.log'.($this->isCli()?PHP_EOL:"<br>"));
@@ -143,7 +143,7 @@ class Core extends \Exception
         if (0 === error_reporting()) {
             return false;
         }
-        if (DEBUG) {
+        if (DEV) {
             echo $this->prepareHtmlMessage();
         } else {
             print_r('程序异常：请联系管理员进行修复！日志：var/log/error.log'.($this->isCli()?PHP_EOL:"<br>"));
@@ -162,8 +162,8 @@ class Core extends \Exception
     {
         $last = error_get_last();
         if ($last) {
-            if (DEBUG) echo json_encode($last);
-            if (DEBUG) {
+            if (DEV) echo json_encode($last);
+            if (DEV) {
                 echo json_encode($last);
             } else {
                 print_r('程序错误：请联系管理员进行修复！日志：var/log/error.log'.($this->isCli()?PHP_EOL:"<br>"));

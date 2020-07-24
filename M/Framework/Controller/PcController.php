@@ -110,6 +110,10 @@ class PcController extends Core
         $reflect = new ReflectionObject($this);
         $ctl_dir_reflect_arr = explode(self::dir, $reflect->getFileName());
         $module_dir = array_shift($ctl_dir_reflect_arr);
-        return $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
+        // 开发模式本地module目录
+        if (!DEV) $module_dir = BP . 'pub/static/default/' . str_replace(APP_PATH, '', $module_dir);
+        $module_dir = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
+        if (!is_dir($module_dir)) mkdir($module_dir, 0775, true);
+        return $module_dir;
     }
 }

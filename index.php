@@ -9,4 +9,5 @@
  * 时间：0:35
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
-include './pub/index.php';
+declare(strict_types=1);
+require __DIR__.'./pub/index.php';

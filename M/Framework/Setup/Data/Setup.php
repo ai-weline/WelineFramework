@@ -13,7 +13,6 @@
 namespace M\Framework\Setup\Data;
 
 
-use M\Framework\App\Exception;
 use M\Framework\Database\Db;
 use M\Framework\Output\Cli\Printing;
 use M\Framework\Setup\Db\Setup as DbSetup;

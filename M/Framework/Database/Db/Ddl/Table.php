@@ -89,7 +89,7 @@ class Table
         $this->db = new DbManager();
         $db = $this->db->getConfig();
         $this->type = $db['default'];
-        $this->prefix = $db['connections'][$this->type]['prefix'] ?? '';
+        $this->prefix = $this->db->getConfig('prefix') ?? '';
         $this->table = $this->prefix . $table;
         $this->comment = "COMMENT '{$comment}'";
     }
@@ -211,7 +211,7 @@ CREATE TABLE {$this->table}(
  {$this->constraints}
 ){$this->comment} {$this->additional}
 createSQL;
-//        if (DEBUG) p($sql, 1);
+//        if (DEV) p($sql, 1);
         return $this->db->query($sql);
 
     }

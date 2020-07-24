@@ -29,13 +29,12 @@ class Install implements InstallInterface
      *
      * @param Data\Setup $setup
      * @param Data\Context $context
-     * @throws Exception
      */
     function setup(Data\Setup $setup, Data\Context $context): void
     {
         $context->getPrinter()->note('执行安装...');
-        $setup->getDb()
-            ->createTable(
+        if (!$setup->getDb()->tableExist(self::table_DEMO)) {
+            $setup->getDb()->createTable(
                 self::table_DEMO,
                 '开发测试'
             )->addColumn(
@@ -55,6 +54,7 @@ class Install implements InstallInterface
                 'id_index',
                 'entity_id'
             )->addConstraints()->create();
+        }
         $context->getPrinter()->note('安装脚本执行完毕...');
     }
 }

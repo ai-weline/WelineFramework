@@ -41,7 +41,7 @@ class Etc
     const log_path_EXCEPTION = 'exception';
     const log_path_NOTICE = 'notice';
     const log_path_WARNING = 'warning';
-    const log_path_DEBUG = 'debug';
+    const log_path_DEV = 'debug';
 
     // 变量
     /**
