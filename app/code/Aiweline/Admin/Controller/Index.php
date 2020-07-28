@@ -13,7 +13,6 @@
 namespace Aiweline\Admin\Controller;
 
 
-
 use M\Framework\App\Controller\BackendController;
 
 class Index extends BackendController
@@ -29,5 +28,10 @@ class Index extends BackendController
     function index()
     {
         return $this->fetch();
+    }
+
+    function test()
+    {
+        return '111111111';
     }
 }

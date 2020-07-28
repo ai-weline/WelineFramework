@@ -13,7 +13,7 @@
 namespace M\Framework\Database\Db\Ddl;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\App\Exception;
 use M\Framework\Database\DbManager;
 

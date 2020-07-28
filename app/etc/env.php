@@ -10,8 +10,9 @@
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 return [
-    'admin'=>'admin123',
-    'api_admin'=>'rest_admin',
+    'admin' => 'admin123',
+    'api_admin' => 'rest_admin',
+    'deploy' => 'dev',
     'db' => [
         'default' => 'mysql',
         'connections' => [
@@ -48,7 +49,7 @@ return [
         'default' => 'file',
         'drivers' => [
             'file' => [
-                'path' =>  'var/cache/'
+                'path' => 'var/cache/'
             ],
             'redis' => [
                 'tip' => '开发中...',
@@ -62,7 +63,7 @@ return [
         'default' => 'file',
         'drivers' => [
             'file' => [
-                'path' =>'var/session/'
+                'path' => 'var/session/'
             ],
             'mysql' => [
                 'tip' => '开发中...'
@@ -71,5 +72,5 @@ return [
                 'tip' => '开发中...'
             ]
         ]
-    ]
+    ],
 ];

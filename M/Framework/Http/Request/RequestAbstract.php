@@ -13,7 +13,7 @@
 namespace M\Framework\Http\Request;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\Controller\Data\DataInterface;
 use M\Framework\Http\Response;
 
@@ -48,10 +48,10 @@ abstract class RequestAbstract
     function getRequestArea()
     {
 
-        if ($this->area_router === Etc::getInstance()->getConfig('admin', '')) {
+        if ($this->area_router === Env::getInstance()->getConfig('admin', '')) {
             return DataInterface::type_pc_BACKEND;
         }
-        if ($this->area_router == Etc::getInstance()->getConfig('api_admin', '')) {
+        if ($this->area_router == Env::getInstance()->getConfig('api_admin', '')) {
             return DataInterface::type_api_REST_BACKEND;
         }
         return 'frontend';
@@ -80,9 +80,9 @@ abstract class RequestAbstract
      * 参数区：
      *
      * @param string $key
-     * @return string|null|array
+     * @return string
      */
-    protected function getServer(string $key = null)
+     function getServer(string $key = null):string
     {
         $filter = RequestFilter::getInstance();
         $filter->init();
@@ -97,7 +97,7 @@ abstract class RequestAbstract
                     }
                     break;
                 default:
-                    $params = isset($_SERVER[$key]) ? $_SERVER[$key] : null;
+                    $params = isset($_SERVER[$key]) ? $_SERVER[$key] : '';
             }
         } else {
             $params = $_SERVER;

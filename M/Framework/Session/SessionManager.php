@@ -13,7 +13,7 @@
 namespace M\Framework\Session;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\Cache\CacheInterface;
 use M\Framework\Cache\CacheManager;
 use M\Framework\Router\DataInterface;
@@ -30,7 +30,7 @@ class SessionManager
 
     private function __construct()
     {
-        $this->config = Etc::getInstance()->getConfig('session');
+        $this->config = Env::getInstance()->getConfig('session');
     }
 
     /**

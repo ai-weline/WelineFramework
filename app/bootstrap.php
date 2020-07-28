@@ -11,13 +11,15 @@
  */
 
 use M\Framework\App;
+use M\Framework\App\Env;
+use M\Framework\Manager\ObjectManager;
 
-// 调试模式
-defined('DEV') ?: define('DEV', false);
 // 项目根目录
 define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 框架根目录
-define('FP', BP . DIRECTORY_SEPARATOR . 'M' . DIRECTORY_SEPARATOR);
+define('FP', BP .'M' . DIRECTORY_SEPARATOR);
+// 静态文件路径
+define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // 应用 目录 (默认访问 web)
 define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
 // 应用 配置 目录 (默认访问 etc)
@@ -27,16 +29,21 @@ define('APP_ETC_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPA
 try {
     require BP . '/vendor/autoload.php';
 } catch (Exception $exception) {
-    exit('自动加载异常：' . $exception->getTrace());
+    exit('自动加载异常：' . $exception->getMessage());
 }
+// 调试模式
+(Env::getInstance()->getConfig('deploy') == 'dev') ? define('DEV', true) : define('DEV', false);
 // 尝试加载应用
 try {
-    $app = new App();
+
+    /**@var $app App */
+    $app = ObjectManager::getInstance(App::class);
 } catch (Exception $exception) {
-    exit('应用启动失败：' . $exception->getTrace());
+    exit('应用启动失败：' . $exception->getMessage());
 }
 //报告错误
 DEV ? error_reporting(E_ALL) : error_reporting(0);
+//error_reporting(E_ALL);
 // 助手函数
 require BP . '/app/etc/functions.php';
 // 启动应用

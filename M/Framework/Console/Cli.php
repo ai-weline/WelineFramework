@@ -13,7 +13,7 @@
 namespace M\Framework\Console;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\App\Exception;
 
 class Cli extends CliAbstract
@@ -97,9 +97,9 @@ class Cli extends CliAbstract
     {
         $arg0 = trim($this->argv[0]);
         if ($arg0 == 'module:command:upgrade') exit((new \M\Framework\Console\Module\Command\Upgrade())->execute());
-        if ($arg0 != 'module:command:upgrade' && !file_exists(Etc::path_COMMANDS_FILE)) exit($this->printer->error('请更新模块命令：module:command:upgrade'));
+        if ($arg0 != 'module:command:upgrade' && !file_exists(Env::path_COMMANDS_FILE)) exit($this->printer->error('请更新模块命令：module:command:upgrade'));
 
-        $commands = include Etc::path_COMMANDS_FILE;
+        $commands = include Env::path_COMMANDS_FILE;
         // 检查命令
         $command_path = '';
         foreach ($commands as $group => $group_commands) {

@@ -21,7 +21,9 @@ interface ManagerInterface
      * 参数区：
      *
      * @param string $class
+     * @param string $method
+     * @param array $params
      * @return object
      */
-    function create(string $class): object;
+    function create(string $class,string $method,array $params): object;
 }

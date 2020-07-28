@@ -13,7 +13,7 @@
 namespace M\Framework\Database;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 
 /**
  * 文件信息
@@ -28,7 +28,7 @@ class DbManager extends \think\DbManager
 {
     function __construct()
     {
-        $this->setConfig(Etc::getInstance()->getDbConfig());
+        $this->setConfig(Env::getInstance()->getDbConfig());
         parent::__construct();
     }
 

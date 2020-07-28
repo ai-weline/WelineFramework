@@ -14,7 +14,7 @@ namespace M\Framework\Console\Module\Command;
 
 
 use M\Framework\App;
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\Console\Command;
 use M\Framework\Console\CommandAbstract;
 use M\Framework\FileSystem\Data\File;
@@ -56,12 +56,12 @@ class Upgrade extends CommandAbstract
     public function execute($args = array())
     {
         // 删除命令文件
-        if (is_file(ETC::path_COMMANDS_FILE)) exec(App::helper()->getConversionCommand('rm', ' ') . ETC::path_COMMANDS_FILE);
+        if (is_file(Env::path_COMMANDS_FILE)) exec(App::helper()->getConversionCommand('rm', ' ') . Env::path_COMMANDS_FILE);
 
         $commands = $this->scan();
 
         $file = new \M\Framework\FileSystem\Io\File();
-        $file->open(Etc::path_COMMANDS_FILE, $file::mode_w_add);
+        $file->open(Env::path_COMMANDS_FILE, $file::mode_w_add);
         $text = '<?php return ' . var_export($commands, true) . ';';
         $file->write($text);
         $file->close();

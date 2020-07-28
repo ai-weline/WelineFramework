@@ -13,7 +13,7 @@
 namespace M\Framework\Console\Module;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\Console\CommandAbstract;
 use M\Framework\Console\ConsoleException;
 use M\Framework\Module\Handle;
@@ -49,7 +49,7 @@ class Remove extends CommandAbstract
         if (strtolower(chop($input)) == 'y') {
 
             // 获得模块列表
-            $module_list = Etc::getInstance()->getModuleList();
+            $module_list = Env::getInstance()->getModuleList();
             foreach ($args as $module) {
                 $this->printer->note(__('执行 ') . $module . __(' 卸载程序...'));
                 if (isset($module_list[$module])) {

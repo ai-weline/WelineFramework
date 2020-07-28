@@ -13,7 +13,7 @@
 namespace M\Framework\View;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\App\Exception;
 use M\Framework\Http\Request;
 use M\Framework\View\Data\DataInterface;
@@ -137,21 +137,25 @@ class Template
         $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
         $file_dir = null;
         $file_name = null;
+
         if (count($file_name_dir_arr) > 1) {
             $file_name = array_pop($file_name_dir_arr);
             $file_dir = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
             if ($file_dir) $file_dir .= DIRECTORY_SEPARATOR;
         }
+
         // 检测模板文件
         if (substr(strrchr($fileName, '.'), 1)) {
             $tplFile = $this->view_dir . $fileName;
         } else {
             $tplFile = $this->template_dir . $fileName . self::file_ext;
         }
+
         if (!file_exists($tplFile)) {
-            if (DEV) new Exception('模板文件：' . $tplFile . '不存在！');
+            if (DEV) throw new Exception('模板文件：' . $tplFile . '不存在！');
             return false;
         }
+
         //定义编译合成的文件 加了前缀 和路径 和后缀名.phtml
         $baseComFileDir = $this->compile_dir . ($file_dir ? $file_dir : '');
         if (!is_dir($baseComFileDir)) mkdir($baseComFileDir, 0770, true);// 检测目录是否存在,不存在则建立

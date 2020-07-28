@@ -14,7 +14,7 @@ namespace M\Framework\Console\Module;
 
 
 use M\Framework\App;
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\Console\CommandAbstract;
 use M\Framework\FileSystem\App\Scanner as AppScanner;
 use M\Framework\Module\Helper\Data;
@@ -38,7 +38,7 @@ class Upgrade extends CommandAbstract
     public function execute($args = array())
     {
         // 删除路由文件
-        foreach (Etc::router_files_PATH as $path) {
+        foreach (Env::router_files_PATH as $path) {
             if (is_file($path)) exec(App::helper()->getConversionCommand('rm -f') . $path);
         }
         // 扫描代码
@@ -55,7 +55,7 @@ class Upgrade extends CommandAbstract
             }
         }
         // 更新模块
-        $module_list = require Etc::path_MODULES_FILE;
+        $module_list = require Env::path_MODULES_FILE;
         $module_list = array_intersect_key($module_list, $all_modules);
 
         $helper = new Data();

@@ -13,7 +13,7 @@
 namespace M\Framework\Router\Helper;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\FileSystem\Io\File;
 use M\Framework\Register\Router\Data\DataInterface;
 
@@ -30,7 +30,7 @@ class Data
     function updateModules(array &$modules)
     {
         $file = new File();
-        $file->open(Etc::path_MODULES_FILE, $file::mode_w_add);
+        $file->open(Env::path_MODULES_FILE, $file::mode_w_add);
         $text = '<?php return ' . var_export($modules, true) . ';';
         $file->write($text);
         $file->close();

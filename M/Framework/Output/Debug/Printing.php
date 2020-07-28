@@ -13,16 +13,16 @@
 namespace M\Framework\Output\Debug;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\FileSystem\Io\File;
 
 class Printing extends AbstractPrint
 {
-    private ?Etc $etc;
+    private ?Env $etc;
 
     function __construct()
     {
-        $this->etc = Etc::getInstance();
+        $this->etc = Env::getInstance();
     }
 
     /**
@@ -36,7 +36,7 @@ class Printing extends AbstractPrint
      */
     function debug($message, string $log_path = null, int $message_type = 3)
     {
-        if ($log_path == null) $log_path = $this->etc->getLogPath(Etc::log_path_ERROR);
+        if ($log_path == null) $log_path = $this->etc->getLogPath(Env::log_path_ERROR);
         $this->write($log_path, is_array($message) ? var_export($message, true) : $message, $message_type);
     }
 }

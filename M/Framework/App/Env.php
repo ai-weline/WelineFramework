@@ -13,19 +13,20 @@
 namespace M\Framework\App;
 
 
-use M\Framework\App\Etc\Modules;
+use M\Framework\App\Env\Modules;
+use M\Framework\FileSystem\Io\File;
 
-class Etc
+class Env
 {
     // 路径
     const path_ENV_FILE = APP_ETC_PATH . 'env.php';
     const path_MODULES_FILE = APP_ETC_PATH . 'modules.php';
-    const path_COMMANDS_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'commands.php';
+    const path_COMMANDS_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'commands.php';
     // 路由
-    const path_BACKEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'routers'.DIRECTORY_SEPARATOR.'backend_rest_api.php';
-    const path_FRONTEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'routers'.DIRECTORY_SEPARATOR.'frontend_rest_api.php';
-    const path_BACKEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'routers'.DIRECTORY_SEPARATOR.'backend_pc.php';
-    const path_FRONTEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'routers'.DIRECTORY_SEPARATOR.'frontend_pc.php';
+    const path_BACKEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR . 'backend_rest_api.php';
+    const path_FRONTEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR . 'frontend_rest_api.php';
+    const path_BACKEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR . 'backend_pc.php';
+    const path_FRONTEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR . 'frontend_pc.php';
 
     const router_files_PATH = [
         self::path_BACKEND_REST_API_ROUTER_FILE,
@@ -34,20 +35,20 @@ class Etc
         self::path_FRONTEND_PC_ROUTER_FILE,
     ];
     // 翻译词典
-    const path_TRANSLATE_WORDS_FILE = APP_ETC_PATH . 'generated'.DIRECTORY_SEPARATOR.'language.php';
+    const path_TRANSLATE_WORDS_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'language.php';
 
     // 日志
     const log_path_ERROR = 'error';
     const log_path_EXCEPTION = 'exception';
     const log_path_NOTICE = 'notice';
     const log_path_WARNING = 'warning';
-    const log_path_DEV = 'debug';
+    const log_path_DEBUG = 'debug';
 
     // 变量
     /**
-     * @var Etc|null
+     * @var Env|null
      */
-    private static ?Etc $instance;
+    private static ?Env $instance;
 
 
     public array $config;
@@ -74,7 +75,7 @@ class Etc
      *
      * 参数区：
      *
-     * @return Etc
+     * @return Env
      */
     static public function getInstance()
     {
@@ -85,7 +86,7 @@ class Etc
     }
 
     /**
-     * Etc 私有化 初始函数...
+     * Env 私有化 初始函数...
      */
     private function __construct()
     {
@@ -107,6 +108,32 @@ class Etc
         if ('' == $name)
             return $this->config;
         return $this->config[$name] ?? $default;
+    }
+
+    /**
+     * @DESC         |设置环境参数
+     *
+     * 参数区：
+     *
+     * @param string $key
+     * @param array $value
+     * @return bool
+     */
+    function setConfig(string $key, $value = array()): bool
+    {
+        $config = $this->getConfig();
+        $config[$key] = $value;
+        try {
+            $file = new File();
+            $file->open(self::path_ENV_FILE,$file::mode_w);
+            $text = '<?php return ' . var_export($config, true) . ';';
+            $file->write($text);
+            $file->close();
+            return true;
+        } catch (Exception $exception) {
+            return false;
+        }
+
     }
 
     /**

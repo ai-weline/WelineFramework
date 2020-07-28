@@ -13,7 +13,7 @@
 namespace M\Framework\Console;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\FileSystem\Io\File;
 
 abstract class CliAbstract implements CommandInterface
@@ -131,7 +131,7 @@ abstract class CliAbstract implements CommandInterface
     {
         // 扫描所有命令
 
-        $file_path = Etc::path_COMMANDS_FILE;
+        $file_path = Env::path_COMMANDS_FILE;
         if (is_file($file_path)) return include $file_path;
 
         $file = new File();

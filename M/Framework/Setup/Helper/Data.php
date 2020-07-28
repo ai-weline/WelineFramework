@@ -13,7 +13,7 @@
 namespace M\Framework\Setup\Helper;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\Setup\Data\DataInterface;
 
 class Data
@@ -29,7 +29,7 @@ class Data
      */
     function getSetupClass(string $module_name, string $type = DataInterface::type_INSTALL)
     {
-        $module_list = Etc::getInstance()->getModuleList();
+        $module_list = Env::getInstance()->getModuleList();
         if (isset($module_list[$module_name]))
             return str_replace(DIRECTORY_SEPARATOR, '\\', $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . $type);
         return false;
@@ -46,7 +46,7 @@ class Data
      */
     function getSetupFile(string $module_name, string $type = DataInterface::type_INSTALL)
     {
-        $module_list = Etc::getInstance()->getModuleList();
+        $module_list = Env::getInstance()->getModuleList();
         if (isset($module_list[$module_name]))
             return APP_PATH . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . $type . '.php';
         return false;

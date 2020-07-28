@@ -13,16 +13,16 @@
 namespace M\Framework\Exception;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\FileSystem\Io\File;
 use M\Framework\Output\Debug\Printing;
 
 class Core extends \Exception
 {
     /**
-     * @var Etc|null
+     * @var Env|null
      */
-    private ?Etc $etc;
+    private ?Env $etc;
 
     private Printing $_debug;
 
@@ -35,7 +35,7 @@ class Core extends \Exception
      */
     public function __construct($message = null, $code = 0)
     {
-        $this->etc = Etc::getInstance();
+        $this->etc = Env::getInstance();
         $this->config = $this->etc->getConfig();
         $this->_debug = new Printing();
 

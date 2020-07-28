@@ -94,8 +94,8 @@ class Request extends Request\RequestAbstract implements RequestInterface
     {
         parse_str($this->getServer('QUERY_STRING'), $params);
         array_shift($params);
-        $params = array_merge($params,$_POST);
-        $params = array_merge($params,$_GET);
+        $params = array_merge($params, $_POST);
+        $params = array_merge($params, $_GET);
         return $params;
     }
 
@@ -138,14 +138,6 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getContentType(): string
     {
         return $this->getServer('CONTENT_TYPE');
-    }
-
-    function getServer(string $key = null)
-    {
-        /**
-         * 重载方法
-         */
-        return parent::getServer($key);
     }
 
     function getAuth(string $auth_type = 'bearer')

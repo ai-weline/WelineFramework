@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../TestFrame/Magento_Modules/FrameTest/.idea/FrameTest.iml" filepath="$PROJECT_DIR$/../TestFrame/Magento_Modules/FrameTest/.idea/FrameTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/MFramework.iml" filepath="$PROJECT_DIR$/.idea/MFramework.iml" />
     </modules>
   </component>

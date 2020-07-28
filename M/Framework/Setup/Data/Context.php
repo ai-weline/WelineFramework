@@ -13,7 +13,7 @@
 namespace M\Framework\Setup\Data;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\Output\Cli\Printing;
 
 class Context
@@ -36,7 +36,7 @@ class Context
         $this->module_name = $module_name;
         $this->module_version = $module_version;
         $this->module_description = $module_description;
-        $this->modules = Etc::getInstance()->getModuleList();
+        $this->modules = Env::getInstance()->getModuleList();
         $this->printer = new Printing();
     }
 

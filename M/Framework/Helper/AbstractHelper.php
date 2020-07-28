@@ -13,7 +13,7 @@
 namespace M\Framework\Helper;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\Output\Debug\Printing;
 
 class AbstractHelper

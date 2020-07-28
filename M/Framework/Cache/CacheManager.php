@@ -13,7 +13,7 @@
 namespace M\Framework\Cache;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 
 class CacheManager
 {
@@ -27,7 +27,7 @@ class CacheManager
 
     private function __construct()
     {
-        $this->config = Etc::getInstance()->getConfig('cache');
+        $this->config = Env::getInstance()->getConfig('cache');
     }
 
     /**

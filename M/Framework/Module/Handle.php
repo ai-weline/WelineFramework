@@ -13,7 +13,7 @@
 namespace M\Framework\Module;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\App\Exception;
 use M\Framework\Console\ConsoleException;
 use M\Framework\Console\Module\Upgrade;
@@ -44,7 +44,7 @@ class Handle implements HandleInterface
 
     function __construct()
     {
-        $this->modules = Etc::getInstance()->getModuleList();
+        $this->modules = Env::getInstance()->getModuleList();
         $this->printer = new Printing();
         $this->helper = new Data();
     }
@@ -87,7 +87,7 @@ class Handle implements HandleInterface
      */
     public function remove(string $module_name)
     {
-        $module_list = Etc::getInstance()->getModuleList();
+        $module_list = Env::getInstance()->getModuleList();
         if (!isset($this->setup_tool)) $this->setup_tool = new \M\Framework\Setup\Data\Setup();
         if (!isset($this->setup_helper)) $this->setup_helper = new SetupHelper();
         $app_path = APP_PATH;

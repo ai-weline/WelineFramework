@@ -10,7 +10,5 @@
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
-// 开发模式
-define('DEV', false);
 // 加载启动器
 require __DIR__ . '/../app/bootstrap.php';

@@ -13,7 +13,7 @@
 namespace M\Framework\Module\Helper;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\FileSystem\App\Scanner;
 use M\Framework\FileSystem\App\Scanner as AppScanner;
 use M\Framework\FileSystem\Io\File;
@@ -242,7 +242,7 @@ class Data extends AbstractHelper
     function updateModules(array &$modules)
     {
         $file = new File();
-        $file->open(Etc::path_MODULES_FILE, $file::mode_w_add);
+        $file->open(Env::path_MODULES_FILE, $file::mode_w_add);
         $text = '<?php return ' . var_export($modules, true) . ';';
         $file->write($text);
         $file->close();
@@ -259,7 +259,7 @@ class Data extends AbstractHelper
     function updateRouters(array &$routers)
     {
         $file = new File();
-        $file->open(Etc::path_MODULES_FILE, $file::mode_w_add);
+        $file->open(Env::path_MODULES_FILE, $file::mode_w_add);
         $text = '<?php return ' . var_export($routers, true) . ';';
         $file->write($text);
         $file->close();

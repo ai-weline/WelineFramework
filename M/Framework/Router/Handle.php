@@ -13,7 +13,7 @@
 namespace M\Framework\Router;
 
 
-use M\Framework\App\Etc;
+use M\Framework\App\Env;
 use M\Framework\App\Exception;
 use M\Framework\Console\ConsoleException;
 use M\Framework\FileSystem\Io\File;
@@ -23,17 +23,17 @@ use M\Framework\Router\Helper\Data;
 
 class Handle
 {
-    const path_backend_PC = Etc::path_BACKEND_PC_ROUTER_FILE;
-    const path_frontend_PC = Etc::path_FRONTEND_PC_ROUTER_FILE;
-    const path_fronted_API = Etc::path_FRONTEND_REST_API_ROUTER_FILE;
-    const path_backend_API = Etc::path_BACKEND_REST_API_ROUTER_FILE;
+    const path_backend_PC = Env::path_BACKEND_PC_ROUTER_FILE;
+    const path_frontend_PC = Env::path_FRONTEND_PC_ROUTER_FILE;
+    const path_fronted_API = Env::path_FRONTEND_REST_API_ROUTER_FILE;
+    const path_backend_API = Env::path_BACKEND_REST_API_ROUTER_FILE;
     private Data $helper;
     private array  $modules;
 
     function __construct()
     {
         $this->helper = new Data();
-        $this->modules = Etc::getInstance()->getModuleList();
+        $this->modules = Env::getInstance()->getModuleList();
     }
 
     /**

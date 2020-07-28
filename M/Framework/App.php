@@ -17,6 +17,12 @@ use M\Framework\Router\Core as RouterCore;
 
 class App
 {
+    private RouterCore $router;
+
+    function __construct()
+    {
+        $this->router = Router\Core::getInstance();
+    }
 
     function isCli()
     {
@@ -37,7 +43,7 @@ class App
     function run()
     {
         if (!$this->isCli()) {
-            RouterCore::getInstance()->start();
+            $this->router->start();
         }
     }
 
@@ -48,8 +54,16 @@ class App
      *
      * @return Helper
      */
-    static function helper():Helper
+    static function helper(): Helper
     {
         return new App\Helper();
+    }
+
+    /**
+     * @return RouterCore
+     */
+    public function getRouter(): RouterCore
+    {
+        return $this->router;
     }
 }

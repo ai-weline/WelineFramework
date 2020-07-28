@@ -26,7 +26,7 @@
 function p($data, bool $pass = false, int $trace_deep = 2): void
 {
 
-    $parent_call_info = debug_backtrace(DEV_BACKTRACE_IGNORE_ARGS, $trace_deep)[1];
+    $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS , $trace_deep)[1];
     $isCli = (PHP_SAPI == 'cli');
     if (!$isCli) {
         print_r("<h3 style=\"color: chocolate\">调试位置：（深度：{$trace_deep}）</h3>");
@@ -78,7 +78,7 @@ function p($data, bool $pass = false, int $trace_deep = 2): void
  */
 function __(string $words)
 {
-    $filename = \M\Framework\App\Etc::path_TRANSLATE_WORDS_FILE;
+    $filename = \M\Framework\App\Env::path_TRANSLATE_WORDS_FILE;
     if (!file_exists($filename)) {
         touch($filename);
     }
