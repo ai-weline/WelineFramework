@@ -2,8 +2,8 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="0b59808d-0ff7-413c-88e4-602012321618" name="root">
-        <fileTransfer rootFolder="/www/wwwroot/m.aiweline.com" accessType="SFTP" host="121.36.94.214" port="22" sshConfigId="bcf40713-cf4b-414b-9168-d1e5ebe47f59" sshConfig="root">
+      <webServer id="0b59808d-0ff7-413c-88e4-602012321618" name="www">
+        <fileTransfer rootFolder="/www/wwwroot/m.aiweline.com" accessType="SFTP" host="121.36.94.214" port="22" sshConfigId="e9871e43-47ac-4018-b2bc-3ee52f9f613c" sshConfig="www">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>

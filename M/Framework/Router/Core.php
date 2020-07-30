@@ -66,13 +66,13 @@ class Core
             if ($this->area_router === $this->_etc->getConfig('admin', '')) {
                 $url = str_replace($this->area_router, '', $url);
                 $url = trim($url, '/');
-                if ('' == $url) {
+                if (!strstr($url, '/')) {
                     $url .= '/Index/Index';
                 }
             } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
                 $url = str_replace($this->area_router, '', $url);
                 $url = trim($url, '/');
-                if ('' == $url) {
+                if (!strstr($url, '/')) {
                     $url .= '/Index/Index';
                 }
             }
@@ -81,7 +81,7 @@ class Core
             $url = '/Index/Index';
         }
 
-        $url = trim($url,'/');
+        $url = trim($url, '/');
 
         // API
         $this->Api($url);

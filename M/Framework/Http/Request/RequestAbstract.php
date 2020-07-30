@@ -48,7 +48,7 @@ abstract class RequestAbstract
     function getRequestArea()
     {
 
-        if ($this->area_router === Env::getInstance()->getConfig('admin', '')) {
+        if ($this->area_router == Env::getInstance()->getConfig('admin', '')) {
             return DataInterface::type_pc_BACKEND;
         }
         if ($this->area_router == Env::getInstance()->getConfig('api_admin', '')) {

@@ -54,6 +54,7 @@ class Data extends AbstractHelper
                 foreach ($Files as $apiFile) {
                     $apiDirArray = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
                     $baseRouter = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
+                    $baseRouter = $router . ($baseRouter ?? '');
                     $baseRouter = trim($baseRouter,'/');
                     $apiClassName = $apiFile->getNamespace() . '\\' . $apiFile->getFilename();
                     $apiClass = new $apiClassName();

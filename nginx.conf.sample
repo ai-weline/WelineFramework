@@ -1,8 +1,32 @@
-#如果请求既不是一个文件，也不是一个目录，则执行一下重写规则
-if (!-e $request_filename)
-  {
+#
+# 你需要在你的站点nginx配置文件上设置$M_ROOT变量
+# 例如你的配置文件中的root /www/html/www.demo.com;
+# 你需要改成 set $M_ROOT /www/html/www.demo.com;
+# 然后include /www/html/www.demo.com/nginx.conf.sample;
+#
+
+
+############# 作用代码 start ##################
+# 项目访问目录
+root $M_ROOT/pub/;
+
+# 如果请求既不是一个文件，也不是一个目录，则执行一下重写规则
+if (!-e $request_filename) {
     #地址作为将参数rewrite到index.php上。
     rewrite ^/(.*)$ /index.php?s=$1;
     #若是子目录则使用下面这句，将subdir改成目录名称即可。
     #rewrite ^/subdir/(.*)$ /subdir/index.php?s=$1;
 }
+
+#一键申请SSL证书验证目录相关设置
+location ~ \.well-known{
+    root $M_ROOT;
+    allow all;
+}
+
+# 静态资源访问
+location /static/ {
+ root $M_ROOT/pub/static/;
+}
+
+ ############# 作用代码 end ##################

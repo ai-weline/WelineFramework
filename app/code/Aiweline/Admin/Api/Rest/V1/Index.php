@@ -20,7 +20,6 @@ class Index extends BackendRestController
     function index()
     {
         $data = ['name' => '后台rest接口！', 'params' => $this->_request->getParams()];
-        $this->assign($data);
-        return $this->fetch(self::fetch_XML);
+        return $this->fetch($data,self::fetch_XML);
     }
 }

@@ -29,8 +29,8 @@ class Upgrade extends CommandAbstract
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {
                 $this->printer->note($vendor . '_' . $name . '...');
-                $module_view_static_dir = $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir .DIRECTORY_SEPARATOR. DataInterface::dir_type_STATICS;
-                $module_view_dir = $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR. DataInterface::dir;
+                $module_view_static_dir = $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::dir_type_STATICS;
+                $module_view_dir = $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir;
                 $origin_view_dir = APP_PATH . $module_view_static_dir;
                 if (is_dir($origin_view_dir)) {
                     $pub_view_dir = PUB . 'static' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR . $module_view_dir;
@@ -39,7 +39,7 @@ class Upgrade extends CommandAbstract
                 }
             }
         }
-        return '静态资源更新';
+        $this->printer->success('静态文件部署完毕！');
     }
 
     public function getTip(): string

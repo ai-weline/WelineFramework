@@ -15,6 +15,7 @@ namespace M\Framework\View;
 
 use M\Framework\App\Env;
 use M\Framework\App\Exception;
+use M\Framework\FileSystem\Directory;
 use M\Framework\Http\Request;
 use M\Framework\View\Data\DataInterface;
 
@@ -105,7 +106,9 @@ class Template
     private function getUrlPath(string $real_path): string
     {
 //        $base = $this->_request->getBaseHost() . DIRECTORY_SEPARATOR;
-        $dir_arr = explode(APP_PATH, $real_path);
+        $explode_str = PUB;
+        if (DEV) $explode_str = APP_PATH;
+        $dir_arr = explode($explode_str, $real_path);
         return DIRECTORY_SEPARATOR . array_pop($dir_arr);
     }
 
@@ -220,7 +223,9 @@ class Template
                 $path = $this->view_dir . DataInterface::view_TEMPLATE_COMPILE_DIR;
                 break;
             case DataInterface::dir_type_STATICS:
-                $path = $this->view_dir . DataInterface::view_STATICS_DIR;
+                $pub_static_path = $this->view_dir;
+                if (!DEV) $pub_static_path = str_replace(APP_PATH, Directory::static_dir . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR, $this->view_dir);
+                $path = $pub_static_path . DataInterface::view_STATICS_DIR;
                 break;
             default:
                 $path = $this->view_dir;
