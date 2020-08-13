@@ -23,10 +23,11 @@ class Env
     const path_MODULES_FILE = APP_ETC_PATH . 'modules.php';
     const path_COMMANDS_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'commands.php';
     // 路由
-    const path_BACKEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR . 'backend_rest_api.php';
-    const path_FRONTEND_REST_API_ROUTER_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR . 'frontend_rest_api.php';
-    const path_BACKEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR . 'backend_pc.php';
-    const path_FRONTEND_PC_ROUTER_FILE = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR . 'frontend_pc.php';
+    const path_ROUTERS_DIR = APP_ETC_PATH . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR;
+    const path_BACKEND_REST_API_ROUTER_FILE = self::path_ROUTERS_DIR . 'backend_rest_api.php';
+    const path_BACKEND_PC_ROUTER_FILE = self::path_ROUTERS_DIR . 'backend_pc.php';
+    const path_FRONTEND_REST_API_ROUTER_FILE = self::path_ROUTERS_DIR . 'frontend_rest_api.php';
+    const path_FRONTEND_PC_ROUTER_FILE = self::path_ROUTERS_DIR . 'frontend_pc.php';
 
     const router_files_PATH = [
         self::path_BACKEND_REST_API_ROUTER_FILE,
@@ -43,6 +44,9 @@ class Env
     const log_path_NOTICE = 'notice';
     const log_path_WARNING = 'warning';
     const log_path_DEBUG = 'debug';
+
+    // 插件
+//    const path_
 
     // 变量
     /**

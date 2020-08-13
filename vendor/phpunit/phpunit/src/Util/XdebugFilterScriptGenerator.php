@@ -37,8 +37,8 @@ if (!\\function_exists('xdebug_set_filter')) {
 }
 
 \\xdebug_set_filter(
-    \\XDEV_FILTER_CODE_COVERAGE,
-    \\XDEV_PATH_WHITELIST,
+    \\XDEBUG_FILTER_CODE_COVERAGE,
+    \\XDEBUG_PATH_WHITELIST,
     [
 {$files}
     ]

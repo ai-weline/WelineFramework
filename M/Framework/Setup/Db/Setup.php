@@ -28,8 +28,9 @@ class Setup extends DbManager
      * @param string $comment
      * @return Table
      */
-    function createTable(string $table_name, string $comment)
+    function createTable(string $table_name, string $comment = '')
     {
+        $table_name = $this->getTable($table_name);
         return new Table($table_name, $comment);
     }
 
@@ -41,7 +42,9 @@ class Setup extends DbManager
      */
     function getTablePrefix(): string
     {
-        return $this->getConfig('prefix') ?? '';
+        $type = $this->getConfig('default');
+        $prefix = $this->getConfig('connections')[$type]['prefix'];
+        return $prefix ?? '';
     }
 
     /**
@@ -70,7 +73,7 @@ class Setup extends DbManager
      * @param string $name
      * @return string
      */
-    function getTable(string $name = ''):string
+    function getTable(string $name = ''): string
     {
         return $this->getTablePrefix() . $name;
     }

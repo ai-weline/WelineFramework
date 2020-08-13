@@ -194,7 +194,7 @@ final class PhptTestCase implements SelfDescribing, Test
                 }
 
                 $hint    = $this->getLocationHintFromDiff($diff, $sections);
-                $trace   = \array_merge($hint, \debug_backtrace(\DEV_BACKTRACE_IGNORE_ARGS));
+                $trace   = \array_merge($hint, \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS));
                 $failure = new PHPTAssertionFailedError(
                     $e->getMessage(),
                     0,
@@ -361,7 +361,7 @@ final class PhptTestCase implements SelfDescribing, Test
             }
 
             $hint  = $this->getLocationHint($message, $sections, 'SKIPIF');
-            $trace = \array_merge($hint, \debug_backtrace(\DEV_BACKTRACE_IGNORE_ARGS));
+            $trace = \array_merge($hint, \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS));
             $result->addFailure(
                 $this,
                 new SyntheticSkippedError($message, 0, $trace[0]['file'], $trace[0]['line'], $trace),

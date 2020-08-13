@@ -2649,7 +2649,7 @@ abstract class Assert
     public static function markTestSkipped(string $message = ''): void
     {
         if ($hint = self::detectLocationHint($message)) {
-            $trace = \debug_backtrace(\DEV_BACKTRACE_IGNORE_ARGS);
+            $trace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
             \array_unshift($trace, $hint);
 
             throw new SyntheticSkippedError($hint['message'], 0, $hint['file'], (int) $hint['line'], $trace);

@@ -28,5 +28,17 @@ location ~ \.well-known{
 location /static/ {
  root $M_ROOT/pub/static/;
 }
+# 禁止直接访问核心文件
+location ^~ /M {
+    deny all;
+}
+# 禁止直接访问vendor
+location ^~ /vendor {
+    deny all;
+}
+# 静态资源访问
+location /setup/ {
+ root $M_ROOT/setup/static/;
+}
 
  ############# 作用代码 end ##################

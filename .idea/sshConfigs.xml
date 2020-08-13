@@ -4,6 +4,7 @@
     <configs>
       <sshConfig authType="PASSWORD" host="121.36.94.214" id="bcf40713-cf4b-414b-9168-d1e5ebe47f59" port="22" customName="root" nameFormat="CUSTOM" username="root" />
       <sshConfig authType="PASSWORD" host="121.36.94.214" id="e9871e43-47ac-4018-b2bc-3ee52f9f613c" port="22" customName="www" nameFormat="CUSTOM" username="www" />
+      <sshConfig authType="PASSWORD" host="121.36.94.214" id="a655f83a-b684-4750-b91a-4645f8dbe275" port="22" customName="dev" nameFormat="CUSTOM" username="www" />
     </configs>
   </component>
 </project>

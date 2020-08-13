@@ -69,6 +69,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         $this->module_path = $module_path;
         $this->module_name = str_replace('\\', '_', $module_path);
         $this->_filter = RequestFilter::getInstance();
+        parent::__construct();
     }
 
     final static function getInstance(string $module_path): self

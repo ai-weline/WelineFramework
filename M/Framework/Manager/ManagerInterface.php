@@ -23,7 +23,15 @@ interface ManagerInterface
      * @param string $class
      * @param string $method
      * @param array $params
-     * @return object
      */
-    function create(string $class,string $method,array $params): object;
+    public static function make(string $class, string $method, array $params);
+
+    /**
+     * @DESC         |获取实例
+     *
+     * 参数区：
+     *
+     * @return mixed
+     */
+    public static function getInstance();
 }

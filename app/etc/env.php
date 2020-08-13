@@ -2,28 +2,7 @@
   'admin' => 'admin123',
   'api_admin' => 'rest_admin',
   'deploy' => 'dev',
-  'db' => 
-  array (
-    'default' => 'mysql',
-    'connections' => 
-    array (
-      'mysql' => 
-      array (
-        'type' => 'mysql',
-        'hostname' => 'localhost',
-        'database' => 'source_center',
-        'username' => 'source_center',
-        'password' => 'api.news.aiweline.com',
-        'hostport' => '',
-        'params' => 
-        array (
-          12 => true,
-        ),
-        'charset' => 'utf8',
-        'prefix' => 'm_',
-      ),
-    ),
-  ),
+  'db' => [],
   'log' => 
   array (
     'error' => '/www/wwwroot/m.aiweline.com/var/log/error.log',
@@ -44,7 +23,7 @@
       'redis' => 
       array (
         'tip' => '开发中...',
-        'server' => 'prod-redis.clbt4t.0001.ape1.cache.amazonaws.com',
+        'server' => '127.0.0.1',
         'port' => 6379,
         'database' => 1,
       ),

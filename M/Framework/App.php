@@ -48,6 +48,17 @@ class App
     }
 
     /**
+     * @DESC         |安装
+     *
+     * 参数区：
+     *
+     */
+    function install()
+    {
+        require BP . 'setup/index.php';
+    }
+
+    /**
      * @DESC         |方法描述
      *
      * 参数区：

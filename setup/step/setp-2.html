@@ -1,0 +1,45 @@
+<div class="container">
+    <div class="form-box"  >
+        <h2>Step 2: 数据库安装</h2>
+        <form id="db_form" action="/setup/installer.php" onsubmit="return false;"
+              onclick="checkEnv('db','db_form','✖')">
+            <div class="user-box">
+                <input type="text" name="hostname" required="" value="127.0.0.1">
+                <label>主机</label>
+            </div>
+            <div class="user-box">
+                <input type="text" name="database" required="" value="weline">
+                <label>数据库</label>
+            </div>
+            <div class="user-box">
+                <input type="text" name="username" required="" value="weline">
+                <label>数据库用户</label>
+            </div>
+            <div class="user-box">
+                <input type="password" name="password" required="" value="weline">
+                <label>数据库密码</label>
+            </div>
+            <div class="user-box">
+                <input type="text" name="hostport" required="" value="3306">
+                <label>端口</label>
+            </div>
+            <div class="user-box">
+                <input type="text" name="prefix" required="" value="m_">
+                <label>表前缀</label>
+            </div>
+            <div class="user-box">
+                <input type="text" name="charset" required="" value="utf8">
+                <label>字符集</label>
+            </div>
+            <button value="提交" type="submit">
+                <span></span>
+                <span></span>
+                提交
+                <span></span>
+                <span></span>
+            </button>
+            <div class="console"></div>
+        </form>
+        <a id="next" class="next-button" href="/">开始</a>
+    </div>
+</div>

@@ -72,7 +72,6 @@ class Table
 
     private string $type;
     private string $table;
-    private string $prefix;
     private string $comment;
     private string $constraints = '';
     private string $additional = 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;';
@@ -84,14 +83,13 @@ class Table
      * @param string $table
      * @param string $comment
      */
-    function __construct(string $table, string $comment)
+    function __construct(string $table, string $comment = '')
     {
         $this->db = new DbManager();
         $db = $this->db->getConfig();
         $this->type = $db['default'];
-        $this->prefix = $this->db->getConfig('prefix') ?? '';
-        $this->table = $this->prefix . $table;
-        $this->comment = "COMMENT '{$comment}'";
+        $this->table = $table;
+        $this->comment = $comment ? "COMMENT '{$comment}'" : '';
     }
 
     /**

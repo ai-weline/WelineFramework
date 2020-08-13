@@ -88,10 +88,15 @@ class Core
         // PC
         $this->Pc($url);
 
-        // 静态资源
-        if (DEV) if ($this->StaticFile($url)) return 111;
-        // 开发模式
-        if (DEV) throw new Exception('未知的路由！');
+        // 非开发模式（匹配不到任何路由将报错）
+        if(!DEV) return $this->base_request->getResponse()->noRouter();
+
+        // 开发模式(静态资源可访问app本地静态资源)
+        if (DEV) {
+            $static = $this->StaticFile($url);
+            if($static) return $static;
+            throw new Exception('未知的路由！');
+        }
         // 404
         return $this->base_request->getResponse()->noRouter();
     }

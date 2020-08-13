@@ -53,7 +53,7 @@ final class Xdebug implements Driver
     public function start(bool $determineUnusedAndDead = true): void
     {
         if ($determineUnusedAndDead) {
-            \xdebug_start_code_coverage(XDEV_CC_UNUSED | XDEV_CC_DEAD_CODE);
+            \xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);
         } else {
             \xdebug_start_code_coverage();
         }

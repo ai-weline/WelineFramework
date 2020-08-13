@@ -14,20 +14,18 @@ namespace M\Framework\Manager;
 
 use ReflectionClass;
 
-class ObjectManager
+class ObjectManager implements ManagerInterface
 {
+
     private static ObjectManager $instance;
     private static array $instances;
-
     private function __clone()
     {
-        // TODO: Implement __clone() method.
     }
 
     private function __construct()
     {
     }
-
     /**
      * @Desc         | 获取实例(如果不填写class则获取对象管理器本身，如果填写则获取class实例)
      * @param string $class
@@ -38,20 +36,22 @@ class ObjectManager
         if (empty($class)) return isset(self::$instance) ?self::$instance:new self();
         if (isset(self::$instances[$class])) return self::$instances[$class];
         $paramArr = self::getMethodParams($class);
+        // TODO 检查插件（插件的方法），然后动态为实例化后的对象添加动态函数（某方法之前，之后，环绕等）
+
         self::$instances[$class] = (new ReflectionClass($class))->newInstanceArgs($paramArr);
         return self::$instances[$class];
     }
 
 
     /**
-     * @Desc         | 创建实例 用于新类实例化
+     * @Desc         | 创建实例并运行
      * @param $className
      * @param string $methodName
      * @param array $params
      * @return mixed
      * @throws \ReflectionException
      */
-    public static function create($className, $methodName = '__construct', $params = [])
+    public static function make($className, $methodName = '__construct', $params = [])
     {
         // 获取类的实例
         $instance = self::getInstance($className);
