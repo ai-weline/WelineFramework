@@ -13,21 +13,36 @@
 namespace M\Installer;
 
 
-use M\Framework\Http\Request;
-use M\Framework\Output\Cli\Printing;
-use M\Installer\RunType\Db\Installer;
+use M\Installer\RunType\Bin\Commands;
+use M\Installer\RunType\Db\InstallConfig;
 use M\Installer\RunType\Env\Checker;
+use M\Installer\RunType\System\Init;
+use M\Installer\RunType\System\Install;
 
 class Runner
 {
-
-    function checkEnv(Checker $envChecker): array
+    function checkEnv(): array
     {
-        return $envChecker->run();
+        return (new Checker)->run();
     }
 
-    function installDb(Installer $installer): array
+    function installDb(): array
     {
-        return $installer->run();
+        return (new InstallConfig())->run();
+    }
+
+    function systemInstall()
+    {
+        return (new Install())->run();
+    }
+
+    function systemCommands()
+    {
+        return (new Commands())->run();
+    }
+
+    function systemInit()
+    {
+        return (new Init())->run();
     }
 }

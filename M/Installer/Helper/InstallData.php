@@ -20,11 +20,11 @@ class InstallData
             'env' => [
                 'functions' => ['exec'],
                 'modules' => [/*'file_info'*/],
-                'commands'=>[
-                    'bin/m module:command:upgrade',
-                    'bin/m module:upgrade',
-                    'bin/m deploy:mode:set dev',
-                ]
+            ],
+            'commands'=>[
+                'bin/m command:upgrade',
+                'bin/m deploy:mode:set dev',
+                'bin/m module:upgrade',
             ],
             'db' => [
                 'tables' => [

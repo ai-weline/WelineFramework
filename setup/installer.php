@@ -12,21 +12,33 @@
  */
 
 
+use M\Framework\Http\Request;
 use M\Framework\Manager\ObjectManager;
-
+use \M\Installer\Runner;
 require 'check.php';
 require 'setup.php';
+$runner = new Runner();
 switch ($_GET['action']) {
     case 'env':
-        $data = ObjectManager::make(\M\Installer\Runner::class, 'checkEnv', [
-            \M\Installer\RunType\Env\Checker::class
-        ]);
+        $data = $runner->checkEnv();
         echo json_encode(coverData($data));
         break;
     case 'db':
-        $data = ObjectManager::make(\M\Installer\Runner::class, 'installDb', [
-            \M\Installer\RunType\Db\Installer::class
-        ]);
+        $data = $runner->installDb();
+        echo json_encode(coverData($data));
+        break;
+    case 'install':
+        $data = $runner->systemInstall();
+        echo json_encode(coverData($data));
+        break;
+    case 'init_env':
+        // 配置生成
+        $data = $runner->systemInit();
+        echo json_encode(coverData($data));
+        break;
+    case 'install_ok':
+        // 命令清理
+        $data = $runner->systemCommands();
         echo json_encode(coverData($data));
         $file = new M\Framework\FileSystem\Io\File();
         $file->open(BP.'setup/install.lock',$file::mode_a_add);

@@ -54,29 +54,6 @@ class Handle implements HandleInterface
         return $this->helper;
     }
 
-    public function upgrade()
-    {
-        $this->helper->updateAllModuleRouters();
-    }
-
-    public function disable($name)
-    {
-        if (array_key_exists($name, $this->modules)) {
-            // 扫描模块中是否api目录，注册api路由映射
-            $appScanner = new Scanner();
-            $moduleDir = $appScanner->scanDir();
-        }
-    }
-
-    public function enable($name)
-    {
-        if (array_key_exists($name, $this->modules)) {
-            // 扫描模块中是否api目录，注册api路由映射
-            $appScanner = new Scanner();
-            $moduleDir = $appScanner->scanDir();
-        }
-    }
-
     /**
      * @DESC         |移除应用
      *
@@ -141,7 +118,6 @@ class Handle implements HandleInterface
                 $router = $env['router'];
             };
         }
-
         if (!isset($this->setup_tool)) $this->setup_tool = new \M\Framework\Setup\Data\Setup();
         $this->setup_context = new \M\Framework\Setup\Data\Context($name, $version);
 

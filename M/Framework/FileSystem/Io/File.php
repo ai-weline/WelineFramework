@@ -136,17 +136,4 @@ class File
         if (file_exists($filename)) return $filename;
         return false;
     }
-
-    /**
-     * @DESC         |处理文件是否存在
-     *
-     * 参数区：
-     * @param string $filename
-     * @return bool|string
-     */
-    function processFile(string $filename)
-    {
-        if (file_exists($filename)) return $filename;
-        return $this->create($filename);
-    }
 }

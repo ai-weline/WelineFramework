@@ -1,7 +1,7 @@
 <div class="container">
     <div class="form-box"  >
         <h2>Step 2: 数据库安装</h2>
-        <form id="db_form" action="/setup/installer.php" onsubmit="return false;"
+        <form id="db_form" action="/setup/installer.php" method="post" onsubmit="return false;"
               onclick="checkEnv('db','db_form','✖')">
             <div class="user-box">
                 <input type="text" name="hostname" required="" value="127.0.0.1">
@@ -40,6 +40,6 @@
             </button>
             <div class="console"></div>
         </form>
-        <a id="next" class="next-button" href="/">开始</a>
+        <a id="next" class="next-button" href="/setup?step=step-3">下一步</a>
     </div>
 </div>

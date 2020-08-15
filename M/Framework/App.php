@@ -21,12 +21,14 @@ class App
 
     function __construct()
     {
+        $this->init();
         $this->router = Router\Core::getInstance();
     }
 
-    function isCli()
+    function init()
     {
-        return (PHP_SAPI === 'cli');
+        // 检查运行模式
+        (PHP_SAPI === 'cli') ? define('CLI', true) : define('CLI', false);
     }
 
     /**
@@ -42,7 +44,7 @@ class App
      */
     function run()
     {
-        if (!$this->isCli()) {
+        if (!CLI) {
             $this->router->start();
         }
     }

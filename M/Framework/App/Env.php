@@ -56,13 +56,51 @@ class Env
 
 
     public array $config;
-    const default_LOG = array(
+    // 日志
+    const default_LOG = [
         'error' => BP . 'var/log/error.log',
         'exception' => BP . 'var/log/exception.log',
         'notice' => BP . 'var/log/notice.log',
         'warning' => BP . 'var/log/warning.log',
         'debug' => BP . 'var/log/debug.log'
-    );
+    ];
+    // 缓存
+    const default_CACHE = [
+        'default' => 'file',
+        'drivers' =>
+            [
+                'file' =>
+                    [
+                        'path' => 'var/cache/',
+                    ],
+                'redis' =>
+                    [
+                        'tip' => '开发中...',
+                        'server' => '127.0.0.1',
+                        'port' => 6379,
+                        'database' => 1,
+                    ],
+            ],
+    ];
+    // Session
+    const default_SESSION = [
+        'default' => 'file',
+        'drivers' =>
+            [
+                'file' =>
+                    [
+                        'path' => 'var/session/',
+                    ],
+                'mysql' =>
+                    [
+                        'tip' => '开发中...',
+                    ],
+                'redis' =>
+                    [
+                        'tip' => '开发中...',
+                    ],
+            ],
+    ];
 
     /**
      * @DESC         |私有化克隆函数
@@ -72,6 +110,26 @@ class Env
      */
     private function __clone()
     {
+    }
+
+    /**
+     * Env 私有化 初始函数...
+     */
+    private function __construct()
+    {
+        $env_file = APP_ETC_PATH . 'env.php';
+        if (!is_file($env_file)) {
+            $file = new File();
+            $file->open($env_file, $file::mode_w_add);
+            $text = '<?php return ' . var_export([
+                    'session' => self::default_SESSION,
+                    'cache' => self::default_CACHE,
+                    'log' => self::default_LOG,
+                ], true) . ';?>';
+            $file->write($text);
+            $file->close();
+        }
+        $this->config = include $env_file;
     }
 
     /**
@@ -89,14 +147,6 @@ class Env
         return self::$instance;
     }
 
-    /**
-     * Env 私有化 初始函数...
-     */
-    private function __construct()
-    {
-        $this->config = include APP_ETC_PATH . 'env.php';
-        $this->config['log'] = isset($this->config['log']) ? $this->config['log'] : self::default_LOG;
-    }
 
     /**
      * @DESC         |获取环境参数
@@ -111,7 +161,7 @@ class Env
     {
         if ('' == $name)
             return $this->config;
-        return $this->config[$name] ?? $default;
+        return isset($this->config[$name]) ? $this->config[$name] : $default;
     }
 
     /**
@@ -129,7 +179,7 @@ class Env
         $config[$key] = $value;
         try {
             $file = new File();
-            $file->open(self::path_ENV_FILE,$file::mode_w);
+            $file->open(self::path_ENV_FILE, $file::mode_w);
             $text = '<?php return ' . var_export($config, true) . ';';
             $file->write($text);
             $file->close();
@@ -163,7 +213,7 @@ class Env
      */
     function getDbConfig(): array
     {
-        return $this->config['db'];
+        return isset($this->config['db']) ? $this->config['db'] : [];
     }
 
     /**

@@ -10,7 +10,7 @@
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
-namespace M\Framework\Console\Module\Command;
+namespace M\Framework\Console\Command;
 
 
 use M\Framework\App;

@@ -21,7 +21,6 @@ class Checker
 {
     const type_MODULES = 'modules';
     const type_FUNCTIONS = 'functions';
-    const type_COMMANDS = 'commands';
     protected Data $helper;
     private Printing $printer;
 
@@ -31,14 +30,11 @@ class Checker
     protected array $method = [];
     private bool $isCli;
 
-    function __construct(
-        Data $helper,
-        Printing $printer
-    )
+    function __construct()
     {
-        $this->helper = $helper;
+        $this->helper = new Data();
         $this->isCli = (PHP_SAPI === 'cli');
-        $this->printer = $printer;
+        $this->printer = new Printing();
 
     }
 
@@ -112,27 +108,6 @@ class Checker
                                 }
                                 $tmp[$key] = $value;
                             }
-                        }
-                        break;
-                    case self::type_COMMANDS:
-                        foreach ($this->$item as $needCommand) {
-                            try {
-                                exec('php ' . BP . $needCommand, $result);
-                                $value = str_pad('✔', 10, " ", STR_PAD_BOTH);
-                                if (!$this->isCli) {
-                                    foreach ($result as $item) {
-                                        $value .= $item . '<br>';
-                                    }
-                                }
-                            } catch (Exception $e) {
-                                $hasErr = true;
-                                $value = str_pad('✖', 10, " ", STR_PAD_BOTH);
-                            }
-                            $key = str_pad($item . '---' . $needCommand, 45, '-', STR_PAD_BOTH);
-                            if ($this->isCli) {
-                                $this->printer->success($key . '=>' . $value);
-                            }
-                            $tmp[$key] = $value;
                         }
                         break;
                     default:

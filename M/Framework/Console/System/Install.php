@@ -1,0 +1,37 @@
+<?php
+/**
+ * 文件信息
+ * 作者：邹万才
+ * 网名：秋风雁飞(可以百度看看)
+ * 网站：www.aiweline.com/bbs.aiweline.com
+ * 工具：PhpStorm
+ * 日期：2020/8/15
+ * 时间：20:48
+ * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+ */
+
+namespace M\Framework\Console\System;
+
+
+use M\Installer\Runner;
+
+class Install extends \M\Framework\Console\CommandAbstract
+{
+
+    /**
+     * @inheritDoc
+     */
+    public function execute($args = array())
+    {
+        $runner = new Runner();
+        get_class_methods();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTip(): string
+    {
+        return '框架安装';
+    }
+}

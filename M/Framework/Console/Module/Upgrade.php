@@ -55,7 +55,11 @@ class Upgrade extends CommandAbstract
             }
         }
         // 更新模块
-        $module_list = require Env::path_MODULES_FILE;
+        $module_list = Env::getInstance()->getModuleList();
+        if (empty($module_list)) {
+            $this->printer->error('请先更新模块:bin/m module:upgrade');
+            exit();
+        }
         $module_list = array_intersect_key($module_list, $all_modules);
 
         $helper = new Data();

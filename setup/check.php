@@ -10,7 +10,7 @@
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 // 安装检测
-if (is_file(__DIR__ . DIRECTORY_SEPARATOR . 'install.lock')) /*Header("Location: /setup/")*/ {
+if (is_file(__DIR__ . DIRECTORY_SEPARATOR . 'install.lock')) {
     http_response_code(404);
     exit(0);
 }

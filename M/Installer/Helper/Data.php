@@ -18,11 +18,9 @@ class Data
 {
     protected InstallData $installData;
 
-    function __construct(
-        InstallData $installData
-    )
+    function __construct()
     {
-        $this->installData = $installData;
+        $this->installData = new InstallData();
     }
 
     function getCheckEnv()
@@ -34,5 +32,10 @@ class Data
     {
         $db = $this->installData->getData('db');
         return $db['tables'];
+    }
+
+    function getCommands()
+    {
+        return $this->installData->getData('commands');
     }
 }

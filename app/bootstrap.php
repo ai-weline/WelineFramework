@@ -24,10 +24,9 @@ define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
 // 应用 配置 目录 (默认访问 etc)
 define('APP_ETC_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
-
 // 自动加载
 try {
-    require BP . 'vendor'. DIRECTORY_SEPARATOR . 'autoload.php';;
+    require BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';;
 } catch (Exception $exception) {
     exit('自动加载异常：' . $exception->getMessage());
 }
@@ -41,8 +40,7 @@ try {
 }
 
 // 助手函数
-require BP . 'app'. DIRECTORY_SEPARATOR .'etc'. DIRECTORY_SEPARATOR .'functions.php';
-
+require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
 // 调试模式
 (Env::getInstance()->getConfig('deploy') == 'dev') ? define('DEV', true) : define('DEV', false);
 //报告错误

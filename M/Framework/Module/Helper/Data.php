@@ -55,7 +55,7 @@ class Data extends AbstractHelper
                     $apiDirArray = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
                     $baseRouter = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
                     $baseRouter = $router . ($baseRouter ?? '');
-                    $baseRouter = trim($baseRouter,'/');
+                    $baseRouter = trim($baseRouter, '/');
                     $apiClassName = $apiFile->getNamespace() . '\\' . $apiFile->getFilename();
                     $apiClass = new $apiClassName();
 
@@ -89,7 +89,7 @@ class Data extends AbstractHelper
                     $controllerDirArray = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
                     $baseRouter = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
                     $baseRouter = $router . ($baseRouter ?? '');
-                    $baseRouter = trim($baseRouter,'/');
+                    $baseRouter = trim($baseRouter, '/');
                     $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
                     $controllerClass = new $controllerClassName();
                     // 删除父类方法：注册控制器方法
@@ -186,10 +186,7 @@ class Data extends AbstractHelper
      */
     function isInstalled(array &$modules, string $name): bool
     {
-        if (array_key_exists($name, $modules)) {
-            return true;
-        }
-        return false;
+        return array_key_exists($name, $modules);
     }
 
     /**

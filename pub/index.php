@@ -9,6 +9,10 @@
  * 时间：21:07
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
-
+// 检查安装
+if (!file_exists(__DIR__ . '/../setup/install.lock')) {
+    require __DIR__ . '/../setup/index.php';
+    exit();
+}
 // 加载启动器
 require __DIR__ . '/../app/bootstrap.php';

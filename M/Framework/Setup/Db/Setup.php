@@ -19,6 +19,7 @@ use think\db\exception\PDOException;
 
 class Setup extends DbManager
 {
+
     /**
      * @DESC         |方法描述
      *

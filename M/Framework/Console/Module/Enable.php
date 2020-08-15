@@ -13,6 +13,7 @@
 namespace M\Framework\Console\Module;
 
 
+use M\Framework\App\Env;
 use M\Framework\Console\Command;
 use M\Framework\Module\Helper\Data;
 
@@ -22,7 +23,11 @@ class Enable extends Command
     public function execute($args = array())
     {
         $command = array_shift($args);
-        $module_list = include APP_ETC_PATH . 'modules.php';
+        $module_list = Env::getInstance()->getModuleList();
+        if(empty($module_list)) {
+            $this->printer->error('请先更新模块:bin/m module:upgrade');
+            exit();
+        }
         if (!empty($args)) {
             foreach ($args as $module) {
                 if (isset($module_list[$module])) {

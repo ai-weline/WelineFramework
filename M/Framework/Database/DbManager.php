@@ -14,6 +14,8 @@ namespace M\Framework\Database;
 
 
 use M\Framework\App\Env;
+use M\Framework\App\Exception;
+use M\Framework\Output\Cli\Printing;
 
 /**
  * 文件信息
@@ -28,6 +30,14 @@ class DbManager extends \think\DbManager
 {
     function __construct()
     {
+        if (empty(Env::getInstance()->getDbConfig())) {
+            if ('cli' === PHP_SAPI) {
+                (new Printing())->error('请安装系统后操作:bin/m system:install', '系统');
+            } else {
+                throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
+            }
+            exit();
+        }
         $this->setConfig(Env::getInstance()->getDbConfig());
         parent::__construct();
     }

@@ -50,6 +50,10 @@ class Remove extends CommandAbstract
 
             // 获得模块列表
             $module_list = Env::getInstance()->getModuleList();
+            if(empty($module_list)) {
+                $this->printer->error('请先更新模块:bin/m module:upgrade');
+                exit();
+            }
             foreach ($args as $module) {
                 $this->printer->note(__('执行 ') . $module . __(' 卸载程序...'));
                 if (isset($module_list[$module])) {

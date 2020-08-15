@@ -19,22 +19,17 @@ use M\Framework\Http\Request;
 use M\Framework\Setup\Data\Setup as DataSetup;
 use M\Installer\Helper\Data;
 
-class Installer
+class InstallConfig
 {
-    protected DataSetup $setup;
     protected Data $helper;
     /**
      * @var Request
      */
     private Request $request;
 
-    function __construct(
-        DataSetup $setup,
-        Data $helper
-    )
+    function __construct()
     {
-        $this->setup = $setup;
-        $this->helper = $helper;
+        $this->helper = new Data();
         $this->request = Request::getInstance('M\\Installer');
     }
 
@@ -45,7 +40,6 @@ class Installer
         $params['type'] = 'mysql';
 
         $tables = $this->helper->getDbTables();
-        $tmp = [];
         $hasErr = false;
         $db = array(
             'default' => $params['type'],
@@ -56,18 +50,10 @@ class Installer
         );
         // 数据库信息初始化
         Env::getInstance()->setConfig('db', $db);
-        $db = $this->setup->getDb()->setDbConfig($db);
-        foreach ($tables as $table => $createSql) {
-            try {
-                $db->query($createSql);
-                $result = true;
-            } catch (Exception $exception) {
-                $hasErr = true;
-                $result = false;
-            }
-//            $db->query('drop table ' . $table);
-            $tmp['---install table "' . $table . '"'] = 'Create table ' . $table . ($result ? ' is success!(✔)' : ' is failed!(✖)');
+        $db_conf = Env::getInstance()->getDbConfig();
+        if(empty($db_conf)){
+            $hasErr = true;
         }
-        return ['data' => $tmp, 'hasErr' => $hasErr, 'msg' => '-------  数据库安装...  -------'];
+        return ['data' => $db, 'hasErr' => $hasErr, 'msg' => '-------  数据库配置安装...  -------'];
     }
 }

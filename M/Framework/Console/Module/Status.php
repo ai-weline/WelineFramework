@@ -13,6 +13,7 @@
 namespace M\Framework\Console\Module;
 
 
+use M\Framework\App\Env;
 use M\Framework\Console\CommandAbstract;
 use M\Framework\Console\CommandInterface;
 
@@ -22,7 +23,11 @@ class Status extends CommandAbstract
     public function execute($args = array())
     {
         array_shift($args);
-        $module_list = include APP_ETC_PATH . 'modules.php';
+        $module_list = Env::getInstance()->getModuleList();
+        if(empty($module_list)) {
+            $this->printer->error('请先更新模块:bin/m module:upgrade');
+            exit();
+        }
         if (!empty($args)) {
             foreach ($args as $module) {
                 if (isset($module_list[$module])) {

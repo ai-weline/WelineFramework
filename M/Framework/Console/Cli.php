@@ -96,8 +96,8 @@ class Cli extends CliAbstract
     private function checkCommand()
     {
         $arg0 = trim($this->argv[0]);
-        if ($arg0 == 'module:command:upgrade') exit((new \M\Framework\Console\Module\Command\Upgrade())->execute());
-        if ($arg0 != 'module:command:upgrade' && !file_exists(Env::path_COMMANDS_FILE)) exit($this->printer->error('请更新模块命令：module:command:upgrade'));
+        if ($arg0 == 'command:upgrade') exit((new \M\Framework\Console\Command\Upgrade())->execute());
+        if ($arg0 != 'command:upgrade' && !file_exists(Env::path_COMMANDS_FILE)) exit($this->printer->error('请更新模块命令：module:command:upgrade'));
 
         $commands = include Env::path_COMMANDS_FILE;
         // 检查命令

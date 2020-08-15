@@ -14,12 +14,13 @@ require 'check.php';
 define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 框架根目录
 define('FP', BP . 'M' . DIRECTORY_SEPARATOR);
+// 开发模式
+define('DEV', true);
 // 应用 配置 目录 (默认访问 etc)
 define('APP_ETC_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
-
 // 自动加载
 try {
-    require BP . 'vendor'. DIRECTORY_SEPARATOR . 'autoload.php';
+    require BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 } catch (Exception $exception) {
     exit('自动加载异常：' . $exception->getMessage());
 }

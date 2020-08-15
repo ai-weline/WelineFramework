@@ -26,9 +26,15 @@ class Modules
      */
     function getList()
     {
-        $file = new File();
-        $file->processFile(APP_ETC_PATH . 'modules.php');
-        $modules_data = include APP_ETC_PATH . 'modules.php';
+        $modules_file = APP_ETC_PATH . 'modules.php';
+        if (!is_file($modules_file)) {
+            $file = new File();
+            $file->open($modules_file, $file::mode_w_add);
+            $text = '<?php return ' . var_export([], true) . ';?>';
+            $file->write($text);
+            $file->close();
+        }
+        $modules_data = include $modules_file;
         return is_array($modules_data) ? $modules_data : array();
     }
 }

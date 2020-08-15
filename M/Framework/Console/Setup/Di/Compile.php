@@ -28,7 +28,7 @@ class Compile extends \M\Framework\Console\CommandAbstract
         $apps = $scanner->scanAppModules();
 
         $this->printer->note('DI:插件更新...');
-        // 注册模块
+        // TODO 扫描插件
         $all_plugins = [];
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {
