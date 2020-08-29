@@ -63,7 +63,7 @@ class Cli extends CliAbstract
         $arg0 = trim($this->argv[0]);
         $command_group_arr = explode(':', $arg0);
         $command_group_arr = array_reverse($command_group_arr);
-        $this->printer->note('参考命令:');
+        $this->printer->note('参考命令:','系统');
         $recommendCommands = [];
         foreach ($command_group_arr as $command_group) {
             foreach ($commands as $group => $command) {
@@ -100,7 +100,7 @@ class Cli extends CliAbstract
             };
         }
         if (empty($command_path)) {
-            $this->printer->error('无效命令：' . $arg0);
+            $this->printer->error('无效命令：' . $arg0,'CLI');
             $this->recommendCommand($commands);
         }
         // 获取类的真实路径和命名空间位置
