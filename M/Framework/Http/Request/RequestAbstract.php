@@ -48,13 +48,15 @@ abstract class RequestAbstract
     function getRequestArea()
     {
 
-        if ($this->area_router == Env::getInstance()->getConfig('admin', '')) {
-            return DataInterface::type_pc_BACKEND;
+        switch ($this->area_router) {
+            case Env::getInstance()->getConfig('admin', 'admin'):
+                return DataInterface::type_pc_BACKEND;
+            case Env::getInstance()->getConfig('api_admin', 'api_admin'):
+                return DataInterface::type_api_REST_BACKEND;
+            case '':
+            default:
+                return DataInterface::type_pc_FRONTEND;
         }
-        if ($this->area_router == Env::getInstance()->getConfig('api_admin', '')) {
-            return DataInterface::type_api_REST_BACKEND;
-        }
-        return 'frontend';
     }
 
     /**
@@ -82,7 +84,7 @@ abstract class RequestAbstract
      * @param string $key
      * @return string
      */
-     function getServer(string $key = null):string
+    function getServer(string $key = null): string
     {
         $filter = RequestFilter::getInstance();
         $filter->init();

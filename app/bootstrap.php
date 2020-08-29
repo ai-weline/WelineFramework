@@ -14,6 +14,8 @@ use M\Framework\App;
 use M\Framework\App\Env;
 use M\Framework\Manager\ObjectManager;
 
+// 运行模式
+define('CLI', PHP_SAPI === 'cli');
 // 项目根目录
 define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 框架根目录
@@ -30,7 +32,8 @@ try {
 } catch (Exception $exception) {
     exit('自动加载异常：' . $exception->getMessage());
 }
-
+// 助手函数
+require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
 // 尝试加载应用
 try {
     /**@var $app App */
@@ -39,8 +42,6 @@ try {
     exit('应用启动失败：' . $exception->getMessage());
 }
 
-// 助手函数
-require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
 // 调试模式
 (Env::getInstance()->getConfig('deploy') == 'dev') ? define('DEV', true) : define('DEV', false);
 //报告错误

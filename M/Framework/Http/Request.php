@@ -88,6 +88,8 @@ class Request extends Request\RequestAbstract implements RequestInterface
     {
         parse_str($this->getServer('QUERY_STRING'), $params);
         array_shift($params);
+        $params = array_merge($params, $_POST);
+        $params = array_merge($params, $_GET);
         return isset($params[$key]) ? $params[$key] : null;
     }
 

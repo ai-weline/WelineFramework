@@ -13,6 +13,7 @@
 namespace M\Installer;
 
 
+use M\Framework\Http\Request;
 use M\Installer\RunType\Bin\Commands;
 use M\Installer\RunType\Db\InstallConfig;
 use M\Installer\RunType\Env\Checker;
@@ -21,6 +22,7 @@ use M\Installer\RunType\System\Install;
 
 class Runner
 {
+
     function checkEnv(): array
     {
         return (new Checker)->run();
@@ -28,7 +30,8 @@ class Runner
 
     function installDb(): array
     {
-        return (new InstallConfig())->run();
+        $params = Request::getInstance('M\\Installer')->getParams();
+        return (new InstallConfig())->run($params);
     }
 
     function systemInstall()

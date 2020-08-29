@@ -75,6 +75,8 @@ function p($data, bool $pass = false, int $trace_deep = 2): void
  * 参数区：
  *
  * @param $words
+ * @return string
+ * @throws @\M\Framework\App\Exception
  */
 function __(string $words)
 {

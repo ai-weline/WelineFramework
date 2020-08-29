@@ -19,7 +19,7 @@ class InstallData
         $data = [
             'env' => [
                 'functions' => ['exec'],
-                'modules' => [/*'file_info'*/],
+                'modules' => ['PDO'],
             ],
             'commands'=>[
                 'bin/m command:upgrade',

@@ -28,7 +28,7 @@ class App
     function init()
     {
         // 检查运行模式
-        (PHP_SAPI === 'cli') ? define('CLI', true) : define('CLI', false);
+        defined('CLI') ?: define('CLI', PHP_SAPI === 'cli');
     }
 
     /**

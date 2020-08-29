@@ -40,11 +40,6 @@ class Cli extends CliAbstract
             default:
                 echo $class->execute($this->argv);
                 break;
-//                try {
-//                    echo $this->execute();
-//                } catch (\Exception $e) {
-//                    $this->printer->error($e->getMessage(), $this->printer::ERROR);
-//                }
         }
     }
 
@@ -65,23 +60,19 @@ class Cli extends CliAbstract
     {
         // 没有任何参数
         if (!isset($this->argv[0])) exit($this->execute());
-
         $arg0 = trim($this->argv[0]);
         $command_group_arr = explode(':', $arg0);
         $command_group_arr = array_reverse($command_group_arr);
+        $this->printer->note('参考命令:');
+        $recommendCommands = [];
         foreach ($command_group_arr as $command_group) {
             foreach ($commands as $group => $command) {
-                if (strstr($command_group, $group)) {
-                    $this->printer->note('参考命令:');
-                    try {
-                        echo $this->printer->printList($commands[$command_group]);
-                    } catch (Exception $e) {
-                        $this->printer->error($arg0, '无法执行的命令:' . $e->getMessage(), $this->printer::WARNING);
-                    }
+                if (strstr($group,$command_group)) {
+                    $recommendCommands[$group] = $commands[$group];
                 }
             }
-
         }
+        echo $this->printer->printList($recommendCommands);
     }
 
     /**
@@ -97,7 +88,7 @@ class Cli extends CliAbstract
     {
         $arg0 = trim($this->argv[0]);
         if ($arg0 == 'command:upgrade') exit((new \M\Framework\Console\Command\Upgrade())->execute());
-        if ($arg0 != 'command:upgrade' && !file_exists(Env::path_COMMANDS_FILE)) exit($this->printer->error('请更新模块命令：module:command:upgrade'));
+        if ($arg0 != 'command:upgrade' && !file_exists(Env::path_COMMANDS_FILE)) exit($this->printer->error('请更新模块命令：command:upgrade'));
 
         $commands = include Env::path_COMMANDS_FILE;
         // 检查命令
@@ -109,8 +100,8 @@ class Cli extends CliAbstract
             };
         }
         if (empty($command_path)) {
-            $this->recommendCommand($commands);
             $this->printer->error('无效命令：' . $arg0);
+            $this->recommendCommand($commands);
         }
         // 获取类的真实路径和命名空间位置
         if ($command_path !== self::core_FRAMEWORK_NAMESPACE) {
