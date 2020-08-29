@@ -44,8 +44,6 @@
     'warning' => '/www/wwwroot/m.dev.aiweline.com/var/log/warning.log',
     'debug' => '/www/wwwroot/m.dev.aiweline.com/var/log/debug.log',
   ),
-  'admin' => 'admin_123',
-  'api_admin' => 'rest_123',
   'deploy' => 'dev',
   'db' => 
   array (
@@ -55,13 +53,13 @@
       'mysql' => 
       array (
         'hostname' => '127.0.0.1',
-        'database' => 'weline',
-        'username' => 'weline',
-        'password' => 'weline',
+        'database' => 'm_dev',
+        'username' => 'm_dev',
+        'password' => 'ShP5T7yzNMs87ZDp',
+        'type' => 'mysql',
         'hostport' => '3306',
         'prefix' => 'm_',
         'charset' => 'utf8',
-        'type' => 'mysql',
       ),
     ),
   ),

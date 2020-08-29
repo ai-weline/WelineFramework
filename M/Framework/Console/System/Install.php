@@ -14,6 +14,7 @@ namespace M\Framework\Console\System;
 
 
 use M\Framework\Database\DbManager;
+use M\Framework\Database\Setup\DataInterface;
 use M\Installer\Runner;
 use PDO;
 use PDOException;
@@ -58,12 +59,7 @@ class Install extends \M\Framework\Console\CommandAbstract
             }
         }
         array_shift($args);
-        $db_keys = [
-            'hostname' => null,
-            'database' => null,
-            'username' => null,
-            'password' => null
-        ];
+        $db_keys = DataInterface::db_keys;
         if (!isset($args_config['db'])) {
             $this->printer->error('数据库配置为空！示例：bin/m system:install --db-type=mysql', '系统');
             foreach ($db_keys as $item) $this->printer->printing($item, '--db-');
@@ -84,17 +80,9 @@ class Install extends \M\Framework\Console\CommandAbstract
         foreach ($db_config as $key => $item) {
             echo $this->printer->colorize(str_pad($key, 8, ' ', STR_PAD_LEFT), $this->printer::WARNING) . '=>' . $this->printer->colorize($item, $this->printer::NOTE) . "\r\n";
         }
-        $this->printer->success('参数检测！', 'OK');
-        $this->printer->note('第三步：数据库链接测试...', '系统');
-        try {
-            //初始化一个PDO对象
-            $dbh = new PDO($db_config['type'].':host='.$db_config['hostname'].';dbname='.$db_config['database'], $db_config['username'], $db_config['password']);
-            $this->printer->success('PDO数据库链接检测！', 'OK');
-            $dbh = null;
-        } catch (PDOException $e) {
-            $this->printer->error('PDO数据库链接检测失败！' . "Error!: " . $e->getMessage(), 'ERROR');
-            exit();
-        }
+        $this->printer->success('参数检测通过！', 'OK');
+        $this->printer->note('第三步：数据安装...', '系统');
+        $runner->installDb($db_config);
     }
 
     /**

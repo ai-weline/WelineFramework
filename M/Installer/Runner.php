@@ -28,24 +28,25 @@ class Runner
         return (new Checker)->run();
     }
 
-    function installDb(): array
+    function installDb(array $params = []): array
     {
-        $params = Request::getInstance('M\\Installer')->getParams();
+        if (!CLI) $params = Request::getInstance('M\\Installer')->getParams();
         return (new InstallConfig())->run($params);
     }
 
-    function systemInstall()
+    function systemInstall(): array
     {
         return (new Install())->run();
     }
 
-    function systemCommands()
+    function systemCommands(): array
     {
         return (new Commands())->run();
     }
 
-    function systemInit()
+    function systemInit(array $params=[]): array
     {
-        return (new Init())->run();
+        if (!CLI) $params = Request::getInstance('M\\Installer')->getParams();
+        return (new Init())->run($params);
     }
 }

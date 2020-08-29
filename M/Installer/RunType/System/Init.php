@@ -15,14 +15,11 @@ namespace M\Installer\RunType\System;
 
 use M\Framework\App\Exception;
 use M\Framework\FileSystem\Io\File;
-use M\Framework\Http\Request;
 
 class Init
 {
-    function run()
+    function run(array $params)
     {
-        $request = Request::getInstance('M\\Installer');
-        $params = $request->getParams();
         if (!isset($params['admin']) || !isset($params['api_admin'])) throw new Exception('参数不完整！');
         $rnv_instance = \M\Framework\App\Env::getInstance();
         if (!is_file($rnv_instance::path_ENV_FILE)) throw new Exception('不存在的环境！');
