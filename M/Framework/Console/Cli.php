@@ -63,7 +63,7 @@ class Cli extends CliAbstract
         $arg0 = trim($this->argv[0]);
         $command_group_arr = explode(':', $arg0);
         $command_group_arr = array_reverse($command_group_arr);
-        $this->printer->note('参考命令:','系统');
+        $this->printer->note('参考命令','系统');
         $recommendCommands = [];
         foreach ($command_group_arr as $command_group) {
             foreach ($commands as $group => $command) {
