@@ -28,7 +28,7 @@ class InstallData
             ],
             'db' => [
                 'tables' => [
-                    'core_menu' => 'CREATE TABLE core_menu
+                    'm_core_menu' => 'CREATE TABLE m_core_menu
 (
 id int primary key comment "菜单ID",
 p_id int default 0 comment "父级ID",

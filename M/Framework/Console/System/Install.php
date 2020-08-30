@@ -85,6 +85,15 @@ class Install extends \M\Framework\Console\CommandAbstract
         $runner->installDb($db_config);
         $this->printer->note('第四步：数据安装...', '系统');
         $runner->systemInstall();
+        $this->printer->note('第五步：系统命令更新...', '系统');
+        $runner->systemCommands();
+        $this->printer->note('第六步：系统初始化...', '系统');
+        $initData['admin'] = 'admin_' . uniqid();
+        $initData['api_admin'] = 'api_' . uniqid();
+        $runner->systemInit($initData);
+        $this->printer->note('初始化数据...', '系统');
+        $this->printer->success(str_pad('admin后台入口:', 20, " ", STR_PAD_LEFT) . $initData['admin']);
+        $this->printer->success(str_pad('Api后台入口:', 20, " ", STR_PAD_LEFT) . $initData['api_admin']);
     }
 
     /**

@@ -15,16 +15,19 @@ namespace M\Installer\RunType\System;
 
 use M\Framework\App\Env;
 use M\Framework\App\Exception;
+use M\Framework\Output\Cli\Printing;
 use M\Framework\Setup\Data\Setup as DataSetup;
 use M\Installer\Helper\Data;
 
 class Install
 {
     protected Data $data;
+    protected Printing $printer;
 
     function __construct()
     {
         $this->data = new Data();
+        $this->printer = new Printing();
     }
 
     function run()
@@ -39,9 +42,11 @@ class Install
         $hasErr = false;
         foreach ($tables as $table => $createSql) {
             if($db->tableExist($table)){
-                $db->
+                if(CLI) $this->printer->warning('删除表：'.$table);
+                $db->dropTable($table);
             }
             try {
+                if(CLI) $this->printer->note('新增表：'.$table);
                 $db->query($createSql);
                 $result = true;
             } catch (Exception $exception) {

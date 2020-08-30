@@ -77,7 +77,8 @@ class Setup extends DbManager
      */
     function getTable(string $name = ''): string
     {
-        return $this->getTablePrefix() . $name;
+        if (!strstr($name, $this->getTablePrefix())) $name = $this->getTablePrefix() . $name;
+        return $name;
     }
 
     /**

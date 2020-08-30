@@ -1,12 +1,22 @@
 <?php return array (
-  '/Index/Index' =>
+  'admin/index/index' => 
   array (
     'module' => 'Aiweline_Admin',
     'class' => 
     array (
       'area' => 'BackendController',
       'name' => 'Aiweline\\Admin\\Controller\\Index',
-      'method' => 'Index',
+      'method' => 'index',
+    ),
+  ),
+  'admin/index/test' => 
+  array (
+    'module' => 'Aiweline_Admin',
+    'class' => 
+    array (
+      'area' => 'BackendController',
+      'name' => 'Aiweline\\Admin\\Controller\\Index',
+      'method' => 'test',
     ),
   ),
 );

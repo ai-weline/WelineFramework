@@ -37,20 +37,17 @@ class Commands
             try {
                 exec('php ' . BP . $needCommand, $result);
                 $value = str_pad('✔', 10, " ", STR_PAD_BOTH);
-                if ('cli' === PHP_SAPI) {
-                    foreach ($result as $item) {
-                        $value .= $item . '<br>';
-                    }
-                }
             } catch (Exception $e) {
                 $hasErr = true;
                 $value = str_pad('✖', 10, " ", STR_PAD_BOTH);
             }
             $key = str_pad('---' . $needCommand, 45, '-', STR_PAD_BOTH);
-            if ('cli' === PHP_SAPI) {
-                $this->printer->success($key . '=>' . $value);
-            }
+            if (CLI) $this->printer->success($key . '=>' . $value,'OK');
             $tmp[$key] = $value;
+            foreach ($result as $item) {
+                $this->printer->printing($item);
+            }
+            unset($result);
         }
         // 读取后台以及接口后台地址
         $tmp['=========后台入口:'] = Env::getInstance()->getConfig('admin');
