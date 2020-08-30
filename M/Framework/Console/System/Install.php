@@ -13,11 +13,8 @@
 namespace M\Framework\Console\System;
 
 
-use M\Framework\Database\DbManager;
 use M\Framework\Database\Setup\DataInterface;
 use M\Installer\Runner;
-use PDO;
-use PDOException;
 
 class Install extends \M\Framework\Console\CommandAbstract
 {
@@ -32,11 +29,21 @@ class Install extends \M\Framework\Console\CommandAbstract
      */
     public function execute($args = array())
     {
-        $runner = new Runner();
-        if (!is_file(BP . 'setup/install.lock')) {
-            $this->printer->warning('系统已安装，请勿重复安装！', '系统');
-            exit();
+        $install_file = BP . 'setup/install.lock';
+        if (is_file($install_file)) {
+            $this->printer->warning('M框架已安装！重新安装将清空系统数据。', '警告');
+            $this->printer->setup("是否继续（y/n）？");
+            $fp = fopen('/dev/stdin', 'r');
+            $input = fgets($fp, 255);
+            fclose($fp);
+            if (strtolower(chop($input)) !== 'y') {
+                $this->printer->setup('操作已成功取消！', '提示');
+                exit();
+            }
         }
+
+        $runner = new Runner();
+
         // 环境检测
         $this->printer->note('第一步：环境检测...', '系统');
         $checkResult = $runner->checkEnv();
@@ -91,9 +98,19 @@ class Install extends \M\Framework\Console\CommandAbstract
         $initData['admin'] = 'admin_' . uniqid();
         $initData['api_admin'] = 'api_' . uniqid();
         $runner->systemInit($initData);
-        $this->printer->note('初始化数据...', '系统');
-        $this->printer->success(str_pad('admin后台入口:', 20, " ", STR_PAD_LEFT) . $initData['admin']);
-        $this->printer->success(str_pad('Api后台入口:', 20, " ", STR_PAD_LEFT) . $initData['api_admin']);
+        $this->printer->success('初始化数据完成！', 'OK');
+        $this->printer->note('-------------------------------------------------------');
+        // 生成安装锁文件
+        if(!is_file($install_file)){
+            $this->printer->note('生成安装锁文件...');
+            $file = new \M\Framework\FileSystem\Io\File();
+            $file->open(BP.'setup/install.lock',$file::mode_w);
+            $file->close();
+        }
+        $this->printer->success(str_pad('admin后台入口: ', 20, " ", STR_PAD_LEFT) . $initData['admin']);
+        $this->printer->success(str_pad('Api后台入口: ', 20, " ", STR_PAD_LEFT) . $initData['api_admin']);
+        $this->printer->note('-------------------------------------------------------');
+        $this->printer->success('恭喜你！系统安装完成！');
     }
 
     /**

@@ -37,17 +37,16 @@ class Remove extends CommandAbstract
     {
         array_shift($args);
         if (empty($args)) throw new ConsoleException('缺少模块名参数。示例：module:remove Aiweline_demo Aiweline_Test');
-        $this->printer->error(__("提示：此命令将执行以下模块的卸载程序。"));
+        $this->printer->setup(__("提示：此命令将执行以下模块的卸载程序。"));
         foreach ($args as $module) {
             $this->printer->warning($module);
         }
-        $this->printer->error(__("是否继续（y/n）？"));
+        $this->printer->setup(__("是否继续（y/n）？"));
         $fp = fopen('/dev/stdin', 'r');
         $input = fgets($fp, 255);
         fclose($fp);
 
         if (strtolower(chop($input)) == 'y') {
-
             // 获得模块列表
             $module_list = Env::getInstance()->getModuleList();
             if(empty($module_list)) {
