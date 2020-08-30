@@ -13,6 +13,7 @@
 namespace M\Framework\Setup\Db;
 
 
+use M\Framework\App\Exception;
 use M\Framework\Database\Db\Ddl\Table;
 use M\Framework\Database\DbManager;
 use think\db\exception\PDOException;
@@ -77,5 +78,24 @@ class Setup extends DbManager
     function getTable(string $name = ''): string
     {
         return $this->getTablePrefix() . $name;
+    }
+
+    /**
+     * @DESC         |删除表
+     *
+     * 参数区：
+     *
+     * @param string $tableName
+     * @return bool
+     */
+    function dropTable(string $tableName)
+    {
+        if (!strstr($tableName, $this->getTablePrefix())) $tableName = $this->getTable($tableName);
+        try {
+            $this->query('drop table ' . $tableName);
+            return true;
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 }

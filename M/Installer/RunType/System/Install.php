@@ -31,11 +31,16 @@ class Install
     {
         $db_conf = Env::getInstance()->getDbConfig();
         if (empty($db_conf)) throw  new Exception('请先安装数据库配置！');
-        $db = (new DataSetup())->getDb();
+        $setup = new DataSetup();
+        $db = $setup->getDb();
+
         $tables = $this->data->getDbTables();
         $tmp = [];
         $hasErr = false;
         foreach ($tables as $table => $createSql) {
+            if($db->tableExist($table)){
+                $db->
+            }
             try {
                 $db->query($createSql);
                 $result = true;

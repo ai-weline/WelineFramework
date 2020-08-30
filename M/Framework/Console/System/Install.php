@@ -81,8 +81,10 @@ class Install extends \M\Framework\Console\CommandAbstract
             echo $this->printer->colorize(str_pad($key, 8, ' ', STR_PAD_LEFT), $this->printer::WARNING) . '=>' . $this->printer->colorize($item, $this->printer::NOTE) . "\r\n";
         }
         $this->printer->success('参数检测通过！', 'OK');
-        $this->printer->note('第三步：数据安装...', '系统');
+        $this->printer->note('第三步：配置安装...', '系统');
         $runner->installDb($db_config);
+        $this->printer->note('第四步：数据安装...', '系统');
+        $runner->systemInstall();
     }
 
     /**
