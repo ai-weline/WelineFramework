@@ -21,14 +21,14 @@ class Init
     function run(array $params)
     {
         if (!isset($params['admin']) || !isset($params['api_admin'])) throw new Exception('参数不完整！');
-        $rnv_instance = \M\Framework\App\Env::getInstance();
-        if (!is_file($rnv_instance::path_ENV_FILE)) throw new Exception('不存在的环境！');
-        $env = require $rnv_instance::path_ENV_FILE;
+        $env_instance = \M\Framework\App\Env::getInstance();
+        if (!is_file($env_instance::path_ENV_FILE)) throw new Exception('不存在的环境！');
+        $env = require $env_instance::path_ENV_FILE;
         if (empty($env)) throw new Exception('环境为空！');
         $env['admin'] = $params['admin'];
         $env['api_admin'] = $params['api_admin'];
         $file = new File();
-        $file->open($rnv_instance::path_ENV_FILE, $file::mode_w);
+        $file->open($env_instance::path_ENV_FILE, $file::mode_w);
         $text = '<?php return ' . var_export($env, true) . ';';
         $file->write($text);
         $file->close();

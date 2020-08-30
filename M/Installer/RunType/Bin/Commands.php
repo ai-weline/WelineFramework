@@ -42,16 +42,17 @@ class Commands
                 $value = str_pad('✖', 10, " ", STR_PAD_BOTH);
             }
             $key = str_pad('---' . $needCommand, 45, '-', STR_PAD_BOTH);
-            if (CLI) $this->printer->success($key . '=>' . $value,'OK');
+            if (CLI) $this->printer->success($key . '=>' . $value, 'OK');
             $tmp[$key] = $value;
-            foreach ($result as $item) {
-                $this->printer->printing($item);
-            }
+            if (CLI)
+                foreach ($result as $item) {
+                    $this->printer->printing($item);
+                }
             unset($result);
         }
         // 读取后台以及接口后台地址
-        $tmp['=========后台入口:'] = Env::getInstance()->getConfig('admin');
-        $tmp['=========REST API后台入口:'] = Env::getInstance()->getConfig('rest_admin');
+        $tmp['=========Admin后台入口:'] = Env::getInstance()->getConfig('admin', '');
+        $tmp['=========API后台入口:'] = Env::getInstance()->getConfig('api_admin', '');
         return ['data' => $tmp, 'hasErr' => $hasErr, 'msg' => '-------  环境命令初始化...  -------'];
     }
 }

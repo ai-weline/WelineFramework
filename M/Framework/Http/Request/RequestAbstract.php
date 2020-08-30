@@ -52,7 +52,7 @@ abstract class RequestAbstract
             case Env::getInstance()->getConfig('admin', 'admin'):
                 return DataInterface::type_pc_BACKEND;
             case Env::getInstance()->getConfig('api_admin', 'api_admin'):
-                return DataInterface::type_api_REST_BACKEND;
+                return DataInterface::type_api_BACKEND;
             case '':
             default:
                 return DataInterface::type_pc_FRONTEND;

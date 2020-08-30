@@ -58,7 +58,7 @@ class Handle
                 $path = '';
                 if ($routerParam['area'] == \M\Framework\Controller\Data\DataInterface::type_api_REST_FRONTEND ) {
                     $path = self::path_fronted_API;
-                } elseif ($routerParam['area'] == \M\Framework\Controller\Data\DataInterface::type_api_REST_BACKEND) {
+                } elseif ($routerParam['area'] == \M\Framework\Controller\Data\DataInterface::type_api_BACKEND) {
                     $path = self::path_backend_API;
                 };
                 if ($path) {

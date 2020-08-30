@@ -40,7 +40,8 @@ class Core
         $this->base_request = BaseRequest::getInstance();
         $this->request_area = $this->base_request->getRequestArea();
         $this->area_router = $this->base_request->getAreaRouter();
-        $this->is_admin = ($this->request_area !== \M\Framework\Router\DataInterface::area_FROMTEND);
+        $area_tower = strtolower($this->request_area);
+        $this->is_admin = strstr($area_tower, \M\Framework\Router\DataInterface::area_BACKEND) ? true : false;
     }
 
     final static function getInstance()
@@ -64,13 +65,13 @@ class Core
         // 前后台路由处理
         if ($this->is_admin) {
             if ($this->area_router === $this->_etc->getConfig('admin', '')) {
-                $url = str_replace($this->area_router, '', $url);
+                $url = str_replace($this->area_router, 'admin', $url);
                 $url = trim($url, '/');
                 if (!strstr($url, '/')) {
                     $url .= '/Index/Index';
                 }
             } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
-                $url = str_replace($this->area_router, '', $url);
+                $url = str_replace($this->area_router, 'admin', $url);
                 $url = trim($url, '/');
                 if (!strstr($url, '/')) {
                     $url .= '/Index/Index';
@@ -89,12 +90,12 @@ class Core
         $this->Pc($url);
 
         // 非开发模式（匹配不到任何路由将报错）
-        if(!DEV) return $this->base_request->getResponse()->noRouter();
+        if (!DEV) return $this->base_request->getResponse()->noRouter();
 
         // 开发模式(静态资源可访问app本地静态资源)
         if (DEV) {
             $static = $this->StaticFile($url);
-            if($static) return $static;
+            if ($static) return $static;
             throw new Exception('未知的路由！');
         }
         // 404
@@ -115,7 +116,7 @@ class Core
 
         // 检测api路由
         $router_filepath = Env::path_FRONTEND_REST_API_ROUTER_FILE;
-        $is_api_admin = $this->request_area === \M\Framework\Controller\Data\DataInterface::type_api_REST_BACKEND;
+        $is_api_admin = $this->request_area === \M\Framework\Controller\Data\DataInterface::type_api_BACKEND;
         if ($is_api_admin)
             $router_filepath = Env::path_BACKEND_REST_API_ROUTER_FILE;
         if (file_exists($router_filepath)) {

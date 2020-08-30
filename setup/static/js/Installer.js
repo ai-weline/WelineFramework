@@ -33,7 +33,7 @@ function checkEnv(type, ele, errorFlag = '✖') {
         },
 
         error: function (XMLHttpRequest, textStatus, errorThrown) {
-            console.log('提交请求的错误信息：' + errorThrown + XMLHttpRequest);
+            console.log('提交请求的错误信息：' + JSON.stringify(errorThrown) + JSON.stringify(XMLHttpRequest));
         }
     });
 }

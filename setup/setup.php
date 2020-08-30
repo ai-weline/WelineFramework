@@ -16,6 +16,8 @@ define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 define('FP', BP . 'M' . DIRECTORY_SEPARATOR);
 // 开发模式
 define('DEV', true);
+// CLI 环境
+define('CLI',false);
 // 应用 配置 目录 (默认访问 etc)
 define('APP_ETC_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
 // 自动加载
@@ -24,7 +26,6 @@ try {
 } catch (Exception $exception) {
     exit('自动加载异常：' . $exception->getMessage());
 }
-
 // 助手函数
 require BP . '/app/etc/functions.php';
 error_reporting(E_ALL);
