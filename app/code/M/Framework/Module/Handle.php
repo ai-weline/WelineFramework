@@ -111,12 +111,15 @@ class Handle implements HandleInterface
         $router = '';
         foreach (DataInterface::files as $filename) {
             $filepath = $module_path . $filename;
-            if (!is_file($filepath)) throw new Exception($filepath . ' 文件不存在！');
-            if ($filename == DataInterface::file_etc_Env) {
-                $env = (array)require $filepath;
-                if (!isset($env['router'])) throw new Exception($filepath . ' 文件中未配置router！');
-                $router = $env['router'];
-            };
+            if (is_file($filepath)) {
+//                throw new Exception($filepath . ' 文件不存在！');
+                if ($filename == DataInterface::file_etc_Env) {
+                    $env = (array)require $filepath;
+                    if (!isset($env['router'])) throw new Exception($filepath . ' 文件中未配置router！');
+                    $router = $env['router'];
+                };
+            }
+
         }
         if (!isset($this->setup_tool)) $this->setup_tool = new \M\Framework\Setup\Data\Setup();
         $this->setup_context = new \M\Framework\Setup\Data\Context($name, $version);
@@ -158,7 +161,7 @@ class Handle implements HandleInterface
             $moduleData = array(
                 'status' => 1,
                 'version' => $version ? $version : '1.0.0',
-                'router' => $router ?? '',
+                'router' => $router,
                 'description' => $description ? $description : '',
                 'path' => $this->helper->moduleNameToPath($this->modules, $name)
             );

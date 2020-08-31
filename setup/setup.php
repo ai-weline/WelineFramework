@@ -12,8 +12,6 @@
 require 'check.php';
 // 项目根目录
 define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
-// 框架根目录
-define('FP', BP . 'M' . DIRECTORY_SEPARATOR);
 // 开发模式
 define('DEV', true);
 // CLI 环境

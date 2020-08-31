@@ -49,9 +49,14 @@ class Upgrade extends CommandAbstract
         // 注册模块
         $all_modules = [];
         foreach ($apps as $vendor => $modules) {
+//            if ($vendor == 'Aiweline') p($modules,1);
             foreach ($modules as $name => $register) {
+//                if ($vendor == 'Aiweline') p($vendor . '_' . $name,1);
                 $all_modules[$vendor . '_' . $name] = $register;
-                require APP_PATH . $register;
+                if (is_file(APP_PATH . $register)) {
+                    require APP_PATH . $register;
+                }
+                if (is_file(BP . 'vendor/' . $register)) require BP . 'vendor/' . $register;
             }
         }
         // 更新模块

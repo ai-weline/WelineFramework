@@ -57,7 +57,9 @@ class Scanner extends Scan
      */
     public function scanAppVendors()
     {
-        return $this->scanDir(APP_PATH);
+        $apps = $this->scanDir(APP_PATH);
+        $vendors = $this->scanDir(BP . 'vendor');
+        return array_merge($vendors, $apps);
     }
 
 
@@ -75,11 +77,17 @@ class Scanner extends Scan
      */
     public function scanVendorModules($vendor)
     {
-        $modules = $this->scanDir(APP_PATH . $vendor);
+        $app_modules = $this->scanDir(APP_PATH . $vendor);
+        $core_modules = $this->scanDir(BP . 'vendor/'.$vendor);
+        $modules = array_merge($core_modules,$app_modules);
         foreach ($modules as $key => $module) {
             unset($modules[$key]);
             if (file_exists(APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file))
                 $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
+            // app下的代码优先度更高
+            if (!isset($modules[$module]))
+                if (file_exists(BP . 'vendor/' . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file))
+                    $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
         }
         return $modules;
     }

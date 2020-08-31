@@ -18,8 +18,6 @@ use M\Framework\Manager\ObjectManager;
 define('CLI', PHP_SAPI === 'cli');
 // 项目根目录
 define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
-// 框架根目录
-define('FP', BP . 'M' . DIRECTORY_SEPARATOR);
 // 静态文件路径
 define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // 应用 目录 (默认访问 web)

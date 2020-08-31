@@ -22,7 +22,7 @@
   },
   "autoload": {
     "psr-4": {
-      "M\\": "M",
+      "M\\": "app/code/M",
       "": "app/code/"
     }
   },

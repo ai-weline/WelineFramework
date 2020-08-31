@@ -105,8 +105,7 @@ class Upgrade extends CommandAbstract
         $scanner = new Scan();
 
         // 扫描核心命令
-        $directory = DIRECTORY_SEPARATOR;
-        $core = $scanner->scanDirTree(FP . "Framework{$directory}Console");
+        $core = $scanner->scanDirTree(BP . "vendor");
         $customer = $scanner->scanDirTree(APP_PATH);
 
         // 合并

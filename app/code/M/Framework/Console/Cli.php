@@ -104,11 +104,7 @@ class Cli extends CliAbstract
             $this->recommendCommand($commands);
         }
         // 获取类的真实路径和命名空间位置
-        if ($command_path !== self::core_FRAMEWORK_NAMESPACE) {
-            $command_class_real_path = APP_PATH . $command_path;
-        } else {
-            $command_class_real_path = BP . $command_path;
-        }
+        $command_class_real_path = APP_PATH . $command_path;
         $command_real_path = str_replace('\\', DIRECTORY_SEPARATOR, $command_class_real_path) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getCommandPath($arg0)) . '.php';
         $command_class_path = $command_path . $this->getCommandPath($arg0);
         if (file_exists($command_real_path)) {

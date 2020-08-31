@@ -40,7 +40,7 @@ class Scan
     function scanDirTree(string $dirPath, int $level = 0): array
     {
         $this->keepLevel += 1;
-        if ($file_handler = opendir($dirPath)) {
+        if (is_dir($dirPath) && $file_handler = opendir($dirPath)) {
             while (false !== ($file = readdir($file_handler))) {
                 // 排除"."".."
                 if ($file != "." && $file != "..") {
@@ -63,7 +63,7 @@ class Scan
                         $file->setBasename($pathInfo['basename']);
                         $file->setFilename($pathInfo['filename']);
                         $file->setDirname($pathInfo['dirname']);
-                        $file->setExtension($pathInfo['extension']);
+                        $file->setExtension(isset($pathInfo['extension']) ? $pathInfo['extension'] : '');
                         $file->setOrigin($filename);
                         $file->setNamespace(str_replace(DIRECTORY_SEPARATOR, '\\', dirname($relateFilename)));
                         $file->setRelate($relateFilename);
@@ -90,9 +90,9 @@ class Scan
      * @param string $dirPath
      * @return array
      */
-    function scanDir(string $dirPath):array
+    function scanDir(string $dirPath): array
     {
-        if(!is_dir($dirPath)) return [];
+        if (!is_dir($dirPath)) return [];
         if ($this->dirs = (scandir($dirPath)) ? scandir($dirPath) : []) {
             // 排除"."".."
             array_shift($this->dirs);

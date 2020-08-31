@@ -52,7 +52,7 @@ class Response implements ResponseInterface
         http_response_code(404);
         @header("http/1.1 404 not found");
         @header("status: 404 not found");
-        include(BP."/404.html");
+        include(BP . "/404.html");
         exit(0);
     }
 }
