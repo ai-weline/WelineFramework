@@ -1,1 +1,3 @@
 ./generated/
+env.php
+modules.php
