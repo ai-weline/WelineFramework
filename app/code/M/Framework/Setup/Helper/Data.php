@@ -30,8 +30,11 @@ class Data
     function getSetupClass(string $module_name, string $type = DataInterface::type_INSTALL)
     {
         $module_list = Env::getInstance()->getModuleList();
-        if (isset($module_list[$module_name]))
-            return str_replace(DIRECTORY_SEPARATOR, '\\', $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . $type);
+        $removeFile = str_replace(DIRECTORY_SEPARATOR, '\\', $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . $type);
+        if (isset($module_list[$module_name])) {
+            if (is_file(APP_PATH . $removeFile)) return APP_PATH . $removeFile;
+            if (is_file(BP . 'vendor/' . $removeFile)) return BP . 'vendor/' . $removeFile;
+        }
         return false;
     }
 

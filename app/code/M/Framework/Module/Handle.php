@@ -70,15 +70,24 @@ class Handle implements HandleInterface
         $app_path = APP_PATH;
         $this->printer->note(__('1、正在执行卸载脚本...'));
         $remove_script = $this->setup_helper->getSetupClass($module_name, \M\Framework\Setup\Data\DataInterface::type_REMOVE);
-        $remove_object = new $remove_script();
+        if ($remove_script) {
+            $remove_object = new $remove_script();
 
-        $version = isset($module_list[$module_name]['version']) ? $module_list[$module_name]['version'] : '1.0.0';
-        $setup_context = new \M\Framework\Setup\Data\Context($module_name, $version);
+            $version = isset($module_list[$module_name]['version']) ? $module_list[$module_name]['version'] : '1.0.0';
+            $setup_context = new \M\Framework\Setup\Data\Context($module_name, $version);
 
-        $this->printer->note($remove_object->setup($this->setup_tool, $setup_context));
-
+            $this->printer->note($remove_object->setup($this->setup_tool, $setup_context));
+        } else {
+            $this->printer->warning('模块卸载脚本不存在，已跳过卸载脚本！', '卸载');
+        }
         $this->printer->note('2、备份应用程序...');
-        $back_path = APP_PATH . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR;
+        if (is_dir(APP_PATH . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR)) {
+            $back_path = APP_PATH . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR;
+        } elseif (is_dir($back_path = BP . 'vendor/' . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR)) {
+            $back_path = BP . 'vendor/' . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR;
+        } else {
+            $this->printer->error("模块{$module_name}:不存在！", 'ERROR');
+        }
         exec("tar -zcPf {$app_path}{$module_name}.tar.gz {$back_path}");
         $this->printer->note($app_path . $module_name . '.tar.gz');
         $this->printer->note('3、卸载应用代码...');

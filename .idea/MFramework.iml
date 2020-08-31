@@ -6,7 +6,6 @@
       <sourceFolder url="file://$MODULE_DIR$/spec" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/app/code/M" isTestSource="false" packagePrefix="M\" />
       <sourceFolder url="file://$MODULE_DIR$/app/code" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/vendor/Magento/Test" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/instantiator" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/myclabs/deep-copy" />
