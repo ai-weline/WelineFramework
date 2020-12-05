@@ -16,6 +16,13 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="2b9af86d-9640-43c2-a085-67cf79b385e2" name="单页前端">
+        <fileTransfer accessType="SFTP" host="47.253.2.213" port="22" sshConfigId="ddc3a0e7-ac12-4f83-8ce6-ff14edcca36b" sshConfig="单页">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

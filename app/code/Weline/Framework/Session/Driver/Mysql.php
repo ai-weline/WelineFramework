@@ -1,0 +1,43 @@
+<?php
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
+ */
+
+namespace Weline\Framework\Session\Driver;
+
+class Mysql extends AbstractSessionDriverHandle implements DriverInterface
+{
+    public function set($name, $value)
+    {
+        // TODO: Implement set() method.
+    }
+
+    public function get($name)
+    {
+        // TODO: Implement get() method.
+    }
+
+    public function del($name)
+    {
+        // TODO: Implement del() method.
+    }
+
+    public function des()
+    {
+        // TODO: Implement des() method.
+    }
+
+    public function open()
+    {
+        // TODO: Implement open() method.
+    }
+
+    public function gc(int $sessMaxLifeTime)
+    {
+        // TODO: Implement gc() method.
+    }
+}

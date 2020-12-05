@@ -1,0 +1,50 @@
+<?php
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
+ */
+
+namespace Weline\Framework\Console;
+
+use Weline\Framework\Output\Cli\Printing;
+
+abstract class CommandAbstract implements CommandInterface
+{
+    protected Printing $printer;
+
+    /**
+     * CommandAbstract 初始函数...
+     * @param Printing $printer
+     */
+    public function __construct(Printing $printer)
+    {
+        $this->printer = $printer;
+    }
+
+    /**
+     * @DESC         |方法描述
+     *
+     * @Author       秋枫雁飞
+     * @Email        aiweline@qq.com
+     * @Forum        https://bbs.aiweline.com
+     * @Description  此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+     *
+     * 参数区：
+     *
+     * @param string $module_path
+     * @param string $command
+     * @return string
+     */
+    protected function getCommandPath(string $module_path, string $command = null): string
+    {
+        $command_array = explode(':', $command);
+        foreach ($command_array as &$command) {
+            $command = ucfirst($command);
+        }
+
+        return $module_path . '\\' . self::dir . '\\' . implode('\\', $command_array);
+    }
+}

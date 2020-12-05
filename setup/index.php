@@ -28,19 +28,24 @@ $step = $_GET['step'];
 switch ($step) {
     case 'step-2':
         include 'step/step-2.html';
+
         break;
     case 'step-3':
         include 'step/step-3.html';
+
         break;
     case 'step-4':
         include 'step/step-4.html';
+
         break;
     case 'step-5':
         include 'step/step-5.html';
+
         break;
     case 'step-1':
     default:
         include 'step/step-1.html';
+
         break;
 }
 ?>

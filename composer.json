@@ -18,18 +18,21 @@
     "topthink/think-orm": "^2.0",
     "ext-exif": "*",
     "ext-fileinfo": "*",
-    "phpunit/phpunit": "^9.2"
+    "phpunit/phpunit": "^9.2",
+    "ext-simplexml": "*",
+    "topthink/think-template": "^2.0",
+    "friendsofphp/php-cs-fixer": "^2.16"
   },
   "autoload": {
     "psr-4": {
-      "M\\": "app/code/M",
+      "Weline\\": "app/code/Weline",
       "": "app/code/"
     }
   },
   "repositories": {
     "packagist": {
       "type": "composer",
-      "url": "https://packagist.phpcomposer.com"
+      "url": "https://mirrors.aliyun.com/composer/"
     }
   }
 }

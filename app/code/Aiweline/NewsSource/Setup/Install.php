@@ -1,39 +1,38 @@
 <?php
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(可以百度看看)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2020/7/16
- * 时间：21:27
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
 namespace Aiweline\NewsSource\Setup;
 
-
-use M\Framework\Database\Db\Ddl\Table;
-use M\Framework\Setup\Data;
-use M\Framework\Setup\InstallInterface;
+use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Setup\Data;
+use Weline\Framework\Setup\InstallInterface;
 
 class Install implements InstallInterface
 {
-
     const table_NEWS_SOURCE = 'aiweline_news_source';
+
     const table_NEWS_CATEGORY = 'aiweline_news_category';
+
     const table_NEWS = 'aiweline_news';
+
     const table_NEWS_POST = 'aiweline_news_post';
+
     const table_NEWS_USER = 'aiweline_news_user';
 
-    function setup(Data\Setup $setup, Data\Context $context): void
+    public function setup(Data\Setup $setup, Data\Context $context): void
     {
         $printer = $setup->getPrinter();
-        $printer->note("安装开始...");
+        $printer->note('安装开始...');
         $db = $setup->getDb();
         /**新闻分类表*/
         $printer->warning('安装数据库表：' . self::table_NEWS_CATEGORY);
-        if (!$db->tableExist(self::table_NEWS_CATEGORY)) {
+        if (! $db->tableExist(self::table_NEWS_CATEGORY)) {
             $setup->getDb()->createTable(
                 self::table_NEWS_CATEGORY,
                 '新闻分类表'
@@ -68,7 +67,7 @@ class Install implements InstallInterface
 
         /**新闻来源表*/
         $printer->warning('安装数据库表：' . self::table_NEWS_SOURCE);
-        if (!$db->tableExist(self::table_NEWS_SOURCE)) {
+        if (! $db->tableExist(self::table_NEWS_SOURCE)) {
             $db->createTable(
                 self::table_NEWS_SOURCE,
                 '新闻来源表'
@@ -105,10 +104,9 @@ class Install implements InstallInterface
             )->create();
         }
 
-
         /**新闻表*/
         $printer->warning('安装数据库表：' . self::table_NEWS);
-        if (!$db->tableExist(self::table_NEWS)) {
+        if (! $db->tableExist(self::table_NEWS)) {
             $foreign_table = $db->getTable(self::table_NEWS_CATEGORY);
             $setup->getDb()->createTable(
                 self::table_NEWS,
@@ -206,12 +204,13 @@ class Install implements InstallInterface
         partition p202211 values less than (TO_DAYS('20221101')),
         partition p202212 values less than (TO_DAYS('20221201'))
     )"
-            )*/ ->create();
+            )*/
+                ->create();
         }
 
         /**新闻数据表*/
         $printer->warning('安装数据库表：' . self::table_NEWS_POST);
-        if (!$db->tableExist(self::table_NEWS_POST)) {
+        if (! $db->tableExist(self::table_NEWS_POST)) {
             $foreign_table = $db->getTable(self::table_NEWS);
             $db->createTable(
                 self::table_NEWS_POST,
@@ -269,7 +268,7 @@ class Install implements InstallInterface
 
         /**新闻用户表*/
         $printer->warning('安装数据库表：' . self::table_NEWS_USER);
-        if (!$db->tableExist(self::table_NEWS_USER)) {
+        if (! $db->tableExist(self::table_NEWS_USER)) {
             $db->createTable(
                 self::table_NEWS_USER,
                 '新闻用户表'
@@ -329,7 +328,7 @@ class Install implements InstallInterface
                 Table::index_type_FULLTEXT,
                 'name',
                 'name'
-            )->create();;
+            )->create();
         }
     }
 }

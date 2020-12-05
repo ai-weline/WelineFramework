@@ -1,22 +1,17 @@
 <?php
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(可以百度看看)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2020/6/28
- * 时间：13:38
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
 namespace Aiweline\HelloWorld\Setup;
 
-
-use M\Framework\App\Exception;
-use M\Framework\Database\Db\Ddl\Table;
-use M\Framework\Setup\Data;
-use M\Framework\Setup\InstallInterface;
+use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Setup\Data;
+use Weline\Framework\Setup\InstallInterface;
 
 class Install implements InstallInterface
 {
@@ -30,10 +25,10 @@ class Install implements InstallInterface
      * @param Data\Setup $setup
      * @param Data\Context $context
      */
-    function setup(Data\Setup $setup, Data\Context $context): void
+    public function setup(Data\Setup $setup, Data\Context $context): void
     {
         $context->getPrinter()->note('执行安装...');
-        if (!$setup->getDb()->tableExist(self::table_DEMO)) {
+        if (! $setup->getDb()->tableExist(self::table_DEMO)) {
             $setup->getDb()->createTable(
                 self::table_DEMO,
                 '开发测试'

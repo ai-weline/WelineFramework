@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>欢迎加入 M Framework 的世界! 发现不一样的世界！</title>
-    <link rel="Shortcut Icon" href="__STATIC__/img/favicon.png">
+    <link rel="Shortcut Icon" href="@static/img/favicon.png">
     <?php
     /**
-     * @var $this \M\Framework\View\Template
+     * @var $this \Weline\Framework\View\Template
      */
     ?>
-    <link href="__STATIC__/css/index.css" type="text/css" rel="stylesheet">
-    <script src="__STATIC__/js/demo.js"></script>
+    <link href="@static/css/index.css" type="text/css" rel="stylesheet">
+    <script src="@static/js/demo.js"></script>
 </head>
 <?php
 //include $this->getViewFile('public/header.phtml');
@@ -18,9 +18,9 @@
 <body>
 <div class="header">
     <h1>欢迎加入 M Framework 的世界! 真挚邀请你，我们共筑一个不一样的世界！</h1>
-    <div class="img-box"><img src="__STATIC__/img/logo.png" alt=""></div>
+    <div class="img-box"><img src="@static/img/logo.png" alt=""></div>
     <p class="official-p-sign">人生总要做点有意义的事儿，非是一定要成功，却是一定是在做，方可安心。</p>
-    <p class="official-p">开发者：秋枫雁飞&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;论坛：<a href="http://bbs.aiweline.com" target="_blank">bbs.aiweline.com</a></p>
+    <p class="official-p">开发者：<a href="https://www.baidu.com/s?wd=%E7%A7%8B%E6%9E%AB%E9%9B%81%E9%A3%9E&rsv_spt=1&rsv_iqid=0xc9e7de650008e85c&issp=1&f=8&rsv_bp=1&rsv_idx=2&ie=utf-8&rqlang=cn&tn=baiduhome_pg&rsv_enter=0&rsv_dl=tb&oq=%25E7%25A7%258B%25E9%25A3%258E%25E9%259B%2581%25E9%25A3%259E&rsv_btype=t&inputT=4314&rsv_t=61f3seQPG9m%2ForkDXbd7xxktyscr%2BUJZgQsaFj7Y9bIVVhR8C%2FyqdamWeYcWcYY7ody9&rsv_pq=b8515c4e001013e3&rsv_sug3=43&rsv_sug1=30&rsv_sug7=100&prefixsug=%25E7%25A7%258B%25E6%259E%25AB%25E9%259B%2581%25E9%25A3%259E&rsp=0&rsv_sug4=4935">秋枫雁飞</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;论坛：<a href="http://bbs.aiweline.com" target="_blank">bbs.aiweline.com</a></p>
 </div>
 <div class="feature">
     <div class="feature-detail">
@@ -42,8 +42,8 @@
         <a href="/hello/helloworld/model" target="_blank" onclick="openWindow(this.href,this.text)">model</a>
         <a href="/hello/helloworld/cache" target="_blank" onclick="openWindow(this.href,this.text)">Cache</a>
         <a href="/hello/helloworld/session" target="_blank" onclick="openWindow(this.href,this.text)">Session</a>
-        <a href="/<?php echo \M\Framework\App\Env::getInstance()->getConfig('admin','admin');?>/" target="_blank" onclick="openWindow(this.href,this.text)">后台</a>
-        <a href="/<?php echo \M\Framework\App\Env::getInstance()->getConfig('api_admin','api_admin');?>/rest/V1/index" target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>
+        <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('admin','admin');?>/" target="_blank" onclick="openWindow(this.href,this.text)">后台</a>
+        <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('api_admin','api_admin');?>/rest/V1/index" target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>
         <a href="hello/rest/v1/index/index" target="_blank" onclick="openWindow(this.href,this.text)">前台api</a>
     </div>
 </div>
