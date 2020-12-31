@@ -1,39 +1,44 @@
 # WelineFramework
 
 #### 介绍
+
 微蓝M框架！
 
-1、代码可移植性。
-代码可安装到其他同框架的项目中。一个代码应用目录位置位于项目下的app/code中。模块中可设置Api目录,Controller目录，view目录等以及必须的register.php注册文件。
-其中的每个应用可以移植安装。
-
-2、无缝集成TP6的ORM,更加符合国人开发逻辑。
-
-3、前后端集成到一个module中，做到一个需求一个module。
-
-4、代码模块化，接口以及传统路由分前后台。包括接口，具有后台接口入口，后台url入口。
-
-5、配置文件统一化。文件位置：app/etc/env.php
+    1、代码可移植性。
+    代码可安装到其他同框架的项目中。一个代码应用目录位置位于项目下的app/code中。模块中可设置Api目录,Controller目录，view目录等以及必须的register.php注册文件。
+    其中的每个应用可以移植安装。
+    
+    2、无缝集成TP6的ORM,更加符合国人开发逻辑。
+    
+    3、前后端集成到一个module中，做到一个需求一个module。
+    
+    4、代码模块化，接口以及传统路由分前后台。包括接口，具有后台接口入口，后台url入口。
+    
+    5、配置文件统一化。文件位置：app/etc/env.php
 
 #### 软件架构
-PHP>=7.4(强类型编写)
-composer
-nginx/apache
-#### 安装教程
-一、项目安装
-1.  WEB项目部署
-2.  无需设置繁杂的nginx（项目中有样例设置，include到配置中就可以）或者Apache设置（针对Apache项目中编写有伪静态），仅设置项目目录为部署目录即可。
 
-二、代码安装
-1.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
-2.  模块安装命令 bin/m module:disable <module_name> 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
-3.  模块卸载命令 bin/m module:remove <module_name> 此命令备份模块并删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
+    PHP>=7.4(强类型编写)
+    composer
+    nginx/apache
+
+#### 安装教程
+###一、项目安装
+
+    1.  WEB项目部署
+    2.  无需设置繁杂的nginx（项目中有样例设置，include到配置中就可以）或者Apache设置（针对Apache项目中编写有伪静态），仅设置项目目录为部署目录即可。
+
+###二、代码安装
+
+    1.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
+    2.  模块安装命令 bin/m module:disable <module_name> 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
+    3.  模块卸载命令 bin/m module:remove <module_name> 此命令备份模块并删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
 
 #### 使用说明
 
-1.  应用模块化
-2.  bin/m 命令
-3.  xxxx
+    1.  应用模块化
+    2.  bin/m 命令
+    3.  xxxx
 
 #### 参与贡献
 
