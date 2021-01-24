@@ -59,6 +59,7 @@ class ObjectManager implements ManagerInterface
      * @param $className
      * @param string $methodName
      * @param array $params
+     * @throws \ReflectionException
      * @return mixed
      */
     public static function make($className, $methodName = '__construct', $params = [])

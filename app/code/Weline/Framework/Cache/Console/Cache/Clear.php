@@ -1,33 +1,27 @@
 <?php
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(可以百度看看)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2021/1/24
- * 时间：18:33
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
 namespace Weline\Framework\Cache\Console\Cache;
 
-
-use Weline\Framework\App\Env;
+use Weline\Framework\Cache\Scanner;
 
 class Clear implements \Weline\Framework\Console\CommandInterface
 {
-
     /**
-     * @var Env
+     * @var Scanner
      */
-    private Env $env;
+    private Scanner $scanner;
 
-    function __construct(
-        Env $env
-    )
-    {
-        $this->env = $env;
+    public function __construct(
+        Scanner $scanner
+    ) {
+        $this->scanner = $scanner;
     }
 
     /**
@@ -35,7 +29,9 @@ class Clear implements \Weline\Framework\Console\CommandInterface
      */
     public function execute($args = [])
     {
-
+        $apps  =$this->scanner->getCaches();
+        p($apps);
+        // FIXME 先简单清理缓存目录
     }
 
     /**

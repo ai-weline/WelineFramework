@@ -32,4 +32,6 @@
   30 => '1、正在执行卸载脚本...',
   31 => 'XML文档中未定义：noNamespaceSchemaLocation 文档：E:\\WelineFramework\\app\\code\\Aiweline\\Bbs\\etc\\event.xml',
   32 => '所有命令已更新！',
+  33 => '所有命令已更新！',
+  34 => '所有命令已更新！',
 );

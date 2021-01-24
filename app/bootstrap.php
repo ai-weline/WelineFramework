@@ -39,5 +39,7 @@ $app->run();
 
 if (DEV) {
     $exception = error_get_last();
-    if($exception)p($exception->getMessage());
+    if ($exception) {
+        p($exception->getMessage());
+    }
 }

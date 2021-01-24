@@ -21,7 +21,9 @@ class CacheManager
 
     private string $identity;
 
-    public function __construct(string $identity = '')
+    public CacheInterface $cache;
+
+    public function __construct(string $identity = 'cache_system')
     {
         $this->config   = Env::getInstance()->getConfig('cache');
         $this->identity = $identity;

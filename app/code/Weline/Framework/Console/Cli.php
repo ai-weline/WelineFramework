@@ -66,23 +66,26 @@ class Cli extends CliAbstract
         foreach ($commands as $group => $command) {
             $keys = array_keys($command);
             foreach ($keys as $command_key) {
+                $command_key_arr = explode(':', $command_key);
                 $k = 0;
                 foreach ($input_command_arr as $input_key => $input_command_head) {
-                    $command_key_arr = explode(':', $command_key);
                     // 如果长度和首匹配都相同
-                    if (count($command_key_arr) == count($input_command_arr)) {
-                        foreach ($command_key_arr as $cd_key => $ck) {
-                            if ($input_key == $cd_key && strstr($ck, $input_command_head)) {
-                                $k += 1;
-                                break;
-                            }
+                    if (count($command_key_arr) === count($input_command_arr)) {
+                        $input_str_pos = strpos($command_key_arr[$input_key], $input_command_head);
+                        if (isset($command_key_arr[$input_key]) && !is_bool($input_str_pos) && $input_str_pos==0) {
+                            $k += 1;
                         }
                     }
                 }
-                if (count($input_command_arr) == $k) $matchCommand[$group][] = [$command_key => $command[$command_key]];
-                if ($k > 0) $recommendCommands[$group][] = [$command_key => $command[$command_key]];
+                if (count($input_command_arr) === $k) {
+                    $matchCommand[$group][] = [$command_key => $command[$command_key]];
+                }
+                if ($k > 0) {
+                    $recommendCommands[$group][] = [$command_key => $command[$command_key]];
+                }
             }
         }
+
         return $matchCommand ?? $recommendCommands;
     }
 
@@ -92,8 +95,8 @@ class Cli extends CliAbstract
      * 参数区：
      *
      * @return CommandInterface
-     * @throws ConsoleException
      * @throws Exception
+     * @throws ConsoleException
      */
     private function checkCommand()
     {
@@ -123,7 +126,6 @@ class Cli extends CliAbstract
             }
         }
 
-
         $recommendCommands = $this->recommendCommand($commands);
         $commands = [];
         foreach ($recommendCommands as $recommendCommand) {
@@ -145,9 +147,6 @@ class Cli extends CliAbstract
             if (DEV) {
                 throw new ConsoleException('命令文件缺失：' . $command_real_path);
             }
-        }
-        if (DEV) {
-            throw new ConsoleException('命令文件缺失：' . $command_real_path);
         }
         foreach ($recommendCommands as $key => &$command) {
             foreach ($command as $k => $item) {

@@ -38,6 +38,7 @@ class Scanner extends Scan
 
         return $vendors;
     }
+    
 
     /**
      * @DESC         |扫描应用供应商
