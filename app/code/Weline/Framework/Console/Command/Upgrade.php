@@ -28,10 +28,10 @@ class Upgrade extends CommandAbstract
     public function __construct(
         Printing $printer,
         System $system
-    ) {
-        parent::__construct($printer);
+    )
+    {
         $this->printer = $printer;
-        $this->system  = $system;
+        $this->system = $system;
     }
 
     /**
@@ -62,8 +62,8 @@ class Upgrade extends CommandAbstract
      * 参数区：
      *
      * @param array $args
-     * @throws \Weline\Framework\App\Exception
      * @return mixed|void
+     * @throws \Weline\Framework\App\Exception
      */
     public function execute($args = [])
     {
@@ -82,6 +82,7 @@ class Upgrade extends CommandAbstract
         $file->close();
 
         $this->printer->printList($commands);
+        $this->printer->success(__('所有命令已更新！'));
     }
 
     /**
@@ -116,12 +117,12 @@ class Upgrade extends CommandAbstract
     private function getDirFileCommand()
     {
         $command_class_position = ObjectManager::getInstance(Command::class);
-        $commands               = [];
+        $commands = [];
         /**@var $scanner Scan */
         $scanner = ObjectManager::getInstance(Scan::class);
 
         // 扫描核心命令
-        $core     = $scanner->scanDirTree(Env::vendor_path);
+        $core = $scanner->scanDirTree(Env::vendor_path);
         $customer = $scanner->scanDirTree(APP_PATH);
 
         // 合并
@@ -133,21 +134,21 @@ class Upgrade extends CommandAbstract
                     $dir = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $dir);
                 }
                 $dir_command_array = explode(self::dir, $dir);
-                $command_dir       = trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR);
-                $module_dir_arr    = explode(DIRECTORY_SEPARATOR, trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR));
-                $module            = array_pop($module_dir_arr);
-                $vendor            = array_pop($module_dir_arr);
-                $module_name       = $vendor . '\\' . $module;
+                $command_dir = trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR);
+                $module_dir_arr = explode(DIRECTORY_SEPARATOR, trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR));
+                $vendor = array_shift($module_dir_arr);
+                $module = implode(DIRECTORY_SEPARATOR,$module_dir_arr);
+                $module_name = $vendor . '\\' . $module;
                 if ($command_dir) {
                     foreach ($command_files as $file) {
-                        $command_dir_file     = $file->getNamespace() . '\\' . $file->getFilename();
+                        $command_dir_file = $file->getNamespace() . '\\' . $file->getFilename();
                         $command_dir_file_arr = explode(self::dir, $command_dir_file);
-                        $command_dir_file     = trim(array_pop($command_dir_file_arr), DIRECTORY_SEPARATOR);
-                        $command              = str_replace('\\', ':', strtolower($command_dir_file));
-                        $command              = trim($command, ':');
+                        $command_dir_file = trim(array_pop($command_dir_file_arr), DIRECTORY_SEPARATOR);
+                        $command = str_replace('\\', ':', strtolower($command_dir_file));
+                        $command = trim($command, ':');
                         if ($command) {
-                            $command_class_path                                                                                       = $command_class_position->getCommandPath($module_name, $command);
-                            $command_class                                                                                            = ObjectManager::getInstance($command_class_path);
+                            $command_class_path = $command_class_position->getCommandPath($module_name, $command);
+                            $command_class = ObjectManager::getInstance($command_class_path);
                             $commands[str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name][$command] = $command_class->getTip();
                         }
                     }

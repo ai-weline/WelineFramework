@@ -32,7 +32,6 @@ class Cli extends CliAbstract
             exit($this->execute());
         }
         $class = $this->checkCommand();
-
         switch (count($this->argv)) {
             case 1:
                 echo $class->execute();
@@ -46,7 +45,7 @@ class Cli extends CliAbstract
     }
 
     /**
-     * @DESC         |推荐命令
+     * @DESC         |简化推荐命令
      *
      * @Author       秋枫雁飞
      * @Email        aiweline@qq.com
@@ -68,12 +67,12 @@ class Cli extends CliAbstract
             $keys = array_keys($command);
             foreach ($keys as $command_key) {
                 $k = 0;
-                foreach ($input_command_arr as $input_key=>$input_command_head) {
+                foreach ($input_command_arr as $input_key => $input_command_head) {
                     $command_key_arr = explode(':', $command_key);
                     // 如果长度和首匹配都相同
                     if (count($command_key_arr) == count($input_command_arr)) {
                         foreach ($command_key_arr as $cd_key => $ck) {
-                            if ($input_key==$cd_key&&strstr($ck, $input_command_head)) {
+                            if ($input_key == $cd_key && strstr($ck, $input_command_head)) {
                                 $k += 1;
                                 break;
                             }
@@ -81,7 +80,7 @@ class Cli extends CliAbstract
                     }
                 }
                 if (count($input_command_arr) == $k) $matchCommand[$group][] = [$command_key => $command[$command_key]];
-                if ($k > 0) $recommendCommands[$group] = [$command_key => $command[$command_key]];
+                if ($k > 0) $recommendCommands[$group][] = [$command_key => $command[$command_key]];
             }
         }
         return $matchCommand ?? $recommendCommands;
@@ -103,11 +102,10 @@ class Cli extends CliAbstract
             exit(ObjectManager::getInstance(\Weline\Framework\Console\Command\Upgrade::class)->execute());
         }
         if ($arg0 !== 'command:upgrade' && !file_exists(Env::path_COMMANDS_FILE)) {
-            exit($this->printer->error('请更新模块命令：command:upgrade'));
+            exit($this->printer->error('命令系统异常！请完整执行（不能简写）更新模块命令后重试：php bin/m command:upgrade'));
         }
 
         $commands = include Env::path_COMMANDS_FILE;
-
         // 检查命令
         $command_path = '';
         foreach ($commands as $group => $group_commands) {
@@ -116,17 +114,12 @@ class Cli extends CliAbstract
                 $command_path = array_pop($group_arr);
             }
         }
-        if (empty($command_path)) {
-            $this->printer->error('无效命令：' . $arg0, 'CLI');
-        } else {
+        if ($command_path) {
             // 获取类的真实路径和命名空间位置
             $command_class_path = $command_path . $this->getCommandPath($arg0);
             $command_real_path = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
             if (file_exists($command_real_path)) {
                 return ObjectManager::getInstance($command_class_path);
-            }
-            if (DEV) {
-                throw new ConsoleException('命令文件缺失：' . $command_real_path);
             }
         }
 
@@ -153,6 +146,9 @@ class Cli extends CliAbstract
                 throw new ConsoleException('命令文件缺失：' . $command_real_path);
             }
         }
+        if (DEV) {
+            throw new ConsoleException('命令文件缺失：' . $command_real_path);
+        }
         foreach ($recommendCommands as $key => &$command) {
             foreach ($command as $k => $item) {
                 unset($command[$k]);
@@ -160,6 +156,7 @@ class Cli extends CliAbstract
                 $command[array_shift($keys)] = array_pop($item);
             }
         }
+        $this->printer->error('无效命令：' . $arg0, 'CLI');
         $this->printer->note('参考命令', '系统');
         $this->printer->printList($recommendCommands);
         exit();

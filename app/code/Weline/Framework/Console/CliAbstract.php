@@ -135,7 +135,6 @@ abstract class CliAbstract implements CommandInterface
             $commands = include $file_path;
             if (empty($commands)) {
                 exec('php ' . BP . 'bin/m command:upgrade', $result);
-
                 return  include $file_path;
             }
 
