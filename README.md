@@ -52,7 +52,7 @@
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0124/182852_fd7f82a9_1568278.png "微信截图_20210124182835.png")
 4. 框架缓存系统完成！
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0124/220301_22ae5546_1568278.png "微信截图_20210124220214.png")
-
+5. 事件Event观察者Observer模式，等待开发...
 #### 参与贡献
 
 1.  Fork 本仓库
