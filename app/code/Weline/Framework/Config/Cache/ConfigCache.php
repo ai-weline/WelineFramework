@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace M\Framework\Config\Cache;
+namespace Weline\Framework\Config\Cache;
 
 class ConfigCache extends \Weline\Framework\Cache\CacheManager
 {

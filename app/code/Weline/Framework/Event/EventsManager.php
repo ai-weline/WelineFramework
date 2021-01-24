@@ -40,7 +40,8 @@ class EventsManager
     public function scanEvents()
     {
         $app_events = $this->reader->read();
-        // 相同
+        p($app_events);
+        // TODO 相同
     }
 
     /**
