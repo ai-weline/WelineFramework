@@ -49,6 +49,7 @@
         例如之前运行：php bin/m deploy:mode:set dev 
         现在仅需要运行：php bin/m d:m:se dev
         简单来说就是现在运行命令可以使首字母匹配的方式，比如deploy可以简写匹配成d或者de再或者dep等，如果匹配冲突会提示相关命令。
+        ![输入图片说明](https://images.gitee.com/uploads/images/2021/0124/182852_fd7f82a9_1568278.png "微信截图_20210124182835.png")
 
 #### 参与贡献
 
