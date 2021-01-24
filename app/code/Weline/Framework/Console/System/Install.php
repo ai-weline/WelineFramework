@@ -9,8 +9,8 @@
 
 namespace Weline\Framework\Console\System;
 
+use Weline\Framework\App\System;
 use Weline\Framework\Database\Setup\DataInterface;
-use Weline\Framework\Output\Cli\Printing;
 use Weline\Installer\Runner;
 
 class Install extends \Weline\Framework\Console\CommandAbstract
@@ -20,14 +20,17 @@ class Install extends \Weline\Framework\Console\CommandAbstract
      */
     private Runner $runner;
 
-    function __construct(
-        Printing $printer,
-        Runner $runner
-    )
-    {
-        parent::__construct($printer);
-        $this->printer = $printer;
+    /**
+     * @var System
+     */
+    private System $system;
+
+    public function __construct(
+        Runner $runner,
+        System $system
+    ) {
         $this->runner = $runner;
+        $this->system = $system;
     }
 
     /**
@@ -39,20 +42,21 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         if (is_file($install_file)) {
             $this->printer->warning('M框架已安装！重新安装将清空系统数据。', '警告');
             $this->printer->setup('是否继续（y/n）？');
+
             // 判断系统
-            if (IS_WIN) {
-                $input = fread(STDIN, 1024);
-            } else {
-                $fp = fopen('/dev/stdin', 'r');
-                $input = fgets($fp, 1024);
-                fclose($fp);
-            }
+            $input = $this->system->input();
+//            if (IS_WIN) {
+//                $input = fread(STDIN, 1024);
+//            } else {
+//                $fp = fopen('/dev/stdin', 'r');
+//                $input = fgets($fp, 1024);
+//                fclose($fp);
+//            }
             if (strtolower(chop($input)) !== 'y') {
                 $this->printer->setup('操作已成功取消！', '提示');
                 exit();
             }
         }
-
 
         // 环境检测
         $this->printer->note('第一步：环境检测...', '系统');
@@ -77,21 +81,21 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         }
         array_shift($args);
         $db_keys = DataInterface::db_keys;
-        if (!isset($args_config['db'])) {
+        if (! isset($args_config['db'])) {
             $this->printer->error('数据库配置为空！示例：bin/m system:install --db-type=mysql', '系统');
             foreach ($db_keys as $key => $item) {
                 $this->printer->warning('--db-' . $key . '=' . ($item ? $item : 'null'), '数据库');
             }
             exit();
         }
-        $db_config = $args_config['db'] ?? [];
-        $db_config = array_intersect_key($db_config, $db_keys);
-        $db_config['type'] ?? $db_config['type'] = 'mysql';
+        $db_config                                       = $args_config['db'] ?? [];
+        $db_config                                       = array_intersect_key($db_config, $db_keys);
+        $db_config['type'] ?? $db_config['type']         = 'mysql';
         $db_config['hostport'] ?? $db_config['hostport'] = '3306';
-        $db_config['prefix'] ?? $db_config['prefix'] = 'm_';
-        $db_config['charset'] ?? $db_config['charset'] = 'utf8';
+        $db_config['prefix'] ?? $db_config['prefix']     = 'm_';
+        $db_config['charset'] ?? $db_config['charset']   = 'utf8';
         foreach ($db_keys as $db_key => $v) {
-            if (!isset($db_config[$db_key])) {
+            if (! isset($db_config[$db_key])) {
                 $this->printer->error('数据库' . $db_key . '配置不能为空！示例：bin/m system:install --db-' . $db_key . '=demo', '系统');
                 exit();
             }
@@ -107,15 +111,15 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         $this->printer->note('第五步：系统命令更新...', '系统');
         $runner->systemCommands();
         $this->printer->note('第六步：系统初始化...', '系统');
-        $initData['admin'] = 'admin_' . uniqid();
+        $initData['admin']     = 'admin_' . uniqid();
         $initData['api_admin'] = 'api_' . uniqid();
         $runner->systemInit($initData);
         $this->printer->success('初始化数据完成！', 'OK');
         $this->printer->note('-------------------------------------------------------');
         // 生成安装锁文件
-        if (!is_file($install_file)) {
+        if (! is_file($install_file)) {
             $this->printer->note('生成安装锁文件...');
-            $file = new \Weline\Framework\FileSystem\Io\File();
+            $file = new \Weline\Framework\System\File\Io\File();
             $file->open(BP . 'setup/install.lock', $file::mode_w);
             $file->close();
         }

@@ -10,12 +10,26 @@
 namespace Aiweline\Index\Controller;
 
 use Weline\Framework\App\Controller\FrontendController;
+use Weline\Framework\Manager\EventsManager;
 
 class Index extends FrontendController
 {
+    /**
+     * @var EventsManager
+     */
+    private EventsManager $eventsManager;
+
+    public function __construct(
+        EventsManager $eventsManager
+    ) {
+        $this->eventsManager = $eventsManager;
+    }
+
     public function index()
     {
-        // TODO 跳转功能
+        // 分配事件
+        $this->eventsManager->dispatch('index_event_test', ['object'=>$this]);
+
         return $this->fetch();
     }
 }

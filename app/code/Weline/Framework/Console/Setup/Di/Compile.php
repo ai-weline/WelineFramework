@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Console\Setup\Di;
 
-use Weline\Framework\FileSystem\App\Scanner as AppScanner;
+use Weline\Framework\System\File\App\Scanner as AppScanner;
 
 class Compile extends \Weline\Framework\Console\CommandAbstract
 {

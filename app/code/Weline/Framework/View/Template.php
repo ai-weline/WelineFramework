@@ -10,7 +10,7 @@
 namespace Weline\Framework\View;
 
 use Weline\Framework\App\Exception;
-use Weline\Framework\FileSystem\Directory;
+use Weline\Framework\System\File\Directory;
 use Weline\Framework\Http\Request;
 use Weline\Framework\View\Data\DataInterface;
 
@@ -144,6 +144,7 @@ class Template
     public function fetch(string $fileName)
     {
         // 解析模板路由
+        $fileName          = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
         $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
         $file_dir          = null;
         $file_name         = null;
@@ -162,7 +163,6 @@ class Template
         } else {
             $tplFile = $this->template_dir . $fileName . self::file_ext;
         }
-
         if (! file_exists($tplFile)) {
             if (DEV) {
                 throw new Exception('模板文件：' . $tplFile . '不存在！');
@@ -202,12 +202,12 @@ class Template
     private function tmp_replace($content)
     {
         // <php></php>标签
-        $patterns = [
+        $replaces = [
             '@static' => $this->getUrlPath($this->statics_dir),
             //            '<php>' => '<?php ',
             /*            '</php>' => ' ?>',*/
         ];
-        foreach ($patterns as $tag => $replace) {
+        foreach ($replaces as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);
         }
         $pattern = [
@@ -215,15 +215,17 @@ class Template
             '/\@\{(.*)\}/',
             '/\@include (.*)/',
             '/\@template (.*)/',
-            '/\@p\((.*)\)/',
+            '/\@view (.*)/',
+            '/\@p\((.+)\)/',
             '/\@if\((.*)\)\{(.*)\}/',
             '/\@foreach\((.*)\)\{(.*)\}/',
         ];
         $replacement = [
             '<?php echo $this->vars["${1}"]; ?>',
             '<?php ${1} ?>',
-            '<?php include("${1}"); ?>',
-            '<?php $this->fetch("${1}"); ?>',
+            '<?php include(trim("${1}")); ?>',
+            '<?php $this->fetch(trim("templates/${1}")); ?>',
+            '<?php $this->fetch(trim("${1}")); ?>',
             '<?php p(isset($this->getData("${1}"))??${1}); ?>',
             '<?php if(${1})echo addslashes("${2}"); ?>',
             "<?php 

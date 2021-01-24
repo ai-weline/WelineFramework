@@ -1,6 +1,6 @@
 {
-  "name": "aiweline/m",
-  "description": "微蓝M框架！",
+  "name": "aiweline/welineframework",
+  "description": "微蓝WelineFramework框架！",
   "type": "project",
   "minimum-stability": "stable",
   "license": "proprietary",
@@ -21,7 +21,9 @@
     "phpunit/phpunit": "^9.2",
     "ext-simplexml": "*",
     "topthink/think-template": "^2.0",
-    "friendsofphp/php-cs-fixer": "^2.16"
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "ext-dom": "*",
+    "ext-libxml": "*"
   },
   "autoload": {
     "psr-4": {

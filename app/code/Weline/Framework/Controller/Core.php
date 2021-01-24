@@ -23,6 +23,11 @@ class Core implements Data\DataInterface
         return $this->getRequest()->getResponse()->noRouter();
     }
 
+    public function __init()
+    {
+        $this->getRequest();
+    }
+
     /**
      * @return Request
      */

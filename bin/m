@@ -1,5 +1,4 @@
 #!/usr/bin/php
-
 <?php
 if (PHP_SAPI !== 'cli') {
     echo chr(27) . '[34m bin/m' . chr(27) . '[31m  ??? CLI ??????' . chr(27) . '[0m' . PHP_EOL;
@@ -22,10 +21,10 @@ CLI_E;
 try {
     (new Weline\Framework\Console\Cli('M?? CLI', $argv))->run();
     // 运行代码标准程序 php-cs-fixer
-    if(is_file(\Weline\Framework\App\Env::extend_dir.'php-cs-fixer-v2.phar')){
-        exec('php '.\Weline\Framework\App\Env::extend_dir.'php-cs-fixer-v2.phar fix',$out);
-    }else{
-        if(DEV)  new \Weline\Framework\App\Exception('标准化代码文件缺失：'.\Weline\Framework\App\Env::extend_dir.'php-cs-fixer-v2.phar');
+    if (PHP_CS && is_file(\Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v2.phar')) {
+        exec('php ' . \Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v2.phar fix', $out);
+    } else {
+        if (DEV) new \Weline\Framework\App\Exception('标准化代码文件缺失：' . \Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v2.phar');
     }
 } catch (Exception $e) {
     $chr = chr(27);

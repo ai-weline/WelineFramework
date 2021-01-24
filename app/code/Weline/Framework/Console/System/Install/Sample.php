@@ -16,12 +16,12 @@ class Sample extends CommandAbstract
     public function execute($args = [])
     {
         $this->printer->note('安装命令示例：');
-        $line_break = IS_WIN?'^':'\\';
-        $this->printer->success('php bin/m system:install '.$line_break.'
---db-type=mysql '.$line_break.'
---db-hostname=127.0.0.1 '.$line_break.'
---db-database=m_dev '.$line_break.'
---db-username=m_dev '.$line_break.'
+        $line_break = IS_WIN ? '^' : '\\';
+        $this->printer->success('php bin/m system:install ' . $line_break . '
+--db-type=mysql ' . $line_break . '
+--db-hostname=127.0.0.1 ' . $line_break . '
+--db-database=m_dev ' . $line_break . '
+--db-username=m_dev ' . $line_break . '
 --db-password=ShP5T7yzNMs87ZDp
             ');
         exit();

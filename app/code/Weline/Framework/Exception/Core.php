@@ -10,7 +10,7 @@
 namespace Weline\Framework\Exception;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\FileSystem\Io\File;
+use Weline\Framework\System\File\Io\File;
 use Weline\Framework\Output\Debug\Printing;
 
 class Core extends \Exception
@@ -27,15 +27,16 @@ class Core extends \Exception
     /**
      * Exception 初始函数...
      * @param $message
+     * @param \Exception|null $cause
      * @param int $code
      */
-    public function __construct($message = null, $code = 0)
+    public function __construct($message = null, \Exception $cause = null, $code = 0)
     {
         $this->etc    = Env::getInstance();
         $this->config = $this->etc->getConfig();
         $this->_debug = new Printing();
 
-        parent::__construct($message, $code);
+        parent::__construct($message, $code, $cause);
         $this->__toString();
 
         $this->init();

@@ -117,12 +117,15 @@ class Core
             if (isset($routers[$url . $method]) || isset($routers[$url . '/index' . $method])) {
                 $router   = $routers[$url . $method] ?? $routers[$url . '/index' . $method];
                 $class    = json_decode(json_encode($router['class']));
-                $dispatch = new $class->name();
+                $dispatch = ObjectManager::getInstance($class->name);
                 $method   = $class->method ? $class->method : 'index';
                 if ((int)method_exists($dispatch, $method)) {
 //                        echo call_user_func(array($dispatch, $method), $this->getParams());
                     // 先初始化控制器
-                    call_user_func([$dispatch, '__init']);
+//                    if (method_exists($dispatch, '__init')) {
+//                        call_user_func([$dispatch, '__init']);
+//                    }
+
                     echo call_user_func([$dispatch, $method]);
                     exit(0);
                 }

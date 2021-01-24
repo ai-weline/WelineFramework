@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Output;
 
-use Weline\Framework\FileSystem\Io\File;
+use Weline\Framework\System\File\Io\File;
 
 abstract class AbstractPrint implements PrintInterface
 {

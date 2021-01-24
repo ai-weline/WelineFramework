@@ -90,7 +90,7 @@ class Cli extends CliAbstract
      */
     private function checkCommand()
     {
-        $arg0 = trim($this->argv[0]);
+        $arg0 = strtolower(trim($this->argv[0]));
         if ($arg0 === 'command:upgrade') {
             exit(ObjectManager::getInstance(\Weline\Framework\Console\Command\Upgrade::class)->execute());
         }
@@ -99,6 +99,7 @@ class Cli extends CliAbstract
         }
 
         $commands = include Env::path_COMMANDS_FILE;
+
         // 检查命令
         $command_path = '';
         foreach ($commands as $group => $group_commands) {

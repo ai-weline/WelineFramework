@@ -15,13 +15,9 @@ abstract class CommandAbstract implements CommandInterface
 {
     protected Printing $printer;
 
-    /**
-     * CommandAbstract 初始函数...
-     * @param Printing $printer
-     */
-    public function __construct(Printing $printer)
+    public function __init()
     {
-        $this->printer = $printer;
+        $this->printer = new Printing();
     }
 
     /**

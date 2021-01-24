@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.aiweline.com/menus urn:m:module:M_Backend::etc/xml_xsd/menu.xsd">
-    <add source="M_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>
+<menus xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+       xs:noNamespaceSchemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd"
+       xs:schemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd">
+    <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>
 </menus>

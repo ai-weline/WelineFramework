@@ -9,7 +9,7 @@
 
 namespace Aiweline\Bbs\Controller;
 
-class Index extends PcBaseController
+class Index extends BasePcController
 {
     public function index()
     {

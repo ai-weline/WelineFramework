@@ -18,34 +18,16 @@ class CacheManager
     private static CacheManager $instance;
 
     private array $config;
+    private string $identity;
 
-    private function __clone()
-    {
-    }
-
-    private function __construct()
+    function __construct(string $identity = '')
     {
         $this->config = Env::getInstance()->getConfig('cache');
+        $this->identity = $identity;
     }
 
     /**
-     * @DESC         |获取实例
-     *
-     * 参数区：
-     *
-     * @return CacheManager
-     */
-    public static function getInstance(): CacheManager
-    {
-        if (! isset(self::$instance)) {
-            self::$instance = new self();
-        }
-
-        return self::$instance;
-    }
-
-    /**
-     * @DESC         |方法描述
+     * @DESC         |创建缓存
      *
      * 参数区：
      * @param string $driver
@@ -58,6 +40,6 @@ class CacheManager
         }
         $driver_class = self::driver_NAMESPACE . ucfirst($driver);
 
-        return new $driver_class($this->config['drivers'][$driver]);
+        return new $driver_class($this->identity, $this->config['drivers'][$driver]);
     }
 }

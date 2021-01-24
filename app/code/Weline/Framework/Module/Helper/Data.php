@@ -10,8 +10,8 @@
 namespace Weline\Framework\Module\Helper;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\FileSystem\App\Scanner;
-use Weline\Framework\FileSystem\Io\File;
+use Weline\Framework\System\File\App\Scanner;
+use Weline\Framework\System\File\Io\File;
 use Weline\Framework\Helper\AbstractHelper;
 use Weline\Framework\Http\RequestInterface;
 use Weline\Framework\Manager\ObjectManager;
@@ -42,9 +42,10 @@ class Data extends AbstractHelper
             $appScanner = new Scanner();
             // 扫描模块
             $moduleDir      = $appScanner->scanDirTree(APP_PATH . $this->moduleNameToPath($modules, $name), 12);
+
             $routerRegister = new Register();
 
-            /** @var $Files \Weline\Framework\FileSystem\Data\File[]  */
+            /** @var $Files \Weline\Framework\System\File\Data\File[] */
             foreach ($moduleDir as $dir => $Files) {
                 // Api路由
                 if (strstr($dir, Handle::api_DIR)) {
@@ -57,9 +58,10 @@ class Data extends AbstractHelper
                         $apiClass     = new $apiClassName();
 
                         // 删除父类方法：注册控制器方法
-                        $ctl_data    = $this->removeParentMethods($apiClass);
-                        $ctl_methods = $ctl_data['methods'];
-                        $ctl_area    = $ctl_data['area'];
+                        $this->parent_class_arr = [];// 清空父类信息
+                        $ctl_data               = $this->parserController($apiClass);
+                        $ctl_methods            = $ctl_data['methods'];
+                        $ctl_area               = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
@@ -82,8 +84,7 @@ class Data extends AbstractHelper
                             ]);
                         }
                     }
-                }
-                // PC路由 TODO 处理PC路由基类引起的未知路由
+                } // PC路由 TODO 处理PC路由基类引起的未知路由
                 elseif (strstr($dir, Handle::pc_DIR)) {
                     foreach ($Files as $controllerFile) {
                         $controllerDirArray  = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
@@ -93,9 +94,10 @@ class Data extends AbstractHelper
                         $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
                         $controllerClass     = ObjectManager::getInstance($controllerClassName);
                         // 删除父类方法：注册控制器方法
-                        $ctl_data    = $this->removeParentMethods($controllerClass);
-                        $ctl_methods = $ctl_data['methods'];
-                        $ctl_area    = $ctl_data['area'];
+                        $this->parent_class_arr = [];// 清空父类信息
+                        $ctl_data               = $this->parserController($controllerClass);
+                        $ctl_methods            = $ctl_data['methods'];
+                        $ctl_area               = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
@@ -104,6 +106,7 @@ class Data extends AbstractHelper
                             if (! in_array($request_method, RequestInterface::METHODS, true)) {
                                 $request_method = RequestInterface::GET;
                             }
+
                             $routerRegister::register(Register::ROUTER, [
                                 'type'           => DataInterface::type_PC,
                                 'area'           => $ctl_area,
@@ -136,7 +139,7 @@ class Data extends AbstractHelper
     public function moduleNameToPath(array &$modules, string $name): string
     {
         if ($this->isInstalled($modules, $name)) {
-            return trim($modules[$name]['path'], DIRECTORY_SEPARATOR);
+            return trim(str_replace('\\', DIRECTORY_SEPARATOR, $modules[$name]['path']), DIRECTORY_SEPARATOR);
         }
 
         return str_replace('_', DIRECTORY_SEPARATOR, $name);
@@ -167,7 +170,7 @@ class Data extends AbstractHelper
      * @throws \ReflectionException
      * @return array
      */
-    private function removeParentMethods(object $class)
+    private function parserController(object $class)
     {
         // 默认前端控制器
         $ctl_area = \Weline\Framework\Controller\Data\DataInterface::type_pc_FRONTEND;
@@ -182,15 +185,26 @@ class Data extends AbstractHelper
         }
         // 存在父类则过滤父类方法
         if ($parent_class = $reflect->getParentClass()) {
-            $this->parent_class_arr = array_merge($this->parent_class_arr, explode('\\', $parent_class->getName()));
+            $controller_class = [];
+            foreach (explode('\\', $parent_class->getName()) as $item) {
+                if (strstr($item, 'Controller')) {
+                    $controller_class[] = $item;
+                }
+            }
+            $this->parent_class_arr = array_merge($this->parent_class_arr, $controller_class);
+            $parent_methods         = [];
             foreach ($parent_class->getMethods() as $method) {
                 if (strstr($method->getName(), '__')) {
                     continue;
                 }
                 $parent_methods[] = $method->getName();
             }
-            $controller_methods     = array_diff($controller_methods, $parent_methods);
-            $this->parent_class_arr = array_merge($this->parent_class_arr, $this->removeParentMethods($parent_class)['area']);
+            $controller_methods = array_diff($controller_methods, $parent_methods);
+            // 实例化类
+            if (! $parent_class->isAbstract()) {
+                $class                  = ObjectManager::getInstance($parent_class->getName());
+                $this->parent_class_arr = array_merge($this->parent_class_arr, $this->parserController($class)['area']);
+            }
         }
 
         return ['area' => array_unique($this->parent_class_arr), 'methods' => $controller_methods];

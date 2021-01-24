@@ -11,5 +11,4 @@ namespace Weline\Framework\Helper;
 
 interface HandleInterface
 {
-    public function getHelper(): AbstractHelper;
 }

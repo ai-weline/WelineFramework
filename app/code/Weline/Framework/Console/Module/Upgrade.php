@@ -12,7 +12,7 @@ namespace Weline\Framework\Console\Module;
 use Weline\Framework\App\System;
 use Weline\Framework\App\Env;
 use Weline\Framework\Console\CommandAbstract;
-use Weline\Framework\FileSystem\App\Scanner as AppScanner;
+use Weline\Framework\System\File\App\Scanner as AppScanner;
 use Weline\Framework\Module\Helper\Data;
 use Weline\Framework\Output\Cli\Printing;
 
@@ -23,13 +23,26 @@ class Upgrade extends CommandAbstract
      */
     private System $system;
 
+    /**
+     * @var AppScanner
+     */
+    private AppScanner $scanner;
+
+    /**
+     * @var Data
+     */
+    private Data $data;
+
     public function __construct(
         Printing $printer,
+        AppScanner $scanner,
+        Data $data,
         System $system
     ) {
-        parent::__construct($printer);
         $this->printer = $printer;
         $this->system  = $system;
+        $this->scanner = $scanner;
+        $this->data    = $data;
     }
 
     /**
@@ -48,15 +61,16 @@ class Upgrade extends CommandAbstract
     public function execute($args = [])
     {
         // 删除路由文件
+        $this->printer->warning('路由更新...', '系统');
         foreach (Env::router_files_PATH as $path) {
+            $this->printer->warning('清除文件：' . $path, '系统');
             if (is_file($path)) {
                 list($out, $var) = $this->system->exec('rm -f ' . $path);
                 $this->printer->printList($out);
             }
         }
         // 扫描代码
-        $scanner = new AppScanner();
-        $apps    = $scanner->scanAppModules();
+        $apps = $this->scanner->scanAppModules();
 
         $this->printer->note('模块更新...');
         // 注册模块
@@ -80,8 +94,7 @@ class Upgrade extends CommandAbstract
         }
         $module_list = array_intersect_key($module_list, $all_modules);
 
-        $helper = new Data();
-        $helper->updateModules($module_list);
+        $this->data->updateModules($module_list);
 
         $this->printer->note('模块更新完毕！');
     }

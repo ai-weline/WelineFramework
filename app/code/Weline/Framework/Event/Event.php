@@ -1,0 +1,85 @@
+<?php
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
+ */
+
+namespace Weline\Framework\Event;
+
+class Event extends \Weline\Framework\DataObject\DataObject
+{
+    public function __construct(array $data = [])
+    {
+        parent::__construct($data);
+        $this->setData('observers', []);
+    }
+
+    private string $name;
+
+    /**
+     * @DESC         |添加观察者
+     *
+     * 参数区：
+     *
+     * @param Observer $observer
+     * @return \Weline\Framework\Event\Event
+     */
+    public function addObserver(Observer $observer)
+    {
+        $observers   = $this->getData('observers');
+        $observers[] = $observer;
+        $this->setData('observers', $observers);
+
+        return $this;
+    }
+
+    /**
+     * @DESC         |获取观察者
+     *
+     * 参数区：
+     *
+     * @return ObserverInterface []
+     */
+    public function getObservers(): array
+    {
+        return $this->getData('observers');
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @DESC         |方法描述
+     *
+     * 参数区：
+     *
+     * @param string $name
+     * @return $this
+     */
+    public function setName(string $name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * @DESC         |派遣
+     *
+     * 参数区：
+     */
+    public function dispatch()
+    {
+        foreach ($this->getObservers() as $observer) {
+            $observer->execute($this->getData('event'));
+        }
+    }
+}

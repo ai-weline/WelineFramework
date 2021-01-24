@@ -9,23 +9,22 @@
 
 namespace Weline\Framework\Module;
 
+use Weline\Framework\System\File\Compress;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\App\System;
 use Weline\Framework\Console\ConsoleException;
-use Weline\Framework\Helper\AbstractHelper;
 use Weline\Framework\Helper\HandleInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Module\Helper\Data;
 use Weline\Framework\Module\Must\DataInterface;
 use Weline\Framework\Output\Cli\Printing;
 use Weline\Framework\Setup\Helper\Data as SetupHelper;
+use Weline\Framework\Setup\Data\Setup as SetupData;
+use Weline\Framework\Setup\Data\Context as SetupContext;
 
 class Handle implements HandleInterface
 {
-    private \Weline\Framework\Setup\Data\Setup $setup_tool;
-
-    private \Weline\Framework\Setup\Data\Context $setup_context;
-
     const api_DIR = 'Api';// api特殊目录，注册api路由
 
     const pc_DIR = 'Controller';// pc特殊目录，注册pc路由
@@ -34,25 +33,51 @@ class Handle implements HandleInterface
 
     private array $modules;
 
-    private SetupHelper $setup_helper;
-
     /**
      * @var Data
      */
     private Data $helper;
 
+    /**
+     * @var System
+     */
+    private System $system;
+
+    /**
+     * @var SetupData
+     */
+    private SetupData $setup_data;
+
+    /**
+     * @var SetupHelper
+     */
+    private SetupHelper $setup_helper;
+
+    /**
+     * @var SetupContext
+     */
+    private SetupContext $setup_context;
+
+    /**
+     * @var Compress
+     */
+    private Compress $compress;
+
     public function __construct(
         Data $helper,
-        Printing $printing
+        Printing $printer,
+        System $system,
+        SetupHelper $setup_helper,
+        SetupData $setup_data,
+        Compress $compress
     ) {
-        $this->modules = Env::getInstance()->getModuleList();
-        $this->printer = $printing;
-        $this->helper  = $helper;
-    }
-
-    public function getHelper(): AbstractHelper
-    {
-        return $this->helper;
+        $this->modules      = Env::getInstance()->getModuleList();
+        $this->helper       = $helper;
+        $this->system       = $system;
+        $this->setup_data   = $setup_data;
+        $this->setup_helper = $setup_helper;
+        $this->printer      = $printer;
+        $this->compress     = $compress;
     }
 
     /**
@@ -65,14 +90,9 @@ class Handle implements HandleInterface
      */
     public function remove(string $module_name)
     {
-        $module_list = Env::getInstance()->getModuleList();
-        if (! isset($this->setup_tool)) {
-            $this->setup_tool = new \Weline\Framework\Setup\Data\Setup();
-        }
-        if (! isset($this->setup_helper)) {
-            $this->setup_helper = new SetupHelper();
-        }
         $app_path = APP_PATH;
+
+        $module_list = Env::getInstance()->getModuleList();
         $this->printer->note(__('1、正在执行卸载脚本...'));
         $remove_script = $this->setup_helper->getSetupClass($module_name, \Weline\Framework\Setup\Data\DataInterface::type_REMOVE);
         if ($remove_script) {
@@ -81,22 +101,25 @@ class Handle implements HandleInterface
             $version       = $module_list[$module_name]['version'] ?? '1.0.0';
             $setup_context = new \Weline\Framework\Setup\Data\Context($module_name, $version);
 
-            $this->printer->note($remove_object->setup($this->setup_tool, $setup_context));
+            $this->printer->note($remove_object->setup($this->setup_data, $setup_context));
         } else {
             $this->printer->warning('模块卸载脚本不存在，已跳过卸载脚本！', '卸载');
         }
         $this->printer->note('2、备份应用程序...');
-        if (is_dir(APP_PATH . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR)) {
-            $back_path = APP_PATH . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR;
+        if (is_dir($app_path . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR)) {
+            $back_path = $app_path . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR;
         } elseif (is_dir($back_path = BP . 'vendor/' . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR)) {
             $back_path = BP . 'vendor/' . $module_list[$module_name]['path'] . DIRECTORY_SEPARATOR;
         } else {
             $this->printer->error("模块{$module_name}:不存在！", 'ERROR');
         }
-        exec("tar -zcPf {$app_path}{$module_name}.tar.gz {$back_path}");
-        $this->printer->note($app_path . $module_name . '.tar.gz');
-        $this->printer->note('3、卸载应用代码...');
-        exec("rm $back_path -r");
+        $zip = $this->compress->createTarGz("{$app_path}{$module_name}");
+        p($zip->isCompressed());
+//        list($out, $vars) = $this->system->exec("tar -zcPf {$app_path}{$module_name}.tar.gz {$back_path}");
+//        exec("tar -zcPf {$app_path}{$module_name}.tar.gz {$back_path}");
+//        $this->printer->note($app_path . $module_name . '.tar.gz');
+//        $this->printer->note('3、卸载应用代码...');
+//        exec("rm $back_path -r");
         $this->printer->success($module_name . __('模块已卸载完成！'));
     }
 
@@ -141,10 +164,8 @@ class Handle implements HandleInterface
                 }
             }
         }
-        if (! isset($this->setup_tool)) {
-            $this->setup_tool = new \Weline\Framework\Setup\Data\Setup();
-        }
-        $this->setup_context = new \Weline\Framework\Setup\Data\Context($name, $version);
+
+        $this->setup_context = new SetupContext($name, $version);
 
         $setup_dir = $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
 
@@ -161,7 +182,7 @@ class Handle implements HandleInterface
                         $setup_file_arr = explode(APP_PATH, $setup_file);
                         $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
                         $setup          = new $file_namespace();
-                        $result         = $setup->setup($this->setup_tool, $this->setup_context);
+                        $result         = $setup->setup($this->setup_data, $this->setup_context);
                         $this->printer->note("{$result}");
                     }
                 }
@@ -199,7 +220,7 @@ class Handle implements HandleInterface
                         $setup_file_arr = explode(APP_PATH, $setup_file);
                         $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
                         $setup          = ObjectManager::getInstance($file_namespace);
-                        $setup->setup($this->setup_tool, $this->setup_context);
+                        $setup->setup($this->setup_data, $this->setup_context);
                     }
                     $this->printer->success(str_pad($name, 45) . '已安装！');
                 }

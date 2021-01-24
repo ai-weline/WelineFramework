@@ -10,7 +10,7 @@
 namespace Weline\Framework\Console;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\FileSystem\Io\File;
+use Weline\Framework\System\File\Io\File;
 
 abstract class CliAbstract implements CommandInterface
 {

@@ -25,6 +25,8 @@ class System
             $linux_to_win = [
                 'rm' => 'del',
                 '-f' => '/F',
+                'cp' => 'xcopy',
+                '-r' => '/s/q',
             ];
             foreach ($linux_to_win as $key => $item) {
                 $linux_command = str_replace($key, $item, $linux_command);
@@ -33,5 +35,19 @@ class System
         exec($linux_command, $output, $return_var);
 
         return [$output, $return_var];
+    }
+
+    public function input()
+    {
+        // 判断系统
+        if (IS_WIN) {
+            $input = fread(STDIN, 1024);
+        } else {
+            $fp    = fopen('/dev/stdin', 'r');
+            $input = fgets($fp, 1024);
+            fclose($fp);
+        }
+
+        return $input;
     }
 }

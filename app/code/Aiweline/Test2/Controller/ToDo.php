@@ -9,7 +9,9 @@
 
 namespace Aiweline\Test2\Controller;
 
-class ToDo
+use Weline\Framework\App\Controller\FrontendController;
+
+class ToDo extends FrontendController
 {
     public function ok()
     {

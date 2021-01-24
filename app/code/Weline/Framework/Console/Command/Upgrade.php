@@ -13,8 +13,8 @@ use Weline\Framework\App\System;
 use Weline\Framework\App\Env;
 use Weline\Framework\Console\Command;
 use Weline\Framework\Console\CommandAbstract;
-use Weline\Framework\FileSystem\Data\File;
-use Weline\Framework\FileSystem\Scan;
+use Weline\Framework\System\File\Data\File;
+use Weline\Framework\System\File\Scan;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Cli\Printing;
 
@@ -74,8 +74,8 @@ class Upgrade extends CommandAbstract
         }
 
         $commands = $this->scan();
-        /**@var $file \Weline\Framework\FileSystem\Io\File */
-        $file = ObjectManager::getInstance('\Weline\Framework\FileSystem\Io\File');
+        /**@var $file \Weline\Framework\System\File\Io\File */
+        $file = ObjectManager::getInstance('\Weline\Framework\System\File\Io\File');
         $file->open(Env::path_COMMANDS_FILE, $file::mode_w_add);
         $text = '<?php return ' . var_export($commands, true) . ';';
         $file->write($text);

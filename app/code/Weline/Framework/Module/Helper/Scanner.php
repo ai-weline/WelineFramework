@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Module\Helper;
 
-use Weline\Framework\FileSystem\Scan;
+use Weline\Framework\System\File\Scan;
 use Weline\Framework\Module\Data\DirectoryInterface;
 
 /**

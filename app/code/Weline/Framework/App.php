@@ -9,6 +9,7 @@
 
 namespace Weline\Framework;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\App\Helper;
 use Weline\Framework\Router\Core as RouterCore;
 
@@ -25,8 +26,27 @@ class App
         $this->router = $router;
     }
 
+    /**
+     * @DESC         |初始化
+     *
+     * 参数区：
+     */
     public function __init()
     {
+        // 执行时间
+        define('START_TIME', microtime(true));
+        // 系统是否WIN
+        define('IS_WIN', strtolower(substr(PHP_OS, 0, 3)) === 'win');
+        // 助手函数
+        require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
+        /**------------环境配置----------------*/
+        $env = Env::getInstance();
+        // 调试模式
+        define('DEV', $env->getConfig('deploy', false) === 'dev');
+        // 代码标准化模式
+        define('PHP_CS', $env->getConfig('php-cs', false));
+        //报告错误
+        DEV ? error_reporting(E_ALL) : error_reporting(0);
         // 检查运行模式
         defined('CLI') ?: define('CLI', PHP_SAPI === 'cli');
         // 导入核心通用组件

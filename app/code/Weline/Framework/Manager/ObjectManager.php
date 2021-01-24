@@ -26,8 +26,12 @@ class ObjectManager implements ManagerInterface
     }
 
     /**
-     * @Desc         | 获取实例(如果不填写class则获取对象管理器本身，如果填写则获取class实例)
+     * @DESC         |获取实例(如果不填写class则获取对象管理器本身，如果填写则获取class实例)
+     *
+     * 参数区：
+     *
      * @param string $class
+     * @throws \ReflectionException
      * @return mixed|ObjectManager
      */
     public static function getInstance(string $class = '')
@@ -113,5 +117,19 @@ class ObjectManager implements ManagerInterface
         }
 
         return $paramArr;
+    }
+
+    /**
+     * @DESC         |读取类反射
+     *
+     * 参数区：
+     *
+     * @param $class
+     * @throws \ReflectionException
+     * @return ReflectionClass
+     */
+    protected function getReflectionClass($class): ReflectionClass
+    {
+        return new \ReflectionClass($class);
     }
 }

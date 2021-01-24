@@ -10,22 +10,54 @@
 namespace Weline\Framework\Console\Module;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\App\System;
 use Weline\Framework\Console\CommandAbstract;
 use Weline\Framework\Console\ConsoleException;
-use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Module\Handle;
 use Weline\Framework\Module\Helper\Data;
 
 class Remove extends CommandAbstract
 {
     /**
+     * @var System
+     */
+    private System $system;
+
+    /**
+     * @var Data
+     */
+    private Data $data;
+
+    /**
+     * @var Upgrade
+     */
+    private Upgrade $upgrade;
+
+    /**
+     * @var Handle
+     */
+    private Handle $handle;
+
+    public function __construct(
+        System $system,
+        Data $data,
+        Upgrade $upgrade,
+        Handle $handle
+    ) {
+        $this->system  = $system;
+        $this->data    = $data;
+        $this->upgrade = $upgrade;
+        $this->handle  = $handle;
+    }
+
+    /**
      * @DESC         |执行方法
      *
      * 参数区：
      *
      * @param array $args
-     * @throws ConsoleException
      * @throws \Weline\Framework\App\Exception
+     * @throws ConsoleException
      * @return mixed|void
      */
     public function execute($args = [])
@@ -39,9 +71,9 @@ class Remove extends CommandAbstract
             $this->printer->warning($module);
         }
         $this->printer->setup(__('是否继续（y/n）？'));
-        $fp    = fopen('/dev/stdin', 'r');
-        $input = fgets($fp, 255);
-        fclose($fp);
+
+        // 控制台输入
+        $input = $this->system->input();
 
         if (strtolower(chop($input)) === 'y') {
             // 获得模块列表
@@ -53,9 +85,7 @@ class Remove extends CommandAbstract
             foreach ($args as $module) {
                 $this->printer->note(__('执行 ') . $module . __(' 卸载程序...'));
                 if (isset($module_list[$module])) {
-                    /**@var $handle Handle*/
-                    $handle = ObjectManager::getInstance(Handle::class);
-                    $handle->remove($module);
+                    $this->handle->remove($module);
                     // 卸载数组中模块
                     unset($module_list[$module]);
                 } else {
@@ -63,8 +93,8 @@ class Remove extends CommandAbstract
                 }
             }
             // 更新模块数据
-            (new Data())->updateModules($module_list);
-            ObjectManager::getInstance(Upgrade::class)->execute();
+            $this->data->updateModules($module_list);
+            $this->upgrade->execute();
         } else {
             $this->printer->warning(__('已取消执行！'));
         }

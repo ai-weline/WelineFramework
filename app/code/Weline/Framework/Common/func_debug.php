@@ -24,6 +24,60 @@
 function p($data = null, bool $pass = false, int $trace_deep = 2): void
 {
     // 执行时间
+    $exe_time         = microtime(true) - START_TIME;
+    $isCli            = (PHP_SAPI === 'cli');
+    if (is_object($data)) {
+        if (method_exists($data, 'toArray')) {
+            $subIsObject = 0;
+            foreach ($data->toArray() as $item) {
+                if (is_object($item)) {
+                    $subIsObject = 1;
+                }
+            }
+            if (! $subIsObject) {
+                var_dump(get_class($data));
+                echo $isCli ? PHP_EOL : '<br>';
+                var_dump($data->toArray());
+                echo $isCli ? PHP_EOL : '</div><br><div>调试时间：<br>--' . ($exe_time * 1000) . '(ms/毫秒)<br>--' . $exe_time . '(s/秒)<br></div></div></pre>';
+                echo $isCli ? PHP_EOL : '</div></pre>';
+                if (! $pass) {
+                    die;
+                }
+            }
+        }
+        var_dump(get_class($data));
+        echo $isCli ? PHP_EOL : '<br>';
+        var_dump(get_class_methods($data));
+        echo $isCli ? PHP_EOL : '</div><br><div>调试时间：<br>--' . ($exe_time * 1000) . '(ms/毫秒)<br>--' . $exe_time . '(s/秒)<br></div></div></pre>';
+        echo $isCli ? PHP_EOL : '</div></div></pre>';
+        if (! $pass) {
+            die;
+        }
+    }
+    echo '<pre>';
+    var_dump($data);
+    echo $isCli ? PHP_EOL : '</div><br><div>调试时间：<br>--' . ($exe_time * 1000) . '(ms/毫秒)<br>--' . $exe_time . '(s/秒)<br></div></div></pre>';
+    if (! $pass) {
+        die;
+    }
+}
+/**
+ * @DESC         |打印调试
+ *
+ * @Author       秋枫雁飞
+ * @Email        aiweline@qq.com
+ * @Forum        https://bbs.aiweline.com
+ * @Description  此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+ *
+ * 参数区：
+ *
+ * @param $data
+ * @param bool $pass
+ * @param int $trace_deep
+ */
+function d($data = null, bool $pass = false, int $trace_deep = 2): void
+{
+    // 执行时间
     $exe_time = microtime(true) - START_TIME;
 
     $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $trace_deep);

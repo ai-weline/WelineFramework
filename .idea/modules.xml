@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../TestFrame/Magento_Modules/FrameTest/.idea/FrameTest.iml" filepath="$PROJECT_DIR$/../TestFrame/Magento_Modules/FrameTest/.idea/FrameTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/MFramework.iml" filepath="$PROJECT_DIR$/.idea/MFramework.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/WelineFramework.iml" filepath="$PROJECT_DIR$/.idea/WelineFramework.iml" />
     </modules>
   </component>
 </project>
