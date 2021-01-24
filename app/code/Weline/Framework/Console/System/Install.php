@@ -45,13 +45,6 @@ class Install extends \Weline\Framework\Console\CommandAbstract
 
             // 判断系统
             $input = $this->system->input();
-//            if (IS_WIN) {
-//                $input = fread(STDIN, 1024);
-//            } else {
-//                $fp = fopen('/dev/stdin', 'r');
-//                $input = fgets($fp, 1024);
-//                fclose($fp);
-//            }
             if (strtolower(chop($input)) !== 'y') {
                 $this->printer->setup('操作已成功取消！', '提示');
                 exit();

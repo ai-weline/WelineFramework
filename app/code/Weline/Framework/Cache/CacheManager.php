@@ -18,11 +18,12 @@ class CacheManager
     private static CacheManager $instance;
 
     private array $config;
+
     private string $identity;
 
-    function __construct(string $identity = '')
+    public function __construct(string $identity = '')
     {
-        $this->config = Env::getInstance()->getConfig('cache');
+        $this->config   = Env::getInstance()->getConfig('cache');
         $this->identity = $identity;
     }
 

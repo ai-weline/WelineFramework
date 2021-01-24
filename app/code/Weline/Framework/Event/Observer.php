@@ -25,12 +25,12 @@ class Observer extends DataObject
         return $this;
     }
 
-    function setInstance($instance)
+    public function setInstance($instance)
     {
         return $this->setData('instance', $instance);
     }
 
-    function getInstance()
+    public function getInstance()
     {
         return $this->setData('instance');
     }

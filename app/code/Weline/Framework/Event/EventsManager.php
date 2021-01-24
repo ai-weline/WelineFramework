@@ -19,11 +19,11 @@ class EventsManager
     /**@var $events Event[] */
     protected array $events;
 
-
     /**
      * @var Parser
      */
     private Parser $parser;
+
     /**
      * @var Reader
      */
@@ -32,8 +32,7 @@ class EventsManager
     public function __construct(
         Parser $parser,
         Reader $reader
-    )
-    {
+    ) {
         $this->parser = $parser;
         $this->reader = $reader;
     }
@@ -67,12 +66,12 @@ class EventsManager
      *
      * @param string $eventName
      * @param ObserverInterface $observer
-     * @return $this
      * @throws Exception
+     * @return $this
      */
     public function addObserver(string $eventName, ObserverInterface $observer)
     {
-        if (!isset($this->events[$eventName])) {
+        if (! isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];
@@ -90,7 +89,7 @@ class EventsManager
      */
     public function trigger(string $eventName)
     {
-        if (!isset($this->events[$eventName])) {
+        if (! isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];

@@ -37,7 +37,7 @@ try {
 // 启动应用
 $app->run();
 
-if(DEV){
+if (DEV) {
     $exception = error_get_last();
-    p($exception);
+    if($exception)p($exception->getMessage());
 }

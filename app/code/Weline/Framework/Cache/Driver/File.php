@@ -21,10 +21,12 @@ class File implements CacheInterface, DriverInterface
 
     public function __construct(string $identity, array $config)
     {
-        if (isset($config['path']) && DIRECTORY_SEPARATOR == '\\') $config['path'] = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
-        $this->cachePath = BP . $config['path'] . DIRECTORY_SEPARATOR . $identity.DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity.DIRECTORY_SEPARATOR;
-        if (!is_dir($this->cachePath)) {
-            mkdir($this->cachePath, 0770,true);
+        if (isset($config['path']) && DIRECTORY_SEPARATOR === '\\') {
+            $config['path'] = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
+        }
+        $this->cachePath = BP . $config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
+        if (! is_dir($this->cachePath)) {
+            mkdir($this->cachePath, 0770, true);
         }
     }
 
@@ -38,7 +40,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function buildKey($key)
     {
-        if (!is_string($key)) {
+        if (! is_string($key)) {
             // 不是字符串，json_encode转成字符串
             $key = json_encode($key);
         }
@@ -56,7 +58,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function get($key)
     {
-        $key = $this->buildKey($key);
+        $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         // filemtime用来获取文件的修改时间
         if (@filemtime($cacheFile) > time()) {
@@ -77,7 +79,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function exists($key)
     {
-        $key = $this->buildKey($key);
+        $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         // 用修改时间标记过期时间，存入时会做相应的处理
         return @filemtime($cacheFile) > time();
@@ -113,7 +115,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function set($key, $value, $duration = 0)
     {
-        $key = $this->buildKey($key);
+        $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
 
         // serialize用来序列化缓存内容
@@ -167,7 +169,7 @@ class File implements CacheInterface, DriverInterface
     public function add($key, $value, $duration = 0)
     {
         //  key不存在，就设置缓存
-        if (!$this->exists($key)) {
+        if (! $this->exists($key)) {
             return $this->set($key, $value, $duration);
         }
 
@@ -206,7 +208,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function delete($key)
     {
-        $key = $this->buildKey($key);
+        $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         // unlink用来删除文件
         return unlink($cacheFile);

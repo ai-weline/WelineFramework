@@ -28,7 +28,7 @@ class Cli extends CliAbstract
     public function run()
     {
         // 没有任何参数
-        if (! isset($this->argv[0])) {
+        if (!isset($this->argv[0])) {
             exit($this->execute());
         }
         $class = $this->checkCommand();
@@ -56,27 +56,35 @@ class Cli extends CliAbstract
      * 参数区：
      *
      * @param array $commands
-     * @throws Exception
+     * @return array
      */
     private function recommendCommand(array $commands)
     {
-        // 没有任何参数
-        if (! isset($this->argv[0])) {
-            exit($this->execute());
-        }
-        $arg0              = trim($this->argv[0]);
-        $command_group_arr = explode(':', $arg0);
-        $command_group_arr = array_reverse($command_group_arr);
-        $this->printer->note('参考命令', '系统');
+        $arg0 = strtolower(trim($this->argv[0]));
+        $input_command_arr = explode(':', $arg0);
         $recommendCommands = [];
-        foreach ($command_group_arr as $command_group) {
-            foreach ($commands as $group => $command) {
-                if (strstr($group, $command_group)) {
-                    $recommendCommands[$group] = $commands[$group];
+        $matchCommand = [];
+        foreach ($commands as $group => $command) {
+            $keys = array_keys($command);
+            foreach ($keys as $command_key) {
+                $k = 0;
+                foreach ($input_command_arr as $input_key=>$input_command_head) {
+                    $command_key_arr = explode(':', $command_key);
+                    // 如果长度和首匹配都相同
+                    if (count($command_key_arr) == count($input_command_arr)) {
+                        foreach ($command_key_arr as $cd_key => $ck) {
+                            if ($input_key==$cd_key&&strstr($ck, $input_command_head)) {
+                                $k += 1;
+                                break;
+                            }
+                        }
+                    }
                 }
+                if (count($input_command_arr) == $k) $matchCommand[$group][] = [$command_key => $command[$command_key]];
+                if ($k > 0) $recommendCommands[$group] = [$command_key => $command[$command_key]];
             }
         }
-        echo $this->printer->printList($recommendCommands);
+        return $matchCommand ?? $recommendCommands;
     }
 
     /**
@@ -84,9 +92,9 @@ class Cli extends CliAbstract
      *
      * 参数区：
      *
+     * @return CommandInterface
      * @throws ConsoleException
      * @throws Exception
-     * @return CommandInterface
      */
     private function checkCommand()
     {
@@ -94,7 +102,7 @@ class Cli extends CliAbstract
         if ($arg0 === 'command:upgrade') {
             exit(ObjectManager::getInstance(\Weline\Framework\Console\Command\Upgrade::class)->execute());
         }
-        if ($arg0 !== 'command:upgrade' && ! file_exists(Env::path_COMMANDS_FILE)) {
+        if ($arg0 !== 'command:upgrade' && !file_exists(Env::path_COMMANDS_FILE)) {
             exit($this->printer->error('请更新模块命令：command:upgrade'));
         }
 
@@ -104,24 +112,56 @@ class Cli extends CliAbstract
         $command_path = '';
         foreach ($commands as $group => $group_commands) {
             if (array_key_exists($arg0, $group_commands)) {
-                $group_arr    = explode('#', $group);
+                $group_arr = explode('#', $group);
                 $command_path = array_pop($group_arr);
             }
         }
         if (empty($command_path)) {
             $this->printer->error('无效命令：' . $arg0, 'CLI');
+        } else {
+            // 获取类的真实路径和命名空间位置
+            $command_class_path = $command_path . $this->getCommandPath($arg0);
+            $command_real_path = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
+            if (file_exists($command_real_path)) {
+                return ObjectManager::getInstance($command_class_path);
+            }
+            if (DEV) {
+                throw new ConsoleException('命令文件缺失：' . $command_real_path);
+            }
         }
-        // 获取类的真实路径和命名空间位置
-        $command_class_real_path = APP_PATH . $command_path;
-        $command_real_path       = str_replace('\\', DIRECTORY_SEPARATOR, $command_class_real_path) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getCommandPath($arg0)) . '.php';
-        $command_class_path      = $command_path . $this->getCommandPath($arg0);
-        if (file_exists($command_real_path)) {
-            return ObjectManager::getInstance($command_class_path);
+
+
+        $recommendCommands = $this->recommendCommand($commands);
+        $commands = [];
+        foreach ($recommendCommands as $recommendCommand) {
+            $commands = array_merge($commands, $recommendCommand);
         }
-        if (DEV) {
-            throw new ConsoleException('命令文件缺失：' . $command_real_path);
+        if (count($commands) === 1) {
+            $command = array_shift($commands);
+            $command_keys = array_keys($command);
+            $command = array_shift($command_keys);
+            $group_keys = array_keys($recommendCommands);
+            $group = array_shift($group_keys);
+            $group_arr = explode('#', $group);
+            $command_path = array_pop($group_arr);
+            $command_class_path = $command_path . $this->getCommandPath($command);
+            $command_real_path = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
+            if (file_exists($command_real_path)) {
+                return ObjectManager::getInstance($command_class_path);
+            }
+            if (DEV) {
+                throw new ConsoleException('命令文件缺失：' . $command_real_path);
+            }
         }
-        $this->recommendCommand($commands);
+        foreach ($recommendCommands as $key => &$command) {
+            foreach ($command as $k => $item) {
+                unset($command[$k]);
+                $keys = array_keys($item);
+                $command[array_shift($keys)] = array_pop($item);
+            }
+        }
+        $this->printer->note('参考命令', '系统');
+        $this->printer->printList($recommendCommands);
         exit();
     }
 }
