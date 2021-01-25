@@ -9,12 +9,20 @@
 
 namespace Weline\Framework\Event;
 
+use Weline\Framework\Manager\ObjectManager;
+
 class Event extends \Weline\Framework\DataObject\DataObject
 {
     public function __construct(array $data = [])
     {
         parent::__construct($data);
-        $this->setData('observers', []);
+        foreach ($data['observers'] as $key=>$observer) {
+            $observer = ObjectManager::getInstance($observer['instance']);
+            if($observer instanceof ObserverInterface){
+                $data['observers'][$key] = $observer;
+            }
+        }
+        $this->setData($data);
     }
 
     private string $name;
@@ -79,7 +87,7 @@ class Event extends \Weline\Framework\DataObject\DataObject
     public function dispatch()
     {
         foreach ($this->getObservers() as $observer) {
-            $observer->execute($this->getData('event'));
+            $observer->execute($this);
         }
     }
 }

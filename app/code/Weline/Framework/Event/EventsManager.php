@@ -32,16 +32,27 @@ class EventsManager
     public function __construct(
         Parser $parser,
         Reader $reader
-    ) {
+    )
+    {
         $this->parser = $parser;
         $this->reader = $reader;
     }
 
     public function scanEvents()
     {
-        $app_events = $this->reader->read();
-        p($app_events);
-        // TODO 相同
+        return $this->reader->read();
+    }
+
+    function getEventObservers(string $eventName)
+    {
+        $evenObserverLists = $this->scanEvents();
+        $observers = [];
+        foreach ($evenObserverLists as $evenObserver) {
+            if ($eventName == $evenObserver['_attribute']['name']) {
+                $observers[] = $evenObserver['_attribute'];
+            }
+        }
+        return $observers;
     }
 
     /**
@@ -55,8 +66,9 @@ class EventsManager
      */
     public function dispatch(string $eventName, array $data)
     {
+        $data['observers'] =$this->getEventObservers($eventName);
         $this->events[$eventName] = (new Event($data))->setName($eventName);
-
+        $this->events[$eventName]->dispatch();
         return $this;
     }
 
@@ -67,12 +79,12 @@ class EventsManager
      *
      * @param string $eventName
      * @param ObserverInterface $observer
-     * @throws Exception
      * @return $this
+     * @throws Exception
      */
     public function addObserver(string $eventName, ObserverInterface $observer)
     {
-        if (! isset($this->events[$eventName])) {
+        if (!isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];
@@ -90,7 +102,7 @@ class EventsManager
      */
     public function trigger(string $eventName)
     {
-        if (! isset($this->events[$eventName])) {
+        if (!isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];

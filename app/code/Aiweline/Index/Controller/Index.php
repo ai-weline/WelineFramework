@@ -10,7 +10,8 @@
 namespace Aiweline\Index\Controller;
 
 use Weline\Framework\App\Controller\FrontendController;
-use Weline\Framework\Manager\EventsManager;
+use Weline\Framework\Event\EventsManager;
+
 
 class Index extends FrontendController
 {
@@ -28,7 +29,9 @@ class Index extends FrontendController
     public function index()
     {
         // 分配事件
-        $this->eventsManager->dispatch('index_event_test', ['object'=>$this]);
+        $a = 1;
+        $this->eventsManager->dispatch('Aiweline_Index::index_event_test', ['a'=>$a]);
+        p($a);
 
         return $this->fetch();
     }

@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Aiweline\Index\Observer;
+namespace Aiweline\Bbs\Observer;
 
 use Weline\Framework\Event\Event;
 use Weline\Framework\Event\ObserverInterface;
@@ -16,6 +16,8 @@ class Test implements ObserverInterface
 {
     public function execute(Event $event)
     {
-        // TODO: Implement execute() method.
+        $a = $event->getData('a');
+        p($a);
+        $a = 2;
     }
 }

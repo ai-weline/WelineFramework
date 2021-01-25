@@ -117,7 +117,6 @@ class File implements CacheInterface, DriverInterface
     {
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
-
         // serialize用来序列化缓存内容
         $value = serialize($value);
         // file_put_contents用来将序列化之后的内容写入文件，LOCK_EX表示写入时会对文件加锁
