@@ -117,6 +117,7 @@ class Cli extends CliAbstract
                 $command_path = array_pop($group_arr);
             }
         }
+
         if ($command_path) {
             // 获取类的真实路径和命名空间位置
             $command_class_path = $command_path . $this->getCommandPath($arg0);
@@ -140,6 +141,7 @@ class Cli extends CliAbstract
             $group_arr          = explode('#', $group);
             $command_path       = array_pop($group_arr);
             $command_class_path = $command_path . $this->getCommandPath($command);
+
             $command_real_path  = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
             if (file_exists($command_real_path)) {
                 return ObjectManager::getInstance($command_class_path);

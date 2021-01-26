@@ -5,7 +5,4 @@
     <event name="Aiweline_Index::test_observer">
         <observer name="bbs_test" instance="Aiweline\Bbs\Observer\Test" disabled="false" shared="true"/>
     </event>
-    <event name="index_event_bbs111">
-        <observer name="Aiweline_Index::index_event_test" instance="Aiweline\Bbs\Observer\Test1" disabled="false" shared="true"/>
-    </event>
 </config>

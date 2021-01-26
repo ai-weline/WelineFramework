@@ -24,13 +24,19 @@ class Upgrade extends CommandAbstract
      * @var System
      */
     private System $system;
+    /**
+     * @var Command
+     */
+    private Command $command;
 
     public function __construct(
         Printing $printer,
+        Command $command,
         System $system
     ) {
         $this->printer = $printer;
         $this->system  = $system;
+        $this->command = $command;
     }
 
     /**
@@ -115,7 +121,6 @@ class Upgrade extends CommandAbstract
      */
     private function getDirFileCommand()
     {
-        $command_class_position = ObjectManager::getInstance(Command::class);
         $commands               = [];
         /**@var $scanner Scan */
         $scanner = ObjectManager::getInstance(Scan::class);
@@ -136,7 +141,7 @@ class Upgrade extends CommandAbstract
                 $command_dir       = trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR);
                 $module_dir_arr    = explode(DIRECTORY_SEPARATOR, trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR));
                 $vendor            = array_shift($module_dir_arr);
-                $module            = implode(DIRECTORY_SEPARATOR, $module_dir_arr);
+                $module            = implode('\\', $module_dir_arr);
                 $module_name       = $vendor . '\\' . $module;
                 if ($command_dir) {
                     foreach ($command_files as $file) {
@@ -146,7 +151,7 @@ class Upgrade extends CommandAbstract
                         $command              = str_replace('\\', ':', strtolower($command_dir_file));
                         $command              = trim($command, ':');
                         if ($command) {
-                            $command_class_path                                                                                       = $command_class_position->getCommandPath($module_name, $command);
+                            $command_class_path                                                                                       = $this->command->getCommandPath($module_name, $command);
                             $command_class                                                                                            = ObjectManager::getInstance($command_class_path);
                             $commands[str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name][$command] = $command_class->getTip();
                         }

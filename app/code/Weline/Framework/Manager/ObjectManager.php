@@ -98,7 +98,6 @@ class ObjectManager implements ManagerInterface
                 foreach ($params as $key => $param) {
                     if ($paramClass = $param->getClass()) {
                         if (isset(self::$instances[$paramClass->getName()])) {
-                            p($paramClass->getName());
                             $paramArr[] = self::$instances[$paramClass->getName()];
                         } else {
                             // 获得参数类型名称
