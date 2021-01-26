@@ -11,6 +11,7 @@ namespace Weline\Framework\Event\Config;
 
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Event\Cache\EventCache;
+use Weline\Framework\Exception\Core;
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\Xml\Parser;
 
@@ -45,19 +46,70 @@ class Reader extends \Weline\Framework\Config\Reader
      * 非开发者模式有缓存则读取缓存
      * 参数区：
      *
-     * @param string $path
      * @param bool $cache
      * @return mixed
      */
-    public function read($path = 'config/event', $cache = true)
+    public function read($cache = true)
     {
-        if (!DEV && $cache && $event = $this->eventCache->get('event')) {
+        if ($cache && $event = $this->eventCache->get('event')) {
             return $event;
         }
-
-        $event = parent::read($path);
-        $this->eventCache->add('event', $event);
-
-        return $event;
+        $configs = parent::read();
+        // 合并掉所有相同名字的事件的观察者，方便获取
+        $event_observers_list = [];
+        foreach ($configs as $module_and_file => $config) {
+            $module_event_observers = [];
+            if (
+                !isset($event_xml_data['config']['_attribute']['noNamespaceSchemaLocation']) &&
+                'urn:Weline_Framework::Event/etc/xsd/event.xsd' != $config['config']['_attribute']['noNamespaceSchemaLocation']
+            ) {
+                throw new Core(__($module_and_file . '事件必须设置：noNamespaceSchemaLocation="urn:Weline_Framework::Event/etc/xsd/event.xsd"'));
+            }
+            // 多个值
+            if (is_integer(array_key_first($config['config']['_value']['event']))) {
+                foreach ($config['config']['_value']['event'] as $event) {
+                    if (!isset($event['_attribute']['name'])) {
+                        throw new Core(__($module_and_file . '事件Event未指定name属性：<event name="eventName">...</event>'));
+                    } else {
+                        // 多个值
+                        if (is_integer(array_key_first($event['_value']))) {
+                            foreach ($event['_value'] as $item_observer) {
+                                $module_event_observers[$event['_attribute']['name']][] = $item_observer;
+                            }
+                        } else {
+                            if(!isset($event['_value']['observer']['_attribute'])){
+                                throw new Core(__($module_and_file . '观察者Observer没有设置属性：<observer name="observerName" instance="instanceClass" disabled="false" shared="true"/>'));
+                            }
+                            if(!isset($event['_value']['observer']['_attribute']['name'])){
+                                throw new Core(__($module_and_file . '观察者Observer没有设置name属性：<observer name="observerName" instance="instanceClass" disabled="false" shared="true"/>'));
+                            }
+                            if(!isset($event['_value']['observer']['_attribute']['instance'])){
+                                throw new Core(__($module_and_file . '观察者Observer没有设置instance属性：<observer name="observerName" instance="instanceClass" disabled="false" shared="true"/>'));
+                            }else{
+                                $module_event_observers[$event['_attribute']['name']][] = $event['_value']['observer']['_attribute'];
+                            }
+                        }
+                    }
+                }
+            } else {
+                if(!isset($config['config']['_value']['event']['_attribute']['name'])){
+                    throw new Core(__($module_and_file . '事件Event未指定name属性：<event name="eventName">...</event>'));
+                }else{
+                    if(!isset($config['config']['_value']['event']['_value']['observer']['_attribute'])){
+                        throw new Core(__($module_and_file . '观察者Observer没有设置属性：<observer name="observerName" instance="instanceClass" disabled="false" shared="true"/>'));
+                    }
+                    if(!isset($config['config']['_value']['event']['_value']['observer']['_attribute']['name'])){
+                        throw new Core(__($module_and_file . '观察者Observer没有设置name属性：<observer name="observerName" instance="instanceClass" disabled="false" shared="true"/>'));
+                    }
+                    if(!isset($config['config']['_value']['event']['_value']['observer']['_attribute']['instance'])){
+                        throw new Core(__($module_and_file . '观察者Observer没有设置instance属性：<observer name="observerName" instance="instanceClass" disabled="false" shared="true"/>'));
+                    }
+                    $module_event_observers[$config['config']['_value']['event']['_attribute']['name']][] = $config['config']['_value']['event']['_value']['observer']['_attribute'];
+                }
+            }
+            $event_observers_list[$module_and_file] = $module_event_observers;
+        }
+        $this->eventCache->add('event', $event_observers_list);
+        return $event_observers_list;
     }
 }

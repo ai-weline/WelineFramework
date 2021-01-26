@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Config;
 
+use Weline\Framework\Exception\Core;
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\System\FileReader;
 use Weline\Framework\Xml\Parser;
@@ -47,18 +48,16 @@ class Reader extends FileReader
      * 参数区：
      * @param string $path
      */
-    public function read($path = 'config/event/')
+    public function read()
     {
-        $pathArr = array_filter(explode('/', $path));
-        $data    = [];
+        $data = [];
         foreach ($this->getFileList() as $vendor => $module_files) {
             foreach ($module_files as $module_name => $module_file) {
-                $xmlArray = $this->parser->load($module_file)->xmlToArray();
-                $data     = array_merge($data, $this->getByPath($xmlArray, $pathArr));
+                $event_xml_data = $this->parser->load($module_file)->xmlToArray();
+                $data[$vendor.'_'.$module_name.'::'.$module_file] = $event_xml_data;
             }
         }
-
-        return $data[array_pop($pathArr)];
+        return $data;
     }
 
     /**
@@ -88,12 +87,12 @@ class Reader extends FileReader
                 }
             } else {
                 // 存在相同节点时其键名是数字
-                $tmp     = [];
+                $tmp = [];
                 $tmp_key = [];
                 foreach ($xmlArray[$levelPath] as $item) {
                     $hasMerged = false;
-                    $xmlArray  = $item['_value'];
-                    $res_data  = $this->getByPath($xmlArray, $pathArr);
+                    $xmlArray = $item['_value'];
+                    $res_data = $this->getByPath($xmlArray, $pathArr);
                     // ID相同合并最后一个
                     $mergeAttributes = ['id', 'name'];
                     foreach ($mergeAttributes as $mergeAttribute) {
@@ -109,7 +108,7 @@ class Reader extends FileReader
                             $tmp_key[$res_data['_attribute'][$mergeAttribute]] = true;
                         }
                     }
-                    if (! $hasMerged) {
+                    if (!$hasMerged) {
                         $tmp[] = $res_data;
                     }
                 }

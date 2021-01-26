@@ -46,13 +46,10 @@ class EventsManager
     function getEventObservers(string $eventName)
     {
         $evenObserverLists = $this->scanEvents();
-        $observers = [];
-        foreach ($evenObserverLists as $evenObserver) {
-            if ($eventName == $evenObserver['_attribute']['name']) {
-                $observers[] = $evenObserver['_attribute'];
-            }
+        foreach ($evenObserverLists as $module_and_file=>$evenObserver) {
+            return isset($evenObserver[$eventName])?$evenObserver[$eventName]:[];
         }
-        return $observers;
+        return [];
     }
 
     /**

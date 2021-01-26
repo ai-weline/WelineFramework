@@ -44,4 +44,5 @@
   42 => '缓存已清理！',
   43 => '缓存已清理！',
   44 => '缓存已清理！',
+  45 => '事件必须设置：noNamespaceSchemaLocation="urn:Weline_Framework::Event/etc/xsd/event.xsd"',
 );
