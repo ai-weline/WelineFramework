@@ -28,7 +28,7 @@ class Cli extends CliAbstract
     public function run()
     {
         // 没有任何参数
-        if (!isset($this->argv[0])) {
+        if (! isset($this->argv[0])) {
             exit($this->execute());
         }
         $class = $this->checkCommand();
@@ -59,20 +59,20 @@ class Cli extends CliAbstract
      */
     private function recommendCommand(array $commands)
     {
-        $arg0 = strtolower(trim($this->argv[0]));
+        $arg0              = strtolower(trim($this->argv[0]));
         $input_command_arr = explode(':', $arg0);
         $recommendCommands = [];
-        $matchCommand = [];
+        $matchCommand      = [];
         foreach ($commands as $group => $command) {
             $keys = array_keys($command);
             foreach ($keys as $command_key) {
                 $command_key_arr = explode(':', $command_key);
-                $k = 0;
+                $k               = 0;
                 foreach ($input_command_arr as $input_key => $input_command_head) {
                     // 如果长度和首匹配都相同
                     if (count($command_key_arr) === count($input_command_arr)) {
                         $input_str_pos = strpos($command_key_arr[$input_key], $input_command_head);
-                        if (isset($command_key_arr[$input_key]) && !is_bool($input_str_pos) && $input_str_pos==0) {
+                        if (isset($command_key_arr[$input_key]) && ! is_bool($input_str_pos) && $input_str_pos === 0) {
                             $k += 1;
                         }
                     }
@@ -94,9 +94,9 @@ class Cli extends CliAbstract
      *
      * 参数区：
      *
-     * @return CommandInterface
      * @throws Exception
      * @throws ConsoleException
+     * @return CommandInterface
      */
     private function checkCommand()
     {
@@ -104,7 +104,7 @@ class Cli extends CliAbstract
         if ($arg0 === 'command:upgrade') {
             exit(ObjectManager::getInstance(\Weline\Framework\Console\Command\Upgrade::class)->execute());
         }
-        if ($arg0 !== 'command:upgrade' && !file_exists(Env::path_COMMANDS_FILE)) {
+        if ($arg0 !== 'command:upgrade' && ! file_exists(Env::path_COMMANDS_FILE)) {
             exit($this->printer->error('命令系统异常！请完整执行（不能简写）更新模块命令后重试：php bin/m command:upgrade'));
         }
 
@@ -113,34 +113,34 @@ class Cli extends CliAbstract
         $command_path = '';
         foreach ($commands as $group => $group_commands) {
             if (array_key_exists($arg0, $group_commands)) {
-                $group_arr = explode('#', $group);
+                $group_arr    = explode('#', $group);
                 $command_path = array_pop($group_arr);
             }
         }
         if ($command_path) {
             // 获取类的真实路径和命名空间位置
             $command_class_path = $command_path . $this->getCommandPath($arg0);
-            $command_real_path = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
+            $command_real_path  = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
             if (file_exists($command_real_path)) {
                 return ObjectManager::getInstance($command_class_path);
             }
         }
 
         $recommendCommands = $this->recommendCommand($commands);
-        $commands = [];
+        $commands          = [];
         foreach ($recommendCommands as $recommendCommand) {
             $commands = array_merge($commands, $recommendCommand);
         }
         if (count($commands) === 1) {
-            $command = array_shift($commands);
-            $command_keys = array_keys($command);
-            $command = array_shift($command_keys);
-            $group_keys = array_keys($recommendCommands);
-            $group = array_shift($group_keys);
-            $group_arr = explode('#', $group);
-            $command_path = array_pop($group_arr);
+            $command            = array_shift($commands);
+            $command_keys       = array_keys($command);
+            $command            = array_shift($command_keys);
+            $group_keys         = array_keys($recommendCommands);
+            $group              = array_shift($group_keys);
+            $group_arr          = explode('#', $group);
+            $command_path       = array_pop($group_arr);
             $command_class_path = $command_path . $this->getCommandPath($command);
-            $command_real_path = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
+            $command_real_path  = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
             if (file_exists($command_real_path)) {
                 return ObjectManager::getInstance($command_class_path);
             }
@@ -151,7 +151,7 @@ class Cli extends CliAbstract
         foreach ($recommendCommands as $key => &$command) {
             foreach ($command as $k => $item) {
                 unset($command[$k]);
-                $keys = array_keys($item);
+                $keys                        = array_keys($item);
                 $command[array_shift($keys)] = array_pop($item);
             }
         }

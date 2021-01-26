@@ -34,14 +34,14 @@ function p($data = null, bool $pass = false, int $trace_deep = 2): void
             foreach ($item as $k => $i) {
                 $k     = "【{$k}】";
                 $i_str = is_string($i) ? $i : json_encode($i);
-                print_r("{$k} ".$i_str.($isCli?'\n':'<br>'));
+                print_r("{$k} " . $i_str . ($isCli ? '\n' : '<br>'));
             }
-            echo '---------------------------------------------------------'.($isCli?'\n':'<br>');
+            echo '---------------------------------------------------------' . ($isCli ? '\n' : '<br>');
         } else {
             $key      = str_pad($key, 12, '-', STR_PAD_BOTH);
             $item_str = is_string($item) ? $item : json_encode($item);
             print_r("{$key}");
-            echo '---------------------------------------------------------'.($isCli?'\n':'<br>');
+            echo '---------------------------------------------------------' . ($isCli ? '\n' : '<br>');
         }
     }
     if (is_object($data)) {

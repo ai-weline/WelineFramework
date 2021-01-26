@@ -9,11 +9,9 @@
 
 namespace Aiweline\Index\Controller;
 
-use Composer\Cache;
 use Weline\Framework\App\Controller\FrontendController;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
-
 
 class Index extends FrontendController
 {

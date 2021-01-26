@@ -24,7 +24,7 @@ class Event extends \Weline\Framework\DataObject\DataObject
                 $data['observers'][$key] = $observer;
             } elseif (DEV) {
                 throw new Core(__('观察者必须继承于：' . ObserverInterface::class));
-            }else{
+            } else {
                 $debug = ObjectManager::getInstance(Printing::class);
                 $debug->debug(__('观察者必须继承于：' . ObserverInterface::class));
             }
@@ -44,7 +44,7 @@ class Event extends \Weline\Framework\DataObject\DataObject
      */
     public function addObserver(Observer $observer)
     {
-        $observers = $this->getData('observers');
+        $observers   = $this->getData('observers');
         $observers[] = $observer;
         $this->setData('observers', $observers);
 

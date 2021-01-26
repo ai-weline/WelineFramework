@@ -19,6 +19,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
      * @var Scanner
      */
     private Scanner $scanner;
+
     /**
      * @var Printing
      */
@@ -27,9 +28,8 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     public function __construct(
         Scanner $scanner,
         Printing $printing
-    )
-    {
-        $this->scanner = $scanner;
+    ) {
+        $this->scanner  = $scanner;
         $this->printing = $printing;
     }
 
@@ -44,16 +44,18 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                 case 'app_caches':
                     $this->printing->note(__('模块缓存清理中...'));
                     foreach ($cache as $app_cache) {
-                        $this->printing->printing(__($app_cache['class'].'...'));
+                        $this->printing->printing(__($app_cache['class'] . '...'));
                         ObjectManager::getInstance($app_cache['class'])->create()->clear();
                     }
+
                     break;
                 case 'framework_caches':
                     $this->printing->note(__('框架缓存清理中...'));
                     foreach ($cache as $framework_cache) {
-                        $this->printing->printing(__($framework_cache['class'].'...'));
+                        $this->printing->printing(__($framework_cache['class'] . '...'));
                         ObjectManager::getInstance($framework_cache['class'])->create()->clear();
                     }
+
                     break;
                 default:
                     $this->printing->error(__('没有任何类型的缓存需要清理！'));
