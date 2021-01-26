@@ -53,6 +53,34 @@
 4. 框架缓存系统完成！
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0124/220301_22ae5546_1568278.png "微信截图_20210124220214.png")
 5. 事件Event观察者Observer模式
+
+        // 分配事件...
+        $a = new DataObject(['a' => 1]);
+        p($a->getData('a'),1);
+        $this->eventsManager->dispatch('Aiweline_Index::test_observer', ['a' => $a]);
+        p($a->getData('a'));
+        // 观察者注册
+        etc/event.xml
+        <?xml version="1.0"?>
+        <config xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+                xs:noNamespaceSchemaLocation="urn:Weline_Framework::Event/etc/xsd/event.xsd"
+                xmlns="urn:Weline_Framework::Event/etc/xsd/event.xsd">
+            <event name="Aiweline_Index::test_observer">
+                <observer name="bbs_test" instance="Aiweline\Bbs\Observer\Test" disabled="false" shared="true"/>
+            </event>
+        </config>
+        // 观察者
+        class Test implements ObserverInterface
+        {
+            public function execute(Event $event)
+            {
+                $a = $event->getData('a');
+                p('我是观察者',1);
+                $a->setData('a', 2);
+            }
+        }
+
+
 6. 方法插件模式等待开发...
 
 #### 参与贡献
