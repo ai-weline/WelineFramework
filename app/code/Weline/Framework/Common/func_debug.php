@@ -26,6 +26,24 @@ function p($data = null, bool $pass = false, int $trace_deep = 2): void
     // 执行时间
     $exe_time         = microtime(true) - START_TIME;
     $isCli            = (PHP_SAPI === 'cli');
+
+    $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+    $parent_call_info = array_reverse($parent_call_info);
+    foreach ($parent_call_info as $key => $item) {
+        if (is_array($item)) {
+            foreach ($item as $k => $i) {
+                $k     = "【{$k}】";
+                $i_str = is_string($i) ? $i : json_encode($i);
+                print_r("{$k} ".$i_str.($isCli?'\n':'<br>'));
+            }
+            echo '---------------------------------------------------------'.($isCli?'\n':'<br>');
+        } else {
+            $key      = str_pad($key, 12, '-', STR_PAD_BOTH);
+            $item_str = is_string($item) ? $item : json_encode($item);
+            print_r("{$key}");
+            echo '---------------------------------------------------------'.($isCli?'\n':'<br>');
+        }
+    }
     if (is_object($data)) {
         if (method_exists($data, 'toArray')) {
             $subIsObject = 0;

@@ -63,6 +63,7 @@ class EventsManager
      * @param string $eventName
      * @param array $data
      * @return $this
+     * @throws \Weline\Framework\Exception\Core
      */
     public function dispatch(string $eventName, array $data)
     {
@@ -78,11 +79,11 @@ class EventsManager
      * 参数区：
      *
      * @param string $eventName
-     * @param ObserverInterface $observer
+     * @param Observer $observer
      * @return $this
      * @throws Exception
      */
-    public function addObserver(string $eventName, ObserverInterface $observer)
+    public function addObserver(string $eventName, Observer $observer)
     {
         if (!isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));

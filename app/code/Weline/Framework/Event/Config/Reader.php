@@ -31,15 +31,18 @@ class Reader extends \Weline\Framework\Config\Reader
         Scanner $scanner,
         Parser $parser,
         $path = 'event.xml'
-    ) {
+    )
+    {
         parent::__construct($scanner, $parser, $path);
-        $this->parser     = $parser;
+        $this->parser = $parser;
         $this->eventCache = $eventCache->create();
     }
 
     /**
      * @DESC         |读取事件配置
      *
+     * 开发者模式读取真实配置
+     * 非开发者模式有缓存则读取缓存
      * 参数区：
      *
      * @param string $path
@@ -48,9 +51,10 @@ class Reader extends \Weline\Framework\Config\Reader
      */
     public function read($path = 'config/event', $cache = true)
     {
-        if ($cache && $event = $this->eventCache->get('event')) {
+        if (!DEV && $cache && $event = $this->eventCache->get('event')) {
             return $event;
         }
+
         $event = parent::read($path);
         $this->eventCache->add('event', $event);
 

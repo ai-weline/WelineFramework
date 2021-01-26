@@ -9,17 +9,24 @@
 
 namespace Weline\Framework\Event;
 
+use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Output\Debug\Printing;
 
 class Event extends \Weline\Framework\DataObject\DataObject
 {
     public function __construct(array $data = [])
     {
         parent::__construct($data);
-        foreach ($data['observers'] as $key=>$observer) {
+        foreach ($data['observers'] as $key => $observer) {
             $observer = ObjectManager::getInstance($observer['instance']);
-            if($observer instanceof ObserverInterface){
+            if ($observer instanceof ObserverInterface) {
                 $data['observers'][$key] = $observer;
+            } elseif (DEV) {
+                throw new Core(__('观察者必须继承于：' . ObserverInterface::class));
+            }else{
+                $debug = ObjectManager::getInstance(Printing::class);
+                $debug->debug(__('观察者必须继承于：' . ObserverInterface::class));
             }
         }
         $this->setData($data);
@@ -37,7 +44,7 @@ class Event extends \Weline\Framework\DataObject\DataObject
      */
     public function addObserver(Observer $observer)
     {
-        $observers   = $this->getData('observers');
+        $observers = $this->getData('observers');
         $observers[] = $observer;
         $this->setData('observers', $observers);
 
