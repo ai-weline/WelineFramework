@@ -106,7 +106,6 @@ class Reader extends \Weline\Framework\Config\Reader
             $event_observers_list[$module_and_file] = $module_event_observers;
         }
         $this->eventCache->add('event', $event_observers_list);
-
         return $event_observers_list;
     }
 }

@@ -17,6 +17,7 @@ class Test implements ObserverInterface
     public function execute(Event $event)
     {
         $a = $event->getData('a');
+        p('我是观察者',1);
         $a->setData('a', 2);
     }
 }
