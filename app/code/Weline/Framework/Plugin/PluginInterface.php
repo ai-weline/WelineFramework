@@ -23,7 +23,7 @@ interface PluginInterface
     public function orderNumber(): int;
 
     /**
-     * @DESC         |方法描述
+     * @DESC         |是否启用
      *
      * 参数区：
      *

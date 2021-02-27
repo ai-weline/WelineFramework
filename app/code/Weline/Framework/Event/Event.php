@@ -23,10 +23,10 @@ class Event extends \Weline\Framework\DataObject\DataObject
             if ($observer instanceof ObserverInterface) {
                 $data['observers'][$key] = $observer;
             } elseif (DEV) {
-                throw new Core(__('观察者必须继承于：' . ObserverInterface::class));
+                throw new Core(__('观察者必须继承于：') . ObserverInterface::class);
             } else {
                 $debug = ObjectManager::getInstance(Printing::class);
-                $debug->debug(__('观察者必须继承于：' . ObserverInterface::class));
+                $debug->debug(__('观察者必须继承于：') . ObserverInterface::class);
             }
         }
         $this->setData($data);

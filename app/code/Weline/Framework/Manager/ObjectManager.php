@@ -10,6 +10,8 @@
 namespace Weline\Framework\Manager;
 
 use ReflectionClass;
+use Weline\Framework\App\Env;
+use Weline\Framework\Event\EventsManager;
 
 class ObjectManager implements ManagerInterface
 {
@@ -17,12 +19,27 @@ class ObjectManager implements ManagerInterface
 
     private static array $instances;
 
+    private static string $current_class;
+
     private function __clone()
     {
     }
 
-    private function __construct()
+    public static function getClass()
     {
+        return self::$current_class;
+    }
+
+    private static function setClass(string $class)
+    {
+        self::$current_class = $class;
+    }
+
+    private static function initSelf()
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
     }
 
     /**
@@ -31,27 +48,57 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param string $class
-     * @throws \ReflectionException
      * @return mixed|ObjectManager
+     * @throws \ReflectionException
      */
     public static function getInstance(string $class = '')
     {
+        self::initSelf();
+        self::setClass($class);
+
         if (empty($class)) {
             return isset(self::$instance) ? self::$instance : new self();
         }
         if (isset(self::$instances[$class])) {
             return self::$instances[$class];
         }
-        $paramArr = self::getMethodParams($class);
-        // TODO 检查插件（插件的方法），然后动态为实例化后的对象添加动态函数（某方法之前，之后，环绕等）
-        $new_object = (new ReflectionClass($class))->newInstanceArgs($paramArr);
-        // 自定义初始化函数
+
+        // 分配实例化时事件
+//        /**@var $eventManager EventsManager */
+//        if (isset(self::$instances[EventsManager::class])) {
+//            $eventManager = self::$instances[EventsManager::class];
+//            p($eventManager,1);
+        ////            p($eventManager->getEventObservers('Framework::instance_object_before'));
+//        } else {
+//            $paramArr = self::getMethodParams(EventsManager::class);
+//            $new_object = (new ReflectionClass(EventsManager::class))->newInstanceArgs($paramArr);
+//            // 自定义初始化函数
+//            self::$instances[EventsManager::class] = self::initClass($new_object);
+//            $eventManager = self::$instances[EventsManager::class];
+//        }
+//        $eventManager->dispatch('Framework::instance_object_before', ['class' => self::$instance]);
+        $new_class = $class;
+        // 拦截器
+        $interceptor = $class . DIRECTORY_SEPARATOR . 'Interceptor';
+        $interceptorFile = Env::path_framework_generated_interceptor . $interceptor . '.php';
+        if (is_file($interceptorFile)) {
+            $new_class = $interceptor;
+        }
+        $paramArr = self::getMethodParams($new_class);
+        $new_object = (new ReflectionClass($new_class))->newInstanceArgs($paramArr);
+
+        self::$instances[$class] = self::initClass($new_object);
+
+        return self::$instances[$class];
+    }
+
+    private static function initClass($new_object)
+    {
         if (method_exists($new_object, '__init')) {
             $new_object->__init();
         }
-        self::$instances[$class] = $new_object;
 
-        return self::$instances[$class];
+        return $new_object;
     }
 
     /**
@@ -59,8 +106,8 @@ class ObjectManager implements ManagerInterface
      * @param $className
      * @param string $methodName
      * @param array $params
-     * @throws \ReflectionException
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function make($className, $methodName = '__construct', $params = [])
     {
@@ -125,8 +172,8 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param $class
-     * @throws \ReflectionException
      * @return ReflectionClass
+     * @throws \ReflectionException
      */
     protected function getReflectionClass($class): ReflectionClass
     {

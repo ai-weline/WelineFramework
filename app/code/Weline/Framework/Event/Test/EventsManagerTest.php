@@ -27,6 +27,6 @@ class EventsManagerTest extends TestCore
 
     public function testScanEvents()
     {
-        $this->eventsManager->scanEvents();
+        p($this->eventsManager->scanEvents());
     }
 }

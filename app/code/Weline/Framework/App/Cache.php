@@ -14,8 +14,19 @@ use Weline\Framework\Cache\CacheManager;
 
 class Cache
 {
+    /**
+     * @var CacheManager
+     */
+    private CacheManager $cacheManager;
+
+    public function __construct(
+        CacheManager $cacheManager
+    ) {
+        $this->cacheManager = $cacheManager;
+    }
+
     public function cache(string $driver = ''): CacheInterface
     {
-        return CacheManager::getInstance()->create($driver);
+        return $this->cacheManager->create($driver);
     }
 }

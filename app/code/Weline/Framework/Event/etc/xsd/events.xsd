@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+* 文件信息
+* 作者：邹万才
+* 网名：秋风雁飞(可以百度看看)
+* 网站：www.aiweline.com/bbs.aiweline.com
+* 工具：PhpStorm
+* 日期：2021/2/1
+* 时间：18:04
+* 版权：Copyright (c) 2021 AIWELINE (http://www.aiweline.com)
+* 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+*/
+-->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            targetNamespace="urn:Weline_Framework::Event/etc/xsd/event.xsd"
            elementFormDefault="qualified"

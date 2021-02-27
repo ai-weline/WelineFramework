@@ -18,15 +18,18 @@ class Env
 
     const framework_name = 'Weline';
 
+    const path_framework_generated = BP . 'generated' . DIRECTORY_SEPARATOR;
+    const path_framework_generated_interceptor = self::path_framework_generated . 'Interceptor'.DIRECTORY_SEPARATOR;
+
     // 路径
     const path_ENV_FILE = APP_ETC_PATH . 'env.php';
 
-    const path_MODULES_FILE = BP . 'generated' . DIRECTORY_SEPARATOR . 'modules.php';
+    const path_MODULES_FILE = self::path_framework_generated . 'modules.php';
 
-    const path_COMMANDS_FILE = BP . 'generated' . DIRECTORY_SEPARATOR . 'commands.php';
+    const path_COMMANDS_FILE = self::path_framework_generated . 'commands.php';
 
     // 路由
-    const path_ROUTERS_DIR = BP . 'generated' . DIRECTORY_SEPARATOR . 'routers' . DIRECTORY_SEPARATOR;
+    const path_ROUTERS_DIR = self::path_framework_generated . 'routers' . DIRECTORY_SEPARATOR;
 
     const path_BACKEND_REST_API_ROUTER_FILE = self::path_ROUTERS_DIR . 'backend_rest_api.php';
 
@@ -74,11 +77,11 @@ class Env
 
     // 日志
     const default_LOG = [
-        'error'     => BP . 'var/log/error.log',
+        'error' => BP . 'var/log/error.log',
         'exception' => BP . 'var/log/exception.log',
-        'notice'    => BP . 'var/log/notice.log',
-        'warning'   => BP . 'var/log/warning.log',
-        'debug'     => BP . 'var/log/debug.log',
+        'notice' => BP . 'var/log/notice.log',
+        'warning' => BP . 'var/log/warning.log',
+        'debug' => BP . 'var/log/debug.log',
     ];
 
     // 缓存
@@ -89,9 +92,9 @@ class Env
                 'path' => 'var/cache/',
             ],
             'redis' => [
-                'tip'      => '开发中...',
-                'server'   => '127.0.0.1',
-                'port'     => 6379,
+                'tip' => '开发中...',
+                'server' => '127.0.0.1',
+                'port' => 6379,
                 'database' => 1,
             ],
         ],
@@ -128,14 +131,14 @@ class Env
     private function __construct()
     {
         $env_file = self::path_ENV_FILE;
-        if (! is_file($env_file)) {
+        if (!is_file($env_file)) {
             $file = new File();
             $file->open($env_file, $file::mode_w_add);
             $text = '<?php return ' . var_export([
-                'session' => self::default_SESSION,
-                'cache'   => self::default_CACHE,
-                'log'     => self::default_LOG,
-            ], true) . ';?>';
+                    'session' => self::default_SESSION,
+                    'cache' => self::default_CACHE,
+                    'log' => self::default_LOG,
+                ], true) . ';?>';
             $file->write($text);
             $file->close();
         }
@@ -151,7 +154,7 @@ class Env
      */
     public static function getInstance()
     {
-        if (! isset(self::$instance)) {
+        if (!isset(self::$instance)) {
             self::$instance = new self();
         }
 
@@ -187,7 +190,7 @@ class Env
      */
     public function setConfig(string $key, $value = []): bool
     {
-        $config       = $this->getConfig();
+        $config = $this->getConfig();
         $config[$key] = $value;
 
         try {

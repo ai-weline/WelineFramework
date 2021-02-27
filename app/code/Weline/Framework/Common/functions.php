@@ -49,11 +49,12 @@ function getStringBetweenContents(string $str, string $startDelimiter, string $e
  *
  * 参数区：
  *
- * @param $words
- * @throws @\Weline\Framework\App\Exception
+ * @param string $words
+ * @param array $args
+ * @throws \Weline\Framework\App\Exception
  * @return string
  */
-function __(string $words)
+function __(string $words, $args=[])
 {
     $filename = \Weline\Framework\App\Env::path_TRANSLATE_WORDS_FILE;
     if (! file_exists($filename)) {
@@ -64,6 +65,11 @@ function __(string $words)
         $all_words = (array)include $filename;
     } catch (\Weline\Framework\App\Exception $exception) {
         throw new \Weline\Framework\App\Exception($exception->getMessage());
+    }
+    if ($args) {
+        foreach ($args as $key=>$arg) {
+            $words = str_replace('%' . (is_integer($key) ? $key + 1 : $key), $arg, $words);
+        }
     }
     $all_words[] = $words;
     $file        = fopen($filename, 'w+');

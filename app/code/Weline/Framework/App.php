@@ -31,12 +31,14 @@ class App
      *
      * 参数区：
      */
-    public function __init()
+    public static function init()
     {
         // 执行时间
         define('START_TIME', microtime(true));
         // 系统是否WIN
         define('IS_WIN', strtolower(substr(PHP_OS, 0, 3)) === 'win');
+        // 导入核心通用组件
+        require __DIR__ . '/Common/loader.php';
         // 助手函数
         require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
         /**------------环境配置----------------*/
@@ -49,8 +51,6 @@ class App
         DEV ? error_reporting(E_ALL) : error_reporting(0);
         // 检查运行模式
         defined('CLI') ?: define('CLI', PHP_SAPI === 'cli');
-        // 导入核心通用组件
-        require __DIR__ . '/Common/loader.php';
     }
 
     /**

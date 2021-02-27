@@ -26,7 +26,7 @@ class System
                 'rm' => 'del',
                 '-f' => '/F',
                 'cp' => 'xcopy',
-                '-r' => '/s/q',
+                '-r' => '/S/Q',
             ];
             foreach ($linux_to_win as $key => $item) {
                 $linux_command = str_replace($key, $item, $linux_command);

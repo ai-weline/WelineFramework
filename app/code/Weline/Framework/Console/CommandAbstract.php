@@ -40,6 +40,7 @@ abstract class CommandAbstract implements CommandInterface
         foreach ($command_array as &$command) {
             $command = ucfirst($command);
         }
+
         return $module_path . '\\' . self::dir . '\\' . implode('\\', $command_array);
     }
 }

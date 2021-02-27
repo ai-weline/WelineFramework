@@ -27,6 +27,10 @@ try {
 }
 // 尝试加载应用
 try {
+    /**
+     * 初始化应用...
+     */
+    \Weline\Framework\App::init();
     /**@var $app \Weline\Framework\App */
     $app = ObjectManager::getInstance(\Weline\Framework\App::class);
 } catch (Exception $exception) {
@@ -39,7 +43,9 @@ $app->run();
 
 if (DEV) {
     $exception = error_get_last();
-//    if ($exception) {
-//        p($exception->getMessage());
-//    }
+    if ($exception) {
+        /**@var $printing \Weline\Framework\Output\Cli\Printing */
+        $printing = ObjectManager::getInstance(\Weline\Framework\Output\Cli\Printing::class);
+        $printing->error($exception['message']);
+    }
 }

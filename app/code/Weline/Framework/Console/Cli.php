@@ -32,16 +32,19 @@ class Cli extends CliAbstract
             exit($this->execute());
         }
         $class = $this->checkCommand();
+//        $this->printer->note(__('执行命令：') . $class['command'] . ' ' . (isset($this->argv[1])?$this->argv[1]:''));
         switch (count($this->argv)) {
             case 1:
-                echo $class->execute();
+                $class['class']->execute();
 
                 break;
             default:
-                echo $class->execute($this->argv);
+                $class['class']->execute($this->argv);
 
                 break;
         }
+        $this->printer->printing("\n");
+        $this->printer->note(__('执行命令：') . $class['command'] . ' ' . (isset($this->argv[1]) ? $this->argv[1] : '')/*,$this->printer->colorize('CLI-System','red')*/);
     }
 
     /**
@@ -94,9 +97,9 @@ class Cli extends CliAbstract
      *
      * 参数区：
      *
-     * @throws Exception
      * @throws ConsoleException
-     * @return CommandInterface
+     * @throws Exception
+     * @return array
      */
     private function checkCommand()
     {
@@ -123,7 +126,7 @@ class Cli extends CliAbstract
             $command_class_path = $command_path . $this->getCommandPath($arg0);
             $command_real_path  = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
             if (file_exists($command_real_path)) {
-                return ObjectManager::getInstance($command_class_path);
+                return ['class' => ObjectManager::getInstance($command_class_path), 'command' => $arg0];
             }
         }
 
@@ -142,9 +145,9 @@ class Cli extends CliAbstract
             $command_path       = array_pop($group_arr);
             $command_class_path = $command_path . $this->getCommandPath($command);
 
-            $command_real_path  = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
+            $command_real_path = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
             if (file_exists($command_real_path)) {
-                return ObjectManager::getInstance($command_class_path);
+                return ['class' => ObjectManager::getInstance($command_class_path), 'command' => $command];
             }
             if (DEV) {
                 throw new ConsoleException('命令文件缺失：' . $command_real_path);

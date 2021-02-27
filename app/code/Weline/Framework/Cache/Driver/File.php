@@ -25,6 +25,7 @@ class File implements CacheInterface, DriverInterface
             $config['path'] = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
         }
         $this->cachePath = BP . $config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
+
         if (! is_dir($this->cachePath)) {
             mkdir($this->cachePath, 0770, true);
         }

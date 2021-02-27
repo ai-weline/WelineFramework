@@ -22,8 +22,7 @@ class Index extends FrontendController
 
     public function __construct(
         EventsManager $eventsManager
-    )
-    {
+    ) {
         $this->eventsManager = $eventsManager;
     }
 
@@ -36,7 +35,7 @@ class Index extends FrontendController
     {
         // 分配事件
         $a = new DataObject(['a' => 1]);
-        p($a->getData('a'),1);
+        p($a->getData('a'), 1);
         $this->eventsManager->dispatch('Aiweline_Index::test_observer', ['a' => $a]);
         p($a->getData('a'));
 

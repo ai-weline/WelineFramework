@@ -11,18 +11,14 @@ namespace Weline\Framework\Event;
 
 use Weline\Framework\Event\Config\Reader;
 use Weline\Framework\App\Exception;
-use Weline\Framework\Xml\Parser;
 
 class EventsManager
 {
 //    protected  WeakMaps $observers;# php8
     /**@var $events Event[] */
-    protected array $events;
+    protected array $events = [];
 
-    /**
-     * @var Parser
-     */
-    private Parser $parser;
+    protected array $eventsObservers=[];
 
     /**
      * @var Reader
@@ -30,26 +26,27 @@ class EventsManager
     private Reader $reader;
 
     public function __construct(
-        Parser $parser,
         Reader $reader
     ) {
-        $this->parser = $parser;
         $this->reader = $reader;
     }
 
     public function scanEvents()
     {
-        return $this->reader->read();
+        if (empty($this->eventsObservers)) {
+            foreach ($this->reader->read() as $module_and_file => $eventObservers) {
+                $this->eventsObservers = array_merge($this->eventsObservers, $eventObservers);
+            }
+        }
+
+        return $this->eventsObservers;
     }
 
     public function getEventObservers(string $eventName)
     {
         $evenObserverLists = $this->scanEvents();
-        foreach ($evenObserverLists as $module_and_file=>$evenObserver) {
-            return $evenObserver[$eventName] ?? [];
-        }
 
-        return [];
+        return $evenObserverLists[$eventName] ?? [];
     }
 
     /**
@@ -64,8 +61,14 @@ class EventsManager
      */
     public function dispatch(string $eventName, array $data)
     {
-        $data['observers']        =$this->getEventObservers($eventName);
-        $this->events[$eventName] = (new Event($data))->setName($eventName);
+//        p($eventName,1);
+//        p($this->eventsObservers,1);
+        if (! isset($this->events[$eventName])) {
+            $data['observers'] = $this->getEventObservers($eventName);
+            $this->events      = array_merge($this->events, [$eventName=>(new Event($data))->setName($eventName)]);
+//            $this->events[$eventName] = (new Event($data))->setName($eventName);
+        }
+//        p($this->events, 1);
         $this->events[$eventName]->dispatch();
 
         return $this;

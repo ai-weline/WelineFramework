@@ -21,27 +21,27 @@
  * @param bool $pass
  * @param int $trace_deep
  */
-function p($data = null, bool $pass = false, int $trace_deep = 2): void
+function p($data = null, bool $pass = false, int $trace_deep = 1): void
 {
     // 执行时间
     $exe_time         = microtime(true) - START_TIME;
     $isCli            = (PHP_SAPI === 'cli');
 
-    $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+    $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $trace_deep);
     $parent_call_info = array_reverse($parent_call_info);
     foreach ($parent_call_info as $key => $item) {
         if (is_array($item)) {
             foreach ($item as $k => $i) {
                 $k     = "【{$k}】";
                 $i_str = is_string($i) ? $i : json_encode($i);
-                print_r("{$k} " . $i_str . ($isCli ? '\n' : '<br>'));
+                print_r("{$k} " . $i_str . ($isCli ? PHP_EOL : '<br>'));
             }
-            echo '---------------------------------------------------------' . ($isCli ? '\n' : '<br>');
+            echo '---------------------------------------------------------' . ($isCli ? PHP_EOL : '<br>');
         } else {
             $key      = str_pad($key, 12, '-', STR_PAD_BOTH);
             $item_str = is_string($item) ? $item : json_encode($item);
             print_r("{$key}");
-            echo '---------------------------------------------------------' . ($isCli ? '\n' : '<br>');
+            echo '---------------------------------------------------------' . ($isCli ? PHP_EOL : '<br>');
         }
     }
     if (is_object($data)) {
@@ -63,6 +63,7 @@ function p($data = null, bool $pass = false, int $trace_deep = 2): void
                 }
             }
         }
+        var_dump($data);
         var_dump(get_class($data));
         echo $isCli ? PHP_EOL : '<br>';
         var_dump(get_class_methods($data));

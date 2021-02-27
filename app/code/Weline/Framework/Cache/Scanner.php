@@ -42,7 +42,7 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
                 $scan_path        = APP_PATH . $relate_scan_path;
                 if ($cacheManagers = $this->scanDir($scan_path)) {
                     foreach ($cacheManagers as $cacheManager) {
-                        $app_caches[] = ['class' => str_replace('/','\\',$relate_scan_path) . str_replace('.php', '', $cacheManager), 'path' => $scan_path . $cacheManager];
+                        $app_caches[] = ['class' => str_replace('/', '\\', $relate_scan_path) . str_replace('.php', '', $cacheManager), 'path' => $scan_path . $cacheManager];
                     }
                 }
             }
@@ -82,7 +82,7 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
                     }
                     if ($cacheManagers = $this->scanDir($scan_path)) {
                         foreach ($cacheManagers as $cacheManager) {
-                            $framework_caches[] = ['class' => str_replace('/','\\',$dir) . '\\' . str_replace('.php', '', $cacheManager), 'path' => $scan_path . DIRECTORY_SEPARATOR . $cacheManager];
+                            $framework_caches[] = ['class' => str_replace('/', '\\', $dir) . '\\' . str_replace('.php', '', $cacheManager), 'path' => $scan_path . DIRECTORY_SEPARATOR . $cacheManager];
                         }
                     }
                 }

@@ -24,6 +24,7 @@ class Upgrade extends CommandAbstract
      * @var System
      */
     private System $system;
+
     /**
      * @var Command
      */

@@ -14,9 +14,26 @@ use Weline\Framework\App\Cache;
 use Weline\Framework\App\Controller\FrontendController;
 use Weline\Framework\App\Exception;
 use Weline\Framework\App\Session\FrontendSession;
+use Weline\Framework\Manager\ObjectManager;
 
 class HelloWorld extends FrontendController
 {
+    private Cache $cache;
+
+    private AiwelineHelloWorld $aiwelineHelloWorld;
+
+    private FrontendSession $frontendSession;
+
+    public function __construct(
+        Cache $cache,
+        AiwelineHelloWorld $aiwelineHelloWorld,
+        FrontendSession $frontendSession
+    ) {
+        $this->cache              = $cache;
+        $this->aiwelineHelloWorld = $aiwelineHelloWorld;
+        $this->frontendSession    = $frontendSession;
+    }
+
     /**
      * @DESC         |方法描述
      *
@@ -64,25 +81,23 @@ class HelloWorld extends FrontendController
 
     public function model()
     {
-        $model = new AiwelineHelloWorld();
-        p('链接类型：' . $model->getDb()->getConfig('default'), 1);
-        $data = $model->getDb()->query("select * from {$model->getTable()}");
+        p('链接类型：' . $this->aiwelineHelloWorld->getDb()->getConfig('default'), 1);
+        $data = $this->aiwelineHelloWorld->getDb()->query("select * from {$this->aiwelineHelloWorld->getTable()}");
         p($data);
-        p($model->insert([
+        p($this->aiwelineHelloWorld->insert([
             'demo' => 1,
         ]));
     }
 
     public function demo()
     {
-        $model = new AiwelineHelloWorld();
-        $data  = $model->getDb()->query("select * from {$model->getTable()}");
+        $data  = $this->aiwelineHelloWorld->getDb()->query("select * from {$this->aiwelineHelloWorld->getTable()}");
         if (empty($data)) {
-            $model->insert([
+            $this->aiwelineHelloWorld->insert([
                 'demo' => 1,
             ]);
         }
-        $data = $model->getDb()->query("select * from {$model->getTable()}");
+        $data = $this->aiwelineHelloWorld->getDb()->query("select * from {$this->aiwelineHelloWorld->getTable()}");
         $this->assign('data', $data);
         $this->fetch();
     }
@@ -94,7 +109,7 @@ class HelloWorld extends FrontendController
      */
     public function session()
     {
-        $frontSession = new FrontendSession();
+        $frontSession = $this->frontendSession;
         p('是否登录:' . ($frontSession->isLogin() ? '是' : '否'), 1);
         $session = $frontSession->getSession();
         $session->set('test', 123);
@@ -108,7 +123,7 @@ class HelloWorld extends FrontendController
      */
     public function cache()
     {
-        $cache = (new Cache())->cache();
+        $cache = ObjectManager::getInstance(Cache::class)->cache();
         $cache->set('111', 8888);
         p($cache->get('111'));
     }

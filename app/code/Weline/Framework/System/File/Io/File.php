@@ -55,7 +55,9 @@ class File
      */
     public function open(string $filename, string $mode = self::mode_a_add)
     {
+        $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
         $position = strrpos($filename, DIRECTORY_SEPARATOR);
+//        if(!$position) throw new Exception(__('系统文件路径层级表达符号错误：当前系统文件分隔符为%1,当前路径：%2',[DIRECTORY_SEPARATOR,$filename]));
         $path     = substr($filename, 0, $position);
         if (! file_exists($path)) {
             mkdir($path, 0770, true);

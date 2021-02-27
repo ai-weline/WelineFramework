@@ -124,7 +124,6 @@ class Scanner extends Scan
                 }
                 // app下的代码优先度更高
                 $vendor_app_module_path = BP . 'vendor/' . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
-
                 if (! isset($modules[$module])) {
                     if (file_exists($vendor_app_module_path . RegisterInterface::register_file)) {
                         if ($file) {
