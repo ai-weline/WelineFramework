@@ -31,7 +31,6 @@ class ${className} extends ${targetClass}
 {
     // 继承侦听器trait
     use \Weline\Framework\Interception\Interceptor;
-    
 ${functionList}
 }
 ';
@@ -104,9 +103,6 @@ ${functionList}
                 } catch (\Exception $exception) {
                     $parameter_value = '';
                 }
-                if ($parameter->isArray()) {
-                    p($parameter->__toString());
-                }
                 $parameter_type = $parameter->hasType() ? '\\' . $parameter->getType()->getName() : '';
                 $args[]         = $parameter_type . ' $' . $parameter->getName() . $parameter_value;
                 $parameters[]   = '$' . $parameter->getName();
@@ -121,6 +117,7 @@ ${functionList}
         ${arguments}
     )${returntype}
     {
+        ${construct_content}
         $pluginInfo = $this->pluginsManager->getPluginInfo($this->subjectType, \'${methodName}\');
         if (!$pluginInfo) {
             return parent::${methodName}(${parameters});
@@ -128,7 +125,13 @@ ${functionList}
             return $this->___callPlugins(\'${methodName}\', func_get_args(), $pluginInfo);
         } 
     }';
-
+            $construct_content = '';
+            if('__construct'===$method->name){
+                $construct_content = '
+        $this->___init();
+        parent::__construct('.$params_tpl.');
+                    ';
+            }
             $functionList[] = '    ' . str_replace(
                 [
                     '${methodName}',
@@ -136,6 +139,7 @@ ${functionList}
                     '${arguments}',
                     '${parameters}',
                     '${func_doc}',
+                    '${construct_content}',
                 ],
                 [
                     $method->name,
@@ -143,6 +147,7 @@ ${functionList}
                     $args_tpl,
                     $params_tpl,
                     $method->getDocComment(),
+                    $construct_content,
                 ],
                 $func_tpl
             );

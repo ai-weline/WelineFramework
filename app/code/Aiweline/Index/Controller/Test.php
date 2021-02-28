@@ -28,7 +28,7 @@ class Test extends \Weline\Framework\App\Controller\FrontendController
         $this->state = $state;
     }
 
-    public function index()
+    public function Dd()
     {
         P($this->state->getStateCode(), 1);
         p($this);

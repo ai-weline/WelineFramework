@@ -12,6 +12,27 @@ namespace Weline\Framework\Cache;
 interface CacheInterface
 {
     /**
+     * @DESC         |获取状态
+     * 0 : 关闭
+     * 1 : 开启
+     * 参数区：
+     *
+     * @return int
+     */
+    function getStatus(): int;
+
+    /**
+     * @DESC         |设置状态
+     * 0 : 关闭
+     * 1 : 开启
+     * 参数区：
+     *
+     * @param int $status
+     * @return CacheInterface
+     */
+    function setStatus(int $status):CacheInterface;
+
+    /**
      * @DESC         |从给定键生成规范化缓存键。
      *
      * 参数区：

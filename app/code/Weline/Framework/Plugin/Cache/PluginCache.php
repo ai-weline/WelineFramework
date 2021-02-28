@@ -9,6 +9,8 @@
 
 namespace Weline\Framework\Plugin\Cache;
 
+use Weline\Framework\Cache\CacheInterface;
+
 /**
  * 文件信息
  * DESC:   |

@@ -173,7 +173,7 @@ class Data extends AbstractHelper
     private function parserController(object $class)
     {
         // 默认前端控制器
-        $ctl_area = \Weline\Framework\Controller\Data\DataInterface::type_pc_FRONTEND;
+//        $ctl_area = \Weline\Framework\Controller\Data\DataInterface::type_pc_FRONTEND;
 
         $reflect            = new \ReflectionClass($class);
         $controller_methods = [];

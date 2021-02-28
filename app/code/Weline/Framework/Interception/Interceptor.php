@@ -9,14 +9,21 @@
 
 namespace Weline\Framework\Interception;
 
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Plugin\Api\Data\InterceptorInterface;
 use Weline\Framework\Plugin\PluginsManager;
 
 trait Interceptor
 {
-    private Object $subjectType;
+    private string $subjectType;
 
     private PluginsManager $pluginsManager;
+
+    function ___init()
+    {
+        $this->pluginsManager = ObjectManager::getInstance(PluginsManager::class);
+        $this->subjectType = get_parent_class($this);
+    }
 
     /**
      * @return Object
@@ -62,8 +69,8 @@ trait Interceptor
      */
     protected function ___callPlugins($method, array $arguments, array $pluginInfo)
     {
-        $subject        = $this;
-        $type           = $this->subjectType;
+        $subject = $this;
+        $type = $this->subjectType;
         $pluginsManager = $this->pluginsManager;
 
         $next = function (...$arguments) use (
@@ -74,15 +81,15 @@ trait Interceptor
             $pluginsManager,
             &$next
         ) {
-            $capMethod         = ucfirst($method);
+            $capMethod = ucfirst($method);
             $currentPluginInfo = $pluginInfo;
-            $result            = null;
+            $result = null;
             if (isset($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE])) {
                 // 调用前置拦截器
                 foreach ($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE] as $code) {
                     $pluginInstance = $pluginsManager->getPlugin($type, $code);
-                    $pluginMethod   = 'before' . $capMethod;
-                    $beforeResult   = $pluginInstance->$pluginMethod($this, ...array_values($arguments));
+                    $pluginMethod = 'before' . $capMethod;
+                    $beforeResult = $pluginInstance->$pluginMethod($this, ...array_values($arguments));
 
                     if ($beforeResult !== null) {
                         $arguments = (array)$beforeResult;
@@ -92,11 +99,11 @@ trait Interceptor
 
             if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AROUND])) {
                 // 调用环绕拦截器
-                $code           = $currentPluginInfo[InterceptorInterface::LISTENER_AROUND];
-                $pluginInfo     = $pluginList->getNext($type, $method, $code);
-                $pluginInstance = $pluginList->getPlugin($type, $code);
-                $pluginMethod   = 'around' . $capMethod;
-                $result         = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
+                $code = $currentPluginInfo[InterceptorInterface::LISTENER_AROUND];
+                $pluginInfo = $pluginsManager->getNext($type, $method, $code);
+                $pluginInstance = $pluginsManager->getPlugin($type, $code);
+                $pluginMethod = 'around' . $capMethod;
+                $result = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
             } else {
                 // 调用原始方法
                 $result = $subject->___callParent($method, $arguments);
@@ -104,9 +111,9 @@ trait Interceptor
             if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AFTER])) {
                 // 调用后置拦截器
                 foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AFTER] as $code) {
-                    $pluginInstance = $pluginList->getPlugin($type, $code);
-                    $pluginMethod   = 'after' . $capMethod;
-                    $result         = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
+                    $pluginInstance = $pluginsManager->getPlugin($type, $code);
+                    $pluginMethod = 'after' . $capMethod;
+                    $result = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
                 }
             }
 
@@ -114,7 +121,7 @@ trait Interceptor
         };
 
         $result = $next(...array_values($arguments));
-        $next   = null;
+        $next = null;
 
         return $result;
     }

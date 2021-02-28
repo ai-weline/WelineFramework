@@ -10,6 +10,7 @@
 namespace Weline\Framework\Plugin\Console\Plugin\Di;
 
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Output\Cli\Printing;
 use Weline\Framework\Plugin\PluginsManager;
 use Weline\Framework\Plugin\Proxy\Generator;
 
@@ -19,11 +20,18 @@ class Compile implements \Weline\Framework\Console\CommandInterface
      * @var PluginsManager
      */
     private PluginsManager $pluginsManager;
+    /**
+     * @var Printing
+     */
+    private Printing $printing;
 
     public function __construct(
-        PluginsManager $pluginsManager
-    ) {
+        PluginsManager $pluginsManager,
+        Printing $printing
+    )
+    {
         $this->pluginsManager = $pluginsManager;
+        $this->printing = $printing;
     }
 
     /**
@@ -31,11 +39,15 @@ class Compile implements \Weline\Framework\Console\CommandInterface
      */
     public function execute($args = [])
     {
-        $plugins_list = $this->pluginsManager->scanPlugins();
-        foreach ($plugins_list as $class => $plugins) {
-            Generator::getProxy(ObjectManager::getInstance($class), $plugins);
+        $this->printing->printing(__('编译开始...'));
+        $generator = $this->pluginsManager->generatorInterceptor('',false);
+        $printer_list = [];
+        foreach ($generator::getClassProxyMap() as $key=>$item) {
+            unset($item['body']);
+            $printer_list[$key]=$item;
         }
-        p($plugins_list);
+        $this->printing->printList($printer_list);
+        $this->printing->printing(__('编译结束...'));
     }
 
     /**
