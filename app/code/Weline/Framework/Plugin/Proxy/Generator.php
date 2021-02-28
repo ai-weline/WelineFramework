@@ -1,47 +1,50 @@
 <?php
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(可以百度看看)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2021/2/2
- * 时间：22:03
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
 namespace Weline\Framework\Plugin\Proxy;
 
-
 use Weline\Framework\App\Env;
+use Weline\Framework\Manager\ObjectManager;
 
 class Generator
 {
-    private static string $proxyClassTemplate = 'namespace ${namespace};
-${use_list}
-class ${className} extends ${targetClass}{
-private $cglibProxyTargetObj;
-public function __construct($target){ $this->cglibProxyTargetObj = $target; }
+    private static string $proxyClassTemplate = '<?php
+/**
+ * 文件信息 Weline框架自动侦听拦截类，请勿随意修改，以免造成系统异常
+ * 作者：WelineFramework                       【Aiweline/邹万才】
+ * 网名：WelineFramework框架                    【秋风雁飞(Aiweline)】
+ * 网站：www.aiweline.com/bbs.aiweline.com
+ * 工具：WelineFramework框架
+ * 日期：${DATE}
+ * 时间：${TIME}
+ * 描述：此文件源码由WelineFramework框架自动侦听拦截类，请勿随意修改源码，以免造成系统异常！
+ */
+namespace ${namespace};
+
+class ${className} extends ${targetClass}
+{
+    // 继承侦听器trait
+    use \Weline\Framework\Interception\Interceptor;
+    
 ${functionList}
 }
 ';
 
-    // 代理类关系
+    // 代理类关系:多次加载时减少重复
     private static array $classProxyMap = [];
 
-
-    public static function getProxy(object $obj, array $plugins)
+    public static function createInterceptor(string $class)
     {
-        // TODO 完善所有代理类的方法形成方法列表并排序，并生成对应代理类
-        $className = '\\' . get_class($obj);
-
-        $proxyClassName = self::getProxyClassName($className);
-//        p($proxyClassName);
-
-        return new $proxyClassName($obj);
+        return self::getProxyInterceptor($class);
     }
 
-    private static function getProxyClassName(string $targetClassName): string
+    private static function getProxyInterceptor(string $targetClassName): array
     {
         $proxyClassName = self::$classProxyMap[$targetClassName] ?? null;
         if ($proxyClassName !== null) {
@@ -50,16 +53,12 @@ ${functionList}
 
         $proxyClass = self::genProxyClass($targetClassName);
 
-        p($proxyClass['body']);
-        // 加载类
-        eval($proxyClass['body']);
+        //eval();动态加载代码
 
-        $proxyClassName = $proxyClass['name'];
-        self::$classProxyMap[$targetClassName] = $proxyClassName;
+        self::$classProxyMap[$targetClassName] = $proxyClass;
 
-        return $proxyClassName;
+        return $proxyClass;
     }
-
 
     private static function genProxyClass(string $class)
     {
@@ -69,12 +68,17 @@ ${functionList}
             throw new \Error($e->getMessage(), $e->getCode(), $e);
         }
         if ($classRef->isFinal()) {
-            throw new \Error('无法动态代理final类' . $class);
+            throw new \Error(__('无法动态代理final类:%1', [$class]));
         }
-
-        $funcTpl = 'public function ${methodName}(...$args)${returntype}{ return AOP::invoke(new AspectPoint($this->cglibProxyTargetObj, \'${methodName}\', $args)); }';
         $functionList = [];
-        $methods = $classRef->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $methods      = $classRef->getMethods(\ReflectionMethod::IS_PUBLIC);
+        // 排除当前类尚未代理的函数
+        foreach ($methods as $key => $method) {
+            if ($class !== $method->class) {
+                unset($methods[$key]);
+            }
+        }
+        // 创建侦听代理函数
         foreach ($methods as $method) {
             if ($method->isFinal()) {
                 throw new \Error('无法动态代理final方法' . $method->name);
@@ -84,29 +88,107 @@ ${functionList}
             if ($methodReturnType === null) {
                 $methodReturnType = '';
             } else {
-                $methodReturnType = ': ' . $methodReturnType;
+                $methodReturnType = ': \\' . $methodReturnType->getName();
             }
-            $functionList[] = str_replace(['${methodName}', '${returntype}'], [$method->name, $methodReturnType], $funcTpl);
+            // 方法参数
+            $args       = [];
+            $parameters = [];
+
+            foreach ($method->getParameters() as $parameter) {
+                // 处理默认值
+                $parameter_value = null;
+
+                try {
+                    $parameter_value = $parameter->getDefaultValue();
+                    $parameter_value = '=' . var_export($parameter_value, true);
+                } catch (\Exception $exception) {
+                    $parameter_value = '';
+                }
+                if ($parameter->isArray()) {
+                    p($parameter->__toString());
+                }
+                $parameter_type = $parameter->hasType() ? '\\' . $parameter->getType()->getName() : '';
+                $args[]         = $parameter_type . ' $' . $parameter->getName() . $parameter_value;
+                $parameters[]   = '$' . $parameter->getName();
+            }
+            $args_tpl   = implode(',' . PHP_EOL . '        ', $args);
+            $params_tpl = implode(',' . PHP_EOL . '        ', $parameters);
+
+            // 方法模板
+            $func_tpl = '
+    ${func_doc}
+    public function ${methodName}(
+        ${arguments}
+    )${returntype}
+    {
+        $pluginInfo = $this->pluginsManager->getPluginInfo($this->subjectType, \'${methodName}\');
+        if (!$pluginInfo) {
+            return parent::${methodName}(${parameters});
+        } else {
+            return $this->___callPlugins(\'${methodName}\', func_get_args(), $pluginInfo);
+        } 
+    }';
+
+            $functionList[] = '    ' . str_replace(
+                [
+                    '${methodName}',
+                    '${returntype}',
+                    '${arguments}',
+                    '${parameters}',
+                    '${func_doc}',
+                ],
+                [
+                    $method->name,
+                    $methodReturnType,
+                    $args_tpl,
+                    $params_tpl,
+                    $method->getDocComment(),
+                ],
+                $func_tpl
+            );
         }
-        p($functionList);
-//        $replaceMap = [
-//            '${namespace}' => $class. '\\CGProxy',
-//            '${className}' => $classRef->getShortName() . '_CGProxy',
-//            '${targetClass}' => $class,
-//            '${functionList}' => join(PHP_EOL, $functionList),
-//        ];
         $replaceMap = [
-            '${namespace}' => /*'Interceptor' . */$class . '\\Interceptor',
-            '${use_list}' => $class,
-            '${className}' => /*$classRef->getShortName().*/'Interceptor',
-            '${targetClass}' => $class,
+            '${DATE}'      => date('Y-m-d'),
+            '${TIME}'      => date('H:m:s'),
+            '${namespace}' => $class,
+            '${className}' => /*$classRef->getShortName().*/
+                'Interceptor',
+            '${targetClass}'  => '\\' . $class,
             '${functionList}' => join(PHP_EOL, $functionList),
         ];
         $classBody = str_replace(array_keys($replaceMap), array_values($replaceMap), self::$proxyClassTemplate);
 
+        // 写入代理文件
+        $class_name       = $replaceMap['${namespace}'] . '\\' . $replaceMap['${className}'];
+        $interceptor_path = Env::path_framework_generated_code . $class_name . '.php';
+
+        /**@var \Weline\Framework\System\File\Io\File $file */
+        $file = ObjectManager::getInstance(\Weline\Framework\System\File\Io\File::class);
+        $file->open($interceptor_path, \Weline\Framework\System\File\Io\File::mode_w)
+            ->write($classBody)
+            ->close();
+
         return [
-            'name' => '\\' . $replaceMap['${namespace}'] . '\\' . $replaceMap['${className}'],
+            'name' => '\\' . $class_name,
             'body' => $classBody,
+            'file' => $interceptor_path,
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getClassProxyMap(): array
+    {
+        return self::$classProxyMap;
+    }
+
+    /**
+     * 设置
+     * @param array $classProxyMap
+     */
+    public static function setClassProxyMap(array $classProxyMap): void
+    {
+        self::$classProxyMap = $classProxyMap;
     }
 }

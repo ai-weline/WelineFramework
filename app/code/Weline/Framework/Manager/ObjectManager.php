@@ -11,6 +11,7 @@ namespace Weline\Framework\Manager;
 
 use ReflectionClass;
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\Event\EventsManager;
 
 class ObjectManager implements ManagerInterface
@@ -37,7 +38,7 @@ class ObjectManager implements ManagerInterface
 
     private static function initSelf()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             self::$instance = new self();
         }
     }
@@ -48,8 +49,9 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param string $class
-     * @return mixed|ObjectManager
+     * @throws Exception
      * @throws \ReflectionException
+     * @return mixed|ObjectManager
      */
     public static function getInstance(string $class = '')
     {
@@ -77,14 +79,21 @@ class ObjectManager implements ManagerInterface
 //            $eventManager = self::$instances[EventsManager::class];
 //        }
 //        $eventManager->dispatch('Framework::instance_object_before', ['class' => self::$instance]);
-        $new_class = $class;
-        // 拦截器
-        $interceptor = $class . DIRECTORY_SEPARATOR . 'Interceptor';
-        $interceptorFile = Env::path_framework_generated_interceptor . $interceptor . '.php';
+
+        // 拦截器处理
+        $new_class       = $class;
+        $interceptor     = $class . DIRECTORY_SEPARATOR . 'Interceptor';
+        $interceptorFile = Env::path_framework_generated_code . $interceptor . '.php';
         if (is_file($interceptorFile)) {
+            try {
+                include $interceptorFile;
+            } catch (Exception $exception) {
+                throw $exception;
+            }
             $new_class = $interceptor;
         }
-        $paramArr = self::getMethodParams($new_class);
+
+        $paramArr   = self::getMethodParams($new_class);
         $new_object = (new ReflectionClass($new_class))->newInstanceArgs($paramArr);
 
         self::$instances[$class] = self::initClass($new_object);
@@ -106,8 +115,8 @@ class ObjectManager implements ManagerInterface
      * @param $className
      * @param string $methodName
      * @param array $params
-     * @return mixed
      * @throws \ReflectionException
+     * @return mixed
      */
     public static function make($className, $methodName = '__construct', $params = [])
     {
@@ -172,8 +181,8 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param $class
-     * @return ReflectionClass
      * @throws \ReflectionException
+     * @return ReflectionClass
      */
     protected function getReflectionClass($class): ReflectionClass
     {

@@ -54,7 +54,7 @@ function getStringBetweenContents(string $str, string $startDelimiter, string $e
  * @throws \Weline\Framework\App\Exception
  * @return string
  */
-function __(string $words, $args=[])
+function __(string $words, array $args=[])
 {
     $filename = \Weline\Framework\App\Env::path_TRANSLATE_WORDS_FILE;
     if (! file_exists($filename)) {

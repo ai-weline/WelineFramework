@@ -26,8 +26,22 @@ class Index extends FrontendController
         $this->eventsManager = $eventsManager;
     }
 
-    public function index()
-    {
+    /**
+     * @DESC         |首页
+     *
+     * 参数区：
+     *
+     * @param mixed $e
+     * @param mixed $test
+     * @param mixed $arr
+     * @throws \Weline\Framework\App\Exception
+     * @return bool
+     */
+    public function index(
+        $e = 1,
+        $test = 'wozao',
+        $arr = ['a'=>1, 2, 3]
+    ) {
         return $this->fetch();
     }
 

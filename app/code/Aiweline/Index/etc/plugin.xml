@@ -3,9 +3,12 @@
         xs:noNamespaceSchemaLocation="urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd"
         xmlns="urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd">
     <plugin name="Aiweline_Index::index_controller_plugin" class="Aiweline\Index\Controller\Index">
-        <interceptor name="Aiweline_Index::interceptor_index_test" instance="Aiweline\Bbs\Plugin\PluginIndexController" disabled="false" sort="1"/>
+        <interceptor name="Aiweline_Index::interceptor_index_test" instance="Aiweline\Index\Plugin\PluginIndexController" disabled="false" sort="1"/>
     </plugin>
     <plugin name="Aiweline_Index::index_controller_plugin" class="Aiweline\Index\Controller\Index">
-        <interceptor name="Aiweline_Index::interceptor_index_test" instance="Aiweline\Bbs\Plugin\PluginIndexController" disabled="false" sort="2"/>
+        <interceptor name="Aiweline_Index::interceptor_index_test" instance="Aiweline\Index\Plugin\PluginIndexController" disabled="false" sort="2"/>
+    </plugin>
+    <plugin name="Aiweline_Index::index_controller_plugin" class="Aiweline\Index\Controller\Test">
+        <interceptor name="Aiweline_Index::interceptor_index_test" instance="Aiweline\Index\Plugin\PluginIndexController" disabled="false" sort="2"/>
     </plugin>
 </config>

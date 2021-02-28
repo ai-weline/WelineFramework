@@ -27,6 +27,9 @@ class PluginsManagerTest extends TestCore
 
     public function testScanPlugins()
     {
-        p($this->pluginsManager->scanPlugins());
+//        p($this->pluginsManager->scanPlugins());
+//        p($this->pluginsManager->getPluginInstanceList('Aiweline\Index\Controller\Index'));
+//        p($this->pluginsManager->generatorInterceptor('Aiweline\Index\Controller\Index'));
+        p($this->pluginsManager->generatorInterceptor());
     }
 }

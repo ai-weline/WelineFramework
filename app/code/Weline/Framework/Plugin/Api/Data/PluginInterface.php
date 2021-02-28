@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Plugin;
+namespace Weline\Framework\Plugin\Api\Data;
 
 interface PluginInterface
 {

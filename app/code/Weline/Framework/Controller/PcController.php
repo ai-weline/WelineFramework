@@ -21,10 +21,13 @@ class PcController extends Core
     /**
      * 设置
      * @param Template $template
+     * @return PcController
      */
-    public function setTemplate(Template $template): void
+    public function setTemplate(Template $template)
     {
         $this->_template = $template;
+
+        return $this;
     }
 
     /**
@@ -63,6 +66,7 @@ class PcController extends Core
      *
      * @param array|string $tpl_var
      * @param array|string $value
+     * @return PcController
      */
     protected function assign($tpl_var, $value = null)
     {
@@ -74,6 +78,8 @@ class PcController extends Core
                 $this->getTemplate()->assign($key, $item);
             }
         }
+
+        return $this;
     }
 
     /**

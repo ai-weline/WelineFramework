@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Plugin;
 
-abstract class PluginAbstract implements PluginInterface
+abstract class PluginAbstract implements \Weline\Framework\Plugin\Api\Data\PluginInterface
 {
     public function orderNumber(): int
     {

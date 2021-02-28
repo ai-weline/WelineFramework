@@ -253,4 +253,18 @@
   251 => '执行命令：',
   252 => '拦截器缓存清理成功！',
   253 => '执行命令：',
+  254 => '拦截器缓存清理成功！',
+  255 => '执行命令：',
+  256 => '拦截器缓存清理成功！',
+  257 => '执行命令：',
+  258 => '插件名称：%1,无法动态代理final类:%2,状态：%3,排序：%4',
+  259 => '插件名称：Aiweline_Index::interceptor_index_test,无法动态代理final类:Aiweline\\Index\\Plugin\\PluginIndexController,状态：false,排序：1',
+  260 => '插件名称：Aiweline_Index::interceptor_index_test,
+无法动态代理final类:Aiweline\\Index\\Plugin\\PluginIndexController
+状态：false
+排序：1',
+  261 => '插件名称：Aiweline_Index::interceptor_index_test,
+无法动态代理final类:Aiweline\\Index\\Plugin\\PluginIndexController
+状态：false
+排序：1',
 );
