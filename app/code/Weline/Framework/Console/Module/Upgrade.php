@@ -62,11 +62,12 @@ class Upgrade extends CommandAbstract
     {
         // 删除路由文件
         $this->printer->warning('路由更新...', '系统');
+        $this->printer->warning('清除文件：');
         foreach (Env::router_files_PATH as $path) {
-            $this->printer->warning('清除文件：' . $path, '系统');
+            $this->printer->warning($path);
             if (is_file($path)) {
                 list($out, $var) = $this->system->exec('rm -f ' . $path);
-                $this->printer->printList($out);
+                if($out)$this->printer->printList($out);
             }
         }
         // 扫描代码

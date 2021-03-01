@@ -6,6 +6,7 @@
       <sshConfig authType="PASSWORD" host="121.36.94.214" id="e9871e43-47ac-4018-b2bc-3ee52f9f613c" port="22" customName="www" nameFormat="CUSTOM" username="www" />
       <sshConfig authType="PASSWORD" host="121.36.94.214" id="a655f83a-b684-4750-b91a-4645f8dbe275" port="22" customName="dev" nameFormat="CUSTOM" username="www" />
       <sshConfig authType="PASSWORD" host="47.253.2.213" id="ddc3a0e7-ac12-4f83-8ce6-ff14edcca36b" port="22" customName="单页" nameFormat="CUSTOM" username="www" />
+      <sshConfig authType="PASSWORD" host="121.36.94.214" id="4a8e08ee-d37c-4972-a9d1-fdb887c148f2" port="22" nameFormat="DESCRIPTIVE" username="www" />
     </configs>
   </component>
 </project>

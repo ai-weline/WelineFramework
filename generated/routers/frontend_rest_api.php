@@ -109,4 +109,37 @@
       'request_method' => 'UPDATE',
     ),
   ),
+  'news/rest/v1/source/news/list::GET' => 
+  array (
+    'module' => 'Aiweline_NewsSource',
+    'class' => 
+    array (
+      'area' => 'FrontendRestController',
+      'name' => 'Aiweline\\NewsSource\\Api\\Rest\\V1\\Source\\News',
+      'method' => 'getList',
+      'request_method' => 'GET',
+    ),
+  ),
+  'news/rest/v1/source/news::GET' => 
+  array (
+    'module' => 'Aiweline_NewsSource',
+    'class' => 
+    array (
+      'area' => 'FrontendRestController',
+      'name' => 'Aiweline\\NewsSource\\Api\\Rest\\V1\\Source\\News',
+      'method' => 'get',
+      'request_method' => 'GET',
+    ),
+  ),
+  'news/rest/v1/source::POST' => 
+  array (
+    'module' => 'Aiweline_NewsSource',
+    'class' => 
+    array (
+      'area' => 'FrontendRestController',
+      'name' => 'Aiweline\\NewsSource\\Api\\Rest\\V1\\Source',
+      'method' => 'post',
+      'request_method' => 'POST',
+    ),
+  ),
 );

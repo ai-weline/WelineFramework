@@ -99,4 +99,54 @@
       'method' => 'cache',
     ),
   ),
+  'index/index' => 
+  array (
+    'module' => 'Aiweline_Index',
+    'class' => 
+    array (
+      'area' => 'FrontendController',
+      'name' => 'Aiweline\\Index\\Controller\\Index',
+      'method' => 'index',
+    ),
+  ),
+  'index/observer' => 
+  array (
+    'module' => 'Aiweline_Index',
+    'class' => 
+    array (
+      'area' => 'FrontendController',
+      'name' => 'Aiweline\\Index\\Controller\\Index',
+      'method' => 'observer',
+    ),
+  ),
+  'test/Dd' => 
+  array (
+    'module' => 'Aiweline_Index',
+    'class' => 
+    array (
+      'area' => 'FrontendController',
+      'name' => 'Aiweline\\Index\\Controller\\Test',
+      'method' => 'Dd',
+    ),
+  ),
+  'news/index/index' => 
+  array (
+    'module' => 'Aiweline_NewsSource',
+    'class' => 
+    array (
+      'area' => 'FrontendController',
+      'name' => 'Aiweline\\NewsSource\\Controller\\Index',
+      'method' => 'index',
+    ),
+  ),
+  'todo/ok' => 
+  array (
+    'module' => 'Aiweline_Test2',
+    'class' => 
+    array (
+      'area' => 'FrontendController',
+      'name' => 'Aiweline\\Test2\\Controller\\ToDo',
+      'method' => 'ok',
+    ),
+  ),
 );

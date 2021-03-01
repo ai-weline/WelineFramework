@@ -131,6 +131,7 @@ class Template
     public function assign(string $tpl_var, $value = null)
     {
         $this->vars[$tpl_var] = $value;
+        return $this;
     }
 
     /**

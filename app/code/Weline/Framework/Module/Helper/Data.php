@@ -55,11 +55,10 @@ class Data extends AbstractHelper
                         $baseRouter   = $router . ($baseRouter ?? '');
                         $baseRouter   = trim($baseRouter, '/');
                         $apiClassName = $apiFile->getNamespace() . '\\' . $apiFile->getFilename();
-                        $apiClass     = new $apiClassName();
 
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
-                        $ctl_data               = $this->parserController($apiClass);
+                        $ctl_data               = $this->parserController($apiClassName);
                         $ctl_methods            = $ctl_data['methods'];
                         $ctl_area               = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {
@@ -92,10 +91,9 @@ class Data extends AbstractHelper
                         $baseRouter          = $router . ($baseRouter ?? '');
                         $baseRouter          = trim($baseRouter, '/');
                         $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
-                        $controllerClass     = ObjectManager::getInstance($controllerClassName);
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
-                        $ctl_data               = $this->parserController($controllerClass);
+                        $ctl_data               = $this->parserController($controllerClassName);
                         $ctl_methods            = $ctl_data['methods'];
                         $ctl_area               = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {
@@ -166,11 +164,11 @@ class Data extends AbstractHelper
      * @DESC         |利用反射去除父类方法
      *
      * 参数区：
-     * @param object $class
+     * @param string $class
      * @throws \ReflectionException
      * @return array
      */
-    private function parserController(object $class)
+    private function parserController(string $class)
     {
         // 默认前端控制器
 //        $ctl_area = \Weline\Framework\Controller\Data\DataInterface::type_pc_FRONTEND;
@@ -202,8 +200,7 @@ class Data extends AbstractHelper
             $controller_methods = array_diff($controller_methods, $parent_methods);
             // 实例化类
             if (! $parent_class->isAbstract()) {
-                $class                  = ObjectManager::getInstance($parent_class->getName());
-                $this->parent_class_arr = array_merge($this->parent_class_arr, $this->parserController($class)['area']);
+                $this->parent_class_arr = array_merge($this->parent_class_arr, $this->parserController($parent_class->getName())['area']);
             }
         }
 
