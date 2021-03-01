@@ -201,6 +201,8 @@ class Core extends \Exception
      */
     private function prepareHtmlMessage($code = '', $message = '', $file = '', $line = '')
     {
+        $track_str_arr_str = $this->getTraceAsString();
+
         // 拼接错误信息
         $err_str = '<style>body{background-color:#151d1c}</style>';
         $err_str .= "<div style='padding:25px;'><h3 style='color: #ad2d2d'>" . date('Y-m-d h:i:s') . '</h3><br>';
@@ -209,7 +211,7 @@ class Core extends \Exception
         $err_str .= '行数：' . ($line ? $line : $this->line) . '<br>';
         $err_str .= '信息：' . ($message ? $message : $this->message) . '<br>';
         $err_str .= '位置：' . $this->getErrorCode() . '<br>';
-        $err_str .= '追踪：<br>' . $this->getTraceAsString() . '<br>';
+        $err_str .= '追踪：<br>' . $track_str_arr_str . '<br>';
         $err_str .= '<br></div></div>';
 
         return $err_str;

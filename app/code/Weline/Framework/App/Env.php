@@ -46,9 +46,9 @@ class Env
         self::path_BACKEND_PC_ROUTER_FILE,
         self::path_FRONTEND_PC_ROUTER_FILE,
     ];
-
+    const GENERATED_DIR = 'generated';
     // 翻译词典
-    const path_TRANSLATE_WORDS_FILE = BP . 'generated' . DIRECTORY_SEPARATOR . 'language.php';
+    const path_TRANSLATE_WORDS_FILE = BP . self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language.php';
 
     // 日志
     const log_path_ERROR = 'error';

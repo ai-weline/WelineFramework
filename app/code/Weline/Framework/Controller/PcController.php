@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Controller;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Template;
@@ -112,7 +113,9 @@ class PcController extends Core
     protected function getViewBaseDir()
     {
         $reflect             = new ReflectionObject($this);
-        $ctl_dir_reflect_arr = explode(self::dir, $reflect->getFileName());
+        $filename = $reflect->getFileName();
+        $filename = str_replace(Env::GENERATED_DIR,'app',$filename);
+        $ctl_dir_reflect_arr = explode(self::dir, $filename);
         $module_dir          = array_shift($ctl_dir_reflect_arr);
         $module_dir          = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
         if (! is_dir($module_dir)) {

@@ -42,7 +42,9 @@ class Index extends FrontendController
         $test = 'wozao',
         $arr = ['a'=>1, 2, 3]
     ) {
-        return $this->fetch();
+        $re =  $this->fetch();
+        p();
+        return $re;
     }
 
     public function observer()
