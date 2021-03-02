@@ -19,7 +19,7 @@ interface CacheInterface
      *
      * @return int
      */
-    function getStatus(): int;
+    public function getStatus(): int;
 
     /**
      * @DESC         |设置状态
@@ -30,7 +30,7 @@ interface CacheInterface
      * @param int $status
      * @return CacheInterface
      */
-    function setStatus(int $status):CacheInterface;
+    public function setStatus(int $status):CacheInterface;
 
     /**
      * @DESC         |从给定键生成规范化缓存键。

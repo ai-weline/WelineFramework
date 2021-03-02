@@ -1,4 +1,5 @@
 <?php
+
 /*
  * 本文件由Aiweline编写，所有解释权归Aiweline所有。
  * 邮箱：aiweline@qq.com
@@ -21,7 +22,7 @@ class File extends AbstractSessionDriverHandle
         parent::__construct($config);
         $this->sessionPath = BP . $config['path'] ?? BP . 'var/session/';
         if (session_status() !== 2) {
-            if (!is_dir($this->sessionPath)) {
+            if (! is_dir($this->sessionPath)) {
                 mkdir($this->sessionPath, 0700);
             }
             ini_set('session.save_handler', DriverInterface::driver_FILE);

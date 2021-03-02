@@ -67,7 +67,9 @@ class Upgrade extends CommandAbstract
             $this->printer->warning($path);
             if (is_file($path)) {
                 list($out, $var) = $this->system->exec('rm -f ' . $path);
-                if($out)$this->printer->printList($out);
+                if ($out) {
+                    $this->printer->printList($out);
+                }
             }
         }
         // 扫描代码

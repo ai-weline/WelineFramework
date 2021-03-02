@@ -11,6 +11,7 @@ namespace Weline\Framework\Plugin\Proxy;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Plugin\PluginsManager;
 
 class Generator
 {
@@ -71,12 +72,19 @@ ${functionList}
         }
         $functionList = [];
         $methods      = $classRef->getMethods(\ReflectionMethod::IS_PUBLIC);
+        // 仅监听被监听的函数
+        /**@var PluginsManager $pluginsManager*/
+        $pluginsManager = ObjectManager::getInstance(PluginsManager::class);
+        $type_plugin = $pluginsManager->getClassPluginInstanceList($class);
+        $plugin_listen_type_methods = isset($type_plugin['listen_methods'])?$type_plugin['listen_methods']:[];
+        $plugin_listen_type_methods[] = '__construct';
         // 排除当前类尚未代理的函数
         foreach ($methods as $key => $method) {
-            if ($class !== $method->class) {
+            if ($class !== $method->class||!in_array($method->name,$plugin_listen_type_methods)) {
                 unset($methods[$key]);
             }
         }
+
         // 创建侦听代理函数
         foreach ($methods as $method) {
             if ($method->isFinal()) {
@@ -125,12 +133,21 @@ ${functionList}
             return $this->___callPlugins(\'${methodName}\', func_get_args(), $pluginInfo);
         } 
     }';
+            $construct_func_tpl = '
+    ${func_doc}
+    public function ${methodName}(
+        ${arguments}
+    )${returntype}
+    {
+        ${construct_content}
+    }';
             $construct_content = '';
-            if('__construct'===$method->name){
+            if ('__construct' === $method->name) {
                 $construct_content = '
         $this->___init();
-        parent::__construct('.$params_tpl.');
+        parent::__construct(' . $params_tpl . ');
                     ';
+                $func_tpl = $construct_func_tpl;
             }
             $functionList[] = '    ' . str_replace(
                 [

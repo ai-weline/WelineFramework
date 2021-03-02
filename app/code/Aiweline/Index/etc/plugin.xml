@@ -2,10 +2,14 @@
 <config xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
         xs:noNamespaceSchemaLocation="urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd"
         xmlns="urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd">
-    <plugin name="Aiweline_Index::index_controller_plugin" class="Aiweline\Index\Controller\Index">
-        <interceptor name="Aiweline_Index::interceptor_index_test" instance="Aiweline\Index\Plugin\PluginIndexController" disabled="false" sort="2"/>
+    <plugin name="Aiweline_Index::index_controller_plugin0" class="Aiweline\Index\Controller\Index">
+        <interceptor name="Aiweline_Index::interceptor_index_test0" instance="Aiweline\Index\Plugin\PluginIndexController" disabled="false" sort="2"/>
     </plugin>
-    <plugin name="Aiweline_Index::index_controller_plugin" class="Aiweline\Index\Controller\Test">
-        <interceptor name="Aiweline_Index::interceptor_index_test" instance="Aiweline\Index\Plugin\PluginTestController" disabled="false" sort="2"/>
+    <plugin name="Aiweline_Index::index_controller_plugin1" class="Aiweline\Index\Controller\Index">
+        <interceptor name="Aiweline_Index::interceptor_index_test1" instance="Aiweline\Index\Plugin\PluginTestController" disabled="false" sort="2"/>
     </plugin>
+
+<!--    <plugin name="Aiweline_Index::index_controller_plugin" class="Aiweline\Index\Controller\Test">-->
+<!--        <interceptor name="Aiweline_Index::interceptor_index_test" instance="Aiweline\Index\Plugin\PluginTestController" disabled="false" sort="2"/>-->
+<!--    </plugin>-->
 </config>

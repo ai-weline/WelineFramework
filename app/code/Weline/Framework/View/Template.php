@@ -131,6 +131,7 @@ class Template
     public function assign(string $tpl_var, $value = null)
     {
         $this->vars[$tpl_var] = $value;
+
         return $this;
     }
 
@@ -168,6 +169,7 @@ class Template
             if (DEV) {
                 throw new Exception('模板文件：' . $tplFile . '不存在！');
             }
+
             return false;
         }
 
@@ -204,8 +206,8 @@ class Template
         // <php></php>标签
         $replaces = [
             '@static' => $this->getUrlPath($this->statics_dir),
-            '<php>' => '<?php ',
-            '</php>' => '?>',
+            '<php>'   => '<?php ',
+            '</php>'  => '?>',
         ];
         foreach ($replaces as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);
@@ -251,7 +253,7 @@ class Template
                 };
                 echo \$foreach_loop_str_tmp;
             }
-            ?>"
+            ?>",
         ];
         // TODO 完善foreach模板
         $content = preg_replace($pattern, $replacement, $content);
@@ -269,8 +271,9 @@ class Template
         return $content;
     }
 
-    function getUrl(string $path){
-        return $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/'.$path;
+    public function getUrl(string $path)
+    {
+        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $path;
     }
 
     /**

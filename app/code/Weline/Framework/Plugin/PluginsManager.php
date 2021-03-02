@@ -17,6 +17,8 @@ use Weline\Framework\Plugin\Config\Reader;
 
 class PluginsManager
 {
+    private $plugin_map = [];
+
     protected array $plugins = [];
 
     /**
@@ -45,10 +47,10 @@ class PluginsManager
      *
      * @param bool $cache
      * @return array
-     * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Exception\Core
+     * @throws \Weline\Framework\App\Exception
      */
-    public function scanPlugins(bool $cache=true)
+    public function scanPlugins(bool $cache = true)
     {
         // 避免重复加载
         if ($this->plugins) {
@@ -58,22 +60,21 @@ class PluginsManager
         if ($cache && $this->plugins = $this->pluginCache->get('plugins_data')) {
             return $this->plugins;
         }
-//        p($this->pluginCache->get('plugins_data'));
 
         if (empty($this->plugins)) {
             // 合并相同类的拦截器
-            foreach ($this->reader->read() as $module_and_file => $pluginInstances) {
+            foreach ($this->reader->read($cache) as $module_and_file => $pluginInstances) {
                 foreach ($pluginInstances as $key => $instances) {
                     foreach ($instances as $k => $instance) {
                         if (isset($instance['plugins']['disabled']) && 'true' === $instance['plugins']['disabled']) {
                             unset($instances[$k]);
                         }
-                        $plugins[$instance['class']][$instance['plugins']['sort']] = $instance['plugins'];
+                        $plugins[$instance['class']][] = $instance['plugins'];
                     }
                 }
             }
         }
-        $plugins_info = [];
+        $types_plugins_info = [];
         // 检查定义所有插件类的方法（方法列表要求：
         //1、 读取所有插件的方法的名字必须在被侦听的类中的方法中存在
         //2、 全局原始类函数，用于创建侦听类使用
@@ -82,6 +83,7 @@ class PluginsManager
         // 反射所有插件类方法
         foreach ($plugins as $type => $type_plugins) {
             $plugin_listen_methods = [];
+
             try {
                 $typeRef = new \ReflectionClass($type);
             } catch (\ReflectionException $e) {
@@ -94,11 +96,11 @@ class PluginsManager
             $type_methods = $typeRef->getMethods();
             foreach ($type_methods as $key => $method) {
                 unset($type_methods[$key]);
-                if ($type === $method->class) {
+                if ($type === $method->class && '__construct' !== $method->name) {
                     $type_methods[$method->name] = $method->name;
                 }
             }
-            $plugins_info[$type]['methods'] = $type_methods;
+            $types_plugins_info[$type]['methods'] = $type_methods;
 
             foreach ($type_plugins as $type_plugin) {
                 try {
@@ -112,86 +114,153 @@ class PluginsManager
                 $plugin_instance_methods = $typePluginRef->getMethods();
                 foreach ($plugin_instance_methods as $key => $plugin_instance_method) {
                     unset($plugin_instance_methods[$key]);
-                    // 获取当前类的方法
-                    if (trim($type_plugin['instance'], '\\') === $plugin_instance_method->class) {
-                        $name = str_replace(
-                            [
-                                InterceptorInterface::LISTENER_BEFORE,
-                                InterceptorInterface::LISTENER_AROUND,
-                                InterceptorInterface::LISTENER_AFTER,
-                            ],
-                            '',
-                            $plugin_instance_method->name
-                        );
+                    /*不可继承*/
+                    /*if ('__construct' != $plugin_instance_method->name && $type_plugin['instance'] === $plugin_instance_method->class) {*/
+                    /*可继承：插件类保留PHP原有特性*/
+                    if ('__construct' !== $plugin_instance_method->name) {
+                        // 获取当前类的方法
+                        if (trim($type_plugin['instance'], '\\') === $plugin_instance_method->class) {
+                            $name = str_replace(
+                                [
+                                    InterceptorInterface::LISTENER_BEFORE,
+                                    InterceptorInterface::LISTENER_AROUND,
+                                    InterceptorInterface::LISTENER_AFTER,
+                                ],
+                                '',
+                                $plugin_instance_method->name
+                            );
 
-                        // 检测首字母大小写字母匹配的方法是否存在：存在则不新增
-                        if (!in_array($name, $plugin_instance_methods, true) || !in_array(lcfirst($name), $plugin_instance_methods, true)) {
-                            // 检测首字母大小写字母匹配的方法
-                            if (in_array($name, $type_methods, true)) {
-                                $plugin_instance_methods[$name][] = $plugin_instance_method->name;
-                            }
-                            if (in_array(lcfirst($name), $type_methods, true)) {
-                                $plugin_instance_methods[lcfirst($name)][] = $plugin_instance_method->name;
-                            }
-                        }
-
-                        // 检测首字母大小写字母匹配的方法是否存在：存在则不新增:全局原始类函数，用于创建侦听类使用
-                        $origin_in_listen = in_array($name, $type_methods, true);
-                        if (!in_array($name, $plugin_listen_methods, true) && $origin_in_listen) {
-                            // 检测首字母大小写字母匹配的方法
-                            $origin_is_in = false;
-                            if (!in_array($name, $plugin_listen_methods, true)) {
-                                $plugin_listen_methods[] = $name;
-                                $origin_is_in = true;
-                            }
-                            // 如果不在继续查
-                            if (!$origin_is_in) {
-                                if (!in_array($name, $plugin_listen_methods, true)) {
-                                    $plugin_listen_methods[] = lcfirst($name);
-                                    $origin_is_in = true;
+                            // 检测首字母大小写字母匹配的方法是否存在：存在则不新增
+                            if (!in_array($name, $plugin_instance_methods, true) || !in_array(lcfirst($name), $plugin_instance_methods, true)) {
+                                // 检测首字母大小写字母匹配的方法
+                                if (in_array($name, $type_methods, true)) {
+                                    $plugin_instance_methods[$name][] = $plugin_instance_method->name;
+                                } elseif (in_array(lcfirst($name), $type_methods, true)) {
+                                    $plugin_instance_methods[lcfirst($name)][] = $plugin_instance_method->name;
                                 }
                             }
-                            // 还不在就创建
-                            if (!$origin_is_in) {
-                                $plugin_listen_methods[] = lcfirst($name);
-                            }
-                        }
 
-                        // 检测首字母大小写字母匹配的方法是否存在：存在则不新增:全局原始类函数，用于创建侦听类使用
-                        $lcfirst_name = lcfirst($name);
-                        $lcfirst_in_listen = in_array($lcfirst_name, $type_methods, true);
-                        if (!in_array($lcfirst_name, $plugin_listen_methods, true) && $lcfirst_in_listen) {
-                            // 检测首字母大小写字母匹配的方法
-                            $lcfirst_is_in = false;
-                            if (!in_array($lcfirst_name, $plugin_listen_methods, true)) {
-                                $plugin_listen_methods[] = $lcfirst_name;
-                                $lcfirst_is_in = true;
+                            // 检测首字母大小写字母匹配的方法是否存在：存在则不新增:全局原始类函数，用于创建侦听类使用
+                            $origin_in_listen = in_array($name, $type_methods, true);
+                            if (!in_array($name, $plugin_listen_methods, true) && $origin_in_listen) {
+                                // 检测首字母大小写字母匹配的方法
+                                $origin_is_in = false;
+                                if (!in_array($name, $plugin_listen_methods, true)) {
+                                    $plugin_listen_methods[] = $name;
+                                    $origin_is_in = true;
+                                } elseif (!$origin_is_in) {
+                                    if (!in_array($name, $plugin_listen_methods, true)) {
+                                        $plugin_listen_methods[] = lcfirst($name);
+                                        $origin_is_in = true;
+                                    }
+                                }
+                                // 还不在就创建
+                                if (!$origin_is_in) {
+                                    $plugin_listen_methods[] = lcfirst($name);
+                                }
                             }
-                            // 如果不在继续查
-                            if (!$lcfirst_is_in) {
+
+                            // 检测首字母大小写字母匹配的方法是否存在：存在则不新增:全局原始类函数，用于创建侦听类使用
+                            $lcfirst_name = lcfirst($name);
+
+                            $lcfirst_in_listen = in_array($lcfirst_name, $type_methods, true);
+                            if (!in_array($lcfirst_name, $plugin_listen_methods, true) && $lcfirst_in_listen) {
+                                // 检测首字母大小写字母匹配的方法
+                                $lcfirst_is_in = false;
                                 if (!in_array($lcfirst_name, $plugin_listen_methods, true)) {
                                     $plugin_listen_methods[] = $lcfirst_name;
                                     $lcfirst_is_in = true;
+                                } elseif (!$lcfirst_is_in) {
+                                    if (!in_array($lcfirst_name, $plugin_listen_methods, true)) {
+                                        $plugin_listen_methods[] = $lcfirst_name;
+                                        $lcfirst_is_in = true;
+                                    }
                                 }
-                            }
-                            // 还不在就创建
-                            if (!$lcfirst_is_in) {
-                                $plugin_listen_methods[] = $lcfirst_name;
+                                // 还不在就创建
+                                if (!$lcfirst_is_in) {
+                                    $plugin_listen_methods[] = $lcfirst_name;
+                                }
                             }
                         }
                     }
                 }
-                $plugins_info[$type]['plugins_methods'][$type_plugin['instance']] = $plugin_instance_methods;
+                $types_plugins_info[$type]['plugins_methods'][$type_plugin['instance']] = $plugin_instance_methods;
             }
-            $plugins_info[$type]['listen_methods'] = $plugin_listen_methods;
+            $types_plugins_info[$type]['listen_methods'] = $plugin_listen_methods;
         }
+        // 再检出前置、环绕、后置等方法信息（包含类和方法）
+        $before_name = InterceptorInterface::LISTENER_BEFORE;
+        $around_name = InterceptorInterface::LISTENER_AROUND;
+        $after_name = InterceptorInterface::LISTENER_AFTER;
+        foreach ($types_plugins_info as $type_class => $plugins_info) {
+            $plugins_info[$before_name] = [];
+            $plugins_info[$around_name] = [];
+            $plugins_info[$after_name] = [];
+            foreach ($plugins_info['plugins_methods'] as $plugin_class => $plugin_methods) {
+                foreach ($plugin_methods as $type_class_method => $type_class_method_plugin_methods) {
+                    foreach ($type_class_method_plugin_methods as $type_class_method_plugin_method) {
+                        // 前置
+                        if (strstr($type_class_method_plugin_method, $before_name)) {
+                            $plugins_info[$before_name][] = [
+                                'instance' => $plugin_class,
+                                'method' => $type_class_method_plugin_method,
+                            ];
+                        } elseif (strstr($type_class_method_plugin_method, $around_name)) {
+                            // 环绕
+                            $plugins_info[$around_name][] = [
+                                'instance' => $plugin_class,
+                                'method' => $type_class_method_plugin_method,
+                            ];
+                        } elseif (strstr($type_class_method_plugin_method, $after_name)) {
+                            $plugins_info[$after_name][] = [
+                                'instance' => $plugin_class,
+                                'method' => $type_class_method_plugin_method,
+                            ];
+                        }
+                    }
+                }
+            }
+            $types_plugins_info[$type_class] = $plugins_info;
+        }
+        // 针对方法的前置，环绕，后置
+        foreach ($types_plugins_info as $type => $plugin_data) {
+            $method_plugins_methods = [];
+            foreach ($plugin_data['listen_methods'] as $listen_method) {
+                foreach ($plugin_data['plugins_methods'] as $plugin_class => $plugin_methods) {
+                    if ($plugin_methods) {
+                        foreach ($plugin_methods[$listen_method] as $plugin_method) {
+                            $plugin_class_method_data = [
+                                'instance' => $plugin_class,
+                                'method' => $plugin_method,
+                            ];
+                            // 全部数据
+                            $method_plugins_methods[$listen_method]['all'][] = $plugin_class_method_data;
 
-        // 正式环境则缓存
-        if (!DEV) {
-            $this->plugins = $this->pluginCache->set('plugins_data', $plugins_info);
+                            if (strstr($plugin_method, $before_name)) {
+                                // 前置
+                                $method_plugins_methods[$listen_method][$before_name][] = $plugin_class_method_data;
+                            } elseif (strstr($plugin_method, $around_name)) {
+                                // 环绕
+                                $method_plugins_methods[$listen_method][$around_name][] = $plugin_class_method_data;
+                            } elseif (strstr($plugin_method, $after_name)) {
+                                // 后置
+                                $method_plugins_methods[$listen_method][$after_name][] = $plugin_class_method_data;
+                            }
+                        }
+                    }
+                }
+            }
+            $plugin_data['methods_plugins'] = $method_plugins_methods;
+            $types_plugins_info[$type] = $plugin_data;
         }
-        $this->pluginCache->set('plugins_data', $plugins_info);
+//        p($types_plugins_info['Aiweline\Index\Controller\Index']);
+        // 正式环境则缓存
+        if ($cache) {
+            $this->plugins = $this->pluginCache->set('plugins_data', $types_plugins_info);
+        }
+        $this->pluginCache->set('plugins_data', $types_plugins_info);
         $this->plugins = $this->pluginCache->get('plugins_data');
+
         return $this->plugins;
     }
 
@@ -203,11 +272,11 @@ class PluginsManager
      * @param string $class
      * @return array|mixed
      */
-    protected function getClassPluginInstanceList(string $class = '')
+    public function getClassPluginInstanceList(string $class = '')
     {
         $plugins = $this->scanPlugins();
         if ($class) {
-            return $plugins[$class] ?? [];
+            return isset($plugins[$class]) ? $plugins[$class] : [];
         }
 
         return $plugins;
@@ -224,16 +293,37 @@ class PluginsManager
      */
     public function getPluginInfo(string $type, string $method, string $code = null)
     {
-        $plugin_instance_list = [];
-        if (isset($this->scanPlugins()[$type])) {
-            $plugin_instance_list = $this->scanPlugins()[$type];
+        // 避免多次读取
+        if (isset($this->plugin_map[$type . $method])) {
+            return $this->plugin_map[$type . $method];
         }
-        if (empty($plugin_instance_list)) {
-            # 浪费空间去创建空数组，不如直接返回已有的空数组
-            return $plugin_instance_list;
+        $data = [];
+        if (isset($this->scanPlugins(false)[$type])) {
+            if (isset($this->scanPlugins(false)[$type]['methods_plugins'][$method])) {
+                $data = $this->plugin_map[$type . $method] = $this->scanPlugins(false)[$type]['methods_plugins'][$method];
+            }
         }
+        $this->plugin_map[$type . $method] = $data;
 
-        return [];
+        return $this->plugin_map[$type . $method];
+    }
+
+    /**
+     * Retrieve next plugins in chain
+     *
+     * @param string $type
+     * @param string $method
+     * @param string $code
+     * @return array
+     */
+    public function getNext($type, $method, $code = '__self')
+    {
+        if (!isset($this->plugin_map[$type . $method])) {
+            $this->_inheritPlugins($type);
+        }
+        $key = $type . '_' . lcfirst($method) . '_' . $code;
+
+        return $this->_processed[$key] ?? null;
     }
 
     /**
@@ -244,11 +334,11 @@ class PluginsManager
      * @param string $class
      * @param bool $cache
      * @return Proxy\Generator
-     * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Exception\Core
+     * @throws \ReflectionException
      */
-    public function generatorInterceptor(string $class = '', bool $cache = true)
+    public function generatorInterceptor(string $class = '', bool $cache = false)
     {
         /**@var \Weline\Framework\Plugin\Proxy\Generator $generator */
         $generator = ObjectManager::getInstance(\Weline\Framework\Plugin\Proxy\Generator::class);
@@ -259,6 +349,7 @@ class PluginsManager
                 $generator::createInterceptor($origin_class);
             }
         }
+
         return $generator;
     }
 }

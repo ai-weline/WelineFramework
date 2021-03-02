@@ -44,6 +44,7 @@ class Index extends FrontendController
     ) {
         $re =  $this->fetch();
         p();
+
         return $re;
     }
 

@@ -28,4 +28,12 @@ class PluginTestController extends PluginAbstract
     public function afterDd(Index $object, $result)
     {
     }
+
+//    function afterIndex(){
+//        echo get_class($this);
+//    }
+    public function before__construct()
+    {
+        echo get_class($this);
+    }
 }

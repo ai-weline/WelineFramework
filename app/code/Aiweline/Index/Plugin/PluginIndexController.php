@@ -17,15 +17,16 @@ class PluginIndexController extends PluginAbstract
     public function beforeIndex(Index $object)
     {
         echo 'beforeIndex';
+        echo get_class($this);
 
         return $object->index();
     }
 
-    public function aroundIndex(Index $object)
-    {
-    }
-
-    public function afterIndex(Index $object, $result)
-    {
-    }
+//    public function aroundIndex(Index $object)
+//    {
+//    }
+//
+//    public function afterIndex(Index $object, $result)
+//    {
+//    }
 }

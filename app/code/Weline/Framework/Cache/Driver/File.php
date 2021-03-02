@@ -14,6 +14,7 @@ use Weline\Framework\Cache\CacheInterface;
 class File implements CacheInterface, DriverInterface
 {
     private int $status;
+
     /**
      * @var string 存储缓存文件的目录。
      * 缓存文件的地址，例如/var/html/projects/var/cache/
@@ -57,8 +58,10 @@ class File implements CacheInterface, DriverInterface
     public function setStatus(int $status):CacheInterface
     {
         $this->status = $status;
+
         return $this;
     }
+
     /**
      * @DESC         |从给定键生成规范化缓存键
      *

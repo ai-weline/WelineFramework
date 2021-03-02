@@ -14,7 +14,6 @@ use Weline\Framework\System\File\App\Scanner;
 use Weline\Framework\System\File\Io\File;
 use Weline\Framework\Helper\AbstractHelper;
 use Weline\Framework\Http\RequestInterface;
-use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Module\Handle;
 use Weline\Framework\Register\Register;
 use Weline\Framework\Register\Router\Data\DataInterface;

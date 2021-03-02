@@ -5,8 +5,8 @@
  * 网名：WelineFramework框架                    【秋风雁飞(Aiweline)】
  * 网站：www.aiweline.com/bbs.aiweline.com
  * 工具：WelineFramework框架
- * 日期：2021-03-01
- * 时间：01:03:00
+ * 日期：2021-03-03
+ * 时间：01:03:58
  * 描述：此文件源码由WelineFramework框架自动侦听拦截类，请勿随意修改源码，以免造成系统异常！
  */
 namespace Aiweline\Index\Controller\Index;
@@ -25,12 +25,6 @@ class Interceptor extends \Aiweline\Index\Controller\Index
         $this->___init();
         parent::__construct($eventsManager);
                     
-        $pluginInfo = $this->pluginsManager->getPluginInfo($this->subjectType, '__construct');
-        if (!$pluginInfo) {
-            return parent::__construct($eventsManager);
-        } else {
-            return $this->___callPlugins('__construct', func_get_args(), $pluginInfo);
-        } 
     }
     
     /**
@@ -62,20 +56,6 @@ class Interceptor extends \Aiweline\Index\Controller\Index
         $arr);
         } else {
             return $this->___callPlugins('index', func_get_args(), $pluginInfo);
-        } 
-    }
-    
-    
-    public function observer(
-        
-    )
-    {
-        
-        $pluginInfo = $this->pluginsManager->getPluginInfo($this->subjectType, 'observer');
-        if (!$pluginInfo) {
-            return parent::observer();
-        } else {
-            return $this->___callPlugins('observer', func_get_args(), $pluginInfo);
         } 
     }
 }
