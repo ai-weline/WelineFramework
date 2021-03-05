@@ -33,6 +33,7 @@ class App
      */
     public static function init()
     {
+
         // 执行时间
         define('START_TIME', microtime(true));
         // 系统是否WIN
@@ -52,6 +53,7 @@ class App
         // 检查运行模式
         defined('CLI') ?: define('CLI', PHP_SAPI === 'cli');
     }
+
 
     /**
      * @DESC         |框架应用运行

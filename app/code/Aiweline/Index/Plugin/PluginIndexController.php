@@ -14,12 +14,10 @@ use Weline\Framework\Plugin\PluginAbstract;
 
 class PluginIndexController extends PluginAbstract
 {
-    public function beforeIndex(Index $object)
+    public function beforeIndex(Index $object,$e,$test,$arr)
     {
-        echo 'beforeIndex';
-        echo get_class($this);
-
-        return $object->index();
+        echo $e;die;
+        return get_class($object);
     }
 
 //    public function aroundIndex(Index $object)
