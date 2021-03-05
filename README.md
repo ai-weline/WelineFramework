@@ -4,6 +4,10 @@
 
 微蓝M框架！
 
+测试环境：http://m.dev.aiweline.com/
+
+样本环境：http://m.aiweline.com/
+
     1、代码可移植性。
     代码可安装到其他同框架的项目中。一个代码应用目录位置位于项目下的app/code中。模块中可设置Api目录,Controller目录，view目录等以及必须的register.php注册文件。
     其中的每个应用可以移植安装。
@@ -54,10 +58,7 @@
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0124/220301_22ae5546_1568278.png "微信截图_20210124220214.png")
 5. 事件Event观察者Observer模式
 
-<<<<<<< HEAD
         详情请转到开发站查看如何使用：http://m.dev.aiweline.com/index/observer
-=======
->>>>>>> 26c4c693bae4cf64ff7ca4a162b0c90add49c8a7
         // 分配事件...
         $a = new DataObject(['a' => 1]);
         p($a->getData('a'),1);
