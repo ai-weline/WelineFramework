@@ -10,7 +10,7 @@
 namespace Weline\Installer\RunType\System;
 
 use Weline\Framework\App\Exception;
-use Weline\Framework\FileSystem\Io\File;
+use Weline\Framework\System\File\Io\File;
 
 class Init
 {

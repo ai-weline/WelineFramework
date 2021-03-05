@@ -7,11 +7,10 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-use M\Installer\Runner;
-
-require 'check.php';
+use Weline\Installer\Runner;
 require 'setup.php';
 $runner = new Runner();
+
 switch ($_GET['action']) {
     case 'env':
         $data = $runner->checkEnv();
@@ -38,7 +37,7 @@ switch ($_GET['action']) {
         // 命令清理
         $data = $runner->systemCommands();
         echo json_encode(coverData($data));
-        $file = new M\Framework\FileSystem\Io\File();
+        $file = new \Weline\Framework\System\File\Io\File();
         $file->open(BP . 'setup/install.lock', $file::mode_a_add);
         $file->close();
 

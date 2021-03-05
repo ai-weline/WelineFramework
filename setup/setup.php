@@ -8,6 +8,7 @@
  */
 
 require 'check.php';
+
 // 项目根目录
 define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 开发模式
@@ -24,5 +25,3 @@ try {
 }
 // 助手函数
 require BP . '/app/etc/functions.php';
-error_reporting(E_ALL);
-//error_reporting(0);
