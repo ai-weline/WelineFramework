@@ -95,8 +95,9 @@ class ObjectManager implements ManagerInterface
     {
         // 拦截器处理
         $new_class = $class;
-        $interceptor = $class . DIRECTORY_SEPARATOR . 'Interceptor';
-        $interceptorFile = Env::path_framework_generated_code . $interceptor . '.php';
+        $interceptor = $class .  '\\Interceptor';
+        $interceptorFile = Env::path_framework_generated_code . str_replace('\\',DIRECTORY_SEPARATOR,$interceptor) . '.php';
+
         if (is_file($interceptorFile)) {
             try {
                 include $interceptorFile;

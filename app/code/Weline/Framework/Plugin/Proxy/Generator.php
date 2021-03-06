@@ -190,7 +190,7 @@ ${functionList}
 
         // 写入代理文件
         $class_name = $replaceMap['${namespace}'] . '\\' . $replaceMap['${className}'];
-        $interceptor_path = Env::path_framework_generated_code . $class_name . '.php';
+        $interceptor_path = Env::path_framework_generated_code . str_replace('\\',DIRECTORY_SEPARATOR,$class_name) . '.php';
 
         /**@var \Weline\Framework\System\File\Io\File $file */
         $file = ObjectManager::getInstance(\Weline\Framework\System\File\Io\File::class);
