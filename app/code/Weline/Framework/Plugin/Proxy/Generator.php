@@ -71,16 +71,16 @@ ${functionList}
             throw new \Error(__('无法动态代理final类:%1', [$class]));
         }
         $functionList = [];
-        $methods      = $classRef->getMethods(\ReflectionMethod::IS_PUBLIC);
+        $methods = $classRef->getMethods(\ReflectionMethod::IS_PUBLIC);
         // 仅监听被监听的函数
-        /**@var PluginsManager $pluginsManager*/
+        /**@var PluginsManager $pluginsManager */
         $pluginsManager = ObjectManager::getInstance(PluginsManager::class);
         $type_plugin = $pluginsManager->getClassPluginInstanceList($class);
-        $plugin_listen_type_methods = isset($type_plugin['listen_methods'])?$type_plugin['listen_methods']:[];
+        $plugin_listen_type_methods = isset($type_plugin['listen_methods']) ? $type_plugin['listen_methods'] : [];
         $plugin_listen_type_methods[] = '__construct';
         // 排除当前类尚未代理的函数
         foreach ($methods as $key => $method) {
-            if ($class !== $method->class||!in_array($method->name,$plugin_listen_type_methods)) {
+            if ($class !== $method->class || !in_array($method->name, $plugin_listen_type_methods)) {
                 unset($methods[$key]);
             }
         }
@@ -98,7 +98,7 @@ ${functionList}
                 $methodReturnType = ': \\' . $methodReturnType->getName();
             }
             // 方法参数
-            $args       = [];
+            $args = [];
             $parameters = [];
 
             foreach ($method->getParameters() as $parameter) {
@@ -111,11 +111,10 @@ ${functionList}
                 } catch (\Exception $exception) {
                     $parameter_value = '';
                 }
-                $parameter_type = $parameter->hasType() ? '\\' . $parameter->getType()->getName() : '';
-                $args[]         = $parameter_type . ' $' . $parameter->getName() . $parameter_value;
-                $parameters[]   = '$' . $parameter->getName();
+                $args[] = self::extractParameterType($parameter) . ' $' . $parameter->getName() . $parameter_value;
+                $parameters[] = '$' . $parameter->getName();
             }
-            $args_tpl   = implode(',' . PHP_EOL . '        ', $args);
+            $args_tpl = implode(',' . PHP_EOL . '        ', $args);
             $params_tpl = implode(',' . PHP_EOL . '        ', $parameters);
 
             // 方法模板
@@ -150,38 +149,38 @@ ${functionList}
                 $func_tpl = $construct_func_tpl;
             }
             $functionList[] = '    ' . str_replace(
-                [
-                    '${methodName}',
-                    '${returntype}',
-                    '${arguments}',
-                    '${parameters}',
-                    '${func_doc}',
-                    '${construct_content}',
-                ],
-                [
-                    $method->name,
-                    $methodReturnType,
-                    $args_tpl,
-                    $params_tpl,
-                    $method->getDocComment(),
-                    $construct_content,
-                ],
-                $func_tpl
-            );
+                    [
+                        '${methodName}',
+                        '${returntype}',
+                        '${arguments}',
+                        '${parameters}',
+                        '${func_doc}',
+                        '${construct_content}',
+                    ],
+                    [
+                        $method->name,
+                        $methodReturnType,
+                        $args_tpl,
+                        $params_tpl,
+                        $method->getDocComment(),
+                        $construct_content,
+                    ],
+                    $func_tpl
+                );
         }
         $replaceMap = [
-            '${DATE}'      => date('Y-m-d'),
-            '${TIME}'      => date('H:m:s'),
+            '${DATE}' => date('Y-m-d'),
+            '${TIME}' => date('H:m:s'),
             '${namespace}' => $class,
             '${className}' => /*$classRef->getShortName().*/
                 'Interceptor',
-            '${targetClass}'  => '\\' . $class,
+            '${targetClass}' => '\\' . $class,
             '${functionList}' => join(PHP_EOL, $functionList),
         ];
         $classBody = str_replace(array_keys($replaceMap), array_values($replaceMap), self::$proxyClassTemplate);
 
         // 写入代理文件
-        $class_name       = $replaceMap['${namespace}'] . '\\' . $replaceMap['${className}'];
+        $class_name = $replaceMap['${namespace}'] . '\\' . $replaceMap['${className}'];
         $interceptor_path = Env::path_framework_generated_code . $class_name . '.php';
 
         /**@var \Weline\Framework\System\File\Io\File $file */
@@ -195,6 +194,38 @@ ${functionList}
             'body' => $classBody,
             'file' => $interceptor_path,
         ];
+    }
+
+    /**
+     * 获取方法参数类型
+     *
+     * @param \ReflectionParameter $parameter
+     * @return null|string
+     */
+    static function extractParameterType(
+        \ReflectionParameter $parameter
+    ): ?string
+    {
+        /** @var string|null $typeName */
+        $typeName = null;
+        if ($parameter->hasType()) {
+            if ($parameter->isArray()) {
+                $typeName = 'array';
+            } elseif ($parameter->getClass()) {
+                $className = ltrim($parameter->getClass()->getName(), '\\');
+                $typeName = $className ? '\\' . $className : '';
+            } elseif ($parameter->isCallable()) {
+                $typeName = 'callable';
+            } else {
+                $typeName = $parameter->getType()->getName();
+            }
+
+            if ($parameter->allowsNull()) {
+                $typeName = '?' . $typeName;
+            }
+        }
+
+        return $typeName;
     }
 
     /**

@@ -99,6 +99,26 @@
       'method' => 'cache',
     ),
   ),
+  'hello/helloworld/observer' => 
+  array (
+    'module' => 'Aiweline_HelloWorld',
+    'class' => 
+    array (
+      'area' => 'FrontendController',
+      'name' => 'Aiweline\\HelloWorld\\Controller\\HelloWorld',
+      'method' => 'observer',
+    ),
+  ),
+  'hello/helloworld/plugin' => 
+  array (
+    'module' => 'Aiweline_HelloWorld',
+    'class' => 
+    array (
+      'area' => 'FrontendController',
+      'name' => 'Aiweline\\HelloWorld\\Controller\\HelloWorld',
+      'method' => 'plugin',
+    ),
+  ),
   'index/index' => 
   array (
     'module' => 'Aiweline_Index',
@@ -107,16 +127,6 @@
       'area' => 'FrontendController',
       'name' => 'Aiweline\\Index\\Controller\\Index',
       'method' => 'index',
-    ),
-  ),
-  'index/observer' => 
-  array (
-    'module' => 'Aiweline_Index',
-    'class' => 
-    array (
-      'area' => 'FrontendController',
-      'name' => 'Aiweline\\Index\\Controller\\Index',
-      'method' => 'observer',
     ),
   ),
   'test/Dd' => 

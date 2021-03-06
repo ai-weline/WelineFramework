@@ -39,8 +39,6 @@ try {
         function cache_shutdown_error() {
             $_error = error_get_last();
             if ($_error && in_array($_error['type'], array(1, 4, 16, 64, 256, 4096, E_ALL))) {
-                header("Content-Type: text/html; charset=utf-8");
-                echo '<b style="color: red">可以尝试 composer update 更新本地依赖包。</b></br>';
                 echo '<b style="color: red">致命错误：</b></br>';
                 echo '<pre>';
                 echo $_error['message'];

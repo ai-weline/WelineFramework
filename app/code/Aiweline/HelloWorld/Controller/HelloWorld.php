@@ -10,10 +10,13 @@
 namespace Aiweline\HelloWorld\Controller;
 
 use Aiweline\HelloWorld\Model\AiwelineHelloWorld;
+use Aiweline\HelloWorld\Model\PluginTestModel;
 use Weline\Framework\App\Cache;
 use Weline\Framework\App\Controller\FrontendController;
 use Weline\Framework\App\Exception;
 use Weline\Framework\App\Session\FrontendSession;
+use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 
 class HelloWorld extends FrontendController
@@ -23,15 +26,25 @@ class HelloWorld extends FrontendController
     private AiwelineHelloWorld $aiwelineHelloWorld;
 
     private FrontendSession $frontendSession;
+    private PluginTestModel $pluginTestModel;
+    /**
+     * @var EventsManager
+     */
+    private EventsManager $eventsManager;
 
     public function __construct(
         Cache $cache,
         AiwelineHelloWorld $aiwelineHelloWorld,
-        FrontendSession $frontendSession
-    ) {
-        $this->cache              = $cache;
+        FrontendSession $frontendSession,
+        PluginTestModel $pluginTestModel,
+        EventsManager $eventsManager
+    )
+    {
+        $this->cache = $cache;
         $this->aiwelineHelloWorld = $aiwelineHelloWorld;
-        $this->frontendSession    = $frontendSession;
+        $this->frontendSession = $frontendSession;
+        $this->pluginTestModel = $pluginTestModel;
+        $this->eventsManager = $eventsManager;
     }
 
     /**
@@ -39,14 +52,14 @@ class HelloWorld extends FrontendController
      *
      * 参数区：
      *
-     * @throws \Weline\Framework\App\Exception
      * @return bool
+     * @throws \Weline\Framework\App\Exception
      */
     public function index()
     {
         $method = $this->_request->getMethod();
         $assign = [
-            'core'   => 'M Framework',
+            'core' => 'M Framework',
             'method' => $method,
             'module' => [
                 'name' => $this->_request->getModuleName(),
@@ -91,7 +104,7 @@ class HelloWorld extends FrontendController
 
     public function demo()
     {
-        $data  = $this->aiwelineHelloWorld->getDb()->query("select * from {$this->aiwelineHelloWorld->getTable()}");
+        $data = $this->aiwelineHelloWorld->getDb()->query("select * from {$this->aiwelineHelloWorld->getTable()}");
         if (empty($data)) {
             $this->aiwelineHelloWorld->insert([
                 'demo' => 1,
@@ -126,5 +139,21 @@ class HelloWorld extends FrontendController
         $cache = ObjectManager::getInstance(Cache::class)->cache();
         $cache->set('111', 8888);
         p($cache->get('111'));
+    }
+
+    public function observer()
+    {
+        // 分配事件
+        $a = new DataObject(['a' => 1]);
+        p($a->getData('a'), 1);
+        $this->eventsManager->dispatch('Aiweline_Index::test_observer', ['a' => $a]);
+        p($a->getData('a'));
+
+        return $this->fetch();
+    }
+
+    function plugin()
+    {
+        return $this->pluginTestModel->getName($a = '默认插件');
     }
 }

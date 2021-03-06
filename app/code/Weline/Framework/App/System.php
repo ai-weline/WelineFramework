@@ -17,9 +17,10 @@ class System
      * 参数区：
      *
      * @param string $linux_command
+     * @param bool $preview
      * @return array
      */
-    public function exec(string $linux_command)
+    public function exec(string $linux_command, bool $preview = false)
     {
         if (IS_WIN) {
             $linux_to_win = [
@@ -32,6 +33,9 @@ class System
                 $linux_command = str_replace($key, $item, $linux_command);
             }
         }
+        if ($preview) {
+            return $linux_command;
+        }
         exec($linux_command, $output, $return_var);
 
         return [$output, $return_var];
@@ -43,7 +47,7 @@ class System
         if (IS_WIN) {
             $input = fread(STDIN, 1024);
         } else {
-            $fp    = fopen('/dev/stdin', 'r');
+            $fp = fopen('/dev/stdin', 'r');
             $input = fgets($fp, 1024);
             fclose($fp);
         }

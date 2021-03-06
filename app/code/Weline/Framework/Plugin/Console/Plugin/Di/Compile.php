@@ -9,6 +9,8 @@
 
 namespace Weline\Framework\Plugin\Console\Plugin\Di;
 
+use Weline\Framework\App\Env;
+use Weline\Framework\App\System;
 use Weline\Framework\Output\Cli\Printing;
 use Weline\Framework\Plugin\PluginsManager;
 
@@ -23,13 +25,19 @@ class Compile implements \Weline\Framework\Console\CommandInterface
      * @var Printing
      */
     private Printing $printing;
+    /**
+     * @var System
+     */
+    private System $system;
 
     public function __construct(
         PluginsManager $pluginsManager,
+        System $system,
         Printing $printing
     ) {
         $this->pluginsManager = $pluginsManager;
         $this->printing       = $printing;
+        $this->system = $system;
     }
 
     /**
@@ -38,6 +46,8 @@ class Compile implements \Weline\Framework\Console\CommandInterface
     public function execute($args = [])
     {
         $this->printing->printing(__('编译开始...'));
+        $this->printing->printing(__('清除旧编译内容...'));
+        $this->system->exec('rm '.Env::path_framework_generated_code.' -f');
         $generator    = $this->pluginsManager->generatorInterceptor('', false);
         $printer_list = [];
         foreach ($generator::getClassProxyMap() as $key=>$item) {

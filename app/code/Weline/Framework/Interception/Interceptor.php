@@ -69,7 +69,7 @@ trait Interceptor
      */
     protected function ___callPlugins($method, array $arguments, array $pluginInfo)
     {
-        // 调用前置拦截器
+/*        // 调用前置拦截器
         if (isset($pluginInfo[InterceptorInterface::LISTENER_BEFORE])) {
             foreach ($pluginInfo[InterceptorInterface::LISTENER_BEFORE] as $code) {
                 $pluginInstance = ObjectManager::getInstance($code['instance']);
@@ -104,68 +104,68 @@ trait Interceptor
             }
         }
 
+        return $result;*/
+         //闭包调用
+        $subject = $this;
+        $type = $this->subjectType;
+        $pluginsManager = $this->pluginsManager;
+
+        $next = function (...$arguments) use (
+            $method,
+            &$pluginInfo,
+            $subject,
+            $type,
+            $pluginsManager,
+            &$next
+        ) {
+            $capMethod = ucfirst($method);
+            $currentPluginInfo = $pluginInfo;
+            $result = null;
+            if (isset($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE])) {
+                // 调用前置拦截器
+                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE] as $code) {
+                    $pluginInstance = ObjectManager::getInstance($code['instance']);
+                    $pluginMethod = 'before' . $capMethod;
+                    $beforeResult = $pluginInstance->$pluginMethod($this, ...array_values($arguments));
+
+                    if ($beforeResult !== null) {
+                        $arguments = (array)$beforeResult;
+                    }
+                }
+            }
+
+            if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AROUND])) {
+                // 调用环绕拦截器
+                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AROUND] as $code) {
+                    $pluginInstance = ObjectManager::getInstance($code['instance']);
+                    $pluginMethod = 'around' . $capMethod;
+                    $result = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
+                }
+                $pluginInfo = [];
+//                $code = $currentPluginInfo[InterceptorInterface::LISTENER_AROUND];
+//                $pluginInfo = $pluginsManager->getNext($type, $method, $code);
+//                $pluginInstance = ObjectManager::getInstance($code['instance']);
+//                $pluginMethod = 'around' . $capMethod;
+//                $result = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
+            } else {
+                // 调用原始方法
+                $result = $subject->___callParentMethod($method, $arguments);
+            }
+            if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AFTER])) {
+                // 调用后置拦截器
+                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AFTER] as $code) {
+                    $pluginInstance = ObjectManager::getInstance($code['instance']);
+                    $pluginMethod = 'after' . $capMethod;
+                    $result = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
+                }
+            }
+            return $result;
+        };
+
+        $result = $next(...array_values($arguments));
+        $next = null;
+
         return $result;
-        // 闭包调用
-//        $subject = $this;
-//        $type = $this->subjectType;
-//        $pluginsManager = $this->pluginsManager;
-//
-//        $next = function (...$arguments) use (
-//            $method,
-//            &$pluginInfo,
-//            $subject,
-//            $type,
-//            $pluginsManager,
-//            &$next
-//        ) {
-//            $capMethod = ucfirst($method);
-//            $currentPluginInfo = $pluginInfo;
-//            $result = null;
-//            if (isset($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE])) {
-//                // 调用前置拦截器
-//                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE] as $code) {
-//                    $pluginInstance = ObjectManager::getInstance($code['instance']);
-//                    $pluginMethod = 'before' . $capMethod;
-//                    $beforeResult = $pluginInstance->$pluginMethod($this, ...array_values($arguments));
-//
-//                    if ($beforeResult !== null) {
-//                        $arguments = (array)$beforeResult;
-//                    }
-//                }
-//            }
-//
-//            if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AROUND])) {
-//                // 调用环绕拦截器
-//                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AROUND] as $code) {
-//                    $pluginInstance = ObjectManager::getInstance($code['instance']);
-//                    $pluginMethod = 'around' . $capMethod;
-//                    $result = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
-//                }
-//                $pluginInfo = [];
-////                $code = $currentPluginInfo[InterceptorInterface::LISTENER_AROUND];
-////                $pluginInfo = $pluginsManager->getNext($type, $method, $code);
-////                $pluginInstance = $pluginsManager->getPlugin($type, $code);
-////                $pluginMethod = 'around' . $capMethod;
-////                $result = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
-//            } else {
-//                // 调用原始方法
-//                $result = $subject->___callParentMethod($method, $arguments);
-//            }
-//            if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AFTER])) {
-//                // 调用后置拦截器
-//                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AFTER] as $code) {
-//                    $pluginInstance = ObjectManager::getInstance($code['instance']);
-//                    $pluginMethod = 'after' . $capMethod;
-//                    $result = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
-//                }
-//            }
-//            return $result;
-//        };
-//
-//        $result = $next(...array_values($arguments));
-//        $next = null;
-//
-//        return $result;
     }
 
     public function ___callParentMethod(string $method, array $arguments)

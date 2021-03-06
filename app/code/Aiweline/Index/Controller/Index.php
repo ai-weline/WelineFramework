@@ -22,8 +22,10 @@ class Index extends FrontendController
 
     public function __construct(
         EventsManager $eventsManager
-    ) {
+    )
+    {
         $this->eventsManager = $eventsManager;
+        $this->pluginTestModel = $pluginTestModel;
     }
 
     /**
@@ -31,31 +33,12 @@ class Index extends FrontendController
      *
      * 参数区：
      *
-     * @param mixed $e
-     * @param mixed $test
-     * @param mixed $arr
-     * @throws \Weline\Framework\App\Exception
+     * @param int $a
      * @return bool
+     * @throws \Weline\Framework\App\Exception
      */
-    public function index(
-        $e = 1,
-        $test = 'wozao',
-        $arr = ['a'=>1, 2, 3]
-    ) {
-        $re =  $this->fetch();
-        p();
-
-        return $re;
-    }
-
-    public function observer()
+    public function index()
     {
-        // 分配事件
-        $a = new DataObject(['a' => 1]);
-        p($a->getData('a'), 1);
-        $this->eventsManager->dispatch('Aiweline_Index::test_observer', ['a' => $a]);
-        p($a->getData('a'));
-
         return $this->fetch();
     }
 }
