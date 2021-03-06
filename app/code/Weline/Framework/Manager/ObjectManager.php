@@ -38,7 +38,7 @@ class ObjectManager implements ManagerInterface
 
     private static function initSelf()
     {
-        if (! isset(self::$instance)) {
+        if (!isset(self::$instance)) {
             self::$instance = new self();
         }
     }
@@ -49,9 +49,9 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param string $class
-     * @throws Exception
-     * @throws \ReflectionException
      * @return mixed|ObjectManager
+     * @throws \ReflectionException
+     * @throws Exception
      */
     public static function getInstance(string $class = '')
     {
@@ -81,8 +81,21 @@ class ObjectManager implements ManagerInterface
 //        $eventManager->dispatch('Framework::instance_object_before', ['class' => self::$instance]);
 
         // 拦截器处理
-        $new_class       = $class;
-        $interceptor     = $class . DIRECTORY_SEPARATOR . 'Interceptor';
+        $new_class = self::parserClass($class);
+
+        $paramArr = self::getMethodParams($new_class);
+        $new_object = (new ReflectionClass($new_class))->newInstanceArgs($paramArr);
+
+        self::$instances[$class] = self::initClass($new_object);
+
+        return self::$instances[$class];
+    }
+
+    static function parserClass(string $class)
+    {
+        // 拦截器处理
+        $new_class = $class;
+        $interceptor = $class . DIRECTORY_SEPARATOR . 'Interceptor';
         $interceptorFile = Env::path_framework_generated_code . $interceptor . '.php';
         if (is_file($interceptorFile)) {
             try {
@@ -92,13 +105,7 @@ class ObjectManager implements ManagerInterface
             }
             $new_class = $interceptor;
         }
-
-        $paramArr   = self::getMethodParams($new_class);
-        $new_object = (new ReflectionClass($new_class))->newInstanceArgs($paramArr);
-
-        self::$instances[$class] = self::initClass($new_object);
-
-        return self::$instances[$class];
+        return $new_class;
     }
 
     private static function initClass($new_object)
@@ -115,8 +122,8 @@ class ObjectManager implements ManagerInterface
      * @param $className
      * @param string $methodName
      * @param array $params
-     * @throws \ReflectionException
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function make($className, $methodName = '__construct', $params = [])
     {
@@ -161,7 +168,7 @@ class ObjectManager implements ManagerInterface
                             // 获得参数类型
                             $args = self::getMethodParams($paramClassName);
                             // 实例化时执行自定义__init方法
-                            $newObj = (new ReflectionClass($paramClass->getName()))->newInstanceArgs($args);
+                            $newObj = (new ReflectionClass(self::parserClass($paramClass->getName())))->newInstanceArgs($args);
                             if (method_exists($newObj, '__init')) {
                                 $newObj->__init();
                             }
@@ -181,8 +188,8 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param $class
-     * @throws \ReflectionException
      * @return ReflectionClass
+     * @throws \ReflectionException
      */
     protected function getReflectionClass($class): ReflectionClass
     {

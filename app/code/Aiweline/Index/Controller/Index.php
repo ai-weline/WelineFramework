@@ -25,7 +25,6 @@ class Index extends FrontendController
     )
     {
         $this->eventsManager = $eventsManager;
-        $this->pluginTestModel = $pluginTestModel;
     }
 
     /**

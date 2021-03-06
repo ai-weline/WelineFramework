@@ -15,7 +15,7 @@ namespace Aiweline\HelloWorld\Model;
 
 class PluginTestModel
 {
-    function getName($a = '我是插件默认参数')
+    function getName($a)
     {
         return $a;
     }

@@ -148,7 +148,7 @@ ${functionList}
                     ';
                 $func_tpl = $construct_func_tpl;
             }
-            $functionList[] = '    ' . str_replace(
+            $functionList[$method->name] = '    ' . str_replace(
                     [
                         '${methodName}',
                         '${returntype}',
@@ -167,6 +167,15 @@ ${functionList}
                     ],
                     $func_tpl
                 );
+        }
+        // 如果没有初始化函数 自行加上
+        if (!array_key_exists('__construct', $functionList)) {
+            $construct_func_tpl = '
+    public function __construct()
+    {
+        $this->___init();
+    }';
+            $functionList['__construct'] = $construct_func_tpl;
         }
         $replaceMap = [
             '${DATE}' => date('Y-m-d'),

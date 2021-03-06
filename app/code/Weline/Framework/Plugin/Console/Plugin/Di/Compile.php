@@ -47,7 +47,7 @@ class Compile implements \Weline\Framework\Console\CommandInterface
     {
         $this->printing->printing(__('编译开始...'));
         $this->printing->printing(__('清除旧编译内容...'));
-        $this->system->exec('rm '.Env::path_framework_generated_code.' -f');
+        $this->system->exec('rm '.Env::path_framework_generated_code.' -rf');
         $generator    = $this->pluginsManager->generatorInterceptor('', false);
         $printer_list = [];
         foreach ($generator::getClassProxyMap() as $key=>$item) {

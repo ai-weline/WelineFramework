@@ -23,12 +23,22 @@ class System
     public function exec(string $linux_command, bool $preview = false)
     {
         if (IS_WIN) {
+            // 删除
+            if (
+                strstr($linux_command, 'rm') &&
+                strstr($linux_command, '-rf')
+            ) {
+                $linux_command = str_replace('rm', 'rd', $linux_command);
+                $linux_command = str_replace('-rf', '-r', $linux_command);
+            }
             $linux_to_win = [
                 'rm' => 'del',
                 '-f' => '/F',
                 'cp' => 'xcopy',
                 '-r' => '/S/Q',
             ];
+
+
             foreach ($linux_to_win as $key => $item) {
                 $linux_command = str_replace($key, $item, $linux_command);
             }
