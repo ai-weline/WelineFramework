@@ -13,23 +13,23 @@
 namespace Aiweline\HelloWorld\Plugin;
 
 
-class PluginTestModel
+class PluginTest
 {
     function beforeGetName($object, $a)
     {
-        $a[] = '我是beforeGetName修改过的插件';
+        $a[] = '我被PluginTest类的beforeGetName修改过';
         return $a;
     }
 
     function aroundGetName($object, \closure $closure,$a)
     {
-        $a[] = '我是aroundGetName修改过的插件';
+        $a[] = '我被PluginTest类的aroundGetName修改过';
         return $a;
     }
 
     function afterGetName($object, $a)
     {
-        $a[] = '我是afterGetName修改过的插件';
+        $a[] = '我被PluginTest类的afterGetName修改过';
         return $a;
     }
 }

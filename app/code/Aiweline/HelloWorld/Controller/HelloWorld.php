@@ -154,6 +154,9 @@ class HelloWorld extends FrontendController
 
     function plugin()
     {
-        return $this->pluginTestModel->getName($a = '默认插件');
+        $a[] = '默认插件';
+        $plugin_deal_data = $this->pluginTestModel->getName($a);
+        p('插件修改的类：' . get_class($this->pluginTestModel), 1);
+        p($plugin_deal_data);
     }
 }

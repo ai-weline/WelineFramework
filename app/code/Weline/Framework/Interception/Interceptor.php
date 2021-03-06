@@ -129,7 +129,13 @@ trait Interceptor
                     $beforeResult = $pluginInstance->$pluginMethod($this, ...array_values($arguments));
 
                     if ($beforeResult !== null) {
-                        $arguments = (array)$beforeResult;
+                        // 返回数组时不要被当做方法参数
+                        if(is_array($beforeResult)){
+                            $arguments = [];
+                            $arguments[] = $beforeResult;
+                        }else{
+                            $arguments = (array)$beforeResult;
+                        }
                     }
                 }
             }
