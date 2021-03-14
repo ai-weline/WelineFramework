@@ -80,7 +80,7 @@ class Reader extends \Weline\Framework\Config\Reader
                         }
                     } else {
                         // interceptor有多个值的情况
-                        if(is_array($plugin['_value']['interceptor'])){
+                        if (is_array($plugin['_value']['interceptor'])) {
                             foreach ($plugin['_value']['interceptor'] as $item) {
                                 if (! isset($item['_attribute'])) {
                                     throw new Core(__($module_and_file . '拦截器Interceptor没有设置属性：<interceptor name="interceptorName" instance="instanceClass" disabled="false" sort="true"/>'));
@@ -93,7 +93,7 @@ class Reader extends \Weline\Framework\Config\Reader
                                 }
                                 $module_plugin_interceptors[$plugin['_attribute']['name']][] = ['class' => $plugin['_attribute']['class'], 'plugins' => $item['_attribute']];
                             }
-                        }else{
+                        } else {
                             if (! isset($plugin['_value']['interceptor']['_attribute'])) {
                                 throw new Core(__($module_and_file . '拦截器Interceptor没有设置属性：<interceptor name="interceptorName" instance="instanceClass" disabled="false" sort="true"/>'));
                             }
@@ -105,7 +105,6 @@ class Reader extends \Weline\Framework\Config\Reader
                             }
                             $module_plugin_interceptors[$plugin['_attribute']['name']][] = ['class' => $plugin['_attribute']['class'], 'plugins' => $plugin['_value']['interceptor']['_attribute']];
                         }
-
                     }
                 }
             } else {
@@ -113,7 +112,7 @@ class Reader extends \Weline\Framework\Config\Reader
                     throw new Core(__($module_and_file . '拦截器Plugin未指定name属性：<plugin name="pluginName">...</plugin>'));
                 }
                 // interceptor有多个值的情况
-                if(is_array($config['config']['_value']['plugin']['_value']['interceptor'])){
+                if (is_array($config['config']['_value']['plugin']['_value']['interceptor'])) {
                     foreach ($config['config']['_value']['plugin']['_value']['interceptor'] as $item) {
                         if (! isset($item['_attribute'])) {
                             throw new Core(__($module_and_file . '拦截器Interceptor没有设置属性：<interceptor name="interceptorName" instance="instanceClass" disabled="false" sort="true"/>'));
@@ -126,7 +125,7 @@ class Reader extends \Weline\Framework\Config\Reader
                         }
                         $module_plugin_interceptors[$config['config']['_value']['plugin']['_attribute']['name']][] = ['class' => $config['config']['_value']['plugin']['_attribute']['class'], 'plugins' => $item['_attribute']];
                     }
-                }else{
+                } else {
                     if (! isset($config['config']['_value']['plugin']['_value']['interceptor']['_attribute'])) {
                         throw new Core(__($module_and_file . '拦截器Interceptor没有设置属性：<interceptor name="interceptorName" instance="instanceClass" disabled="false" sort="true"/>'));
                     }
@@ -138,8 +137,6 @@ class Reader extends \Weline\Framework\Config\Reader
                     }
                     $module_plugin_interceptors[$config['config']['_value']['plugin']['_attribute']['name']][] = ['class' => $config['config']['_value']['plugin']['_attribute']['class'], 'plugins' => $config['config']['_value']['plugin']['_value']['interceptor']['_attribute']];
                 }
-
-
             }
             $plugin_interceptors_list[$module_and_file] = $module_plugin_interceptors;
         }

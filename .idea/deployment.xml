@@ -1,8 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="dev">
+  <component name="PublishConfigData" autoUpload="Always" serverName="象牙云-M-DEV">
     <serverData>
-      <paths name="dev">
+      <paths name="华为云-www">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="象牙云">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="象牙云-M">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="象牙云-M-DEV">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="象牙云-www">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="阿里云轻量-dev">
         <serverdata>
           <mappings>
             <mapping local="$PROJECT_DIR$/../TestFrame/Magento_Modules/FrameTest" web="/" />
@@ -10,20 +45,7 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="www">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="单页前端">
-        <serverdata>
-          <mappings>
-            <mapping local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
     </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
   </component>
 </project>

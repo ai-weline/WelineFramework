@@ -10,7 +10,6 @@
 namespace Aiweline\Index\Controller;
 
 use Weline\Framework\App\Controller\FrontendController;
-use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 
 class Index extends FrontendController
@@ -22,8 +21,7 @@ class Index extends FrontendController
 
     public function __construct(
         EventsManager $eventsManager
-    )
-    {
+    ) {
         $this->eventsManager = $eventsManager;
     }
 
@@ -33,8 +31,8 @@ class Index extends FrontendController
      * 参数区：
      *
      * @param int $a
-     * @return bool
      * @throws \Weline\Framework\App\Exception
+     * @return bool
      */
     public function index()
     {

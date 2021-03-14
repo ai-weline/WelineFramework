@@ -28,7 +28,10 @@
   "autoload": {
     "psr-4": {
       "Weline\\": "app/code/Weline",
-      "": "app/code/"
+      "": [
+        "app/code/",
+        "generated/code/"
+      ]
     }
   },
   "repositories": {

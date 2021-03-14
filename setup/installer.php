@@ -8,6 +8,7 @@
  */
 
 use Weline\Installer\Runner;
+
 require 'setup.php';
 $runner = new Runner();
 

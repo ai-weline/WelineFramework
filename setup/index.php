@@ -24,7 +24,7 @@ require 'check.php';
 </head>
 <body>
 <?php
-$step = $_GET['step'];
+$step = $_GET['step'] ?? '';
 switch ($step) {
     case 'step-2':
         include 'step/step-2.html';

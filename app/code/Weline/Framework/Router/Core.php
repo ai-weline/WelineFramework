@@ -50,6 +50,7 @@ class Core
     {
         // 读取url
         $url = $this->request->getUrl();
+
         // 前后台路由处理
         if ($this->is_admin) {
             if ($this->area_router === $this->_etc->getConfig('admin', '')) {
@@ -118,6 +119,7 @@ class Core
                 $router   = $routers[$url . $method] ?? $routers[$url . '/index' . $method];
                 $class    = json_decode(json_encode($router['class']));
                 $dispatch = ObjectManager::getInstance($class->name);
+
                 $method   = $class->method ? $class->method : 'index';
                 if ((int)method_exists($dispatch, $method)) {
 //                        echo call_user_func(array($dispatch, $method), $this->getParams());
@@ -166,6 +168,7 @@ class Core
 
                 // 检测注册方法
                 $dispatch = ObjectManager::getInstance($class->name);
+
                 $method   = $class->method ? $class->method : 'index';
                 if (method_exists($dispatch, $method)) {
 //                        echo call_user_func(array($dispatch, $method)/*, $_GET*/);
@@ -173,7 +176,7 @@ class Core
                     if (method_exists($dispatch, '__init')) {
                         call_user_func([$dispatch, '__init']);
                     }
-                    echo call_user_func([$dispatch, $method]);
+                    echo call_user_func([$dispatch, $method], $this->request->getParams());
                     exit(0);
                 }
 

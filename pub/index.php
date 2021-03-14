@@ -8,9 +8,9 @@
  */
 
 // 检查安装
-if (! file_exists(__DIR__ . '/../setup/install.lock')) {
-    require __DIR__ . '/../setup/index.php';
+if (! file_exists(dirname(__DIR__) . '/setup/install.lock')) {
+    require dirname(__DIR__) . '/setup/index.php';
     exit();
 }
 // 加载启动器
-require __DIR__ . '/../app/bootstrap.php';
+require dirname(__DIR__) . '/app/bootstrap.php';

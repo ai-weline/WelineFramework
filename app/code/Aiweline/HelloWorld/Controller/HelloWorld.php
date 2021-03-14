@@ -26,7 +26,9 @@ class HelloWorld extends FrontendController
     private AiwelineHelloWorld $aiwelineHelloWorld;
 
     private FrontendSession $frontendSession;
+
     private PluginTestModel $pluginTestModel;
+
     /**
      * @var EventsManager
      */
@@ -38,13 +40,12 @@ class HelloWorld extends FrontendController
         FrontendSession $frontendSession,
         PluginTestModel $pluginTestModel,
         EventsManager $eventsManager
-    )
-    {
-        $this->cache = $cache;
+    ) {
+        $this->cache              = $cache;
         $this->aiwelineHelloWorld = $aiwelineHelloWorld;
-        $this->frontendSession = $frontendSession;
-        $this->pluginTestModel = $pluginTestModel;
-        $this->eventsManager = $eventsManager;
+        $this->frontendSession    = $frontendSession;
+        $this->pluginTestModel    = $pluginTestModel;
+        $this->eventsManager      = $eventsManager;
     }
 
     /**
@@ -52,14 +53,14 @@ class HelloWorld extends FrontendController
      *
      * 参数区：
      *
-     * @return bool
      * @throws \Weline\Framework\App\Exception
+     * @return bool
      */
     public function index()
     {
         $method = $this->_request->getMethod();
         $assign = [
-            'core' => 'M Framework',
+            'core'   => 'M Framework',
             'method' => $method,
             'module' => [
                 'name' => $this->_request->getModuleName(),
@@ -152,9 +153,9 @@ class HelloWorld extends FrontendController
         return $this->fetch();
     }
 
-    function plugin()
+    public function plugin()
     {
-        $a[] = '默认插件';
+        $a[]              = '默认插件';
         $plugin_deal_data = $this->pluginTestModel->getName($a);
         p('插件修改的类：' . get_class($this->pluginTestModel), 1);
         p($plugin_deal_data);

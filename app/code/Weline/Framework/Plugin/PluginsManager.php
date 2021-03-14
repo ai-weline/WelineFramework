@@ -34,9 +34,8 @@ class PluginsManager
     public function __construct(
         Reader $reader,
         PluginCache $pluginCache
-    )
-    {
-        $this->reader = $reader;
+    ) {
+        $this->reader      = $reader;
         $this->pluginCache = $pluginCache->create();
     }
 
@@ -46,9 +45,9 @@ class PluginsManager
      * 参数区：
      *
      * @param bool $cache
-     * @return array
      * @throws \Weline\Framework\Exception\Core
      * @throws \Weline\Framework\App\Exception
+     * @return array
      */
     public function scanPlugins(bool $cache = true)
     {
@@ -131,7 +130,7 @@ class PluginsManager
                             );
 
                             // 检测首字母大小写字母匹配的方法是否存在：存在则不新增
-                            if (!in_array($name, $plugin_instance_methods, true) || !in_array(lcfirst($name), $plugin_instance_methods, true)) {
+                            if (! in_array($name, $plugin_instance_methods, true) || ! in_array(lcfirst($name), $plugin_instance_methods, true)) {
                                 // 检测首字母大小写字母匹配的方法
                                 if (in_array($name, $type_methods, true)) {
                                     $plugin_instance_methods[$name][] = $plugin_instance_method->name;
@@ -142,20 +141,20 @@ class PluginsManager
 
                             // 检测首字母大小写字母匹配的方法是否存在：存在则不新增:全局原始类函数，用于创建侦听类使用
                             $origin_in_listen = in_array($name, $type_methods, true);
-                            if (!in_array($name, $plugin_listen_methods, true) && $origin_in_listen) {
+                            if (! in_array($name, $plugin_listen_methods, true) && $origin_in_listen) {
                                 // 检测首字母大小写字母匹配的方法
                                 $origin_is_in = false;
-                                if (!in_array($name, $plugin_listen_methods, true)) {
+                                if (! in_array($name, $plugin_listen_methods, true)) {
                                     $plugin_listen_methods[] = $name;
-                                    $origin_is_in = true;
-                                } elseif (!$origin_is_in) {
-                                    if (!in_array($name, $plugin_listen_methods, true)) {
+                                    $origin_is_in            = true;
+                                } elseif (! $origin_is_in) {
+                                    if (! in_array($name, $plugin_listen_methods, true)) {
                                         $plugin_listen_methods[] = lcfirst($name);
-                                        $origin_is_in = true;
+                                        $origin_is_in            = true;
                                     }
                                 }
                                 // 还不在就创建
-                                if (!$origin_is_in) {
+                                if (! $origin_is_in) {
                                     $plugin_listen_methods[] = lcfirst($name);
                                 }
                             }
@@ -164,20 +163,20 @@ class PluginsManager
                             $lcfirst_name = lcfirst($name);
 
                             $lcfirst_in_listen = in_array($lcfirst_name, $type_methods, true);
-                            if (!in_array($lcfirst_name, $plugin_listen_methods, true) && $lcfirst_in_listen) {
+                            if (! in_array($lcfirst_name, $plugin_listen_methods, true) && $lcfirst_in_listen) {
                                 // 检测首字母大小写字母匹配的方法
                                 $lcfirst_is_in = false;
-                                if (!in_array($lcfirst_name, $plugin_listen_methods, true)) {
+                                if (! in_array($lcfirst_name, $plugin_listen_methods, true)) {
                                     $plugin_listen_methods[] = $lcfirst_name;
-                                    $lcfirst_is_in = true;
-                                } elseif (!$lcfirst_is_in) {
-                                    if (!in_array($lcfirst_name, $plugin_listen_methods, true)) {
+                                    $lcfirst_is_in           = true;
+                                } elseif (! $lcfirst_is_in) {
+                                    if (! in_array($lcfirst_name, $plugin_listen_methods, true)) {
                                         $plugin_listen_methods[] = $lcfirst_name;
-                                        $lcfirst_is_in = true;
+                                        $lcfirst_is_in           = true;
                                     }
                                 }
                                 // 还不在就创建
-                                if (!$lcfirst_is_in) {
+                                if (! $lcfirst_is_in) {
                                     $plugin_listen_methods[] = $lcfirst_name;
                                 }
                             }
@@ -191,11 +190,11 @@ class PluginsManager
         // 再检出前置、环绕、后置等方法信息（包含类和方法）
         $before_name = InterceptorInterface::LISTENER_BEFORE;
         $around_name = InterceptorInterface::LISTENER_AROUND;
-        $after_name = InterceptorInterface::LISTENER_AFTER;
+        $after_name  = InterceptorInterface::LISTENER_AFTER;
         foreach ($types_plugins_info as $type_class => $plugins_info) {
             $plugins_info[$before_name] = [];
             $plugins_info[$around_name] = [];
-            $plugins_info[$after_name] = [];
+            $plugins_info[$after_name]  = [];
             foreach ($plugins_info['plugins_methods'] as $plugin_class => $plugin_methods) {
                 foreach ($plugin_methods as $type_class_method => $type_class_method_plugin_methods) {
                     foreach ($type_class_method_plugin_methods as $type_class_method_plugin_method) {
@@ -203,18 +202,18 @@ class PluginsManager
                         if (strstr($type_class_method_plugin_method, $before_name)) {
                             $plugins_info[$before_name][] = [
                                 'instance' => $plugin_class,
-                                'method' => $type_class_method_plugin_method,
+                                'method'   => $type_class_method_plugin_method,
                             ];
                         } elseif (strstr($type_class_method_plugin_method, $around_name)) {
                             // 环绕
                             $plugins_info[$around_name][] = [
                                 'instance' => $plugin_class,
-                                'method' => $type_class_method_plugin_method,
+                                'method'   => $type_class_method_plugin_method,
                             ];
                         } elseif (strstr($type_class_method_plugin_method, $after_name)) {
                             $plugins_info[$after_name][] = [
                                 'instance' => $plugin_class,
-                                'method' => $type_class_method_plugin_method,
+                                'method'   => $type_class_method_plugin_method,
                             ];
                         }
                     }
@@ -231,7 +230,7 @@ class PluginsManager
                         foreach ($plugin_methods[$listen_method] as $plugin_method) {
                             $plugin_class_method_data = [
                                 'instance' => $plugin_class,
-                                'method' => $plugin_method,
+                                'method'   => $plugin_method,
                             ];
                             // 全部数据
                             $method_plugins_methods[$listen_method]['all'][] = $plugin_class_method_data;
@@ -251,7 +250,7 @@ class PluginsManager
                 }
             }
             $plugin_data['methods_plugins'] = $method_plugins_methods;
-            $types_plugins_info[$type] = $plugin_data;
+            $types_plugins_info[$type]      = $plugin_data;
         }
 //        p($types_plugins_info['Aiweline\Index\Controller\Index']);
         // 正式环境则缓存
@@ -276,7 +275,7 @@ class PluginsManager
     {
         $plugins = $this->scanPlugins();
         if ($class) {
-            return isset($plugins[$class]) ? $plugins[$class] : [];
+            return $plugins[$class] ?? [];
         }
 
         return $plugins;
@@ -318,7 +317,7 @@ class PluginsManager
      */
     public function getNext($type, $method, $code = '__self')
     {
-        if (!isset($this->plugin_map[$type . $method])) {
+        if (! isset($this->plugin_map[$type . $method])) {
             $this->_inheritPlugins($type);
         }
         $key = $type . '_' . lcfirst($method) . '_' . $code;
@@ -333,10 +332,10 @@ class PluginsManager
      *
      * @param string $class
      * @param bool $cache
-     * @return Proxy\Generator
      * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Exception\Core
      * @throws \ReflectionException
+     * @return Proxy\Generator
      */
     public function generatorInterceptor(string $class = '', bool $cache = false)
     {

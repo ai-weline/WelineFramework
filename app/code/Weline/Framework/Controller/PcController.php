@@ -118,6 +118,7 @@ class PcController extends Core
         $ctl_dir_reflect_arr = explode(self::dir, $filename);
         $module_dir          = array_shift($ctl_dir_reflect_arr);
         $module_dir          = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
+        p($module_dir);
         if (! is_dir($module_dir)) {
             mkdir($module_dir, 0775, true);
         }

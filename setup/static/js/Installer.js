@@ -25,10 +25,12 @@ function checkEnv(type, ele, errorFlag = '✖') {
                 }, Math.round(Math.random() * 3600))
             }
             let next_btn = $('#next');
+            console.log(json)
             if (json.hasErr) {
                 next_btn.hide()
             } else {
                 next_btn.addClass('next-button-active')
+                next_btn.css({display:'block'})
             }
         },
 

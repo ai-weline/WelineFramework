@@ -28,24 +28,24 @@ try {
 
 // 尝试加载应用
 try {
-
     /**
      * 初始化应用...
      */
     \Weline\Framework\App::init();
-    if(DEV){
-        ini_set("error_reporting", E_ALL);
+    if (DEV) {
+        ini_set('error_reporting', E_ALL);
 
-        function cache_shutdown_error() {
+        function cache_shutdown_error()
+        {
             $_error = error_get_last();
-            if ($_error && in_array($_error['type'], array(1, 4, 16, 64, 256, 4096, E_ALL))) {
+            if ($_error && in_array($_error['type'], [1, 4, 16, 64, 256, 4096, E_ALL], true)) {
                 echo '<b style="color: red">致命错误：</b></br>';
                 echo '<pre>';
                 echo $_error['message'];
                 echo '</pre>';
             }
         }
-        register_shutdown_function("cache_shutdown_error");
+        register_shutdown_function('cache_shutdown_error');
     }
     /**@var $app \Weline\Framework\App */
     $app = ObjectManager::getInstance(\Weline\Framework\App::class);

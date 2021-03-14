@@ -38,7 +38,6 @@ class System
                 '-r' => '/S/Q',
             ];
 
-
             foreach ($linux_to_win as $key => $item) {
                 $linux_command = str_replace($key, $item, $linux_command);
             }
@@ -57,7 +56,7 @@ class System
         if (IS_WIN) {
             $input = fread(STDIN, 1024);
         } else {
-            $fp = fopen('/dev/stdin', 'r');
+            $fp    = fopen('/dev/stdin', 'r');
             $input = fgets($fp, 1024);
             fclose($fp);
         }
