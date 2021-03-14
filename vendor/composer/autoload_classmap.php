@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Attribute' => $vendorDir . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'JsonException' => $vendorDir . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
     'Normalizer' => $vendorDir . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
     'PHPUnit\\Exception' => $vendorDir . '/phpunit/phpunit/src/Exception.php',
@@ -476,6 +477,7 @@ return array(
     'PhpCsFixer\\Tests\\Test\\IntegrationCaseFactoryInterface' => $vendorDir . '/friendsofphp/php-cs-fixer/tests/Test/IntegrationCaseFactoryInterface.php',
     'PhpCsFixer\\Tests\\Test\\InternalIntegrationCaseFactory' => $vendorDir . '/friendsofphp/php-cs-fixer/tests/Test/InternalIntegrationCaseFactory.php',
     'PhpCsFixer\\Tests\\Test\\IsIdenticalConstraint' => $vendorDir . '/friendsofphp/php-cs-fixer/tests/Test/IsIdenticalConstraint.php',
+    'PhpCsFixer\\Tests\\Test\\TokensWithObservedTransformers' => $vendorDir . '/friendsofphp/php-cs-fixer/tests/Test/TokensWithObservedTransformers.php',
     'SebastianBergmann\\CliParser\\AmbiguousOptionException' => $vendorDir . '/sebastian/cli-parser/src/exceptions/AmbiguousOptionException.php',
     'SebastianBergmann\\CliParser\\Exception' => $vendorDir . '/sebastian/cli-parser/src/exceptions/Exception.php',
     'SebastianBergmann\\CliParser\\OptionDoesNotAllowArgumentException' => $vendorDir . '/sebastian/cli-parser/src/exceptions/OptionDoesNotAllowArgumentException.php',

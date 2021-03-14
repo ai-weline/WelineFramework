@@ -40,5 +40,5 @@ return array(
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
     'Composer\\XdebugHandler\\' => array($vendorDir . '/composer/xdebug-handler/src'),
     'Composer\\Semver\\' => array($vendorDir . '/composer/semver/src'),
-    '' => array($baseDir . '/app/code'),
+    '' => array($baseDir . '/app/code', $baseDir . '/generated/code'),
 );

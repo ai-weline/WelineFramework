@@ -1,28 +1,33 @@
 <?php
-
-/*
- * 本文件由Aiweline编写，所有解释权归Aiweline所有。
- * 邮箱：aiweline@qq.com
- * 网址：aiweline.com
- * 论坛：https://bbs.aiweline.com
+/**
+ * 文件信息 Weline框架自动侦听拦截类，请勿随意修改，以免造成系统异常
+ * 作者：WelineFramework                       【Aiweline/邹万才】
+ * 网名：WelineFramework框架                    【秋风雁飞(Aiweline)】
+ * 网站：www.aiweline.com/bbs.aiweline.com
+ * 工具：WelineFramework框架
+ * 日期：2021-03-14
+ * 时间：19:03:52
+ * 描述：此文件源码由WelineFramework框架自动侦听拦截类，请勿随意修改源码，以免造成系统异常！
  */
-
 namespace Aiweline\HelloWorld\Model\PluginTestModel;
 
 class Interceptor extends \Aiweline\HelloWorld\Model\PluginTestModel
 {
     // 继承侦听器trait
     use \Weline\Framework\Interception\Interceptor;
-
+    
+    
     public function getName(
-        $a
-    ) {
+         $a
+    )
+    {
+        
         $pluginInfo = $this->pluginsManager->getPluginInfo($this->subjectType, 'getName');
-        if (! $pluginInfo) {
+        if (!$pluginInfo) {
             return parent::getName($a);
-        }
-
-        return $this->___callPlugins('getName', func_get_args(), $pluginInfo);
+        } else {
+            return $this->___callPlugins('getName', func_get_args(), $pluginInfo);
+        } 
     }
 
     public function __construct()

@@ -1,1 +1,0 @@
-a:1:{s:82:"Aiweline_HelloWorld::E:\WelineFramework\app\code\Aiweline\HelloWorld\etc\event.xml";a:1:{s:29:"Aiweline_Index::test_observer";a:1:{i:0;a:4:{s:4:"name";s:33:"Aiweline_HelloWorld_observer_test";s:8:"instance";s:33:"Aiweline\HelloWorld\Observer\Test";s:8:"disabled";s:5:"false";s:6:"shared";s:4:"true";}}}}
