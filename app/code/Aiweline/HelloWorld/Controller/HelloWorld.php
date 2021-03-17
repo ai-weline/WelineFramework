@@ -157,7 +157,7 @@ class HelloWorld extends FrontendController
     {
         $a[]              = '默认插件';
         $plugin_deal_data = $this->pluginTestModel->getName($a);
-        p('插件修改的类：' . get_class($this->pluginTestModel), 1);
+        p('插件修改的类：' . str_replace('\Interceptor','',get_class($this->pluginTestModel)), 1);
         p($plugin_deal_data);
     }
 }
