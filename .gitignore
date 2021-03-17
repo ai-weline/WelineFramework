@@ -1,1 +1,5 @@
-./vendor/
+pub/static/
+var/cache/
+var/log/
+var/session/
+vendor/
