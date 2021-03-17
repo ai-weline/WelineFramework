@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Aiweline\NewsSource\Setup;
+namespace Weline\Theme\Setup;
 
 use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Setup\Data;

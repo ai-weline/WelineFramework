@@ -16,15 +16,23 @@ class Setup
 {
     protected DbSetup $setup_db;
 
-    protected Printing $printer;
+    /**
+     * @var Printing
+     */
+    private Printing $printing;
 
     /**
      * Setup 初始函数...
+     * @param DbSetup $setup_db
+     * @param Printing $printing
      */
-    public function __construct()
+    public function __construct(
+        DbSetup $setup_db,
+        Printing $printing
+    )
     {
-        $this->printer  = new Printing();
-        $this->setup_db = new DbSetup();
+        $this->setup_db = $setup_db;
+        $this->printing = $printing;
     }
 
     /**
@@ -48,6 +56,6 @@ class Setup
      */
     public function getPrinter(): Printing
     {
-        return $this->printer;
+        return $this->printing;
     }
 }

@@ -58,12 +58,13 @@ class File
         $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
         $position = strrpos($filename, DIRECTORY_SEPARATOR);
 //        if(!$position) throw new Exception(__('系统文件路径层级表达符号错误：当前系统文件分隔符为%1,当前路径：%2',[DIRECTORY_SEPARATOR,$filename]));
-        $path     = substr($filename, 0, $position);
+        $path = substr($filename, 0, $position);
         if (! file_exists($path)) {
             mkdir($path, 0770, true);
         }
         $this->_filename = $filename;
         $this->_file     = fopen($filename, $mode);
+        flock($this->_file, LOCK_EX);
 
         return $this;
     }

@@ -155,12 +155,9 @@ class Upgrade extends CommandAbstract
                         $command              = str_replace('\\', ':', strtolower($command_dir_file));
                         $command              = trim($command, ':');
                         if ($command) {
-                            $command_tip        = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
-                            $command_class_path = $this->command->getCommandPath($module_name, $command);
-//                            p('Weline\Framework\Console\System\Install',1);
-                            p($command_class_path, 1);
-                            $command_class      = ObjectManager::getInstance($command_class_path);
-                            p($command_class, 1);
+                            $command_tip                      = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
+                            $command_class_path               = $this->command->getCommandPath($module_name, $command);
+                            $command_class                    = ObjectManager::getInstance($command_class_path);
                             $commands[$command_tip][$command] = $command_class->getTip();
                         }
                     }

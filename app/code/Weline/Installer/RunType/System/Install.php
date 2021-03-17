@@ -19,37 +19,60 @@ class Install
 {
     protected Data $data;
 
-    protected Printing $printer;
+    /**
+     * @var Printing
+     */
+    private Printing $printing;
+    /**
+     * @var DataSetup
+     */
+    private DataSetup $setup;
 
-    public function __construct()
+    public function __construct(
+        Data $data,
+        DataSetup $setup,
+        Printing $printing
+    )
     {
-        $this->data    = new Data();
-        $this->printer = new Printing();
+        $this->data = $data;
+        $this->printing = $printing;
+        $this->setup = $setup;
     }
 
     public function run()
     {
-        $db_conf = Env::getInstance()->getDbConfig();
-        if (empty($db_conf)) {
-            throw  new Exception('请先安装数据库配置！');
+        // 阻塞等待配置文件写入
+        $break = false;
+        $wait_times = 1;
+        while (!$break) {
+            sleep(1);
+            $db_conf = Env::getInstance()->reload()->getDbConfig();
+            if ($db_conf) {
+                $break = true;
+            }
+            $wait_times += 1;
+            if ($wait_times == 10) {
+//                throw  new Exception('请先安装数据库配置！');
+            }
         }
-        $setup = new DataSetup();
-        $db    = $setup->getDb();
+
+
+        $db = $this->setup->getDb();
 
         $tables = $this->data->getDbTables();
-        $tmp    = [];
+        $tmp = [];
         $hasErr = false;
         foreach ($tables as $table => $createSql) {
             if ($db->tableExist($table)) {
                 if (CLI) {
-                    $this->printer->warning('删除表：' . $table);
+                    $this->printing->warning('删除表：' . $table);
                 }
                 $db->dropTable($table);
             }
 
             try {
                 if (CLI) {
-                    $this->printer->note('新增表：' . $table);
+                    $this->printing->note('新增表：' . $table);
                 }
                 $db->query($createSql);
                 $result = true;

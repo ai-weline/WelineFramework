@@ -84,13 +84,12 @@ class Env
 
     // 日志
     const default_LOG = [
-        'error' => BP . 'var/log/error.log',
-        'exception' => BP . 'var/log/exception.log',
-        'notice' => BP . 'var/log/notice.log',
-        'warning' => BP . 'var/log/warning.log',
-        'debug' => BP . 'var/log/debug.log',
+        'error' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log',
+        'exception' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'exception.log',
+        'notice' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'notice.log',
+        'warning' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'warning.log',
+        'debug' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log',
     ];
-
     // 缓存
     const default_CACHE = [
         'default' => 'file',
@@ -139,16 +138,27 @@ class Env
      */
     private function __construct()
     {
+        $this->reload();
+    }
+
+    function reload()
+    {
         $env_file = self::path_ENV_FILE;
         if (!is_file($env_file)) {
             $file = new File();
             $file->open($env_file, $file::mode_w_add);
             $text = '<?php return ' . var_export([], true) . ';?>';
-            $file->write($text);
+            try {
+                $file->write($text);
+            } catch (Exception $e) {
+                throw new Exception(__('错误：' . $e->getMessage()));
+            }
             $file->close();
+            sleep(1);
         }
         // 覆盖默认配置
-        $this->config = array_merge(self::default_CONFIG,(array)include $env_file);
+        $this->config = array_merge(self::default_CONFIG, (array)include $env_file);
+        return $this;
     }
 
     /**
@@ -176,7 +186,7 @@ class Env
      * @param  $default
      * @return mixed
      */
-    public function getConfig(string $name = null, $default = null)
+    public function getConfig(string $name = '', $default = null)
     {
         if ('' === $name) {
             return $this->config;
@@ -205,7 +215,6 @@ class Env
             $text = '<?php return ' . var_export($config, true) . ';';
             $file->write($text);
             $file->close();
-
             return true;
         } catch (Exception $exception) {
             return false;
@@ -222,7 +231,7 @@ class Env
      */
     public function getLogPath(string $type): string
     {
-        return $this->config['log'][$type];
+        return BP . $this->config['log'][$type];
     }
 
     /**

@@ -32,7 +32,7 @@ try {
      * 初始化应用...
      */
     \Weline\Framework\App::init();
-    if (DEV) {
+    if (DEV || CLI) {
         ini_set('error_reporting', E_ALL);
 
         function cache_shutdown_error()
@@ -45,6 +45,7 @@ try {
                 echo '</pre>';
             }
         }
+
         register_shutdown_function('cache_shutdown_error');
     }
     /**@var $app \Weline\Framework\App */

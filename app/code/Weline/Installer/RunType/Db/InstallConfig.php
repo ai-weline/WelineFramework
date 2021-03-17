@@ -63,7 +63,7 @@ class InstallConfig
         $db_conf = [
             'default'     => $params['type'],
             'connections' => [
-                'mysql' => $params,
+                $params['type'] => $params,
             ],
         ];
         if (CLI) {

@@ -9,8 +9,8 @@
 
 namespace Weline\Installer;
 
-use Weline\Framework\App\Exception;
 use Weline\Framework\Http\Request;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Installer\RunType\Bin\Commands;
 use Weline\Installer\RunType\Db\InstallConfig;
 use Weline\Installer\RunType\Env\Checker;
@@ -21,40 +21,42 @@ class Runner
 {
     public function checkEnv(): array
     {
-        return (new Checker())->run();
+        /**@var $checker Checker */
+        $checker = ObjectManager::getInstance(Checker::class);
+        return $checker->run();
     }
 
     public function installDb(array $params = []): array
     {
-        if (! CLI) {
+        if (!CLI) {
             $params = Request::getInstance('Weline\\Installer')->getParams();
         }
-
-        return (new InstallConfig())->run($params);
+        /**@var $installConfig InstallConfig */
+        $installConfig = ObjectManager::getInstance(InstallConfig::class);
+        return $installConfig->run($params);
     }
 
     public function systemInstall(): array
     {
-        try {
-            return (new Install())->run();
-        } catch (Exception $e) {
-            if (CLI) {
-                p($e->getMessage());
-            }
-        }
+        /**@var $install Install */
+        $install = ObjectManager::getInstance(Install::class);
+        return $install->run();
     }
 
     public function systemCommands(): array
     {
-        return (new Commands())->run();
+        /**@var $commands Commands */
+        $commands = ObjectManager::getInstance(Commands::class);
+        return $commands->run();
     }
 
     public function systemInit(array $params = []): array
     {
-        if (! CLI) {
+        if (!CLI) {
             $params = Request::getInstance('Weline\\Installer')->getParams();
         }
-
-        return (new Init())->run($params);
+        /**@var $init Init */
+        $init = ObjectManager::getInstance(Init::class);
+        return $init->run($params);
     }
 }

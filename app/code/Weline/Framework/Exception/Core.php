@@ -87,7 +87,7 @@ class Core extends \Exception
         if (DEV) {
             echo $this->prepareHtmlMessage();
         } else {
-            print_r('运行警告：请联系管理员进行修复！日志：var/log/note.log' . ($this->isCli() ? PHP_EOL : '<br>'));
+            print_r('运行警告：请联系管理员进行修复！日志：var/log/note.log' . (CLI ? PHP_EOL : '<br>'));
         }
         $log_path = $this->etc->getLogPath($this->etc::log_path_NOTICE);
         $this->_debug->debug($this->prepareMessage(), $log_path);
@@ -104,7 +104,7 @@ class Core extends \Exception
         if (DEV) {
             echo $this->prepareHtmlMessage();
         } else {
-            print_r('运行警告：请联系管理员进行修复！日志：var/log/warning.log' . ($this->isCli() ? PHP_EOL : '<br>'));
+            print_r('运行警告：请联系管理员进行修复！日志：var/log/warning.log' . (CLI ? PHP_EOL : '<br>'));
         }
         $this->_debug->debug($this->prepareMessage(), $log_path, 2);
     }
@@ -119,7 +119,7 @@ class Core extends \Exception
         if (DEV) {
             echo $this->prepareHtmlMessage();
         } else {
-            print_r('程序异常：请联系管理员进行修复！日志：var/log/exception.log' . ($this->isCli() ? PHP_EOL : '<br>'));
+            print_r('程序异常：请联系管理员进行修复！日志：var/log/exception.log' . (CLI ? PHP_EOL : '<br>'));
         }
         $log_path = $this->etc->getLogPath($this->etc::log_path_EXCEPTION);
         $this->_debug->debug($this->prepareMessage(), $log_path);
@@ -139,7 +139,7 @@ class Core extends \Exception
         if (DEV) {
             echo $this->prepareHtmlMessage();
         } else {
-            print_r('程序异常：请联系管理员进行修复！日志：var/log/error.log' . ($this->isCli() ? PHP_EOL : '<br>'));
+            print_r('程序异常：请联系管理员进行修复！日志：var/log/error.log' . (CLI ? PHP_EOL : '<br>'));
         }
         $log_path = $this->etc->getLogPath($this->etc::log_path_ERROR);
         $this->_debug->debug($this->prepareMessage(), $log_path, 3);
@@ -157,7 +157,7 @@ class Core extends \Exception
             if (DEV) {
                 echo json_encode($last);
             } else {
-                print_r('程序错误：请联系管理员进行修复！日志：var/log/error.log' . ($this->isCli() ? PHP_EOL : '<br>'));
+                print_r('程序错误：请联系管理员进行修复！日志：var/log/error.log' . (CLI ? PHP_EOL : '<br>'));
             }
             $log_path = $this->etc->getLogPath($this->etc::log_path_ERROR);
             $this->_debug->debug(json_encode($last), $log_path, 3);
@@ -211,7 +211,7 @@ class Core extends \Exception
         $err_str .= '行数：' . ($line ? $line : $this->line) . '<br>';
         $err_str .= '信息：' . ($message ? $message : $this->message) . '<br>';
         $err_str .= '位置：' . $this->getErrorCode() . '<br>';
-        $err_str .= '追踪：<br>' . $track_str_arr_str . '<br>';
+        $err_str .= '追踪：<br><pre>' . $track_str_arr_str . '</pre><br>';
         $err_str .= '<br></div></div>';
 
         return $err_str;
@@ -239,20 +239,9 @@ class Core extends \Exception
 
     public function __toString()
     {
-        return $this->message = $this->isCli() ? $this->preCliFrontColor() : $this->preHtmlFrontColor('b', $this->message, '#945252');
+        return $this->message =CLI ? $this->preCliFrontColor() : $this->preHtmlFrontColor('b', $this->message, '#945252');
     }
 
-    /**
-     * @DESC         |是否cli模式
-     *
-     * 参数区：
-     *
-     * @return bool
-     */
-    private function isCli()
-    {
-        return PHP_SAPI === 'cli';
-    }
 
     /**
      * @DESC         |获取出错代码
