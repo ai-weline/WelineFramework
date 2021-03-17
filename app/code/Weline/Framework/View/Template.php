@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\View;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\System\File\Directory;
 use Weline\Framework\Http\Request;
@@ -58,10 +59,6 @@ class Template
         $this->statics_dir   = $this->getViewDir(DataInterface::view_STATICS_DIR);
         $this->template_dir  = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
         $this->compile_dir   = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
-    }
-
-    public function __init()
-    {
     }
 
     /**
@@ -297,8 +294,10 @@ class Template
                 break;
             case DataInterface::dir_type_STATICS:
                 $pub_static_path = $this->view_dir;
+                // 主题配置
+                $theme_dir = Env::getInstance()->getConfig('theme', 'default');
                 if (! DEV) {
-                    $pub_static_path = str_replace(APP_PATH, Directory::static_dir . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR, $this->view_dir);
+                    $pub_static_path = str_replace(APP_PATH, Directory::static_dir . DIRECTORY_SEPARATOR . $theme_dir . DIRECTORY_SEPARATOR, $this->view_dir);
                 }
                 $path = $pub_static_path . DataInterface::view_STATICS_DIR;
 

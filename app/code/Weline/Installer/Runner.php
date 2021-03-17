@@ -9,6 +9,7 @@
 
 namespace Weline\Installer;
 
+use Weline\Framework\App\Exception;
 use Weline\Framework\Http\Request;
 use Weline\Installer\RunType\Bin\Commands;
 use Weline\Installer\RunType\Db\InstallConfig;
@@ -34,7 +35,13 @@ class Runner
 
     public function systemInstall(): array
     {
-        return (new Install())->run();
+        try {
+            return (new Install())->run();
+        } catch (Exception $e) {
+            if (CLI) {
+                p($e->getMessage());
+            }
+        }
     }
 
     public function systemCommands(): array

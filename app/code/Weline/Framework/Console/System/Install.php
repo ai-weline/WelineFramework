@@ -98,15 +98,15 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         }
         $this->printer->success('参数检测通过！', 'OK');
         $this->printer->note('第三步：配置安装...', '系统');
-        $runner->installDb($db_config);
+        $this->runner->installDb($db_config);
         $this->printer->note('第四步：数据安装...', '系统');
-        $runner->systemInstall();
+        $this->runner->systemInstall();
         $this->printer->note('第五步：系统命令更新...', '系统');
-        $runner->systemCommands();
+        $this->runner->systemCommands();
         $this->printer->note('第六步：系统初始化...', '系统');
         $initData['admin']     = 'admin_' . uniqid();
         $initData['api_admin'] = 'api_' . uniqid();
-        $runner->systemInit($initData);
+        $this->runner->systemInit($initData);
         $this->printer->success('初始化数据完成！', 'OK');
         $this->printer->note('-------------------------------------------------------');
         // 生成安装锁文件
@@ -130,3 +130,11 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         return '框架安装';
     }
 }
+/*
+php bin/m system:install ^
+--db-type=mysql ^
+--db-hostname=127.0.0.1 ^
+--db-database=weline ^
+--db-username=weline ^
+--db-password=weline
+*/

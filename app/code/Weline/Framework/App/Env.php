@@ -76,15 +76,19 @@ class Env
      */
     private static ?Env $instance;
 
-    public array $config;
+    const default_CONFIG = [
+        'cache' => self::default_CACHE,
+        'session' => self::default_SESSION,
+        'log' => self::default_LOG,
+    ];
 
     // 日志
     const default_LOG = [
-        'error'     => BP . 'var/log/error.log',
+        'error' => BP . 'var/log/error.log',
         'exception' => BP . 'var/log/exception.log',
-        'notice'    => BP . 'var/log/notice.log',
-        'warning'   => BP . 'var/log/warning.log',
-        'debug'     => BP . 'var/log/debug.log',
+        'notice' => BP . 'var/log/notice.log',
+        'warning' => BP . 'var/log/warning.log',
+        'debug' => BP . 'var/log/debug.log',
     ];
 
     // 缓存
@@ -95,9 +99,9 @@ class Env
                 'path' => 'var/cache/',
             ],
             'redis' => [
-                'tip'      => '开发中...',
-                'server'   => '127.0.0.1',
-                'port'     => 6379,
+                'tip' => '开发中...',
+                'server' => '127.0.0.1',
+                'port' => 6379,
                 'database' => 1,
             ],
         ],
@@ -119,6 +123,8 @@ class Env
         ],
     ];
 
+    private array $config = [];
+
     /**
      * @DESC         |私有化克隆函数
      *
@@ -134,18 +140,15 @@ class Env
     private function __construct()
     {
         $env_file = self::path_ENV_FILE;
-        if (! is_file($env_file)) {
+        if (!is_file($env_file)) {
             $file = new File();
             $file->open($env_file, $file::mode_w_add);
-            $text = '<?php return ' . var_export([
-                'session' => self::default_SESSION,
-                'cache'   => self::default_CACHE,
-                'log'     => self::default_LOG,
-            ], true) . ';?>';
+            $text = '<?php return ' . var_export([], true) . ';?>';
             $file->write($text);
             $file->close();
         }
-        $this->config = include $env_file;
+        // 覆盖默认配置
+        $this->config = array_merge(self::default_CONFIG,(array)include $env_file);
     }
 
     /**
@@ -157,7 +160,7 @@ class Env
      */
     public static function getInstance()
     {
-        if (! isset(self::$instance)) {
+        if (!isset(self::$instance)) {
             self::$instance = new self();
         }
 
@@ -171,9 +174,9 @@ class Env
      *
      * @param string $name
      * @param  $default
-     * @return array|string
+     * @return mixed
      */
-    public function getConfig(string $name = '', $default = [])
+    public function getConfig(string $name = null, $default = null)
     {
         if ('' === $name) {
             return $this->config;
@@ -193,7 +196,7 @@ class Env
      */
     public function setConfig(string $key, $value = []): bool
     {
-        $config       = $this->getConfig();
+        $config = $this->getConfig();
         $config[$key] = $value;
 
         try {

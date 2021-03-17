@@ -68,6 +68,7 @@ class Upgrade extends CommandAbstract
      * 参数区：
      *
      * @param array $args
+     * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      * @return mixed|void
      */
@@ -118,6 +119,7 @@ class Upgrade extends CommandAbstract
      *
      * 参数区：
      *
+     * @throws \ReflectionException
      * @return array
      */
     private function getDirFileCommand()
@@ -132,6 +134,7 @@ class Upgrade extends CommandAbstract
 
         // 合并
         $command_dir_files = array_merge($core, $custom);
+
         /** @var $command_files File[] */
         foreach ($command_dir_files as $dir => $command_files) {
             if (is_string($dir) && strstr($dir, self::dir)) {
@@ -152,9 +155,13 @@ class Upgrade extends CommandAbstract
                         $command              = str_replace('\\', ':', strtolower($command_dir_file));
                         $command              = trim($command, ':');
                         if ($command) {
-                            $command_class_path                                                                                       = $this->command->getCommandPath($module_name, $command);
-                            $command_class                                                                                            = ObjectManager::getInstance($command_class_path);
-                            $commands[str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name][$command] = $command_class->getTip();
+                            $command_tip        = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
+                            $command_class_path = $this->command->getCommandPath($module_name, $command);
+//                            p('Weline\Framework\Console\System\Install',1);
+                            p($command_class_path, 1);
+                            $command_class      = ObjectManager::getInstance($command_class_path);
+                            p($command_class, 1);
+                            $commands[$command_tip][$command] = $command_class->getTip();
                         }
                     }
                 }

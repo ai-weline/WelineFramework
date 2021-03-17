@@ -9,10 +9,12 @@
 
 namespace Weline\Framework\Event\Console\Event\Cache;
 
+use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Console\CommandInterface;
 use Weline\Framework\Event\Cache\EventCache;
 use Weline\Framework\Output\Cli\Printing;
 
-class Clear implements \Weline\Framework\Console\CommandInterface
+class Clear implements CommandInterface
 {
     /**
      * @var Printing
@@ -20,16 +22,16 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     private Printing $printing;
 
     /**
-     * @var EventCache
+     * @var CacheInterface
      */
-    private EventCache $eventCache;
+    private CacheInterface $eventCache;
 
     public function __construct(
         EventCache $eventCache,
         Printing $printing
     ) {
         $this->printing   = $printing;
-        $this->eventCache = $eventCache;
+        $this->eventCache = $eventCache->create();
     }
 
     /**
@@ -37,7 +39,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
      */
     public function execute($args = [])
     {
-        $this->eventCache->create()->clear();
+        $this->eventCache->clear();
 
         return $this->printing->success(__('清理完毕！'), '系统事件缓存');
     }

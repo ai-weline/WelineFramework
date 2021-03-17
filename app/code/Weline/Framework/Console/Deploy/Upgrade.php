@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Console\Deploy;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\App\System;
 use Weline\Framework\Console\CommandAbstract;
 use Weline\Framework\System\File\App\Scanner as AppScanner;
@@ -50,7 +51,9 @@ class Upgrade extends CommandAbstract
                 }
                 $origin_view_dir = APP_PATH . $module_view_static_dir;
                 if (is_dir($origin_view_dir)) {
-                    $pub_view_dir = PUB . 'static' . DIRECTORY_SEPARATOR . 'default' . DIRECTORY_SEPARATOR . $module_view_dir;
+                    // 主题配置
+                    $theme_dir    = Env::getInstance()->getConfig('theme', 'default');
+                    $pub_view_dir = PUB . 'static' . DIRECTORY_SEPARATOR . $theme_dir . DIRECTORY_SEPARATOR . $module_view_dir;
                     if (! is_dir($pub_view_dir)) {
                         mkdir($pub_view_dir, 0775, true);
                     }

@@ -11,7 +11,6 @@ namespace Weline\Framework\Manager;
 
 use ReflectionClass;
 use Weline\Framework\App\Env;
-use Weline\Framework\App\Exception;
 use Weline\Framework\Event\EventsManager;
 
 class ObjectManager implements ManagerInterface
@@ -50,7 +49,6 @@ class ObjectManager implements ManagerInterface
      *
      * @param string $class
      * @throws \ReflectionException
-     * @throws Exception
      * @return mixed|ObjectManager
      */
     public static function getInstance(string $class = '')
@@ -83,7 +81,8 @@ class ObjectManager implements ManagerInterface
         // 拦截器处理
         $new_class = self::parserClass($class);
 
-        $paramArr   = self::getMethodParams($new_class);
+        $paramArr = self::getMethodParams($new_class);
+
         $new_object = (new ReflectionClass($new_class))->newInstanceArgs($paramArr);
 
         self::$instances[$class] = self::initClass($new_object);
@@ -97,12 +96,8 @@ class ObjectManager implements ManagerInterface
         $new_class       = $class;
         $interceptor     = $class . '\\Interceptor';
         $interceptorFile = Env::path_framework_generated_code . str_replace('\\', DIRECTORY_SEPARATOR, $interceptor) . '.php';
+
         if (is_file($interceptorFile)) {
-//            try {
-//                include $interceptorFile;
-//            } catch (Exception $exception) {
-//                throw $exception;
-//            }
             $new_class = $interceptor;
         }
 
@@ -175,6 +170,8 @@ class ObjectManager implements ManagerInterface
                             }
                             $paramArr[] = $newObj;
                         }
+                    } else {
+                        $paramArr[] = $param->getDefaultValue();
                     }
                 }
             }

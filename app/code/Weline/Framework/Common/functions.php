@@ -62,7 +62,7 @@ function __(string $words, array $args=[])
     }
 
     try {
-        $all_words = (array)include $filename;
+        $all_words = (array) include $filename;
     } catch (\Weline\Framework\App\Exception $exception) {
         throw new \Weline\Framework\App\Exception($exception->getMessage());
     }

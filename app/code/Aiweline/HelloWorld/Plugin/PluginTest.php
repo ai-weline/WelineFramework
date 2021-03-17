@@ -25,10 +25,10 @@ class PluginTest
         return $a;
     }
 
-//    public function afterGetName($object, $a)
-//    {
-//        $a[] = '我被PluginTest类的afterGetName修改过';
-//
-//        return $a;
-//    }
+    public function afterGetName($object, $a)
+    {
+        $a[] = '我被PluginTest类的afterGetName修改过';
+
+        return $a;
+    }
 }

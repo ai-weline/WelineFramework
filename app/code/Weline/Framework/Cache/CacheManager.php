@@ -21,11 +21,9 @@ class CacheManager
 
     private string $identity;
 
-    public CacheInterface $cache;
-
     public function __construct(string $identity = 'cache_system')
     {
-        $this->config   = Env::getInstance()->getConfig('cache');
+        $this->config   = (array)Env::getInstance()->getConfig('cache');
         $this->identity = $identity;
     }
 
@@ -36,7 +34,7 @@ class CacheManager
      * @param string $driver
      * @return CacheInterface
      */
-    public function create(string $driver = ''): CacheInterface
+    public function create(string $driver = 'file'): CacheInterface
     {
         if (empty($driver) && isset($this->config['default'])) {
             $driver = $this->config['default'];

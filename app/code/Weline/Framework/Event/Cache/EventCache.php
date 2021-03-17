@@ -22,7 +22,7 @@ namespace Weline\Framework\Event\Cache;
  * @since 1.2
  *
  * Class EventCache
- * @package M\Framework\Event\Cache
+ * @package Weline\Framework\Event\Cache
  * @since 100
  */
 class EventCache extends \Weline\Framework\Cache\CacheManager

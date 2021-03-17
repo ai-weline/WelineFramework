@@ -105,7 +105,12 @@ class Cli extends CliAbstract
     {
         $arg0 = strtolower(trim($this->argv[0]));
         if ($arg0 === 'command:upgrade') {
-            exit(ObjectManager::getInstance(\Weline\Framework\Console\Command\Upgrade::class)->execute());
+            try {
+                ObjectManager::getInstance(\Weline\Framework\Console\Command\Upgrade::class)->execute();
+            } catch (Exception $exception) {
+                $this->printer->error($exception->getMessage());
+                exit();
+            }
         }
         if ($arg0 !== 'command:upgrade' && ! file_exists(Env::path_COMMANDS_FILE)) {
             exit($this->printer->error('命令系统异常！请完整执行（不能简写）更新模块命令后重试：php bin/m command:upgrade'));
