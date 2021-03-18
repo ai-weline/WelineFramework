@@ -99,6 +99,7 @@
         <interceptor name="HelloWorld::interceptor_index_test2" instance="Aiweline\HelloWorld\Plugin\PluginTest" disabled="false" sort="2"/>
     </plugin>
 </config>
+
 简要说明：
 class属性是要拦截的类
 interceptor元素是拦截器定义
@@ -149,9 +150,11 @@ class PluginTestModel
 php bin/m plugin:di:compile
 或者
 php bin/m p:d:c
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0318/234622_02e3c50a_1568278.png "微信截图_20210318234608.png")
 
 第四步 访问测试
-具体可看helloword模块，m.aiweline.com也可以查看插件测试。
+具体可看helloword模块，http://m.aiweline.com也可以查看插件测试。
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0318/234828_d69ffba1_1568278.png "微信截图_20210318234816.png")
 
 7、完成主题功能
 
