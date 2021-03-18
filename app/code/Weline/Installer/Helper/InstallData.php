@@ -15,7 +15,7 @@ class InstallData
     {
         $data = [
             'env' => [
-                'functions' => ['exec'],
+                'functions' => ['exec', 'putenv'],
                 'modules'   => ['PDO', 'exif', 'fileinfo', 'xsl'],
             ],
             'commands' => [

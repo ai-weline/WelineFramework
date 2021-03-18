@@ -27,10 +27,10 @@ try {
 require BP . '/app/etc/functions.php';
 
 /**
-php bin/m system:install ^
---db-type=mysql ^
---db-hostname=127.0.0.1 ^
---db-database=weline ^
---db-username=weline ^
---db-password=weline
+ * php bin/m system:install ^
+ * --db-type=mysql ^
+ * --db-hostname=127.0.0.1 ^
+ * --db-database=weline ^
+ * --db-username=weline ^
+ * --db-password=weline
  */

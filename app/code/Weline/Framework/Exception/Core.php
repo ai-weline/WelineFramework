@@ -33,7 +33,7 @@ class Core extends \Exception
     public function __construct($message = null, \Exception $cause = null, $code = 0)
     {
         $this->etc    = Env::getInstance();
-        $this->config = $this->etc->getConfig();
+        $this->config = (array)$this->etc->getConfig();
         $this->_debug = new Printing();
 
         parent::__construct($message, $code, $cause);
@@ -241,7 +241,6 @@ class Core extends \Exception
     {
         return $this->message =CLI ? $this->preCliFrontColor() : $this->preHtmlFrontColor('b', $this->message, '#945252');
     }
-
 
     /**
      * @DESC         |获取出错代码

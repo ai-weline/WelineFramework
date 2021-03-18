@@ -7,10 +7,8 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-use Weline\Framework\Register\Register;
+namespace Weline\Theme\Config;
 
-Register::register(
-    Register::MODULE,
-    __DIR__,
-    '1.0.2'
-);
+class Reader
+{
+}

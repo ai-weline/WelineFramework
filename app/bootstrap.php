@@ -21,7 +21,11 @@ define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARAT
 define('APP_ETC_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
 // 检测自动加载
 try {
-    require BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+    if (is_file(BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) {
+        require BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+    } else {
+        exit('Composer自动加载异常!尝试执行：php composer.phar install');
+    }
 } catch (Exception $exception) {
     exit('自动加载异常：' . $exception->getMessage());
 }

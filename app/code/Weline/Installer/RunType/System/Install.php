@@ -23,6 +23,7 @@ class Install
      * @var Printing
      */
     private Printing $printing;
+
     /**
      * @var DataSetup
      */
@@ -32,35 +33,33 @@ class Install
         Data $data,
         DataSetup $setup,
         Printing $printing
-    )
-    {
-        $this->data = $data;
+    ) {
+        $this->data     = $data;
         $this->printing = $printing;
-        $this->setup = $setup;
+        $this->setup    = $setup;
     }
 
     public function run()
     {
         // 阻塞等待配置文件写入
-        $break = false;
+        $break      = false;
         $wait_times = 1;
-        while (!$break) {
+        while (! $break) {
             sleep(1);
             $db_conf = Env::getInstance()->reload()->getDbConfig();
             if ($db_conf) {
                 $break = true;
             }
             $wait_times += 1;
-            if ($wait_times == 10) {
+            if ($wait_times === 10) {
 //                throw  new Exception('请先安装数据库配置！');
             }
         }
 
-
         $db = $this->setup->getDb();
 
         $tables = $this->data->getDbTables();
-        $tmp = [];
+        $tmp    = [];
         $hasErr = false;
         foreach ($tables as $table => $createSql) {
             if ($db->tableExist($table)) {

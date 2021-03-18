@@ -29,8 +29,7 @@ class Setup
     public function __construct(
         DbSetup $setup_db,
         Printing $printing
-    )
-    {
+    ) {
         $this->setup_db = $setup_db;
         $this->printing = $printing;
     }

@@ -62,6 +62,7 @@ function __(string $words, array $args=[])
     }
 
     try {
+        /** @noinspection PhpIncludeInspection */
         $all_words = (array) include $filename;
     } catch (\Weline\Framework\App\Exception $exception) {
         throw new \Weline\Framework\App\Exception($exception->getMessage());

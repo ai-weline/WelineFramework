@@ -30,15 +30,15 @@ class DbManager extends \think\DbManager
         if (empty($db_conf)) {
             // FIXME 首次安装问题：后期处理
             $db_conf = Env::getInstance()->reload()->getDbConfig();
-            if(empty($db_conf)){
+            if (empty($db_conf)) {
                 if ('cli' === PHP_SAPI) {
                     (new Printing())->error('请安装系统后操作:bin/m system:install', '系统');
-                    throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
-                } else {
+
                     throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
                 }
-            }
 
+                throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
+            }
         }
         $this->setConfig(Env::getInstance()->getDbConfig());
         parent::__construct();

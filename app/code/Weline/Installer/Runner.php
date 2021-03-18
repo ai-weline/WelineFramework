@@ -23,16 +23,18 @@ class Runner
     {
         /**@var $checker Checker */
         $checker = ObjectManager::getInstance(Checker::class);
+
         return $checker->run();
     }
 
     public function installDb(array $params = []): array
     {
-        if (!CLI) {
+        if (! CLI) {
             $params = Request::getInstance('Weline\\Installer')->getParams();
         }
         /**@var $installConfig InstallConfig */
         $installConfig = ObjectManager::getInstance(InstallConfig::class);
+
         return $installConfig->run($params);
     }
 
@@ -40,6 +42,7 @@ class Runner
     {
         /**@var $install Install */
         $install = ObjectManager::getInstance(Install::class);
+
         return $install->run();
     }
 
@@ -47,16 +50,18 @@ class Runner
     {
         /**@var $commands Commands */
         $commands = ObjectManager::getInstance(Commands::class);
+
         return $commands->run();
     }
 
     public function systemInit(array $params = []): array
     {
-        if (!CLI) {
+        if (! CLI) {
             $params = Request::getInstance('Weline\\Installer')->getParams();
         }
         /**@var $init Init */
         $init = ObjectManager::getInstance(Init::class);
+
         return $init->run($params);
     }
 }

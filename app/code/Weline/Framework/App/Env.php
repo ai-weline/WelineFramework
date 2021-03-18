@@ -77,19 +77,20 @@ class Env
     private static ?Env $instance;
 
     const default_CONFIG = [
-        'cache' => self::default_CACHE,
+        'cache'   => self::default_CACHE,
         'session' => self::default_SESSION,
-        'log' => self::default_LOG,
+        'log'     => self::default_LOG,
     ];
 
     // 日志
     const default_LOG = [
-        'error' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log',
+        'error'     => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log',
         'exception' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'exception.log',
-        'notice' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'notice.log',
-        'warning' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'warning.log',
-        'debug' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log',
+        'notice'    => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'notice.log',
+        'warning'   => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'warning.log',
+        'debug'     => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log',
     ];
+
     // 缓存
     const default_CACHE = [
         'default' => 'file',
@@ -98,9 +99,9 @@ class Env
                 'path' => 'var/cache/',
             ],
             'redis' => [
-                'tip' => '开发中...',
-                'server' => '127.0.0.1',
-                'port' => 6379,
+                'tip'      => '开发中...',
+                'server'   => '127.0.0.1',
+                'port'     => 6379,
                 'database' => 1,
             ],
         ],
@@ -141,13 +142,14 @@ class Env
         $this->reload();
     }
 
-    function reload()
+    public function reload()
     {
         $env_file = self::path_ENV_FILE;
-        if (!is_file($env_file)) {
+        if (! is_file($env_file)) {
             $file = new File();
             $file->open($env_file, $file::mode_w_add);
             $text = '<?php return ' . var_export([], true) . ';?>';
+
             try {
                 $file->write($text);
             } catch (Exception $e) {
@@ -158,6 +160,7 @@ class Env
         }
         // 覆盖默认配置
         $this->config = array_merge(self::default_CONFIG, (array)include $env_file);
+
         return $this;
     }
 
@@ -170,7 +173,7 @@ class Env
      */
     public static function getInstance()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             self::$instance = new self();
         }
 
@@ -206,7 +209,7 @@ class Env
      */
     public function setConfig(string $key, $value = []): bool
     {
-        $config = $this->getConfig();
+        $config       = $this->getConfig();
         $config[$key] = $value;
 
         try {
@@ -215,6 +218,7 @@ class Env
             $text = '<?php return ' . var_export($config, true) . ';';
             $file->write($text);
             $file->close();
+
             return true;
         } catch (Exception $exception) {
             return false;

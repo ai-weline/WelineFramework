@@ -23,6 +23,11 @@ class FileReader extends DataObject
 
     private string $path;
 
+    /**
+     * FileReader 初始函数...
+     * @param Scanner $scanner
+     * @param string $path
+     */
     public function __construct(
         Scanner $scanner,
         $path = 'etc' . DIRECTORY_SEPARATOR . 'module.xml'
@@ -30,6 +35,7 @@ class FileReader extends DataObject
         $this->scanner  = $scanner;
         $this->path     = $path;
         $this->fileList = $this->scanner->scanVendorModulesWithFiles($path);
+        parent::__construct();
     }
 
     public function getFileList()

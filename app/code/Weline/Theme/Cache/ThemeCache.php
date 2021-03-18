@@ -11,7 +11,7 @@ namespace Weline\Theme\Cache;
 
 class ThemeCache extends \Weline\Framework\Cache\CacheManager
 {
-    public function __construct(string $identity = 'theme_system')
+    public function __construct(string $identity = 'system_theme')
     {
         parent::__construct($identity);
     }
