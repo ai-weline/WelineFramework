@@ -150,16 +150,19 @@ class PluginTestModel
 php bin/m plugin:di:compile
 或者
 php bin/m p:d:c
+~~~
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0318/234622_02e3c50a_1568278.png "微信截图_20210318234608.png")
-
+~~~
 第四步 访问测试
 具体可看helloword模块，http://m.aiweline.com也可以查看插件测试。
+~~~
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0318/234828_d69ffba1_1568278.png "微信截图_20210318234816.png")
+
 
 7、完成主题功能
 
 8、完成i18n翻译功能
-~~~
+
 
     
 #### 参与贡献
