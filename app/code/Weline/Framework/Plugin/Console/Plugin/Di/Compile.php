@@ -64,6 +64,6 @@ class Compile implements \Weline\Framework\Console\CommandInterface
      */
     public function getTip(): string
     {
-        return '系统依赖编译';
+        return '【插件】系统依赖编译';
     }
 }

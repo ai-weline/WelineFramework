@@ -86,8 +86,79 @@
         }
 
 
-6. 方法插件模式等待开发...
+6. 插件机制
 
+~~~
+第一步：模块的etc目录下plugin.xml,参考：Aiweline_HelloWorld模块
+<?xml version="1.0"?>
+<config xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+        xs:noNamespaceSchemaLocation="urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd"
+        xmlns="urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd">
+    <plugin name="HelloWorld::controller_plugin" class="Aiweline\HelloWorld\Model\PluginTestModel">
+        <interceptor name="HelloWorld::interceptor_index_test1" instance="Aiweline\HelloWorld\Plugin\PluginTestModel" disabled="false" sort="2"/>
+        <interceptor name="HelloWorld::interceptor_index_test2" instance="Aiweline\HelloWorld\Plugin\PluginTest" disabled="false" sort="2"/>
+    </plugin>
+</config>
+简要说明：
+class属性是要拦截的类
+interceptor元素是拦截器定义
+instance是拦截类
+
+
+第二步：实现拦截器类
+
+Aiweline\HelloWorld\Plugin\PluginTestModel
+示例代码：
+<?php
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
+ */
+
+namespace Aiweline\HelloWorld\Plugin;
+
+class PluginTestModel
+{
+    public function beforeGetName($object, $a)
+    {
+        $a[] = '我是beforeGetName修改过的插件';
+
+        return $a;
+    }
+
+    public function aroundGetName($object, \closure $closure, $a)
+    {
+        $a[] = '我是aroundGetName修改过的插件';
+
+        return $a;
+    }
+
+    public function afterGetName($object, $a)
+    {
+        $a[] = '我是afterGetName修改过的插件';
+
+        return $a;
+    }
+}
+
+第三步 生成拦截器拦截者（插件系统依赖编译）
+项目下执行
+php bin/m plugin:di:compile
+或者
+php bin/m p:d:c
+
+第四步 访问测试
+具体可看helloword模块，m.aiweline.com也可以查看插件测试。
+
+7、完成主题功能
+
+8、完成i18n翻译功能
+~~~
+
+    
 #### 参与贡献
 
 1.  Fork 本仓库
