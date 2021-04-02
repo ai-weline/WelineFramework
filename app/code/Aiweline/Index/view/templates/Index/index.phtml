@@ -34,16 +34,16 @@
 <div class="sample">
     <div class="debug">
         <a href="<?=$this->getUrl('/hello/helloworld/p')?>" target="_blank" onclick="openWindow(this.href,this.text)">调试样式</a>
-        <a href="/hello/helloworld/ex" target="_blank" onclick="openWindow(this.href,this.text)">异常调试</a>
-        <a href="/hello/helloworld/demo" target="_blank" onclick="openWindow(this.href,this.text)">Demo</a>
-        <a href="/hello/helloworld/model" target="_blank" onclick="openWindow(this.href,this.text)">model</a>
-        <a href="/hello/helloworld/cache" target="_blank" onclick="openWindow(this.href,this.text)">Cache</a>
-        <a href="/hello/helloworld/session" target="_blank" onclick="openWindow(this.href,this.text)">Session</a>
-        <a href="/hello/helloworld/plugin" target="_blank" onclick="openWindow(this.href,this.text)">Plugin</a>
-        <a href="/hello/helloworld/observer" target="_blank" onclick="openWindow(this.href,this.text)">Observer</a>
+        <a href="/hello/helloworld/ex" target="_blank" onclick="openWindow(this.href,'异常调试')">异常调试</a>
+        <a href="/hello/helloworld/demo" target="_blank" onclick="openWindow(this.href,'Demo')">Demo</a>
+        <a href="/hello/helloworld/model" target="_blank" onclick="openWindow(this.href,'model')">model</a>
+        <a href="/hello/helloworld/cache" target="_blank" onclick="openWindow(this.href,'Cache')">Cache</a>
+        <a href="/hello/helloworld/session" target="_blank" onclick="openWindow(this.href,'Session')">Session</a>
+        <a href="/hello/helloworld/plugin" target="_blank" onclick="openWindow(this.href,'Plugin')">Plugin</a>
+        <a href="/hello/helloworld/observer" target="_blank" onclick="openWindow(this.href,'Observer')">Observer</a>
         <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('admin','admin');?>/" target="_blank" onclick="openWindow(this.href,this.text)">后台</a>
         <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('api_admin','api_admin');?>/rest/V1/index" target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>
-        <a href="hello/rest/v1/index/index" target="_blank" onclick="openWindow(this.href,this.text)">前台api</a>
+        <a href="hello/rest/v1/index/index" target="_blank" onclick="openWindow(this.href,'前台api')">前台api</a>
     </div>
 </div>
 </body>

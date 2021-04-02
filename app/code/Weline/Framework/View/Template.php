@@ -73,7 +73,7 @@ class Template
     {
         $path = $this->view_dir . $filepath;
         if (! file_exists($path) && DEV) {
-            new Exception('文件不存在！位置：' . $path);
+            new Exception(__('文件不存在！位置：') . $path);
         }
         $this->fetch($filepath);
 
@@ -113,7 +113,6 @@ class Template
             $explode_str = APP_PATH;
         }
         $dir_arr = explode($explode_str, $real_path);
-
         return DIRECTORY_SEPARATOR . array_pop($dir_arr);
     }
 

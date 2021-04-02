@@ -5,6 +5,10 @@
 微蓝M框架！
 
 测试环境：http://m.dev.aiweline.com/
+~~~
+注意：dev开发环境下把防跨站攻击关闭。
+
+~~~
 
 样本环境：http://m.aiweline.com/
 
@@ -165,6 +169,7 @@ php bin/m p:d:c
 
 版本2.0计划
 1、将所有依赖编入metadata元数据，加快加载速度。
+2、路由参数实现
 
 
     

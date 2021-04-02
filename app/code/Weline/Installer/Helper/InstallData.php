@@ -21,7 +21,7 @@ class InstallData
             'commands' => [
                 'bin/m command:upgrade',
                 'bin/m deploy:mode:set dev',
-                'bin/m module:upgrade',
+                'bin/m cache:clear',
             ],
             'db' => [
                 'tables' => [
