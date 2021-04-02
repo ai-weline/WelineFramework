@@ -12,7 +12,6 @@ namespace Weline\Framework\Manager;
 use ReflectionClass;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
-use Weline\Framework\Event\EventsManager;
 
 class ObjectManager implements ManagerInterface
 {
@@ -38,7 +37,7 @@ class ObjectManager implements ManagerInterface
 
     private static function initSelf()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             self::$instance = new self();
         }
     }
@@ -49,8 +48,8 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param string $class
-     * @return mixed|ObjectManager
      * @throws \ReflectionException
+     * @return mixed|ObjectManager
      */
     public static function getInstance(string $class = '')
     {
@@ -79,8 +78,8 @@ class ObjectManager implements ManagerInterface
     public static function parserClass(string $class)
     {
         // 拦截器处理
-        $new_class = $class;
-        $interceptor = $class . '\\Interceptor';
+        $new_class       = $class;
+        $interceptor     = $class . '\\Interceptor';
         $interceptorFile = Env::path_framework_generated_code . str_replace('\\', DIRECTORY_SEPARATOR, $interceptor) . '.php';
 
         if (is_file($interceptorFile)) {
@@ -104,35 +103,36 @@ class ObjectManager implements ManagerInterface
      * @param $className
      * @param string $methodName
      * @param array $params
-     * @return mixed
      * @throws \ReflectionException
+     * @return mixed
      */
     public static function make($className, $methodName = '__construct', $params = [])
     {
         // 拦截器处理
         $new_class = self::parserClass($className);
 
-        if ('__construct' == $methodName) {
+        if ('__construct' === $methodName) {
             // 如果是初始化函数则返回一个初始化后的对象
-            $instance = (new ReflectionClass($new_class))->newInstanceArgs($params);
+            $instance                    = (new ReflectionClass($new_class))->newInstanceArgs($params);
             self::$instances[$className] = $instance;
+
             return self::$instances[$className];
-        } else {
-            // 如果不是则实例化后立即执行该函数
-            // 获取该方法所需要依赖注入的参数
-            $paramArr = self::getMethodParams($className, $methodName);
-            // 获取类的实例
-            self::$instances[$className] = self::getInstance($className);
-            return self::$instances[$className]->{$methodName}(...array_merge($paramArr, $params));
         }
+        // 如果不是则实例化后立即执行该函数
+        // 获取该方法所需要依赖注入的参数
+        $paramArr = self::getMethodParams($className, $methodName);
+        // 获取类的实例
+        self::$instances[$className] = self::getInstance($className);
+
+        return self::$instances[$className]->{$methodName}(...array_merge($paramArr, $params));
     }
 
     /**
      * @Desc         | 获取方法参数,插件实现
      * @param $className
      * @param string $methodsName
-     * @return array
      * @throws Exception
+     * @return array
      */
     protected static function getMethodParams($className, $methodsName = '__construct')
     {
@@ -198,8 +198,8 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param $class
-     * @return ReflectionClass
      * @throws \ReflectionException
+     * @return ReflectionClass
      */
     protected function getReflectionClass($class): ReflectionClass
     {

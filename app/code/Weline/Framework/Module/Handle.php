@@ -166,7 +166,7 @@ class Handle implements HandleInterface
         }
 
 //        $this->setup_context = new SetupContext($name, $version);
-        $this->setup_context = ObjectManager::make(SetupContext::class,'__construct',['module_name'=>$name, 'module_version'=>$version]);
+        $this->setup_context = ObjectManager::make(SetupContext::class, '__construct', ['module_name'=>$name, 'module_version'=>$version]);
 
         $setup_dir = $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
 

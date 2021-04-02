@@ -1,13 +1,10 @@
 <?php
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(Aiweline)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2021/3/18
- * 时间：22:00
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
 namespace Weline\Theme\Test\Unit;
@@ -23,8 +20,8 @@ class ThemeTest extends TestCore
      */
     private Theme $theme;
 
-
-    function testGetMode(){
+    public function testGetMode()
+    {
         $this->theme = ObjectManager::getInstance(Theme::class);
         $this->theme->getId();
     }

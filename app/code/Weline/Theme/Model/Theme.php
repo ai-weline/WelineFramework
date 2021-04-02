@@ -21,6 +21,7 @@ class Theme
      * @var CacheInterface
      */
     private CacheInterface $themeCache;
+
     /**
      * @var WelineTheme
      */
@@ -29,9 +30,8 @@ class Theme
     public function __construct(
         ThemeCache $themeCache,
         WelineTheme $welineTheme
-    )
-    {
-        $this->themeCache = $themeCache->create();
+    ) {
+        $this->themeCache  = $themeCache->create();
         $this->welineTheme = $welineTheme;
     }
 
@@ -44,10 +44,11 @@ class Theme
         p($this->welineTheme->getData('id'));
         $this->themeCache->set('theme', $this->welineTheme, static::cache_TIME);
         p($this->themeCache->get('theme'));
+
         return $this->themeCache->get('theme');
     }
 
-    function getId()
+    public function getId()
     {
         p($this->getModel()->getData());
     }
