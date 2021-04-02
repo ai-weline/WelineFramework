@@ -1,8 +1,4 @@
-pub/static/
-var/cache/
-var/log/
-var/session/
-vendor/
+vendor
 generated
 .user.ini
 .phpunit.result.cache
