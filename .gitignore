@@ -3,3 +3,7 @@ var/cache/
 var/log/
 var/session/
 vendor/
+generated
+.user.ini
+.phpunit.result.cache
+.php_cs.cache
