@@ -20,6 +20,7 @@ class CacheManager
     private array $config;
 
     private string $identity;
+    // FIXME 缓存清理后首次存储缓存set后 立即读取get 将返回false 待后期处理 先直接返回结果
 
     public function __construct(string $identity = 'cache_system')
     {

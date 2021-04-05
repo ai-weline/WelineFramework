@@ -63,8 +63,7 @@ class WelineTheme extends Model
         }
         $theme = $this->load(self::filed_IS_ACTIVE, 1);
         $this->themeCache->set('theme', $theme, static::cache_TIME);
-
-        return $this->themeCache->get('theme');
+        return $theme;
     }
 
     public function getId()
