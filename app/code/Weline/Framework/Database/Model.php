@@ -9,26 +9,41 @@
 
 namespace Weline\Framework\Database;
 
-use Weline\Framework\DataObject\TraitDataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 
 abstract class Model extends \think\Model
 {
-    use TraitDataObject;
+    use TraitModelObject;
 
-    private static DbManager $_db;
     private EventsManager $eventsManager;
 
+    /**
+     * @DESC         |TP6原生初始化函数...
+     *
+     * 参数区：
+     *
+     */
     protected static function init()
     {
         // 设置事件
-        self::$db = self::$_db = new DbManager();
+        self::$db = new DbManager();
         /**
          * 重载方法
          */
         parent::init();
     }
+
+    /**
+     * @DESC         |框架初始化函数...
+     *
+     * 参数区：
+     *
+     * @throws \ReflectionException
+     */
+//    function __init(){
+//
+//    }
 
     /**
      * @DESC         |获取数据库基类
@@ -62,9 +77,9 @@ abstract class Model extends \think\Model
         $this->getEvenManager()->dispatch($this->getTable() . '_model_load_before', ['model' => $this]);
         if (!$value) {
             $pk = $this->getPk();
-            $data = $this->db()->where("{$pk}='{$field_or_pk_value}'")->find();
+            $data = $this->db()->where("{$pk}=:pkv", ['pkv' => $field_or_pk_value])->find();
         } else {
-            $data = $this->db()->where("{$field_or_pk_value}='{$value}'")->find();
+            $data = $this->db()->where("{$field_or_pk_value}=:fv", ['fv' => $value])->find();
         }
         $this->setData($data);
         // load之之后事件
@@ -99,5 +114,18 @@ abstract class Model extends \think\Model
     protected function getEvenManager(): EventsManager
     {
         return ObjectManager::getInstance(EventsManager::class);
+    }
+
+    /**
+     * @DESC         |获得数据库管理器
+     *
+     * 参数区：
+     *
+     * @return DbManager
+     * @throws \ReflectionException
+     */
+    function getDbManager(): DbManager
+    {
+        return ObjectManager::getInstance(DbManager::class);
     }
 }

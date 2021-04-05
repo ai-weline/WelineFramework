@@ -12,9 +12,8 @@ namespace Weline\Theme\Model;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Model;
 use Weline\Theme\Cache\ThemeCache;
-use Weline\Theme\Model\ResourceModel\WelineTheme;
 
-class Theme extends Model
+class WelineTheme extends Model
 {
     const cache_TIME = 604800;
 
@@ -30,18 +29,17 @@ class Theme extends Model
 
     public function __construct(
         ThemeCache $themeCache,
-        WelineTheme $welineTheme,
         array $data = []
     )
     {
         $this->themeCache = $themeCache->create();
-        $this->welineTheme = $welineTheme;
         parent::__construct($data);
     }
 
     protected function getModel()
     {
         if ($theme = $this->themeCache->get('theme')) {
+            p($theme);
             return $theme;
         }
         $theme = $this->load('is_active', 1);
@@ -59,6 +57,51 @@ class Theme extends Model
 
     public function setId($value)
     {
-        return $this->setData('id', $value);
+        $this->setData('id', $value);
+        return $this;
+    }
+
+    public function getName_()
+    {
+        return $this->getData('name');
+    }
+
+    public function setName($value)
+    {
+        $this->setData('name', $value);
+        return $this;
+    }
+
+    function getParentId()
+    {
+        return $this->getData('parent_id');
+    }
+
+    function setParentId($value)
+    {
+        $this->setData('parent_id', $value);
+        return $this;
+    }
+
+    function isActive()
+    {
+        return $this->getData('is_active');
+    }
+
+    function setIsActive($value)
+    {
+        $this->setData('is_active', $value);
+        return $this;
+    }
+
+    function getCreateTime()
+    {
+        return $this->getData('create_time');
+    }
+
+    function setCreateTime($time)
+    {
+        $this->setData('create_time', $time);
+        return $this;
     }
 }

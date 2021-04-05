@@ -11,18 +11,20 @@ namespace Weline\Theme\Test\Unit;
 
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
-use Weline\Theme\Model\Theme;
+use Weline\Theme\Model\WelineTheme;
 
 class ThemeTest extends TestCore
 {
     /**
-     * @var Theme
+     * @var WelineTheme
      */
-    private Theme $theme;
+    private WelineTheme $theme;
 
     public function testGetMode()
     {
-        $this->theme = ObjectManager::getInstance(Theme::class);
+        $this->theme = ObjectManager::getInstance(WelineTheme::class);
+        $theme = $this->theme->load(1);
+        p($theme);
         $this->theme->getId();
     }
 }

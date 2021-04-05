@@ -12,18 +12,18 @@ namespace Weline\Theme\Setup;
 use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Setup\Data;
 use Weline\Framework\Setup\InstallInterface;
-use Weline\Theme\Model\Theme;
+use Weline\Theme\Model\WelineTheme;
 
 class Install implements InstallInterface
 {
     const table_THEME = 'weline_theme';
     /**
-     * @var Theme
+     * @var WelineTheme
      */
-    private Theme $theme;
+    private WelineTheme $theme;
 
     function __construct(
-        Theme $theme
+        WelineTheme $theme
     )
     {
         $this->theme = $theme;
