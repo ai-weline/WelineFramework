@@ -24,7 +24,6 @@ class ThemeTest extends TestCore
     {
         $this->theme = ObjectManager::getInstance(WelineTheme::class);
         $theme = $this->theme->load(1);
-        p($theme);
-        $this->theme->getId();
+        p($theme->getActiveTheme());
     }
 }

@@ -41,9 +41,10 @@ abstract class Model extends \think\Model
      *
      * @throws \ReflectionException
      */
-//    function __init(){
-//
-//    }
+    function __init()
+    {
+        $this->suffix = $this->getSuffix() . $this->suffix;
+    }
 
     /**
      * @DESC         |获取数据库基类

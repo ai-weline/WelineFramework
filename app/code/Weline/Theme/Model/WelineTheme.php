@@ -13,10 +13,21 @@ use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Theme\Cache\ThemeCache;
+use Weline\Theme\Setup\Install;
 
 class WelineTheme extends Model
 {
     const cache_TIME = 604800;
+
+    const filed_ID = 'id';
+    const filed_NAME = 'name';
+    const filed_PATH = 'path';
+    const filed_PARENT_ID = 'parent_id';
+    const filed_IS_ACTIVE = 'is_active';
+    const filed_CREATE_TIME = 'create_time';
+
+    protected $pk = self::filed_ID;
+//    protected $table = Install::table_THEME; # 如果需要设置特殊表名 需要加前缀
 
     /**
      * @var CacheInterface
@@ -35,83 +46,90 @@ class WelineTheme extends Model
         $this->themeCache = ObjectManager::getInstance(ThemeCache::class)->create();
     }
 
-    protected function getModel()
+    /**
+     * @DESC         |获取激活的主题 有缓存
+     *
+     * 参数区：
+     *
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    function getActiveTheme()
     {
         if ($theme = $this->themeCache->get('theme')) {
-            p($theme);
             return $theme;
         }
-        $theme = $this->load('is_active', 1);
-        p($theme);
-        $this->themeCache->set('theme', $this->welineTheme, static::cache_TIME);
-        p($this->themeCache->get('theme'));
+        $theme = $this->load(self::filed_IS_ACTIVE, 1);
+        $this->themeCache->set('theme', $theme, static::cache_TIME);
 
         return $this->themeCache->get('theme');
     }
 
     public function getId()
     {
-        return $this->getData('id');
+        return $this->getData(self::filed_ID);
     }
 
     public function setId($value)
     {
-        $this->setData('id', $value);
+        $this->setData(self::filed_ID, $value);
         return $this;
     }
 
     public function getName_()
     {
-        return $this->getData('name');
+        return $this->getData(self::filed_NAME);
     }
 
     public function setName($value)
     {
-        $this->setData('name', $value);
+        $this->setData(self::filed_NAME, $value);
         return $this;
     }
 
     public function getPath()
     {
-        return $this->getData('path');
+        return $this->getData(self::filed_PATH);
     }
 
     public function setPath($value)
     {
-        $this->setData('path', $value);
+        $this->setData(self::filed_PATH, $value);
         return $this;
     }
 
     function getParentId()
     {
-        return $this->getData('parent_id');
+        return $this->getData(self::filed_PARENT_ID);
     }
 
     function setParentId($value)
     {
-        $this->setData('parent_id', $value);
+        $this->setData(self::filed_PARENT_ID, $value);
         return $this;
     }
 
     function isActive()
     {
-        return $this->getData('is_active');
+        return $this->getData(self::filed_IS_ACTIVE);
     }
 
     function setIsActive($value)
     {
-        $this->setData('is_active', $value);
+        $this->setData(self::filed_IS_ACTIVE, $value);
         return $this;
     }
 
     function getCreateTime()
     {
-        return $this->getData('create_time');
+        return $this->getData(self::filed_CREATE_TIME);
     }
 
     function setCreateTime($time)
     {
-        $this->setData('create_time', $time);
+        $this->setData(self::filed_CREATE_TIME, $time);
         return $this;
     }
 }
