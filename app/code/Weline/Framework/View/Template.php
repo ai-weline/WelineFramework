@@ -301,6 +301,8 @@ class Template
                 } elseif ($theme_dir !== 'default') {
                     $pub_static_path = str_replace(APP_PATH, Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $theme_dir) . DIRECTORY_SEPARATOR, $this->view_dir);;
                 }
+                p($pub_static_path);
+
                 $path = $pub_static_path . DataInterface::view_STATICS_DIR;
 
                 break;
