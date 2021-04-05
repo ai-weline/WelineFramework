@@ -10,10 +10,11 @@
 namespace Weline\Theme\Model;
 
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Database\Model;
 use Weline\Theme\Cache\ThemeCache;
 use Weline\Theme\Model\ResourceModel\WelineTheme;
 
-class Theme
+class Theme extends Model
 {
     const cache_TIME = 604800;
 
@@ -29,10 +30,13 @@ class Theme
 
     public function __construct(
         ThemeCache $themeCache,
-        WelineTheme $welineTheme
-    ) {
-        $this->themeCache  = $themeCache->create();
+        WelineTheme $welineTheme,
+        array $data = []
+    )
+    {
+        $this->themeCache = $themeCache->create();
         $this->welineTheme = $welineTheme;
+        parent::__construct($data);
     }
 
     protected function getModel()
@@ -40,7 +44,8 @@ class Theme
         if ($theme = $this->themeCache->get('theme')) {
             return $theme;
         }
-        p($this->welineTheme->where());
+        $theme = $this->welineTheme->where('is_active="1"')->find();
+        p($this->welineTheme->where('is_active="1"')->find());
         p($this->welineTheme->getData('id'));
         $this->themeCache->set('theme', $this->welineTheme, static::cache_TIME);
         p($this->themeCache->get('theme'));
@@ -50,6 +55,11 @@ class Theme
 
     public function getId()
     {
-        p($this->getModel()->getData());
+        return $this->getModel()->getData();
+    }
+
+    public function setId()
+    {
+        return $this->getModel()->getData();
     }
 }

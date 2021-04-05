@@ -9,6 +9,9 @@
 
 namespace Weline\Framework\App;
 
+use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\System\Path\Directory;
+
 class System
 {
     /**
@@ -62,5 +65,18 @@ class System
         }
 
         return $input;
+    }
+
+    /**
+     * @DESC         |获得目录对象
+     *
+     * 参数区：
+     *
+     * @throws \ReflectionException
+     * @return Directory
+     */
+    public function getDirectoryObject(): Directory
+    {
+        return ObjectManager::getInstance(Directory::class);
     }
 }

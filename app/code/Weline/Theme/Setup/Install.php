@@ -12,10 +12,22 @@ namespace Weline\Theme\Setup;
 use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Setup\Data;
 use Weline\Framework\Setup\InstallInterface;
+use Weline\Theme\Model\Theme;
 
 class Install implements InstallInterface
 {
     const table_THEME = 'weline_theme';
+    /**
+     * @var Theme
+     */
+    private Theme $theme;
+
+    function __construct(
+        Theme $theme
+    )
+    {
+        $this->theme = $theme;
+    }
 
     public function setup(Data\Setup $setup, Data\Context $context): void
     {
@@ -46,6 +58,18 @@ class Install implements InstallInterface
                 11,
                 '',
                 '父级主题'
+            )->addColumn(
+                'is_active',
+                Table::column_type_INTEGER,
+                11,
+                '',
+                '是否激活'
+            )->addColumn(
+                'create_time',
+                Table::column_type_DATETIME,
+                null,
+                'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+                '安装时间'
             )->addIndex(
                 Table::index_type_FULLTEXT,
                 'name',
@@ -56,6 +80,8 @@ class Install implements InstallInterface
                 'parent_id'
             )->create();
         }
+        $printer->warning('正在写入默认主题...');
+        $this->theme->
         $printer->note('安装结束...');
     }
 }

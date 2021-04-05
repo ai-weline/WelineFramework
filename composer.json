@@ -23,7 +23,8 @@
     "topthink/think-template": "^2.0",
     "friendsofphp/php-cs-fixer": "^2.16",
     "ext-dom": "*",
-    "ext-libxml": "*"
+    "ext-libxml": "*",
+    "ext-zip": "*"
   },
   "autoload": {
     "psr-4": {

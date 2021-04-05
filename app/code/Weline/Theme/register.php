@@ -12,5 +12,5 @@ use Weline\Framework\Register\Register;
 Register::register(
     Register::MODULE,
     __DIR__,
-    '1.0.2'
+    '1.0.1'
 );

@@ -56,19 +56,30 @@ class Remove extends CommandAbstract
      * 参数区：
      *
      * @param array $args
-     * @throws \Weline\Framework\App\Exception
      * @throws ConsoleException
+     * @throws \Weline\Framework\App\Exception
      * @return mixed|void
      */
     public function execute($args = [])
     {
         array_shift($args);
+
+        // 获得模块列表
+        $module_list = Env::getInstance()->getModuleList();
         if (empty($args)) {
             throw new ConsoleException('缺少模块名参数。示例：module:remove Aiweline_demo Aiweline_Test');
         }
         $this->printer->setup(__('提示：此命令将执行以下模块的卸载程序。'));
-        foreach ($args as $module) {
+        foreach ($args as $key => $module) {
             $this->printer->warning($module);
+            if (! isset($module_list[$module])) {
+                unset($args[$key]);
+                $this->printer->warning($module . __('模块不存在！'));
+            }
+        }
+        if (empty($args)) {
+            $this->printer->error(__('无可卸载模块'));
+            exit(0);
         }
         $this->printer->setup(__('是否继续（y/n）？'));
 
@@ -76,21 +87,15 @@ class Remove extends CommandAbstract
         $input = $this->system->input();
 
         if (strtolower(chop($input)) === 'y') {
-            // 获得模块列表
-            $module_list = Env::getInstance()->getModuleList();
             if (empty($module_list)) {
                 $this->printer->error('请先更新模块:bin/m module:upgrade');
                 exit();
             }
             foreach ($args as $module) {
                 $this->printer->note(__('执行 ') . $module . __(' 卸载程序...'));
-                if (isset($module_list[$module])) {
-                    $this->handle->remove($module);
-                    // 卸载数组中模块
-                    unset($module_list[$module]);
-                } else {
-                    $this->printer->warning($module . __(' 模块卸载失败：模块不存在！'));
-                }
+                $this->handle->remove($module);
+                // 卸载数组中模块
+                unset($module_list[$module]);
             }
             // 更新模块数据
             $this->data->updateModules($module_list);

@@ -16,6 +16,6 @@ class Upgrade implements \Weline\Framework\Setup\UpgradeInterface
     public function setup(Data\Setup $setup, Data\Context $context): void
     {
         $setup->getDb();
-        p();
+        $setup->getPrinter()->setup('开始更新模块...');
     }
 }

@@ -90,7 +90,7 @@ class Upgrade extends CommandAbstract
             }
         }
         // 更新模块
-        $module_list = Env::getInstance()->getModuleList();
+        $module_list = Env::getInstance()->getModuleList(true);
         if (empty($module_list)) {
             $this->printer->error('请先更新模块:bin/m module:upgrade');
             exit();

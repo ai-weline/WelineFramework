@@ -26,9 +26,8 @@ class DbManager extends \think\DbManager
 {
     public function __construct()
     {
-        $db_conf = Env::getInstance()->getDbConfig();
+        $db_conf = Env::getInstance()->getDbConfig();# Env配置对象内存常驻，无需担心配置多次操作env.php配置文件
         if (empty($db_conf)) {
-            // FIXME 首次安装问题：后期处理
             $db_conf = Env::getInstance()->reload()->getDbConfig();
             if (empty($db_conf)) {
                 if ('cli' === PHP_SAPI) {
@@ -36,11 +35,10 @@ class DbManager extends \think\DbManager
 
                     throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
                 }
-
                 throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
             }
         }
-        $this->setConfig(Env::getInstance()->getDbConfig());
+        $this->setConfig($db_conf);
         parent::__construct();
     }
 
