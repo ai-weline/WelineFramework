@@ -81,7 +81,7 @@ abstract class Model extends \think\Model
         } else {
             $data = $this->db()->where("{$field_or_pk_value}=:fv", ['fv' => $value])->find();
         }
-        $this->setData($data);
+        $this->setData($data->getData());
         // load之之后事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_load_after', ['model' => $this]);
         return $this;

@@ -10,6 +10,7 @@
 namespace Weline\Theme\Setup;
 
 use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data;
 use Weline\Framework\Setup\InstallInterface;
 use Weline\Theme\Model\WelineTheme;
@@ -17,17 +18,6 @@ use Weline\Theme\Model\WelineTheme;
 class Install implements InstallInterface
 {
     const table_THEME = 'weline_theme';
-    /**
-     * @var WelineTheme
-     */
-    private WelineTheme $theme;
-
-    function __construct(
-        WelineTheme $theme
-    )
-    {
-        $this->theme = $theme;
-    }
 
     public function setup(Data\Setup $setup, Data\Context $context): void
     {
@@ -52,6 +42,12 @@ class Install implements InstallInterface
                 '60',
                 'NOT NULL',
                 '主题名'
+            )->addColumn(
+                'path',
+                Table::column_type_VARCHAR,
+                '128',
+                'NOT NULL',
+                '主题路径'
             )->addColumn(
                 'parent_id',
                 Table::column_type_INTEGER,
@@ -81,7 +77,12 @@ class Install implements InstallInterface
             )->create();
         }
         $printer->warning('正在写入默认主题...');
-        $this->theme->
+        /**@var WelineTheme $welineTheme*/
+        $welineTheme = ObjectManager::getInstance(WelineTheme::class);
+        $welineTheme->setName('default')
+            ->setPath('default')
+            ->setIsActive(1)
+            ->save();
         $printer->note('安装结束...');
     }
 }

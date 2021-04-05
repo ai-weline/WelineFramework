@@ -11,6 +11,7 @@ namespace Weline\Theme\Model;
 
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Model;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Theme\Cache\ThemeCache;
 
 class WelineTheme extends Model
@@ -22,18 +23,16 @@ class WelineTheme extends Model
      */
     private CacheInterface $themeCache;
 
-    /**
-     * @var WelineTheme
-     */
-    private WelineTheme $welineTheme;
-
     public function __construct(
-        ThemeCache $themeCache,
         array $data = []
     )
     {
-        $this->themeCache = $themeCache->create();
         parent::__construct($data);
+    }
+
+    function __init()
+    {
+        $this->themeCache = ObjectManager::getInstance(ThemeCache::class)->create();
     }
 
     protected function getModel()
@@ -69,6 +68,17 @@ class WelineTheme extends Model
     public function setName($value)
     {
         $this->setData('name', $value);
+        return $this;
+    }
+
+    public function getPath()
+    {
+        return $this->getData('path');
+    }
+
+    public function setPath($value)
+    {
+        $this->setData('path', $value);
         return $this;
     }
 
