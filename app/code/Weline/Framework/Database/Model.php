@@ -59,7 +59,7 @@ abstract class Model extends \think\Model
     function load(string $field_or_pk_value, $value = null)
     {
         // load之前事件
-        $this->getEvenManager()->dispatch($this->getTable() . '_load_before', ['model' => $this]);
+        $this->getEvenManager()->dispatch($this->getTable() . '_model_load_before', ['model' => $this]);
         if (!$value) {
             $pk = $this->getPk();
             $data = $this->db()->where("{$pk}='{$field_or_pk_value}'")->find();
@@ -68,8 +68,16 @@ abstract class Model extends \think\Model
         }
         $this->setData($data);
         // load之之后事件
-        $this->getEvenManager()->dispatch($this->getTable() . '_load_after', ['model' => $this]);
+        $this->getEvenManager()->dispatch($this->getTable() . '_model_load_after', ['model' => $this]);
         return $this;
+    }
+
+    function save(array $data = [], string $sequence = null): bool
+    {
+        /**
+         * 重载TP6 模型save方法 并加入事件机制
+         */
+        return parent::save($data, $sequence);
     }
 
     /**
