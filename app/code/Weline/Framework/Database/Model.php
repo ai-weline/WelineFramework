@@ -77,7 +77,15 @@ abstract class Model extends \think\Model
         /**
          * 重载TP6 模型save方法 并加入事件机制
          */
-        return parent::save($data, $sequence);
+        // save之前事件
+        $this->getEvenManager()->dispatch($this->getTable() . '_model_save_before', ['model' => $this]);
+        if ($data) {
+            $this->setData($data);
+        }
+        $save_result = parent::save($this->getData(), $sequence);
+        // save之前事件
+        $this->getEvenManager()->dispatch($this->getTable() . '_model_save_before', ['model' => $this]);
+        return $save_result;
     }
 
     /**
