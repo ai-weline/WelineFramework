@@ -10,15 +10,19 @@
 namespace Weline\Framework\Database;
 
 use Weline\Framework\DataObject\TraitDataObject;
+use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Manager\ObjectManager;
 
 abstract class Model extends \think\Model
 {
     use TraitDataObject;
 
     private static DbManager $_db;
+    private EventsManager $eventsManager;
 
     protected static function init()
     {
+        // 设置事件
         self::$db = self::$_db = new DbManager();
         /**
          * 重载方法
@@ -54,6 +58,8 @@ abstract class Model extends \think\Model
      */
     function load(string $field_or_pk_value, $value = null)
     {
+        // load之前事件
+        $this->getEvenManager()->dispatch($this->getTable() . '_load_before', ['model' => $this]);
         if (!$value) {
             $pk = $this->getPk();
             $data = $this->db()->where("{$pk}='{$field_or_pk_value}'")->find();
@@ -61,6 +67,21 @@ abstract class Model extends \think\Model
             $data = $this->db()->where("{$field_or_pk_value}='{$value}'")->find();
         }
         $this->setData($data);
+        // load之之后事件
+        $this->getEvenManager()->dispatch($this->getTable() . '_load_after', ['model' => $this]);
         return $this;
+    }
+
+    /**
+     * @DESC         |获取事件管理器
+     *
+     * 参数区：
+     *
+     * @return EventsManager
+     * @throws \ReflectionException
+     */
+    protected function getEvenManager(): EventsManager
+    {
+        return ObjectManager::getInstance(EventsManager::class);
     }
 }

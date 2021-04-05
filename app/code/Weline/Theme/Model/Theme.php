@@ -44,9 +44,8 @@ class Theme extends Model
         if ($theme = $this->themeCache->get('theme')) {
             return $theme;
         }
-        $theme = $this->welineTheme->where('is_active="1"')->find();
-        p($this->welineTheme->where('is_active="1"')->find());
-        p($this->welineTheme->getData('id'));
+        $theme = $this->load('is_active', 1);
+        p($theme);
         $this->themeCache->set('theme', $this->welineTheme, static::cache_TIME);
         p($this->themeCache->get('theme'));
 
@@ -55,11 +54,11 @@ class Theme extends Model
 
     public function getId()
     {
-        return $this->getModel()->getData();
+        return $this->getData('id');
     }
 
-    public function setId()
+    public function setId($value)
     {
-        return $this->getModel()->getData();
+        return $this->setData('id', $value);
     }
 }
