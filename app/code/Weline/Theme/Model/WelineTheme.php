@@ -9,6 +9,7 @@
 
 namespace Weline\Theme\Model;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
@@ -63,6 +64,8 @@ class WelineTheme extends Model
         }
         $theme = $this->load(self::filed_IS_ACTIVE, 1);
         $this->themeCache->set('theme', $theme, static::cache_TIME);
+        // 配置回写
+        Env::getInstance()->setConfig('theme');
         return $theme;
     }
 

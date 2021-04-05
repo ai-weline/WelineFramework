@@ -218,7 +218,8 @@ class Env
             $text = '<?php return ' . var_export($config, true) . ';';
             $file->write($text);
             $file->close();
-
+            // 重置环境参数
+            $this->reload();
             return true;
         } catch (Exception $exception) {
             return false;
