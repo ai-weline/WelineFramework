@@ -21,13 +21,19 @@ class WelineTheme extends Model
     const cache_TIME = 604800;
 
     const filed_ID = 'id';
+
     const filed_NAME = 'name';
+
     const filed_PATH = 'path';
+
     const filed_PARENT_ID = 'parent_id';
+
     const filed_IS_ACTIVE = 'is_active';
+
     const filed_CREATE_TIME = 'create_time';
 
     protected $pk = self::filed_ID;
+
 //    protected $table = Install::table_THEME; # 如果需要设置特殊表名 需要加前缀
 
     /**
@@ -37,12 +43,11 @@ class WelineTheme extends Model
 
     public function __construct(
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($data);
     }
 
-    function __init()
+    public function __init()
     {
         $this->themeCache = ObjectManager::getInstance(ThemeCache::class)->create();
     }
@@ -52,12 +57,12 @@ class WelineTheme extends Model
      *
      * 参数区：
      *
-     * @return mixed
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @return mixed
      */
-    function getActiveTheme()
+    public function getActiveTheme()
     {
         if ($theme = $this->themeCache->get('theme')) {
             return $theme;
@@ -65,7 +70,8 @@ class WelineTheme extends Model
         $theme = $this->load(self::filed_IS_ACTIVE, 1);
         $this->themeCache->set('theme', $theme, static::cache_TIME);
         // 配置回写
-        Env::getInstance()->setConfig('theme');
+        Env::getInstance()->setConfig('theme', $theme->getData());
+
         return $theme;
     }
 
@@ -77,6 +83,7 @@ class WelineTheme extends Model
     public function setId($value)
     {
         $this->setData(self::filed_ID, $value);
+
         return $this;
     }
 
@@ -88,6 +95,7 @@ class WelineTheme extends Model
     public function setName($value)
     {
         $this->setData(self::filed_NAME, $value);
+
         return $this;
     }
 
@@ -99,39 +107,43 @@ class WelineTheme extends Model
     public function setPath($value)
     {
         $this->setData(self::filed_PATH, $value);
+
         return $this;
     }
 
-    function getParentId()
+    public function getParentId()
     {
         return $this->getData(self::filed_PARENT_ID);
     }
 
-    function setParentId($value)
+    public function setParentId($value)
     {
         $this->setData(self::filed_PARENT_ID, $value);
+
         return $this;
     }
 
-    function isActive()
+    public function isActive()
     {
         return $this->getData(self::filed_IS_ACTIVE);
     }
 
-    function setIsActive($value)
+    public function setIsActive($value)
     {
         $this->setData(self::filed_IS_ACTIVE, $value);
+
         return $this;
     }
 
-    function getCreateTime()
+    public function getCreateTime()
     {
         return $this->getData(self::filed_CREATE_TIME);
     }
 
-    function setCreateTime($time)
+    public function setCreateTime($time)
     {
         $this->setData(self::filed_CREATE_TIME, $time);
+
         return $this;
     }
 }

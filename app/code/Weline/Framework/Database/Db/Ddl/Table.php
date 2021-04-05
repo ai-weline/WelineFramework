@@ -88,10 +88,10 @@ class Table
      */
     public function __construct(string $table, string $comment = '')
     {
-        $this->db = new DbManager();
-        $db = $this->db->getConfig();
-        $this->type = $db['default'];
-        $this->table = $table;
+        $this->db      = new DbManager();
+        $db            = $this->db->getConfig();
+        $this->type    = $db['default'];
+        $this->table   = $table;
         $this->comment = $comment ? "COMMENT '{$comment}'" : '';
     }
 
@@ -107,7 +107,7 @@ class Table
      */
     public function addColumn(string $field_name, string $type, $length, string $options, string $comment): Table
     {
-        $type_length = $length ? "{$type}({$length})" : $type;
+        $type_length     = $length ? "{$type}({$length})" : $type;
         $this->_fields[] = "`{$field_name}` {$type_length} {$options} COMMENT '{$comment}'," . PHP_EOL;
 
         return $this;
@@ -148,10 +148,10 @@ class Table
                 break;
             case self::index_type_MULTI:
                 $type_of_column = getType($column);
-                if (!is_array($column)) {
+                if (! is_array($column)) {
                     new Exception(self::index_type_MULTI . __('：此索引的column需要array类型,当前类型') . "{$type_of_column}" . ' 例如：[ID,NAME(19),AGE]');
                 }
-                $column = implode(',', $column);
+                $column           = implode(',', $column);
                 $this->_indexes[] = "INDEX {$name}($column)," . PHP_EOL;
 
                 break;

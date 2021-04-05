@@ -79,15 +79,14 @@ class Handle implements HandleInterface
         SetupHelper $setup_helper,
         SetupData $setup_data,
         Compress $compress
-    )
-    {
-        $this->modules = Env::getInstance()->getModuleList();
-        $this->helper = $helper;
-        $this->system = $system;
-        $this->setup_data = $setup_data;
+    ) {
+        $this->modules      = Env::getInstance()->getModuleList();
+        $this->helper       = $helper;
+        $this->system       = $system;
+        $this->setup_data   = $setup_data;
         $this->setup_helper = $setup_helper;
-        $this->printer = $printer;
-        $this->compress = $compress;
+        $this->printer      = $printer;
+        $this->compress     = $compress;
     }
 
     /**
@@ -107,7 +106,7 @@ class Handle implements HandleInterface
         if ($remove_script) {
             $remove_object = ObjectManager::getInstance($remove_script);
 
-            $version = $this->modules[$module_name]['version'] ?? '1.0.0';
+            $version       = $this->modules[$module_name]['version'] ?? '1.0.0';
             $setup_context = new \Weline\Framework\Setup\Data\Context($module_name, $version);
 
             $this->printer->note($remove_object->setup($this->setup_data, $setup_context));
@@ -123,7 +122,7 @@ class Handle implements HandleInterface
             $this->printer->error("模块{$module_name}:不存在！", 'ERROR');
         }
         $module_path = $this->helper->getModulePath($module_name);
-        $zip = $this->compress->compression("{$module_path}", APP_PATH . $module_name, APP_PATH);
+        $zip         = $this->compress->compression("{$module_path}", APP_PATH . $module_name, APP_PATH);
         // TODO 完成模块卸载 兼容 win 和 linux
 
         $this->printer->note($zip);
@@ -166,7 +165,7 @@ class Handle implements HandleInterface
             if (is_file($filepath)) {
                 if ($filename === DataInterface::file_etc_Env) {
                     $env = (array)require $filepath;
-                    if (!isset($env['router'])) {
+                    if (! isset($env['router'])) {
                         // 如果文件不存在则读取模块名字作为router
                         $env['router'] = strtolower($name);
                         if (DEV) {
@@ -198,12 +197,12 @@ class Handle implements HandleInterface
                         // 获取命名空间
                         $setup_file_arr = explode(APP_PATH, $setup_file);
                         $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
-                        $setup = ObjectManager::getInstance($file_namespace);
-                        $result = $setup->setup($this->setup_data, $this->setup_context);
+                        $setup          = ObjectManager::getInstance($file_namespace);
+                        $result         = $setup->setup($this->setup_data, $this->setup_context);
                         $this->printer->note("{$result}");
                     }
                 }
-                $this->modules[$name]['version'] = $version ? $version : '1.0.0';
+                $this->modules[$name]['version']     = $version ? $version : '1.0.0';
                 $this->modules[$name]['description'] = $description ? $description : '';
                 // 更新模块
                 $this->helper->updateModules($this->modules);
@@ -220,11 +219,11 @@ class Handle implements HandleInterface
             $this->printer->note("扩展{$name}安装中...");
             // 全新安装
             $moduleData = [
-                'status' => 1,
-                'version' => $version ? $version : '1.0.0',
-                'router' => $router,
+                'status'      => 1,
+                'version'     => $version ? $version : '1.0.0',
+                'router'      => $router,
                 'description' => $description ? $description : '',
-                'path' => $this->helper->moduleNameToPath($this->modules, $name),
+                'path'        => $this->helper->moduleNameToPath($this->modules, $name),
             ];
             $this->modules[$name] = $moduleData;
 
@@ -236,7 +235,7 @@ class Handle implements HandleInterface
                         // 获取命名空间
                         $setup_file_arr = explode(APP_PATH, $setup_file);
                         $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
-                        $setup = ObjectManager::getInstance($file_namespace);
+                        $setup          = ObjectManager::getInstance($file_namespace);
                         $setup->setup($this->setup_data, $this->setup_context);
                     }
                     $this->printer->success(str_pad($name, 45) . '已安装！');

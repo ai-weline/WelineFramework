@@ -22,7 +22,6 @@ abstract class Model extends \think\Model
      * @DESC         |TP6原生初始化函数...
      *
      * 参数区：
-     *
      */
     protected static function init()
     {
@@ -41,7 +40,7 @@ abstract class Model extends \think\Model
      *
      * @throws \ReflectionException
      */
-    function __init()
+    public function __init()
     {
         $this->suffix = $this->getSuffix() . $this->suffix;
     }
@@ -67,17 +66,17 @@ abstract class Model extends \think\Model
      *
      * @param string $field_or_pk_value 字段或者主键的值
      * @param null $value 字段的值，只读取主键就不填
-     * @return $this
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @return $this
      */
-    function load(string $field_or_pk_value, $value = null)
+    public function load(string $field_or_pk_value, $value = null)
     {
         // load之前事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_load_before', ['model' => $this]);
-        if (!$value) {
-            $pk = $this->getPk();
+        if (! $value) {
+            $pk   = $this->getPk();
             $data = $this->db()->where("{$pk}=:pkv", ['pkv' => $field_or_pk_value])->find();
         } else {
             $data = $this->db()->where("{$field_or_pk_value}=:fv", ['fv' => $value])->find();
@@ -85,10 +84,11 @@ abstract class Model extends \think\Model
         $this->setData($data->getData());
         // load之之后事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_load_after', ['model' => $this]);
+
         return $this;
     }
 
-    function save(array $data = [], string $sequence = null): bool
+    public function save(array $data = [], string $sequence = null): bool
     {
         /**
          * 重载TP6 模型save方法 并加入事件机制
@@ -101,6 +101,7 @@ abstract class Model extends \think\Model
         $save_result = parent::save($this->getData(), $sequence);
         // save之前事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_save_before', ['model' => $this]);
+
         return $save_result;
     }
 
@@ -109,8 +110,8 @@ abstract class Model extends \think\Model
      *
      * 参数区：
      *
-     * @return EventsManager
      * @throws \ReflectionException
+     * @return EventsManager
      */
     protected function getEvenManager(): EventsManager
     {
@@ -122,10 +123,10 @@ abstract class Model extends \think\Model
      *
      * 参数区：
      *
-     * @return DbManager
      * @throws \ReflectionException
+     * @return DbManager
      */
-    function getDbManager(): DbManager
+    public function getDbManager(): DbManager
     {
         return ObjectManager::getInstance(DbManager::class);
     }

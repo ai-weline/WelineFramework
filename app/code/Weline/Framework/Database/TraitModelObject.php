@@ -1,19 +1,13 @@
 <?php
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(Aiweline)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2021/4/5
- * 时间：15:57
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
 namespace Weline\Framework\Database;
-
-
-use Weline\Framework\DataObject\TraitDataObject;
 
 trait TraitModelObject
 {
@@ -261,8 +255,8 @@ trait TraitModelObject
      */
     public function hasData($key = ''): bool
     {
-        if (empty($key) || !is_string($key)) {
-            return !empty($this->_data);
+        if (empty($key) || ! is_string($key)) {
+            return ! empty($this->_data);
         }
 
         return array_key_exists($key, $this->_data);
@@ -320,7 +314,7 @@ trait TraitModelObject
      */
     public function toXml(array $keys = [], $rootName = 'item', $addOpenTag = false, $addCdata = true): string
     {
-        $xml = '';
+        $xml  = '';
         $data = $this->toArray($keys);
         foreach ($data as $fieldName => $fieldValue) {
             if ($addCdata === true) {
@@ -360,8 +354,7 @@ trait TraitModelObject
         $rootName = 'item',
         $addOpenTag = false,
         $addCdata = true
-    ): string
-    {
+    ): string {
         return $this->toXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
     }
 
@@ -438,12 +431,12 @@ trait TraitModelObject
     {
         switch (substr($method, 0, 3)) {
             case 'get':
-                $key = $this->_underscore(substr($method, 3));
+                $key   = $this->_underscore(substr($method, 3));
                 $index = $args[0] ?? null;
 
                 return $this->getData($key, $index);
             case 'set':
-                $key = $this->_underscore(substr($method, 3));
+                $key   = $this->_underscore(substr($method, 3));
                 $value = $args[0] ?? null;
 
                 return $this->setData($key, $value);
@@ -494,7 +487,7 @@ trait TraitModelObject
         if (isset(self::$_underscoreCache[$name])) {
             return self::$_underscoreCache[$name];
         }
-        $result = strtolower(trim(preg_replace('/([A-Z]|[0-9]+)/', '_$1', $name), '_'));
+        $result                        = strtolower(trim(preg_replace('/([A-Z]|[0-9]+)/', '_$1', $name), '_'));
         self::$_underscoreCache[$name] = $result;
 
         return $result;
@@ -544,11 +537,11 @@ trait TraitModelObject
     {
         if ($data === null) {
             $hash = spl_object_hash($this);
-            if (!empty($objects[$hash])) {
+            if (! empty($objects[$hash])) {
                 return '*** RECURSION ***';
             }
             $objects[$hash] = true;
-            $data = $this->getData();
+            $data           = $this->getData();
         }
         $debug = [];
         foreach ($data as $key => $value) {

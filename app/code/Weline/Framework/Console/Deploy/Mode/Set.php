@@ -26,8 +26,7 @@ class Set extends CommandAbstract
 
     public function __construct(
         System $system
-    )
-    {
+    ) {
         $this->system = $system;
     }
 
@@ -45,10 +44,12 @@ class Set extends CommandAbstract
                 /**@var $deploy_upgrade Upgrade */
                 $deploy_upgrade = ObjectManager::getInstance(Upgrade::class);
                 $deploy_upgrade->execute();
+
                 break;
             case 'dev':
                 $this->printer->note('正在清除模组模板编译文件...');
                 $this->cleanTplComDir();
+
                 break;
             default:
                 $this->printer->error(' ╮(๑•́ ₃•̀๑)╭  ：错误的部署模式：' . $param);
@@ -77,7 +78,7 @@ class Set extends CommandAbstract
     {
         // 扫描代码
         $scanner = new AppScanner();
-        $apps = $scanner->scanAppModules();
+        $apps    = $scanner->scanAppModules();
         // 注册模块
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {

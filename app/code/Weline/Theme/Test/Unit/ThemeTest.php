@@ -23,7 +23,7 @@ class ThemeTest extends TestCore
     public function testGetMode()
     {
         $this->theme = ObjectManager::getInstance(WelineTheme::class);
-        $theme = $this->theme->load(1);
+        $theme       = $this->theme->load(1);
         p($theme->getActiveTheme());
     }
 }

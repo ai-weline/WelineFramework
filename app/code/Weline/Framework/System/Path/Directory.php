@@ -22,6 +22,7 @@ class Directory
         if ($i > 2) {
             return false;
         }
+
         return true;
     }
 }

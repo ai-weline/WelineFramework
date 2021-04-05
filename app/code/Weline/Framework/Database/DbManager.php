@@ -35,6 +35,7 @@ class DbManager extends \think\DbManager
 
                     throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
                 }
+
                 throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
             }
         }
