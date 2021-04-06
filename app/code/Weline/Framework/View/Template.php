@@ -9,11 +9,16 @@
 
 namespace Weline\Framework\View;
 
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Directory;
 use Weline\Framework\Http\Request;
 use Weline\Framework\View\Data\DataInterface;
+use Weline\Theme\Model\WelineTheme;
 
 class Template
 {
@@ -51,14 +56,17 @@ class Template
      * @param Request $request
      * @param string $view_dir
      */
-    public function __construct(Request $request, string $view_dir)
-    {
+    public function __construct(
+        Request $request,
+        string $view_dir
+    ) {
         $this->_request      = $request;
         $this->view_dir      = $view_dir;
         $this->vars['title'] = $this->_request->getModuleName();
         $this->statics_dir   = $this->getViewDir(DataInterface::view_STATICS_DIR);
         $this->template_dir  = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
         $this->compile_dir   = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
+        p($this->getFile('1.txt'));
     }
 
     /**
@@ -283,6 +291,7 @@ class Template
      */
     protected function getViewDir(string $type = '')
     {
+        $theme = ObjectManager::getInstance(WelineTheme::class);
         switch ($type) {
             case DataInterface::dir_type_TEMPLATE:
                 $path = $this->view_dir . DataInterface::view_TEMPLATE_DIR;
@@ -295,8 +304,9 @@ class Template
             case DataInterface::dir_type_STATICS:
                 $pub_static_path = $this->view_dir;
                 // 主题配置
-                $theme_dir = Env::getInstance()->getConfig('theme', 'default');
-
+//                $theme_dir = Env::getInstance()->getConfig('theme', 'default');
+                $theme_dir = 'default';
+                // FIXME 后期减少 引入操作 比如连接字符串等
                 // 开发环境就直接
                 if (! DEV) {
                     $pub_static_path = str_replace(APP_PATH, Directory::static_dir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $theme_dir) . DIRECTORY_SEPARATOR, $this->view_dir);
@@ -317,5 +327,42 @@ class Template
         }
 
         return $path;
+    }
+
+    /**
+     * @DESC         |读取文件
+     *
+     * 参数区：
+     * @param string $module_file_path
+     */
+    public function getFile(string $module_file_path)
+    {
+        // 主题数据 存在缓存
+        /**@var WelineTheme $welineTheme */
+        $welineTheme = ObjectManager::getInstance(WelineTheme::class);
+
+        try {
+            $theme = $welineTheme->getActiveTheme();
+        } catch (DataNotFoundException $e) {
+            if (DEV) {
+                throw  new Exception(__('主题数据找不到:') . $e->getMessage());
+            }
+        } catch (ModelNotFoundException $e) {
+            if (DEV) {
+                throw  new Exception(__('主题Mode找不到:') . $e->getMessage());
+            }
+        } catch (DbException $e) {
+            if (DEV) {
+                throw  new Exception(__('数据库异常：') . $e->getMessage());
+            }
+        } finally {
+            $theme = $welineTheme->setName('default')
+                ->setPath('default')
+                ->setIsActive(1);
+        }
+        // 组织主题文件位置
+        $theme_path = $theme->getPath() . $module_file_path;
+
+        return $theme_path;
     }
 }

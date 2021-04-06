@@ -11,6 +11,7 @@ namespace Weline\Framework\Controller;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Template;
 use ReflectionObject;
@@ -54,7 +55,9 @@ class PcController extends Core
     public function getTemplate(): Template
     {
         if (! isset($this->_template)) {
-            $this->_template = new Template($this->getRequest(), $this->getViewBaseDir());
+//            ObjectManager::make(Template::class,['request'=>$this->getRequest(),'view_dir'=>$this->getViewBaseDir()]);
+//            $this->_template = new Template($this->getRequest(), $this->getViewBaseDir());
+            $this->_template = ObjectManager::make(Template::class,'__construct',['request'=>$this->getRequest(),'view_dir'=>$this->getViewBaseDir()]);
         }
 
         return $this->_template;

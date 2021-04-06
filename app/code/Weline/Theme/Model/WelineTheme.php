@@ -57,9 +57,9 @@ class WelineTheme extends Model
      *
      * 参数区：
      *
-     * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\db\exception\DataNotFoundException
      * @return mixed
      */
     public function getActiveTheme()
@@ -69,10 +69,8 @@ class WelineTheme extends Model
         }
         $theme = $this->load(self::filed_IS_ACTIVE, 1);
         $this->themeCache->set('theme', $theme, static::cache_TIME);
-        // 配置回写
-        Env::getInstance()->setConfig('theme', $theme->getData());
 
-        return $theme;
+        return $this;
     }
 
     public function getId()
@@ -101,7 +99,7 @@ class WelineTheme extends Model
 
     public function getPath()
     {
-        return $this->getData(self::filed_PATH);
+        return Env::path_THEME_DESIGN_DIR . $this->getData(self::filed_PATH) . DIRECTORY_SEPARATOR;
     }
 
     public function setPath($value)

@@ -25,7 +25,7 @@ class Env
     // 路径
     const path_ENV_FILE = APP_ETC_PATH . 'env.php';
 
-    const path_SYSTEM_META_DATA = self::path_framework_generated . 'configs.php';
+    const path_SYSTEM_META_DATA = self::path_framework_generated . 'configs.php'; //FIXME 元数据等待开发
 
     const path_MODULES_FILE = self::path_framework_generated . 'modules.php';
 

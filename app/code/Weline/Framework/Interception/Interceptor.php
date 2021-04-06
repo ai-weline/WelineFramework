@@ -114,8 +114,8 @@ trait Interceptor
             $method,
             &$pluginInfo,
             $subject,
-            $type,
-            $pluginsManager,
+//            $type,
+//            $pluginsManager,
             &$next
         ) {
             $capMethod         = ucfirst($method);
@@ -142,9 +142,11 @@ trait Interceptor
 
             if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AROUND])) {
                 // 调用环绕拦截器
-                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AROUND] as $code) {
+                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AROUND] as $key=>$code) {
                     $pluginInstance = ObjectManager::getInstance($code['instance']);
                     $pluginMethod   = 'around' . $capMethod;
+                    unset($currentPluginInfo[InterceptorInterface::LISTENER_AROUND][$key]);
+                    $pluginInfo = $currentPluginInfo;
                     $result         = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
                 }
                 $pluginInfo = [];
