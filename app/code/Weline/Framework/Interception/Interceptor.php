@@ -22,7 +22,7 @@ trait Interceptor
     public function ___init()
     {
         $this->pluginsManager = ObjectManager::getInstance(PluginsManager::class);
-        $this->subjectType    = get_parent_class($this);
+        $this->subjectType = get_parent_class($this);
     }
 
     /**
@@ -106,8 +106,8 @@ trait Interceptor
 
                 return $result;*/
         //闭包调用
-        $subject        = $this;
-        $type           = $this->subjectType;
+        $subject = $this;
+        $type = $this->subjectType;
         $pluginsManager = $this->pluginsManager;
 
         $next = function (...$arguments) use (
@@ -118,20 +118,22 @@ trait Interceptor
 //            $pluginsManager,
             &$next
         ) {
-            $capMethod         = ucfirst($method);
+            $capMethod = ucfirst($method);
             $currentPluginInfo = $pluginInfo;
-            $result            = null;
+            $result = null;
             if (isset($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE])) {
                 // 调用前置拦截器
-                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE] as $code) {
+                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE] as $key => $code) {
                     $pluginInstance = ObjectManager::getInstance($code['instance']);
-                    $pluginMethod   = 'before' . $capMethod;
-                    $beforeResult   = $pluginInstance->$pluginMethod($this, ...array_values($arguments));
+                    $pluginMethod = 'before' . $capMethod;
+                    unset($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE][$key]);
+                    $pluginInfo = $currentPluginInfo;
+                    $beforeResult = $pluginInstance->$pluginMethod($this, ...array_values($arguments));
 
                     if ($beforeResult !== null) {
                         // 返回数组时不要被当做方法参数
                         if (is_array($beforeResult)) {
-                            $arguments   = [];
+                            $arguments = [];
                             $arguments[] = $beforeResult;
                         } else {
                             $arguments = (array)$beforeResult;
@@ -142,12 +144,12 @@ trait Interceptor
 
             if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AROUND])) {
                 // 调用环绕拦截器
-                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AROUND] as $key=>$code) {
+                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AROUND] as $key => $code) {
                     $pluginInstance = ObjectManager::getInstance($code['instance']);
-                    $pluginMethod   = 'around' . $capMethod;
+                    $pluginMethod = 'around' . $capMethod;
                     unset($currentPluginInfo[InterceptorInterface::LISTENER_AROUND][$key]);
                     $pluginInfo = $currentPluginInfo;
-                    $result         = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
+                    $result = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
                 }
                 $pluginInfo = [];
 //                $code = $currentPluginInfo[InterceptorInterface::LISTENER_AROUND];
@@ -163,8 +165,10 @@ trait Interceptor
                 // 调用后置拦截器
                 foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AFTER] as $code) {
                     $pluginInstance = ObjectManager::getInstance($code['instance']);
-                    $pluginMethod   = 'after' . $capMethod;
-                    $result         = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
+                    $pluginMethod = 'after' . $capMethod;
+                    unset($currentPluginInfo[InterceptorInterface::LISTENER_AFTER][$key]);
+                    $pluginInfo = $currentPluginInfo;
+                    $result = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
                 }
             }
 
@@ -172,7 +176,7 @@ trait Interceptor
         };
 
         $result = $next(...array_values($arguments));
-        $next   = null;
+        $next = null;
 
         return $result;
     }
