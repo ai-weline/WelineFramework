@@ -57,7 +57,7 @@ class PcController extends Core
         if (! isset($this->_template)) {
 //            ObjectManager::make(Template::class,['request'=>$this->getRequest(),'view_dir'=>$this->getViewBaseDir()]);
 //            $this->_template = new Template($this->getRequest(), $this->getViewBaseDir());
-            $this->_template = ObjectManager::make(Template::class,'__construct',['request'=>$this->getRequest(),'view_dir'=>$this->getViewBaseDir()]);
+            $this->_template = ObjectManager::make(Template::class, '__construct', ['request'=>$this->getRequest(), 'view_dir'=>$this->getViewBaseDir()]);
         }
 
         return $this->_template;

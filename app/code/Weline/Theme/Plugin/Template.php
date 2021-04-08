@@ -13,7 +13,6 @@ class Template
 {
     public function aroundGetFile(\Weline\Framework\View\Template $subject, \Closure $call, $file)
     {
-        $result = $call();
-        p($result);
+        return $call($file);
     }
 }

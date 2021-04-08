@@ -66,7 +66,6 @@ class Template
         $this->statics_dir   = $this->getViewDir(DataInterface::view_STATICS_DIR);
         $this->template_dir  = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
         $this->compile_dir   = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
-        p($this->getFile('1.txt'));
     }
 
     /**
@@ -150,6 +149,8 @@ class Template
      */
     public function fetch(string $fileName)
     {
+        p($this->getFile('1.txt'));
+
         // 解析模板路由
         $fileName          = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
         $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
