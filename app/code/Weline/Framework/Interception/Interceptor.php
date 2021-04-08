@@ -125,13 +125,13 @@ trait Interceptor
                 // 调用前置拦截器
                 foreach ($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE] as $key => $code) {
                     $pluginInstance = ObjectManager::getInstance($code['instance']);
-                    $pluginMethod = 'before' . $capMethod;
+                    $pluginMethod   = 'before' . $capMethod;
                     unset($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE][$key]);
                     // 如果没有before了就清空，以免多次执行
-                    if(count($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE])==0){
+                    if (count($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE]) === 0) {
                         unset($currentPluginInfo[InterceptorInterface::LISTENER_BEFORE]);
                     }
-                    $pluginInfo = $currentPluginInfo;
+                    $pluginInfo   = $currentPluginInfo;
                     $beforeResult = $pluginInstance->$pluginMethod($this, ...array_values($arguments));
                     if ($beforeResult !== null) {
                         $arguments = (array)$beforeResult;
@@ -149,23 +149,23 @@ trait Interceptor
                 $pluginInfo     = $currentPluginInfo;
                 $pluginInstance = ObjectManager::getInstance($code['instance']);
                 $pluginMethod   = 'around' . $capMethod;
-                $result =$pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
+                $result         = $pluginInstance->$pluginMethod($subject, $next, ...array_values($arguments));
             } else {
                 // 调用原始方法
                 $result = $subject->___callParentMethod($method, $arguments);
             }
             if (isset($currentPluginInfo[InterceptorInterface::LISTENER_AFTER])) {
                 // 调用后置拦截器
-                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AFTER] as $code) {
+                foreach ($currentPluginInfo[InterceptorInterface::LISTENER_AFTER] as $key => $code) {
                     $pluginInstance = ObjectManager::getInstance($code['instance']);
-                    $pluginMethod = 'after' . $capMethod;
+                    $pluginMethod   = 'after' . $capMethod;
                     unset($currentPluginInfo[InterceptorInterface::LISTENER_AFTER][$key]);
                     // 如果没有after了就清空，以免多次执行
-                    if(count($currentPluginInfo[InterceptorInterface::LISTENER_AFTER])==0){
+                    if (count($currentPluginInfo[InterceptorInterface::LISTENER_AFTER]) === 0) {
                         unset($currentPluginInfo[InterceptorInterface::LISTENER_AFTER]);
                     }
                     $pluginInfo = $currentPluginInfo;
-                    $result = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
+                    $result     = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
                 }
             }
 

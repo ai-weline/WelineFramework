@@ -11,8 +11,18 @@ namespace Weline\Theme\Plugin;
 
 class Template
 {
+    public function beforeGetFile(\Weline\Framework\View\Template $subject, $file)
+    {
+        return 'before.txt';
+    }
+
     public function aroundGetFile(\Weline\Framework\View\Template $subject, \Closure $call, $file)
     {
         return $call($file);
+    }
+
+    public function afterGetFile(\Weline\Framework\View\Template $subject, $result)
+    {
+        return $result . '---after.txt';
     }
 }
