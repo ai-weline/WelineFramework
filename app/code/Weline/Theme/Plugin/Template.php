@@ -11,18 +11,19 @@ namespace Weline\Theme\Plugin;
 
 class Template
 {
-    public function beforeGetFile(\Weline\Framework\View\Template $subject, $file)
-    {
-        return 'before.txt';
-    }
-
+    /**
+     * @DESC         |修改系统读取文件的路径
+     *
+     * 参数区：
+     *
+     * @param \Weline\Framework\View\Template $subject
+     * @param \Closure $call
+     * @param $file
+     * @return mixed
+     */
     public function aroundGetFile(\Weline\Framework\View\Template $subject, \Closure $call, $file)
     {
+        $file = '2.txt';
         return $call($file);
-    }
-
-    public function afterGetFile(\Weline\Framework\View\Template $subject, $result)
-    {
-        return $result . '---after.txt';
     }
 }
