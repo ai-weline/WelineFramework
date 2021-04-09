@@ -62,6 +62,9 @@ class Cli extends CliAbstract
      */
     private function recommendCommand(array $commands)
     {
+        // 新算法
+
+        // 旧算法
         $arg0              = strtolower(trim($this->argv[0]));
         $input_command_arr = explode(':', $arg0);
         $recommendCommands = [];
@@ -69,6 +72,10 @@ class Cli extends CliAbstract
         foreach ($commands as $group => $command) {
             $keys = array_keys($command);
             foreach ($keys as $command_key) {
+                // 匹配参考
+                if (strstr($command_key, $arg0)) {
+                    $matchCommand[$group][] = [$command_key => $command[$command_key]];
+                }
                 $command_key_arr = explode(':', $command_key);
                 $k               = 0;
                 foreach ($input_command_arr as $input_key => $input_command_head) {

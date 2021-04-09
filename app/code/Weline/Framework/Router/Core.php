@@ -122,12 +122,6 @@ class Core
 
                 $method   = $class->method ? $class->method : 'index';
                 if ((int)method_exists($dispatch, $method)) {
-//                        echo call_user_func(array($dispatch, $method), $this->getParams());
-                    // 先初始化控制器
-//                    if (method_exists($dispatch, '__init')) {
-//                        call_user_func([$dispatch, '__init']);
-//                    }
-
                     echo call_user_func([$dispatch, $method]);
                     exit(0);
                 }
@@ -168,14 +162,8 @@ class Core
 
                 // 检测注册方法
                 $dispatch = ObjectManager::getInstance($class->name);
-
                 $method   = $class->method ? $class->method : 'index';
                 if (method_exists($dispatch, $method)) {
-//                        echo call_user_func(array($dispatch, $method)/*, $_GET*/);
-                    // 先初始化控制器
-                    if (method_exists($dispatch, '__init')) {
-                        call_user_func([$dispatch, '__init']);
-                    }
                     echo call_user_func([$dispatch, $method], $this->request->getParams());
                     exit(0);
                 }

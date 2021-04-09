@@ -61,8 +61,6 @@ class EventsManager
      */
     public function dispatch(string $eventName, array $data)
     {
-//        p($eventName,1);
-//        p($this->eventsObservers,1);
         if (! isset($this->events[$eventName])) {
             $data['observers'] = $this->getEventObservers($eventName);
             $this->events      = array_merge($this->events, [$eventName=>(new Event($data))->setName($eventName)]);

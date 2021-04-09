@@ -9,17 +9,14 @@
 
 namespace Weline\Framework\View;
 
-use think\db\exception\DataNotFoundException;
-use think\db\exception\DbException;
-use think\db\exception\ModelNotFoundException;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Directory;
 use Weline\Framework\Http\Request;
 use Weline\Framework\View\Data\DataInterface;
-use Weline\Theme\Model\WelineTheme;
 
 class Template
 {
@@ -52,6 +49,8 @@ class Template
      */
     private array $vars = [];
 
+    private EventsManager $eventsManager;
+
     /**
      * Template 初始函数...
      * @param Request $request
@@ -60,13 +59,52 @@ class Template
     public function __construct(
         Request $request,
         string $view_dir
-    ) {
-        $this->_request      = $request;
-        $this->view_dir      = $view_dir;
+    )
+    {
+        $this->_request = $request;
+        $this->view_dir = $view_dir;
         $this->vars['title'] = $this->_request->getModuleName();
-        $this->statics_dir   = $this->getViewDir(DataInterface::view_STATICS_DIR);
-        $this->template_dir  = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
-        $this->compile_dir   = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
+        $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
+        $this->template_dir = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
+        $this->compile_dir = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
+
+        $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
+    }
+
+    /**
+     * @DESC         |按照类型获取view目录
+     *
+     * 参数区：
+     *
+     * @param string $type
+     * @return string
+     */
+    protected function getViewDir(string $type = '')
+    {
+        switch ($type) {
+            case DataInterface::dir_type_TEMPLATE:
+                $path = $this->view_dir . DataInterface::view_TEMPLATE_DIR;
+
+                break;
+            case DataInterface::dir_type_TEMPLATE_COMPILE:
+                $path = $this->view_dir . DataInterface::view_TEMPLATE_COMPILE_DIR;
+
+                break;
+            case DataInterface::dir_type_STATICS:
+                $path = $this->view_dir . DataInterface::view_STATICS_DIR;
+
+                break;
+            default:
+                $path = $this->view_dir;
+
+                break;
+        }
+        $path = $path . DIRECTORY_SEPARATOR;
+        if (!is_dir($path)) {
+            mkdir($path, 0770, true);
+        }
+
+        return $path;
     }
 
     /**
@@ -80,7 +118,7 @@ class Template
     public function getViewFile($filepath)
     {
         $path = $this->view_dir . $filepath;
-        if (! file_exists($path) && DEV) {
+        if (!file_exists($path) && DEV) {
             new Exception(__('文件不存在！位置：') . $path);
         }
         $this->fetch($filepath);
@@ -150,16 +188,24 @@ class Template
      */
     public function fetch(string $fileName)
     {
+        // 检查路径
+        $data = new DataObject(['filename' => $fileName]);
+        $this->eventsManager->dispatch(
+            'Framework_View_event::template_fetch_before',
+            ['object' => $this, 'data' => $data]
+        );
+        $event_filename = $data->getData('filename');
+        if ($event_filename !== $fileName) $fileName = $event_filename;
         // 解析模板路由
-        $fileName          = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+        $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
         $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
-        $file_dir          = null;
-        $file_name         = null;
+        $file_dir = null;
+        $file_name = null;
 
         // 如果给的文件名字有路径
         if (count($file_name_dir_arr) > 1) {
             $file_name = array_pop($file_name_dir_arr);
-            $file_dir  = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
+            $file_dir = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
             if ($file_dir) {
                 $file_dir .= DIRECTORY_SEPARATOR;
             }
@@ -171,7 +217,7 @@ class Template
         } else {
             $tplFile = $this->template_dir . $fileName . self::file_ext;
         }
-        if (! file_exists($tplFile)) {
+        if (!file_exists($tplFile)) {
             if (DEV) {
                 throw new Exception('模板文件：' . $tplFile . '不存在！');
             }
@@ -181,7 +227,7 @@ class Template
 
         //定义编译合成的文件 加了前缀 和路径 和后缀名.phtml
         $baseComFileDir = $this->compile_dir . ($file_dir ? $file_dir : '');
-        if (! is_dir($baseComFileDir)) {
+        if (!is_dir($baseComFileDir)) {
             mkdir($baseComFileDir, 0770, true);
         }// 检测目录是否存在,不存在则建立
 
@@ -190,7 +236,7 @@ class Template
         } else {
             $comFileName = $baseComFileDir . 'com_' . $file_name . self::file_ext;
         }
-        if (DEV || ! file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+        if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中
@@ -212,8 +258,8 @@ class Template
         // <php></php>标签
         $replaces = [
             '@static' => $this->getUrlPath($this->statics_dir),
-            '<php>'   => '<?php ',
-            '</php>'  => '?>',
+            '<php>' => '<?php ',
+            '</php>' => '?>',
         ];
         foreach ($replaces as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);
@@ -280,97 +326,5 @@ class Template
     public function getUrl(string $path)
     {
         return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $path;
-    }
-
-    /**
-     * @DESC         |按照类型获取view目录
-     *
-     * 参数区：
-     *
-     * @param string $type
-     * @return string
-     */
-    protected function getViewDir(string $type = '')
-    {
-        switch ($type) {
-            case DataInterface::dir_type_TEMPLATE:
-                $path = $this->view_dir . DataInterface::view_TEMPLATE_DIR;
-
-                break;
-            case DataInterface::dir_type_TEMPLATE_COMPILE:
-                $path = $this->view_dir . DataInterface::view_TEMPLATE_COMPILE_DIR;
-
-                break;
-            case DataInterface::dir_type_STATICS:
-                $pub_static_path = $this->view_dir;
-                // 主题配置
-//                $theme_dir = Env::getInstance()->getConfig('theme', 'default');
-                $theme_dir = 'default';
-                // FIXME 后期减少 引入操作 比如连接字符串等
-                // 开发环境就直接
-                if (! DEV) {
-                    $pub_static_path = str_replace(APP_PATH, Directory::static_dir . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $theme_dir) . DIRECTORY_SEPARATOR, $this->view_dir);
-                } elseif ($theme_dir !== 'default') {
-                    $pub_static_path = str_replace(APP_PATH, Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $theme_dir) . DIRECTORY_SEPARATOR, $this->view_dir);
-                }
-                $path = $pub_static_path . DataInterface::view_STATICS_DIR;
-
-                break;
-            default:
-                $path = $this->view_dir;
-
-                break;
-        }
-        $path = $path . DIRECTORY_SEPARATOR;
-        if (! is_dir($path)) {
-            mkdir($path, 0770, true);
-        }
-
-        return $path;
-    }
-
-    private EventsManager $eventManager;
-
-    /**
-     * @DESC         |读取文件
-     *
-     * 参数区：
-     * @param string $module_file_path
-     */
-    public function getFile(string $module_file_path)
-    {
-        if (! isset($this->eventManager)) {
-            $this->eventManager = ObjectManager::getInstance(EventsManager::class);
-        }
-        $this->eventManager->dispatch('Framework_View::get_file', ['path' => $module_file_path]);
-
-        return $module_file_path;
-        // 主题数据 存在缓存
-        /**@var WelineTheme $welineTheme */
-        $welineTheme = ObjectManager::getInstance(WelineTheme::class);
-
-        try {
-            $theme = $welineTheme->getActiveTheme();
-        } catch (DataNotFoundException $e) {
-            if (DEV) {
-                throw  new Exception(__('主题数据找不到:') . $e->getMessage());
-            }
-        } catch (ModelNotFoundException $e) {
-            if (DEV) {
-                throw  new Exception(__('主题Mode找不到:') . $e->getMessage());
-            }
-        } catch (DbException $e) {
-            if (DEV) {
-                throw  new Exception(__('数据库异常：') . $e->getMessage());
-            }
-        } finally {
-            $theme = $welineTheme->setName('default')
-                ->setPath('default')
-                ->setIsActive(1);
-        }
-        // 组织主题文件位置
-        $theme_path = $theme->getPath() . $module_file_path;
-
-        return $theme_path;
     }
 }

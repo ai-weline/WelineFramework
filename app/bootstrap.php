@@ -37,7 +37,8 @@ try {
      */
     \Weline\Framework\App::init();
     if (DEV || CLI) {
-        ini_set('error_reporting', E_ALL);
+//        ini_set('error_reporting', E_ALL);
+        ini_set('error_reporting', 0);
 
         function cache_shutdown_error()
         {

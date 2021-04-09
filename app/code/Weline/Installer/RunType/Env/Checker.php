@@ -113,6 +113,7 @@ class Checker
                                 $tmp[$key] = $value;
                             }
                         }
+
                         break;
                     default:
                         $tmp['ERR: ' . $item] = '不存在的检测类型！（✖）';
