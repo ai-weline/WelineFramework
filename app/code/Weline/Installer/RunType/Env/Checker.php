@@ -18,6 +18,8 @@ class Checker
 
     const type_FUNCTIONS = 'functions';
 
+    const type_CONFIG = 'config';
+
     protected Data $helper;
 
     private Printing $printer;
@@ -93,6 +95,28 @@ class Checker
                         break;
                     case self::type_MODULES:
                         $modules = get_loaded_extensions();
+                        foreach ($this->$item as $needModule) {
+                            if (in_array($needModule, $modules, true)) {
+                                $key   = str_pad($item . '---' . $needModule, 45, '-', STR_PAD_BOTH);
+                                $value = str_pad('✔', 10, ' ', STR_PAD_BOTH);
+                                if ($this->isCli) {
+                                    $this->printer->success($key . '=>' . $value);
+                                }
+                                $tmp[$key] = $value;
+                            } else {
+                                $hasErr = true;
+                                $key    = str_pad($item . '---' . $needModule, 45, '-', STR_PAD_BOTH);
+                                $value  = str_pad('✖', 10, ' ', STR_PAD_BOTH);
+                                if ($this->isCli) {
+                                    $this->printer->error($key . '=>' . $value);
+                                }
+                                $tmp[$key] = $value;
+                            }
+                        }
+
+                        break;
+                    case self::type_CONFIG:
+                        $modules = php_ini_loaded_file();
                         foreach ($this->$item as $needModule) {
                             if (in_array($needModule, $modules, true)) {
                                 $key   = str_pad($item . '---' . $needModule, 45, '-', STR_PAD_BOTH);

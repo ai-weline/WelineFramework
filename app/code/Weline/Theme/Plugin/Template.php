@@ -24,6 +24,7 @@ class Template
     public function aroundGetFile(\Weline\Framework\View\Template $subject, \Closure $call, $file)
     {
         $file = '2.txt';
+
         return $call($file);
     }
 }

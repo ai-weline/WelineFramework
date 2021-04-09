@@ -18,7 +18,7 @@ function cache_shutdown_error()
         echo '<pre>';
         echo $_error['message'];
         echo '</pre>';
-        echo '<b style="color: red">提示：尝试到项目目录'.dirname(__DIR__) . DIRECTORY_SEPARATOR.'下执行 composer update 更新本地依赖包。</b></br></br>';
+        echo '<b style="color: red">提示：尝试到项目目录' . dirname(__DIR__) . DIRECTORY_SEPARATOR . '下执行 composer update 更新本地依赖包。</b></br></br>';
         echo '<b style="color: red">如果没有安装composer请执行php composer.phar update更新本地依赖包。</b></br></br>';
     }
 }

@@ -71,7 +71,7 @@ trait Interceptor
     {
         //闭包调用
         $subject = $this;
-        $result = null;
+        $result  = null;
 
         $next = function (...$arguments) use (
             $method,
@@ -125,10 +125,11 @@ trait Interceptor
                     }
                     $pluginInstance = ObjectManager::getInstance($code['instance']);
                     $pluginMethod   = 'after' . $capMethod;
-                    $pluginInfo = $currentPluginInfo;
-                    $result     = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
+                    $pluginInfo     = $currentPluginInfo;
+                    $result         = $pluginInstance->$pluginMethod($subject, $result, ...array_values($arguments));
                 }
             }
+
             return $result;
         };
         $result = $next(...array_values($arguments));
