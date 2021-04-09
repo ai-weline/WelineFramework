@@ -8,7 +8,6 @@ declare(strict_types=1);
  * 网址：aiweline.com
  * 论坛：https://bbs.aiweline.com
  */
-
 $start = microtime(true);
 require __DIR__ . '/pub/index.php';
 $end = microtime(true);

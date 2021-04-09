@@ -7,18 +7,18 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-ini_set('error_reporting', E_ALL);
+ini_set('error_reporting', 0);
 
 function cache_shutdown_error()
 {
     $_error = error_get_last();
     if ($_error && in_array($_error['type'], [1, 4, 16, 64, 256, 4096, E_ALL], true)) {
         header('Content-Type: text/html; charset=utf-8');
-        echo '<b style="color: red">可以尝试 composer update 更新本地依赖包。</b></br>';
-        echo '<b style="color: red">致命错误：</b></br>';
+        echo '<b style="color: #ff0000">致命错误：</b></br>';
         echo '<pre>';
         echo $_error['message'];
         echo '</pre>';
+        echo '<b style="color: red">提示：尝试到项目目录'.dirname(__DIR__) . DIRECTORY_SEPARATOR.'下执行 composer update 更新本地依赖包。</b></br></br>';
     }
 }
 register_shutdown_function('cache_shutdown_error');

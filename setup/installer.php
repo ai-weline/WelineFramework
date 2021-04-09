@@ -46,18 +46,17 @@ switch ($_GET['action']) {
     default:
         return http_response_code(404);
 }
-
 function coverData(array $data): array
 {
-    $tmpD        = [];
+    $tmpD = [];
     $tmp['data'] = [];
     foreach ($data['data'] as $key => $datum) {
-        $tmpD['name']  = $key;
+        $tmpD['name'] = $key;
         $tmpD['value'] = $datum;
         $tmp['data'][] = $tmpD;
     }
     $tmp['hasErr'] = $data['hasErr'];
-    $tmp['msg']    = $data['msg'] ?? '';
+    $tmp['msg'] = $data['msg'] ?? '';
 
     return $tmp;
 }
