@@ -43,6 +43,7 @@ class Reader
         if ($cache) {
             return $this->theme->getActiveTheme();
         }
+
         return $this->theme->load(WelineTheme::filed_IS_ACTIVE);
     }
 }

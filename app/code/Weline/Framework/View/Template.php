@@ -236,6 +236,7 @@ class Template
             if (DEV) {
                 throw new Exception('模板文件：' . $tplFile . '不存在！');
             }
+
             return false;
         }
 

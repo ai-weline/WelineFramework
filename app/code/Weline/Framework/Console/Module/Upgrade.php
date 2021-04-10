@@ -72,6 +72,8 @@ class Upgrade extends CommandAbstract
                 }
             }
         }
+        $this->printer->warning('generated生成目录code代码清理...', '系统');
+        $this->system->exec('rm -rf ' . Env::path_framework_generated_code);
         // 扫描代码
         $apps = $this->scanner->scanAppModules();
 

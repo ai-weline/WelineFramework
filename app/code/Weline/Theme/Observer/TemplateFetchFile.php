@@ -41,10 +41,9 @@ class TemplateFetchFile implements ObserverInterface
     public function __construct(
         WelineTheme $welineTheme,
         ThemeCache $themeCache
-    )
-    {
+    ) {
         $this->welineTheme = $welineTheme;
-        $this->themeCache = $themeCache->create();
+        $this->themeCache  = $themeCache->create();
     }
 
     public function execute(Event $event)
@@ -61,7 +60,7 @@ class TemplateFetchFile implements ObserverInterface
         $module_file_path = $fileData->getData('filename');
 
         // 非开发模式 判断缓存中是否存在 主题文件，存在则直接返回 不存在则解析主题文件
-        if (!DEV && $theme_file_path = $this->themeCache->get($module_file_path)) {
+        if (! DEV && $theme_file_path = $this->themeCache->get($module_file_path)) {
             $fileData->setData('filename', $theme_file_path);
         }
 
@@ -90,7 +89,7 @@ class TemplateFetchFile implements ObserverInterface
         $theme_file_path = str_replace(APP_PATH, $theme->getPath(), $module_file_path);
         // 非开发模式启用缓存
         if (is_file($theme_file_path)) {
-            if (!DEV) {
+            if (! DEV) {
                 $this->themeCache->set($module_file_path, $theme_file_path);
             }
         } else {
