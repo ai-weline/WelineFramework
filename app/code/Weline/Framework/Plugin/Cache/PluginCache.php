@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
  * 邮箱：aiweline@qq.com
  * 网址：aiweline.com
  * 论坛：https://bbs.aiweline.com
@@ -27,7 +27,7 @@ namespace Weline\Framework\Plugin\Cache;
  */
 class PluginCache extends \Weline\Framework\Cache\CacheManager
 {
-    public function __construct(string $identity = 'plugin')
+    public function __construct(string $identity = 'framework_plugin')
     {
         parent::__construct($identity);
     }

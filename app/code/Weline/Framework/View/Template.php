@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
  * 邮箱：aiweline@qq.com
  * 网址：aiweline.com
  * 论坛：https://bbs.aiweline.com
@@ -9,12 +9,16 @@
 
 namespace Weline\Framework\View;
 
+use think\db\Fetch;
 use Weline\Framework\App\Exception;
+use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Directory;
 use Weline\Framework\Http\Request;
+use Weline\Framework\View\Cache\ViewCache;
 use Weline\Framework\View\Data\DataInterface;
 
 class Template
@@ -51,6 +55,11 @@ class Template
     private EventsManager $eventsManager;
 
     /**
+     * @var CacheInterface 缓存
+     */
+    private CacheInterface $viewCache;
+
+    /**
      * Template 初始函数...
      * @param Request $request
      * @param string $view_dir
@@ -67,6 +76,17 @@ class Template
         $this->compile_dir   = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
 
         $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
+        $this->viewCache     = ObjectManager::getInstance(ViewCache::class)->create();
+    }
+
+    /**
+     * @DESC         |获取模块的基础视图目录
+     *
+     * 参数区：
+     */
+    public function getModuleViewDir()
+    {
+        return $this->view_dir;
     }
 
     /**
@@ -77,7 +97,7 @@ class Template
      * @param string $type
      * @return string
      */
-    protected function getViewDir(string $type = '')
+    private function getViewDir(string $type = '')
     {
         switch ($type) {
             case DataInterface::dir_type_TEMPLATE:
@@ -182,20 +202,11 @@ class Template
      * 参数区：
      *
      * @param string $fileName
+     * @throws Core
      * @return bool|void
      */
     public function fetch(string $fileName)
     {
-        // 检查路径
-        $data = new DataObject(['filename' => $fileName]);
-        $this->eventsManager->dispatch(
-            'Framework_View_event::template_fetch_before',
-            ['object' => $this, 'data' => $data]
-        );
-        $event_filename = $data->getData('filename');
-        if ($event_filename !== $fileName) {
-            $fileName = $event_filename;
-        }
         // 解析模板路由
         $fileName          = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
         $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
@@ -210,39 +221,72 @@ class Template
                 $file_dir .= DIRECTORY_SEPARATOR;
             }
         }
+        // 判断文件后缀
+        $file_ext = substr(strrchr($fileName, '.'), 1);
 
-        // 检测模板文件
-        if (substr(strrchr($fileName, '.'), 1)) {
+        // 检测模板文件：如果文件名有后缀 则直接到view下面读取。没有说明是默认
+        if ($file_ext) {
             $tplFile = $this->view_dir . $fileName;
         } else {
             $tplFile = $this->template_dir . $fileName . self::file_ext;
         }
+        $tplFile = $this->fetchFile($tplFile);
+
         if (! file_exists($tplFile)) {
             if (DEV) {
                 throw new Exception('模板文件：' . $tplFile . '不存在！');
             }
-
             return false;
         }
 
-        //定义编译合成的文件 加了前缀 和路径 和后缀名.phtml
+        // 检测目录是否存在,不存在则建立
         $baseComFileDir = $this->compile_dir . ($file_dir ? $file_dir : '');
         if (! is_dir($baseComFileDir)) {
             mkdir($baseComFileDir, 0770, true);
-        }// 检测目录是否存在,不存在则建立
+        }
 
-        if (substr(strrchr($fileName, '.'), 1)) {
+        //定义编译合成的文件 加了前缀 和路径 和后缀名.phtml
+        if ($file_ext) {
             $comFileName = $baseComFileDir . 'com_' . $file_name;
         } else {
             $comFileName = $baseComFileDir . 'com_' . $file_name . self::file_ext;
         }
+        $comFileName = $this->fetchFile($comFileName);
+
         if (DEV || ! file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中
         }
+
         //包含编译后的文件
         require $comFileName;
+    }
+
+    /**
+     * @DESC         | 取得对应的文件
+     *
+     * 参数区：
+     * @param string $filename
+     * @throws \Weline\Framework\Exception\Core
+     */
+    protected function fetchFile(string $filename)
+    {
+        if (! DEV && $filename = $this->viewCache->get($filename)) {
+            return $filename;
+        }
+        /*---------观察者模式 检测文件是否被继承-----------*/
+        $fileData = new DataObject(['filename' => $filename, 'type' => 'compile']);
+        $this->eventsManager->dispatch(
+            'Framework_View_event::template_fetch_file',
+            ['object' => $this, 'data' => $fileData]
+        );
+        $event_filename = $fileData->getData('filename');
+        if (! DEV) {
+            $this->viewCache->set($filename, $event_filename);
+        }
+
+        return $event_filename;
     }
 
     /**

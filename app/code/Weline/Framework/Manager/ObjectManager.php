@@ -1,7 +1,7 @@
 <?php
 
 /*
- * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
  * 邮箱：aiweline@qq.com
  * 网址：aiweline.com
  * 论坛：https://bbs.aiweline.com
@@ -69,6 +69,7 @@ class ObjectManager implements ManagerInterface
         self::initSelf();
         self::setClass($class);
 
+        // 缓存对象读取
         if ($class_object = self::getCache()->get($class)) {
             self::$instances[$class] = self::initClass($class_object);
 
@@ -89,6 +90,7 @@ class ObjectManager implements ManagerInterface
         $new_object = (new ReflectionClass($new_class))->newInstanceArgs($paramArr);
 
         self::$instances[$class] = self::initClass($new_object);
+        // 缓存对象
         self::getCache()->set($class, self::$instances[$class]);
 
         return self::$instances[$class];
