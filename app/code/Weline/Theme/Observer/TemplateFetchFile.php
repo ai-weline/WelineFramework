@@ -63,7 +63,6 @@ class TemplateFetchFile implements ObserverInterface
         // 非开发模式 判断缓存中是否存在 主题文件，存在则直接返回 不存在则解析主题文件
         if (!DEV && $theme_file_path = $this->themeCache->get($module_file_path)) {
             $fileData->setData('filename', $theme_file_path);
-            return '';
         }
 
         # 开始分析主题路径
@@ -98,6 +97,5 @@ class TemplateFetchFile implements ObserverInterface
             $theme_file_path = $module_file_path;
         }
         $fileData->setData('filename', $theme_file_path);
-        return '';
     }
 }

@@ -69,7 +69,7 @@ class Env
     const extend_dir = BP . 'extend' . DIRECTORY_SEPARATOR;
 
     // 主题设计
-    const path_THEME_DESIGN_DIR = APP_PATH . 'design' . DIRECTORY_SEPARATOR;
+    const path_THEME_DESIGN_DIR = BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR;
 
     // 变量
 
@@ -79,19 +79,19 @@ class Env
     private static ?Env $instance;
 
     const default_CONFIG = [
-        'cache'   => self::default_CACHE,
+        'cache' => self::default_CACHE,
         'session' => self::default_SESSION,
-        'log'     => self::default_LOG,
-        'php-cs'  => true,
+        'log' => self::default_LOG,
+        'php-cs' => true,
     ];
 
     // 日志
     const default_LOG = [
-        'error'     => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log',
+        'error' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log',
         'exception' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'exception.log',
-        'notice'    => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'notice.log',
-        'warning'   => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'warning.log',
-        'debug'     => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log',
+        'notice' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'notice.log',
+        'warning' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'warning.log',
+        'debug' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log',
     ];
 
     // 缓存
@@ -102,9 +102,9 @@ class Env
                 'path' => 'var/cache/',
             ],
             'redis' => [
-                'tip'      => '开发中...',
-                'server'   => '127.0.0.1',
-                'port'     => 6379,
+                'tip' => '开发中...',
+                'server' => '127.0.0.1',
+                'port' => 6379,
                 'database' => 1,
             ],
         ],
@@ -149,7 +149,7 @@ class Env
 
     public function reload()
     {
-        if (! is_file(self::path_ENV_FILE)) {
+        if (!is_file(self::path_ENV_FILE)) {
             $file = new File();
             $file->open(self::path_ENV_FILE, $file::mode_w_add);
             $text = '<?php return ' . var_export([], true) . ';?>';
@@ -176,7 +176,7 @@ class Env
      */
     public static function getInstance()
     {
-        if (! isset(self::$instance)) {
+        if (!isset(self::$instance)) {
             self::$instance = new self();
         }
 
@@ -212,7 +212,7 @@ class Env
      */
     public function setConfig(string $key, $value = []): bool
     {
-        $config       = $this->getConfig();
+        $config = $this->getConfig();
         $config[$key] = $value;
 
         try {
@@ -264,7 +264,7 @@ class Env
      */
     public function getModuleList(bool $reget = false)
     {
-        if (! $reget && $this->module_list) {
+        if (!$reget && $this->module_list) {
             return $this->module_list;
         }
         $this->module_list = (new Modules())->getList();
