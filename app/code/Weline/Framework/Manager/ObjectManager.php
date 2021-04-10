@@ -18,6 +18,7 @@ use Weline\Framework\Manager\Cache\ObjectCache;
 class ObjectManager implements ManagerInterface
 {
     private static CacheInterface $cache;
+
     private static ObjectManager $instance;
 
     private static array $instances;
@@ -30,9 +31,10 @@ class ObjectManager implements ManagerInterface
 
     private static function getCache()
     {
-        if (!isset(self::$cache)) {
+        if (! isset(self::$cache)) {
             self::$cache = (new ObjectCache())->create();
         }
+
         return self::$cache;
     }
 
@@ -48,7 +50,7 @@ class ObjectManager implements ManagerInterface
 
     private static function initSelf()
     {
-        if (!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             self::$instance = new self();
         }
     }
@@ -59,17 +61,17 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param string $class
-     * @return mixed|ObjectManager
      * @throws \ReflectionException
+     * @return mixed|ObjectManager
      */
     public static function getInstance(string $class = '')
     {
-
         self::initSelf();
         self::setClass($class);
 
         if ($class_object = self::getCache()->get($class)) {
             self::$instances[$class] = self::initClass($class_object);
+
             return self::$instances[$class];
         }
         if (empty($class)) {
@@ -88,14 +90,15 @@ class ObjectManager implements ManagerInterface
 
         self::$instances[$class] = self::initClass($new_object);
         self::getCache()->set($class, self::$instances[$class]);
+
         return self::$instances[$class];
     }
 
     public static function parserClass(string $class)
     {
         // 拦截器处理
-        $new_class = $class;
-        $interceptor = $class . '\\Interceptor';
+        $new_class       = $class;
+        $interceptor     = $class . '\\Interceptor';
         $interceptorFile = Env::path_framework_generated_code . str_replace('\\', DIRECTORY_SEPARATOR, $interceptor) . '.php';
 
         if (is_file($interceptorFile)) {
@@ -110,6 +113,7 @@ class ObjectManager implements ManagerInterface
         if (method_exists($new_object, '__init')) {
             $new_object->__init();
         }
+
         return $new_object;
     }
 
@@ -118,8 +122,8 @@ class ObjectManager implements ManagerInterface
      * @param $className
      * @param string $methodName
      * @param array $params
-     * @return mixed
      * @throws \ReflectionException
+     * @return mixed
      */
     public static function make($className, $methodName = '__construct', $params = [])
     {
@@ -128,7 +132,7 @@ class ObjectManager implements ManagerInterface
 
         if ('__construct' === $methodName) {
             // 如果是初始化函数则返回一个初始化后的对象
-            $instance = (new ReflectionClass($new_class))->newInstanceArgs($params);
+            $instance                    = (new ReflectionClass($new_class))->newInstanceArgs($params);
             self::$instances[$className] = $instance;
 
             return self::$instances[$className];
@@ -146,8 +150,8 @@ class ObjectManager implements ManagerInterface
      * @Desc         | 获取方法参数,插件实现
      * @param $className
      * @param string $methodsName
-     * @return array
      * @throws Exception
+     * @return array
      */
     protected static function getMethodParams($className, $methodsName = '__construct')
     {
@@ -213,8 +217,8 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param $class
-     * @return ReflectionClass
      * @throws \ReflectionException
+     * @return ReflectionClass
      */
     protected function getReflectionClass($class): ReflectionClass
     {

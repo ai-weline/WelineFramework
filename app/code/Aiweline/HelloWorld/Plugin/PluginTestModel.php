@@ -13,21 +13,21 @@ class PluginTestModel
 {
     public function beforeGetName($object, $a)
     {
-        $a[] = '我是beforeGetName修改过的插件';
+        $a .= '我是beforeGetName修改过的插件';
 
         return $a;
     }
 
     public function aroundGetName($object, \closure $closure, $a)
     {
-        $a[] = '我是aroundGetName修改过的插件';
+        $a .= '我是aroundGetName修改过的插件';
 
         return $a;
     }
 
     public function afterGetName($object, $a)
     {
-        $a[] = '我是afterGetName修改过的插件';
+        $a .= '我是afterGetName修改过的插件';
 
         return $a;
     }

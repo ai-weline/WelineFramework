@@ -1,13 +1,13 @@
 <?php
-/**
- * @Author       秋枫雁飞
- * @Email        aiweline@qq.com/1714255949@qq.com
- * @Desc         文件由Aiweline(秋枫雁飞)编写，若有升级需要
- *               建议不要随意修改文件源码。
- **/
+
+/*
+ * 本文件由Aiweline编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
+ */
 
 namespace Weline\Framework\Manager\Cache;
-
 
 class ObjectCache extends \Weline\Framework\Cache\CacheManager
 {

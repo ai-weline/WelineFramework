@@ -26,9 +26,10 @@ class TemplateFetchBefore implements ObserverInterface
         # 开始分析主题路径
         /**@var Template $template*/
         $template = $event->getData('object');
-        $data = $event->getData('data');
+        $data     = $event->getData('data');
         $filename = $data->getData('filename');
-        $data->setData('filename',$filename);
+        $data->setData('filename', $filename);
+
         return $filename;
         // 主题数据 存在缓存
         /**@var WelineTheme $welineTheme */
