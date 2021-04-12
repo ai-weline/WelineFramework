@@ -70,7 +70,7 @@ class ObjectManager implements ManagerInterface
         self::setClass($class);
 
         // 缓存对象读取
-        if ($class_object = self::getCache()->get($class)) {
+        if (! DEV && $class_object = self::getCache()->get($class)) {
             self::$instances[$class] = self::initClass($class_object);
 
             return self::$instances[$class];

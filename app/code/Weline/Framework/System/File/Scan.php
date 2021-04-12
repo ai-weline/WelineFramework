@@ -17,7 +17,12 @@ class Scan
 
     private int $keepLevel = 0;
 
-    public function clearDirs()
+    /**
+     * @DESC         |初始化
+     *
+     * 参数区：
+     */
+    public function init()
     {
         $this->dirs = [];
     }

@@ -96,11 +96,10 @@ class Scanner extends Scan
      *
      * 参数区：
      *
-     * @param string $dir
-     * @param string $file
+     * @param string $file_or_dir
      * @return array
      */
-    public function scanVendorModulesWithFiles($file = '')
+    public function scanVendorModulesWithFiles($file_or_dir = '')
     {
         $vendors         = $this->scanAppVendors();
         $vendors_modules = [];
@@ -109,31 +108,28 @@ class Scanner extends Scan
             $core_modules = $this->scanDir(BP . 'vendor' . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR);
             $modules      = array_merge($core_modules, $app_modules);
             foreach ($modules as $key => $module) {
+                // app下的代码优先度更高
                 $app_module_path = APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
                 unset($modules[$key]);
-                if (file_exists($app_module_path . RegisterInterface::register_file)) {
-                    if ($file) {
-                        if (file_exists($app_module_path . $file)) {
-                            $modules[$module] = $app_module_path . $file;
-                        }
+                if (is_file($app_module_path . RegisterInterface::register_file)) {
+                    if (is_file($app_module_path . $file_or_dir)) {
+                        $modules[$module] = $app_module_path . $file_or_dir;
                     } else {
-                        $this->clearDirs();
-                        $modules[$module] = $this->scanDirTree($app_module_path);
-                        $this->clearDirs();
+                        $this->init();
+                        $modules[$module] = $this->scanDirTree($app_module_path . $file_or_dir, 3);
+                        $this->init();
                     }
                 }
-                // app下的代码优先度更高
+                // vendor下的代码会被覆盖
                 $vendor_app_module_path = BP . 'vendor/' . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
                 if (! isset($modules[$module])) {
-                    if (file_exists($vendor_app_module_path . RegisterInterface::register_file)) {
-                        if ($file) {
-                            if (file_exists($vendor_app_module_path . $file)) {
-                                $modules[$module] = $vendor_app_module_path . $file;
-                            }
+                    if (is_file($vendor_app_module_path . RegisterInterface::register_file)) {
+                        if (is_file($vendor_app_module_path . $file_or_dir)) {
+                            $modules[$module] = $vendor_app_module_path . $file_or_dir;
                         } else {
-                            $this->clearDirs();
-                            $modules[$module] = $this->scanDirTree($vendor_app_module_path);
-                            $this->clearDirs();
+                            $this->init();
+                            $modules[$module] = $this->scanDirTree($vendor_app_module_path . $file_or_dir, 3);
+                            $this->init();
                         }
                     }
                 }

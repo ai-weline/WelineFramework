@@ -15,7 +15,7 @@ use Weline\Framework\Exception\Core;
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\Xml\Parser;
 
-class Reader extends \Weline\Framework\Config\Reader
+class Reader extends \Weline\Framework\Config\Xml\Reader
 {
     /**
      * @var Parser

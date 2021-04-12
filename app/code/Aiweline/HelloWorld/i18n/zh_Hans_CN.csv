@@ -7,11 +7,6 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\I18n;
-
-class Parse
-{
-    public function __construct(string $string)
-    {
-    }
-}
+return [
+    '你好世界！' => '翻译：你好世界！',
+];

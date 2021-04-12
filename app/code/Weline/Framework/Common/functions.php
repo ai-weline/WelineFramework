@@ -54,31 +54,9 @@ function getStringBetweenContents(string $str, string $startDelimiter, string $e
  * @throws \Weline\Framework\App\Exception
  * @return string
  */
-function __(string $words, array $args=[])
+function __(string $words, array $args = [])
 {
-    $filename = \Weline\Framework\App\Env::path_TRANSLATE_WORDS_FILE;
-    if (! file_exists($filename)) {
-        touch($filename);
-    }
-
-    try {
-        /** @noinspection PhpIncludeInspection */
-        $all_words = (array) include $filename;
-    } catch (\Weline\Framework\App\Exception $exception) {
-        throw new \Weline\Framework\App\Exception($exception->getMessage());
-    }
-    if ($args) {
-        foreach ($args as $key=>$arg) {
-            $words = str_replace('%' . (is_integer($key) ? $key + 1 : $key), $arg, $words);
-        }
-    }
-    $all_words[] = $words;
-    $file        = fopen($filename, 'w+');
-    $text        = '<?php return ' . var_export($all_words, true) . ';';
-    fwrite($file, $text);
-    fclose($file);
-
-    return $words;
+    return \Weline\Framework\I18n\Parser::parse($words, $args);
 }
 
 /**

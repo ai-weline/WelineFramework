@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Config;
+namespace Weline\Framework\Config\Xml;
 
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\System\FileReader;
@@ -51,8 +51,10 @@ class Reader extends FileReader
         $data = [];
         foreach ($this->getFileList() as $vendor => $module_files) {
             foreach ($module_files as $module_name => $module_file) {
-                $event_xml_data                                           = $this->parser->load($module_file)->xmlToArray();
-                $data[$vendor . '_' . $module_name . '::' . $module_file] = $event_xml_data;
+                if ($module_file) {
+                    $event_xml_data                                           = $this->parser->load($module_file)->xmlToArray();
+                    $data[$vendor . '_' . $module_name . '::' . $module_file] = $event_xml_data;
+                }
             }
         }
 
