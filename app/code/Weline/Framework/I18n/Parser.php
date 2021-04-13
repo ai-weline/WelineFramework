@@ -13,7 +13,7 @@ class Parser
 {
     public static function parse(string $words, array $args): string
     {
-        // 读取语言环境
+        // 读取语言环境 TODO 翻译环境
         $request =
         // 只缓存
         /**@var $cache \Weline\Framework\Cache\CacheInterface */

@@ -10,14 +10,14 @@
 namespace Weline\Framework\View;
 
 use think\db\Fetch;
+use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Exception\Core;
-use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\System\File\Directory;
 use Weline\Framework\Http\Request;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Cache\ViewCache;
 use Weline\Framework\View\Data\DataInterface;
 
@@ -48,7 +48,7 @@ class Template
     private string $view_dir;
 
     /**
-     * @var array 读取模板中所有变量的数组
+     * @var array $vars 读取模板中所有变量的数组
      */
     private array $vars = [];
 
@@ -63,20 +63,24 @@ class Template
      * Template 初始函数...
      * @param Request $request
      * @param string $view_dir
+     * @param ViewCache $cache
+     * @param EventsManager $eventsManager
+     * @throws Exception
+     * @throws \ReflectionException
      */
     public function __construct(
         Request $request,
         string $view_dir
-    ) {
-        $this->_request      = $request;
-        $this->view_dir      = $view_dir;
-        $this->vars['title'] = $this->_request->getModuleName();
-        $this->statics_dir   = $this->getViewDir(DataInterface::view_STATICS_DIR);
-        $this->template_dir  = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
-        $this->compile_dir   = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
-
+    )
+    {
+        $this->_request = $request;
+        $this->view_dir = $view_dir;
         $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
-        $this->viewCache     = ObjectManager::getInstance(ViewCache::class)->create();
+        $this->viewCache = ObjectManager::getInstance(ViewCache::class)->create();
+        $this->vars['title'] = $this->_request->getModuleName();
+        $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
+        $this->template_dir = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
+        $this->compile_dir = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
     }
 
     /**
@@ -109,7 +113,24 @@ class Template
 
                 break;
             case DataInterface::dir_type_STATICS:
-                $path = $this->view_dir . DataInterface::view_STATICS_DIR;
+                $cache_key = 'getViewDir' . $type;
+                if (!DEV && $cache_static_dir = $this->viewCache->get($cache_key)) {
+                    return $cache_static_dir;
+                }
+                $path = $this->view_dir . DataInterface::view_STATICS_DIR . DIRECTORY_SEPARATOR;
+                $theme = Env::getInstance()->getConfig('theme', [
+                    'id' => 1,
+                    'name' => 'default',
+                    'path' => 'default',
+                    'parent_id' => null,
+                    'is_active' => 1,
+                    'create_time' => '2021-04-05 16:49:58',
+                ]);
+
+                if (!DEV) {
+                    $path = str_replace(APP_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $theme['path'] . DIRECTORY_SEPARATOR, $path);
+                    $this->viewCache->set($cache_key, $path);
+                }
 
                 break;
             default:
@@ -118,7 +139,7 @@ class Template
                 break;
         }
         $path = $path . DIRECTORY_SEPARATOR;
-        if (! is_dir($path)) {
+        if (!is_dir($path)) {
             mkdir($path, 0770, true);
         }
 
@@ -136,7 +157,7 @@ class Template
     public function getViewFile($filepath)
     {
         $path = $this->view_dir . $filepath;
-        if (! file_exists($path) && DEV) {
+        if (!file_exists($path) && DEV) {
             new Exception(__('文件不存在！位置：') . $path);
         }
         $this->fetch($filepath);
@@ -171,7 +192,6 @@ class Template
      */
     private function getUrlPath(string $real_path): string
     {
-//        $base = $this->_request->getBaseHost() . DIRECTORY_SEPARATOR;
         $explode_str = PUB;
         if (DEV) {
             $explode_str = APP_PATH;
@@ -202,21 +222,21 @@ class Template
      * 参数区：
      *
      * @param string $fileName
-     * @throws Core
      * @return bool|void
+     * @throws Core
      */
     public function fetch(string $fileName)
     {
         // 解析模板路由
-        $fileName          = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+        $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
         $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
-        $file_dir          = null;
-        $file_name         = null;
+        $file_dir = null;
+        $file_name = null;
 
         // 如果给的文件名字有路径
         if (count($file_name_dir_arr) > 1) {
             $file_name = array_pop($file_name_dir_arr);
-            $file_dir  = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
+            $file_dir = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
             if ($file_dir) {
                 $file_dir .= DIRECTORY_SEPARATOR;
             }
@@ -230,9 +250,9 @@ class Template
         } else {
             $tplFile = $this->template_dir . $fileName . self::file_ext;
         }
-        $tplFile = $this->fetchFile($tplFile);
 
-        if (! file_exists($tplFile)) {
+        $tplFile = $this->fetchFile($tplFile);
+        if (!file_exists($tplFile)) {
             if (DEV) {
                 throw new Exception('模板文件：' . $tplFile . '不存在！');
             }
@@ -242,7 +262,7 @@ class Template
 
         // 检测目录是否存在,不存在则建立
         $baseComFileDir = $this->compile_dir . ($file_dir ? $file_dir : '');
-        if (! is_dir($baseComFileDir)) {
+        if (!is_dir($baseComFileDir)) {
             mkdir($baseComFileDir, 0770, true);
         }
 
@@ -254,7 +274,7 @@ class Template
         }
         $comFileName = $this->fetchFile($comFileName);
 
-        if (DEV || ! file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+        if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中
@@ -262,6 +282,7 @@ class Template
 
         //包含编译后的文件
         require $comFileName;
+        return;
     }
 
     /**
@@ -273,8 +294,8 @@ class Template
      */
     protected function fetchFile(string $filename)
     {
-        if (! DEV && $filename = $this->viewCache->get($filename)) {
-            return $filename;
+        if (!DEV && $cache_filename = $this->viewCache->get($filename)) {
+            return $cache_filename;
         }
         /*---------观察者模式 检测文件是否被继承-----------*/
         $fileData = new DataObject(['filename' => $filename, 'type' => 'compile']);
@@ -283,7 +304,7 @@ class Template
             ['object' => $this, 'data' => $fileData]
         );
         $event_filename = $fileData->getData('filename');
-        if (! DEV) {
+        if (!DEV) {
             $this->viewCache->set($filename, $event_filename);
         }
 
@@ -300,11 +321,11 @@ class Template
      */
     private function tmp_replace($content)
     {
-        // <php></php>标签
+        // <php></php>标签 TODO 静态资源
         $replaces = [
             '@static' => $this->getUrlPath($this->statics_dir),
-            '<php>'   => '<?php ',
-            '</php>'  => '?>',
+            '<php>' => '<?php ',
+            '</php>' => '?>',
         ];
         foreach ($replaces as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);

@@ -12,6 +12,7 @@ namespace Weline\Framework\Console\Module;
 use Weline\Framework\App\System;
 use Weline\Framework\App\Env;
 use Weline\Framework\Console\CommandAbstract;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\App\Scanner as AppScanner;
 use Weline\Framework\Module\Helper\Data;
 use Weline\Framework\Output\Cli\Printing;
@@ -61,7 +62,7 @@ class Upgrade extends CommandAbstract
     public function execute($args = [])
     {
         // 删除路由文件
-        $this->printer->warning('路由更新...', '系统');
+        $this->printer->warning('1、路由更新...', '系统');
         $this->printer->warning('清除文件：');
         foreach (Env::router_files_PATH as $path) {
             $this->printer->warning($path);
@@ -72,12 +73,12 @@ class Upgrade extends CommandAbstract
                 }
             }
         }
-        $this->printer->warning('generated生成目录代码清理...', '系统');
-        $this->system->exec('rm -rf ' . Env::path_framework_generated);
+        $this->printer->warning('2、generated生成目录代码code清理...', '系统');
+        $this->system->exec('rm -rf ' . Env::path_framework_generated_code);
         // 扫描代码
         $apps = $this->scanner->scanAppModules();
 
-        $this->printer->note('模块更新...');
+        $this->printer->note('3、模块更新...');
         // 注册模块
         $all_modules = [];
         foreach ($apps as $vendor => $modules) {
@@ -102,6 +103,11 @@ class Upgrade extends CommandAbstract
         $this->data->updateModules($module_list);
 
         $this->printer->note('模块更新完毕！');
+
+        $this->printer->note('4、清理缓存...');
+        /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
+        $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
+        $cacheManagerConsole->execute();
     }
 
     /**

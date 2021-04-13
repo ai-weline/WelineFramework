@@ -29,10 +29,11 @@ class System
             // 删除
             if (
                 strstr($linux_command, 'rm') &&
-                strstr($linux_command, '-rf')
+                (strstr($linux_command, '-rf') || strstr($linux_command, '-fr'))
             ) {
                 $linux_command = str_replace('rm', 'rd', $linux_command);
                 $linux_command = str_replace('-rf', '-r', $linux_command);
+                $linux_command = str_replace('-fr', '-r', $linux_command);
             }
             $linux_to_win = [
                 'rm' => 'del',

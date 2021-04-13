@@ -62,6 +62,10 @@ class Set extends CommandAbstract
         } else {
             $this->printer->error('╮(๑•́ ₃•̀๑)╭ 部署模式设置错误：' . $param);
         }
+        $this->printer->note('清理缓存...');
+        /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
+        $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
+        $cacheManagerConsole->execute();
     }
 
     public function getTip(): string
@@ -85,8 +89,7 @@ class Set extends CommandAbstract
                 $this->printer->note($vendor . '_' . $name . '...');
                 $module_view_tpl_com_dir = APP_PATH . $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::view_TEMPLATE_COMPILE_DIR . DIRECTORY_SEPARATOR;
                 if (is_dir($module_view_tpl_com_dir)) {
-                    $this->system->exec("rm $module_view_tpl_com_dir -r");
-//                    exec(IS_WIN ? "rmdir /s/q $module_view_tpl_com_dir -r" : "rm $module_view_tpl_com_dir -r");
+                    $this->system->exec("rm -rf $module_view_tpl_com_dir");
                 }
             }
         }
@@ -103,7 +106,7 @@ class Set extends CommandAbstract
         $pub_theme_dir = PUB . 'static' . DIRECTORY_SEPARATOR . $theme;
         if (is_dir($pub_theme_dir)) {
             $this->printer->warning('系统', $pub_theme_dir);
-            exec(IS_WIN ? "del /s/q $pub_theme_dir" : "rm $pub_theme_dir -r");
+            $this->system->exec("rm -rf $pub_theme_dir");
         }
     }
 }

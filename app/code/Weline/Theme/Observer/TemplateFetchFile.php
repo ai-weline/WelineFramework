@@ -58,10 +58,9 @@ class TemplateFetchFile implements ObserverInterface
         $fileData = $event->getData('data');
 
         $module_file_path = $fileData->getData('filename');
-
         // 非开发模式 判断缓存中是否存在 主题文件，存在则直接返回 不存在则解析主题文件
-        if (! DEV && $theme_file_path = $this->themeCache->get($module_file_path)) {
-            $fileData->setData('filename', $theme_file_path);
+        if (! DEV && $cache_theme_file_path = $this->themeCache->get($module_file_path)) {
+            $fileData->setData('filename', $cache_theme_file_path);
         }
 
         # 开始分析主题路径
@@ -79,7 +78,8 @@ class TemplateFetchFile implements ObserverInterface
             if (DEV) {
                 throw  new Exception(__('数据库异常：') . $e->getMessage());
             }
-        } finally {
+        }
+        if (! isset($theme)) {
             $theme = $this->welineTheme->setName('default')
                 ->setPath('default')
                 ->setIsActive(1);

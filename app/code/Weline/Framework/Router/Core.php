@@ -85,8 +85,10 @@ class Core
         $url = trim($url, '/');
         // API
         $this->Api($url);
+
         // PC
         $this->Pc($url);
+
         // 非开发模式（匹配不到任何路由将报错）
         if (! DEV) {
             return $this->request->getResponse()->noRouter();
@@ -110,7 +112,7 @@ class Core
      * 参数区：
      *
      * @param string $url
-     * @throws Exception
+     * @throws Exception|\ReflectionException
      */
     public function Api(string $url)
     {
@@ -135,7 +137,7 @@ class Core
                 $method = $class->method ? $class->method : 'index';
                 if ((int)method_exists($dispatch, $method)) {
                     echo call_user_func([$dispatch, $method]);
-                    exit(0);
+                    exit();
                 }
 
                 throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
@@ -154,6 +156,7 @@ class Core
      *
      * @param string $url
      * @throws Exception
+     * @throws \ReflectionException
      */
     public function Pc(string $url)
     {
@@ -177,7 +180,7 @@ class Core
                 $method   = $class->method ? $class->method : 'index';
                 if (method_exists($dispatch, $method)) {
                     echo call_user_func([$dispatch, $method], $this->request->getParams());
-                    exit(0);
+                    exit();
                 }
 
                 throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");

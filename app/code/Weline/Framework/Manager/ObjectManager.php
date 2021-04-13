@@ -23,8 +23,6 @@ class ObjectManager implements ManagerInterface
 
     private static array $instances;
 
-    private static string $current_class;
-
     private function __clone()
     {
     }
@@ -36,16 +34,6 @@ class ObjectManager implements ManagerInterface
         }
 
         return self::$cache;
-    }
-
-    public static function getClass()
-    {
-        return self::$current_class;
-    }
-
-    private static function setClass(string $class)
-    {
-        self::$current_class = $class;
     }
 
     private static function initSelf()
@@ -61,35 +49,34 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param string $class
+     * @param array $arguments
+     * @throws Exception
      * @throws \ReflectionException
      * @return mixed|ObjectManager
      */
-    public static function getInstance(string $class = '')
+    public static function getInstance(string $class = '', array $arguments = [])
     {
         self::initSelf();
-        self::setClass($class);
-
-        // 缓存对象读取
-        if (! DEV && $class_object = self::getCache()->get($class)) {
-            self::$instances[$class] = self::initClass($class_object);
-
-            return self::$instances[$class];
-        }
         if (empty($class)) {
             return isset(self::$instance) ? self::$instance : new self();
         }
         if (isset(self::$instances[$class])) {
             return self::$instances[$class];
         }
+        // 缓存对象读取
+        if (! DEV && $cache_class_object = self::getCache()->get($class)) {
+            self::$instances[$class] = self::initClass($cache_class_object);
+
+            return self::$instances[$class];
+        }
 
         // 拦截器处理
         $new_class = self::parserClass($class);
 
-        $paramArr = self::getMethodParams($new_class);
-
-        $new_object = (new ReflectionClass($new_class))->newInstanceArgs($paramArr);
-
+        $arguments               = $arguments ? $arguments : self::getMethodParams($new_class);
+        $new_object              = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
         self::$instances[$class] = self::initClass($new_object);
+
         // 缓存对象
         self::getCache()->set($class, self::$instances[$class]);
 
@@ -131,11 +118,21 @@ class ObjectManager implements ManagerInterface
     {
         // 拦截器处理
         $new_class = self::parserClass($className);
-
         if ('__construct' === $methodName) {
+//            throw  new Exception(__('无法通过make方式执行__construct函数！'));
+            if (self::$instances[$className]) {
+                return self::$instances[$className];
+            }
             // 如果是初始化函数则返回一个初始化后的对象
+            // 缓存对象读取
+            if (! DEV && $cache_class_object = self::getCache()->get($new_class)) {
+                self::$instances[$className] = self::initClass($cache_class_object);
+
+                return self::$instances[$className];
+            }
             $instance                    = (new ReflectionClass($new_class))->newInstanceArgs($params);
             self::$instances[$className] = $instance;
+            self::getCache()->set($className, $instance);
 
             return self::$instances[$className];
         }

@@ -52,12 +52,19 @@ class Upgrade extends CommandAbstract
                 $origin_view_dir = APP_PATH . $module_view_static_dir;
                 if (is_dir($origin_view_dir)) {
                     // 主题配置
-                    $theme_dir    = Env::getInstance()->getConfig('theme', 'default');
-                    $pub_view_dir = PUB . 'static' . DIRECTORY_SEPARATOR . $theme_dir . DIRECTORY_SEPARATOR . $module_view_dir;
+                    $theme = Env::getInstance()->getConfig('theme', [
+                        'id'          => 1,
+                        'name'        => 'default',
+                        'path'        => 'default',
+                        'parent_id'   => null,
+                        'is_active'   => 1,
+                        'create_time' => '2021-04-05 16:49:58',
+                    ]);
+                    $pub_view_dir = PUB . 'static' . DIRECTORY_SEPARATOR . $theme['path'] . DIRECTORY_SEPARATOR . $module_view_dir;
                     if (! is_dir($pub_view_dir)) {
                         mkdir($pub_view_dir, 0775, true);
                     }
-                    list($out, $vars) = $this->system->exec("cp $origin_view_dir $pub_view_dir -r");
+                    list($out, $vars) = $this->system->exec("cp -r $origin_view_dir $pub_view_dir");
                 }
             }
         }
