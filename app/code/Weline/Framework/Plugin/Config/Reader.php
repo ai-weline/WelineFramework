@@ -49,7 +49,7 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
      */
     public function read()
     {
-        if (!DEV && $plugin = $this->pluginCache->get('plugin')) {
+        if (! DEV && $plugin = $this->pluginCache->get('plugin')) {
             return $plugin;
         }
         $configs = parent::read();
