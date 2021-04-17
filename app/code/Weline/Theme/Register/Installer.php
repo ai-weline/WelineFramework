@@ -14,12 +14,24 @@ namespace Weline\Theme\Register;
 
 
 use Weline\Framework\Register\RegisterInterface;
+use Weline\Theme\Model\WelineTheme;
 
 class Installer implements RegisterInterface
 {
+    /**
+     * @var WelineTheme
+     */
+    private WelineTheme $welineTheme;
+
+    function __construct(
+        WelineTheme $welineTheme
+    )
+    {
+        $this->welineTheme = $welineTheme;
+    }
 
     public function register($data, string $version = '', string $description = '')
     {
-       p($data);
+       p(func_get_args());
     }
 }
