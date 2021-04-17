@@ -155,7 +155,7 @@ class Handle implements HandleInterface, RegisterInterface
      * @throws \Weline\Framework\App\Exception
      * @throws \ReflectionException
      */
-    public function register($name, string $version = '', string $description = '')
+    public function register($name,string $version = '', string $description = '')
     {
         // 模块路径
         $module_path = APP_PATH . $this->helper->moduleNameToPath($this->modules, $name) . DIRECTORY_SEPARATOR;

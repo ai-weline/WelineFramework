@@ -19,8 +19,13 @@ class Register implements ObserverInterface
     public function execute(Event $event)
     {
         $data = $event->getData('data');
-        if ($data->getData('register_arguments')[0] == RegisterInterface::THEME) {
+        $func_arguments = $data->getData('register_arguments');
+        $type = $func_arguments[0];
+        if ($type == RegisterInterface::THEME) {
             $data->setData('installer', Installer::class);
+            // 卸载掉类型 剩下的参数原样回传 给Installer安装器
+            unset($func_arguments[0]);
+            $data->setData('register_arguments', $func_arguments);
         }
     }
 }

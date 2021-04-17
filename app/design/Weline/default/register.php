@@ -11,6 +11,10 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     \Weline\Theme\Api\ModuleInterface::type,
-    __DIR__,
-    '1.0.1'
+    [
+        'name' => 'default',
+        'path' => __DIR__
+    ],
+    '1.0.1',
+    '默认主题'
 );

@@ -10,7 +10,7 @@
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
-namespace Weline\Theme\Api;
+namespace Weline\Theme\Register;
 
 
 interface ModuleInterface
