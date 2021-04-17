@@ -82,6 +82,7 @@ class Install implements InstallInterface
         $welineTheme = ObjectManager::getInstance(WelineTheme::class);
         $welineTheme->setData(Env::default_theme_DATA)
             ->save();
+        Env::getInstance()->setConfig('theme', $welineTheme->getData());
         $printer->note('安装结束...');
     }
 }

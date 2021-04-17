@@ -155,7 +155,7 @@ class Handle implements HandleInterface, RegisterInterface
      * @throws \Weline\Framework\App\Exception
      * @throws \ReflectionException
      */
-    public function register($name,string $version = '', string $description = '')
+    public function register($name, string $version = '', string $description = '')
     {
         // 模块路径
         $module_path = APP_PATH . $this->helper->moduleNameToPath($this->modules, $name) . DIRECTORY_SEPARATOR;
@@ -182,8 +182,7 @@ class Handle implements HandleInterface, RegisterInterface
 
 //        $this->setup_context = new SetupContext($name, $version);
         $this->setup_context = ObjectManager::make(SetupContext::class, '__construct', ['module_name' => $name, 'module_version' => $version]);
-
-        $setup_dir = $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
+        $setup_dir           = $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
 
         // 已经存在模块则更新
         if ($this->helper->isInstalled($this->modules, $name)) {

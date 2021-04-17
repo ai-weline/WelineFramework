@@ -36,19 +36,19 @@ class Register implements RegisterDataInterface
      */
     public static function register(string $type, $param, string $version = '', string $description = '')
     {
-        $install_params = [];
+        $install_params = func_get_args();
         switch ($type) {
             // 模块安装
             case self::MODULE:
                 $appPathArray = explode(DIRECTORY_SEPARATOR, $param);
-                $module = array_pop($appPathArray);
-                $vendor = array_pop($appPathArray);
-                $code = array_pop($appPathArray);
-                $app = array_pop($appPathArray);
-                $moduleName = $vendor . '_' . $module;
+                $module       = array_pop($appPathArray);
+                $vendor       = array_pop($appPathArray);
+                $code         = array_pop($appPathArray);
+                $app          = array_pop($appPathArray);
+                $moduleName   = $vendor . '_' . $module;
 
                 $moduleRegisterFile = $app . DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . self::register_file;
-                if (!is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
+                if (! is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
                     throw new ConsoleException("{$moduleName}注册文件{$moduleRegisterFile}不存在！");
                 }
                 // 安装数据
@@ -70,13 +70,12 @@ class Register implements RegisterDataInterface
         $installerPathData = ObjectManager::getInstance(DataObject::class);
         $installerPathData
             ->setData('installer', self::NAMESPACE . ucfirst($type) . '\Handle')
-            ->setData('register_arguments', func_get_args());
+            ->setData('register_arguments', $install_params);
         /**@var EventsManager $eventsManager */
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
         $eventsManager->dispatch('Framework_Register::register_installer', ['data' => $installerPathData]);
         $installer_class = $installerPathData->getData('installer');
 
-        // 注册 FIXME 修改注册handle
         try {
             /**@var RegisterInterface $installer */
             $installer = ObjectManager::getInstance($installer_class);

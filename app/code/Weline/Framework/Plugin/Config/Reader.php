@@ -45,12 +45,11 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
      * 非开发者模式有缓存则读取缓存
      * 参数区：
      *
-     * @param bool $cache
      * @return mixed
      */
-    public function read($cache = true)
+    public function read()
     {
-        if ($cache && $plugin = $this->pluginCache->get('plugin')) {
+        if (!DEV && $plugin = $this->pluginCache->get('plugin')) {
             return $plugin;
         }
         $configs = parent::read();
