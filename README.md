@@ -3,8 +3,6 @@
 #### 介绍
 
 微蓝WelineFramework框架！
-不定期抖音直播撸码：
-<img src="https://images.gitee.com/uploads/images/2021/0402/231552_e0bb4e60_1568278.jpeg" style="width:150px;height:180px">
 
 测试环境：http://m.dev.aiweline.com/
 ~~~
@@ -189,6 +187,7 @@ url->router->controller(或者静态资源)，
 2、路由参数实现
 3、driver驱动观察者加入，以获得驱动拓展
 4、单个缓存清理
+5、module间的继承关系：env.php中定义的继承关系
 ~~~
 
 
