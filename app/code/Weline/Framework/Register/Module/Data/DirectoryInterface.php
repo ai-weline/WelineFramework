@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Module\Data;
+namespace Weline\Framework\Register\Module\Data;
 
 /**
  * @Author       秋枫雁飞

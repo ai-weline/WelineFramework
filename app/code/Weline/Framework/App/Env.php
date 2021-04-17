@@ -14,7 +14,7 @@ use Weline\Framework\System\File\Io\File;
 
 class Env
 {
-    const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR . 'aiweline';
+    const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
 
     const framework_name = 'Weline';
 
@@ -22,7 +22,7 @@ class Env
 
     const path_framework_generated_code = self::path_framework_generated . 'code' . DIRECTORY_SEPARATOR;
 
-    // 路径
+    // -----------------路径--------------------
     const path_ENV_FILE = APP_ETC_PATH . 'env.php';
 
     const path_SYSTEM_META_DATA = self::path_framework_generated . 'configs.php'; //FIXME 元数据等待开发
@@ -30,6 +30,28 @@ class Env
     const path_MODULES_FILE = APP_ETC_PATH . 'modules.php';
 
     const path_COMMANDS_FILE = self::path_framework_generated . 'commands.php';
+
+    // 注册register路径
+    const path_CODE = APP_PATH;
+
+    const path_VENDOR_CODE = self::vendor_path;
+
+    const path_CODE_DESIGN = BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR;
+
+    const register_FILE_PATHS = [
+        'app_code'     => self::path_CODE,
+        'vendor_code'  => self::path_VENDOR_CODE,
+        'theme_design' => self::path_CODE_DESIGN,
+    ];
+
+    const default_theme_DATA = [
+        'id'          => 0,
+        'name'        => 'default',
+        'path'        => 'Weline' . DIRECTORY_SEPARATOR . 'default',
+        'parent_id'   => null,
+        'is_active'   => 1,
+        'create_time' => '2021-04-05 16:49:58',
+    ];
 
     // 路由
     const path_ROUTERS_DIR = self::path_framework_generated . 'routers' . DIRECTORY_SEPARATOR;

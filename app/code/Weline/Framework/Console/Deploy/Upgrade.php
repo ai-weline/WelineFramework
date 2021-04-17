@@ -38,9 +38,9 @@ class Upgrade extends CommandAbstract
     public function execute($args = [])
     {
         // 扫描代码
-        $apps = $this->scanner->scanAppModules();
+        $registers = $this->scanner->scanAppModules();
         // 注册模块
-        foreach ($apps as $vendor => $modules) {
+        foreach ($registers as $vendor => $modules) {
             foreach ($modules as $name => $register) {
                 $this->printer->note($vendor . '_' . $name . '...');
                 $module_view_static_dir = $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::dir_type_STATICS;
@@ -52,14 +52,7 @@ class Upgrade extends CommandAbstract
                 $origin_view_dir = APP_PATH . $module_view_static_dir;
                 if (is_dir($origin_view_dir)) {
                     // 主题配置
-                    $theme = Env::getInstance()->getConfig('theme', [
-                        'id'          => 1,
-                        'name'        => 'default',
-                        'path'        => 'default',
-                        'parent_id'   => null,
-                        'is_active'   => 1,
-                        'create_time' => '2021-04-05 16:49:58',
-                    ]);
+                    $theme        = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
                     $pub_view_dir = PUB . 'static' . DIRECTORY_SEPARATOR . $theme['path'] . DIRECTORY_SEPARATOR . $module_view_dir;
                     if (! is_dir($pub_view_dir)) {
                         mkdir($pub_view_dir, 0775, true);

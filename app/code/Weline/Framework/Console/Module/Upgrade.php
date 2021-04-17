@@ -76,19 +76,27 @@ class Upgrade extends CommandAbstract
         $this->printer->warning('2、generated生成目录代码code清理...', '系统');
         $this->system->exec('rm -rf ' . Env::path_framework_generated_code);
         // 扫描代码
-        $apps = $this->scanner->scanAppModules();
+        $registers = $this->scanner->scanAppModules();
 
-        $this->printer->note('3、模块更新...');
+        $this->printer->note('3、依赖编译...');
+        /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
+        $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Plugin\Console\Plugin\Di\Compile::class);
+        $cacheManagerConsole->execute();
+        $this->printer->note('4、module模块更新...');
         // 注册模块
         $all_modules = [];
-        foreach ($apps as $vendor => $modules) {
+
+        foreach ($registers as $vendor => $modules) {
             foreach ($modules as $name => $register) {
                 $all_modules[$vendor . '_' . $name] = $register;
                 if (is_file(APP_PATH . $register)) {
                     require APP_PATH . $register;
                 }
-                if (is_file(BP . 'vendor/' . $register)) {
-                    require BP . 'vendor/' . $register;
+                if (is_file(BP . 'vendor' . DIRECTORY_SEPARATOR . $register)) {
+                    require BP . 'vendor' . DIRECTORY_SEPARATOR . $register;
+                }
+                if (is_file(BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR . $register)) {
+                    require BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR . $register;
                 }
             }
         }
@@ -104,7 +112,7 @@ class Upgrade extends CommandAbstract
 
         $this->printer->note('模块更新完毕！');
 
-        $this->printer->note('4、清理缓存...');
+        $this->printer->note('5、清理缓存...');
         /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
         $cacheManagerConsole->execute();

@@ -5,4 +5,7 @@
     <event name="Framework_View_event::template_fetch_file">
         <observer name="Framework_Theme_event::template_fetch_file" instance="Weline\Theme\Observer\TemplateFetchFile" disabled="false" shared="true"/>
     </event>
+    <event name="Framework_Register::register_installer">
+        <observer name="Weline_Theme::register_installer" instance="Weline\Theme\Observer\Register" disabled="false" shared="true"/>
+    </event>
 </config>

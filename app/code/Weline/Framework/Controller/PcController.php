@@ -27,7 +27,7 @@ class PcController extends Core
     public function __init()
     {
         $this->controllerCache    = ObjectManager::getInstance(ControllerCache::class)->create();
-        $this->_template = $this->getTemplate();
+        $this->_template          = $this->getTemplate();
     }
 
     /**
@@ -82,6 +82,7 @@ class PcController extends Core
                 ]*/
             );
         }
+
         return $this->_template;
     }
 

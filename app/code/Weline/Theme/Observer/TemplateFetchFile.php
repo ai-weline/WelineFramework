@@ -12,6 +12,7 @@ namespace Weline\Theme\Observer;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
+use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\DataObject\DataObject;
@@ -80,9 +81,7 @@ class TemplateFetchFile implements ObserverInterface
             }
         }
         if (! isset($theme)) {
-            $theme = $this->welineTheme->setName('default')
-                ->setPath('default')
-                ->setIsActive(1);
+            $theme = $this->welineTheme->setData(Env::default_theme_DATA);
         }
 
         // 组织主题文件位置

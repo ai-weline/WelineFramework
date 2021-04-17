@@ -13,10 +13,11 @@ use Weline\Framework\App\Env;
 use Weline\Framework\Console\ConsoleException;
 use Weline\Framework\Controller\Data\DataInterface as DataInterfaceAlias;
 use Weline\Framework\Output\Cli\Printing;
+use Weline\Framework\Register\RegisterInterface;
 use Weline\Framework\Register\Router\Data\DataInterface;
 use Weline\Framework\Router\Helper\Data;
 
-class Handle
+class Handle implements RegisterInterface
 {
     const path_backend_PC = Env::path_BACKEND_PC_ROUTER_FILE;
 
@@ -53,10 +54,13 @@ class Handle
      * 参数区：
      *
      * @param array $routerParam
+     * @param string $version
+     * @param string $description
+     * @throws ConsoleException
      * @throws \Weline\Framework\App\Exception
      * @return array|mixed
      */
-    public function register(array $routerParam)
+    public function register($routerParam, string $version = '', string $description = '')
     {
         switch ($routerParam['type']) {
             case DataInterface::type_API:

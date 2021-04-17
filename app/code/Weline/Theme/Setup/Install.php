@@ -9,6 +9,7 @@
 
 namespace Weline\Theme\Setup;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data;
@@ -79,9 +80,7 @@ class Install implements InstallInterface
         $printer->warning('正在写入默认主题...');
         /**@var WelineTheme $welineTheme*/
         $welineTheme = ObjectManager::getInstance(WelineTheme::class);
-        $welineTheme->setName('default')
-            ->setPath('default')
-            ->setIsActive(1)
+        $welineTheme->setData(Env::default_theme_DATA)
             ->save();
         $printer->note('安装结束...');
     }

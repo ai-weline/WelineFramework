@@ -11,23 +11,15 @@ namespace Weline\Framework\Register;
 
 interface RegisterInterface
 {
-    const NAMESPACE = 'Weline\Framework\Register\\';
+    const NAMESPACE = 'Weline\\Framework\\Register\\';
 
     const MODULE = 'module';
 
-    const HOOK = 'hook';
-
     const LANGUAGE = 'language';
-
-    const OBSERVER = 'observer';
-
-    const THEME = 'theme';
-
-    const PLUGIN = 'plugin';
 
     const ROUTER = 'router';
 
-    const COMMAND = 'command';
+    const THEME = 'theme';
 
     const register_file = 'register.php';
 
@@ -41,10 +33,9 @@ interface RegisterInterface
      *
      * 参数区：
      *
-     * @param string $type
-     * @param $param
+     * @param $data
      * @param string|null $version
      * @param string $description
      */
-    public static function register(string $type, $param, string $version = '', string $description = '');
+    public function register($data, string $version = '', string $description = '');
 }

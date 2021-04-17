@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Module;
 
+use Weline\Framework\Register\RegisterInterface;
 use Weline\Framework\System\File\Compress;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
@@ -23,7 +24,7 @@ use Weline\Framework\Setup\Helper\Data as SetupHelper;
 use Weline\Framework\Setup\Data\Setup as SetupData;
 use Weline\Framework\Setup\Data\Context as SetupContext;
 
-class Handle implements HandleInterface
+class Handle implements HandleInterface, RegisterInterface
 {
     const api_DIR = 'Api';// api特殊目录，注册api路由
 
@@ -154,7 +155,7 @@ class Handle implements HandleInterface
      * @throws \Weline\Framework\App\Exception
      * @throws \ReflectionException
      */
-    public function register(string $name, string $version, string $description)
+    public function register($name, string $version = '', string $description = '')
     {
         // 模块路径
         $module_path = APP_PATH . $this->helper->moduleNameToPath($this->modules, $name) . DIRECTORY_SEPARATOR;

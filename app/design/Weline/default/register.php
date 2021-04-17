@@ -7,12 +7,10 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Module\Data;
+use Weline\Framework\Register\Register;
 
-interface FileInterface
-{
-    /**
-     * 模块注册文件
-     */
-    const file_register = 'register.php';
-}
+Register::register(
+    \Weline\Theme\Api\ModuleInterface::type,
+    __DIR__,
+    '1.0.1'
+);

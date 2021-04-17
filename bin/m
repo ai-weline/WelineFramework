@@ -36,12 +36,12 @@ try {
 {$chr}[36m代码
 {$code}
 {$chr}[0m
-{$chr}[31m追踪
+{$chr}[31m追踪: 
 {$e->getTraceAsString()}
 
-{$chr}[31m文件{$e->getFile()}
-行数{$e->getLine()}
-消息{$e->getMessage()}
+{$chr}[31m文件: {$e->getFile()}
+行数: {$e->getLine()}
+消息: {$e->getMessage()}
 CLI_E;
         echo "\n\n";
         $e = $e->getPrevious();
