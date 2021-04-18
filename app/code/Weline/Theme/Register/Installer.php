@@ -9,6 +9,7 @@
 
 namespace Weline\Theme\Register;
 
+use Weline\Framework\Console\ConsoleException;
 use Weline\Framework\Register\RegisterInterface;
 use Weline\Theme\Model\WelineTheme;
 
@@ -21,12 +22,8 @@ class Installer implements RegisterInterface
 
     public function __construct(
         WelineTheme $welineTheme
-    ) {
-
-
-
-
-
+    )
+    {
         $this->welineTheme = $welineTheme;
     }
 
@@ -41,6 +38,13 @@ class Installer implements RegisterInterface
      */
     public function register($data, string $version = '', string $description = '')
     {
-       p(func_get_args());
+        // 参数检查
+        if (!isset($data['name']) || !isset($data['path'])) {
+            throw new ConsoleException('注册文件参数params必须包含：name和path。 样例：["name"=>"default主题"，"path"=>__DIR__]');
+        }
+
+        // 开始注册
+        $this->welineTheme->setName($data['name'])
+            ->setIsActive(1)
     }
 }

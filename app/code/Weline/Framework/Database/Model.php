@@ -66,17 +66,19 @@ abstract class Model extends \think\Model
      *
      * @param string $field_or_pk_value 字段或者主键的值
      * @param null $value 字段的值，只读取主键就不填
-     * @throws \think\db\exception\DataNotFoundException
+     * @return $this
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
-     * @return $this
+     * @throws \think\db\exception\DataNotFoundException
      */
     public function load(string $field_or_pk_value, $value = null)
     {
+        // 加载之前
+        $this->load_before();
         // load之前事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_load_before', ['model' => $this]);
-        if (! $value) {
-            $pk   = $this->getPk();
+        if (!$value) {
+            $pk = $this->getPk();
             $data = $this->db()->where("{$pk}=:pkv", ['pkv' => $field_or_pk_value])->find();
         } else {
             $data = $this->db()->where("{$field_or_pk_value}=:fv", ['fv' => $value])->find();
@@ -85,11 +87,48 @@ abstract class Model extends \think\Model
         // load之之后事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_load_after', ['model' => $this]);
 
+        // 加载之后
+        $this->load_after();
         return $this;
     }
 
+    /**
+     * @DESC         |载入前
+     *
+     * 参数区：
+     *
+     */
+    function load_before()
+    {
+
+    }
+
+    /**
+     * @DESC         |载入后
+     *
+     * 参数区：
+     *
+     */
+    function load_after()
+    {
+
+    }
+
+    /**
+     * @DESC         |保存方法
+     *
+     * 参数区：
+     *
+     * @param array $data
+     * @param string|null $sequence
+     * @return bool
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\Exception\Core
+     */
     public function save(array $data = [], string $sequence = null): bool
     {
+        // 保存前
+        $this->save_before();
         /**
          * 重载TP6 模型save方法 并加入事件机制
          */
@@ -99,10 +138,22 @@ abstract class Model extends \think\Model
             $this->setData($data);
         }
         $save_result = parent::save($this->getData(), $sequence);
-        // save之前事件
-        $this->getEvenManager()->dispatch($this->getTable() . '_model_save_before', ['model' => $this]);
+        // save之后事件
+        $this->getEvenManager()->dispatch($this->getTable() . '_model_save_after', ['model' => $this]);
 
+        // 保存后
+        $this->save_after();
         return $save_result;
+    }
+
+    function save_before()
+    {
+
+    }
+
+    function save_after()
+    {
+
     }
 
     /**
@@ -110,8 +161,8 @@ abstract class Model extends \think\Model
      *
      * 参数区：
      *
-     * @throws \ReflectionException
      * @return EventsManager
+     * @throws \ReflectionException
      */
     protected function getEvenManager(): EventsManager
     {
@@ -123,8 +174,8 @@ abstract class Model extends \think\Model
      *
      * 参数区：
      *
-     * @throws \ReflectionException
      * @return DbManager
+     * @throws \ReflectionException
      */
     public function getDbManager(): DbManager
     {

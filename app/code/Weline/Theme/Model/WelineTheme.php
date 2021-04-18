@@ -130,7 +130,6 @@ class WelineTheme extends Model
     public function setIsActive($value)
     {
         $this->setData(self::filed_IS_ACTIVE, $value);
-
         return $this;
     }
 
