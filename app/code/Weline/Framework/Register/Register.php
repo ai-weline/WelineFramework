@@ -41,24 +41,24 @@ class Register implements RegisterDataInterface
             // 模块安装
             case self::MODULE:
                 $appPathArray = explode(DIRECTORY_SEPARATOR, $param);
-                $module       = array_pop($appPathArray);
-                $vendor       = array_pop($appPathArray);
-                $code         = array_pop($appPathArray);
-                $app          = array_pop($appPathArray);
-                $moduleName   = $vendor . '_' . $module;
+                $module = array_pop($appPathArray);
+                $vendor = array_pop($appPathArray);
+                $code = array_pop($appPathArray);
+                $app = array_pop($appPathArray);
+                $moduleName = $vendor . '_' . $module;
 
                 $moduleRegisterFile = $app . DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . self::register_file;
-                if (! is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
+                if (!is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
                     throw new ConsoleException("{$moduleName}注册文件{$moduleRegisterFile}不存在！");
                 }
                 // 安装数据
-                $install_params = [$moduleName, $version, $description];
+                $install_params = [$type, $moduleName, $version, $description];
 
                 break;
             // 路由注册
             case self::ROUTER:
                 // 安装数据
-                $install_params = [$param];
+                $install_params = [$type, $param];
 
                 break;
             default:
@@ -80,7 +80,9 @@ class Register implements RegisterDataInterface
             /**@var RegisterInterface $installer */
             $installer = ObjectManager::getInstance($installer_class);
             if ($installer instanceof RegisterInterface) {
-                $installer->register(...$installerPathData->getData('register_arguments'));
+                $register_arguments = $installerPathData->getData('register_arguments');
+                unset($register_arguments[0]);// 去除type类型标志 因为后续的register继承自
+                $installer->register(...$register_arguments);
             } else {
                 throw new ConsoleException($installer_class . __('安装器必须继承：') . RegisterInterface::class);
             }

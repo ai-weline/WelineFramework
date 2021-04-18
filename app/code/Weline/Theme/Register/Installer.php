@@ -22,12 +22,25 @@ class Installer implements RegisterInterface
     public function __construct(
         WelineTheme $welineTheme
     ) {
+
+
+
+
+
         $this->welineTheme = $welineTheme;
     }
 
+    /**
+     * @DESC         |注册主题
+     *
+     * 参数区：
+     *
+     * @param $data
+     * @param string $version
+     * @param string $description
+     */
     public function register($data, string $version = '', string $description = '')
     {
-        // TODO 继续安装主题
-//       p(func_get_args());
+       p(func_get_args());
     }
 }
