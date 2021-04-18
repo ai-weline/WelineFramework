@@ -9,6 +9,7 @@
 
 namespace Weline\Theme\Test\Unit;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 use Weline\Theme\Model\WelineTheme;
@@ -23,7 +24,9 @@ class ThemeTest extends TestCore
     public function testGetMode()
     {
         $this->theme = ObjectManager::getInstance(WelineTheme::class);
-        $theme       = $this->theme->load(1);
-        p($theme->getActiveTheme());
+//        $theme       = $this->theme->load(1);
+//        p($theme->getActiveTheme());
+        $save_result = $this->theme->setData(Env::default_theme_DATA)->save();
+        p($save_result);
     }
 }

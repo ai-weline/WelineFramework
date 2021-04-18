@@ -127,9 +127,9 @@ class WelineTheme extends Model
         return $this->getData(self::filed_IS_ACTIVE);
     }
 
-    public function setIsActive($value)
+    public function setIsActive(bool $value)
     {
-        $this->setData(self::filed_IS_ACTIVE, $value);
+        $this->setData(self::filed_IS_ACTIVE,$value);
         return $this;
     }
 
@@ -143,5 +143,21 @@ class WelineTheme extends Model
         $this->setData(self::filed_CREATE_TIME, $time);
 
         return $this;
+    }
+
+    /**
+     * @DESC         |保存之后如果当前主题处于激活状态则启用当前主题
+     * 启用前清除所有缓存
+     * 启用当前主题则将其他主题设置为不激活
+     *
+     * 参数区：
+     *
+     */
+    function save_after()
+    {
+        p('save_after');
+//        if($this->isActive()){
+//            $this->
+//        }
     }
 }

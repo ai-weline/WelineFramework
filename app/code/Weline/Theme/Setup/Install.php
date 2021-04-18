@@ -41,13 +41,13 @@ class Install implements InstallInterface
                 'name',
                 Table::column_type_VARCHAR,
                 '60',
-                'NOT NULL',
+                'NOT NULL UNIQUE',
                 '主题名'
             )->addColumn(
                 'path',
                 Table::column_type_VARCHAR,
                 '128',
-                'NOT NULL',
+                'NOT NULL UNIQUE',
                 '主题路径'
             )->addColumn(
                 'parent_id',
