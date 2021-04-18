@@ -53,6 +53,7 @@ function getStringBetweenContents(string $str, string $startDelimiter, string $e
  * @param array $args
  * @throws \Weline\Framework\App\Exception
  * @return string
+ * @r
  */
 function __(string $words, array $args = [])
 {

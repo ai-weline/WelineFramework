@@ -9,7 +9,9 @@
 
 namespace Weline\Theme\Register;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Console\ConsoleException;
+use Weline\Framework\Output\Cli\Printing;
 use Weline\Framework\Register\RegisterInterface;
 use Weline\Theme\Model\WelineTheme;
 
@@ -19,12 +21,23 @@ class Installer implements RegisterInterface
      * @var WelineTheme
      */
     private WelineTheme $welineTheme;
+    /**
+     * @var Printing
+     */
+    private Printing $printing;
 
+    /**
+     * Installer 初始函数...
+     * @param WelineTheme $welineTheme
+     * @param Printing $printing
+     */
     public function __construct(
-        WelineTheme $welineTheme
+        WelineTheme $welineTheme,
+        Printing $printing
     )
     {
         $this->welineTheme = $welineTheme;
+        $this->printing = $printing;
     }
 
     /**
@@ -43,8 +56,22 @@ class Installer implements RegisterInterface
             throw new ConsoleException('注册文件参数params必须包含：name和path。 样例：["name"=>"default主题"，"path"=>__DIR__]');
         }
 
-        // 开始注册
-        $this->welineTheme->setName($data['name'])
-            ->setIsActive(1)
+        // 处理主题路径
+        $theme_path = str_replace(Env::path_CODE_DESIGN, '', $data['path']);
+
+        // 开始主题事务注册
+        $this->welineTheme->startTrans();
+        try {
+            $this->welineTheme
+                ->setName($data['name'])
+                ->setIsActive(1)
+                ->setPath($theme_path);
+            $this->welineTheme->commit();
+            $this->printing->success($data['name'] . __('主题安装完成!'));
+        } catch (\Exception $exception) {
+            $this->printing->success($data['name'] . __('主题安装异常!'));
+            $this->welineTheme->rollback();
+            throw $exception;
+        }
     }
 }
