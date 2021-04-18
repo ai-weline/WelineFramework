@@ -25,7 +25,7 @@
             $themeCache = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Theme\Cache\ThemeCache::class)->create();
             /**@var \Weline\Theme\Model\WelineTheme $theme*/
             $theme = $themeCache->get('theme');
-            echo $theme->getPath();
+            echo $theme->getRelatePath();
             ?>
         里可以看到我的模板template</p>
 </div>
