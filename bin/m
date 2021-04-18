@@ -10,7 +10,7 @@ try {
 } catch (Exception $e) {
     $chr = chr(27);
     echo <<<CLI_E
-{$chr}[34m CLI 异常
+{$chr}[34m [CLI 运行异常]
 {$chr}[31m文件：{$e->getFile()}
 行数：{$e->getLine()}
 消息：{$e->getMessage()} 
@@ -31,11 +31,9 @@ try {
     while ($e) {
         $code = (in_array('getErrorCode', get_class_methods($e))) ? $e->getErrorCode() : '?????';
         echo <<<CLI_E
-{$chr}[34m CLI 异常
-{$chr}[0m
+{$chr}[31mCLI 异常
 {$chr}[36m代码
 {$code}
-{$chr}[0m
 {$chr}[31m追踪: 
 {$e->getTraceAsString()}
 
@@ -43,7 +41,7 @@ try {
 行数: {$e->getLine()}
 消息: {$e->getMessage()}
 CLI_E;
-        echo "\n\n";
+        echo PHP_EOL."{$chr}[0m";
         $e = $e->getPrevious();
     }
     exit(0);

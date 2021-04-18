@@ -247,8 +247,8 @@ class Core extends \Exception
      *
      * 参数区：
      *
-     * @return string
      * @throws \Weline\Framework\App\Exception
+     * @return string
      */
     public function getErrorCode()
     {

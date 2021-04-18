@@ -41,13 +41,13 @@ class Install implements InstallInterface
                 'name',
                 Table::column_type_VARCHAR,
                 '60',
-                'NOT NULL UNIQUE',
+                'UNIQUE NOT NULL ',
                 '主题名'
             )->addColumn(
                 'path',
                 Table::column_type_VARCHAR,
                 '128',
-                'NOT NULL UNIQUE',
+                'UNIQUE NOT NULL ',
                 '主题路径'
             )->addColumn(
                 'parent_id',
@@ -67,22 +67,23 @@ class Install implements InstallInterface
                 null,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '安装时间'
-            )->addIndex(
-                Table::index_type_FULLTEXT,
-                'name',
-                'name'
+            )->addColumn(
+                'update_time',
+                Table::column_type_DATETIME,
+                null,
+                'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+                '更新时间'
             )->addIndex(
                 Table::index_type_DEFAULT,
                 'parent_id',
                 'parent_id'
             )->create();
         }
-        $printer->warning('正在写入默认主题...');
-        /**@var WelineTheme $welineTheme*/
-        $welineTheme = ObjectManager::getInstance(WelineTheme::class);
-        $welineTheme->setData(Env::default_theme_DATA)
-            ->save();
-        Env::getInstance()->setConfig('theme', $welineTheme->getData());
+//        $printer->warning('正在写入默认主题...');
+//        /**@var WelineTheme $welineTheme*/
+//        $welineTheme = ObjectManager::getInstance(WelineTheme::class);
+//        $welineTheme->setData(Env::default_theme_DATA)
+//            ->save();
         $printer->note('安装结束...');
     }
 }

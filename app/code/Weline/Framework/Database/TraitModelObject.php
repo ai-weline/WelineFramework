@@ -615,4 +615,18 @@ trait TraitModelObject
 
         return null;
     }
+
+    /**
+     * @DESC         |清空数据
+     *
+     * 参数区：
+     *
+     * @return $this
+     */
+    public function clear()
+    {
+        $this->_data = [];
+
+        return $this;
+    }
 }

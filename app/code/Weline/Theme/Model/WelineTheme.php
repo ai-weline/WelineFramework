@@ -57,9 +57,9 @@ class WelineTheme extends Model
      *
      * 参数区：
      *
+     * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
      * @return mixed
      */
     public function getActiveTheme()
@@ -67,9 +67,11 @@ class WelineTheme extends Model
         if ($theme = $this->themeCache->get('theme')) {
             return $theme;
         }
-        $theme = $this->load(self::filed_IS_ACTIVE, 1);
-        $this->themeCache->set('theme', $theme, static::cache_TIME);
-        Env::getInstance()->setConfig('theme', $theme->getData());
+        $this->load(self::filed_IS_ACTIVE, 1);
+        if ($this->getId()) {
+            $this->themeCache->set('theme', $this, static::cache_TIME);
+            Env::getInstance()->setConfig('theme', $this->getData());
+        }
 
         return $this;
     }
@@ -103,6 +105,11 @@ class WelineTheme extends Model
         return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
     }
 
+    public function getRelatePath()
+    {
+        return str_replace(BP,'',Env::path_THEME_DESIGN_DIR) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
+    }
+
     public function setPath($value)
     {
         $this->setData(self::filed_PATH, $value);
@@ -129,7 +136,8 @@ class WelineTheme extends Model
 
     public function setIsActive(bool $value)
     {
-        $this->setData(self::filed_IS_ACTIVE,$value);
+        $this->setData(self::filed_IS_ACTIVE, $value);
+
         return $this;
     }
 
@@ -151,13 +159,16 @@ class WelineTheme extends Model
      * 启用当前主题则将其他主题设置为不激活
      *
      * 参数区：
-     *
      */
-    function save_after()
+    public function save_after()
     {
-        p('save_after');
-//        if($this->isActive()){
-//            $this->
-//        }
+        if ($this->isActive()) {
+            $this->where(self::filed_NAME, $this->getName_())
+                ->find();
+            if ($this->getId()) {
+                $this->getDb()
+                    ->query('UPDATE ' . $this->getTable() . ' SET `is_active`=0 WHERE id != ' . $this->getId());
+            }
+        }
     }
 }

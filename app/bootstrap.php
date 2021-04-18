@@ -44,17 +44,17 @@ try {
         {
             $_error = error_get_last();
             if ($_error && in_array($_error['type'], [1, 4, 16, 64, 256, 4096, E_ALL], true)) {
-                if(CLI){
-                    echo __('致命错误：').PHP_EOL;
-                    echo __('文件：').$_error['file'].PHP_EOL;
-                    echo __('行数：').$_error['line'].PHP_EOL;
-                    echo __('消息：').$_error['message'].PHP_EOL;
-                }else{
+                if (CLI) {
+                    echo __('致命错误：') . PHP_EOL;
+                    echo __('文件：') . $_error['file'] . PHP_EOL;
+                    echo __('行数：') . $_error['line'] . PHP_EOL;
+                    echo __('消息：') . $_error['message'] . PHP_EOL;
+                } else {
                     echo '<b style="color: red">致命错误：</b></br>';
                     echo '<pre>';
-                    echo __('文件：').$_error['file'].'</br>';
-                    echo __('行数：').$_error['line'].'</br>';
-                    echo __('消息：').$_error['message'].'</br>';
+                    echo __('文件：') . $_error['file'] . '</br>';
+                    echo __('行数：') . $_error['line'] . '</br>';
+                    echo __('消息：') . $_error['message'] . '</br>';
                     echo '</pre>';
                 }
             }
