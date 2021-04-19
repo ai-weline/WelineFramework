@@ -12,9 +12,9 @@ use Weline\Framework\Register\Register;
 Register::register(
     \Weline\Theme\Register\TypeInterface::type,
     [
-        'name' => 'default',
+        'name' => 'demo',
         'path' => __DIR__,
     ],
     '1.0.1',
-    '默认主题'
+    'demo主题'
 );

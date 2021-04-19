@@ -14,8 +14,9 @@ class Parser
     public static function parse(string $words, array $args): string
     {
         // 读取语言环境 TODO 翻译环境
-        $request =
-        // 只缓存
+        $request =\Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Http\Request::class);
+//        p($request);
+        // 只缓存 收集来的 翻译文件 以及翻译包
         /**@var $cache \Weline\Framework\Cache\CacheInterface */
         $cache = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\I18n\Cache\I18nCache::class)->create();
         if (! DEV && $cache_words = $cache->get($words)) {

@@ -13,6 +13,7 @@ use Weline\Framework\App\System;
 use Weline\Framework\App\Env;
 use Weline\Framework\Console\Command;
 use Weline\Framework\Console\CommandAbstract;
+use Weline\Framework\Console\CommandInterface;
 use Weline\Framework\System\File\Data\File;
 use Weline\Framework\System\File\Scan;
 use Weline\Framework\Manager\ObjectManager;
@@ -82,7 +83,7 @@ class Upgrade extends CommandAbstract
 
         $commands = $this->scan();
         /**@var $file \Weline\Framework\System\File\Io\File */
-        $file = ObjectManager::getInstance('\Weline\Framework\System\File\Io\File');
+        $file = ObjectManager::getInstance(\Weline\Framework\System\File\Io\File::class);
         $file->open(Env::path_COMMANDS_FILE, $file::mode_w_add);
         $text = '<?php return ' . var_export($commands, true) . ';';
         $file->write($text);
@@ -124,7 +125,7 @@ class Upgrade extends CommandAbstract
      */
     private function getDirFileCommand()
     {
-        $commands               = [];
+        $commands = [];
         /**@var $scanner Scan */
         $scanner = ObjectManager::getInstance(Scan::class);
 
@@ -155,10 +156,19 @@ class Upgrade extends CommandAbstract
                         $command              = str_replace('\\', ':', strtolower($command_dir_file));
                         $command              = trim($command, ':');
                         if ($command) {
-                            $command_tip                      = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
-                            $command_class_path               = $this->command->getCommandPath($module_name, $command);
-                            $command_class                    = ObjectManager::getInstance($command_class_path);
-                            $commands[$command_tip][$command] = $command_class->getTip();
+                            $command_tip        = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
+                            $command_class_path = $this->command->getCommandPath($module_name, $command);
+
+                            try {
+                                $command_class = ObjectManager::getInstance($command_class_path);
+                                if ($command_class instanceof CommandInterface) {
+                                    $commands[$command_tip][$command] = $command_class->getTip();
+                                } else {
+                                    $this->printer->warning(__('命令类：%1 必须继承：%2', [$command_class_path, CommandInterface::class]));
+                                }
+                            } catch (\Exception $exception) {
+                                // 异常的类不加入命令
+                            }
                         }
                     }
                 }

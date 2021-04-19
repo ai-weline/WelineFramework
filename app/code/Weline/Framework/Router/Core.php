@@ -40,14 +40,15 @@ class Core
     }
 
     /**
-     * @DESC         |当对象被唤醒时 新建一个请求对象Request给这个对象
+     * @DESC         | 唤醒
+     * 当对象被唤醒时 新建一个请求对象Request给这个对象
      *
      * 参数区：
      */
     public function __wakeup()
     {
-        $request = new  Request();
-        $this->__construct($request);
+        p();
+        $this->request = new Request();
     }
 
     /**

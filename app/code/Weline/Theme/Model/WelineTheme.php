@@ -107,7 +107,7 @@ class WelineTheme extends Model
 
     public function getRelatePath()
     {
-        return str_replace(BP,'',Env::path_THEME_DESIGN_DIR) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
+        return str_replace(BP, '', Env::path_THEME_DESIGN_DIR) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
     }
 
     public function setPath($value)

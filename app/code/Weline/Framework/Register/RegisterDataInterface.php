@@ -15,7 +15,7 @@ interface RegisterDataInterface
 
     const MODULE = 'module';
 
-    const LANGUAGE = 'language';
+    const I18N = 'i18n';
 
     const ROUTER = 'router';
 
