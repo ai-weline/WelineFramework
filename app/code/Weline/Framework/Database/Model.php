@@ -143,6 +143,7 @@ abstract class Model extends \think\Model
         if ($this->getId()) {
             $this->exists(true);
         }
+
         $save_result = parent::save($this->getData(), $sequence);
         // save之后事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_save_after', ['model' => $this]);

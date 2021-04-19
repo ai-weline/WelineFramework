@@ -7,13 +7,13 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Theme\Console;
+namespace Weline\Theme\Console\Theme;
 
 use Weline\Framework\Console\CommandInterface;
 use Weline\Framework\Output\Cli\Printing;
 use Weline\Theme\Model\WelineTheme;
 
-class Theme implements CommandInterface
+class Active implements CommandInterface
 {
     /**
      * @var WelineTheme
@@ -41,8 +41,8 @@ class Theme implements CommandInterface
     public function execute($args = [])
     {
         $theme = $this->welineTheme->getActiveTheme();
-        $this->printing->note(__('当前主题：%1', [$theme->getName()]));
-        $this->printing->note(__('路径：%1', [$theme->getPath()]));
+        $this->printing->success(__('当前主题：%1', [$theme->getName()]));
+        $this->printing->success(__('路径：%1', [$theme->getPath()]));
     }
 
     public function getTip(): string

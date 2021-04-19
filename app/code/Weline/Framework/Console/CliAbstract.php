@@ -138,6 +138,7 @@ abstract class CliAbstract implements CommandInterface
 
                 return require $file_path;
             }
+
             return $commands;
         }
 

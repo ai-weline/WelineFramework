@@ -61,26 +61,34 @@ class Installer implements RegisterInterface
 //        $this->welineTheme->where('name=:name', ['name'=>$data['name']])->find();
         $action_string = __('安装');
         if ($this->welineTheme->getId()) {
-            if ($this->welineTheme->getPath() !== $data['path']) {
+            if ($this->welineTheme->getPath() !== $data['path'] . DIRECTORY_SEPARATOR) {
                 $this->printing->setup($data['name'] . __(' 主题更新...'));
                 $action_string = '更新';
             } else {
                 return '';
             }
         }
-
         // 处理主题路径
         $theme_path = str_replace(Env::path_CODE_DESIGN, '', $data['path']);
-
         // 开始主题事务注册
         $this->welineTheme->startTrans();
 
         try {
-            $this->welineTheme
-                ->setName($data['name'])
-                ->setIsActive(1)
-                ->setPath($theme_path)
-                ->save();
+            if ($this->welineTheme->getId()) {
+                // 更新
+                $this->welineTheme
+                    ->setName($data['name'])
+                    ->setPath($theme_path)
+                    ->save();
+            } else {
+                // 新安装
+                $this->welineTheme
+                    ->setName($data['name'])
+                    ->setIsActive(1)
+                    ->setPath($theme_path)
+                    ->save();
+            }
+
             $this->welineTheme->commit();
             $this->printing->success($data['name'] . __(" 主题{$action_string}完成!"));
         } catch (\Exception $exception) {
