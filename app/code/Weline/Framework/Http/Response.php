@@ -13,11 +13,11 @@ namespace Weline\Framework\Http;
 
 class Response implements ResponseInterface
 {
-    private static Response $instance;
+    private Response $instance;
+    private array $headers = ['WELINE-LANG' => 'zh_Hans_CN'];
 
     private function __clone()
     {
-        // TODO: Implement __clone() method.
     }
 
     private function __construct()
@@ -31,13 +31,28 @@ class Response implements ResponseInterface
      *
      * @return Response
      */
-    public static function getInstance(): Response
+    public function getInstance(): Response
     {
-        if (! isset(self::$instance)) {
-            self::$instance = new self();
+        if (!isset($this->instance)) {
+            $this->instance = new self();
         }
+        return $this->instance;
+    }
 
-        return self::$instance;
+    function setHeader(string $header_key, string $header_value)
+    {
+        $this->headers[$header_key] = $header_value;
+        header("{$header_key}:{$header_value}");
+        return $this;
+    }
+
+    function setHeaders(array $headers)
+    {
+        $this->headers = array_merge($this->headers, $headers);
+        foreach ($this->headers as $header_key => $header_value) {
+            header("{$header_key}:{$header_value}");
+        }
+        return $this;
     }
 
     /**]
@@ -51,7 +66,6 @@ class Response implements ResponseInterface
         http_response_code(404);
         @header('http/1.1 404 not found');
         @header('status: 404 not found');
-        include BP . '/404.html';
-        exit(0);
+        exit(include BP . '/404.html');
     }
 }
