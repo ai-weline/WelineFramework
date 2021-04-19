@@ -15,7 +15,7 @@ use Weline\Framework\Controller\Data\DataInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Http\Response;
 
-abstract class RequestAbstract extends DataObject
+abstract class RequestAbstract
 {
     const HEADER = 'header';
 
@@ -30,11 +30,10 @@ abstract class RequestAbstract extends DataObject
 
     private string $area_router = State::area_frontend;
 
-    function __construct(array $data = [])
+    function __construct()
     {
         $url_arr = explode('/', trim($this->getUrl(), '/'));
         $this->area_router = array_shift($url_arr);
-        parent::__construct($data);
     }
 
     /**
