@@ -11,7 +11,7 @@ namespace Weline\Framework\Session;
 
 class Session
 {
-    const login_KEY = 'WE_LINE_USER';
+    const login_KEY = 'WELINE_USER';
 
     private SessionInterface $session;
 
