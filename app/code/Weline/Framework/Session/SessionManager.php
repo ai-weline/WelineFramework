@@ -25,7 +25,7 @@ class SessionManager
 
     private function __construct()
     {
-        $this->config = Env::getInstance()->getConfig('session');
+        $this->config = (array)Env::getInstance()->getConfig('session');
     }
 
     /**
