@@ -12,8 +12,7 @@ namespace Weline\Framework\Http\Request;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\State;
 use Weline\Framework\Controller\Data\DataInterface;
-use Weline\Framework\DataObject\DataObject;
-use Weline\Framework\Http\Response;
+use Weline\Framework\Manager\ObjectManager;
 
 abstract class RequestAbstract
 {
@@ -30,10 +29,23 @@ abstract class RequestAbstract
 
     private string $area_router = State::area_frontend;
 
-    function __construct()
+    /**
+     * @var RequestFilter
+     */
+    private RequestFilter $_filter;
+
+    private $_response;
+
+    public function __construct()
     {
-        $url_arr = explode('/', trim($this->getUrl(), '/'));
+        $url_arr           = explode('/', trim($this->getUrl(), '/'));
         $this->area_router = array_shift($url_arr);
+        $this->_filter     = RequestFilter::getInstance();
+    }
+
+    public function __init()
+    {
+        $this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
     }
 
     /**
@@ -170,7 +182,7 @@ abstract class RequestAbstract
 
     public function getUrl(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return array_shift($url_exp);
@@ -178,7 +190,7 @@ abstract class RequestAbstract
 
     public function getBaseUrl(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return $this->getBaseHost() . array_shift($url_exp);
@@ -186,7 +198,7 @@ abstract class RequestAbstract
 
     public function getBaseUri(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return $this->getBaseHost() . array_shift($url_exp);
@@ -206,6 +218,6 @@ abstract class RequestAbstract
      */
     public function getResponse(): Response
     {
-        return Response::getInstance();
+        return $this->_response;
     }
 }

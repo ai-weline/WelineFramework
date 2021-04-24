@@ -9,6 +9,9 @@
 
 namespace Weline\Framework\Http;
 
-class Http
+class Cookie
 {
+    public function setCookie()
+    {
+    }
 }

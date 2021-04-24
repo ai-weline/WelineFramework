@@ -99,8 +99,9 @@ class ObjectManager implements ManagerInterface
 
     private static function initClass($new_object)
     {
-        if (method_exists($new_object, '__init')) {
-            $new_object->__init();
+        $init_method_name = '__init';
+        if (method_exists($new_object, $init_method_name)) {
+            $new_object->$init_method_name();
         }
 
         return $new_object;

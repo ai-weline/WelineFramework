@@ -24,10 +24,13 @@ class PcController extends Core
 
     private CacheInterface $controllerCache;
 
-    public function __init()
+
+    function getControllerCache(): CacheInterface
     {
-        $this->controllerCache    = ObjectManager::getInstance(ControllerCache::class)->create();
-        $this->_template          = $this->getTemplate();
+        if (!isset($this->controllerCache)) {
+            $this->controllerCache = ObjectManager::getInstance(ControllerCache::class)->create();
+        }
+        return $this->controllerCache;
     }
 
     /**
@@ -64,7 +67,7 @@ class PcController extends Core
      */
     public function getTemplate(): Template
     {
-        if (! isset($this->_template)) {
+        if (!isset($this->_template)) {
 //            $this->_template = ObjectManager::make(
 //                Template::class,
 //                '__construct',
@@ -73,7 +76,7 @@ class PcController extends Core
             $this->_template = ObjectManager::getInstance(
                 Template::class,
                 [
-                    'request'  => $this->getRequest(),
+                    'request' => $this->getRequest(),
                     'view_dir' => $this->getViewBaseDir(),
                 ]/*
                 [
@@ -115,16 +118,16 @@ class PcController extends Core
      * 参数区：
      *
      * @param string $fileName
-     * @throws \Weline\Framework\Exception\Core
-     * @throws Exception
      * @return bool
+     * @throws Exception
+     * @throws \Weline\Framework\Exception\Core
      */
     protected function fetch(string $fileName = null)
     {
         if ($fileName === null) {
             $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-            $fileNameArr      = explode(\Weline\Framework\Controller\Data\DataInterface::dir, $parent_call_info['class']);
-            $fileName         = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $parent_call_info['function'];
+            $fileNameArr = explode(\Weline\Framework\Controller\Data\DataInterface::dir, $parent_call_info['class']);
+            $fileName = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $parent_call_info['function'];
         }
 
         return $this->getTemplate()->fetch($fileName);
@@ -140,18 +143,18 @@ class PcController extends Core
     protected function getViewBaseDir()
     {
         $class_name = get_class($this);
-        $cache_key  = 'module_of_' . $class_name;
+        $cache_key = 'module_of_' . $class_name;
         // 设置缓存，以免每次都去反射解析控制器的模块基础目录
-        if ($module_dir = $this->controllerCache->get($cache_key)) {
+        if ($module_dir = $this->getControllerCache()->get($cache_key)) {
             return $module_dir;
         }
-        $reflect             = new ReflectionObject($this);
-        $filename            = $reflect->getFileName();
-        $filename            = str_replace(Env::GENERATED_DIR, 'app', $filename);
+        $reflect = new ReflectionObject($this);
+        $filename = $reflect->getFileName();
+        $filename = str_replace(Env::GENERATED_DIR, 'app', $filename);
         $ctl_dir_reflect_arr = explode(self::dir, $filename);
-        $module_dir          = array_shift($ctl_dir_reflect_arr);
-        $module_dir          = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
-        if (! is_dir($module_dir)) {
+        $module_dir = array_shift($ctl_dir_reflect_arr);
+        $module_dir = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
+        if (!is_dir($module_dir)) {
             mkdir($module_dir, 0775, true);
         }
         $this->controllerCache->set($cache_key, $module_dir);
