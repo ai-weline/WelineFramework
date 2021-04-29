@@ -46,12 +46,12 @@ class Parser
             // 先访问缓存
             /**@var \Weline\Framework\Cache\CacheInterface $phraseCache */
             $phraseCache = ObjectManager::getInstance('\Weline\Framework\Phrase\Cache\PhraseCacheFactory');
-            if (!DEV && $phrase_words = $phraseCache->get('phrase_words')) {
+            if (! DEV && $phrase_words = $phraseCache->get('phrase_words')) {
                 self::$words = $phrase_words;
             } else {
                 /**@var \Weline\Framework\Event\EventsManager $eventsManager */
                 $eventsManager = ObjectManager::getInstance(\Weline\Framework\Event\EventsManager::class);
-                $file_data = new DataObject(['file_path' => Env::path_TRANSLATE_DEFAULT_FILE]);
+                $file_data     = new DataObject(['file_path' => Env::path_TRANSLATE_DEFAULT_FILE]);
                 $eventsManager->dispatch('Weline_Framework_phrase::get_words_file', ['file_data' => $file_data]);
                 $words_file = $file_data->getData('file_path');
                 if (is_file($words_file)) {
@@ -63,7 +63,6 @@ class Parser
                     }
                 }
             }
-
         }
         // 如果有就替换
         if (isset(self::$words[$words])) {
