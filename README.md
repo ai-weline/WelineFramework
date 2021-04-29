@@ -175,6 +175,22 @@ php bin/m p:d:c
 
 已完成。
 
+10、新增工厂类模式
+
+~~~
+实例化一个类，如果类后缀是Factory时会创建类并检查create函数，有则运行
+例如：
+原本实例化\Weline\Framework\Phrase\Cache\PhraseCache后需要再执行create，才能得到缓存驱动。
+$phraseCache = (new \Weline\Framework\Phrase\Cache\PhraseCache())->create();
+这样会很麻烦。
+现在使用工厂类模式：
+/**@var \Weline\Framework\Cache\CacheInterface $phraseCache */
+$phraseCache = ObjectManager::getInstance(\Weline\Framework\Phrase\Cache\PhraseCache::class.'Factory');
+或者：
+$phraseCache = ObjectManager::getInstance('\Weline\Framework\Phrase\Cache\PhraseCacheFactory');
+就能够轻松搞定。
+~~~
+
 
 下一个版本2.0计划
 ~~~
