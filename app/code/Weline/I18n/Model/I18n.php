@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\I18n\Model;
+namespace Weline\I18n\Model;
 
 class I18n extends \Weline\Framework\Database\Model
 {

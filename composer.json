@@ -24,7 +24,8 @@
     "friendsofphp/php-cs-fixer": "^2.16",
     "ext-dom": "*",
     "ext-libxml": "*",
-    "ext-zip": "*"
+    "ext-zip": "*",
+    "symfony/intl": "^5.2"
   },
   "autoload": {
     "psr-4": {
