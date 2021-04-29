@@ -15,7 +15,7 @@ class Response implements ResponseInterface
 {
     private Response $instance;
 
-    private array $headers = ['WELINE-LANG' => 'zh_Hans_CN'];
+    private array $headers = ['WELINE-USER-LANG' => 'zh_Hans_CN'];
 
     public function setHeader(string $header_key, string $header_value)
     {

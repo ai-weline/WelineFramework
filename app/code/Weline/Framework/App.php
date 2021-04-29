@@ -11,19 +11,38 @@ namespace Weline\Framework;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Helper;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Router\Core as RouterCore;
 
 class App
 {
     /**
-     * @var RouterCore
+     * @var Env
      */
-    private RouterCore $router;
+    private static Env $_env;
 
-    public function __construct(
-        RouterCore $router
-    ) {
-        $this->router = $router;
+    /**
+     * @DESC         |环境变量操作
+     *
+     * 参数区：
+     *
+     * @param string|null $key
+     * @param null $value
+     * @return array|bool|mixed|Env|null
+     */
+    public static function Env(string $key = null, $value = null)
+    {
+        if (! isset(self::$_env)) {
+            self::$_env = Env::getInstance();
+        }
+        if ($key && empty($value)) {
+            return self::$_env->getConfig($key);
+        }
+        if ($key && $value) {
+            return self::$_env->setConfig($key, $value);
+        }
+
+        return self::$_env;
     }
 
     /**
@@ -42,15 +61,40 @@ class App
         // 助手函数
         require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
         /**------------环境配置----------------*/
-        $env = Env::getInstance();
         // 调试模式
-        define('DEV', $env->getConfig('deploy', false) === 'dev');
+        define('DEV', self::Env('deploy') === 'dev');
         // 代码标准化模式
-        define('PHP_CS', $env->getConfig('php-cs', false));
+        define('PHP_CS', self::Env()->getConfig('php-cs', false));
         //报告错误
         DEV ? error_reporting(E_ALL) : error_reporting(0);
         // 检查运行模式
         defined('CLI') ?: define('CLI', PHP_SAPI === 'cli');
+
+        // 错误报告
+        if (DEV || CLI) {
+            ini_set('error_reporting', E_ALL);
+            register_shutdown_function(function () {
+                $_error = error_get_last();
+                if ($_error && in_array($_error['type'], [1, 4, 16, 64, 256, 4096, E_ALL], true)) {
+                    if (CLI) {
+                        echo __('致命错误：') . PHP_EOL;
+                        echo __('文件：') . $_error['file'] . PHP_EOL;
+                        echo __('行数：') . $_error['line'] . PHP_EOL;
+                        echo __('消息：') . $_error['message'] . PHP_EOL;
+                    } else {
+                        echo '<b style="color: red">致命错误：</b></br>';
+                        echo '<pre>';
+                        echo __('文件：') . $_error['file'] . '</br>';
+                        echo __('行数：') . $_error['line'] . '</br>';
+                        echo __('消息：') . $_error['message'] . '</br>';
+                        echo '</pre>';
+                    }
+                }
+            });
+        }
+//        else{
+//            ini_set('error_reporting', 0);
+//        }
     }
 
     /**
@@ -63,11 +107,14 @@ class App
      *
      * 参数区：
      */
-    public function run()
+    public static function run()
     {
+        self::init();
         if (! CLI) {
-            $this->router->start();
+            return ObjectManager::getInstance(RouterCore::class)->start();
         }
+
+        return '';
     }
 
     /**
@@ -90,13 +137,5 @@ class App
     public static function helper(): Helper
     {
         return new App\Helper();
-    }
-
-    /**
-     * @return RouterCore
-     */
-    public function getRouter(): RouterCore
-    {
-        return $this->router;
     }
 }

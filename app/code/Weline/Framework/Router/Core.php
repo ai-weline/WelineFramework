@@ -47,7 +47,6 @@ class Core
      */
     public function __wakeup()
     {
-        p();
         $this->request = new Request();
     }
 

@@ -16,7 +16,8 @@ class Parser
         // 读取语言环境 TODO 翻译环境 数据库 对应用户的翻译
         /**@var \Weline\Framework\Http\Request $request */
         $request =\Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Http\Request::class);
-        $lang    = $request->getHeader('WELINE-LANG');
+        $lang    = $request->getHeader('WELINE-USER-LANG');
+        p($lang);
 //        p($request);
         // 只缓存 收集来的 翻译文件 以及翻译包
         /**@var $cache \Weline\Framework\Cache\CacheInterface */

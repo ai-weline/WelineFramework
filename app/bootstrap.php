@@ -35,48 +35,19 @@ try {
     /**
      * 初始化应用...
      */
-    \Weline\Framework\App::init();
-    if (DEV || CLI) {
-//        ini_set('error_reporting', E_ALL);
-        ini_set('error_reporting', 0);
-
-        function cache_shutdown_error()
-        {
-            $_error = error_get_last();
-            if ($_error && in_array($_error['type'], [1, 4, 16, 64, 256, 4096, E_ALL], true)) {
-                if (CLI) {
-                    echo __('致命错误：') . PHP_EOL;
-                    echo __('文件：') . $_error['file'] . PHP_EOL;
-                    echo __('行数：') . $_error['line'] . PHP_EOL;
-                    echo __('消息：') . $_error['message'] . PHP_EOL;
-                } else {
-                    echo '<b style="color: red">致命错误：</b></br>';
-                    echo '<pre>';
-                    echo __('文件：') . $_error['file'] . '</br>';
-                    echo __('行数：') . $_error['line'] . '</br>';
-                    echo __('消息：') . $_error['message'] . '</br>';
-                    echo '</pre>';
-                }
-            }
-        }
-
-        register_shutdown_function('cache_shutdown_error');
-    }
-    /**@var $app \Weline\Framework\App */
-    $app = ObjectManager::getInstance(\Weline\Framework\App::class);
+    \Weline\Framework\App::run();
 } catch (Exception $exception) {
     if (DEV) {
         exit('应用启动失败：' . $exception->getMessage());
     }
 }
-// 启动应用
-$app->run();
 
-if (DEV) {
-    $exception = error_get_last();
-    if ($exception) {
-        /**@var $printing \Weline\Framework\Output\Cli\Printing */
-        $printing = ObjectManager::getInstance(\Weline\Framework\Output\Cli\Printing::class);
-        $printing->error($exception['message']);
-    }
-}
+//
+//if (DEV) {
+//    $exception = error_get_last();
+//    if ($exception) {
+//        /**@var $printing \Weline\Framework\Output\Cli\Printing */
+//        $printing = ObjectManager::getInstance(\Weline\Framework\Output\Cli\Printing::class);
+//        $printing->error($exception['message']);
+//    }
+//}

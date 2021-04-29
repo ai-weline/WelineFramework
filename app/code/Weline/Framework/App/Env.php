@@ -73,8 +73,12 @@ class Env
 
     const GENERATED_DIR = 'generated';
 
-    // 翻译词典
-    const path_TRANSLATE_WORDS_FILE = BP . self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language.php';
+    // 翻译词典 目录
+    const path_TRANSLATE_FILES_PATH = BP . self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR;
+
+    const path_TRANSLATE_DEFAULT_FILE = BP . self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'zh_Hans_CN.php';
+
+    const path_TRANSLATE_ALL_COLLECTIONS_WORDS_FILE = BP . self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'words.php';
 
     // 日志
     const log_path_ERROR = 'error';
@@ -196,7 +200,7 @@ class Env
      *
      * @return Env
      */
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (! isset(self::$instance)) {
             self::$instance = new self();

@@ -19,13 +19,14 @@ class File implements CacheInterface, DriverInterface
      * @var string 存储缓存文件的目录。
      * 缓存文件的地址，例如/var/html/projects/var/cache/
      */
-    public string $cachePath;
+    private string $cachePath;
 
     public function __construct(string $identity, array $config)
     {
-        if (isset($config['path']) && DIRECTORY_SEPARATOR === '\\') {
-            $config['path'] = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
+        if (! isset($config['path'])) {
+            $config['path'] = 'var/cache/';
         }
+        $config['path']  = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
         $this->cachePath = BP . $config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
 
         if (! is_dir($this->cachePath)) {
@@ -55,7 +56,7 @@ class File implements CacheInterface, DriverInterface
      * @param int $status
      * @return CacheInterface
      */
-    public function setStatus(int $status):CacheInterface
+    public function setStatus(int $status): CacheInterface
     {
         $this->status = $status;
 
@@ -91,7 +92,7 @@ class File implements CacheInterface, DriverInterface
     public function get($key)
     {
         $key       = $this->buildKey($key);
-        $cacheFile = $this->cachePath . $key;
+        $cacheFile = $this->processCacheFile($this->cachePath . $key);
         // filemtime用来获取文件的修改时间
         if (@filemtime($cacheFile) > time()) {
             // file_get_contents用来获取文件内容，unserialize用来反序列化文件内容
@@ -290,5 +291,22 @@ class File implements CacheInterface, DriverInterface
 
         // 关闭目录
         $dir->close();
+    }
+
+    /**
+     * @DESC         |处理缓存文件路径
+     *
+     * 参数区：
+     *
+     * @param string $cacheFile
+     * @return string
+     */
+    public function processCacheFile(string $cacheFile): string
+    {
+        if (! file_exists($cacheFile)) {
+            touch($cacheFile);
+        }
+
+        return $cacheFile;
     }
 }

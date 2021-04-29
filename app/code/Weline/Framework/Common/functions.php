@@ -57,7 +57,7 @@ function getStringBetweenContents(string $str, string $startDelimiter, string $e
  */
 function __(string $words, array $args = [])
 {
-    return \Weline\Framework\I18n\Parser::parse($words, $args);
+    return \Weline\Framework\Phrase\Parser::parse($words, $args);
 }
 
 /**

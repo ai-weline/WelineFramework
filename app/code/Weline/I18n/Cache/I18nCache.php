@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\I18n\Cache;
+namespace Weline\I18n\Cache;
 
 class I18nCache extends \Weline\Framework\Cache\CacheManager
 {

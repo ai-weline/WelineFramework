@@ -12,4 +12,3 @@ declare(strict_types=1);
 $start = microtime(true);
 require __DIR__ . '/pub/index.php';
 $end = microtime(true);
-var_dump(($start - $end) / 1000000);

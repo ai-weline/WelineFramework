@@ -4,7 +4,6 @@ if (PHP_SAPI !== 'cli') {
     echo chr(27) . '[34m bin/m' . chr(27) . '[31m  ??? CLI ??????' . chr(27) . '[0m' . PHP_EOL;
     exit(1);
 }
-
 try {
     require __DIR__ . '/../app/bootstrap.php';
 } catch (Exception $e) {
