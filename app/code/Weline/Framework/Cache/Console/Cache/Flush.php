@@ -48,10 +48,11 @@ class Flush implements \Weline\Framework\Console\CommandInterface
 //        /**@var EventsManager $eventsManager */
 //        $eventsManager = ObjectManager::getInstance(EventsManager::class);
 //        $eventsManager->dispatch('WelineFrame');
-        $var_dirs = $this->scanner->scanDir(BP . 'var' . DIRECTORY_SEPARATOR . 'cache');
-        p($var_dirs);
+        $system_cache_dir = BP . 'var' . DIRECTORY_SEPARATOR . 'cache';
+        $var_dirs = $this->scanner->scanDir($system_cache_dir);
         foreach ($var_dirs as $var_dir) {
-
+            $cache_dir = $system_cache_dir.DIRECTORY_SEPARATOR.$var_dir;
+            p($cache_dir);
         }
         $this->printing->success(__('缓存已清理！'));
     }
