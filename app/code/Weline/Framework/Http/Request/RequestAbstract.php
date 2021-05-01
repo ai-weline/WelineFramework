@@ -37,9 +37,9 @@ abstract class RequestAbstract
 
     public function __construct()
     {
-        $url_arr = explode('/', trim($this->getUrl(), '/'));
+        $url_arr           = explode('/', trim($this->getUrl(), '/'));
         $this->area_router = array_shift($url_arr);
-        $this->_filter = RequestFilter::getInstance();
+        $this->_filter     = RequestFilter::getInstance();
     }
 
     public function __init()
@@ -181,7 +181,7 @@ abstract class RequestAbstract
 
     public function getUrl(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return array_shift($url_exp);
@@ -189,7 +189,7 @@ abstract class RequestAbstract
 
     public function getBaseUrl(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return $this->getBaseHost() . array_shift($url_exp);
@@ -197,7 +197,7 @@ abstract class RequestAbstract
 
     public function getBaseUri(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return $this->getBaseHost() . array_shift($url_exp);
@@ -213,11 +213,11 @@ abstract class RequestAbstract
      *
      * 参数区：
      *
-     * @return Response
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
+     * @return Response
      */
-    function getResponse(): Response
+    public function getResponse(): Response
     {
         return ObjectManager::getInstance(Response::class);
     }

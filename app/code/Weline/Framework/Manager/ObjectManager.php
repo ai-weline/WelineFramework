@@ -106,7 +106,6 @@ class ObjectManager implements ManagerInterface
         if (rtrim($class, 'Factory') !== $class) {
             $create_method = 'create';
             if (method_exists($new_object, $create_method)) {
-                p($class);
                 $new_object = $new_object->$create_method();
             }
         }
