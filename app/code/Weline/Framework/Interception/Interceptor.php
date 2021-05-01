@@ -19,7 +19,7 @@ trait Interceptor
 
     private PluginsManager $pluginsManager;
 
-    public function ___init()
+    public function __init()
     {
         $this->pluginsManager = ObjectManager::getInstance(PluginsManager::class);
         $this->subjectType    = get_parent_class($this);

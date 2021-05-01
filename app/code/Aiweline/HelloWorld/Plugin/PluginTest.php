@@ -13,6 +13,7 @@ class PluginTest
 {
     public function beforeGetName(\Aiweline\HelloWorld\Model\PluginTestModel $object, $a)
     {
+        p($a);
         $a[]= '我被PluginTest类的beforeGetName修改过';
 
         return $a;

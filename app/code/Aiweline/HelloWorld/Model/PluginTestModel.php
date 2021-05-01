@@ -11,7 +11,7 @@ namespace Aiweline\HelloWorld\Model;
 
 class PluginTestModel
 {
-    public function getName($a)
+    public function getName(array $a)
     {
         return $a;
     }

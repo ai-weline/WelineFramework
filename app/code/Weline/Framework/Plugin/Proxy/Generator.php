@@ -143,7 +143,7 @@ ${functionList}
             $construct_content = '';
             if ('__construct' === $method->name) {
                 $construct_content = '
-        $this->___init();
+        $this->__init();
         parent::__construct(' . $params_tpl . ');
                     ';
                 $func_tpl = $construct_func_tpl;
