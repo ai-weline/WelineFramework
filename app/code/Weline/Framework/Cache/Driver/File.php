@@ -23,10 +23,10 @@ class File implements CacheInterface, DriverInterface
 
     public function __construct(string $identity, array $config)
     {
-        if (! isset($config['path'])) {
+        if (!isset($config['path'])) {
             $config['path'] = 'var/cache/';
         }
-        $config['path']  = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
+        $config['path'] = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
         $this->cachePath = BP . $config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
     }
 
@@ -37,7 +37,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function __init()
     {
-        if (! is_dir($this->cachePath)) {
+        if (!is_dir($this->cachePath)) {
             mkdir($this->cachePath, 0770, true);
         }
     }
@@ -81,7 +81,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function buildKey($key)
     {
-        if (! is_string($key)) {
+        if (!is_string($key)) {
             // 不是字符串，json_encode转成字符串
             $key = json_encode($key);
         }
@@ -99,7 +99,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function get($key)
     {
-        $key       = $this->buildKey($key);
+        $key = $this->buildKey($key);
         $cacheFile = $this->processCacheFile($this->cachePath . $key);
         // filemtime用来获取文件的修改时间
         if (@filemtime($cacheFile) > time()) {
@@ -120,7 +120,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function exists($key)
     {
-        $key       = $this->buildKey($key);
+        $key = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         // 用修改时间标记过期时间，存入时会做相应的处理
         return @filemtime($cacheFile) > time();
@@ -156,7 +156,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function set($key, $value, $duration = 0)
     {
-        $key       = $this->buildKey($key);
+        $key = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         // serialize用来序列化缓存内容
         $value = serialize($value);
@@ -209,7 +209,7 @@ class File implements CacheInterface, DriverInterface
     public function add($key, $value, $duration = 0)
     {
         //  key不存在，就设置缓存
-        if (! $this->exists($key)) {
+        if (!$this->exists($key)) {
             return $this->set($key, $value, $duration);
         }
 
@@ -248,7 +248,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function delete($key)
     {
-        $key       = $this->buildKey($key);
+        $key = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         // unlink用来删除文件
         return unlink($cacheFile);
@@ -288,17 +288,16 @@ class File implements CacheInterface, DriverInterface
     public function clear()
     {
         // 打开cache文件所在目录
-        $dir = @dir($this->cachePath);
-
-        // 列出目录中的所有文件
-        while (($file = $dir->read()) !== false) {
-            if ($file !== '.' && $file !== '..') {
-                @file_put_contents($this->cachePath . $file, '', LOCK_EX);
+        if ($dir = @dir($this->cachePath)) {
+            // 列出目录中的所有文件
+            while (($file = $dir->read()) !== false) {
+                if ($file !== '.' && $file !== '..') {
+                    @file_put_contents($this->cachePath . $file, '', LOCK_EX);
+                }
             }
+            // 关闭目录
+            $dir->close();
         }
-
-        // 关闭目录
-        $dir->close();
     }
 
     /**
@@ -312,10 +311,10 @@ class File implements CacheInterface, DriverInterface
     public function processCacheFile(string $cacheFile): string
     {
         $cache_dir = dirname($cacheFile);
-        if (! is_dir($cache_dir)) {
+        if (!is_dir($cache_dir)) {
             mkdir($cache_dir, 775, true);
         }
-        if (! file_exists($cacheFile)) {
+        if (!file_exists($cacheFile)) {
             touch($cacheFile);
         }
 
