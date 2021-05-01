@@ -70,8 +70,9 @@ trait Interceptor
     protected function ___callPlugins($method, array $arguments, array $pluginInfo)
     {
         //闭包调用
-        $subject = $this;
-        $result  = null;
+        $subject          = $this;
+        $result           = null;
+        $origin_arguments = $arguments;
 
         $next = function (...$arguments) use (
             $method,
@@ -132,7 +133,7 @@ trait Interceptor
 
             return $result;
         };
-        $result = $next(...array_values($arguments));
+        $result = $next(...$arguments);
         $next   = null;
 
         return $result;

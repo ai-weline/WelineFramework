@@ -13,21 +13,21 @@ class PluginTestModel
 {
     public function beforeGetName(\Aiweline\HelloWorld\Model\PluginTestModel $object, $a)
     {
-        $a[] = '我被PluginTestModel类abeforeGetName修改过';
+        $a .= '我被PluginTestModel类abeforeGetName修改过';
 
         return $a;
     }
 
     public function aroundGetName($object, \closure $closure, $a)
     {
-        $a[] = '我被PluginTestModel类aroundGetName修改过';
+        $a .= '我被PluginTestModel类aroundGetName修改过';
 
         return $a;
     }
 
     public function afterGetName($object, $a)
     {
-        $a[] = '我被PluginTestModel类afterGetName修改过';
+        $a .= '我被PluginTestModel类afterGetName修改过';
 
         return $a;
     }
