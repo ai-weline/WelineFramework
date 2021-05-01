@@ -45,7 +45,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                     $this->printing->note(__('模块缓存清理中...'));
                     foreach ($cache as $app_cache) {
                         $this->printing->printing(__($app_cache['class'] . '...'));
-                        ObjectManager::getInstance($app_cache['class'])->clear();
+                        ObjectManager::getInstance($app_cache['class'] . 'Factory')->clear();
                     }
 
                     break;
@@ -53,7 +53,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                     $this->printing->note(__('框架缓存清理中...'));
                     foreach ($cache as $framework_cache) {
                         $this->printing->printing(__($framework_cache['class'] . '...'));
-                        ObjectManager::getInstance($framework_cache['class'])->create()->clear();
+                        ObjectManager::getInstance($framework_cache['class'] . 'Factory')->clear();
                     }
 
                     break;

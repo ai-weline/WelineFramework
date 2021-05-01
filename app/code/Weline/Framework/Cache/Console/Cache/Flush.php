@@ -9,9 +9,7 @@
 
 namespace Weline\Framework\Cache\Console\Cache;
 
-use Weline\Framework\App\System;
 use Weline\Framework\Cache\Scanner;
-use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Cli\Printing;
 
@@ -27,25 +25,12 @@ class Flush implements \Weline\Framework\Console\CommandInterface
      */
     private Printing $printing;
 
-    /**
-     * @var System
-     */
-    private System $system;
-
-    /**
-     * Flush 初始函数...
-     * @param Scanner $scanner
-     * @param Printing $printing
-     * @param System $system
-     */
     public function __construct(
         Scanner $scanner,
-        Printing $printing,
-        System $system
+        Printing $printing
     ) {
         $this->scanner  = $scanner;
         $this->printing = $printing;
-        $this->system   = $system;
     }
 
     /**
@@ -53,18 +38,30 @@ class Flush implements \Weline\Framework\Console\CommandInterface
      */
     public function execute($args = [])
     {
-        // FIXME 准备缓存拓展,允许支持第三方自定义缓存插件
-//        /**@var EventsManager $eventsManager */
-//        $eventsManager = ObjectManager::getInstance(EventsManager::class);
-//        $eventsManager->dispatch('WelineFrame');
-        $system_cache_dir = BP . 'var' . DIRECTORY_SEPARATOR . 'cache';
-        $var_dirs         = $this->scanner->scanDir($system_cache_dir);
-        foreach ($var_dirs as $var_dir) {
-            $cache_dir = $system_cache_dir . DIRECTORY_SEPARATOR . $var_dir;
-            $this->system->exec('rm -rf ' . $cache_dir);
-            $this->printing->note($cache_dir);
+        $caches = $this->scanner->getCaches();
+        foreach ($caches as $form => $cache) {
+            switch ($form) {
+                case 'app_caches':
+                    $this->printing->note(__('模块缓存刷新中...'));
+                    foreach ($cache as $app_cache) {
+                        $this->printing->printing(__($app_cache['class'] . '...'));
+                        ObjectManager::getInstance($app_cache['class'] . 'Factory')->flush();
+                    }
+
+                    break;
+                case 'framework_caches':
+                    $this->printing->note(__('框架缓存刷新中...'));
+                    foreach ($cache as $framework_cache) {
+                        $this->printing->printing(__($framework_cache['class'] . '...'));
+                        ObjectManager::getInstance($framework_cache['class'] . 'Factory')->flush();
+                    }
+
+                    break;
+                default:
+                    $this->printing->error(__('没有任何类型的缓存需要刷新！'));
+            }
         }
-        $this->printing->success(__('缓存已清理！'));
+        $this->printing->success(__('缓存已刷新！'));
     }
 
     /**
@@ -72,6 +69,6 @@ class Flush implements \Weline\Framework\Console\CommandInterface
      */
     public function getTip(): string
     {
-        return '缓存刷新。（常用于刷新错误的对象缓存：当刷新出问题时，可以手动清除缓存，file缓存请删除./var/cache）';
+        return '缓存刷新。';
     }
 }

@@ -67,8 +67,7 @@ class ObjectManager implements ManagerInterface
         }
 
         // 类名规则处理
-        $new_class = self::parserClass($class);
-
+        $new_class               = self::parserClass($class);
         $arguments               = $arguments ? $arguments : self::getMethodParams($new_class);
         $new_object              = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
         self::$instances[$class] = self::initClass($class, $new_object);
