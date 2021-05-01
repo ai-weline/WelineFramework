@@ -28,7 +28,15 @@ class File implements CacheInterface, DriverInterface
         }
         $config['path']  = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
         $this->cachePath = BP . $config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
+    }
 
+    /**
+     * @DESC         |框架初始化函数保证缓存文件目录存在
+     *
+     * 参数区：
+     */
+    public function __init()
+    {
         if (! is_dir($this->cachePath)) {
             mkdir($this->cachePath, 0770, true);
         }
@@ -303,6 +311,10 @@ class File implements CacheInterface, DriverInterface
      */
     public function processCacheFile(string $cacheFile): string
     {
+        $cache_dir = dirname($cacheFile);
+        if (! is_dir($cache_dir)) {
+            mkdir($cache_dir, 775, true);
+        }
         if (! file_exists($cacheFile)) {
             touch($cacheFile);
         }

@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Cache\Console\Cache;
 
+use Weline\Framework\App\System;
 use Weline\Framework\Cache\Scanner;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
@@ -27,16 +28,24 @@ class Flush implements \Weline\Framework\Console\CommandInterface
     private Printing $printing;
 
     /**
+     * @var System
+     */
+    private System $system;
+
+    /**
      * Flush 初始函数...
      * @param Scanner $scanner
      * @param Printing $printing
+     * @param System $system
      */
     public function __construct(
         Scanner $scanner,
-        Printing $printing
+        Printing $printing,
+        System $system
     ) {
         $this->scanner  = $scanner;
         $this->printing = $printing;
+        $this->system   = $system;
     }
 
     /**
@@ -49,10 +58,11 @@ class Flush implements \Weline\Framework\Console\CommandInterface
 //        $eventsManager = ObjectManager::getInstance(EventsManager::class);
 //        $eventsManager->dispatch('WelineFrame');
         $system_cache_dir = BP . 'var' . DIRECTORY_SEPARATOR . 'cache';
-        $var_dirs = $this->scanner->scanDir($system_cache_dir);
+        $var_dirs         = $this->scanner->scanDir($system_cache_dir);
         foreach ($var_dirs as $var_dir) {
-            $cache_dir = $system_cache_dir.DIRECTORY_SEPARATOR.$var_dir;
-            p($cache_dir);
+            $cache_dir = $system_cache_dir . DIRECTORY_SEPARATOR . $var_dir;
+            $this->system->exec('rm -rf ' . $cache_dir);
+            $this->printing->note($cache_dir);
         }
         $this->printing->success(__('缓存已清理！'));
     }
@@ -62,6 +72,6 @@ class Flush implements \Weline\Framework\Console\CommandInterface
      */
     public function getTip(): string
     {
-        return '缓存刷新。';
+        return '缓存刷新。（常用于刷新错误的对象缓存：当刷新出问题时，可以手动清除缓存，file缓存请删除./var/cache）';
     }
 }
