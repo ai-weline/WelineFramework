@@ -24,19 +24,14 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     private string $module_path;
 
-    public function __construct()
+    public function __init()
     {
-        parent::__construct();
+        /**
+         * 重载方法
+         */
+        parent::__init();
         $this->module_path = '';
         $this->module_name = str_replace('\\', '_', $this->module_path);
-    }
-
-    /**
-     * @return string|string[]
-     */
-    public function getModuleName()
-    {
-        return $this->module_name;
     }
 
     /**

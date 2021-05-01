@@ -133,10 +133,10 @@ class Core
                 $router   = $routers[$url . $method] ?? $routers[$url . '/index' . $method];
                 $class    = json_decode(json_encode($router['class']));
                 $dispatch = ObjectManager::getInstance($class->name);
-
+                $this->request->setRouter($router);
                 $method = $class->method ? $class->method : 'index';
                 if ((int)method_exists($dispatch, $method)) {
-                    return call_user_func([$dispatch, $method]);
+                    exit(call_user_func([$dispatch, $method]));
                 }
 
                 throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
@@ -173,14 +173,13 @@ class Core
             $routers = include $router_filepath;
             if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . '/index/index'])) {
                 $router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . '/index/index'];
-
-                $class = json_decode(json_encode($router['class']));
-
+                $class  = json_decode(json_encode($router['class']));
+                $this->request->setRouter($router);
                 // 检测注册方法
                 $dispatch = ObjectManager::getInstance($class->name);
                 $method   = $class->method ? $class->method : 'index';
                 if (method_exists($dispatch, $method)) {
-                    return call_user_func([$dispatch, $method], $this->request->getParams());
+                    exit(call_user_func([$dispatch, $method], $this->request->getParams()));
                 }
 
                 throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");

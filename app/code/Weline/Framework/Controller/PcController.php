@@ -68,22 +68,7 @@ class PcController extends Core
     public function getTemplate(): Template
     {
         if (! isset($this->_template)) {
-//            $this->_template = ObjectManager::make(
-//                Template::class,
-//                '__construct',
-//                ['request' => $this->getRequest(), 'view_dir' => $this->getViewBaseDir()]
-//            );
-            $this->_template = ObjectManager::getInstance(
-                Template::class,
-                [
-                    'request'  => $this->getRequest(),
-                    'view_dir' => $this->getViewBaseDir(),
-                ]/*
-                [
-                    'request'  => $this->getRequest(),
-                    'view_dir' => $this->getViewBaseDir(),
-                ]*/
-            );
+            $this->_template = ObjectManager::getInstance(Template::class, ['controller' => $this], false);
         }
 
         return $this->_template;
@@ -118,8 +103,8 @@ class PcController extends Core
      * 参数区：
      *
      * @param string $fileName
-     * @throws Exception
      * @throws \Weline\Framework\Exception\Core
+     * @throws Exception
      * @return bool
      */
     protected function fetch(string $fileName = null)
@@ -140,7 +125,7 @@ class PcController extends Core
      *
      * @return string
      */
-    protected function getViewBaseDir()
+    public function getViewBaseDir()
     {
         $class_name = get_class($this);
         $cache_key  = 'module_of_' . $class_name;

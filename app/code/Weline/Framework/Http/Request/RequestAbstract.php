@@ -30,21 +30,60 @@ abstract class RequestAbstract
 
     private string $area_router = State::area_frontend;
 
+    private array $router;
+
     /**
      * @var RequestFilter
      */
     private RequestFilter $_filter;
 
-    public function __construct()
+    /**
+     * @var \Weline\Framework\Http\Response
+     */
+    private \Weline\Framework\Http\Response $_response;
+
+    public function __init()
     {
         $url_arr           = explode('/', trim($this->getUrl(), '/'));
         $this->area_router = array_shift($url_arr);
         $this->_filter     = RequestFilter::getInstance();
+        $this->_response   = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
     }
 
-    public function __init()
+    /**
+     * @DESC         |设置原始路由
+     *
+     * 参数区：
+     *
+     * @param array $router
+     */
+    public function setRouter(array $router)
     {
-        $this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
+        $this->router = $router;
+    }
+
+    /**
+     * @DESC         |获取原始路由
+     *
+     * 参数区：
+     *
+     * @return array
+     */
+    public function getRouter(): array
+    {
+        return $this->router;
+    }
+
+    /**
+     * @DESC         |获取模块名
+     *
+     * 参数区：
+     *
+     * @return string
+     */
+    public function getModuleName(): string
+    {
+        return isset($this->router['name']) ? $this->router['name'] : '';
     }
 
     /**
@@ -219,6 +258,6 @@ abstract class RequestAbstract
      */
     public function getResponse(): Response
     {
-        return ObjectManager::getInstance(Response::class);
+        return $this->_response;
     }
 }
