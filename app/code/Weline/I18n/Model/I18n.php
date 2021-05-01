@@ -30,7 +30,6 @@ class I18n extends \Weline\Framework\Database\Model
                 }
             }
         }
-
         return $locals;
     }
 }

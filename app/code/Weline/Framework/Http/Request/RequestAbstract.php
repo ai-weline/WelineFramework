@@ -12,6 +12,7 @@ namespace Weline\Framework\Http\Request;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\State;
 use Weline\Framework\Controller\Data\DataInterface;
+use Weline\Framework\Http\Response;
 use Weline\Framework\Manager\ObjectManager;
 
 abstract class RequestAbstract
@@ -34,13 +35,11 @@ abstract class RequestAbstract
      */
     private RequestFilter $_filter;
 
-    private $_response;
-
     public function __construct()
     {
-        $url_arr           = explode('/', trim($this->getUrl(), '/'));
+        $url_arr = explode('/', trim($this->getUrl(), '/'));
         $this->area_router = array_shift($url_arr);
-        $this->_filter     = RequestFilter::getInstance();
+        $this->_filter = RequestFilter::getInstance();
     }
 
     public function __init()
@@ -182,7 +181,7 @@ abstract class RequestAbstract
 
     public function getUrl(): string
     {
-        $uri     = $this->getUri();
+        $uri = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return array_shift($url_exp);
@@ -190,7 +189,7 @@ abstract class RequestAbstract
 
     public function getBaseUrl(): string
     {
-        $uri     = $this->getUri();
+        $uri = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return $this->getBaseHost() . array_shift($url_exp);
@@ -198,7 +197,7 @@ abstract class RequestAbstract
 
     public function getBaseUri(): string
     {
-        $uri     = $this->getUri();
+        $uri = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return $this->getBaseHost() . array_shift($url_exp);
@@ -210,14 +209,16 @@ abstract class RequestAbstract
     }
 
     /**
-     * @DESC         |获取响应类
+     * @DESC         |返回响应类
      *
      * 参数区：
      *
      * @return Response
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
-    public function getResponse(): Response
+    function getResponse(): Response
     {
-        return $this->_response;
+        return ObjectManager::getInstance(Response::class);
     }
 }

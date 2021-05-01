@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\I18n\Config;
+namespace Weline\I18n\Config;
 
 use Weline\Framework\Manager\ObjectManager;
 

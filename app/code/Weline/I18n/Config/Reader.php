@@ -7,11 +7,11 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\I18n\Config;
+namespace Weline\I18n\Config;
 
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Http\Request;
-use Weline\Framework\I18n\Cache\I18nCache;
+use Weline\I18n\Cache\I18nCache;
 use Weline\Framework\I18n\Parser;
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\System\FileReader;

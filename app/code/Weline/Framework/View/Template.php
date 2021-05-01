@@ -242,7 +242,6 @@ class Template
         } else {
             $tplFile = $this->template_dir . $fileName . self::file_ext;
         }
-
         $tplFile = $this->fetchFile($tplFile);
         if (! file_exists($tplFile)) {
             if (DEV) {
