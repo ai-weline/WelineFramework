@@ -81,9 +81,11 @@ class Cli extends CliAbstract
                 foreach ($input_command_arr as $input_key => $input_command_head) {
                     // 如果长度和首匹配都相同
                     if (count($command_key_arr) === count($input_command_arr)) {
-                        $input_str_pos = strpos($command_key_arr[$input_key], $input_command_head);
-                        if (isset($command_key_arr[$input_key]) && ! is_bool($input_str_pos) && $input_str_pos === 0) {
-                            $k += 1;
+                        if($input_command_head){
+                            $input_str_pos = strpos($command_key_arr[$input_key], $input_command_head);
+                            if (isset($command_key_arr[$input_key]) && ! is_bool($input_str_pos) && $input_str_pos === 0) {
+                                $k += 1;
+                            }
                         }
                     }
                 }
