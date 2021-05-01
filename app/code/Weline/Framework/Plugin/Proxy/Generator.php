@@ -173,7 +173,7 @@ ${functionList}
             $construct_func_tpl = '
     public function __construct()
     {
-        $this->___init();
+        $this->__init();
     }';
             $functionList['__construct'] = $construct_func_tpl;
         }

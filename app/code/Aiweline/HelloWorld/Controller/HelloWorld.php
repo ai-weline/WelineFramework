@@ -155,7 +155,7 @@ class HelloWorld extends FrontendController
 
     public function plugin()
     {
-        p('需要注意的是：本身插件的实现是利用语法糖的数组参数，如果传输数组会被解析成参数！如需传输数据请使用DataObject包裹',1);
+        p('需要注意的是：本身插件的实现是利用语法糖的数组参数，如果传输数组会被解析成参数！如需传输数据请使用DataObject包裹', 1);
         $a[]              = '默认插件1';
         $a[]              = '默认插件2';
         $plugin_deal_data = $this->pluginTestModel->getName($a);
