@@ -11,23 +11,23 @@ namespace Aiweline\HelloWorld\Plugin;
 
 class PluginTest
 {
-    public function beforeGetName($object, $a)
+    public function beforeGetName(\Aiweline\HelloWorld\Model\PluginTestModel $object, $a)
     {
-        $a .= '我被PluginTest类的beforeGetName修改过';
+        $a[]= '我被PluginTest类的beforeGetName修改过';
 
         return $a;
     }
 
-    public function aroundGetName($object, \closure $closure, $a)
+    public function aroundGetName(\Aiweline\HelloWorld\Model\PluginTestModel $object, \closure $closure, $a)
     {
-        $a .= '我被PluginTest类的aroundGetName修改过';
+        $a[]= '我被PluginTest类的aroundGetName修改过';
 
         return $a;
     }
 
-    public function afterGetName($object, $a)
+    public function afterGetName(\Aiweline\HelloWorld\Model\PluginTestModel $object, $a)
     {
-        $a .= '我被PluginTest类的afterGetName修改过';
+        $a[]= '我被PluginTest类的afterGetName修改过';
 
         return $a;
     }

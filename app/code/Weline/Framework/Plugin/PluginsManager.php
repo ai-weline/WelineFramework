@@ -62,7 +62,7 @@ class PluginsManager
 
         if (empty($this->plugins)) {
             // 合并相同类的拦截器
-            foreach ($this->reader->read($cache) as $module_and_file => $pluginInstances) {
+            foreach ($this->reader->read() as $module_and_file => $pluginInstances) {
                 foreach ($pluginInstances as $key => $instances) {
                     foreach ($instances as $k => $instance) {
                         if (isset($instance['plugins']['disabled']) && 'true' === $instance['plugins']['disabled']) {
