@@ -31,20 +31,20 @@ class Cli extends CliAbstract
         if (! isset($this->argv[0])) {
             exit($this->execute());
         }
-        $class = $this->checkCommand();
+        $command_class = $this->checkCommand();
 //        $this->printer->note(__('执行命令：') . $class['command'] . ' ' . (isset($this->argv[1])?$this->argv[1]:''));
         switch (count($this->argv)) {
             case 1:
-                $class['class']->execute();
+                ObjectManager::getInstance($command_class['class'])->execute();
 
                 break;
             default:
-                $class['class']->execute($this->argv);
+                ObjectManager::getInstance($command_class['class'])->execute($this->argv);
 
                 break;
         }
         $this->printer->printing("\n");
-        $this->printer->note(__('执行命令：') . $class['command'] . ' ' . (isset($this->argv[1]) ? $this->argv[1] : '')/*,$this->printer->colorize('CLI-System','red')*/);
+        $this->printer->note(__('执行命令：') . $command_class['command'] . ' ' . (isset($this->argv[1]) ? $this->argv[1] : '')/*,$this->printer->colorize('CLI-System','red')*/);
     }
 
     /**
@@ -81,7 +81,7 @@ class Cli extends CliAbstract
                 foreach ($input_command_arr as $input_key => $input_command_head) {
                     // 如果长度和首匹配都相同
                     if (count($command_key_arr) === count($input_command_arr)) {
-                        if($input_command_head){
+                        if ($input_command_head) {
                             $input_str_pos = strpos($command_key_arr[$input_key], $input_command_head);
                             if (isset($command_key_arr[$input_key]) && ! is_bool($input_str_pos) && $input_str_pos === 0) {
                                 $k += 1;
@@ -140,7 +140,7 @@ class Cli extends CliAbstract
             $command_class_path = $command_path . $this->getCommandPath($arg0);
             $command_real_path  = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
             if (file_exists($command_real_path)) {
-                return ['class' => ObjectManager::getInstance($command_class_path), 'command' => $arg0];
+                return ['class' => $command_class_path, 'command' => $arg0];
             }
         }
 
@@ -161,7 +161,7 @@ class Cli extends CliAbstract
 
             $command_real_path = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
             if (file_exists($command_real_path)) {
-                return ['class' => ObjectManager::getInstance($command_class_path), 'command' => $command];
+                return ['class' => $command_class_path, 'command' => $command];
             }
             if (DEV) {
                 throw new ConsoleException('命令文件缺失：' . $command_real_path);
