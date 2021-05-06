@@ -48,8 +48,8 @@ class ObjectManager implements ManagerInterface
      * @param string $class
      * @param array $arguments
      * @param bool $shared
-     * @throws Exception
      * @throws \ReflectionException
+     * @throws Exception
      * @return mixed|ObjectManager
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true)
@@ -61,7 +61,7 @@ class ObjectManager implements ManagerInterface
             return self::$instances[$class];
         }
         // 缓存对象读取 FIXME 需要换回 ！DEV
-        if ($shared && DEV && $cache_class_object = self::getCache()->get($class)) {
+        if (! CLI && $shared && DEV && $cache_class_object = self::getCache()->get($class)) {
             self::$instances[$class] = self::initClass($class, $cache_class_object);
 
             return self::$instances[$class];
@@ -127,7 +127,7 @@ class ObjectManager implements ManagerInterface
         $new_class = self::parserClass($className);
         if ('__construct' === $methodName) {
 //            throw  new Exception(__('无法通过make方式执行__construct函数！'));
-            if (self::$instances[$className]) {
+            if (isset(self::$instances[$className])) {
                 return self::$instances[$className];
             }
             // 如果是初始化函数则返回一个初始化后的对象

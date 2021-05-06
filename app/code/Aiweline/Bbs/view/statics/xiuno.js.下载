@@ -1030,7 +1030,7 @@ $.fn.base64_encode_file = function(width, height, action) {
 		var jhidden = $('<input type="hidden" name="'+obj.name+'" />').appendTo(jform);
 		obj.name = '';
 
-		var reader = new FileReader();
+		var reader = new ModuleFileReader();
 		reader.readAsDataURL(file);
 		reader.onload = function(e) {
 			// 如果是图片，并且设置了，宽高，和剪切模式
@@ -1385,13 +1385,13 @@ xn.upload_file = function(file, upload_url, postdata, complete_callback, progres
 		}
 	};
 		
-	// 如果为 base64 则不需要 new FileReader()
+	// 如果为 base64 则不需要 new ModuleFileReader()
 	if(xn.is_string(file) && xn.substr(file, 0, 10) == 'data:image') {
 		var base64_data = file;
 		if(thumb_callback) thumb_callback(base64_data);
 		ajax_upload_file(base64_data);
 	} else {
-		var reader = new FileReader();
+		var reader = new ModuleFileReader();
 			reader.readAsDataURL(file);
 			reader.onload = function() {
 				var base64_data = this.result;

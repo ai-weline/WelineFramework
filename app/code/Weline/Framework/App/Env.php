@@ -38,10 +38,13 @@ class Env
 
     const path_CODE_DESIGN = BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR;
 
+    const path_LANGUAGE_PACK = BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR;
+
     const register_FILE_PATHS = [
-        'app_code'     => self::path_CODE,
-        'vendor_code'  => self::path_VENDOR_CODE,
-        'theme_design' => self::path_CODE_DESIGN,
+        'app_code'      => self::path_CODE,
+        'vendor_code'   => self::path_VENDOR_CODE,
+        'theme_design'  => self::path_CODE_DESIGN,
+        'language_pack' => self::path_LANGUAGE_PACK,
     ];
 
     const default_theme_DATA = [

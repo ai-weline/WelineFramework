@@ -31,9 +31,11 @@ class Scanner extends Scan
         $vendors = $this->scanAllAppVendors();
         foreach ($vendors as $key => $vendor) {
             unset($vendors[$key]);
+            // 常规模块
             if ($vendor_files = $this->scanVendorModules($vendor)) {
                 $vendors[$vendor] = $vendor_files;
             }
+            //
         }
 
         return $vendors;

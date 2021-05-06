@@ -12,7 +12,7 @@ namespace Weline\Framework\System;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\System\File\Scanner;
 
-class FileReader extends DataObject
+class ModuleFileReader extends DataObject
 {
     /**
      * @var Scanner
@@ -24,7 +24,7 @@ class FileReader extends DataObject
     private string $path;
 
     /**
-     * FileReader 初始函数...
+     * ModuleFileReader 初始函数...
      * @param Scanner $scanner
      * @param string $path
      */

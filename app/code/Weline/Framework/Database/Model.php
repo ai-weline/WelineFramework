@@ -68,9 +68,9 @@ abstract class Model extends \think\Model
      *
      * @param string $field_or_pk_value 字段或者主键的值
      * @param null $value 字段的值，只读取主键就不填
-     * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
      * @return $this
      */
     public function load(string $field_or_pk_value, $value = null)
@@ -123,8 +123,8 @@ abstract class Model extends \think\Model
      *
      * @param array $data
      * @param string|null $sequence
-     * @throws \Weline\Framework\Exception\Core
      * @throws \ReflectionException
+     * @throws \Weline\Framework\Exception\Core
      * @return bool
      */
     public function save(array $data = [], string $sequence = null): bool
@@ -191,9 +191,18 @@ abstract class Model extends \think\Model
     public function find($data = null)
     {
         $find_data = parent::find($data);
-        p($find_data);
         $this->setData($find_data);
 
         return $find_data;
+    }
+
+    public function getModuleName(): string
+    {
+        return $this->name;
+    }
+
+    public function getName(): string
+    {
+        return $this->getData('name');
     }
 }

@@ -11,12 +11,14 @@ namespace Weline\I18n\Config;
 
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Http\Request;
+use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\System\File\Data\File;
 use Weline\I18n\Cache\I18nCache;
-use Weline\Framework\I18n\Parser;
+use Weline\I18n\Parser;
 use Weline\Framework\System\File\Scanner;
-use Weline\Framework\System\FileReader;
+use Weline\Framework\System\ModuleFileReader;
 
-class Reader extends FileReader
+class Reader extends ModuleFileReader
 {
     /**
      * @var Request
@@ -58,25 +60,32 @@ class Reader extends FileReader
         parent::__construct($scanner, 'i18n');
     }
 
-    /**
-     * @DESC         |读取语言
-     *
-     * 参数区：
-     */
-    public function getLanguage()
-    {
-        $language = $this->request->getHeader('lang');
-        if (! $language) {
-        }
-    }
 
     /**
-     * @DESC         |读取 TODO 读取模块i18n翻译文件
+     * @DESC         |读取模块i18n翻译文件
      *
      * 参数区：
      */
     public function getAllI18ns()
     {
-//        $this->
+        /**@var LanguagePackReader $lang_pack_reader */
+        $lang_pack_reader = ObjectManager::getInstance(LanguagePackReader::class);
+        $lang_packs = $lang_pack_reader->getLanguagePack();
+        // 模块翻译
+        $vendor_module_i18ns = [];
+        foreach ($this->getFileList() as $vendor => $module_files) {
+            foreach ($module_files as $module => $item) {
+                /**@var $i File*/
+                foreach ($item as $ims) {
+                    foreach ($ims as $im) {
+                        if ($im->getExtension() === 'csv') {
+                            $vendor_module_i18ns[$vendor][$module][]=$im;
+                        }
+                    }
+                }
+            }
+        }
+
+        return array_merge($lang_packs,$vendor_module_i18ns);
     }
 }

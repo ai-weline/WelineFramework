@@ -95,8 +95,13 @@ class Upgrade extends CommandAbstract
                 if (is_file(BP . 'vendor' . DIRECTORY_SEPARATOR . $register)) {
                     require BP . 'vendor' . DIRECTORY_SEPARATOR . $register;
                 }
+                // 主题
                 if (is_file(BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR . $register)) {
                     require BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR . $register;
+                }
+                // i18n国际化
+                if (is_file(BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . $register)) {
+                    require BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . $register;
                 }
             }
         }

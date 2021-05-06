@@ -1,12 +1,2 @@
-<?php
-
-/*
- * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
- * 邮箱：aiweline@qq.com
- * 网址：aiweline.com
- * 论坛：https://bbs.aiweline.com
- */
-
-return [
-    '你好世界！' => '翻译：你好世界！',
-];
+'你好世界！','翻译：你好世界！'
+'你好i18n！','翻译：你好i18n！来自module的覆盖'

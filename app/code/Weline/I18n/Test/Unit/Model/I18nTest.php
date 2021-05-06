@@ -17,10 +17,20 @@ use Weline\I18n\Model\I18n;
 
 class I18nTest extends TestCore
 {
+    private I18n $i18n;
+
+    public function setUp(): void
+    {
+        $this->i18n = ObjectManager::getInstance(I18n::class);
+    }
+
     public function testGetLocals()
     {
-        /**@var I18n $i18n*/
-        $i18n = ObjectManager::getInstance(I18n::class);
-        p($i18n->getLocals());
+        p($this->i18n->getLocals());
+    }
+
+    public function testGetLocalWords()
+    {
+        p($this->i18n->getLocalsWords());
     }
 }

@@ -5,7 +5,7 @@
     <event name="Weline_Framework_phrase::get_words_file">
         <observer name="Framework_I18n::get_words_file" instance="Weline\I18n\Observer\GetWordsFile" disabled="false" shared="true"/>
     </event>
-<!--    <event name="Framework_Register::register_installer">-->
-<!--        <observer name="Weline_Theme::register_installer" instance="Weline\Theme\Observer\Register" disabled="false" shared="true"/>-->
-<!--    </event>-->
+    <event name="Framework_Register::register_installer">
+        <observer name="Weline_I18n::register_installer" instance="Weline\I18n\Observer\Register" disabled="false" shared="true"/>
+    </event>
 </config>

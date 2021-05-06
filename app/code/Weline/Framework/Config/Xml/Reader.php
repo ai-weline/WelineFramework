@@ -10,10 +10,10 @@
 namespace Weline\Framework\Config\Xml;
 
 use Weline\Framework\System\File\Scanner;
-use Weline\Framework\System\FileReader;
+use Weline\Framework\System\ModuleFileReader;
 use Weline\Framework\Xml\Parser;
 
-class Reader extends FileReader
+class Reader extends ModuleFileReader
 {
     const ROOT_NAMESPACE_PREFIX = 'x';
 

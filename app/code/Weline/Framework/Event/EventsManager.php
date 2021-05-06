@@ -35,7 +35,16 @@ class EventsManager
     {
         if (empty($this->eventsObservers)) {
             foreach ($this->reader->read() as $module_and_file => $eventObservers) {
-                $this->eventsObservers = array_merge($this->eventsObservers, $eventObservers);
+                foreach ($eventObservers as $event_name=>$eventObserver) {
+                    if (isset($this->eventsObservers[$event_name])) {
+                        $this->eventsObservers[$event_name] = array_merge($this->eventsObservers[$event_name], $eventObserver);
+                    } else {
+                        {
+                        $this->eventsObservers[$event_name] = $eventObserver;
+                    }
+                    }
+                }
+//                $this->eventsObservers = array_merge($this->eventsObservers, $eventObservers);
             }
         }
 
