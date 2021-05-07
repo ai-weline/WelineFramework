@@ -35,10 +35,9 @@ class Upgrade extends CommandAbstract
         Printing $printer,
         Command $command,
         System $system
-    )
-    {
+    ) {
         $this->printer = $printer;
-        $this->system = $system;
+        $this->system  = $system;
         $this->command = $command;
     }
 
@@ -70,9 +69,9 @@ class Upgrade extends CommandAbstract
      * 参数区：
      *
      * @param array $args
-     * @return mixed|void
      * @throws \Weline\Framework\App\Exception
      * @throws \ReflectionException
+     * @return mixed|void
      */
     public function execute($args = [])
     {
@@ -121,8 +120,8 @@ class Upgrade extends CommandAbstract
      *
      * 参数区：
      *
-     * @return array
      * @throws \ReflectionException
+     * @return array
      */
     private function getDirFileCommand()
     {
@@ -131,7 +130,7 @@ class Upgrade extends CommandAbstract
         $scanner = ObjectManager::getInstance(Scan::class);
 
         // 扫描核心命令
-        $core = $scanner->scanDirTree(Env::vendor_path);
+        $core   = $scanner->scanDirTree(Env::vendor_path);
         $custom = $scanner->scanDirTree(APP_PATH);
 
         // 合并
@@ -144,20 +143,20 @@ class Upgrade extends CommandAbstract
                     $dir = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $dir);
                 }
                 $dir_command_array = explode(self::dir, $dir);
-                $command_dir = trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR);
-                $module_dir_arr = explode(DIRECTORY_SEPARATOR, trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR));
-                $vendor = array_shift($module_dir_arr);
-                $module = implode('\\', $module_dir_arr);
-                $module_name = $vendor . '\\' . $module;
+                $command_dir       = trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR);
+                $module_dir_arr    = explode(DIRECTORY_SEPARATOR, trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR));
+                $vendor            = array_shift($module_dir_arr);
+                $module            = implode('\\', $module_dir_arr);
+                $module_name       = $vendor . '\\' . $module;
                 if ($command_dir) {
                     foreach ($command_files as $file) {
-                        $command_dir_file = $file->getNamespace() . '\\' . $file->getFilename();
+                        $command_dir_file     = $file->getNamespace() . '\\' . $file->getFilename();
                         $command_dir_file_arr = explode(self::dir, $command_dir_file);
-                        $command_dir_file = trim(array_pop($command_dir_file_arr), DIRECTORY_SEPARATOR);
-                        $command = str_replace('\\', ':', strtolower($command_dir_file));
-                        $command = trim($command, ':');
+                        $command_dir_file     = trim(array_pop($command_dir_file_arr), DIRECTORY_SEPARATOR);
+                        $command              = str_replace('\\', ':', strtolower($command_dir_file));
+                        $command              = trim($command, ':');
                         if ($command) {
-                            $command_tip = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
+                            $command_tip        = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
                             $command_class_path = $this->command->getCommandPath($module_name, $command);
                             // 排除不存在的类
                             if (class_exists($command_class_path)) {
