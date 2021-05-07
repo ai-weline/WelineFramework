@@ -18,7 +18,7 @@ class EventsManager
     /**@var $events Event[] */
     protected array $events = [];
 
-    protected array $eventsObservers=[];
+    protected array $eventsObservers = [];
 
     /**
      * @var Reader
@@ -27,7 +27,8 @@ class EventsManager
 
     public function __construct(
         Reader $reader
-    ) {
+    )
+    {
         $this->reader = $reader;
     }
 
@@ -35,13 +36,13 @@ class EventsManager
     {
         if (empty($this->eventsObservers)) {
             foreach ($this->reader->read() as $module_and_file => $eventObservers) {
-                foreach ($eventObservers as $event_name=>$eventObserver) {
+                foreach ($eventObservers as $event_name => $eventObserver) {
                     if (isset($this->eventsObservers[$event_name])) {
                         $this->eventsObservers[$event_name] = array_merge($this->eventsObservers[$event_name], $eventObserver);
                     } else {
                         {
-                        $this->eventsObservers[$event_name] = $eventObserver;
-                    }
+                            $this->eventsObservers[$event_name] = $eventObserver;
+                        }
                     }
                 }
 //                $this->eventsObservers = array_merge($this->eventsObservers, $eventObservers);
@@ -65,14 +66,14 @@ class EventsManager
      *
      * @param string $eventName
      * @param array $data
-     * @throws \Weline\Framework\Exception\Core
      * @return $this
+     * @throws \Weline\Framework\Exception\Core
      */
-    public function dispatch(string $eventName, array $data)
+    public function dispatch(string $eventName, array $data = [])
     {
-        if (! isset($this->events[$eventName])) {
+        if (!isset($this->events[$eventName])) {
             $data['observers'] = $this->getEventObservers($eventName);
-            $this->events      = array_merge($this->events, [$eventName=>(new Event($data))->setName($eventName)]);
+            $this->events = array_merge($this->events, [$eventName => (new Event($data))->setName($eventName)]);
 //            $this->events[$eventName] = (new Event($data))->setName($eventName);
         }
 //        p($this->events, 1);
@@ -88,12 +89,12 @@ class EventsManager
      *
      * @param string $eventName
      * @param Observer $observer
-     * @throws Exception
      * @return $this
+     * @throws Exception
      */
     public function addObserver(string $eventName, Observer $observer)
     {
-        if (! isset($this->events[$eventName])) {
+        if (!isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];
@@ -111,7 +112,7 @@ class EventsManager
      */
     public function trigger(string $eventName)
     {
-        if (! isset($this->events[$eventName])) {
+        if (!isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];

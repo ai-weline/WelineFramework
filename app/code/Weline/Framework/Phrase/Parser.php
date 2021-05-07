@@ -65,7 +65,7 @@ class Parser
                 /**@var \Weline\Framework\Event\EventsManager $eventsManager */
                 $eventsManager = ObjectManager::getInstance(\Weline\Framework\Event\EventsManager::class);
                 $file_data     = new DataObject(['file_path' => Env::path_TRANSLATE_DEFAULT_FILE]);
-                $eventsManager->dispatch('Weline_Framework_phrase::get_words_file', ['file_data' => $file_data]);
+                $eventsManager->dispatch('Framework_phrase::get_words_file', ['file_data' => $file_data]);
                 $words_file = $file_data->getData('file_path');
                 if (is_file($words_file)) {
                     try {
