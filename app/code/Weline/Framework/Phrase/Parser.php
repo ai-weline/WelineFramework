@@ -24,21 +24,34 @@ class Parser
      * 参数区：
      *
      * @param string $words
-     * @param array $args
+     * @param array|string|int $args
      * @throws \Weline\Framework\App\Exception
      */
-    public static function parse(string $words, array $args)
+    public static function parse(string $words, $args)
     {
         $words = self::processWords($words);
-        if ($args) {
+        if (is_array($args)) {
             foreach ($args as $key => $arg) {
                 $words = str_replace('%' . (is_integer($key) ? $key + 1 : $key), $arg, $words);
             }
+        } else {
+            $words = str_replace('%1', $args, $words);
         }
 
         return $words;
     }
 
+    /**
+     * @DESC         |处理词组
+     *
+     * 参数区：
+     *
+     * @param string $words
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
+     * @throws \Weline\Framework\Exception\Core
+     * @return mixed|string
+     */
     protected static function processWords(string $words)
     {
         // 仅加载一次翻译到对象self::$words
@@ -46,7 +59,7 @@ class Parser
             // 先访问缓存
             /**@var \Weline\Framework\Cache\CacheInterface $phraseCache */
             $phraseCache = ObjectManager::getInstance('\Weline\Framework\Phrase\Cache\PhraseCacheFactory');
-            if (! DEV && $phrase_words = $phraseCache->get('phrase_words')) {
+            if (! CLI && ! DEV && $phrase_words = $phraseCache->get('phrase_words')) {
                 self::$words = $phrase_words;
             } else {
                 /**@var \Weline\Framework\Event\EventsManager $eventsManager */
@@ -58,6 +71,7 @@ class Parser
                     try {
                         /** @noinspection PhpIncludeInspection */
                         self::$words = (array)include $words_file;
+                        $phraseCache->set('phrase_words', self::$words);
                     } catch (\Weline\Framework\App\Exception $exception) {
                         throw new \Weline\Framework\App\Exception($exception->getMessage());
                     }

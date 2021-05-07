@@ -14,9 +14,27 @@ namespace Weline\I18n\Observer;
 use Weline\Framework\App\Env;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\Event;
+use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Output\Debug\Printing;
+use Weline\I18n\Model\I18n;
 
 class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
 {
+    /**
+     * @var I18n
+     */
+    private I18n $i18n;
+
+    /**
+     * GetWordsFile 初始函数...
+     * @param I18n $i18n
+     */
+    public function __construct(
+        I18n $i18n
+    ) {
+        $this->i18n = $i18n;
+    }
+
     /**
      * @inheritDoc
      */
@@ -31,6 +49,17 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
             // 用户语言优先
             if (isset($_COOKIE['WELINE-USER-LANG'])) {
                 $lang = $_COOKIE['WELINE-USER-LANG'];
+            }
+            // 翻译收集
+            try {
+                $this->i18n->convertToLanguageFile();
+            } catch (\Exception $e) {
+                /**@var Printing $debug*/
+                $debug = ObjectManager::getInstance(Printing::class);
+                $debug->debug($e->getMessage());
+                if (CLI) {
+                    throw $e;
+                }
             }
             // 默认中文
             if ($lang) {

@@ -42,6 +42,11 @@ class File implements CacheInterface, DriverInterface
         }
     }
 
+    public function __wakeup()
+    {
+        $this->__init();
+    }
+
     /**
      * @DESC         |获取状态
      * 0 : 关闭
@@ -122,6 +127,7 @@ class File implements CacheInterface, DriverInterface
     {
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
+        $this->processCacheFile($cacheFile);
         // 用修改时间标记过期时间，存入时会做相应的处理
         return @filemtime($cacheFile) > time();
     }
@@ -161,6 +167,7 @@ class File implements CacheInterface, DriverInterface
         // serialize用来序列化缓存内容
         $value = serialize($value);
         // file_put_contents用来将序列化之后的内容写入文件，LOCK_EX表示写入时会对文件加锁
+        $this->processCacheFile($cacheFile);
         if (@file_put_contents($cacheFile, $value, LOCK_EX) !== false) {
             if ($duration <= 0) {
                 // 不设置过期时间，设置为一年，这是因为用文件的修改时间来做过期时间造成的
@@ -250,6 +257,7 @@ class File implements CacheInterface, DriverInterface
     {
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
+        $this->processCacheFile($cacheFile);
         // unlink用来删除文件
         return unlink($cacheFile);
     }
@@ -288,6 +296,7 @@ class File implements CacheInterface, DriverInterface
     public function clear()
     {
         // 打开cache文件所在目录
+        $this->processCacheFile($this->cachePath . DIRECTORY_SEPARATOR . 'tmp');
         if ($dir = @dir($this->cachePath)) {
             // 列出目录中的所有文件
             while (($file = $dir->read()) !== false) {

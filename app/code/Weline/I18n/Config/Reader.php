@@ -60,7 +60,6 @@ class Reader extends ModuleFileReader
         parent::__construct($scanner, 'i18n');
     }
 
-
     /**
      * @DESC         |读取模块i18n翻译文件
      *
@@ -70,7 +69,7 @@ class Reader extends ModuleFileReader
     {
         /**@var LanguagePackReader $lang_pack_reader */
         $lang_pack_reader = ObjectManager::getInstance(LanguagePackReader::class);
-        $lang_packs = $lang_pack_reader->getLanguagePack();
+        $lang_packs       = $lang_pack_reader->getLanguagePack();
         // 模块翻译
         $vendor_module_i18ns = [];
         foreach ($this->getFileList() as $vendor => $module_files) {
@@ -86,6 +85,6 @@ class Reader extends ModuleFileReader
             }
         }
 
-        return array_merge($lang_packs,$vendor_module_i18ns);
+        return array_merge($lang_packs, $vendor_module_i18ns);
     }
 }

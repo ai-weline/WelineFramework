@@ -162,4 +162,13 @@ class HelloWorld extends FrontendController
         p('插件修改的类：' . str_replace('\Interceptor', '', get_class($this->pluginTestModel)), 1);
         p($plugin_deal_data);
     }
+
+    public function i18n()
+    {
+        p($this->getRequest()->getModuleName() . '模块i18n目录下的‘zh_Hans_CN.csv’原文："你好i18n！"', 1);
+        p('经过函数__("你好i18n！");翻译后：' . __('你好i18n！'), 1);
+        p('语言包目录app/i18n/下的Weline/zh_Hans_CN/zh_Hans_CN.csv 原文："你好翻译包i18n！"', 1);
+        p('经过函数__("你好翻译包i18n！");翻译后：' . __('你好翻译包i18n！'), 1);
+        p('翻译包的优先级低于模块下i18n定义的翻译，也就是模块下的i18n将覆盖语言包');
+    }
 }

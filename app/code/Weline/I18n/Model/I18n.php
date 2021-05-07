@@ -15,7 +15,7 @@ use Weline\Framework\App\Exception;
 use Weline\Framework\System\File\Data\File;
 use Weline\I18n\Config\Reader;
 
-class I18n extends \Weline\Framework\Database\Model
+class I18n
 {
     /**
      * @var Reader
@@ -28,11 +28,8 @@ class I18n extends \Weline\Framework\Database\Model
      * @param array $data
      */
     public function __construct(
-        Reader $reader,
-        array $data = []
-    )
-    {
-        parent::__construct($data);
+        Reader $reader
+    ) {
         $this->reader = $reader;
     }
 
@@ -62,8 +59,8 @@ class I18n extends \Weline\Framework\Database\Model
      *
      * 参数区：
      *
-     * @return array
      * @throws Exception
+     * @return array
      */
     public function getLocalsWords()
     {
@@ -79,20 +76,27 @@ class I18n extends \Weline\Framework\Database\Model
                 foreach ($i18ns as $i18n_file) {
                     $local_filename = $i18n_file->getFilename();
                     if (isset($locals_names[$local_filename])) {
-                        $handle = fopen($i18n_file->getOrigin(), 'r');
+                        $handle  = fopen($i18n_file->getOrigin(), 'r');
                         $is_utf8 = false;
+                        $line    = 1;
                         while (($data = fgetcsv($handle)) !== false) {
-                            // 下面这行代码可以解决中文字符乱码问题
-//                             $data[0] = iconv('gbk', 'utf-8', $data[0]);
-//                             $data[1] = iconv('gbk', 'utf-8', $data[1]);
-                            if (!$is_utf8) {
+                            if (! isset($data[0])) {
+                                throw new Exception(PHP_EOL . 'i18n翻译文件格式错误：' . $i18n_file->getOrigin() . '错误行号：' . $line . '  错误消息：没有翻译原文' . PHP_EOL . '读取内容：' . PHP_EOL . var_export($data, true));
+                            }
+                            $data[0] = trim($data[0]);
+                            if (! isset($data[1])) {
+                                throw new Exception(PHP_EOL . 'i18n翻译文件格式错误：' . $i18n_file->getOrigin() . '错误行号：' . $line . '  错误消息：没有翻译内容' . PHP_EOL . '读取内容：' . PHP_EOL . var_export($data, true));
+                            }
+                            $data[1] = trim($data[1]);
+                            if (! $is_utf8) {
                                 if (md5(mb_convert_encoding($data[0], 'utf-8', 'utf-8')) === md5($data[0])) {
                                     $is_utf8 = true;
                                 } else {
-                                    throw new Exception(__('i18n翻译文件仅支持utf-8编码：%1', [$local_filename]));
+                                    throw new Exception('i18n翻译文件仅支持utf-8编码：' . $i18n_file->getOrigin());
                                 }
                             }
                             $locals_words[$local_filename][$data[0]] = $data[1];
+                            $line += 1;
                         }
 
                         fclose($handle);
@@ -100,7 +104,7 @@ class I18n extends \Weline\Framework\Database\Model
                 }
             }
         }
-        $this->convertToLanguageFile($locals_words);
+
         return $locals_words;
     }
 
@@ -110,17 +114,18 @@ class I18n extends \Weline\Framework\Database\Model
      * 参数区：
      *
      * @param string $local_code
-     * @return array|mixed
      * @throws Exception
+     * @return array|mixed
      */
-    function getLocalWords(string $local_code = 'zh_Hans_CN')
+    public function getLocalWords(string $local_code = 'zh_Hans_CN')
     {
         $words = [];
         if (isset($this->getLocalsWords()[$local_code])) {
             $words = $this->getLocalsWords()[$local_code];
-        } else if (isset($this->getLocalsWords()['zh_Hans_CN'])) {
+        } elseif (isset($this->getLocalsWords()['zh_Hans_CN'])) {
             $words = $this->getLocalsWords()['zh_Hans_CN'];
         }
+
         return $words;
     }
 
@@ -129,13 +134,14 @@ class I18n extends \Weline\Framework\Database\Model
      *
      * 参数区：
      *
-     * @param array $locals_words
+     * @throws Exception
      */
-    function convertToLanguageFile(array $locals_words)
+    public function convertToLanguageFile()
     {
+        $locals_words = $this->getLocalsWords();
         foreach ($locals_words as $local => $locals_word) {
             $words_filename = Env::path_TRANSLATE_FILES_PATH . $local . '.php';
-            $file = new \Weline\Framework\System\File\Io\File();
+            $file           = new \Weline\Framework\System\File\Io\File();
             $file->open($words_filename, $file::mode_w);
             $text = '<?php return ' . var_export($locals_word, true) . ';?>';
 
