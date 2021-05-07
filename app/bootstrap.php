@@ -41,13 +41,3 @@ try {
         exit('应用启动失败：' . $exception->getMessage());
     }
 }
-
-//
-//if (DEV) {
-//    $exception = error_get_last();
-//    if ($exception) {
-//        /**@var $printing \Weline\Framework\Output\Cli\Printing */
-//        $printing = ObjectManager::getInstance(\Weline\Framework\Output\Cli\Printing::class);
-//        $printing->error($exception['message']);
-//    }
-//}

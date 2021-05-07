@@ -12,7 +12,6 @@ namespace Weline\Framework;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Helper;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\Router\Core as RouterCore;
 
 class App
 {
@@ -63,8 +62,6 @@ class App
         /**------------环境配置----------------*/
         // 调试模式
         define('DEV', self::Env('deploy') === 'dev');
-        // 代码标准化模式
-        define('PHP_CS', self::Env()->getConfig('php-cs', false));
         //报告错误
         DEV ? error_reporting(E_ALL) : error_reporting(0);
         // 检查运行模式
@@ -111,7 +108,7 @@ class App
     {
         self::init();
         if (! CLI) {
-            return ObjectManager::getInstance(RouterCore::class)->start();
+            return ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
         }
 
         return '';
