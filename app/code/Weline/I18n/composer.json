@@ -1,0 +1,15 @@
+{
+  "name": "weline/i18n",
+  "description": "国际化i18n翻译支持",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "秋枫雁飞",
+      "email": "aiweline@qq.com"
+    }
+  ],
+  "require": {
+    "symfony/intl": "^5.2"
+  }
+}

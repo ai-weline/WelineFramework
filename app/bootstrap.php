@@ -1,18 +1,13 @@
 <?php
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(可以百度看看)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2020/6/9
- * 时间：21:23
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
-use M\Framework\App;
-use M\Framework\App\Env;
-use M\Framework\Manager\ObjectManager;
+use Weline\Framework\Manager\ObjectManager;
 
 // 运行模式
 define('CLI', PHP_SAPI === 'cli');
@@ -24,26 +19,25 @@ define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
 // 应用 配置 目录 (默认访问 etc)
 define('APP_ETC_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
-// 自动加载
+// 检测自动加载
 try {
-    require BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';;
+    if (is_file(BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php')) {
+        require BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+    } else {
+        exit('Composer自动加载异常!尝试执行：php composer.phar install');
+    }
 } catch (Exception $exception) {
     exit('自动加载异常：' . $exception->getMessage());
 }
-// 助手函数
-require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
+
 // 尝试加载应用
 try {
-    /**@var $app App */
-    $app = ObjectManager::getInstance(App::class);
+    /**
+     * 初始化应用...
+     */
+    \Weline\Framework\App::run();
 } catch (Exception $exception) {
-    exit('应用启动失败：' . $exception->getMessage());
+    if (DEV) {
+        exit('应用启动失败：' . $exception->getMessage());
+    }
 }
-
-// 调试模式
-(Env::getInstance()->getConfig('deploy') == 'dev') ? define('DEV', true) : define('DEV', false);
-//报告错误
-DEV ? error_reporting(E_ALL) : error_reporting(0);
-//error_reporting(E_ALL);
-// 启动应用
-$app->run();

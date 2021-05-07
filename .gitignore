@@ -1,1 +1,9 @@
-./vendor
+vendor
+pub/static/
+var/cache/
+var/log/
+var/session/
+generated
+.user.ini
+.phpunit.result.cache
+.php_cs.cache

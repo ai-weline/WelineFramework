@@ -7,5 +7,11 @@
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://121.36.94.214:3306/source_center</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="bbs" uuid="84aeb11d-0049-4c7c-a46b-b4131da73838">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://121.36.94.214:3306/db_bbs</jdbc-url>
+    </data-source>
   </component>
 </project>

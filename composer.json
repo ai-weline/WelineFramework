@@ -1,12 +1,12 @@
 {
-  "name": "aiweline/m",
-  "description": "微蓝M框架！",
+  "name": "aiweline/welineframework",
+  "description": "微蓝WelineFramework框架！",
   "type": "project",
   "minimum-stability": "stable",
   "license": "proprietary",
   "authors": [
     {
-      "name": "Aiweline",
+      "name": "秋枫雁飞",
       "email": "aiweline@qq.com"
     }
   ],
@@ -18,18 +18,28 @@
     "topthink/think-orm": "^2.0",
     "ext-exif": "*",
     "ext-fileinfo": "*",
-    "phpunit/phpunit": "^9.2"
+    "phpunit/phpunit": "^9.2",
+    "ext-simplexml": "*",
+    "topthink/think-template": "^2.0",
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "ext-dom": "*",
+    "ext-libxml": "*",
+    "ext-zip": "*",
+    "symfony/intl": "^5.2"
   },
   "autoload": {
     "psr-4": {
-      "M\\": "app/code/M",
-      "": "app/code/"
+      "Weline\\": "app/code/Weline",
+      "": [
+        "app/code/",
+        "generated/code/"
+      ]
     }
   },
   "repositories": {
     "packagist": {
       "type": "composer",
-      "url": "https://packagist.phpcomposer.com"
+      "url": "https://mirrors.aliyun.com/composer/"
     }
   }
 }

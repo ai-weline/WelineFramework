@@ -1,24 +1,19 @@
 <?php
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(可以百度看看)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2020/6/21
- * 时间：15:19
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
 namespace Aiweline\HelloWorld\Console\Article;
 
-
-use M\Framework\Console\CommandInterface;
+use Weline\Framework\Console\CommandInterface;
 
 class Get implements CommandInterface
 {
-
-    public function execute($args=array())
+    public function execute($args = [])
     {
         exit(' // TODO: Implement execute() method.');
     }

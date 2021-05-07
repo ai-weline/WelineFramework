@@ -2,15 +2,43 @@
 <project version="4">
   <component name="WebServers">
     <option name="servers">
-      <webServer id="0b59808d-0ff7-413c-88e4-602012321618" name="www">
-        <fileTransfer rootFolder="/www/wwwroot/m.aiweline.com" accessType="SFTP" host="121.36.94.214" port="22" sshConfigId="a655f83a-b684-4750-b91a-4645f8dbe275" sshConfig="dev">
+      <webServer id="0b59808d-0ff7-413c-88e4-602012321618" name="华为云-www">
+        <fileTransfer rootFolder="/www/wwwroot/aiweline.com/m" accessType="SFTP" host="47.108.205.135" port="22" sshConfigId="a655f83a-b684-4750-b91a-4645f8dbe275" sshConfig="dev">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
-      <webServer id="5b8b197b-1a2f-4c99-b38c-dee743b1d535" name="dev">
-        <fileTransfer rootFolder="/www/wwwroot/m.dev.aiweline.com" accessType="SFTP" host="121.36.94.214" port="22" sshConfigId="a655f83a-b684-4750-b91a-4645f8dbe275" sshConfig="dev">
+      <webServer id="5b8b197b-1a2f-4c99-b38c-dee743b1d535" name="阿里云轻量-dev">
+        <fileTransfer rootFolder="/www/wwwroot/aiweline.com/m.dev" accessType="SFTP" host="103.45.178.155" port="22" sshConfigId="92b86039-08e1-4f95-a3a4-598db5a3ab17" sshConfig="象牙云-root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="da4dfefa-7153-41f0-9c9d-627d2b9f5e75" name="象牙云">
+        <fileTransfer accessType="SFTP" host="103.45.178.155" port="22" sshConfigId="92b86039-08e1-4f95-a3a4-598db5a3ab17" sshConfig="象牙云-root">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="6ab943ef-7125-4466-97eb-64c4364632df" name="象牙云-www">
+        <fileTransfer accessType="SFTP" host="103.45.178.155" port="22" sshConfigId="623acd9e-ef52-4701-8ff8-0a80ee88a3ca" sshConfig="象牙云-www">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="4cec79de-0d9c-4c36-bee9-ea00dc71c83e" name="象牙云-M">
+        <fileTransfer rootFolder="/www/wwwroot/aiweline.com/m" accessType="SFTP" host="103.45.178.155" port="22" sshConfigId="623acd9e-ef52-4701-8ff8-0a80ee88a3ca" sshConfig="象牙云-www">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+      <webServer id="7cb660d4-9b6d-49d8-91d1-e54357cc4fef" name="象牙云-M-DEV">
+        <fileTransfer rootFolder="/www/wwwroot/aiweline.com/m.dev" accessType="SFTP" host="103.45.178.155" port="22" sshConfigId="623acd9e-ef52-4701-8ff8-0a80ee88a3ca" sshConfig="象牙云-www">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
