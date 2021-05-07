@@ -37,9 +37,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function __init()
     {
-        if (! is_dir($this->cachePath)) {
-            mkdir($this->cachePath, 0770, true);
-        }
+        $this->processCacheFile($this->cachePath . DIRECTORY_SEPARATOR . 'tmp');
     }
 
     public function __wakeup()
@@ -321,11 +319,12 @@ class File implements CacheInterface, DriverInterface
     {
         $cache_dir = dirname($cacheFile);
         if (! is_dir($cache_dir)) {
-            mkdir($cache_dir, 775, true);
+            mkdir($cache_dir, 0775, true);
         }
         if (! file_exists($cacheFile)) {
             touch($cacheFile);
         }
+        chmod($cacheFile, 0755);
 
         return $cacheFile;
     }

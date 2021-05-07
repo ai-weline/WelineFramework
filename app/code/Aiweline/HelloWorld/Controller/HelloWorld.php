@@ -27,8 +27,6 @@ class HelloWorld extends FrontendController
 
     private FrontendSession $frontendSession;
 
-    private PluginTestModel $pluginTestModel;
-
     /**
      * @var EventsManager
      */
@@ -38,13 +36,11 @@ class HelloWorld extends FrontendController
         Cache $cache,
         AiwelineHelloWorld $aiwelineHelloWorld,
         FrontendSession $frontendSession,
-        PluginTestModel $pluginTestModel,
         EventsManager $eventsManager
     ) {
         $this->cache              = $cache;
         $this->aiwelineHelloWorld = $aiwelineHelloWorld;
         $this->frontendSession    = $frontendSession;
-        $this->pluginTestModel    = $pluginTestModel;
         $this->eventsManager      = $eventsManager;
     }
 
@@ -158,8 +154,10 @@ class HelloWorld extends FrontendController
         p('需要注意的是：本身插件的实现是利用语法糖的数组参数，如果传输数组会被解析成参数！建议所有传输数据请使用DataObject包裹', 1);
         $a = '默认插件1';
         $a .= '默认插件2';
-        $plugin_deal_data = $this->pluginTestModel->getName($a);
-        p('插件修改的类：' . str_replace('\Interceptor', '', get_class($this->pluginTestModel)), 1);
+        /**@var PluginTestModel $pluginTestModel*/
+        $pluginTestModel  = $this->_objectManager::getInstance(PluginTestModel::class);
+        $plugin_deal_data = $pluginTestModel->getName($a);
+        p('插件修改的类：' . str_replace('\Interceptor', '', get_class($pluginTestModel)), 1);
         p($plugin_deal_data);
     }
 

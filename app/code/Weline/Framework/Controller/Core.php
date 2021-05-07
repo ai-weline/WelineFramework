@@ -10,10 +10,13 @@
 namespace Weline\Framework\Controller;
 
 use Weline\Framework\Http\Request;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Debug\Printing;
 
 class Core implements Data\DataInterface
 {
+    protected ObjectManager $_objectManager;
+
     protected Request $_request;
 
     protected Printing $_debug;
@@ -26,6 +29,7 @@ class Core implements Data\DataInterface
     public function __init()
     {
         $this->getRequest();
+        $this->getObjectManager();
     }
 
     /**
@@ -40,6 +44,18 @@ class Core implements Data\DataInterface
         }
 
         return $this->_request;
+    }
+
+    /**
+     * @return Request
+     */
+    public function getObjectManager(): ObjectManager
+    {
+        if (! isset($this->_objectManager)) {
+            $this->_objectManager = ObjectManager::getInstance();
+        }
+
+        return $this->_objectManager;
     }
 
     /**

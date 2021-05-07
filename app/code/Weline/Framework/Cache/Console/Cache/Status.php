@@ -1,33 +1,28 @@
 <?php
+
 declare(strict_types=1);
-/**
- * 文件信息
- * 作者：邹万才
- * 网名：秋风雁飞(Aiweline)
- * 网站：www.aiweline.com/bbs.aiweline.com
- * 工具：PhpStorm
- * 日期：2021/5/7
- * 时间：17:54
- * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+
+/*
+ * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
+ * 邮箱：aiweline@qq.com
+ * 网址：aiweline.com
+ * 论坛：https://bbs.aiweline.com
  */
 
 namespace Weline\Framework\Cache\Console\Cache;
-
 
 use Weline\Framework\Cache\Scanner;
 
 class Status implements \Weline\Framework\Console\CommandInterface
 {
-
     /**
      * @var Scanner
      */
     private Scanner $scanner;
 
-    function __construct(
+    public function __construct(
         Scanner $scanner
-    )
-    {
+    ) {
         $this->scanner = $scanner;
     }
 
@@ -45,5 +40,6 @@ class Status implements \Weline\Framework\Console\CommandInterface
     public function getTip(): string
     {
         // TODO: Implement getTip() method.
+        return __('查看缓存状态！');
     }
 }

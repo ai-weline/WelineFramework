@@ -18,6 +18,10 @@ class Core
 {
     const dir_static = 'static';
 
+    const default_index_url = '/index/index';
+
+    const url_path_split = '/';
+
     private ?Env $_etc;
 
     private Request $request;
@@ -62,23 +66,23 @@ class Core
         if ($this->is_admin) {
             if ($this->area_router === $this->_etc->getConfig('admin', '')) {
                 $url = str_replace($this->area_router, 'admin', $url);
-                $url = trim($url, '/');
-                if (! strstr($url, '/')) {
-                    $url .= '/index/index';
+                $url = trim($url, self::url_path_split);
+                if (! strstr($url, self::url_path_split)) {
+                    $url .= self::default_index_url;
                 }
             } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
                 $url = str_replace($this->area_router, 'admin', $url);
-                $url = trim($url, '/');
-                if (! strstr($url, '/')) {
-                    $url .= '/index/index';
+                $url = trim($url, self::url_path_split);
+                if (! strstr($url, self::url_path_split)) {
+                    $url .= self::default_index_url;
                 }
             }
         }
         // 找不到则访问默认控制器
-        if ('/' === $url) {
-            $url = '/index/index';
+        if (self::url_path_split === $url) {
+            $url = self::default_index_url;
         }
-        $url = trim($url, '/');
+        $url = trim($url, self::url_path_split);
         // API
         if ($api_result = $this->Api($url)) {
             return $api_result;
@@ -171,8 +175,8 @@ class Core
         }
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
-            if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . '/index/index'])) {
-                $router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . '/index/index'];
+            if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . self::default_index_url])) {
+                $router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url];
                 $class  = json_decode(json_encode($router['class']));
                 $this->request->setRouter($router);
                 // 检测注册方法

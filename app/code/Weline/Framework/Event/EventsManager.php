@@ -27,8 +27,7 @@ class EventsManager
 
     public function __construct(
         Reader $reader
-    )
-    {
+    ) {
         $this->reader = $reader;
     }
 
@@ -66,14 +65,14 @@ class EventsManager
      *
      * @param string $eventName
      * @param array $data
-     * @return $this
      * @throws \Weline\Framework\Exception\Core
+     * @return $this
      */
     public function dispatch(string $eventName, array $data = [])
     {
-        if (!isset($this->events[$eventName])) {
+        if (! isset($this->events[$eventName])) {
             $data['observers'] = $this->getEventObservers($eventName);
-            $this->events = array_merge($this->events, [$eventName => (new Event($data))->setName($eventName)]);
+            $this->events      = array_merge($this->events, [$eventName => (new Event($data))->setName($eventName)]);
 //            $this->events[$eventName] = (new Event($data))->setName($eventName);
         }
 //        p($this->events, 1);
@@ -89,12 +88,12 @@ class EventsManager
      *
      * @param string $eventName
      * @param Observer $observer
-     * @return $this
      * @throws Exception
+     * @return $this
      */
     public function addObserver(string $eventName, Observer $observer)
     {
-        if (!isset($this->events[$eventName])) {
+        if (! isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];
@@ -112,7 +111,7 @@ class EventsManager
      */
     public function trigger(string $eventName)
     {
-        if (!isset($this->events[$eventName])) {
+        if (! isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];

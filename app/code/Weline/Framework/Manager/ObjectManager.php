@@ -61,7 +61,7 @@ class ObjectManager implements ManagerInterface
             return self::$instances[$class];
         }
         // 缓存对象读取 FIXME 需要换回 ！DEV
-        if (! CLI && $shared && DEV && $cache_class_object = self::getCache()->get($class)) {
+        if (! CLI && $shared && ! DEV && $cache_class_object = self::getCache()->get($class)) {
             self::$instances[$class] = self::initClass($class, $cache_class_object);
 
             return self::$instances[$class];
