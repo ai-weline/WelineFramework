@@ -28,7 +28,7 @@ class System
         if (IS_WIN) {
             // 删除
             if (
-                strstr($linux_command, 'rm') &&
+                (strstr($linux_command, 'rm')||strstr($linux_command, 'cp')) &&
                 (strstr($linux_command, '-rf') || strstr($linux_command, '-fr'))
             ) {
                 $linux_command = str_replace('rm', 'rd', $linux_command);
@@ -39,7 +39,7 @@ class System
                 'rm' => 'del',
                 '-f' => '/F',
                 'cp' => 'xcopy',
-                '-r' => '/S/Q',
+                '-r' => '/S/Q/Y',
             ];
 
             foreach ($linux_to_win as $key => $item) {

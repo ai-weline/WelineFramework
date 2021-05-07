@@ -57,7 +57,7 @@ class Upgrade extends CommandAbstract
                     if (! is_dir($pub_view_dir)) {
                         mkdir($pub_view_dir, 0775, true);
                     }
-                    list($out, $vars) = $this->system->exec("cp -r $origin_view_dir $pub_view_dir");
+                    list($out, $vars) = $this->system->exec("cp -rf $origin_view_dir $pub_view_dir");
                 }
             }
         }
