@@ -143,40 +143,40 @@ ${functionList}
             $construct_content = '';
             if ('__construct' === $method->name) {
                 $construct_content = '
-        $this->__init();
+//        $this->__init();
         parent::__construct(' . $params_tpl . ');
                     ';
                 $func_tpl = $construct_func_tpl;
             }
             $functionList[$method->name] = '    ' . str_replace(
-                [
-                    '${methodName}',
-                    '${returntype}',
-                    '${arguments}',
-                    '${parameters}',
-                    '${func_doc}',
-                    '${construct_content}',
-                ],
-                [
-                    $method->name,
-                    $methodReturnType,
-                    $args_tpl,
-                    $params_tpl,
-                    $method->getDocComment(),
-                    $construct_content,
-                ],
-                $func_tpl
-            );
+                    [
+                        '${methodName}',
+                        '${returntype}',
+                        '${arguments}',
+                        '${parameters}',
+                        '${func_doc}',
+                        '${construct_content}',
+                    ],
+                    [
+                        $method->name,
+                        $methodReturnType,
+                        $args_tpl,
+                        $params_tpl,
+                        $method->getDocComment(),
+                        $construct_content,
+                    ],
+                    $func_tpl
+                );
         }
         // 如果没有初始化函数 自行加上
-        if (! array_key_exists('__construct', $functionList)) {
-            $construct_func_tpl = '
-    public function __construct()
-    {
-        $this->__init();
-    }';
-            $functionList['__construct'] = $construct_func_tpl;
-        }
+//        if (! array_key_exists('__construct', $functionList)) {
+//            $construct_func_tpl = '
+//    public function __construct()
+//    {
+//        $this->__init();
+//    }';
+//            $functionList['__construct'] = $construct_func_tpl;
+//        }
         $replaceMap = [
             '${DATE}'      => date('Y-m-d'),
             '${TIME}'      => date('H:m:s'),

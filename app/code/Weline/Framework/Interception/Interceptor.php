@@ -21,6 +21,7 @@ trait Interceptor
 
     public function __init()
     {
+        parent::__init();
         $this->pluginsManager = ObjectManager::getInstance(PluginsManager::class);
         $this->subjectType    = get_parent_class($this);
     }

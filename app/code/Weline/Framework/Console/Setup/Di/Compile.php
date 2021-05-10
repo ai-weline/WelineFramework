@@ -20,15 +20,17 @@ class Compile extends \Weline\Framework\Console\CommandAbstract
     {
         // 扫描代码
         $scanner = new AppScanner();
-        $apps    = $scanner->scanAppModules();
+        $apps = $scanner->scanAppModules();
 
         $this->printer->note('DI:插件更新...');
         // TODO 扫描插件
         $all_plugins = [];
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {
-                $all_modules[$vendor . '_' . $name] = $register;
-                require APP_PATH . $register;
+                if (is_file(APP_PATH . $register)) {
+                    $all_modules[$vendor . '_' . $name] = $register;
+                    require APP_PATH . $register;
+                }
             }
         }
     }
