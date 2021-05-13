@@ -15,10 +15,7 @@ namespace Weline\Theme\Console\Theme;
 
 
 use Weline\Framework\App\System;
-use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\Output\Cli\Printing;
-use Weline\Theme\Model\WelineTheme;
 
 class Remove extends AbstractConsole
 {

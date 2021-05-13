@@ -87,6 +87,7 @@ abstract class Model extends \think\Model
         }
         // 有数据就回填到对象
         if ($data) {
+            $this->data($data->getData());
             $this->exists(true);
             $this->setData($data->getData());
         }
