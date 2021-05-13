@@ -12,7 +12,7 @@ namespace Weline\Framework\Database;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 
-abstract class Model extends \think\Model
+class Model extends \think\Model
 {
     private static DbManager $_db;
 
@@ -27,7 +27,7 @@ abstract class Model extends \think\Model
      */
     protected static function init()
     {
-        self::$db  = new DbManager();
+        self::$db = new DbManager();
         self::$_db = self::$db;
         /**
          * 重载方法
@@ -68,10 +68,9 @@ abstract class Model extends \think\Model
      *
      * @param string $field_or_pk_value 字段或者主键的值
      * @param null $value 字段的值，只读取主键就不填
-     * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\DbException
-     * @return $this
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function load(string $field_or_pk_value, $value = null)
     {
@@ -79,17 +78,16 @@ abstract class Model extends \think\Model
         $this->load_before();
         // load之前事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_load_before', ['model' => $this]);
-        if (! $value) {
-            $pk   = $this->getPk();
-            $data = $this->db()->where("{$pk}=:pkv", ['pkv' => $field_or_pk_value])->find();
+        if (!$value) {
+            $pk = $this->getPk();
+            $model = $this->where("`{$pk}`=:pkv", ['pkv' => $field_or_pk_value])->find();
         } else {
-            $data = $this->db()->where("{$field_or_pk_value}=:fv", ['fv' => $value])->find();
+            $model = $this->where("`{$field_or_pk_value}`=:fv", ['fv' => $value])->find();
         }
-        // 有数据就回填到对象
-        if ($data) {
-            $this->data($data->getData());
-            $this->exists(true);
-            $this->setData($data->getData());
+//        // 有数据就回填到对象
+        if ($model && $model->getId()) {
+            $this->data($model->getData());
+            $this->setData($model->getData());
         }
         // load之之后事件
         $this->getEvenManager()->dispatch($this->getTable() . '_model_load_after', ['model' => $this]);
@@ -97,7 +95,7 @@ abstract class Model extends \think\Model
         // 加载之后
         $this->load_after();
 
-        return $this;
+        return $model ? $model : $this;
     }
 
     /**
@@ -125,9 +123,9 @@ abstract class Model extends \think\Model
      *
      * @param array $data
      * @param string|null $sequence
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\Exception\Core
      * @return bool
+     * @throws \Weline\Framework\Exception\Core
+     * @throws \ReflectionException
      */
     public function save(array $data = [], string $sequence = null): bool
     {
@@ -169,8 +167,8 @@ abstract class Model extends \think\Model
      *
      * 参数区：
      *
-     * @throws \ReflectionException
      * @return EventsManager
+     * @throws \ReflectionException
      */
     protected function getEvenManager(): EventsManager
     {
@@ -182,8 +180,8 @@ abstract class Model extends \think\Model
      *
      * 参数区：
      *
-     * @throws \ReflectionException
      * @return DbManager
+     * @throws \ReflectionException
      */
     public function getDbManager(): DbManager
     {
@@ -194,7 +192,6 @@ abstract class Model extends \think\Model
     {
         $find_data = parent::find($data);
         $this->setData($find_data);
-
         return $find_data;
     }
 

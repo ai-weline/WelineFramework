@@ -40,7 +40,6 @@ class Remove extends AbstractConsole
                 $this->printing->note(__('安装状态:已安装！'));
                 $this->printing->note(__('激活状态:') . $status);
                 $this->printing->setup(__('正在卸载主题...') );
-                p($theme->isEmpty());
 
                 $theme->delete();
             } else {
