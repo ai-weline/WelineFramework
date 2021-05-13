@@ -10,6 +10,7 @@
 namespace Weline\Framework\Router;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\Console\ConsoleException;
 use Weline\Framework\Controller\Data\DataInterface as DataInterfaceAlias;
 use Weline\Framework\Output\Cli\Printing;
@@ -38,8 +39,8 @@ class Handle implements RegisterInterface
 
     public function __construct()
     {
-        $this->helper   = new Data();
-        $this->modules  = Env::getInstance()->getModuleList();
+        $this->helper = new Data();
+        $this->modules = Env::getInstance()->getModuleList();
         $this->printing = new Printing();
     }
 
@@ -56,9 +57,9 @@ class Handle implements RegisterInterface
      * @param array $routerParam
      * @param string $version
      * @param string $description
-     * @throws ConsoleException
-     * @throws \Weline\Framework\App\Exception
      * @return array|mixed
+     * @throws \Weline\Framework\App\Exception
+     * @throws ConsoleException
      */
     public function register($routerParam, string $version = '', string $description = '')
     {
@@ -66,10 +67,10 @@ class Handle implements RegisterInterface
             case DataInterface::type_API:
                 $path = '';
                 if (in_array(DataInterfaceAlias::type_api_REST_FRONTEND, $routerParam['area'], true)) {
-                    $path                = self::path_fronted_API;
+                    $path = self::path_fronted_API;
                     $routerParam['area'] = DataInterfaceAlias::type_api_REST_FRONTEND;
                 } elseif (in_array(DataInterfaceAlias::type_api_BACKEND, $routerParam['area'], true)) {
-                    $path                = self::path_backend_API;
+                    $path = self::path_backend_API;
                     $routerParam['area'] = DataInterfaceAlias::type_api_BACKEND;
                 } else {
                     $routerParam['area'] = self::path_fronted_API;
@@ -77,10 +78,10 @@ class Handle implements RegisterInterface
                 if ($path) {
                     $router = [
                         'module' => $routerParam['module'],
-                        'class'  => [
-                            'area'           => $routerParam['area'],
-                            'name'           => $routerParam['class'],
-                            'method'         => $routerParam['method'],
+                        'class' => [
+                            'area' => $routerParam['area'],
+                            'name' => $routerParam['class'],
+                            'method' => $routerParam['method'],
                             'request_method' => $routerParam['request_method'],
                         ],
                     ];
@@ -96,10 +97,10 @@ class Handle implements RegisterInterface
             case DataInterface::type_PC:
                 $path = '';
                 if (in_array(DataInterfaceAlias::type_pc_FRONTEND, $routerParam['area'], true)) {
-                    $path                = self::path_frontend_PC;
+                    $path = self::path_frontend_PC;
                     $routerParam['area'] = DataInterfaceAlias::type_pc_FRONTEND;
                 } elseif (in_array(DataInterfaceAlias::type_pc_BACKEND, $routerParam['area'], true)) {
-                    $path                = self::path_backend_PC;
+                    $path = self::path_backend_PC;
                     $routerParam['area'] = DataInterfaceAlias::type_pc_BACKEND;
                 }
                 if ($path) {
@@ -109,9 +110,9 @@ class Handle implements RegisterInterface
                     }
                     $router = [
                         'module' => $routerParam['module'],
-                        'class'  => [
-                            'area'   => $routerParam['area'],
-                            'name'   => $routerParam['class'],
+                        'class' => [
+                            'area' => $routerParam['area'],
+                            'name' => $routerParam['class'],
                             'method' => $routerParam['method'],
                         ],
                     ];
@@ -119,7 +120,8 @@ class Handle implements RegisterInterface
                     // 写入路由文件
                     $this->helper->updatePcRouters($path, $routers);
                 } else {
-                    $this->printing->error('未知的路由区域：' . 'File:' . $routerParam['class']);
+                    $this->printing->error('未知的路由区域！文件:' . $routerParam['class']);
+                    if (DEV) throw new Exception(__('未知的路由区域！文件:') . $routerParam['class']);
                 }
 
                 break;
