@@ -74,6 +74,8 @@ class Model extends \think\Model
      */
     public function load(string $field_or_pk_value, $value = null)
     {
+        // 清空之前的数据
+        $this->unsetData();
         // 加载之前
         $this->load_before();
         // load之前事件
@@ -95,8 +97,9 @@ class Model extends \think\Model
         // 加载之后
         $this->load_after();
 
-        return $model ? $model : $this;
+        return $model;
     }
+
 
     /**
      * @DESC         |载入前
@@ -142,6 +145,8 @@ class Model extends \think\Model
         // 保存前才检查 是否已经存在
         if ($this->getId()) {
             $this->exists(true);
+        }else{
+            $this->exists(false);
         }
 
         $save_result = parent::save($this->getData(), $sequence);

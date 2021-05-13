@@ -16,7 +16,7 @@ trait TraitModelObject
      *
      * @var array
      */
-    protected array $data = [];
+    protected array $_data = [];
 
     /**
      * Setter/Getter转换缓存
@@ -32,7 +32,7 @@ trait TraitModelObject
      */
     public function __construct(array $data = [])
     {
-        $this->data = $data;
+        $this->_data = $data;
         parent::__construct($data);
     }
 
@@ -73,11 +73,12 @@ trait TraitModelObject
     public function setData($key, $value = null)
     {
         if ($key === (array)$key) {
-            $this->data = $key;
+            $this->_data = $key;
         } else {
-            $this->data[$key] = $value;
+            $this->_data[$key] = $value;
         }
-        if($this->data){
+        if($this->_data){
+            $this->data($this->_data);
             $this->exists(true);
         }
         return $this;
@@ -96,8 +97,8 @@ trait TraitModelObject
         if ($key === null) {
             $this->setData([]);
         } elseif (is_string($key)) {
-            if (isset($this->data[$key]) || array_key_exists($key, $this->data)) {
-                unset($this->data[$key]);
+            if (isset($this->_data[$key]) || array_key_exists($key, $this->_data)) {
+                unset($this->_data[$key]);
             }
         } elseif ($key === (array)$key) {
             foreach ($key as $element) {
@@ -127,7 +128,7 @@ trait TraitModelObject
     public function getData($key = '', $index = null)
     {
         if ('' === $key) {
-            return $this->data;
+            return $this->_data;
         }
 
         /* 处理 a/b/c key as ['a']['b']['c'] */
@@ -167,7 +168,7 @@ trait TraitModelObject
     {
         $keys = explode('/', $path);
 
-        $data = $this->data;
+        $data = $this->_data;
         foreach ($keys as $key) {
             if ((array)$data === $data && isset($data[$key])) {
                 $data = $data[$key];
@@ -204,8 +205,8 @@ trait TraitModelObject
      */
     protected function _getData($key)
     {
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
+        if (isset($this->_data[$key])) {
+            return $this->_data[$key];
         }
 
         return null;
@@ -258,10 +259,10 @@ trait TraitModelObject
     public function hasData($key = ''): bool
     {
         if (empty($key) || ! is_string($key)) {
-            return ! empty($this->data);
+            return ! empty($this->_data);
         }
 
-        return array_key_exists($key, $this->data);
+        return array_key_exists($key, $this->_data);
     }
 
     /**
@@ -275,13 +276,13 @@ trait TraitModelObject
     public function toArray(array $keys = []): array
     {
         if (empty($keys)) {
-            return $this->data;
+            return $this->_data;
         }
 
         $result = [];
         foreach ($keys as $key) {
-            if (isset($this->data[$key])) {
-                $result[$key] = $this->data[$key];
+            if (isset($this->_data[$key])) {
+                $result[$key] = $this->_data[$key];
             } else {
                 $result[$key] = null;
             }
@@ -449,7 +450,7 @@ trait TraitModelObject
             case 'has':
                 $key = $this->_underscore(substr($method, 3));
 
-                return isset($this->data[$key]);
+                return isset($this->_data[$key]);
         }
 
         throw new \Weline\Framework\Exception\Core(
@@ -466,7 +467,7 @@ trait TraitModelObject
      */
     public function modelIsEmpty()
     {
-        if (empty($this->data)) {
+        if (empty($this->_data)) {
             return true;
         }
 
@@ -514,10 +515,10 @@ trait TraitModelObject
     {
         $data = [];
         if (empty($keys)) {
-            $keys = array_keys($this->data);
+            $keys = array_keys($this->_data);
         }
 
-        foreach ($this->data as $key => $value) {
+        foreach ($this->_data as $key => $value) {
             if (in_array($key, $keys, true)) {
                 $data[] = $key . $valueSeparator . $quote . $value . $quote;
             }
@@ -570,7 +571,7 @@ trait TraitModelObject
      */
     public function offsetSet($offset, $value): void
     {
-        $this->data[$offset] = $value;
+        $this->_data[$offset] = $value;
     }
 
     /**
@@ -584,7 +585,7 @@ trait TraitModelObject
      */
     public function offsetExists($offset): bool
     {
-        return isset($this->data[$offset]) || array_key_exists($offset, $this->data);
+        return isset($this->_data[$offset]) || array_key_exists($offset, $this->_data);
     }
 
     /**
@@ -597,7 +598,7 @@ trait TraitModelObject
      */
     public function offsetUnset($offset): void
     {
-        unset($this->data[$offset]);
+        unset($this->_data[$offset]);
     }
 
     /**
@@ -611,8 +612,8 @@ trait TraitModelObject
      */
     public function offsetGet($offset)
     {
-        if (isset($this->data[$offset])) {
-            return $this->data[$offset];
+        if (isset($this->_data[$offset])) {
+            return $this->_data[$offset];
         }
 
         return null;
@@ -627,7 +628,7 @@ trait TraitModelObject
      */
     public function clear()
     {
-        $this->data = [];
+        $this->_data = [];
 
         return $this;
     }
