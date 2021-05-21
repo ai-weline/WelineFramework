@@ -11,7 +11,6 @@ namespace Weline\Framework;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Helper;
-use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 
 class App
@@ -19,6 +18,7 @@ class App
     /**
      * @var Env
      */
+
     private static Env $_env;
 
     /**

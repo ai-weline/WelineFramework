@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Weline\Theme\Console\Theme;
 
 
+use Weline\Framework\App\Env;
 use Weline\Framework\App\System;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -40,8 +41,13 @@ class Remove extends AbstractConsole
                 $this->printing->note(__('安装状态:已安装！'));
                 $this->printing->note(__('激活状态:') . $status);
                 $this->printing->setup(__('正在卸载主题...') );
-
-                $theme->delete();
+//                $theme->delete();
+                // 压缩主题包
+                $this->printing->note(__('正在压缩备份文件...') );
+                /**@var \Weline\Framework\System\File\Compress $compress*/
+                $compress = ObjectManager::getInstance(\Weline\Framework\System\File\Compress::class);
+                $res = $compress->compression(Env::path_THEME_DESIGN_DIR.$theme->getPath(),Env::path_THEME_DESIGN_DIR,Env::path_THEME_DESIGN_DIR);
+                p($res);
             } else {
                 $this->printing->error(__('当前主题未安装：卸载失败！'), __('主题'));
             }
