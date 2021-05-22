@@ -67,7 +67,7 @@ class Table
     // 数据字段
     private array $_fields;
 
-    private array $_indexes;
+    private array $_indexes = [];
 
     private string $type;
 
@@ -88,10 +88,10 @@ class Table
      */
     public function __construct(string $table, string $comment = '')
     {
-        $this->db      = new DbManager();
-        $db            = $this->db->getConfig();
-        $this->type    = $db['default'];
-        $this->table   = $table;
+        $this->db = new DbManager();
+        $db = $this->db->getConfig();
+        $this->type = $db['default'];
+        $this->table = $table;
         $this->comment = $comment ? "COMMENT '{$comment}'" : '';
     }
 
@@ -107,7 +107,7 @@ class Table
      */
     public function addColumn(string $field_name, string $type, $length, string $options, string $comment): Table
     {
-        $type_length     = $length ? "{$type}({$length})" : $type;
+        $type_length = $length ? "{$type}({$length})" : $type;
         $this->_fields[] = "`{$field_name}` {$type_length} {$options} COMMENT '{$comment}'," . PHP_EOL;
 
         return $this;
@@ -127,32 +127,32 @@ class Table
     {
         switch ($type) {
             case self::index_type_DEFAULT:
-                $this->_indexes[] = "INDEX {$name}({$column})," . PHP_EOL;
+                $this->_indexes[] = "INDEX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_FULLTEXT:
-                $this->_indexes[] = "FULLTEXT INDEX {$name}({$column})," . PHP_EOL;
+                $this->_indexes[] = "FULLTEXT INDEX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_UNIQUE:
-                $this->_indexes[] = "UNIQUE INDEX {$name}({$column})," . PHP_EOL;
+                $this->_indexes[] = "UNIQUE INDEX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_SPATIAL:
-                $this->_indexes[] = "SPATIAL INDEX {$name}({$column})," . PHP_EOL;
+                $this->_indexes[] = "SPATIAL INDEX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_KEY:
-                $this->_indexes[] = "KEY IDX {$name}({$column})," . PHP_EOL;
+                $this->_indexes[] = "KEY IDX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_MULTI:
                 $type_of_column = getType($column);
-                if (! is_array($column)) {
+                if (!is_array($column)) {
                     new Exception(self::index_type_MULTI . __('：此索引的column需要array类型,当前类型') . "{$type_of_column}" . ' 例如：[ID,NAME(19),AGE]');
                 }
-                $column           = implode(',', $column);
-                $this->_indexes[] = "INDEX {$name}($column)," . PHP_EOL;
+                $column = implode(',', $column);
+                $this->_indexes[] = "INDEX {$name}(`$column`)," . PHP_EOL;
 
                 break;
             default:
@@ -218,6 +218,23 @@ class Table
                 }
             }
             $indexes_str .= $index;
+        }
+        if (!strstr($fields_str, '`create_time`')) {
+            $fields_str .= ','.PHP_EOL;
+            $create_time_comment_words = __('创建时间');
+            $fields_str .= "`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '{$create_time_comment_words}',".PHP_EOL;
+        }
+        if (!strstr($fields_str, '`update_time`')) {
+            if(strstr($fields_str,','.PHP_EOL)){
+                $fields_str = rtrim($fields_str, ','.PHP_EOL);
+            }
+            $fields_str = rtrim($fields_str, ',');
+            $fields_str .= ','.PHP_EOL;
+            $update_time_comment_words = __('更新时间');
+            $fields_str .= "`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '{$update_time_comment_words}',".PHP_EOL;
+        }
+        if(strstr($fields_str,','.PHP_EOL)){
+            $fields_str = rtrim($fields_str, ','.PHP_EOL);
         }
         $sql = <<<createSQL
 CREATE TABLE {$this->table}(

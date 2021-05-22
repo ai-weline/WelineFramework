@@ -206,6 +206,9 @@ url->router->controller(或者静态资源)，
 4、单个缓存清理
 5、module间的继承关系：env.php中定义的继承关系
 6、多模块扫描module优化，现分散且重复代码过多（针对文件module扫描的地方）错综复杂且乱，应该提供一个扫描接口，统一扫描文件
+细分项：
+数据库部分
+（1）Weline\Framework\Database\Db\Ddl\Table表创建添加外键addForeignKey方法。
 ~~~
 
 下一个版本2.1计划

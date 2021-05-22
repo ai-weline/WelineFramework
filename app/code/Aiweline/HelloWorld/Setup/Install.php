@@ -44,10 +44,6 @@ class Install implements InstallInterface
                 256,
                 'NOT NULL',
                 '测试'
-            )->addIndex(
-                Table::index_type_DEFAULT,
-                'id_index',
-                'entity_id'
             )->addConstraints()->create();
         }
         $context->getPrinter()->note('安装脚本执行完毕...');
