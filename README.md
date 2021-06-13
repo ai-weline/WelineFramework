@@ -206,6 +206,7 @@ url->router->controller(或者静态资源)，
 4、单个缓存清理
 5、module间的继承关系：env.php中定义的继承关系
 6、多模块扫描module优化，现分散且重复代码过多（针对文件module扫描的地方）错综复杂且乱，应该提供一个扫描接口，统一扫描文件
+7、重要：model模型自定义，抛除TP6的Model
 细分项：
 数据库部分
 （1）Weline\Framework\Database\Db\Ddl\Table表创建添加外键addForeignKey方法。
@@ -237,4 +238,3 @@ url->router->controller(或者静态资源)，
 4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
 5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
 6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
->>>>>>> dev

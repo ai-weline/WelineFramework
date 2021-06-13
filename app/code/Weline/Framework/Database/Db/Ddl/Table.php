@@ -68,6 +68,7 @@ class Table
     private array $_fields;
 
     private array $_indexes = [];
+    private array $_foreign_keys = [];
 
     private string $type;
 
@@ -209,16 +210,7 @@ class Table
             }
             $fields_str .= $field;
         }
-        // 索引
-        $indexes_str = '';
-        foreach ($this->_indexes as $index) {
-            if (end($this->_indexes) === $index) {
-                if (empty($this->constraints)) {
-                    $index = trim(trim($index, PHP_EOL), ',');
-                }
-            }
-            $indexes_str .= $index;
-        }
+        $fields_str = trim($fields_str, ',');
         if (!strstr($fields_str, '`create_time`')) {
             $fields_str .= ','.PHP_EOL;
             $create_time_comment_words = __('创建时间');
@@ -236,10 +228,42 @@ class Table
         if(strstr($fields_str,','.PHP_EOL)){
             $fields_str = rtrim($fields_str, ','.PHP_EOL);
         }
+        // 索引
+        $indexes_str = '';
+        foreach ($this->_indexes as $index) {
+            if (end($this->_indexes) === $index) {
+                if (empty($this->constraints)) {
+                    $index = trim(trim($index, PHP_EOL), ',');
+                }
+            }
+            $indexes_str .= $index;
+        }
+        if($indexes_str){
+            $fields_str.=',';
+        }
+        $indexes_str = rtrim($indexes_str,PHP_EOL);
+        $indexes_str = rtrim($indexes_str,'\n\r');
+        // 外键
+        $foreign_key_str = '';
+        foreach ($this->_foreign_keys as $foreign_key) {
+            if (end($this->_foreign_keys) === $foreign_key) {
+                if (empty($this->constraints)) {
+                    $foreign_key = trim(trim($foreign_key, PHP_EOL), ',');
+                }
+            }
+            $foreign_key_str .= $foreign_key;
+        }
+        if($foreign_key_str){
+            $indexes_str.=',';
+        }
+        $foreign_key_str = rtrim($foreign_key_str,PHP_EOL);
+        $foreign_key_str = rtrim($foreign_key_str,'\n\r');
+
         $sql = <<<createSQL
 CREATE TABLE {$this->table}(
  {$fields_str}
  {$indexes_str}
+ {$foreign_key_str}
  {$this->constraints}
 ){$this->comment} {$this->additional}
 createSQL;
@@ -294,5 +318,25 @@ createSQL;
     public function getTable(): string
     {
         return $this->table;
+    }
+
+    /**
+     * @DESC         |添加外键
+     *
+     * 参数区：
+     *
+     * @param $FK_Name
+     * @param $FK_Field
+     * @param $references_table
+     * @param $references_field
+     * @param bool $on_delete
+     * @param bool $on_update
+     * @return $this
+     */
+    function addForeignKey($FK_Name,$FK_Field,$references_table,$references_field,$on_delete=false,$on_update=false){
+        $on_delete_str = $on_delete?'on delete cascade':'';
+        $on_update_str = $on_update?'on update cascade':'';
+        $this->_foreign_keys[] = "constraint {$FK_Name} foreign key ({$FK_Field}) references {$references_table}({$references_field}) {$on_delete_str} {$on_update_str}";
+        return $this;
     }
 }

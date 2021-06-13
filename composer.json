@@ -25,7 +25,8 @@
     "ext-dom": "*",
     "ext-libxml": "*",
     "ext-zip": "*",
-    "symfony/intl": "^5.2"
+    "symfony/intl": "^5.2",
+    "symfony/polyfill-intl-icu": "^1.23"
   },
   "autoload": {
     "psr-4": {
