@@ -72,7 +72,6 @@ class WelineTheme extends Model
             $this->themeCache->set('theme', $this, static::cache_TIME);
             Env::getInstance()->setConfig('theme', $this->getData());
         }
-
         return $this;
     }
 

@@ -57,9 +57,13 @@ class ObjectManager implements ManagerInterface
         if (empty($class)) {
             return isset(self::$instance) ? self::$instance : new self();
         }
+        if($class==='\Weline\Theme\Model\WelineThemeFactory'){
+            p();
+        }
         if (isset(self::$instances[$class])) {
             return self::$instances[$class];
         }
+
         // 缓存对象读取 FIXME 需要换回 ！DEV
         if (! CLI && $shared && ! DEV && $cache_class_object = self::getCache()->get($class)) {
             self::$instances[$class] = self::initClass($class, $cache_class_object);
