@@ -77,12 +77,12 @@ class Scanner extends Scan
         $modules      = array_merge($core_modules, $app_modules);
         foreach ($modules as $key => $module) {
             unset($modules[$key]);
-            if (file_exists(APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
+            if (@file_exists(APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
                 $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
             }
             // app下的代码优先度更高
             if (! isset($modules[$module])) {
-                if (file_exists(BP . 'vendor/' . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
+                if (@file_exists(BP . 'vendor/' . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
                     $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
                 }
             }
@@ -111,8 +111,8 @@ class Scanner extends Scan
                 // app下的代码优先度更高
                 $app_module_path = APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
                 unset($modules[$key]);
-                if (is_file($app_module_path . RegisterInterface::register_file)) {
-                    if (is_file($app_module_path . $file_or_dir)) {
+                if (@is_file($app_module_path . RegisterInterface::register_file)) {
+                    if (@is_file($app_module_path . $file_or_dir)) {
                         $modules[$module] = $app_module_path . $file_or_dir;
                     } else {
                         $this->init();
@@ -123,8 +123,8 @@ class Scanner extends Scan
                 // vendor下的代码会被覆盖
                 $vendor_app_module_path = BP . 'vendor/' . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
                 if (! isset($modules[$module])) {
-                    if (is_file($vendor_app_module_path . RegisterInterface::register_file)) {
-                        if (is_file($vendor_app_module_path . $file_or_dir)) {
+                    if (@is_file($vendor_app_module_path . RegisterInterface::register_file)) {
+                        if (@is_file($vendor_app_module_path . $file_or_dir)) {
                             $modules[$module] = $vendor_app_module_path . $file_or_dir;
                         } else {
                             $this->init();

@@ -130,7 +130,7 @@ class Core
             $router_filepath = Env::path_FRONTEND_REST_API_ROUTER_FILE;
         }
 
-        if (file_exists($router_filepath)) {
+        if (@file_exists($router_filepath)) {
             $routers = include $router_filepath;
             $method  = '::' . strtoupper($this->request->getMethod());
             if (isset($routers[$url . $method]) || isset($routers[$url . '/index' . $method])) {
@@ -173,7 +173,7 @@ class Core
             // 检测api路由
             $router_filepath = Env::path_FRONTEND_PC_ROUTER_FILE;
         }
-        if (is_file($router_filepath)) {
+        if (@is_file($router_filepath)) {
             $routers = include $router_filepath;
             if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . self::default_index_url])) {
                 $router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url];
@@ -213,7 +213,7 @@ class Core
         if (is_bool(strpos($filename, \Weline\Framework\View\Data\DataInterface::dir))) {
             $this->request->getResponse()->noRouter();
         }
-        if (is_file($filename)) {
+        if (@is_file($filename)) {
             $filename_arr = explode('.', $filename);
             $file_ext     = end($filename_arr);
             if ($file_ext === 'css' || $file_ext === 'less' || $file_ext === 'sass') {

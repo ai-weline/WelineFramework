@@ -88,7 +88,7 @@ class SqlFile
      */
     public function import_data(string $db_filepath, string $dbfile_table_pre = 'zq_')
     {
-        if (! file_exists($db_filepath)) {
+        if (! @file_exists($db_filepath)) {
             return ['status' => false, 'info' => '数据库文件不存在'];
         }
         $sql    = file_get_contents($db_filepath);

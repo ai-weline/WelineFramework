@@ -178,7 +178,7 @@ class Env
 
     public function reload()
     {
-        if (!is_file(self::path_ENV_FILE)) {
+        if (!@is_file(self::path_ENV_FILE)) {
             $file = new File();
             $file->open(self::path_ENV_FILE, $file::mode_w_add);
             $text = '<?php return ' . var_export([], true) . ';?>';

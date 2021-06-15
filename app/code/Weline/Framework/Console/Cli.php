@@ -121,7 +121,7 @@ class Cli extends CliAbstract
                 exit();
             }
         }
-        if ($arg0 !== 'command:upgrade' && ! file_exists(Env::path_COMMANDS_FILE)) {
+        if ($arg0 !== 'command:upgrade' && ! @file_exists(Env::path_COMMANDS_FILE)) {
             exit($this->printer->error('命令系统异常！请完整执行（不能简写）更新模块命令后重试：php bin/m command:upgrade'));
         }
 
@@ -139,7 +139,7 @@ class Cli extends CliAbstract
             // 获取类的真实路径和命名空间位置
             $command_class_path = $command_path . $this->getCommandPath($arg0);
             $command_real_path  = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
-            if (file_exists($command_real_path)) {
+            if (@file_exists($command_real_path)) {
                 return ['class' => $command_class_path, 'command' => $arg0];
             }
         }
@@ -160,7 +160,7 @@ class Cli extends CliAbstract
             $command_class_path = $command_path . $this->getCommandPath($command);
 
             $command_real_path = APP_PATH . str_replace('\\', DIRECTORY_SEPARATOR, $command_class_path) . '.php';
-            if (file_exists($command_real_path)) {
+            if (@file_exists($command_real_path)) {
                 return ['class' => $command_class_path, 'command' => $command];
             }
             if (DEV) {

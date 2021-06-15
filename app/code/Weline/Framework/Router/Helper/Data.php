@@ -61,7 +61,7 @@ class Data
     public function updateApiRouters(string $path, array &$api)
     {
         $routers[$api['router']] = $api['rule'];
-        if (is_file($path)) {
+        if (@is_file($path)) {
             $file_routers = require $path;
             $routers      = array_merge($file_routers, $routers);
         }

@@ -21,7 +21,7 @@ class PhpCsFixer implements \Weline\Framework\Console\CommandInterface
         array_shift($args);
         $args = implode(' ', $args);
         // 运行代码标准程序 php-cs-fixer
-        if (PHP_CS && is_file(\Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v2.phar')) {
+        if (PHP_CS && @is_file(\Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v2.phar')) {
             exec('php ' . \Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v2.phar fix ' . $args, $out);
         } else {
             if (DEV) {

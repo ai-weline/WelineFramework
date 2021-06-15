@@ -39,7 +39,7 @@ class Install extends \Weline\Framework\Console\CommandAbstract
     public function execute($args = [])
     {
         $install_file = BP . 'setup/install.lock';
-        if (is_file($install_file)) {
+        if (@is_file($install_file)) {
             $this->printer->warning('M框架已安装！重新安装将清空系统数据。', '警告');
             $this->printer->setup('是否继续（y/n）？');
 
@@ -110,7 +110,7 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         $this->printer->success('初始化数据完成！', 'OK');
         $this->printer->note('-------------------------------------------------------');
         // 生成安装锁文件
-        if (! is_file($install_file)) {
+        if (! @is_file($install_file)) {
             $this->printer->note('生成安装锁文件...');
             $file = new \Weline\Framework\System\File\Io\File();
             $file->open(BP . 'setup/install.lock', $file::mode_w);

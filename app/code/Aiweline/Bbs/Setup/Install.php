@@ -28,7 +28,7 @@ class Install implements \Weline\Framework\Setup\InstallInterface
     public function setup(Data\Setup $setup, Data\Context $context): void
     {
         $sql_file_path = $context->getModulePath() . DIRECTORY_SEPARATOR . 'Setup' . DIRECTORY_SEPARATOR . 'Data' . DIRECTORY_SEPARATOR . 'db_bbs_20201129_144653.sql';
-        if (is_file($sql_file_path)) {
+        if (@is_file($sql_file_path)) {
             $context->getPrinter()->setup('数据库Sql文件导入中...');
             $context->getPrinter()->printList($this->sqlFile->import_data($sql_file_path, 'bbs_'));
             $context->getPrinter()->setup('数据库Sql文件导入完成.');

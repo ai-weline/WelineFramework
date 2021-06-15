@@ -321,7 +321,7 @@ class File implements CacheInterface, DriverInterface
         if (! is_dir($cache_dir)) {
             mkdir($cache_dir, 0775, true);
         }
-        if (! file_exists($cacheFile)) {
+        if (! @file_exists($cacheFile)) {
             touch($cacheFile);
         }
         chmod($cacheFile, 0755);

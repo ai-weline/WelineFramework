@@ -224,7 +224,7 @@ class RequestFilter
         foreach ($_COOKIE as $key => $value) {
             $this->StopAttack($key, $value, $cookiefilter);
         }
-        if (file_exists('updateSafeScan.php')) {
+        if (@file_exists('updateSafeScan.php')) {
             echo '请重命名文件updateSafeScan.php，防止黑客利用<br/>';
             die();
         }

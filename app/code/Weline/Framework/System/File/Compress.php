@@ -90,7 +90,7 @@ class Compress
     public function addFileToZip($path)
     {
         // 如果是文件直接加入
-        if (is_file($path)) {
+        if (@is_file($path)) {
             $this->zipArchive->addFile($path);
         } else {
             $handler = opendir($path); //打开当前文件夹由$path指定。
@@ -105,7 +105,7 @@ class Compress
                     $filename = $path . DIRECTORY_SEPARATOR . $filename;
                     if (is_dir($filename)) {// 如果读取的某个对象是文件夹，则递归
                         $this->addFileToZip($filename);
-                    } elseif (is_file($filename)) { //将文件加入zip对象
+                    } elseif (@is_file($filename)) { //将文件加入zip对象
                         $this->zipArchive->addFile($filename, trim(str_replace($this->base_path, '', $filename), DIRECTORY_SEPARATOR));
                     }
                 }
@@ -191,7 +191,7 @@ class Compress
         if (is_array($file)) {
             $this->files = array_unique(array_merge($this->files, $file));
         } else {
-            if (is_file($file)) {
+            if (@is_file($file)) {
                 $this->files[] = $file;
             } else {
                 throw new Exception(__('不存在的文件！'));

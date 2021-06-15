@@ -37,10 +37,10 @@ class Data
     public function getSetupClass(string $module_name, string $type = DataInterface::type_INSTALL)
     {
         $removeFile = str_replace(DIRECTORY_SEPARATOR, '\\', $this->getModulePath($module_name) . DataInterface::dir . DIRECTORY_SEPARATOR . $type);
-        if (is_file(APP_PATH . $removeFile)) {
+        if (@is_file(APP_PATH . $removeFile)) {
             return APP_PATH . $removeFile;
         }
-        if (is_file(BP . 'vendor/' . $removeFile)) {
+        if (@is_file(BP . 'vendor/' . $removeFile)) {
             return BP . 'vendor/' . $removeFile;
         }
 
@@ -62,10 +62,10 @@ class Data
     public function getSetupFile(string $module_name, string $type = DataInterface::type_INSTALL)
     {
         $setupFile = $this->getModuleClassFile($module_name, DataInterface::dir . DIRECTORY_SEPARATOR . $type);
-        if (is_file(APP_PATH . $setupFile)) {
+        if (@is_file(APP_PATH . $setupFile)) {
             return APP_PATH . $setupFile;
         }
-        if (is_file(BP . 'vendor/' . $setupFile)) {
+        if (@is_file(BP . 'vendor/' . $setupFile)) {
             return BP . 'vendor/' . $setupFile;
         }
 
