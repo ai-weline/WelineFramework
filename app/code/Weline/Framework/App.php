@@ -32,7 +32,7 @@ class App
      */
     public static function Env(string $key = null, $value = null)
     {
-        if (! isset(self::$_env)) {
+        if (!isset(self::$_env)) {
             self::$_env = Env::getInstance();
         }
         if ($key && empty($value)) {
@@ -63,6 +63,8 @@ class App
         /**------------环境配置----------------*/
         // 调试模式
         define('DEV', self::Env('deploy') === 'dev');
+        // 调试模式
+        define('PHP_CS', self::Env('php-cs'));
         //报告错误
         DEV ? error_reporting(E_ALL) : error_reporting(0);
         // 检查运行模式
@@ -108,7 +110,7 @@ class App
     public static function run()
     {
         self::init();
-        if (! CLI) {
+        if (!CLI) {
             return ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
         }
 

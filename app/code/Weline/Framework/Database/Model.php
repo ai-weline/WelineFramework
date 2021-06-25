@@ -9,41 +9,35 @@
 
 namespace Weline\Framework\Database;
 
+use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Database\Cache\DbCache;
+use Weline\Framework\Database\Linker\QueryInterface;
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 
-class Model extends \think\Model
+class Model extends DataObject
 {
-    private static DbManager $_db;
-
-    use TraitModelObject;
+    private Linker $linker;
+    private CacheInterface $cache;
+    private string $suffix;
+    private array $query_funcs;
 
     private EventsManager $eventsManager;
 
-    /**
-     * @DESC         |TP6原生初始化函数...
-     *
-     * 参数区：
-     */
-    protected static function init()
-    {
-        self::$db = new DbManager();
-        self::$_db = self::$db;
-        /**
-         * 重载方法
-         */
-        parent::init();
-    }
 
     /**
-     * @DESC         |框架初始化函数...
+     * @DESC         |初始化连接、缓存、表前缀
      *
      * 参数区：
      *
      * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
     public function __init()
     {
+        $this->linker = ObjectManager::getInstance(DbManager::class . 'Factory');
+        $this->cache = ObjectManager::getInstance(DbCache::class . 'Factory');
         $this->suffix = $this->getSuffix() . $this->suffix;
     }
 
@@ -52,11 +46,11 @@ class Model extends \think\Model
      *
      * 参数区：
      *
-     * @return DbManager
+     * @return Linker
      */
-    public function getDb()
+    public function getLinker(): Linker
     {
-        return self::$_db;
+        return $this->linker;
     }
 
     /**
@@ -68,9 +62,6 @@ class Model extends \think\Model
      *
      * @param string $field_or_pk_value 字段或者主键的值
      * @param null $value 字段的值，只读取主键就不填
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
      */
     public function load(string $field_or_pk_value, $value = null)
     {
@@ -145,7 +136,7 @@ class Model extends \think\Model
         // 保存前才检查 是否已经存在
         if ($this->getId()) {
             $this->exists(true);
-        }else{
+        } else {
             $this->exists(false);
         }
 
@@ -200,13 +191,32 @@ class Model extends \think\Model
         return $find_data;
     }
 
-    public function getModuleName(): string
+    /**
+     * @DESC         |访问不存在的方法时，默认为查询
+     *
+     * 参数区：
+     *
+     * @param $method
+     * @param $args
+     * @return array|bool|mixed|string|Model|null
+     * @throws \Weline\Framework\Exception\Core
+     */
+    function __call($method, $args)
     {
-        return $this->name;
-    }
-
-    public function getName(): string
-    {
-        return $this->getData('name');
+        // 判断是查询方法
+        $cache_key = 'query_methods';
+        $query_funcs = $this->cache->get($cache_key);
+        if (empty($query_funcs)) {
+            $query_funcs = get_class_methods(QueryInterface::class);
+            $this->cache->set($cache_key, $query_funcs);
+        }
+        // TODO 模型查询
+        if (in_array($method, $query_funcs)) {
+            return $this->linker->getQuery()->$method(...$query_funcs);
+        }
+        /**
+         * 重载方法
+         */
+        return parent::__call($method, $args);
     }
 }

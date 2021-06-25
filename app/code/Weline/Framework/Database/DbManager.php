@@ -9,9 +9,12 @@
 
 namespace Weline\Framework\Database;
 
-use Weline\Framework\App\Env;
-use Weline\Framework\App\Exception;
-use Weline\Framework\Output\Cli\Printing;
+use JetBrains\PhpStorm\Pure;
+use PDO;
+use WeakMap;
+use Weline\Framework\Database\DbManager\ConfigProvider;
+use Weline\Framework\Manager\Cache\ObjectCache;
+use Weline\Theme\Model\WelineTheme;
 
 /**
  * 文件信息
@@ -24,73 +27,93 @@ use Weline\Framework\Output\Cli\Printing;
  */
 class DbManager
 {
-    private \WeakMap $_connections;
-    private array $_configs;
+    protected ?Linker $defaultLinker = null;
+    protected WeakMap $linkers;
+    protected ConfigProvider $configProvider;
 
-    public function __construct()
+    public function __construct(ConfigProvider $configProvider)
     {
-        $db_conf = Env::getInstance()->getDbConfig();# Env配置对象内存请求生命周期内常驻，无需担心配置多次操作env.php配置文件
-        if (empty($db_conf)) {
-            $db_conf = Env::getInstance()->reload()->getDbConfig();
-            if (empty($db_conf)) {
-                if ('cli' === PHP_SAPI) {
-                    (new Printing())->error('请安装系统后操作:bin/m system:install', '系统');
-
-                    throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
-                }
-
-                throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
-            }
-        }
-        $this->setConfig($db_conf);
-    }
-
-    function setConfig($config)
-    {
-        $this->_configs = $config;
+        $this->linkers = new WeakMap();
+        $this->configProvider = $configProvider;
     }
 
     /**
-     * @DESC         |获得当前数据库连接信息
+     * @DESC         |设置数据库配置
      *
      * 参数区：
      *
-     * @return bool|mixed
-     */
-    public function getCurrentConfig()
-    {
-        $config = $this->getConfig();
-
-        return isset($config['default']) && isset($config['connections']) ? $config['connections'][$config['default']] : $config;
-    }
-
-    /**
-     * @DESC         |补充查询
-     *
-     * 参数区：
-     *
-     * @param string $sql
-     * @return mixed
-     */
-    public function query(string $sql)
-    {
-    }
-
-    /**
-     * @DESC         |方法描述
-     *
-     * 参数区：
-     *
-     * @param array $config
+     * @param ConfigProvider $configProvider
      * @return $this
      */
-    public function setDbConfig($config): DbManager
+    function setConfig(ConfigProvider $configProvider)
     {
-        /**
-         * 重载方法
-         */
-        $this->setConfig($config);
-
+        $this->configProvider = $configProvider;
         return $this;
+    }
+
+    /**
+     * @DESC         |数据库配置
+     *
+     * 参数区：
+     *
+     * @return ConfigProvider
+     */
+    function getConfig(): ConfigProvider
+    {
+        return $this->configProvider;
+    }
+
+    /**
+     * @DESC         |创建链接资源
+     *
+     * 兼并新链接
+     *
+     * 参数区：
+     * @param string $linker_name 链接名称
+     * @param ConfigProvider|null $configProvider 链接资源配置
+     * @return Linker
+     */
+    function create(string $linker_name = 'default', ConfigProvider $configProvider = null)
+    {
+        $linker = $this->getLinker($linker_name);
+        // 如果不更新连接配置，且已经存在连接就直接读取
+        if (empty($configProvider) && $linker) {
+            return $linker;
+        }
+        // 存在连接配置则
+        if ($configProvider && $linker) {
+            // 如果更新连接配置，但是配置内容一致，且存在使用此配置存在的连接则直接返回
+            if ($linker->getConfigProvider()->getData() == $configProvider->getData()) {
+                return $linker;
+            } else {
+                $linker = new Linker($configProvider);
+            }
+        } else {
+            $linker = new Linker($this->configProvider);
+        }
+        $this->linkers->offsetSet($linker, $linker_name);
+        return $linker;
+    }
+
+    /**
+     * @DESC         |获取连接
+     *
+     * 参数区：
+     *
+     * @param string $linker_name
+     * @return Linker|null
+     */
+    function getLinker($linker_name = 'default')
+    {
+        if ('default' === $linker_name) {
+            return $this->defaultLinker;
+        }
+        /**@var Linker $linker */
+        foreach ($this->linkers->getIterator() as $linker => $linker_name_value) {
+            if ($linker_name === $linker_name_value) {
+                return $linker;
+            }
+        }
+        return null;
     }
 }

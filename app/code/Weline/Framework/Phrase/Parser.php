@@ -58,7 +58,7 @@ class Parser
         if (empty(self::$words)) {
             // 先访问缓存
             /**@var \Weline\Framework\Cache\CacheInterface $phraseCache */
-            $phraseCache = ObjectManager::getInstance('\Weline\Framework\Phrase\Cache\PhraseCacheFactory');
+            $phraseCache = ObjectManager::getInstance(\Weline\Framework\Phrase\Cache\PhraseCache::class.'Factory');
             if (! CLI && ! DEV && $phrase_words = $phraseCache->get('phrase_words')) {
                 self::$words = $phrase_words;
             } else {

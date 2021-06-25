@@ -50,12 +50,12 @@ function getStringBetweenContents(string $str, string $startDelimiter, string $e
  * 参数区：
  *
  * @param string $words
- * @param array $args
+ * @param  $args
  * @throws \Weline\Framework\App\Exception
  * @return string
  * @r
  */
-function __(string $words, array $args = [])
+function __(string $words, $args = [])
 {
     return \Weline\Framework\Phrase\Parser::parse($words, $args);
 }

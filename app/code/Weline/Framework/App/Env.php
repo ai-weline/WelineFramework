@@ -12,10 +12,6 @@ namespace Weline\Framework\App;
 use Weline\Framework\App\Env\Modules;
 use Weline\Framework\System\File\Io\File;
 
-/**
- * Class Env FIXME 配置文件系统协程常驻
- * @package Weline\Framework\App
- */
 class Env
 {
     const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
