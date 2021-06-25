@@ -140,7 +140,7 @@ class Template
     public function getViewFile($filepath)
     {
         $path = $this->view_dir . $filepath;
-        if (! @file_exists($path) && DEV) {
+        if (! file_exists($path) && DEV) {
             new Exception(__('文件不存在！位置：') . $path);
         }
         $this->fetch($filepath);
@@ -234,7 +234,7 @@ class Template
             $tplFile = $this->template_dir . $fileName . self::file_ext;
         }
         $tplFile = $this->fetchFile($tplFile);
-        if (! @file_exists($tplFile)) {
+        if (! file_exists($tplFile)) {
             if (DEV) {
                 throw new Exception('模板文件：' . $tplFile . '不存在！');
             }
@@ -256,7 +256,7 @@ class Template
         }
         $comFileName = $this->fetchFile($comFileName);
 
-        if (DEV || ! @file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+        if (DEV || ! file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中

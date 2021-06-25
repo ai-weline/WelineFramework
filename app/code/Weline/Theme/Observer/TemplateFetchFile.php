@@ -87,7 +87,7 @@ class TemplateFetchFile implements ObserverInterface
         // 组织主题文件位置
         $theme_file_path = str_replace(APP_PATH, $theme->getPath(), $module_file_path);
         // 非开发模式启用缓存
-        if (@is_file($theme_file_path)) {
+        if (is_file($theme_file_path)) {
             if (! DEV) {
                 $this->themeCache->set($module_file_path, $theme_file_path);
             }

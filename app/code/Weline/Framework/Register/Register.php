@@ -48,7 +48,7 @@ class Register implements RegisterDataInterface
                 $moduleName   = $vendor . '_' . $module;
 
                 $moduleRegisterFile = $app . DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . self::register_file;
-                if (! @is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
+                if (! is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
                     throw new ConsoleException("{$moduleName}注册文件{$moduleRegisterFile}不存在！");
                 }
                 // 安装数据

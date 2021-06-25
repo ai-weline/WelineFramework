@@ -59,7 +59,7 @@ class File
         $position = strrpos($filename, DIRECTORY_SEPARATOR);
 //        if(!$position) throw new Exception(__('系统文件路径层级表达符号错误：当前系统文件分隔符为%1,当前路径：%2',[DIRECTORY_SEPARATOR,$filename]));
         $path = substr($filename, 0, $position);
-        if (! @file_exists($path)) {
+        if (! file_exists($path)) {
             mkdir($path, 0770, true);
         }
         $this->_filename = $filename;
@@ -141,7 +141,7 @@ class File
      */
     public function create(string $filename)
     {
-        if (@file_exists($filename)) {
+        if (file_exists($filename)) {
             return $filename;
         }
         $dir = dirname($filename);
@@ -150,7 +150,7 @@ class File
         }
         $this->open($filename, self::mode_w);
         $this->close();
-        if (@file_exists($filename)) {
+        if (file_exists($filename)) {
             return $filename;
         }
 

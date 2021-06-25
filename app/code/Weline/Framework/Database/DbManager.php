@@ -22,11 +22,14 @@ use Weline\Framework\Output\Cli\Printing;
  * 网站：   https://bbs.aiweline.com
  * Email：  aiweline@qq.com
  */
-class DbManager extends \think\DbManager
+class DbManager
 {
+    private \WeakMap $_connections;
+    private array $_configs;
+
     public function __construct()
     {
-        $db_conf = Env::getInstance()->getDbConfig();# Env配置对象内存常驻，无需担心配置多次操作env.php配置文件
+        $db_conf = Env::getInstance()->getDbConfig();# Env配置对象内存请求生命周期内常驻，无需担心配置多次操作env.php配置文件
         if (empty($db_conf)) {
             $db_conf = Env::getInstance()->reload()->getDbConfig();
             if (empty($db_conf)) {
@@ -40,7 +43,11 @@ class DbManager extends \think\DbManager
             }
         }
         $this->setConfig($db_conf);
-        parent::__construct();
+    }
+
+    function setConfig($config)
+    {
+        $this->_configs = $config;
     }
 
     /**
@@ -67,7 +74,6 @@ class DbManager extends \think\DbManager
      */
     public function query(string $sql)
     {
-        return parent::query($sql);
     }
 
     /**
@@ -83,7 +89,7 @@ class DbManager extends \think\DbManager
         /**
          * 重载方法
          */
-        parent::setConfig($config);
+        $this->setConfig($config);
 
         return $this;
     }

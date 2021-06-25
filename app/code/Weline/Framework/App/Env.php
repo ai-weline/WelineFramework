@@ -12,6 +12,10 @@ namespace Weline\Framework\App;
 use Weline\Framework\App\Env\Modules;
 use Weline\Framework\System\File\Io\File;
 
+/**
+ * Class Env FIXME 配置文件系统协程常驻
+ * @package Weline\Framework\App
+ */
 class Env
 {
     const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
@@ -178,7 +182,7 @@ class Env
 
     public function reload()
     {
-        if (!@is_file(self::path_ENV_FILE)) {
+        if (!is_file(self::path_ENV_FILE)) {
             $file = new File();
             $file->open(self::path_ENV_FILE, $file::mode_w_add);
             $text = '<?php return ' . var_export([], true) . ';?>';

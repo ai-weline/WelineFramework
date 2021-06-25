@@ -163,7 +163,7 @@ class Handle implements HandleInterface, RegisterInterface
         $router = '';
         foreach (DataInterface::files as $filename) {
             $filepath = $module_path . $filename;
-            if (@is_file($filepath)) {
+            if (is_file($filepath)) {
                 if ($filename === DataInterface::file_etc_Env) {
                     $env = (array)require $filepath;
                     if (! isset($env['router'])) {
@@ -193,7 +193,7 @@ class Handle implements HandleInterface, RegisterInterface
                 $this->printer->setup(__('升级') . $old_version . __('到') . $version);
                 foreach (\Weline\Framework\Setup\Data\DataInterface::upgrade_FILES as $upgrade_FILE) {
                     $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $upgrade_FILE . '.php';
-                    if (@file_exists($setup_file)) {
+                    if (file_exists($setup_file)) {
                         // 获取命名空间
                         $setup_file_arr = explode(APP_PATH, $setup_file);
                         $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
@@ -231,7 +231,7 @@ class Handle implements HandleInterface, RegisterInterface
                 // 安装模块：加载模块下的Setup模块下的安装文件进行安装
                 foreach (\Weline\Framework\Setup\Data\DataInterface::install_FILES as $install_FILE) {
                     $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $install_FILE . '.php';
-                    if (@file_exists($setup_file)) {
+                    if (file_exists($setup_file)) {
                         // 获取命名空间
                         $setup_file_arr = explode(APP_PATH, $setup_file);
                         $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');

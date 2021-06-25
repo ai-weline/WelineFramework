@@ -105,7 +105,7 @@ class Handle implements RegisterInterface
                 }
                 if ($path) {
                     $routers = [];
-                    if (@is_file($path)) {
+                    if (is_file($path)) {
                         $routers = require $path;
                     }
                     $router = [

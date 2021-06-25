@@ -20,7 +20,7 @@ class Init
             throw new Exception('参数不完整！');
         }
         $env_instance = \Weline\Framework\App\Env::getInstance();
-        if (! @is_file($env_instance::path_ENV_FILE)) {
+        if (! is_file($env_instance::path_ENV_FILE)) {
             throw new Exception('不存在的环境！');
         }
         $env = require $env_instance::path_ENV_FILE;

@@ -28,7 +28,7 @@ class Parser
             // 如果没有缓存就收集到词组中
             // 收集词组位置
             $filename = \Weline\Framework\App\Env::path_TRANSLATE_ALL_COLLECTIONS_WORDS_FILE;
-            if (! @file_exists($filename)) {
+            if (! file_exists($filename)) {
                 touch($filename);
             }
 
