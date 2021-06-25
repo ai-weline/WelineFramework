@@ -18,7 +18,7 @@ class CompressTest extends TestCore
     {
         /**@var $compress Compress*/
         $compress = ObjectManager::getInstance(Compress::class);
-//        $tar = $compress->compression(APP_PATH.'Aiweline\\Test\\');
+//        $tar = $compress->compression(APP_PATH.'Aiweline\\test\\');
         $tar = $compress->deCompression('E:\WelineFramework\app\code\Aiweline_Test.zip');
         p($tar);
     }

@@ -15,7 +15,7 @@ use Weline\Framework\Xml\Security;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test for class \Weline\Framework\Xml\Security
+ * test for class \Weline\Framework\Xml\Security
  */
 class SecurityTest extends TestCase
 {

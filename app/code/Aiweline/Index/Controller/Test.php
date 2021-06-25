@@ -19,7 +19,7 @@ class Test extends \Weline\Framework\App\Controller\FrontendController
     private State $state;
 
     /**
-     * Test 初始函数...
+     * test 初始函数...
      * @param State $state
      */
     public function __construct(

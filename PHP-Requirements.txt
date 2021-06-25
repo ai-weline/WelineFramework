@@ -1,0 +1,6 @@
+[方法]
+exec
+putenv
+[拓展]
+ext-exif
+ext-fileinfo

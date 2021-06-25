@@ -11,16 +11,14 @@
     }
   ],
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.0",
     "ext-iconv": "*",
     "ext-json": "*",
     "ext-pdo": "*",
-    "topthink/think-orm": "^2.0",
     "ext-exif": "*",
     "ext-fileinfo": "*",
     "phpunit/phpunit": "^9.2",
     "ext-simplexml": "*",
-    "topthink/think-template": "^2.0",
     "friendsofphp/php-cs-fixer": "^2.16",
     "ext-dom": "*",
     "ext-libxml": "*",
