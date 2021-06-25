@@ -1,4 +1,0 @@
-[dev d298f05] '模型兼容TP6的兼容性问题。使得模型可使用：$model-;$model-;且兼容原模型读取方法：$model-
- 5 files changed, 717 insertions(+), 19 deletions(-)
- create mode 100644 app/code/Weline/Framework/Database/TraitModelObject.php
- rename app/code/Weline/Theme/Model/{Theme.php => WelineTheme.php} (57%)
