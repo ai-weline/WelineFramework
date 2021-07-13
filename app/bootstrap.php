@@ -7,18 +7,17 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-use Weline\Framework\Manager\ObjectManager;
 
 // 运行模式
-define('CLI', PHP_SAPI === 'cli');
+defined('CLI') || define('CLI', PHP_SAPI === 'cli');
 // 项目根目录
-define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
+defined('BP') || define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 静态文件路径
-define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
+defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // 应用 目录 (默认访问 web)
-define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
+defined('APP_PATH') || define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
 // 应用 配置 目录 (默认访问 etc)
-define('APP_ETC_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
+defined('APP_ETC_PATH') || define('APP_ETC_PATH', APP_PATH. 'etc' . DIRECTORY_SEPARATOR);
 // 检测自动加载
 try {
     $autoloader = BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';

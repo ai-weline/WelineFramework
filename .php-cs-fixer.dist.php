@@ -21,7 +21,6 @@ $finder = PhpCsFixer\Finder::create()
     ->name('*.php')
     ->exclude('pub/media')
     ->exclude('pub/static')
-    ->exclude('pub/static')
     ->exclude('var')
     ->exclude('vendor')
     ->in(__DIR__);

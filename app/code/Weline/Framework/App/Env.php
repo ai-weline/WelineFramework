@@ -14,6 +14,7 @@ use Weline\Framework\System\File\Io\File;
 
 class Env
 {
+    const app_path='';
     const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
 
     const framework_name = 'Weline';
@@ -32,7 +33,6 @@ class Env
     const path_COMMANDS_FILE = self::path_framework_generated . 'commands.php';
 
     // 注册register路径
-    const path_CODE = APP_PATH;
 
     const path_VENDOR_CODE = self::vendor_path;
 
@@ -41,7 +41,7 @@ class Env
     const path_LANGUAGE_PACK = BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR;
 
     const register_FILE_PATHS = [
-        'app_code' => self::path_CODE,
+        'app_code' => APP_PATH,
         'vendor_code' => self::path_VENDOR_CODE,
         'theme_design' => self::path_CODE_DESIGN,
         'language_pack' => self::path_LANGUAGE_PACK,
@@ -103,9 +103,9 @@ class Env
     // 变量
 
     /**
-     * @var Env|null
+     * @var Env
      */
-    private static ?Env $instance;
+    private static Env $instance;
 
     const default_CONFIG = [
         'cache' => self::default_CACHE,
@@ -173,10 +173,14 @@ class Env
      */
     private function __construct()
     {
-        $this->reload();
+        try {
+            $this->reload();
+        } catch (Exception $e) {
+            throw new Exception(__('系统加载错误：%1',$e->getMessage()));
+        }
     }
 
-    public function reload()
+    public function reload(): static
     {
         if (!is_file(self::path_ENV_FILE)) {
             $file = new File();
@@ -208,7 +212,6 @@ class Env
         if (!isset(self::$instance)) {
             self::$instance = new self();
         }
-
         return self::$instance;
     }
 

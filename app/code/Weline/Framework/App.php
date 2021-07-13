@@ -10,7 +10,9 @@
 namespace Weline\Framework;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\App\Helper;
+use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
 
 class App
@@ -28,9 +30,9 @@ class App
      *
      * @param string|null $key
      * @param null $value
-     * @return array|bool|mixed|Env|null
+     * @return mixed
      */
-    public static function Env(string $key = null, $value = null)
+    public static function Env(string $key = null, $value = null): mixed
     {
         if (!isset(self::$_env)) {
             self::$_env = Env::getInstance();
@@ -62,13 +64,13 @@ class App
         require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
         /**------------环境配置----------------*/
         // 调试模式
-        define('DEV', self::Env('deploy') === 'dev');
+        define('DEV', 'dev' === self::Env('deploy'));
         // 调试模式
         define('PHP_CS', self::Env('php-cs'));
         //报告错误
         DEV ? error_reporting(E_ALL) : error_reporting(0);
         // 检查运行模式
-        defined('CLI') ?: define('CLI', PHP_SAPI === 'cli');
+        defined('CLI') || define('CLI', PHP_SAPI === 'cli');
 
         // 错误报告
         if (DEV || CLI) {
@@ -106,12 +108,17 @@ class App
      * @Description  此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
      *
      * 参数区：
+     * @throws Exception
      */
-    public static function run()
+    public static function run(): string
     {
         self::init();
         if (!CLI) {
-            return ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
+            try {
+                return ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
+            } catch (\ReflectionException | App\Exception $e) {
+                throw new Exception(__('系统错误：%1', $e->getMessage()));
+            }
         }
 
         return '';
