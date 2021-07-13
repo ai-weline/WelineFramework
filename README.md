@@ -212,6 +212,9 @@ url->router->controller(或者静态资源)，
 （1）Weline\Framework\Database\Db\Ddl\Table表创建添加外键addForeignKey方法。
 ~~~
 
+正在进行...
+1、重要：model模型自定义，抛除TP6的Model
+
 下一个版本2.1计划
 ~~~
 1、观察者wapper,简化观察者new DataObject过程
