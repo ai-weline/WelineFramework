@@ -17,7 +17,7 @@
     代码可安装到其他同框架的项目中。一个代码应用目录位置位于项目下的app/code中。模块中可设置Api目录,Controller目录，view目录等以及必须的register.php注册文件。
     其中的每个应用可以移植安装。
     
-    2、无缝集成TP6的ORM,更加符合国人开发逻辑。
+    2、自定义ORM。
     
     3、前后端集成到一个module中，做到一个需求一个module。
     
@@ -27,7 +27,7 @@
 
 #### 软件架构
 
-    PHP>=7.4(强类型编写)
+    PHP>=8.0
     composer
     nginx/apache
 
@@ -232,12 +232,3 @@ url->router->controller(或者静态资源)，
 3.  提交代码
 4.  新建 Pull Request
 
-
-#### 码云特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5.  码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
