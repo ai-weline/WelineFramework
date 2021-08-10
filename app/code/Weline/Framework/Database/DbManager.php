@@ -9,12 +9,8 @@
 
 namespace Weline\Framework\Database;
 
-use JetBrains\PhpStorm\Pure;
-use PDO;
-use WeakMap;
 use Weline\Framework\Database\DbManager\ConfigProvider;
-use Weline\Framework\Manager\Cache\ObjectCache;
-use Weline\Theme\Model\WelineTheme;
+use Weline\Framework\Manager\ObjectManager;
 
 /**
  * 文件信息
@@ -28,12 +24,12 @@ use Weline\Theme\Model\WelineTheme;
 class DbManager
 {
     protected ?Linker $defaultLinker = null;
-    protected WeakMap $linkers;
+    protected \WeakMap $linkers;
     protected ConfigProvider $configProvider;
 
     public function __construct(ConfigProvider $configProvider)
     {
-        $this->linkers = new WeakMap();
+        $this->linkers = new \WeakMap();
         $this->configProvider = $configProvider;
     }
 
@@ -45,7 +41,7 @@ class DbManager
      * @param ConfigProvider $configProvider
      * @return $this
      */
-    function setConfig(ConfigProvider $configProvider)
+    function setConfig(ConfigProvider $configProvider): static
     {
         $this->configProvider = $configProvider;
         return $this;
@@ -72,8 +68,10 @@ class DbManager
      * @param string $linker_name 链接名称
      * @param ConfigProvider|null $configProvider 链接资源配置
      * @return Linker
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
-    function create(string $linker_name = 'default', ConfigProvider $configProvider = null)
+    function create(string $linker_name = 'default', ConfigProvider $configProvider = null): Linker
     {
         $linker = $this->getLinker($linker_name);
         // 如果不更新连接配置，且已经存在连接就直接读取
@@ -86,10 +84,10 @@ class DbManager
             if ($linker->getConfigProvider()->getData() == $configProvider->getData()) {
                 return $linker;
             } else {
-                $linker = new Linker($configProvider);
+                $linker = ObjectManager::getInstance(Linker::class);
             }
         } else {
-            $linker = new Linker($this->configProvider);
+            $linker = ObjectManager::getInstance(Linker::class);
         }
         $this->linkers->offsetSet($linker, $linker_name);
         return $linker;
@@ -103,7 +101,7 @@ class DbManager
      * @param string $linker_name
      * @return Linker|null
      */
-    function getLinker($linker_name = 'default')
+    function getLinker(string $linker_name = 'default'): ?Linker
     {
         if ('default' === $linker_name) {
             return $this->defaultLinker;
@@ -116,4 +114,17 @@ class DbManager
         }
         return null;
     }
+
+    /**
+     * @DESC         |休眠时执行函数： 保存配置信息，以及模型数据
+     *
+     * 参数区：
+     *
+     * @return string[]
+     */
+    public function __sleep()
+    {
+        return array('configProvider', 'defaultLinker');
+    }
+
 }

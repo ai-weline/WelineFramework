@@ -16,12 +16,25 @@ namespace Weline\Framework\Database\test;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Database\DbManager\ConfigProvider;
+use Weline\Framework\Database\Linker;
 use Weline\Framework\Manager\ObjectManager;
 
 class DbManager extends \Weline\Framework\UnitTest\TestCore
 {
     function testCreate(){
         $dbManager = ObjectManager::getInstance(\Weline\Framework\Database\DbManager::class);
-        p($dbManager->create());
+        /**@var Linker $linker*/
+        $linker = $dbManager->create();
+        p($linker->query('show tables;'));
     }
 }
+/**
+
+php bin/m system:install ^
+--db-type=mysql ^
+--db-hostname=127.0.0.1 ^
+--db-database=weline ^
+--db-username=weline ^
+--db-password=weline
+
+ */

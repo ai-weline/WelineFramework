@@ -65,4 +65,9 @@ interface QueryInterface
      * @return bool
      */
     function delete():bool;
+
+    /**
+     * @return mixed
+     */
+    function query(): mixed;
 }

@@ -15,13 +15,14 @@ namespace Weline\Framework\Database\Linker\Query;
 
 
 
-use Weline\Framework\Database\Linker\QueryInterface;
+use Weline\Framework\Database\Linker\Query;
 
-class Mysql implements QueryInterface
+class Mysql extends Query
 {
     function select(): array
     {
-        // TODO: Implement select() method.
+
+
     }
 
     function join(string $join_str): Query
@@ -42,5 +43,10 @@ class Mysql implements QueryInterface
     function where(string $where_str): Query
     {
         // TODO: Implement where() method.
+    }
+
+    function query(): mixed
+    {
+        // TODO: Implement query() method.
     }
 }

@@ -82,7 +82,7 @@ class File implements CacheInterface, DriverInterface
      * @param $key
      * @return string
      */
-    public function buildKey($key)
+    public function buildKey($key): string
     {
         if (! is_string($key)) {
             // 不是字符串，json_encode转成字符串
@@ -100,7 +100,7 @@ class File implements CacheInterface, DriverInterface
      * @param $key
      * @return bool|mixed
      */
-    public function get($key)
+    public function get($key): mixed
     {
         $key       = $this->buildKey($key);
         $cacheFile = $this->processCacheFile($this->cachePath . $key);
@@ -121,7 +121,7 @@ class File implements CacheInterface, DriverInterface
      * @param $key
      * @return bool
      */
-    public function exists($key)
+    public function exists($key): bool
     {
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
@@ -136,9 +136,9 @@ class File implements CacheInterface, DriverInterface
      * 参数区：
      *
      * @param $keys
-     * @return array|mixed
+     * @return array
      */
-    public function getMulti($keys)
+    public function getMulti($keys): array
     {
         $results = [];
         foreach ($keys as $key) {
@@ -156,9 +156,9 @@ class File implements CacheInterface, DriverInterface
      * @param $key
      * @param $value
      * @param int $duration
-     * @return bool|mixed
+     * @return bool
      */
-    public function set($key, $value, $duration = 0)
+    public function set($key, $value, int $duration = 0): bool
     {
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
@@ -187,9 +187,9 @@ class File implements CacheInterface, DriverInterface
      *
      * @param $items
      * @param int $duration
-     * @return array|mixed
+     * @return array
      */
-    public function setMulti($items, $duration = 0)
+    public function setMulti($items, int $duration = 0): array
     {
         $failedKeys = [];
         foreach ($items as $key => $value) {
@@ -210,9 +210,9 @@ class File implements CacheInterface, DriverInterface
      * @param $key
      * @param $value
      * @param int $duration
-     * @return bool|mixed
+     * @return bool
      */
-    public function add($key, $value, $duration = 0)
+    public function add($key, $value, int $duration = 0): bool
     {
         //  key不存在，就设置缓存
         if (! $this->exists($key)) {
@@ -230,9 +230,9 @@ class File implements CacheInterface, DriverInterface
      *
      * @param $items
      * @param int $duration
-     * @return array|mixed
+     * @return array
      */
-    public function addMulti($items, $duration = 0)
+    public function addMulti($items, int $duration = 0): array
     {
         $failedKeys = [];
         foreach ($items as $key => $value) {
@@ -250,9 +250,9 @@ class File implements CacheInterface, DriverInterface
      * 参数区：
      *
      * @param $key
-     * @return bool|mixed
+     * @return bool
      */
-    public function delete($key)
+    public function delete($key): bool
     {
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;

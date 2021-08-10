@@ -26,7 +26,7 @@ class ObjectManager implements ManagerInterface
     {
     }
 
-    private static function getCache()
+    private static function getCache(): CacheInterface
     {
         if (!isset(self::$cache)) {
             self::$cache = (new ObjectCache())->create();
@@ -35,9 +35,9 @@ class ObjectManager implements ManagerInterface
         return self::$cache;
     }
 
-    private static function initFactoryClass(string $class)
+    private static function initFactoryClass(string $class): string
     {
-        return rtrim($class, 'Factory');
+        return str_replace('Factory', '', $class);
     }
 
     /**
@@ -52,10 +52,10 @@ class ObjectManager implements ManagerInterface
      * @throws Exception
      * @throws \ReflectionException
      */
-    public static function getInstance(string $class = '', array $arguments = [], bool $shared = true)
+    public static function getInstance(string $class = '', array $arguments = [], bool $shared = true): mixed
     {
         if (empty($class)) {
-            return isset(self::$instance) ? self::$instance : new self();
+            return self::$instance ?? new self();
         }
         if (isset(self::$instances[$class])) {
             return self::$instances[$class];
@@ -63,22 +63,27 @@ class ObjectManager implements ManagerInterface
 
         // 缓存对象读取 FIXME 需要换回 ！DEV
         if (!CLI && $shared && !DEV && $cache_class_object = self::getCache()->get($class)) {
-            self::$instances[$class] = self::initClass($class, $cache_class_object);
+            self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
             return self::$instances[$class];
         }
-
         // 类名规则处理
         $new_class = self::parserClass($class);
-        $arguments = $arguments ? $arguments : self::getMethodParams($new_class);
+        $arguments = $arguments ?: self::getMethodParams($new_class);
         $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
-        self::$instances[$class] = self::initClass($class, $new_object);
+        self::$instances[$class] = self::initClassInstance($class, $new_object);
 
         // 缓存对象
         self::getCache()->set($class, self::$instances[$class]);
+
         return self::$instances[$class];
     }
 
-    public static function parserClass(string $class)
+    /**
+     * 解析类名
+     * @param string $class
+     * @return string
+     */
+    public static function parserClass(string $class): string
     {
         // 拦截器处理
         $new_class = $class;
@@ -95,60 +100,67 @@ class ObjectManager implements ManagerInterface
         return $new_class;
     }
 
-    private static function initClass(string $class, $new_object)
+    /**
+     * 初始化类实例
+     * @param string $class
+     * @param $new_object
+     * @return mixed
+     */
+    private static function initClassInstance(string $class, $new_object): mixed
     {
         $init_method_name = '__init';
         if (method_exists($new_object, $init_method_name)) {
             $new_object->$init_method_name();
         }
+
         // 工厂类
-        if (rtrim($class, 'Factory') !== $class) {
+        if (self::initFactoryClass($class) !== $class) {
             $create_method = 'create';
             if (method_exists($new_object, $create_method)) {
                 $new_object = $new_object->$create_method();
             }
         }
-
         return $new_object;
     }
 
     /**
      * @Desc         | 创建实例并运行
-     * @param $className
-     * @param string $methodName
+     * @param $class
+     * @param string $method
      * @param array $params
      * @return mixed
      * @throws \ReflectionException
+     * @throws Exception
      */
-    public static function make($className, $methodName = '__construct', $params = [])
+    public static function make($class, string $method = '__construct', $params = []): mixed
     {
         // 拦截器处理
-        $new_class = self::parserClass($className);
-        if ('__construct' === $methodName) {
+        $new_class = self::parserClass($class);
+        if ('__construct' === $method) {
 //            throw  new Exception(__('无法通过make方式执行__construct函数！'));
-            if (isset(self::$instances[$className])) {
-                return self::$instances[$className];
+            if (isset(self::$instances[$class])) {
+                return self::$instances[$class];
             }
             // 如果是初始化函数则返回一个初始化后的对象
             // 缓存对象读取
             if (!DEV && $cache_class_object = self::getCache()->get($new_class)) {
-                self::$instances[$className] = self::initClass($className, $cache_class_object);
+                self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
 
-                return self::$instances[$className];
+                return self::$instances[$class];
             }
             $instance = (new ReflectionClass($new_class))->newInstanceArgs($params);
-            self::$instances[$className] = $instance;
-            self::getCache()->set($className, $instance);
+            self::$instances[$class] = $instance;
+            self::getCache()->set($class, $instance);
 
-            return self::$instances[$className];
+            return self::$instances[$class];
         }
         // 如果不是则实例化后立即执行该函数
         // 获取该方法所需要依赖注入的参数
-        $paramArr = self::getMethodParams($className, $methodName);
+        $paramArr = self::getMethodParams($class, $method);
         // 获取类的实例
-        self::$instances[$className] = self::getInstance($className);
+        self::$instances[$class] = self::getInstance($class);
 
-        return self::$instances[$className]->{$methodName}(...array_merge($paramArr, $params));
+        return self::$instances[$class]->{$method}(...array_merge($paramArr, $params));
     }
 
     /**
@@ -158,7 +170,7 @@ class ObjectManager implements ManagerInterface
      * @return array
      * @throws Exception
      */
-    protected static function getMethodParams($className, $methodsName = '__construct')
+    protected static function getMethodParams($className, string $methodsName = '__construct'): array
     {
         // 通过反射获得该类
         try {

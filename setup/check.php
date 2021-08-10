@@ -25,7 +25,7 @@ function cache_shutdown_error()
 register_shutdown_function('cache_shutdown_error');
 
 // 安装检测
-if (@is_file(__DIR__ . DIRECTORY_SEPARATOR . 'install.lock')) {
+if (@is_file(__DIR__ . DIRECTORY_SEPARATOR)) {
     http_response_code(404);
     exit(0);
 }

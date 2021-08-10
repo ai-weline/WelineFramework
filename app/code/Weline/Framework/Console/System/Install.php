@@ -55,7 +55,7 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         $this->printer->note('第一步：环境检测...', '系统');
         $checkResult = $this->runner->checkEnv();
         if ($checkResult['hasErr']) {
-            $this->printer->error($checkResult, '检测错误！', '系统');
+            $this->printer->error('检测失败！', '系统');
             exit();
         }
         // 参数检测

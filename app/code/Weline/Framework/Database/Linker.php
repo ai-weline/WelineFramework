@@ -16,14 +16,16 @@ namespace Weline\Framework\Database;
 
 use PDO;
 use PDOException;
+use PhpParser\Node\Expr\Cast\Object_;
 use Weline\Framework\Database\DbManager\ConfigProvider;
 use Weline\Framework\Database\Exception\LinkException;
 use Weline\Framework\Database\Linker\QueryAdapter;
 use Weline\Framework\Database\Linker\QueryInterface;
+use Weline\Framework\Manager\ObjectManager;
 
 class Linker
 {
-    protected ?PDO $db = null;
+    protected ?PDO $linker = null;
     protected ConfigProvider $configProvider;
     protected ?QueryInterface $query = null;
 
@@ -81,16 +83,16 @@ class Linker
      * @throws LinkException
      * @throws \Weline\Framework\App\Exception
      */
-    function __init(): void
+    public function __init(): void
     {
-        /* 1、初始化DB连接*/
-        if (!$this->db) {
-            $this->db = $this->getLink();
+        /* 1、初始化linker连接*/
+        if (!$this->linker) {
+            $this->linker = $this->getLink();
         }
 
         /* 2、初始化查询 */
         if (!$this->query) {
-
+            $this->getQuery();
         }
     }
 
@@ -105,12 +107,13 @@ class Linker
      */
     private function getLink(): PDO
     {
-        $dsn = "{$this->configProvider->getDbType()}:host={$this->configProvider->getHostName()}:{$this->configProvider->getHostPort()};dbname={$this->configProvider->getDatabase()};charset={$this->configProvider->getCharset()}";
-        if (!in_array($this->configProvider->getDbType(), PDO::getAvailableDrivers())) {
-            throw new LinkException(__('驱动不存在：%1,可用驱动列表：%2，更多驱动配置请转到php.ini中开启。', [$this->configProvider->getDbType(), implode(',', PDO::getAvailableDrivers())]));
+        $db_type = $this->configProvider->getDbType();
+        $dsn = "{$db_type}:host={$this->configProvider->getHostName()}:{$this->configProvider->getHostPort()};dbname={$this->configProvider->getDatabase()};charset={$this->configProvider->getCharset()}";
+        if (!in_array($db_type, PDO::getAvailableDrivers())) {
+            throw new LinkException(__('驱动不存在：%1,可用驱动列表：%2，更多驱动配置请转到php.ini中开启。', [$db_type, implode(',', PDO::getAvailableDrivers())]));
         }
         try {
-            //初始化一个db对象
+            //初始化一个linker对象
             return new PDO($dsn, $this->configProvider->getUsername(), $this->configProvider->getPassword(), $this->configProvider->getOptions());
         } catch (PDOException $e) {
             throw new LinkException($e->getMessage());
@@ -128,9 +131,24 @@ class Linker
      */
     public function getQuery(): QueryInterface
     {
-        if(is_null($this->query)){
-            $this->query = (new QueryAdapter())->setConfigProvider($this->configProvider)->create();
+        if (is_null($this->query)) {
+            $adapter_class = $this->getAdapter();
+            $this->query = new $adapter_class($this->getLink());
         }
         return $this->query;
+    }
+
+    function query(string $sql): bool|\PDOStatement
+    {
+        return $this->linker->query($sql);
+    }
+
+    /**
+     * 获取适配器
+     * @return string
+     */
+    function getAdapter(): string
+    {
+        return 'Weline\\Framework\\Database\\Linker\\Query\\' . ucfirst($this->configProvider->getDbType());
     }
 }
