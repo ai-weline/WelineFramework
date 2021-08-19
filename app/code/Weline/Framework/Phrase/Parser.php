@@ -18,16 +18,20 @@ class Parser
     protected static array $words = [];
 
     /**
-     * @DESC         |翻译解析函数
+     * @DESC         # 翻译解析函数
      * DEV环境下解析字词并收集到generated/language/words.php
-     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/16 22:50
      * 参数区：
-     *
-     * @param string $words
-     * @param array|string|int $args
+     * @param string|array $words
+     * @param int|array|string|null $args
+     * @return mixed|string|string[]
+     * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
+     * @throws \Weline\Framework\Exception\Core
      */
-    public static function parse(string $words, $args)
+    public static function parse(string|array $words, int|array|string $args=null)
     {
         $words = self::processWords($words);
         if (is_array($args)) {

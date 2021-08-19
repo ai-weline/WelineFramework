@@ -35,6 +35,9 @@ use Weline\Framework\Output\Cli\Printing;
  */
 class ConfigProvider extends DataObject implements ConfigProviderInterface
 {
+    /**
+     * @throws Exception
+     */
     function __construct($db_conf = [])
     {
         if (empty($db_conf)) {
@@ -55,7 +58,7 @@ class ConfigProvider extends DataObject implements ConfigProviderInterface
      * @return array|mixed
      * @throws Exception
      */
-    protected function getConfig()
+    protected function getConfig(): mixed
     {
         $db_conf = Env::getInstance()->getDbConfig();# Env配置对象内存生命周期常驻，无需担心配置多次操作env.php配置文件
         if (empty($db_conf)) {

@@ -27,10 +27,10 @@
  */
 function getStringBetweenContents(string $str, string $startDelimiter, string $endDelimiter): array
 {
-    $contents             = [];
+    $contents = [];
     $startDelimiterLength = strlen($startDelimiter);
-    $endDelimiterLength   = strlen($endDelimiter);
-    $startFrom            = $contentStart            = $contentEnd            = 0;
+    $endDelimiterLength = strlen($endDelimiter);
+    $startFrom = $contentStart = $contentEnd = 0;
     while (false !== ($contentStart = strpos($str, $startDelimiter, $startFrom))) {
         $contentStart += $startDelimiterLength;
         $contentEnd = strpos($str, $endDelimiter, $contentStart);
@@ -38,37 +38,39 @@ function getStringBetweenContents(string $str, string $startDelimiter, string $e
             break;
         }
         $contents[] = substr($str, $contentStart, $contentEnd - $contentStart);
-        $startFrom  = $contentEnd + $endDelimiterLength;
+        $startFrom = $contentEnd + $endDelimiterLength;
     }
 
     return $contents;
 }
 
 /**
- * @DESC         |翻译
+ * @DESC          # 翻译
  *
+ * @AUTH  秋枫雁飞
+ * @EMAIL aiweline@qq.com
+ * @DateTime: 2021/8/16 22:48
  * 参数区：
- *
  * @param string $words
- * @param  $args
- * @throws \Weline\Framework\App\Exception
+ * @param array|string|null $args
  * @return string
- * @r
  */
-function __(string $words, $args = [])
+function __(string $words, array|string $args = null): string
 {
     return \Weline\Framework\Phrase\Parser::parse($words, $args);
 }
 
 /**
- * @DESC         |以大写字母分割字符串
+ * @DESC          | 以大写字母分割字符串
  *
+ * @AUTH  秋枫雁飞
+ * @EMAIL aiweline@qq.com
+ * @DateTime: 2021/8/16 21:13
  * 参数区：
- *
  * @param string $str
- * @return array|false|string[]
+ * @return array|bool
  */
-function m_split_by_capital(string $str)
+function m_split_by_capital(string $str): array|bool
 {
     return preg_split('/(?=[A-Z])/', $str);
 }

@@ -16,14 +16,12 @@ namespace Weline\Framework\Database;
 
 use PDO;
 use PDOException;
-use PhpParser\Node\Expr\Cast\Object_;
 use Weline\Framework\Database\DbManager\ConfigProvider;
 use Weline\Framework\Database\Exception\LinkException;
-use Weline\Framework\Database\Linker\QueryAdapter;
 use Weline\Framework\Database\Linker\QueryInterface;
 use Weline\Framework\Manager\ObjectManager;
 
-class Linker
+class LinkerFactory
 {
     protected ?PDO $linker = null;
     protected ConfigProvider $configProvider;
@@ -32,10 +30,12 @@ class Linker
     /**
      * Linker 初始函数...
      * @param ConfigProvider $configProvider
+     * @throws LinkException
      */
     function __construct(ConfigProvider $configProvider)
     {
         $this->configProvider = $configProvider;
+        $this->create();
     }
 
     /**
@@ -59,7 +59,7 @@ class Linker
      */
     public function __sleep()
     {
-        return array('configProvider');
+        return array('configProvider', 'query');
     }
 
     /**
@@ -76,36 +76,32 @@ class Linker
     }
 
     /**
-     * @DESC         |框架初始化函数
+     * @DESC          # 框架初始化函数
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/18 21:50
      * 参数区：
-     *
      * @throws LinkException
-     * @throws \Weline\Framework\App\Exception
      */
     public function __init(): void
     {
         /* 1、初始化linker连接*/
         if (!$this->linker) {
-            $this->linker = $this->getLink();
-        }
-
-        /* 2、初始化查询 */
-        if (!$this->query) {
-            $this->getQuery();
+            $this->create();
         }
     }
 
     /**
-     * @DESC         |获取连接
+     * @DESC          # 获得数据库PDO链接
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/18 21:10
      * 参数区：
-     *
-     * @return PDO
      * @throws LinkException
-     * @throws \Weline\Framework\App\Exception
      */
-    private function getLink(): PDO
+    public function create(): static
     {
         $db_type = $this->configProvider->getDbType();
         $dsn = "{$db_type}:host={$this->configProvider->getHostName()}:{$this->configProvider->getHostPort()};dbname={$this->configProvider->getDatabase()};charset={$this->configProvider->getCharset()}";
@@ -114,33 +110,49 @@ class Linker
         }
         try {
             //初始化一个linker对象
-            return new PDO($dsn, $this->configProvider->getUsername(), $this->configProvider->getPassword(), $this->configProvider->getOptions());
+            $this->linker = new PDO($dsn, $this->configProvider->getUsername(), $this->configProvider->getPassword(), $this->configProvider->getOptions());
         } catch (PDOException $e) {
             throw new LinkException($e->getMessage());
         }
+        return $this;
     }
 
     /**
-     * @DESC         |获取查询类
+     * @DESC          # 获取连接
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/18 21:06
      * 参数区：
+     * @return PDO
+     */
+    public function getLink(): PDO
+    {
+        return $this->linker;
+    }
+
+    /**
+     * @DESC          # 获取查询类
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/18 21:07
+     * 参数区：
      * @return QueryInterface
-     * @throws LinkException
+     * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      */
     public function getQuery(): QueryInterface
     {
         if (is_null($this->query)) {
-            $adapter_class = $this->getAdapter();
-            $this->query = new $adapter_class($this->getLink());
+            $this->query = ObjectManager::getInstance($this->getAdapter());
         }
         return $this->query;
     }
 
-    function query(string $sql): bool|\PDOStatement
+    function query(string $sql): bool|array|\PDOStatement
     {
-        return $this->linker->query($sql);
+        return $this->query->query($sql);
     }
 
     /**
@@ -149,6 +161,6 @@ class Linker
      */
     function getAdapter(): string
     {
-        return 'Weline\\Framework\\Database\\Linker\\Query\\' . ucfirst($this->configProvider->getDbType());
+        return 'Weline\\Framework\\Database\\Linker\\Query\\Adapter\\' . ucfirst($this->configProvider->getDbType());
     }
 }

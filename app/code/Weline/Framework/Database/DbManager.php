@@ -10,6 +10,8 @@
 namespace Weline\Framework\Database;
 
 use Weline\Framework\Database\DbManager\ConfigProvider;
+use Weline\Framework\Database\Exception\DbException;
+use Weline\Framework\Database\Exception\LinkException;
 use Weline\Framework\Manager\ObjectManager;
 
 /**
@@ -23,7 +25,7 @@ use Weline\Framework\Manager\ObjectManager;
  */
 class DbManager
 {
-    protected ?Linker $defaultLinker = null;
+    protected ?LinkerFactory $defaultLinkerFactory = null;
     protected \WeakMap $linkers;
     protected ConfigProvider $configProvider;
 
@@ -67,11 +69,11 @@ class DbManager
      * 参数区：
      * @param string $linker_name 链接名称
      * @param ConfigProvider|null $configProvider 链接资源配置
-     * @return Linker
+     * @return LinkerFactory
      * @throws \ReflectionException
-     * @throws \Weline\Framework\App\Exception
+     * @throws LinkException|\Weline\Framework\App\Exception
      */
-    function create(string $linker_name = 'default', ConfigProvider $configProvider = null): Linker
+    function create(string $linker_name = 'default', ConfigProvider $configProvider = null): LinkerFactory
     {
         $linker = $this->getLinker($linker_name);
         // 如果不更新连接配置，且已经存在连接就直接读取
@@ -84,12 +86,19 @@ class DbManager
             if ($linker->getConfigProvider()->getData() == $configProvider->getData()) {
                 return $linker;
             } else {
-                $linker = ObjectManager::getInstance(Linker::class);
+                $linker = ObjectManager::getInstance(LinkerFactory::class, [$configProvider]);
             }
         } else {
-            $linker = ObjectManager::getInstance(Linker::class);
+            if ($configProvider && empty($linker)) {
+                $linker = ObjectManager::getInstance(LinkerFactory::class, [$configProvider]);
+            } else {
+                $linker = ObjectManager::getInstance(LinkerFactory::class);
+            }
         }
         $this->linkers->offsetSet($linker, $linker_name);
+        if('default'===$linker_name){
+            $this->defaultLinkerFactory = $linker;
+        }
         return $linker;
     }
 
@@ -99,20 +108,21 @@ class DbManager
      * 参数区：
      *
      * @param string $linker_name
-     * @return Linker|null
+     * @return LinkerFactory|null
+     * @throws LinkException
      */
-    function getLinker(string $linker_name = 'default'): ?Linker
+    function getLinker(string $linker_name = 'default'): ?LinkerFactory
     {
         if ('default' === $linker_name) {
-            return $this->defaultLinker;
+            return $this->defaultLinkerFactory;
         }
-        /**@var Linker $linker */
+        /**@var LinkerFactory $linker */
         foreach ($this->linkers->getIterator() as $linker => $linker_name_value) {
             if ($linker_name === $linker_name_value) {
                 return $linker;
             }
         }
-        return null;
+        throw new LinkException(__('链接异常：%1 链接不存在，或者尚未创建。',$linker_name));
     }
 
     /**
@@ -124,7 +134,7 @@ class DbManager
      */
     public function __sleep()
     {
-        return array('configProvider', 'defaultLinker');
+        return array('configProvider');
     }
 
 }

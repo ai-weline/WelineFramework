@@ -9,9 +9,11 @@
 
 namespace Weline\Framework\Database;
 
+use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Cache\DbCache;
-use Weline\Framework\Database\Linker\QueryInterface;
+use Weline\Framework\Database\Exception\DbException;
+use Weline\Framework\Database\test\Linker\QueryInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
@@ -181,7 +183,12 @@ class Model extends DataObject
      */
     public function getDbManager(): DbManager
     {
-        return ObjectManager::getInstance(DbManager::class);
+        try {
+            return ObjectManager::getInstance(DbManager::class);
+        } catch (\ReflectionException $e) {
+            throw new DbException(__('数据库链接异常：%1'),$e->getMessage());
+        } catch (Exception $e) {
+        }
     }
 
     public function find($data = null)

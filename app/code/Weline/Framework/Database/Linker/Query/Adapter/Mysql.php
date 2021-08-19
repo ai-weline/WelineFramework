@@ -11,7 +11,7 @@ declare(strict_types=1);
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
-namespace Weline\Framework\Database\Linker\Query;
+namespace Weline\Framework\Database\Linker\Query\Adapter;
 
 
 
@@ -25,11 +25,6 @@ class Mysql extends Query
 
     }
 
-    function join(string $join_str): Query
-    {
-        // TODO: Implement join() method.
-    }
-
     function insert(array|string $data): bool
     {
         // TODO: Implement insert() method.
@@ -40,13 +35,4 @@ class Mysql extends Query
         // TODO: Implement delete() method.
     }
 
-    function where(string $where_str): Query
-    {
-        // TODO: Implement where() method.
-    }
-
-    function query(): mixed
-    {
-        // TODO: Implement query() method.
-    }
 }

@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Manager;
 
+use MongoDB\BSON\Serializable;
 use ReflectionClass;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
@@ -16,6 +17,10 @@ use Weline\Framework\Manager\Cache\ObjectCache;
 
 class ObjectManager implements ManagerInterface
 {
+    const unserializable_class = [
+        \PDO::class,
+        \WeakMap::class
+    ];
     private static CacheInterface $cache;
 
     private static ObjectManager $instance;
@@ -68,12 +73,15 @@ class ObjectManager implements ManagerInterface
         }
         // 类名规则处理
         $new_class = self::parserClass($class);
+
         $arguments = $arguments ?: self::getMethodParams($new_class);
         $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
         self::$instances[$class] = self::initClassInstance($class, $new_object);
 
-        // 缓存对象
-        self::getCache()->set($class, self::$instances[$class]);
+        // 缓存可缓存对象
+        if (!DEV && in_array($class, self::unserializable_class)) {
+            self::getCache()->set($class, self::$instances[$class]);
+        };
 
         return self::$instances[$class];
     }
@@ -201,7 +209,7 @@ class ObjectManager implements ManagerInterface
             if (count($params) > 0) {
                 // 判断参数类型
                 foreach ($params as $key => $param) {
-                    if ($param->getType()&&class_exists($param->getType()->getName())) {
+                    if ($param->getType() && class_exists($param->getType()->getName())) {
                         // 获得参数类型名称
                         $paramTypeName = $param->getType()->getName();
                         if (isset(self::$instances[$paramTypeName])) {

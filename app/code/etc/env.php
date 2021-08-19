@@ -52,7 +52,7 @@
     array (
       'mysql' => 
       array (
-        'hostname' => '192.168.92.135',
+        'hostname' => '192.168.1.3',
         'database' => 'weline',
         'username' => 'weline',
         'password' => 'weline',
@@ -63,4 +63,5 @@
       ),
     ),
   ),
+  'deploy' => 'dev',
 );

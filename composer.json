@@ -24,7 +24,8 @@
     "ext-libxml": "*",
     "ext-zip": "*",
     "symfony/intl": "^5.2",
-    "symfony/polyfill-intl-icu": "^1.23"
+    "symfony/polyfill-intl-icu": "^1.23",
+    "jdorn/sql-formatter": "^1.2"
   },
   "autoload": {
     "psr-4": {
