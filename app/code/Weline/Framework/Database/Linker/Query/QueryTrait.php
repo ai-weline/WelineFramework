@@ -15,6 +15,7 @@ use Weline\Framework\Database\LinkerFactory;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Cache\DbCache;
 use Weline\Framework\Database\Exception\DbException;
+use Weline\Framework\Exception\Core;
 
 trait QueryTrait
 {
@@ -88,7 +89,7 @@ trait QueryTrait
 
         foreach ($where_array as $f_item_key => $f_item_value) {
             if (!is_numeric($f_item_key)) {
-                throw new DbException(__('Where查询异常：%1,%2,%3', ["第{$f_key}个条件数组错误", '出错的数组：["' . implode('","', $where_array) . '"]', "示例：where([['name','like','%张三%','or'],['name','like','%李四%']])"]));
+                $this->$this->exceptionHandle(__('Where查询异常：%1,%2,%3', ["第{$f_key}个条件数组错误", '出错的数组：["' . implode('","', $where_array) . '"]', "示例：where([['name','like','%张三%','or'],['name','like','%李四%']])"]));
             }
         }
     }
@@ -118,8 +119,9 @@ trait QueryTrait
         if (in_array($where_array[1], $conditions)) {
             return $where_array[1];
         } else {
-            throw new DbException(__('当前错误的条件操作符：%1 ,当前的条件数组：%2, 允许的条件符：%3', [$where_array[1], '["' . implode('","', $where_array) . '"]', '["' . implode('","', $conditions) . '"]']));
+            $this->exceptionHandle(__('当前错误的条件操作符：%1 ,当前的条件数组：%2, 允许的条件符：%3', [$where_array[1], '["' . implode('","', $where_array) . '"]', '["' . implode('","', $conditions) . '"]']));
         }
+        return '';
     }
 
     /**
@@ -132,9 +134,7 @@ trait QueryTrait
      */
     private function prepareSql($action)
     {
-        if ($this->_table == '') {
-            throw new DbException(__('没有指定table表名！'));
-        }
+        if ($this->_table == '') $this->exceptionHandle(__('没有指定table表名！'));
         # 处理 joins
         $joins = '';
         foreach ($this->_joins as $join) {
@@ -142,7 +142,6 @@ trait QueryTrait
         }
         # 处理 Where 条件
         $wheres = '';
-        $wheres_values = [];
         if ($this->_wheres) {
             $wheres .= ' WHERE ';
             $logic = 'AND ';
@@ -162,7 +161,7 @@ trait QueryTrait
                         $where[0] = '`'.str_replace('.', '`.`', $where[0]).'`';
                         # 处理别名
                         $param = str_replace('.', '__', $param) . $key;
-                        $wheres_values[$param] = $where[2];
+                        $this->_wheres_values[$param] = $where[2];
                         $where[2] = $param;
                         $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
                 }
@@ -170,28 +169,27 @@ trait QueryTrait
             }
             $wheres = rtrim($wheres, $logic);
         }
-        $sql = '';
-        switch ($action) {
-            case 'select':
-                $sql = "SELECT {$this->_fields} FROM {$this->_table} {$this->_table_alias} {$joins} {$wheres} {$this->_limit}";
-                break;
-            case 'delete':
-                $sql = "DELETE FROM {$this->_table} {$wheres}";
-                break;
-            case 'update':
-                $update = '';
-                foreach ($this->_updates as $update) {
-                    
-                }
-                $sql = "UPDATE {$this->_table} SET `{$this->_update}` {$wheres}";
-                break;
-            case 'find':
-            default:
-                $sql = "SELECT {$this->_fields} FROM {$this->_table} {$this->_table_alias} {$joins} {$wheres} LIMIT 1";
-        }
-        pp($sql);
-        $linker = $this->linker->getLink()->prepare($sql);
-        $linker->execute($wheres_values);
-        return [$linker, $wheres_values, $sql];
+        $sql = match ($action) {
+            'select' => "SELECT {$this->_fields} FROM {$this->_table} {$this->_table_alias} {$joins} {$wheres} {$this->_limit}",
+            'delete' => "DELETE FROM {$this->_table} {$wheres}",
+            'update' => "UPDATE {$this->_table}  {$this->_table_alias} SET {$this->_updates} {$wheres}",
+            default => "SELECT {$this->_fields} FROM {$this->_table} {$this->_table_alias} {$joins} {$wheres} LIMIT 1",
+        };
+        $this->PDOStatement = $this->linker->getLink()->prepare($sql);
+        $this->sql = $sql;
+    }
+    /**
+     * @DESC          # 异常函数
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/23 21:28
+     * 参数区：
+     * @param $words
+     * @throws DbException
+     */
+    protected function exceptionHandle($words)
+    {
+        throw new DbException($words);
     }
 }

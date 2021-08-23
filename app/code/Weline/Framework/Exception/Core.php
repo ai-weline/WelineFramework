@@ -32,6 +32,8 @@ class Core extends \Exception
      */
     public function __construct($message = null, \Exception $cause = null, $code = 0)
     {
+        $this->init();
+
         $this->etc    = Env::getInstance();
         $this->config = (array)$this->etc->getConfig();
         $this->_debug = new Printing();
@@ -39,7 +41,6 @@ class Core extends \Exception
         parent::__construct($message, $code, $cause);
         $this->__toString();
 
-        $this->init();
 
         return $this;
     }
@@ -199,7 +200,7 @@ class Core extends \Exception
      * @param string $line
      * @return string
      */
-    private function prepareHtmlMessage($code = '', $message = '', $file = '', $line = '')
+    private function prepareHtmlMessage($code = '', $message = '', $file = '', $line = ''): string
     {
         $track_str_arr_str = $this->getTraceAsString();
 

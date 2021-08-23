@@ -23,15 +23,28 @@ abstract class Query implements QueryInterface
 {
     use QueryTrait;
 
+    const init_vars = [
+        '_table' => '',
+        '_table_alias' => 'main_table',
+        '_joins' => array(),
+        '_fields' => '*',
+        '_updates' => '',
+        '_wheres' => array(),
+        '_where_values' => array(),
+        '_limit' => '',
+        '_order' => array(),
+        'sql' => '',
+    ];
+
     private string $_table = '';
     private string $_table_alias = 'main_table';
     private array $_joins = [];
     private string $_fields = '*';
-    private array $_updates = [];
+    private string $_updates = '';
     private array $_wheres = [];
     private array $_wheres_values = [];
     private string $_limit = '';
-    private string $_order = '';
+    private array $_order = [];
 
     private ?PDOStatement $PDOStatement = null;
     private string $sql = '';
@@ -43,15 +56,26 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function update(array $data,$type='replace'): mixed
+    function update(array $data, $type = 'replace'): Query
     {
         # 处理批量更新
-        $this->_updates = $data;
+        foreach ($data as $field => $value) {
+            if (is_int($field)) $this->exceptionHandle(__('请输入键值对数组，示例：%1', "['id'=>1,'name'=>'weline']"));
+            $field = str_replace('`', '', $field);
+            if (is_string($value)) {
+                $value = "'$value'";
+            }
+
+            $this->_updates .= "`$field`=$value,";
+        }
+        $this->_updates = rtrim($this->_updates, ',');
+        $this->prepareSql(__FUNCTION__);
+        return $this;
     }
 
     function alias(string $table_alias_name): Query
     {
-        $this->_table_alias = ' ' . $table_alias_name;
+        $this->_table_alias = $table_alias_name;
         return $this;
     }
 
@@ -69,9 +93,9 @@ abstract class Query implements QueryInterface
 
     function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): Query
     {
-        if (!DEV) {
-            $this->cache->get();// TODO 缓存
-        }
+//        if (!DEV) {
+//            $this->cache->get();// TODO 缓存
+//        }
         if (is_array($field)) {
             foreach ($field as $f_key => $where_array) {
                 # 处理两个元素数组
@@ -116,13 +140,13 @@ abstract class Query implements QueryInterface
 
     function order(string $fields, string $sort = 'DESC'): Query
     {
-        $this->_order = " ORDER BY {$fields} {$sort}";
+        $this->_order[] = " ORDER BY `{$fields}` {$sort}";
         return $this;
     }
 
-    function find(): static
+    function find(): Query
     {
-        list($this->PDOStatement, $this->_wheres_values, $this->sql) = $this->prepareSql(__FUNCTION__);
+        $this->prepareSql(__FUNCTION__);
         return $this;
     }
 
@@ -131,20 +155,18 @@ abstract class Query implements QueryInterface
         // TODO: Implement select() method.
     }
 
-    function query($sql): static
+    function query($sql): Query
     {
         $this->PDOStatement = $this->linker->query($sql);
         return $this;
     }
 
-    function clearQuery(): static
+    function fetch($return_origin_result = false): array|bool
     {
-        $this->_wheres = [];
-        return $this;
-    }
-
-    function fetch(): array
-    {
+        $result = $this->PDOStatement->execute($this->_wheres_values);
+        if (is_bool($result)) {
+            return $result;
+        }
         return $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -163,5 +185,38 @@ abstract class Query implements QueryInterface
             $this->sql = str_replace($where_key, (string)$wheres_value, $this->sql);
         }
         return \SqlFormatter::format($this->sql);
+    }
+
+    function clear(string $type = 'wheres'): Query
+    {
+        $attr_var_name = '_1' . $type;
+        if (!isset(self::init_vars[$attr_var_name])) {
+            $this->exceptionHandle(__('不支持的清理类型：%1 支持的初始化类型：%2', [$attr_var_name, var_export(self::init_vars, true)]));
+        }
+        $this->$attr_var_name = self::init_vars[$attr_var_name];
+        return $this;
+    }
+
+    function reset(): Query
+    {
+        foreach (self::init_vars as $init_field => $init_var) {
+            $this->$init_field = $init_var;
+        }
+        return $this;
+    }
+
+    function beginTransaction(): void
+    {
+        $this->linker->getLink()->beginTransaction();
+    }
+
+    function rollBack(): void
+    {
+        $this->linker->getLink()->rollBack();
+    }
+
+    function commit(): void
+    {
+        $this->linker->getLink()->rollBack();
     }
 }

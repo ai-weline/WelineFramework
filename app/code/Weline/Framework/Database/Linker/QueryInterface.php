@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Weline\Framework\Database\Linker;
 
 
+use PDOStatement;
 use Weline\Framework\Database\Linker;
 use Weline\Framework\Database\Model;
 
@@ -54,7 +55,7 @@ interface QueryInterface
      * @param array $data
      * @return mixed
      */
-    function update(array $data): mixed;// TODO 更新方式
+    function update(array $data): mixed;
 
     /**
      * @DESC          # 表名设置
@@ -178,7 +179,7 @@ interface QueryInterface
      * @param $sql
      * @return $this
      */
-    function query($sql): static;
+    function query($sql): Query;
 
     /**
      * @DESC          | 查询最终的结果
@@ -187,12 +188,23 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 21:09
      *
-     * @return array
+     * @return array|bool
      */
-    function fetch(): array;
+    function fetch():  array|bool;
 
     /**
-     * @DESC          # 方法描述
+     * @DESC          # 清理特定条件
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/23 22:02
+     * 参数区：
+     * @param string $type 'wheres' | 'orders' | 'limit' | 'joins' | 'fields' | 'alias' | 'updates'|'table'
+     * @return Query
+     */
+    function clear(string $type = 'wheres'): Query;
+    /**
+     * @DESC          # 重置所有
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
@@ -200,6 +212,37 @@ interface QueryInterface
      * 参数区：
      * @return $this
      */
-    function clearQuery(): static;
+    function reset(): Query;
+
+    /**
+     * @DESC          # 开启事务
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/23 22:33
+     * 参数区：
+     * @return void
+     */
+    function beginTransaction():void;
+    /**
+     * @DESC          # 事务回滚
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/23 22:33
+     * 参数区：
+     * @return void
+     */
+    function rollBack():void;
+    /**
+     * @DESC          # 事务提交
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/23 22:33
+     * 参数区：
+     * @return void
+     */
+    function commit():void;
 
 }

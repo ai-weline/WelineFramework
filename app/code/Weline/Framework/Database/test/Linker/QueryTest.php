@@ -40,7 +40,7 @@ class QueryTest extends \Weline\Framework\UnitTest\TestCore
             ->update([
                 'id' => 1,
                 'stores' => 2
-            ])
+            ])->clear()->order('id')
         );
         p($query->getLastSql());
     }

@@ -26,8 +26,9 @@ class Printing extends AbstractPrint
      * 参数区：
      *
      * @param $message
+     * @param string|null $log_path
      * @param int $message_type
-     * @param string $log_path
+     * @throws \Weline\Framework\App\Exception
      */
     public function debug($message, string $log_path = null, int $message_type = 3)
     {

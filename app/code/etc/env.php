@@ -63,5 +63,5 @@
       ),
     ),
   ),
-  'deploy' => 'dev',
+  'deploy' => 'prod',
 );
