@@ -22,6 +22,25 @@ class QueryTest extends \Weline\Framework\UnitTest\TestCore
         $dbManager = ObjectManager::getInstance(\Weline\Framework\Database\DbManager::class);
         /**@var Linker\QueryInterface $query */
         $query = $dbManager->create()->getQuery();
+        # 增
+//        pp($query->table('weline')
+//            ->insert(['stores'=>4])->fetch()
+//        );
+        # 删
+//        pp($query->table('store_user')
+//            ->where('id', 3)
+//            ->order('id')
+//            ->delete()->fetch()
+//        );
+        # 改
+//        pp($query->table('weline')
+//            ->alias('a')
+//            ->where('a.id', 3)
+//            ->update([
+//                'stores'=>3
+//            ])->fetch()
+//        );
+        # 查
 //        pp($query->table('weline')->alias('a')->where("(a.stores = '1') OR (a.stores like '%1%')")->where('a.id=1')->where('a.id',1)->find()->fetch());
 //        pp($query->table('weline')->alias('a')->where([['a.stores', 1], ['a.id', 1]])->find()->fetch());
 //        pp($query->table('weline')->alias('a')->where([ ['a.stores', '=', '1', 'OR'], ['a.stores', 'like', '%1%'] ])->find()->fetch());
@@ -34,14 +53,15 @@ class QueryTest extends \Weline\Framework\UnitTest\TestCore
 //            ->find()
 //            ->fetch()
 //        );
-        pp($query->table('weline')
-            ->alias('a')
-            ->where('a.id', 1)
-            ->update([
-                'id' => 1,
-                'stores' => 2
-            ])->clear()->order('id')
-        );
+        # 联查
+//        pp($query->table('weline')
+//            ->alias('a')
+//            ->join('store_user u', 'u.store_id=a.stores','left')
+//            ->where('a.id', 1)
+//            ->order('a.id')
+//            ->find()->fetch()
+//        );
+
         p($query->getLastSql());
     }
 }

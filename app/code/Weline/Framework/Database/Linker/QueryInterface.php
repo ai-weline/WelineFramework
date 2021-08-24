@@ -29,9 +29,9 @@ interface QueryInterface
      * @DateTime: 2021/8/16 23:01
      * 参数区：
      * @param string $table_name
-     * @return mixed
+     * @return QueryInterface
      */
-    function table(string $table_name): Query;
+    function table(string $table_name): QueryInterface;
 
     /**
      * @DESC          # 表名别名
@@ -41,9 +41,9 @@ interface QueryInterface
      * @DateTime: 2021/8/17 23:25
      * 参数区：
      * @param string $table_alias_name
-     * @return Query
+     * @return QueryInterface
      */
-    function alias(string $table_alias_name): Query;
+    function alias(string $table_alias_name): QueryInterface;
 
     /**
      * @DESC          # 更新
@@ -53,9 +53,9 @@ interface QueryInterface
      * @DateTime: 2021/8/18 0:20
      * 参数区：
      * @param array $data
-     * @return mixed
+     * @return QueryInterface
      */
-    function update(array $data): mixed;
+    function update(array $data): QueryInterface;
 
     /**
      * @DESC          # 表名设置
@@ -65,9 +65,9 @@ interface QueryInterface
      * @DateTime: 2021/8/16 23:01
      * 参数区：
      * @param string $fields 示例：a.id,a.name,b.role_id,b.rule_name
-     * @return mixed
+     * @return QueryInterface
      */
-    function fields(string $fields): Query;
+    function fields(string $fields): QueryInterface;
 
     /**
      * @DESC          # 连接查询
@@ -79,9 +79,9 @@ interface QueryInterface
      * @param string $table
      * @param string $condition
      * @param string $type
-     * @return Query
+     * @return QueryInterface
      */
-    function join(string $table, string $condition, string $type): Query;
+    function join(string $table, string $condition, string $type='left'): QueryInterface;
 
     /**
      * @DESC          | 条件查询
@@ -100,9 +100,9 @@ interface QueryInterface
      * @param mixed|null $value 条件值
      * @param string $condition 逻辑符： < | = | like | > 等常规逻辑
      * @param string $where_logic 下一个where使用的逻辑 值：and | or 默认
-     * @return $this
+     * @return QueryInterface
      */
-    function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): Query;
+    function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): QueryInterface;
 
     /**
      * @DESC          # 限制查询
@@ -113,9 +113,9 @@ interface QueryInterface
      * 参数区：
      * @param int $size
      * @param int $offset
-     * @return Query
+     * @return QueryInterface
      */
-    function limit(int $size, int $offset = 0): Query;
+    function limit(int $size, int $offset = 0): QueryInterface;
 
     /**
      * @DESC          # 方法描述
@@ -126,9 +126,9 @@ interface QueryInterface
      * 参数区：
      * @param string $fields
      * @param string $sort
-     * @return Query
+     * @return QueryInterface
      */
-    function order(string $fields, string $sort = 'DESC'): Query;
+    function order(string $fields, string $sort = 'ASC'): QueryInterface;
 
     /**
      * @DESC          # 仅查找一个
@@ -137,37 +137,37 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/17 23:15
      * 参数区：
-     * @return mixed
+     * @return QueryInterface
      */
-    function find(): mixed;
+    function find(): QueryInterface;
 
     /**
      * @DESC         |选择
      *
      * 参数区：
      *
-     * @return Model []
+     * @return QueryInterface
      */
-    function select(): array;
+    function select(): QueryInterface;
 
     /**
      * @DESC         |插入
      *
      * 参数区：
      *
-     * @param string|array $data
-     * @return bool
+     * @param array $data
+     * @return QueryInterface
      */
-    function insert(string|array $data): bool;
+    function insert(array $data): QueryInterface;
 
     /**
      * @DESC         |删除
      *
      * 参数区：
      *
-     * @return bool
+     * @return QueryInterface
      */
-    function delete(): bool;
+    function delete(): QueryInterface;
 
     /**
      * @DESC          | 查询结果集
@@ -177,9 +177,21 @@ interface QueryInterface
      * @DateTime: 2021/8/16 21:09
      *
      * @param $sql
-     * @return $this
+     * @return QueryInterface
      */
-    function query($sql): Query;
+    function query($sql): QueryInterface;
+
+    /**
+     * @DESC          # 附加的sql 用于复杂自定义的长sql 比如聚合函数的使用
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/24 22:06
+     * 参数区：
+     * @param string $additional_sql
+     * @return QueryInterface
+     */
+    function additional(string $additional_sql): QueryInterface;
 
     /**
      * @DESC          | 查询最终的结果
@@ -190,7 +202,7 @@ interface QueryInterface
      *
      * @return array|bool
      */
-    function fetch():  array|bool;
+    function fetch(): array|bool;
 
     /**
      * @DESC          # 清理特定条件
@@ -200,9 +212,10 @@ interface QueryInterface
      * @DateTime: 2021/8/23 22:02
      * 参数区：
      * @param string $type 'wheres' | 'orders' | 'limit' | 'joins' | 'fields' | 'alias' | 'updates'|'table'
-     * @return Query
+     * @return QueryInterface
      */
-    function clear(string $type = 'wheres'): Query;
+    function clear(string $type = 'wheres'): QueryInterface;
+
     /**
      * @DESC          # 重置所有
      *
@@ -210,9 +223,9 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 22:59
      * 参数区：
-     * @return $this
+     * @return QueryInterface
      */
-    function reset(): Query;
+    function reset(): QueryInterface;
 
     /**
      * @DESC          # 开启事务
@@ -223,7 +236,8 @@ interface QueryInterface
      * 参数区：
      * @return void
      */
-    function beginTransaction():void;
+    function beginTransaction(): void;
+
     /**
      * @DESC          # 事务回滚
      *
@@ -233,7 +247,8 @@ interface QueryInterface
      * 参数区：
      * @return void
      */
-    function rollBack():void;
+    function rollBack(): void;
+
     /**
      * @DESC          # 事务提交
      *
@@ -243,6 +258,6 @@ interface QueryInterface
      * 参数区：
      * @return void
      */
-    function commit():void;
+    function commit(): void;
 
 }

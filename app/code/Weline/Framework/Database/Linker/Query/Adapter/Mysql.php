@@ -19,20 +19,6 @@ use Weline\Framework\Database\Linker\Query;
 
 class Mysql extends Query
 {
-    function select(): array
-    {
 
-
-    }
-
-    function insert(array|string $data): bool
-    {
-        // TODO: Implement insert() method.
-    }
-
-    function delete(): bool
-    {
-        // TODO: Implement delete() method.
-    }
 
 }

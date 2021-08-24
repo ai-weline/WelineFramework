@@ -23,42 +23,69 @@ abstract class Query implements QueryInterface
 {
     use QueryTrait;
 
+    const attr_TABLE = 'table';
+    const attr_TABLE_ALIAS = 'table_alias';
+    const attr_JOIN = 'joins';
+
     const init_vars = [
-        '_table' => '',
-        '_table_alias' => 'main_table',
-        '_joins' => array(),
-        '_fields' => '*',
-        '_updates' => '',
-        '_wheres' => array(),
-        '_where_values' => array(),
-        '_limit' => '',
-        '_order' => array(),
+        'table' => '',
+        'table_alias' => 'main_table',
+        'insert' => array(),
+        'joins' => array(),
+        'fields' => '*',
+        'updates' => '',
+        'wheres' => array(),
+        'where_values' => array(),
+        'limit' => '',
+        'order' => array(),
         'sql' => '',
+        'additional_sql' => '',
     ];
 
-    private string $_table = '';
-    private string $_table_alias = 'main_table';
-    private array $_joins = [];
-    private string $_fields = '*';
-    private string $_updates = '';
-    private array $_wheres = [];
-    private array $_wheres_values = [];
-    private string $_limit = '';
-    private array $_order = [];
+    private string $table = '';
+    private string $table_alias = 'main_table';
+    private array $insert = array();
+    private array $joins = array();
+    private string $fields = '*';
+    private string $updates = '';
+    private array $wheres = array();
+    private array $wheres_values = array();
+    private string $limit = '';
+    private array $order = array();
 
     private ?PDOStatement $PDOStatement = null;
     private string $sql = '';
+    private string $additional_sql = '';
 
 
-    function table(string $table_name): Query
+    function table(string $table_name): QueryInterface
     {
-        $this->_table = $this->getTable($table_name);
+        $this->table = $this->getTable($table_name);
         return $this;
     }
 
-    function update(array $data, $type = 'replace'): Query
+    function insert(array $data): QueryInterface
     {
-        # 处理批量更新
+        if (is_string(array_key_first($data))) {
+            $this->insert[] = $data;
+        } else {
+            $this->insert = $data;
+        }
+        $fields = '(';
+        foreach ($this->insert[0] as $field => $value) {
+            $fields .= "`$field`,";
+        }
+        $fields = rtrim($fields, ',') . ')';
+        $origin_fields = $this->fields;
+        $this->fields = $fields;
+        $this->prepareSql(__FUNCTION__);
+        $this->fields = $origin_fields;
+        return $this;
+    }
+
+    function update(array $data): QueryInterface
+    {
+        # TODO 处理批量更新
         foreach ($data as $field => $value) {
             if (is_int($field)) $this->exceptionHandle(__('请输入键值对数组，示例：%1', "['id'=>1,'name'=>'weline']"));
             $field = str_replace('`', '', $field);
@@ -66,32 +93,33 @@ abstract class Query implements QueryInterface
                 $value = "'$value'";
             }
 
-            $this->_updates .= "`$field`=$value,";
+            $this->updates .= "`$field`=$value,";
         }
-        $this->_updates = rtrim($this->_updates, ',');
+        $this->updates = rtrim($this->updates, ',');
         $this->prepareSql(__FUNCTION__);
         return $this;
     }
 
-    function alias(string $table_alias_name): Query
+    function alias(string $table_alias_name): QueryInterface
     {
-        $this->_table_alias = $table_alias_name;
+        $this->table_alias = $table_alias_name;
         return $this;
     }
 
-    function join(string $table, string $condition, string $type = 'INNER'): Query
+    function join(string $table, string $condition, string $type = 'left'): QueryInterface
     {
-        $this->_joins[] = [$table, $condition, $type];
+        if (1 === count(func_get_args())) $type = 'inner';
+        $this->joins[] = [$table, $condition, $type];
         return $this;
     }
 
-    function fields(string $fields): Query
+    function fields(string $fields): QueryInterface
     {
-        $this->_fields = $fields;
+        $this->fields = $fields;
         return $this;
     }
 
-    function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): Query
+    function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): QueryInterface
     {
 //        if (!DEV) {
 //            $this->cache->get();// TODO 缓存
@@ -110,7 +138,7 @@ abstract class Query implements QueryInterface
                 if (isset($where_array[2]) && is_string($where_array[2])) {
                     $where_array[2] = "'{$where_array[2]}'";
                 }
-                $this->_wheres[] = $where_array;
+                $this->wheres[] = $where_array;
             }
         } else {
             if (is_string($value)) {
@@ -122,9 +150,9 @@ abstract class Query implements QueryInterface
                 $this->checkWhereArray($where_array, 0);
                 # 检测条件数组 检测第二个元素必须是限定的 条件操作符
                 $this->checkConditionString($where_array);
-                $this->_wheres[] = $where_array;
+                $this->wheres[] = $where_array;
             } else {
-                $this->_wheres[] = [$field];
+                $this->wheres[] = [$field];
             }
 
         }
@@ -132,42 +160,56 @@ abstract class Query implements QueryInterface
 
     }
 
-    function limit($size, $offset = 0): Query
+    function limit($size, $offset = 0): QueryInterface
     {
-        $this->_limit = " LIMIT $offset,$size";
+        $this->limit = " LIMIT $offset,$size";
         return $this;
     }
 
-    function order(string $fields, string $sort = 'DESC'): Query
+    function order(string $fields, string $sort = 'DESC'): QueryInterface
     {
-        $this->_order[] = " ORDER BY `{$fields}` {$sort}";
+        $this->order[$fields] = $sort;
         return $this;
     }
 
-    function find(): Query
+    function find(): QueryInterface
     {
         $this->prepareSql(__FUNCTION__);
         return $this;
     }
 
-    function select(): array
+    function select(): QueryInterface
     {
-        // TODO: Implement select() method.
+        $this->prepareSql(__FUNCTION__);
+        return $this;
     }
 
-    function query($sql): Query
+    function delete(): QueryInterface
+    {
+        $this->prepareSql(__FUNCTION__);
+        return $this;
+    }
+
+    function query($sql): QueryInterface
     {
         $this->PDOStatement = $this->linker->query($sql);
         return $this;
     }
 
-    function fetch($return_origin_result = false): array|bool
+    function additional(string $additional_sql): QueryInterface
     {
-        $result = $this->PDOStatement->execute($this->_wheres_values);
-        if (is_bool($result)) {
-            return $result;
+        $this->additional_sql = $additional_sql;
+        return $this;
+    }
+
+    function fetch(): array|bool
+    {
+        $result = $this->PDOStatement->execute($this->wheres_values);
+        $data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
+        if ($result && $data) {
+            return $data;
         }
-        return $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
     }
 
     /**
@@ -181,23 +223,27 @@ abstract class Query implements QueryInterface
      */
     public function getLastSql(): string
     {
-        foreach ($this->_wheres_values as $where_key => $wheres_value) {
+        foreach ($this->wheres_values as $where_key => $wheres_value) {
             $this->sql = str_replace($where_key, (string)$wheres_value, $this->sql);
         }
         return \SqlFormatter::format($this->sql);
     }
 
-    function clear(string $type = 'wheres'): Query
+    function clear(string $type = ''): QueryInterface
     {
-        $attr_var_name = '_1' . $type;
-        if (!isset(self::init_vars[$attr_var_name])) {
-            $this->exceptionHandle(__('不支持的清理类型：%1 支持的初始化类型：%2', [$attr_var_name, var_export(self::init_vars, true)]));
+        if ($type) {
+            $attr_var_name = '' . $type;
+            if (DEV && !isset(self::init_vars[$attr_var_name])) {
+                $this->exceptionHandle(__('不支持的清理类型：%1 支持的初始化类型：%2', [$attr_var_name, var_export(self::init_vars, true)]));
+            }
+            $this->$attr_var_name = self::init_vars[$attr_var_name];
+        } else {
+            $this->reset();
         }
-        $this->$attr_var_name = self::init_vars[$attr_var_name];
         return $this;
     }
 
-    function reset(): Query
+    function reset(): QueryInterface
     {
         foreach (self::init_vars as $init_field => $init_var) {
             $this->$init_field = $init_var;

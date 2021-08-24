@@ -134,18 +134,18 @@ trait QueryTrait
      */
     private function prepareSql($action)
     {
-        if ($this->_table == '') $this->exceptionHandle(__('没有指定table表名！'));
+        if ($this->table == '') $this->exceptionHandle(__('没有指定table表名！'));
         # 处理 joins
         $joins = '';
-        foreach ($this->_joins as $join) {
+        foreach ($this->joins as $join) {
             $joins .= " {$join[2]} JOIN {$join[0]} ON {$join[1]} ";
         }
         # 处理 Where 条件
         $wheres = '';
-        if ($this->_wheres) {
+        if ($this->wheres) {
             $wheres .= ' WHERE ';
             $logic = 'AND ';
-            foreach ($this->_wheres as $key => $where) {
+            foreach ($this->wheres as $key => $where) {
                 # 如果自己设置了where 逻辑连接符 就修改默认的连接符 AND
                 if (isset($where[3])) {
                     $logic = array_pop($where) . ' ';
@@ -158,10 +158,10 @@ trait QueryTrait
                     # 默认where逻辑连接符为AND
                     default:
                         $param = ':' . trim($where[0], '`');
-                        $where[0] = '`'.str_replace('.', '`.`', $where[0]).'`';
+                        $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
                         # 处理别名
                         $param = str_replace('.', '__', $param) . $key;
-                        $this->_wheres_values[$param] = $where[2];
+                        $this->wheres_values[$param] = $where[2];
                         $where[2] = $param;
                         $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
                 }
@@ -169,15 +169,41 @@ trait QueryTrait
             }
             $wheres = rtrim($wheres, $logic);
         }
-        $sql = match ($action) {
-            'select' => "SELECT {$this->_fields} FROM {$this->_table} {$this->_table_alias} {$joins} {$wheres} {$this->_limit}",
-            'delete' => "DELETE FROM {$this->_table} {$wheres}",
-            'update' => "UPDATE {$this->_table}  {$this->_table_alias} SET {$this->_updates} {$wheres}",
-            default => "SELECT {$this->_fields} FROM {$this->_table} {$this->_table_alias} {$joins} {$wheres} LIMIT 1",
+        # 排序
+        $order = '';
+        foreach ($this->order as $field => $dir) {
+            $order .= "$field $dir";
+        }
+        if ($order) $order = 'ORDER BY ' . $order;
+
+        # 匹配sql
+        switch ($action) {
+            case 'insert' :
+                $values = '';
+                foreach ($this->insert as $insert) {
+                    $values .= '(' . implode(',', $insert) . '),';
+                }
+                $values = rtrim($values, ',');
+                $sql = "INSERT INTO {$this->table} {$this->fields} VALUES {$values}";
+                break;
+            case 'select' :
+                $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres} {$order} {$this->additional_sql} {$this->limit}";
+                break;
+            case 'delete' :
+                $sql = "DELETE FROM {$this->table} {$wheres} {$this->additional_sql}";
+                break;
+            case 'update' :
+                $sql = "UPDATE {$this->table}  {$this->table_alias} SET {$this->updates} {$wheres} {$this->additional_sql} ";
+                break;
+            default :
+                $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres}  {$order} {$this->additional_sql} LIMIT 1";
+                break;
         };
+        # 预置sql
         $this->PDOStatement = $this->linker->getLink()->prepare($sql);
         $this->sql = $sql;
     }
+
     /**
      * @DESC          # 异常函数
      *
