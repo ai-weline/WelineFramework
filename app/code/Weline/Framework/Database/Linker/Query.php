@@ -23,24 +23,34 @@ abstract class Query implements QueryInterface
 {
     use QueryTrait;
 
+    const attr_IDENTITY_FIELD = 'identity_field';
     const attr_TABLE = 'table';
-    const attr_TABLE_ALIAS = 'table_alias';
+    const attr_TABLE_ALIA = 'table_alias';
+    const attr_INSERT = 'insert';
     const attr_JOIN = 'joins';
+    const attr_FIELD = 'fields';
+    const attr_UPDATE = 'updates';
+    const attr_WHERE = 'wheres';
+    const attr_WHERE_VALUE = 'where_values';
+    const attr_LIMIT = 'limit';
+    const attr_ORDER = 'order';
+    const attr_SQL = 'sql';
+    const attr_ADDITIONAL_SQL = 'additional_sql';
 
     const init_vars = [
-        'identity_field' => 'id',
-        'table' => '',
-        'table_alias' => 'main_table',
-        'insert' => array(),
-        'joins' => array(),
-        'fields' => '*',
-        'updates' => array(),
-        'wheres' => array(),
-        'where_values' => array(),
-        'limit' => '',
-        'order' => array(),
-        'sql' => '',
-        'additional_sql' => '',
+        self::attr_IDENTITY_FIELD => 'id',
+        self::attr_TABLE => '',
+        self::attr_TABLE_ALIA => 'main_table',
+        self::attr_INSERT => array(),
+        self::attr_JOIN => array(),
+        self::attr_FIELD => '*',
+        self::attr_UPDATE => array(),
+        self::attr_WHERE => array(),
+        self::attr_WHERE_VALUE => array(),
+        self::attr_LIMIT => '',
+        self::attr_ORDER => array(),
+        self::attr_SQL => '',
+        self::attr_ADDITIONAL_SQL => '',
     ];
 
     private string $identity_field = 'id';
@@ -93,12 +103,12 @@ abstract class Query implements QueryInterface
 
     function update(array $data, string $condition_field = 'id'): QueryInterface
     {
-        if(empty($data)){
+        if (empty($data)) {
             throw new DbException(__('更新异常，不可更新空数据！'));
         }
         $data = $this->parserFiledValue($data);
         // 设置数据更新依赖条件主键
-        if($this->identity_field!==$condition_field){
+        if ($this->identity_field !== $condition_field) {
             $this->identity_field = $condition_field;
         }
         if (is_string(array_key_first($data))) {

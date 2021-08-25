@@ -13,12 +13,12 @@ use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Cache\DbCache;
 use Weline\Framework\Database\Exception\DbException;
-use Weline\Framework\Database\test\Linker\QueryInterface;
+use Weline\Framework\Database\Linker\QueryInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 
-class Model extends DataObject
+class Model extends DataObject implements ModelInterface
 {
     private Linker $linker;
     private CacheInterface $cache;
@@ -27,9 +27,8 @@ class Model extends DataObject
 
     private EventsManager $eventsManager;
 
-
     /**
-     * @DESC         |初始化连接、缓存、表前缀
+     * @DESC         |初始化连接、缓存、表前缀 读取模型自身表名字等
      *
      * 参数区：
      *
