@@ -28,12 +28,13 @@ abstract class Query implements QueryInterface
     const attr_JOIN = 'joins';
 
     const init_vars = [
+        'identity_field' => 'id',
         'table' => '',
         'table_alias' => 'main_table',
         'insert' => array(),
         'joins' => array(),
         'fields' => '*',
-        'updates' => '',
+        'updates' => array(),
         'wheres' => array(),
         'where_values' => array(),
         'limit' => '',
@@ -42,12 +43,13 @@ abstract class Query implements QueryInterface
         'additional_sql' => '',
     ];
 
+    private string $identity_field = 'id';
     private string $table = '';
     private string $table_alias = 'main_table';
     private array $insert = array();
     private array $joins = array();
     private string $fields = '*';
-    private string $updates = '';
+    private array $updates = array();
     private array $wheres = array();
     private array $wheres_values = array();
     private string $limit = '';
@@ -57,6 +59,12 @@ abstract class Query implements QueryInterface
     private string $sql = '';
     private string $additional_sql = '';
 
+
+    function identity(string $field): QueryInterface
+    {
+        $this->identity_field = $field;
+        return $this;
+    }
 
     function table(string $table_name): QueryInterface
     {
@@ -83,19 +91,21 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function update(array $data): QueryInterface
+    function update(array $data, string $condition_field = 'id'): QueryInterface
     {
-        # TODO 处理批量更新
-        foreach ($data as $field => $value) {
-            if (is_int($field)) $this->exceptionHandle(__('请输入键值对数组，示例：%1', "['id'=>1,'name'=>'weline']"));
-            $field = str_replace('`', '', $field);
-            if (is_string($value)) {
-                $value = "'$value'";
-            }
-
-            $this->updates .= "`$field`=$value,";
+        if(empty($data)){
+            throw new DbException(__('更新异常，不可更新空数据！'));
         }
-        $this->updates = rtrim($this->updates, ',');
+        $data = $this->parserFiledValue($data);
+        // 设置数据更新依赖条件主键
+        if($this->identity_field!==$condition_field){
+            $this->identity_field = $condition_field;
+        }
+        if (is_string(array_key_first($data))) {
+            $this->updates[] = $data;
+        } else {
+            $this->updates = $data;
+        }
         $this->prepareSql(__FUNCTION__);
         return $this;
     }

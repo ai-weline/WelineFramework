@@ -20,6 +20,17 @@ use Weline\Framework\Database\Model;
 
 interface QueryInterface
 {
+    /**
+     * @DESC          # 设置主键
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/25 22:02
+     * 参数区：
+     * @param string $field
+     * @return mixed
+     */
+    function identity(string $field): QueryInterface;
 
     /**
      * @DESC          # 表名设置
@@ -52,10 +63,11 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/18 0:20
      * 参数区：
-     * @param array $data
+     * @param string $condition_field 更新条件字段，如果查询设置有表主键则自动使用表主键
+     * @param array $data 更新数据示例：['id'=>1,'name'=>'用户']或者多值更新[['id'=>1,'name'=>'用户1'],['id'=>2,'name'=>'用户2']]
      * @return QueryInterface
      */
-    function update(array $data): QueryInterface;
+    function update(array $data,string $condition_field='id'): QueryInterface;
 
     /**
      * @DESC          # 表名设置

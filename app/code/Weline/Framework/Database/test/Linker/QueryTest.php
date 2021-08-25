@@ -33,13 +33,21 @@ class QueryTest extends \Weline\Framework\UnitTest\TestCore
 //            ->delete()->fetch()
 //        );
         # 改
-//        pp($query->table('weline')
-//            ->alias('a')
+        pp($query->table('weline')
+            ->alias('a')
 //            ->where('a.id', 3)
-//            ->update([
-//                'stores'=>3
-//            ])->fetch()
-//        );
+            ->update([
+                ['id' => 1,
+                    'stores' => 1,],
+                ['id' => 2,
+                    'stores' => 2,],
+                ['id' => 3,
+                    'stores' => 3,]
+            ])->fetch()
+//            ],'id')->getLastSql() # 默认条件更新
+//            ],'id1')->getLastSql() #自定义非默认字段时
+//            ])->getLastSql() # 普通条件更新时
+        );
         # 查
 //        pp($query->table('weline')->alias('a')->where("(a.stores = '1') OR (a.stores like '%1%')")->where('a.id=1')->where('a.id',1)->find()->fetch());
 //        pp($query->table('weline')->alias('a')->where([['a.stores', 1], ['a.id', 1]])->find()->fetch());

@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Weline\Framework\Database\Linker\Query;
 
 
+use Weline\Framework\Database\Exception\SqlParserException;
 use Weline\Framework\Database\LinkerFactory;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Cache\DbCache;
@@ -193,7 +194,45 @@ trait QueryTrait
                 $sql = "DELETE FROM {$this->table} {$wheres} {$this->additional_sql}";
                 break;
             case 'update' :
-                $sql = "UPDATE {$this->table}  {$this->table_alias} SET {$this->updates} {$wheres} {$this->additional_sql} ";
+                $update_fields = [];
+                foreach ($this->updates[0] as $field => $values) {
+                    $update_fields[] = $field;
+                }
+                # 设置where条件
+                $identity_values = array_column($this->updates, $this->identity_field);
+                if ($identity_values) {
+                    $identity_values_str = implode(',', $identity_values);
+                    $wheres .= ($wheres ? " AND " : 'WHERE ') . "$this->identity_field IN ($identity_values_str)";
+                }
+
+                # 排除没有条件值的更新
+                if (empty($wheres)) {
+                    throw new DbException(__('请设置更新条件：第一种方式，->where($condition)设置，第二种方式，更新数据中包含条件值（默认为字段id,可自行设置->update($arg1,$arg2)第二参数指定根据数组中的某个字段值作为依赖条件更新。）'));
+                }
+                $updates = '';
+                # 存在$identity_values 表示多维数组更新
+                if ($identity_values) {
+                    $updates = '';
+                    $keys = array_keys(current($this->updates));
+                    foreach ($keys as $column) {
+                        $updates .= sprintf("`%s` = CASE `%s` \n", $column, $this->identity_field);
+                        foreach ($this->updates as $line) {
+                            $updates .= sprintf("WHEN '%s' THEN '%s' \n", $line[$this->identity_field], $line[$column]);
+                        }
+                        $updates .= "END,";
+                    }
+                } else { # 普通单条更新
+                    if (1 < count($this->updates)) {
+                        throw new SqlParserException(__('更新条数大于一条时请使用示例更新：$query->table("demo")->identity("id")->update(["id"=>1,"name"=>"测试1"])->update(["id"=>2,"name"=>"测试2"])或者update中指定条件字段id：$query->table("demo")->update([["id"=>1,"name"=>"测试1"],["id"=>2,"name"=>"测试2"]],"id")'));
+                    }
+                    foreach ($this->updates[0] as $update_field => $field_value) {
+                        $update_field = $this->parserFiled($update_field);
+                        $updates .= "$update_field = $field_value,";
+                    }
+                }
+                $updates = rtrim($updates, ',');
+
+                $sql = "UPDATE {$this->table}  {$this->table_alias} SET {$updates} {$wheres} {$this->additional_sql} ";
                 break;
             default :
                 $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres}  {$order} {$this->additional_sql} LIMIT 1";
@@ -202,6 +241,60 @@ trait QueryTrait
         # 预置sql
         $this->PDOStatement = $this->linker->getLink()->prepare($sql);
         $this->sql = $sql;
+    }
+
+    /**
+     * @DESC          # 解析数组键
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/25 22:34
+     * 参数区：
+     * @param string|array $field 解析数据：一维数组值 或者 二维数组值
+     * @return string|array
+     */
+    function parserFiled(string|array &$field): string|array
+    {
+        if (is_array($field)) {
+            foreach ($field as $field_key => $value) {
+                unset($field[$field_key]);
+                $field_key = '`' . str_replace('.', '`.`', $field_key) . '`';
+                $field[$field_key] = $value;
+            }
+        } else {
+            if (is_string($field)) {
+                $field = '`' . str_replace('.', '`.`', $field) . '`';
+            }
+        }
+        return $field;
+    }
+
+    /**
+     * @DESC          # 解析数组键值
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/25 22:34
+     * 参数区：
+     * @param array $data 解析数据：一维数组值 或者 二维数组值
+     * @return array
+     */
+    function parserFiledValue(array &$data): array
+    {
+        foreach ($data as &$item) {
+            if (is_array($item)) {
+                foreach ($item as &$it) {
+                    if (is_string($item)) {
+                        $item = "'$item'";
+                    }
+                }
+            } else {
+                if (is_string($item)) {
+                    $item = "'$item'";
+                }
+            }
+        }
+        return $data;
     }
 
     /**
