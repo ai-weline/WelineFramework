@@ -150,7 +150,7 @@ class LinkerFactory
         return $this->query;
     }
 
-    function query(string $sql): bool|array|\PDOStatement
+    function query(string $sql): QueryInterface
     {
         return $this->query->query($sql);
     }

@@ -18,12 +18,13 @@ use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 
-class Model extends DataObject implements ModelInterface
+
+abstract class Model extends DataObject implements ModelInterface
 {
-    private Linker $linker;
+    private string $table='';
+    private LinkerFactory $linker;
     private CacheInterface $cache;
     private string $suffix;
-    private array $query_funcs;
 
     private EventsManager $eventsManager;
 
@@ -37,9 +38,18 @@ class Model extends DataObject implements ModelInterface
      */
     public function __init()
     {
+        # 如果没有设置
+        $this->table = $this->processTable();
         $this->linker = ObjectManager::getInstance(DbManager::class . 'Factory');
         $this->cache = ObjectManager::getInstance(DbCache::class . 'Factory');
         $this->suffix = $this->getSuffix() . $this->suffix;
+    }
+
+    public function processTable(){
+        // TODO 读取继承这个类的子类名称，通过名称读取表名
+        if(!$this->table){
+            p(__NAMESPACE__);
+        }
     }
 
     /**
@@ -49,9 +59,23 @@ class Model extends DataObject implements ModelInterface
      *
      * @return Linker
      */
-    public function getLinker(): Linker
+    public function getLinker(): LinkerFactory
     {
         return $this->linker;
+    }
+
+    /**
+     * @DESC         |获取数据库基类
+     *
+     * 参数区：
+     *
+     * @return QueryInterface
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public function getQuery(): QueryInterface
+    {
+        return $this->linker->getQuery();
     }
 
     /**
@@ -63,8 +87,11 @@ class Model extends DataObject implements ModelInterface
      *
      * @param string $field_or_pk_value 字段或者主键的值
      * @param null $value 字段的值，只读取主键就不填
+     * @return mixed
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\Exception\Core
      */
-    public function load(string $field_or_pk_value, $value = null)
+    public function load(string $field_or_pk_value, $value = null): mixed
     {
         // 清空之前的数据
         $this->unsetData();

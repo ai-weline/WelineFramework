@@ -16,16 +16,17 @@ namespace Weline\Framework\Database\test;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Database\DbManager\ConfigProvider;
-use Weline\Framework\Database\test\Linker;
+use Weline\Framework\Database\LinkerFactory;
 use Weline\Framework\Manager\ObjectManager;
 
 class DbManager extends \Weline\Framework\UnitTest\TestCore
 {
     function testCreate(){
+        /**@var \Weline\Framework\Database\DbManager $dbManager*/
         $dbManager = ObjectManager::getInstance(\Weline\Framework\Database\DbManager::class);
-        /**@var Linker $linker*/
+        /**@var LinkerFactory $linker*/
         $linker = $dbManager->create();
-        p($linker->query('select * from weline'));
+        p($linker->getQuery()->query('select * from weline')->fetch());
     }
 }
 /**

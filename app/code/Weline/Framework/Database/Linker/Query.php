@@ -210,10 +210,10 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function query($sql): QueryInterface
+    function query(string $sql): QueryInterface
     {
-        $this->PDOStatement = $this->linker->query($sql);
-        return $this;
+        $this->PDOStatement = $this->linker->getLink()->query($sql);
+        return  $this;
     }
 
     function additional(string $additional_sql): QueryInterface

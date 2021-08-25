@@ -188,10 +188,10 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 21:09
      *
-     * @param $sql
+     * @param string $sql
      * @return QueryInterface
      */
-    function query($sql): QueryInterface;
+    function query(string $sql): QueryInterface;
 
     /**
      * @DESC          # 附加的sql 用于复杂自定义的长sql 比如聚合函数的使用

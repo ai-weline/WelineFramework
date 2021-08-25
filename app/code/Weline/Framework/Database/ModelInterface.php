@@ -33,7 +33,7 @@ interface ModelInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/25 23:46
      * 参数区：
-     * @param array $fields
+     * @param array $fields 示例：['id'=>]
      * @return void
      */
     function setFields(array $fields):void;

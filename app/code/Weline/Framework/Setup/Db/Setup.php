@@ -25,7 +25,7 @@ class Setup extends DbManager
      * @param string $comment
      * @return Table
      */
-    public function createTable(string $table_name, string $comment = '')
+    public function createTable(string $table_name, string $comment = ''): Table
     {
         $table_name = $this->getTable($table_name);
 
