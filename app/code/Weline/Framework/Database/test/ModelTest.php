@@ -10,16 +10,34 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\test;
 
-use Weline\Framework\Database\test\ModelTest\Model;
+use Weline\Framework\Database\test\ModelTest\WelineModel;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 
 class ModelTest extends TestCore
 {
+    private WelineModel $model;
+    function setUp(): void
+    {
+        $this->model = ObjectManager::getInstance(WelineModel::class);
+    }
+
     function testProcessTable()
     {
-        /**@var Model $model */
-        $model = ObjectManager::getInstance(Model::class);
-        p($model->processTable());
+        p(data: $this->model->processTable());
+    }
+
+    function testLoad()
+    {
+        p($this->model->load('id',1));
+    }
+    function testSave()
+    {
+        # 模型不存在数据时自动插入
+//        p($this->model->save(['id'=>6,'stores'=>441114]));
+        # 模型存在数据时自动更新
+//        $this->model = $this->model->load(6);
+        $this->model->setData('id',6);
+        p($this->model->save(['id'=>6,'stores'=>441114]));
     }
 }

@@ -9,9 +9,9 @@
 
 namespace Aiweline\NewsSource\Model;
 
-use Weline\Framework\Database\Model;
+use Weline\Framework\Database\AbstractModel;
 
-class AiwelineNews extends Model
+class AiwelineNews extends AbstractModel
 {
     public function add($data)
     {

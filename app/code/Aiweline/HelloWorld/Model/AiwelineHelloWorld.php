@@ -9,8 +9,8 @@
 
 namespace Aiweline\HelloWorld\Model;
 
-use Weline\Framework\Database\Model;
+use Weline\Framework\Database\AbstractModel;
 
-class AiwelineHelloWorld extends Model
+class AiwelineHelloWorld extends AbstractModel
 {
 }

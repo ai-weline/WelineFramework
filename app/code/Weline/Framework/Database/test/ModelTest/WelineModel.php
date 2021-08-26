@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
@@ -7,8 +8,11 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Theme\Model\ResourceModel;
+namespace Weline\Framework\Database\test\ModelTest;
 
-class WelineTheme extends \Weline\Framework\Database\AbstractModel
+
+class WelineModel extends \Weline\Framework\Database\Model
 {
+
+
 }

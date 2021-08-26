@@ -11,6 +11,7 @@ namespace Weline\Framework\Database\Db\Ddl;
 
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\DbManager;
+use Weline\Framework\Manager\ObjectManager;
 
 class Table
 {
@@ -64,52 +65,95 @@ class Table
 
     const index_type_KEY = 'KEY';//--用KEY创建普通索引
 
+    const table_TABLE = 'table';
+    const table_COMMENT = 'comment';
+    const table_FIELDS = 'fields';
+    const table_INDEXS = 'indexes';
+    const table_FOREIGN_KEYS = 'foreign_keys';
+    const table_TYPE = 'type';
+    const table_CONSTRAINTS = 'constraints';
+    const table_ADDITIONAL = 'additional';
+
+    const init_vars = array(
+        self::table_TABLE => '',
+        self::table_COMMENT => '',
+        self::table_FIELDS => array(),
+        self::table_INDEXS => array(),
+        self::table_FOREIGN_KEYS => array(),
+        self::table_CONSTRAINTS => '',
+        self::table_ADDITIONAL => 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;',
+    );
+
     // 数据字段
-    private array $_fields;
-
-    private array $_indexes = [];
-    private array $_foreign_keys = [];
-
-    private string $type;
-
     private string $table;
 
     private string $comment;
+
+    private array $fields=array();
+    private array $indexes = array();
+
+    private array $foreign_keys = array();
+
+    private string $type;
 
     private string $constraints = '';
 
     private string $additional = 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;';
 
-    private DbManager $db;
+    private DbManager $dbManager;
 
     /**
-     * Table 初始函数...
-     * @param string $table
-     * @param string $comment
+     * 初始函数...
+     * Table constructor.
+     * @param DbManager $dbManager
      */
-    public function __construct(string $table, string $comment = '')
+    public function __construct(DbManager $dbManager)
     {
-        $this->db = new DbManager();
-        $db = $this->db->getConfig();
-        $this->type = $db['default'];
-        $this->table = $table;
-        $this->comment = $comment ? "COMMENT '{$comment}'" : '';
+        $this->dbManager = $dbManager;
+        $this->type = $dbManager->getConfig()->getDbType();
     }
 
     /**
-     * @DESC         |添加字段
+     * @DESC          # 创建表
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/26 21:22
      * 参数区：
-     * @param string $field_name
-     * @param string $type
-     * @param string|null $length
-     * @param string $options
+     * @param string $table
      * @param string $comment
+     * @return $this
      */
-    public function addColumn(string $field_name, string $type, $length, string $options, string $comment): Table
+    public function creatTable(string $table, string $comment = ''): static
+    {
+        # 清空所有表属性 重新创建表
+        foreach (self::init_vars as $attr => $init_var) {
+            $this->$attr = $init_var;
+        }
+        # 重新赋予新表的值
+        $this->table = $table;
+        $this->comment = $comment ? "COMMENT '{$comment}'" : '';
+        return $this;
+    }
+
+    /**
+     * @DESC          # 添加字段
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/26 21:31
+     * 参数区：
+     * @param string $field_name    字段名
+     * @param string $type          字段类型
+     * @param string|null $length   长度
+     * @param string $options       配置
+     * @param string $comment       字段注释
+     * @return Table
+     */
+    public function addColumn(string $field_name, string $type, ?string $length, string $options, string $comment): Table
     {
         $type_length = $length ? "{$type}({$length})" : $type;
-        $this->_fields[] = "`{$field_name}` {$type_length} {$options} COMMENT '{$comment}'," . PHP_EOL;
+        $this->fields[] = "`{$field_name}` {$type_length} {$options} COMMENT '{$comment}'," . PHP_EOL;
 
         return $this;
     }
@@ -121,30 +165,30 @@ class Table
      *
      * @param string $type
      * @param string $name
-     * @param string|array $column
+     * @param array|string $column
      * @return Table
      */
-    public function addIndex(string $type, string $name, $column): Table
+    public function addIndex(string $type, string $name, array|string $column): Table
     {
         switch ($type) {
             case self::index_type_DEFAULT:
-                $this->_indexes[] = "INDEX {$name}(`{$column}`)," . PHP_EOL;
+                $this->indexes[] = "INDEX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_FULLTEXT:
-                $this->_indexes[] = "FULLTEXT INDEX {$name}(`{$column}`)," . PHP_EOL;
+                $this->indexes[] = "FULLTEXT INDEX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_UNIQUE:
-                $this->_indexes[] = "UNIQUE INDEX {$name}(`{$column}`)," . PHP_EOL;
+                $this->indexes[] = "UNIQUE INDEX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_SPATIAL:
-                $this->_indexes[] = "SPATIAL INDEX {$name}(`{$column}`)," . PHP_EOL;
+                $this->indexes[] = "SPATIAL INDEX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_KEY:
-                $this->_indexes[] = "KEY IDX {$name}(`{$column}`)," . PHP_EOL;
+                $this->indexes[] = "KEY IDX {$name}(`{$column}`)," . PHP_EOL;
 
                 break;
             case self::index_type_MULTI:
@@ -153,7 +197,7 @@ class Table
                     new Exception(self::index_type_MULTI . __('：此索引的column需要array类型,当前类型') . "{$type_of_column}" . ' 例如：[ID,NAME(19),AGE]');
                 }
                 $column = implode(',', $column);
-                $this->_indexes[] = "INDEX {$name}(`$column`)," . PHP_EOL;
+                $this->indexes[] = "INDEX {$name}(`$column`)," . PHP_EOL;
 
                 break;
             default:
@@ -171,7 +215,7 @@ class Table
      * @param string $additional_sql
      * @return $this
      */
-    public function addAdditional($additional_sql = 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;'): Table
+    public function addAdditional(string $additional_sql = 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;'): Table
     {
         $this->additional = $additional_sql;
 
@@ -201,10 +245,10 @@ class Table
     {
         // 字段
         $fields_str = '';
-        foreach ($this->_fields as $field) {
-            if (end($this->_fields) === $field) {
+        foreach ($this->fields as $field) {
+            if (end($this->fields) === $field) {
                 $field = trim($field, PHP_EOL);
-                if (empty($this->_indexes)) {
+                if (empty($this->indexes)) {
                     $field = trim($field, ',');
                 }// 如果没有设置索引
             }
@@ -212,52 +256,52 @@ class Table
         }
         $fields_str = trim($fields_str, ',');
         if (!strstr($fields_str, '`create_time`')) {
-            $fields_str .= ','.PHP_EOL;
+            $fields_str .= ',' . PHP_EOL;
             $create_time_comment_words = __('创建时间');
-            $fields_str .= "`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '{$create_time_comment_words}',".PHP_EOL;
+            $fields_str .= "`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '{$create_time_comment_words}'," . PHP_EOL;
         }
         if (!strstr($fields_str, '`update_time`')) {
-            if(strstr($fields_str,','.PHP_EOL)){
-                $fields_str = rtrim($fields_str, ','.PHP_EOL);
+            if (strstr($fields_str, ',' . PHP_EOL)) {
+                $fields_str = rtrim($fields_str, ',' . PHP_EOL);
             }
             $fields_str = rtrim($fields_str, ',');
-            $fields_str .= ','.PHP_EOL;
+            $fields_str .= ',' . PHP_EOL;
             $update_time_comment_words = __('更新时间');
-            $fields_str .= "`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '{$update_time_comment_words}',".PHP_EOL;
+            $fields_str .= "`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '{$update_time_comment_words}'," . PHP_EOL;
         }
-        if(strstr($fields_str,','.PHP_EOL)){
-            $fields_str = rtrim($fields_str, ','.PHP_EOL);
+        if (strstr($fields_str, ',' . PHP_EOL)) {
+            $fields_str = rtrim($fields_str, ',' . PHP_EOL);
         }
         // 索引
         $indexes_str = '';
-        foreach ($this->_indexes as $index) {
-            if (end($this->_indexes) === $index) {
+        foreach ($this->indexes as $index) {
+            if (end($this->indexes) === $index) {
                 if (empty($this->constraints)) {
                     $index = trim(trim($index, PHP_EOL), ',');
                 }
             }
             $indexes_str .= $index;
         }
-        if($indexes_str){
-            $fields_str.=',';
+        if ($indexes_str) {
+            $fields_str .= ',';
         }
-        $indexes_str = rtrim($indexes_str,PHP_EOL);
-        $indexes_str = rtrim($indexes_str,'\n\r');
+        $indexes_str = rtrim($indexes_str, PHP_EOL);
+        $indexes_str = rtrim($indexes_str, '\n\r');
         // 外键
         $foreign_key_str = '';
-        foreach ($this->_foreign_keys as $foreign_key) {
-            if (end($this->_foreign_keys) === $foreign_key) {
+        foreach ($this->foreign_keys as $foreign_key) {
+            if (end($this->foreign_keys) === $foreign_key) {
                 if (empty($this->constraints)) {
                     $foreign_key = trim(trim($foreign_key, PHP_EOL), ',');
                 }
             }
             $foreign_key_str .= $foreign_key;
         }
-        if($foreign_key_str){
-            $indexes_str.=',';
+        if ($foreign_key_str) {
+            $indexes_str .= ',';
         }
-        $foreign_key_str = rtrim($foreign_key_str,PHP_EOL);
-        $foreign_key_str = rtrim($foreign_key_str,'\n\r');
+        $foreign_key_str = rtrim($foreign_key_str, PHP_EOL);
+        $foreign_key_str = rtrim($foreign_key_str, '\n\r');
 
         $sql = <<<createSQL
 CREATE TABLE {$this->table}(
@@ -268,7 +312,7 @@ CREATE TABLE {$this->table}(
 ){$this->comment} {$this->additional}
 createSQL;
 //        if (DEV) p($sql, 1);
-        return $this->db->query($sql);
+        return $this->dbManager->create()->getQuery()->query($sql);
     }
 
     /**
@@ -280,7 +324,7 @@ createSQL;
      */
     public function alert(string $sql)
     {
-        return $this->db->query($sql);
+        return $dbManager->query($sql);
     }
 
     /**
@@ -293,7 +337,7 @@ createSQL;
      */
     public function query(string $sql)
     {
-        return $this->db->query($sql);
+        return $dbManager->query($sql);
     }
 
     /**
@@ -333,10 +377,11 @@ createSQL;
      * @param bool $on_update
      * @return $this
      */
-    function addForeignKey($FK_Name,$FK_Field,$references_table,$references_field,$on_delete=false,$on_update=false){
-        $on_delete_str = $on_delete?'on delete cascade':'';
-        $on_update_str = $on_update?'on update cascade':'';
-        $this->_foreign_keys[] = "constraint {$FK_Name} foreign key ({$FK_Field}) references {$references_table}({$references_field}) {$on_delete_str} {$on_update_str}";
+    function addForeignKey($FK_Name, $FK_Field, $references_table, $references_field, $on_delete = false, $on_update = false)
+    {
+        $on_delete_str = $on_delete ? 'on delete cascade' : '';
+        $on_update_str = $on_update ? 'on update cascade' : '';
+        $this->foreign_keys[] = "constraint {$FK_Name} foreign key ({$FK_Field}) references {$references_table}({$references_field}) {$on_delete_str} {$on_update_str}";
         return $this;
     }
 }

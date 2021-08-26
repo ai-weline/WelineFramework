@@ -15,7 +15,7 @@ use PDO;
 use PDOStatement;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Linker\Query\QueryTrait;
-use Weline\Framework\Database\Model;
+use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Exception\Core;
 use function PHPUnit\Framework\isInstanceOf;
 
@@ -31,7 +31,7 @@ abstract class Query implements QueryInterface
     const attr_FIELD = 'fields';
     const attr_UPDATE = 'updates';
     const attr_WHERE = 'wheres';
-    const attr_WHERE_VALUE = 'where_values';
+    const attr_BOUND_VALUE = 'bound_values';
     const attr_LIMIT = 'limit';
     const attr_ORDER = 'order';
     const attr_SQL = 'sql';
@@ -46,7 +46,7 @@ abstract class Query implements QueryInterface
         self::attr_FIELD => '*',
         self::attr_UPDATE => array(),
         self::attr_WHERE => array(),
-        self::attr_WHERE_VALUE => array(),
+        self::attr_BOUND_VALUE => array(),
         self::attr_LIMIT => '',
         self::attr_ORDER => array(),
         self::attr_SQL => '',
@@ -61,13 +61,15 @@ abstract class Query implements QueryInterface
     private string $fields = '*';
     private array $updates = array();
     private array $wheres = array();
-    private array $wheres_values = array();
+    private array $bound_values = array();
     private string $limit = '';
     private array $order = array();
 
     private ?PDOStatement $PDOStatement = null;
     private string $sql = '';
     private string $additional_sql = '';
+
+    private string $fetch_type = '';
 
 
     function identity(string $field): QueryInterface
@@ -96,6 +98,7 @@ abstract class Query implements QueryInterface
         $fields = rtrim($fields, ',') . ')';
         $origin_fields = $this->fields;
         $this->fields = $fields;
+        $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         $this->fields = $origin_fields;
         return $this;
@@ -116,6 +119,7 @@ abstract class Query implements QueryInterface
         } else {
             $this->updates = $data;
         }
+        $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         return $this;
     }
@@ -194,26 +198,30 @@ abstract class Query implements QueryInterface
 
     function find(): QueryInterface
     {
+        $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         return $this;
     }
 
     function select(): QueryInterface
     {
+        $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         return $this;
     }
 
     function delete(): QueryInterface
     {
+        $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         return $this;
     }
 
     function query(string $sql): QueryInterface
     {
+        $this->fetch_type = __FUNCTION__;
         $this->PDOStatement = $this->linker->getLink()->query($sql);
-        return  $this;
+        return $this;
     }
 
     function additional(string $additional_sql): QueryInterface
@@ -224,30 +232,32 @@ abstract class Query implements QueryInterface
 
     function fetch(): array|bool
     {
-        $result = $this->PDOStatement->execute($this->wheres_values);
+        // TODO 解决预编译sql Invalid parameter number: number of bound variables does not match number of tokens
+        $result = $this->PDOStatement->execute($this->bound_values);
         $data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
         if ($result && $data) {
+            switch ($this->fetch_type) {
+                case 'find':
+                    if (isset($data[0])) {
+                        $data = $data[0];
+                    }
+                    break;
+                case 'insert':
+                    $data = $this->query('SELECT LAST_INSERT_ID();')->fetch();
+                    break;
+                case 'delete':
+                case 'select':
+                case 'update':
+                case 'query':
+                default:
+                    break;
+            }
             return $data;
         }
+        $this->fetch_type = '';
         return $result;
     }
 
-    /**
-     * @DESC          # 获得最后的sql
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/8/18 23:06
-     * 参数区：
-     * @return string
-     */
-    public function getLastSql(): string
-    {
-        foreach ($this->wheres_values as $where_key => $wheres_value) {
-            $this->sql = str_replace($where_key, (string)$wheres_value, $this->sql);
-        }
-        return \SqlFormatter::format($this->sql);
-    }
 
     function clear(string $type = ''): QueryInterface
     {
@@ -283,6 +293,18 @@ abstract class Query implements QueryInterface
 
     function commit(): void
     {
-        $this->linker->getLink()->rollBack();
+        $this->linker->getLink()->commit();
+    }
+
+    public function getLastSql(): string
+    {
+        foreach ($this->bound_values as $where_key => $wheres_value) {
+            $this->sql = str_replace($where_key, (string)$wheres_value, $this->sql);
+        }
+        return \SqlFormatter::format($this->sql);
+    }
+    public function getPrepareSql(): string
+    {
+        return \SqlFormatter::format($this->sql);
     }
 }

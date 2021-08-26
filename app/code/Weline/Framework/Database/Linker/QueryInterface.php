@@ -16,7 +16,7 @@ namespace Weline\Framework\Database\Linker;
 
 use PDOStatement;
 use Weline\Framework\Database\Linker;
-use Weline\Framework\Database\Model;
+use Weline\Framework\Database\AbstractModel;
 
 interface QueryInterface
 {
@@ -226,7 +226,7 @@ interface QueryInterface
      * @param string $type 'wheres' | 'orders' | 'limit' | 'joins' | 'fields' | 'alias' | 'updates'|'table'
      * @return QueryInterface
      */
-    function clear(string $type = 'wheres'): QueryInterface;
+    function clear(string $type = ''): QueryInterface;
 
     /**
      * @DESC          # 重置所有
@@ -272,4 +272,24 @@ interface QueryInterface
      */
     function commit(): void;
 
+    /**
+     * @DESC          # 读取最终的sql
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/26 21:42
+     * 参数区：
+     * @return string
+     */
+    function getLastSql():string;
+    /**
+     * @DESC          # 读取预编译sql
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/26 21:42
+     * 参数区：
+     * @return string
+     */
+    function getPrepareSql():string;
 }

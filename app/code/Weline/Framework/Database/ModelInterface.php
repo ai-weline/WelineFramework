@@ -15,26 +15,35 @@ interface ModelInterface
 {
 
     /**
-     * @DESC          # 设置表名
+     * @DESC          # 返回表名 如果返回空值 则读取模型名称
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/25 23:45
      * 参数区：
-     * @param string $table
      * @return string
      */
-    function setTable(string $table):string;
+    function getTable():string;
+
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/26 20:58
+     * 参数区：
+     * @return string
+     */
+    function getPrimaryKey():string;
 
     /**
      * @DESC          # 设置模型字段
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/8/25 23:46
+     * @DateTime: 2021/8/26 21:17
      * 参数区：
-     * @param array $fields 示例：['id'=>]
-     * @return void
+     * @return array
      */
-    function setFields(array $fields):void;
+    function getFields():array;
 }

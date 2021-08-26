@@ -162,7 +162,7 @@ trait QueryTrait
                         $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
                         # 处理别名
                         $param = str_replace('.', '__', $param) . $key;
-                        $this->wheres_values[$param] = $where[2];
+                        $this->bound_values[$param] = $where[2];
                         $where[2] = $param;
                         $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
                 }
@@ -181,8 +181,15 @@ trait QueryTrait
         switch ($action) {
             case 'insert' :
                 $values = '';
-                foreach ($this->insert as $insert) {
-                    $values .= '(' . implode(',', $insert) . '),';
+                foreach ($this->insert as $insert_key => $insert) {
+                    $values .= '(';
+                    foreach ($insert as $insert_field => $insert_value) {
+                        $insert_bound_key = ":{$insert_field}_{$insert_key}_field";
+                        $this->bound_values[$insert_bound_key] = $insert_value;
+                        $values .= ":{$insert_field}_{$insert_key}_field , ";
+                    }
+                    $values = rtrim($values, ', ');
+                    $values .= '),';
                 }
                 $values = rtrim($values, ',');
                 $sql = "INSERT INTO {$this->table} {$this->fields} VALUES {$values}";
@@ -201,8 +208,10 @@ trait QueryTrait
                 # 设置where条件
                 $identity_values = array_column($this->updates, $this->identity_field);
                 if ($identity_values) {
+                    $identity_values_key = ':identity_values_key';
                     $identity_values_str = implode(',', $identity_values);
-                    $wheres .= ($wheres ? " AND " : 'WHERE ') . "$this->identity_field IN ($identity_values_str)";
+                    $this->bound_values[$identity_values_key] = $identity_values_str;
+                    $wheres .= ($wheres ? " AND " : 'WHERE ') . "$this->identity_field IN ( $identity_values_key )";
                 }
 
                 # 排除没有条件值的更新
@@ -216,8 +225,16 @@ trait QueryTrait
                     $keys = array_keys(current($this->updates));
                     foreach ($keys as $column) {
                         $updates .= sprintf("`%s` = CASE `%s` \n", $column, $this->identity_field);
-                        foreach ($this->updates as $line) {
-                            $updates .= sprintf("WHEN '%s' THEN '%s' \n", $line[$this->identity_field], $line[$column]);
+                        foreach ($this->updates as $update_key => $line) {
+                            # 主键值
+                            $identity_field_column_key = ":{$this->identity_field}_{$update_key}_{$column}_key";
+                            $this->bound_values[$identity_field_column_key] = $line[$this->identity_field];
+
+                            # 更新键值
+                            $identity_field_column_value = ":update_{$update_key}_{$column}_value";
+                            $this->bound_values[$identity_field_column_value] = $line[$column];
+                            # 组装
+                            $updates .= sprintf("WHEN '%s' THEN '%s' \n", $identity_field_column_key, $identity_field_column_value);
                         }
                         $updates .= "END,";
                     }

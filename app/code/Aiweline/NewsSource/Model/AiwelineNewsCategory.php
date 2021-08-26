@@ -9,9 +9,9 @@
 
 namespace Aiweline\NewsSource\Model;
 
-use Weline\Framework\Database\Model;
+use Weline\Framework\Database\AbstractModel;
 
-class AiwelineNewsCategory extends Model
+class AiwelineNewsCategory extends AbstractModel
 {
     /**
      * @DESC         |存来源返回来源ID

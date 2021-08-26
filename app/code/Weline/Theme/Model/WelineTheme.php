@@ -11,12 +11,12 @@ namespace Weline\Theme\Model;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Database\Model;
+use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Theme\Cache\ThemeCache;
 use Weline\Theme\Setup\Install;
 
-class WelineTheme extends Model
+class WelineTheme extends AbstractModel
 {
     const cache_TIME = 604800;
 

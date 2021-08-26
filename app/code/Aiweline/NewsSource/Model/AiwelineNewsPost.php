@@ -10,9 +10,9 @@
 namespace Aiweline\NewsSource\Model;
 
 use Weline\Framework\App\Exception;
-use Weline\Framework\Database\Model;
+use Weline\Framework\Database\AbstractModel;
 
-class AiwelineNewsPost extends Model
+class AiwelineNewsPost extends AbstractModel
 {
     /**
      * @DESC         |存来源返回来源ID

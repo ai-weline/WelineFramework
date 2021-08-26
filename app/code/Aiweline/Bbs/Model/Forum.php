@@ -9,8 +9,8 @@
 
 namespace Aiweline\Bbs\Model;
 
-use Weline\Framework\Database\Model;
+use Weline\Framework\Database\AbstractModel;
 
-class Forum extends Model
+class Forum extends AbstractModel
 {
 }
