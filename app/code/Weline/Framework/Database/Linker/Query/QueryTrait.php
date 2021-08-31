@@ -115,6 +115,8 @@ trait QueryTrait
             '=<',
             '<>',
             'like',
+            'in',
+            'find_in_set',
             '=',
         ];
         if (in_array($where_array[1], $conditions)) {
@@ -132,6 +134,8 @@ trait QueryTrait
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/17 22:52
      * 参数区：
+     * @throws SqlParserException
+     * @throws DbException
      */
     private function prepareSql($action)
     {
@@ -147,6 +151,7 @@ trait QueryTrait
             $wheres .= ' WHERE ';
             $logic = 'AND ';
             foreach ($this->wheres as $key => $where) {
+                $key += 1;
                 # 如果自己设置了where 逻辑连接符 就修改默认的连接符 AND
                 if (isset($where[3])) {
                     $logic = array_pop($where) . ' ';
@@ -162,7 +167,7 @@ trait QueryTrait
                         $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
                         # 处理别名
                         $param = str_replace('.', '__', $param) . $key;
-                        $this->bound_values[$param] = $where[2];
+                        $this->bound_values[$param] = (string)$where[2];
                         $where[2] = $param;
                         $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
                 }
@@ -182,11 +187,12 @@ trait QueryTrait
             case 'insert' :
                 $values = '';
                 foreach ($this->insert as $insert_key => $insert) {
+                    $insert_key += 1;
                     $values .= '(';
                     foreach ($insert as $insert_field => $insert_value) {
-                        $insert_bound_key = ":{$insert_field}_{$insert_key}_field";
+                        $insert_bound_key = ":{$insert_field}_field_{$insert_key}";
                         $this->bound_values[$insert_bound_key] = $insert_value;
-                        $values .= ":{$insert_field}_{$insert_key}_field , ";
+                        $values .= "$insert_bound_key , ";
                     }
                     $values = rtrim($values, ', ');
                     $values .= '),';
@@ -201,10 +207,6 @@ trait QueryTrait
                 $sql = "DELETE FROM {$this->table} {$wheres} {$this->additional_sql}";
                 break;
             case 'update' :
-                $update_fields = [];
-                foreach ($this->updates[0] as $field => $values) {
-                    $update_fields[] = $field;
-                }
                 # 设置where条件
                 $identity_values = array_column($this->updates, $this->identity_field);
                 if ($identity_values) {
@@ -221,20 +223,21 @@ trait QueryTrait
                 $updates = '';
                 # 存在$identity_values 表示多维数组更新
                 if ($identity_values) {
-                    $updates = '';
                     $keys = array_keys(current($this->updates));
                     foreach ($keys as $column) {
                         $updates .= sprintf("`%s` = CASE `%s` \n", $column, $this->identity_field);
                         foreach ($this->updates as $update_key => $line) {
                             # 主键值
-                            $identity_field_column_key = ":{$this->identity_field}_{$update_key}_{$column}_key";
+                            $update_key += 1;
+                            $identity_field_column_key = ":{$this->identity_field}_{$column}_key_{$update_key}";
                             $this->bound_values[$identity_field_column_key] = $line[$this->identity_field];
 
                             # 更新键值
-                            $identity_field_column_value = ":update_{$update_key}_{$column}_value";
+                            $identity_field_column_value = ":update_{$column}_value_{$update_key}";
                             $this->bound_values[$identity_field_column_value] = $line[$column];
                             # 组装
-                            $updates .= sprintf("WHEN '%s' THEN '%s' \n", $identity_field_column_key, $identity_field_column_value);
+                            $updates .= sprintf("WHEN %s THEN %s ", $identity_field_column_key, $identity_field_column_value);
+//                            $updates .= sprintf("WHEN '%s' THEN '%s' \n", $line[$this->identity_field], $identity_field_column_value);
                         }
                         $updates .= "END,";
                     }
@@ -248,11 +251,10 @@ trait QueryTrait
                     }
                 }
                 $updates = rtrim($updates, ',');
-
-                $sql = "UPDATE {$this->table}  {$this->table_alias} SET {$updates} {$wheres} {$this->additional_sql} ";
+                $sql = "UPDATE {$this->table} {$this->table_alias} SET {$updates} {$wheres} {$this->additional_sql} ";
                 break;
             default :
-                $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres}  {$order} {$this->additional_sql} LIMIT 1";
+                $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres} {$order} {$this->additional_sql} LIMIT 1";
                 break;
         };
         # 预置sql
@@ -301,8 +303,8 @@ trait QueryTrait
         foreach ($data as &$item) {
             if (is_array($item)) {
                 foreach ($item as &$it) {
-                    if (is_string($item)) {
-                        $item = "'$item'";
+                    if (is_string($it)) {
+                        $item = "'$it'";
                     }
                 }
             } else {

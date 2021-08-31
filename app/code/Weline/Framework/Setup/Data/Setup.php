@@ -35,22 +35,27 @@ class Setup
     }
 
     /**
-     * @DESC         |方法描述
+     * @DESC          # 获取数据库链接
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:47
      * 参数区：
-     *
+     * @deprecated
      * @return DbSetup
      */
-    public function getDb()
+    public function getDb(): DbSetup
     {
         return $this->setup_db;
     }
 
     /**
-     * @DESC         |方法描述
+     * @DESC          # 打印
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:48
      * 参数区：
-     *
      * @return Printing
      */
     public function getPrinter(): Printing

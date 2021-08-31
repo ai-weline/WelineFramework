@@ -35,9 +35,10 @@ class Installer implements RegisterInterface
     public function __construct(
         WelineTheme $welineTheme,
         Printing $printing
-    ) {
+    )
+    {
         $this->welineTheme = $welineTheme;
-        $this->printing    = $printing;
+        $this->printing = $printing;
     }
 
     /**
@@ -52,7 +53,7 @@ class Installer implements RegisterInterface
     public function register($data, string $version = '', string $description = '')
     {
         // 参数检查
-        if (! isset($data['name']) || ! isset($data['path'])) {
+        if (!isset($data['name']) || !isset($data['path'])) {
             throw new ConsoleException('注册文件参数params必须包含：name和path。 样例：["name"=>"default主题"，"path"=>__DIR__]');
         }
 
@@ -63,16 +64,14 @@ class Installer implements RegisterInterface
         if ($this->welineTheme->getId()) {
             if ($this->welineTheme->getPath() !== $data['path'] . DIRECTORY_SEPARATOR) {
                 $this->printing->setup($data['name'] . __(' 主题更新...'));
-                $action_string = '更新';
+                $action_string = __('更新');
             } else {
                 return '';
             }
         }
         // 处理主题路径
         $theme_path = str_replace(Env::path_CODE_DESIGN, '', $data['path']);
-        // 开始主题事务注册
-        $this->welineTheme->startTrans();
-
+        // 开始主题注册 save 方法自带事务
         try {
             if ($this->welineTheme->getId()) {
                 // 更新
@@ -89,12 +88,10 @@ class Installer implements RegisterInterface
                     ->save();
             }
 
-            $this->welineTheme->commit();
             $this->printing->success($data['name'] . __(" 主题{$action_string}完成!"));
         } catch (\Exception $exception) {
             $this->printing->success($data['name'] . __(" 主题{$action_string}异常!"));
             $this->printing->success($exception->getMessage());
-            $this->welineTheme->rollback();
 
             throw  $exception;
         }

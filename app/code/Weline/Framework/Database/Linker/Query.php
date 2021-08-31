@@ -53,6 +53,19 @@ abstract class Query implements QueryInterface
         self::attr_ADDITIONAL_SQL => '',
     ];
 
+    const query_vars = [
+        self::attr_INSERT => array(),
+        self::attr_JOIN => array(),
+        self::attr_FIELD => '*',
+        self::attr_UPDATE => array(),
+        self::attr_WHERE => array(),
+        self::attr_BOUND_VALUE => array(),
+        self::attr_LIMIT => '',
+        self::attr_ORDER => array(),
+        self::attr_SQL => '',
+        self::attr_ADDITIONAL_SQL => '',
+    ];
+
     private string $identity_field = 'id';
     private string $table = '';
     private string $table_alias = 'main_table';
@@ -232,18 +245,20 @@ abstract class Query implements QueryInterface
 
     function fetch(): array|bool
     {
-        // TODO 解决预编译sql Invalid parameter number: number of bound variables does not match number of tokens
         $result = $this->PDOStatement->execute($this->bound_values);
         $data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
         if ($result && $data) {
             switch ($this->fetch_type) {
                 case 'find':
                     if (isset($data[0])) {
+                        // FIXME 处理主键数字字段变成字符串返回的问题
+                        $identity_value = $data[0][$this->identity_field];
+                        $data[0][$this->identity_field] = is_numeric($identity_value) ? (int)$identity_value : $identity_value;
                         $data = $data[0];
                     }
                     break;
                 case 'insert':
-                    $data = $this->query('SELECT LAST_INSERT_ID();')->fetch();
+                    $data = $this->clearQuery()->query('SELECT LAST_INSERT_ID();')->fetch();
                     break;
                 case 'delete':
                 case 'select':
@@ -262,13 +277,30 @@ abstract class Query implements QueryInterface
     function clear(string $type = ''): QueryInterface
     {
         if ($type) {
-            $attr_var_name = '' . $type;
+            $attr_var_name = $type;
             if (DEV && !isset(self::init_vars[$attr_var_name])) {
                 $this->exceptionHandle(__('不支持的清理类型：%1 支持的初始化类型：%2', [$attr_var_name, var_export(self::init_vars, true)]));
             }
             $this->$attr_var_name = self::init_vars[$attr_var_name];
         } else {
             $this->reset();
+        }
+        return $this;
+    }
+
+
+    function clearQuery(string $type = ''): QueryInterface
+    {
+        if ($type) {
+            $attr_var_name = $type;
+            if (DEV && !isset(self::init_vars[$attr_var_name])) {
+                $this->exceptionHandle(__('不支持的清理类型：%1 支持的初始化类型：%2', [$attr_var_name, var_export(self::init_vars, true)]));
+            }
+            $this->$attr_var_name = self::init_vars[$attr_var_name];
+        } else {
+            foreach (self::query_vars as $query_field => $query_var) {
+                $this->$query_field = $query_var;
+            }
         }
         return $this;
     }
@@ -303,6 +335,7 @@ abstract class Query implements QueryInterface
         }
         return \SqlFormatter::format($this->sql);
     }
+
     public function getPrepareSql(): string
     {
         return \SqlFormatter::format($this->sql);

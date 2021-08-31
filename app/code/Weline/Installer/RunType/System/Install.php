@@ -39,7 +39,7 @@ class Install
         $this->setup    = $setup;
     }
 
-    public function run()
+    #[\JetBrains\PhpStorm\ArrayShape(['data' => "array", 'hasErr' => "bool", 'msg' => "string"])] public function run(): array
     {
         // 阻塞等待配置文件写入
         $break      = false;
@@ -52,7 +52,7 @@ class Install
             }
             $wait_times += 1;
             if ($wait_times === 10) {
-//                throw  new Exception('请先安装数据库配置！');
+                throw  new Exception('请先安装数据库配置！');
             }
         }
 

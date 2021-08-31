@@ -11,28 +11,13 @@ declare(strict_types=1);
 namespace Weline\Framework\Database;
 
 
-class Model extends AbstractModel implements ModelInterface
+abstract class Model extends AbstractModel implements ModelInterface
 {
     protected function processTable(): string
     {
-        if (empty($this->table = $this->getTable())) {
+        if (empty($this->table = $this->providerTable())) {
             parent::processTable();
         }
         return $this->table;
-    }
-
-    function getTable(): string
-    {
-        return '';
-    }
-
-    function getPrimaryKey(): string
-    {
-        return 'id';
-    }
-
-    function getFields(): array
-    {
-        return array();
     }
 }

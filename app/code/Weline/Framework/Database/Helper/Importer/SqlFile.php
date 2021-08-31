@@ -31,19 +31,22 @@ class SqlFile
     private $link;
 
     /**
-     * ImportSql 初始函数...
+     * SqlFile constructor.
      * @param DbManager $dbManager
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
+     * @throws \Weline\Framework\Database\Exception\LinkException
      */
     public function __construct(DbManager $dbManager)
     {
-        $db_config             = $dbManager->getCurrentConfig();
-        $this->db_host_name    = $db_config['hostname'];
-        $this->db_user_name    = $db_config['username'];
-        $this->db_password     = $db_config['password'];
-        $this->db_port         = $db_config['hostport'];
-        $this->db_name         = $db_config['database'];
-        $this->db_charset      = $db_config['charset'];
-        $this->db_table_prefix = $db_config['prefix'];
+        $linker             = $dbManager->create()->getConfigProvider();
+        $this->db_host_name    = $linker->getHostName();
+        $this->db_user_name    = $linker->getUsername();
+        $this->db_password     = $linker->getPassword();
+        $this->db_port         = $linker->getHostPort();
+        $this->db_name         = $linker->getDatabase();
+        $this->db_charset      = $linker->getCharset();
+        $this->db_table_prefix = $linker->getPrefix();
         $link_info             = $this->link_data();
         if (isset($link_info['status'])) {
             exit($link_info['info']);

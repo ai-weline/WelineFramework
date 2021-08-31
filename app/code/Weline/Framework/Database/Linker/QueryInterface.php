@@ -227,6 +227,17 @@ interface QueryInterface
      * @return QueryInterface
      */
     function clear(string $type = ''): QueryInterface;
+    /**
+     * @DESC          # 清理特定条件
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/23 22:02
+     * 参数区：
+     * @param string $type 默认：清理除了表名、表别名、表主键外的查询缓存 'wheres' | 'orders' | 'limit' | 'joins' | 'fields' | 'alias' | 'updates'|'table'
+     * @return QueryInterface
+     */
+    function clearQuery(string $type = ''): QueryInterface;
 
     /**
      * @DESC          # 重置所有

@@ -132,9 +132,9 @@ class Install extends \Weline\Framework\Console\CommandAbstract
 }
 /*
 php bin/m system:install ^
---db-type=mysql ^
---db-hostname=127.0.0.1 ^
---db-database=weline ^
---db-username=weline ^
---db-password=weline
+    --db-type=mysql ^
+    --db-hostname=192.168.1.3 ^
+    --db-database=weline ^
+    --db-username=weline ^
+    --db-password=weline
 */

@@ -34,15 +34,15 @@ class QueryTest extends \Weline\Framework\UnitTest\TestCore
 //        );
         # 改
         pp($query->table('weline')
-            ->alias('a')
+//            ->alias('a')
 //            ->where('a.id', 3)
             ->update([
                 ['id' => 1,
                     'stores' => 1,],
-                ['id' => 2,
+               /* ['id' => 2,
                     'stores' => 2,],
                 ['id' => 3,
-                    'stores' => 3,]
+                    'stores' => 3,]*/
             ])->fetch()
 //            ],'id')->getLastSql() # 默认条件更新
 //            ],'id1')->getLastSql() #自定义非默认字段时

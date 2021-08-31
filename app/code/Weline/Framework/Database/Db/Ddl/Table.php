@@ -11,6 +11,7 @@ namespace Weline\Framework\Database\Db\Ddl;
 
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\DbManager;
+use Weline\Framework\Database\LinkerFactory;
 use Weline\Framework\Manager\ObjectManager;
 
 class Table
@@ -89,28 +90,27 @@ class Table
 
     private string $comment;
 
-    private array $fields=array();
+    private array $fields = array();
     private array $indexes = array();
 
     private array $foreign_keys = array();
-
-    private string $type;
 
     private string $constraints = '';
 
     private string $additional = 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;';
 
-    private DbManager $dbManager;
+    private LinkerFactory $linker;
 
     /**
-     * 初始函数...
      * Table constructor.
      * @param DbManager $dbManager
+     * @throws Exception
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\Database\Exception\LinkException
      */
     public function __construct(DbManager $dbManager)
     {
-        $this->dbManager = $dbManager;
-        $this->type = $dbManager->getConfig()->getDbType();
+        $this->linker = $dbManager->create();
     }
 
     /**
@@ -124,7 +124,7 @@ class Table
      * @param string $comment
      * @return $this
      */
-    public function creatTable(string $table, string $comment = ''): static
+    public function createTable(string $table, string $comment = ''): static
     {
         # 清空所有表属性 重新创建表
         foreach (self::init_vars as $attr => $init_var) {
@@ -137,20 +137,34 @@ class Table
     }
 
     /**
+     * @DESC          # 数据库链接
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:43
+     * 参数区：
+     * @return LinkerFactory
+     */
+    function getLinker(): LinkerFactory
+    {
+        return $this->linker;
+    }
+
+    /**
      * @DESC          # 添加字段
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/26 21:31
      * 参数区：
-     * @param string $field_name    字段名
-     * @param string $type          字段类型
-     * @param string|null $length   长度
-     * @param string $options       配置
-     * @param string $comment       字段注释
+     * @param string $field_name 字段名
+     * @param string $type 字段类型
+     * @param int|null $length 长度
+     * @param string $options 配置
+     * @param string $comment 字段注释
      * @return Table
      */
-    public function addColumn(string $field_name, string $type, ?string $length, string $options, string $comment): Table
+    public function addColumn(string $field_name, string $type, ?int $length, string $options, string $comment): Table
     {
         $type_length = $length ? "{$type}({$length})" : $type;
         $this->fields[] = "`{$field_name}` {$type_length} {$options} COMMENT '{$comment}'," . PHP_EOL;
@@ -237,11 +251,15 @@ class Table
     }
 
     /**
-     * @DESC         |建表
+     * @DESC          # 建表
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:36
      * 参数区：
+     * @return \Weline\Framework\Database\Linker\QueryInterface
      */
-    public function create()
+    public function create(): \Weline\Framework\Database\Linker\QueryInterface
     {
         // 字段
         $fields_str = '';
@@ -311,41 +329,51 @@ CREATE TABLE {$this->table}(
  {$this->constraints}
 ){$this->comment} {$this->additional}
 createSQL;
-//        if (DEV) p($sql, 1);
-        return $this->dbManager->create()->getQuery()->query($sql);
+        return $this->linker->query($sql);
     }
 
     /**
-     * @DESC         |修改表
+     * @DESC          # 修改表
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:33
      * 参数区：
      * @param string $sql
-     * @return mixed
+     * @return \Weline\Framework\Database\Linker\QueryInterface
      */
-    public function alert(string $sql)
+    public function alert(string $sql): \Weline\Framework\Database\Linker\QueryInterface
     {
-        return $dbManager->query($sql);
+        return $this->linker->query($sql);
     }
 
     /**
-     * @DESC         |查询
+     * @DESC          # 查询
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:34
      * 参数区：
-     *
      * @param string $sql
-     * @return mixed
+     * @return \Weline\Framework\Database\Linker\QueryInterface
      */
-    public function query(string $sql)
+    public function query(string $sql): \Weline\Framework\Database\Linker\QueryInterface
     {
-        return $dbManager->query($sql);
+        return $this->linker->query($sql);
     }
 
     /**
+     * @DESC          # 数据库类型
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:36
+     * 参数区：
      * @return string
      */
     public function getType(): string
     {
-        return $this->type;
+        return $this->linker->getConfigProvider()->getDbType();
     }
 
     /**
@@ -353,7 +381,7 @@ createSQL;
      */
     public function getPrefix(): string
     {
-        return $this->prefix;
+        return $this->linker->getConfigProvider()->getPrefix();
     }
 
     /**
@@ -365,19 +393,21 @@ createSQL;
     }
 
     /**
-     * @DESC         |添加外键
+     * @DESC          # 添加外键
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:37
      * 参数区：
-     *
-     * @param $FK_Name
-     * @param $FK_Field
-     * @param $references_table
-     * @param $references_field
-     * @param bool $on_delete
-     * @param bool $on_update
+     * @param string $FK_Name
+     * @param string $FK_Field
+     * @param string $references_table
+     * @param string $references_field
+     * @param false $on_delete
+     * @param false $on_update
      * @return $this
      */
-    function addForeignKey($FK_Name, $FK_Field, $references_table, $references_field, $on_delete = false, $on_update = false)
+    function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): static
     {
         $on_delete_str = $on_delete ? 'on delete cascade' : '';
         $on_update_str = $on_update ? 'on update cascade' : '';

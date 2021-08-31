@@ -9,13 +9,30 @@
 
 namespace Weline\Framework\Setup\Db;
 
+use PDOException;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Database\DbManager;
-use think\db\exception\PDOException;
+use Weline\Framework\Database\DbManager\ConfigProvider;
 
 class Setup extends DbManager
 {
+    private Table $table;
+
+    /**
+     * Setup constructor.
+     * @param ConfigProvider $configProvider
+     * @param Table $table
+     */
+    function __construct(
+        ConfigProvider $configProvider,
+        Table $table
+    )
+    {
+        $this->table = $table;
+        parent::__construct($configProvider);
+    }
+
     /**
      * @DESC         |方法描述
      *
@@ -28,20 +45,21 @@ class Setup extends DbManager
     public function createTable(string $table_name, string $comment = ''): Table
     {
         $table_name = $this->getTable($table_name);
-
-        return new Table($table_name, $comment);
+        return $this->table->createTable($table_name, $comment);
     }
 
     /**
-     * @DESC         |获取前缀
+     * @DESC          # 获取前缀
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:27
      * 参数区：
+     * @return string
      */
     public function getTablePrefix(): string
     {
-        $type   = $this->getConfig('default');
-        $prefix = $this->getConfig('connections')[$type]['prefix'];
-
+        $prefix = $this->getConfig()->getPrefix();
         return $prefix ?? '';
     }
 
@@ -57,8 +75,7 @@ class Setup extends DbManager
         $table = $this->getTable($table);
 
         try {
-            $this->query("desc {$table}");
-
+            $this->table->getLinker()->query("desc {$table}");
             return true;
         } catch (PDOException $exception) {
             return false;
@@ -75,7 +92,7 @@ class Setup extends DbManager
      */
     public function getTable(string $name = ''): string
     {
-        if (! strstr($name, $this->getTablePrefix())) {
+        if (!strstr($name, $this->getTablePrefix())) {
             $name = $this->getTablePrefix() . $name;
         }
 
@@ -92,7 +109,7 @@ class Setup extends DbManager
      */
     public function dropTable(string $tableName)
     {
-        if (! strstr($tableName, $this->getTablePrefix())) {
+        if (!strstr($tableName, $this->getTablePrefix())) {
             $tableName = $this->getTable($tableName);
         }
 
@@ -103,5 +120,20 @@ class Setup extends DbManager
         } catch (Exception $exception) {
             return false;
         }
+    }
+
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 20:56
+     * 参数区：
+     * @param string $sql
+     * @return mixed
+     */
+    function query(string $sql)
+    {
+        return $this->table->getLinker()->query($sql);
     }
 }

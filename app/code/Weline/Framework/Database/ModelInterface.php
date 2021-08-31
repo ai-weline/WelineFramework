@@ -15,7 +15,7 @@ interface ModelInterface
 {
 
     /**
-     * @DESC          # 返回表名 如果返回空值 则读取模型名称
+     * @DESC          # 提供表名 如果返回空值 则读取模型名称
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
@@ -23,10 +23,10 @@ interface ModelInterface
      * 参数区：
      * @return string
      */
-    function getTable():string;
+    function providerTable():string;
 
     /**
-     * @DESC          # 方法描述
+     * @DESC          # 提供主键字段
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
@@ -34,10 +34,10 @@ interface ModelInterface
      * 参数区：
      * @return string
      */
-    function getPrimaryKey():string;
+    function providerPrimaryField():string;
 
     /**
-     * @DESC          # 设置模型字段
+     * @DESC          # 提供模型字段
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
@@ -45,5 +45,5 @@ interface ModelInterface
      * 参数区：
      * @return array
      */
-    function getFields():array;
+    function providerFields():array;
 }

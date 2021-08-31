@@ -12,11 +12,12 @@ namespace Weline\Theme\Model;
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Theme\Cache\ThemeCache;
 use Weline\Theme\Setup\Install;
 
-class WelineTheme extends AbstractModel
+class WelineTheme extends Model
 {
     const cache_TIME = 604800;
 
@@ -43,26 +44,29 @@ class WelineTheme extends AbstractModel
 
     public function __construct(
         array $data = []
-    ) {
+    )
+    {
         parent::__construct($data);
     }
 
     public function __init()
     {
         $this->themeCache = ObjectManager::getInstance(ThemeCache::class)->create();
+        parent::__init();
     }
 
     /**
-     * @DESC         |获取激活的主题 有缓存
+     * @DESC          # 获取激活的主题 有缓存
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/31 21:15
      * 参数区：
-     *
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\db\exception\DataNotFoundException
-     * @return mixed
+     * @return $this
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\Exception\Core
      */
-    public function getActiveTheme()
+    public function getActiveTheme(): static
     {
         if ($theme = $this->themeCache->get('theme')) {
             return $theme;
@@ -75,41 +79,29 @@ class WelineTheme extends AbstractModel
         return $this;
     }
 
-    public function getId()
-    {
-        return $this->getData(self::filed_ID);
-    }
-
-    public function setId($value)
-    {
-        $this->setData(self::filed_ID, $value);
-
-        return $this;
-    }
-
     public function getName_()
     {
         return $this->getData(self::filed_NAME);
     }
 
-    public function setName($value)
+    public function setName($value): static
     {
         $this->setData(self::filed_NAME, $value);
 
         return $this;
     }
 
-    public function getPath()
+    public function getPath(): string
     {
         return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
     }
 
-    public function getRelatePath()
+    public function getRelatePath(): string
     {
         return str_replace(BP, '', Env::path_THEME_DESIGN_DIR) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
     }
 
-    public function setPath($value)
+    public function setPath($value): static
     {
         $this->setData(self::filed_PATH, $value);
 
@@ -121,7 +113,7 @@ class WelineTheme extends AbstractModel
         return $this->getData(self::filed_PARENT_ID);
     }
 
-    public function setParentId($value)
+    public function setParentId($value): static
     {
         $this->setData(self::filed_PARENT_ID, $value);
 
@@ -133,7 +125,7 @@ class WelineTheme extends AbstractModel
         return $this->getData(self::filed_IS_ACTIVE);
     }
 
-    public function setIsActive(bool $value)
+    public function setIsActive(bool $value): static
     {
         $this->setData(self::filed_IS_ACTIVE, $value);
 
@@ -145,7 +137,7 @@ class WelineTheme extends AbstractModel
         return $this->getData(self::filed_CREATE_TIME);
     }
 
-    public function setCreateTime($time)
+    public function setCreateTime($time): static
     {
         $this->setData(self::filed_CREATE_TIME, $time);
 
@@ -169,5 +161,20 @@ class WelineTheme extends AbstractModel
                     ->query('UPDATE ' . $this->getTable() . ' SET `is_active`=0 WHERE id != ' . $this->getId());
             }
         }
+    }
+
+    function providerTable(): string
+    {
+        return '';
+    }
+
+    function providerFields(): array
+    {
+        return [];
+    }
+
+    function providerPrimaryField(): string
+    {
+        return '';
     }
 }

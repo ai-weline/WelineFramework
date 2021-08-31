@@ -19,10 +19,10 @@ class Sample extends CommandAbstract
         $line_break = IS_WIN ? '^' : '\\';
         $this->printer->success('php bin/m system:install ' . $line_break . '
 --db-type=mysql ' . $line_break . '
---db-hostname=127.0.0.1 ' . $line_break . '
---db-database=m_dev ' . $line_break . '
---db-username=m_dev ' . $line_break . '
---db-password=ShP5T7yzNMs87ZDp
+--db-hostname=192.168.1.3 ' . $line_break . '
+--db-database=weline ' . $line_break . '
+--db-username=weline ' . $line_break . '
+--db-password=weline
             ');
         exit();
     }

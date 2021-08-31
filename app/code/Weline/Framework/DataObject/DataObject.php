@@ -61,7 +61,7 @@ class DataObject implements \ArrayAccess
      * @param array $arr
      * @return $this
      */
-    public function addData(array $arr)
+    public function addData(array $arr): static
     {
         foreach ($arr as $index => $value) {
             $this->setData($index, $value);
@@ -84,10 +84,10 @@ class DataObject implements \ArrayAccess
      * @param null $value
      * @return $this
      */
-    public function setData($key, $value = null)
+    public function setData($key, $value = null): static
     {
         if ($key === (array)$key) {
-            $this->_data = $key;
+            $this->_data = array_merge($this->_data, $key);
         } else {
             $this->_data[$key] = $value;
         }
@@ -269,8 +269,8 @@ class DataObject implements \ArrayAccess
      */
     public function hasData($key = ''): bool
     {
-        if (empty($key) || ! is_string($key)) {
-            return ! empty($this->_data);
+        if (empty($key) || !is_string($key)) {
+            return !empty($this->_data);
         }
 
         return array_key_exists($key, $this->_data);
@@ -328,7 +328,7 @@ class DataObject implements \ArrayAccess
      */
     public function toXml(array $keys = [], $rootName = 'item', $addOpenTag = false, $addCdata = true): string
     {
-        $xml  = '';
+        $xml = '';
         $data = $this->toArray($keys);
         foreach ($data as $fieldName => $fieldValue) {
             if ($addCdata === true) {
@@ -368,7 +368,8 @@ class DataObject implements \ArrayAccess
         $rootName = 'item',
         $addOpenTag = false,
         $addCdata = true
-    ): string {
+    ): string
+    {
         return $this->toXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
     }
 
@@ -445,12 +446,12 @@ class DataObject implements \ArrayAccess
     {
         switch (substr($method, 0, 3)) {
             case 'get':
-                $key   = $this->_underscore(substr($method, 3));
+                $key = $this->_underscore(substr($method, 3));
                 $index = $args[0] ?? null;
 
                 return $this->getData($key, $index);
             case 'set':
-                $key   = $this->_underscore(substr($method, 3));
+                $key = $this->_underscore(substr($method, 3));
                 $value = $args[0] ?? null;
 
                 return $this->setData($key, $value);
@@ -465,7 +466,7 @@ class DataObject implements \ArrayAccess
         }
 
         throw new \Weline\Framework\Exception\Core(
-            sprintf('Invalid method %1::%2', get_class($this), $method)
+            sprintf('Invalid method %s::%s', get_class($this), $method)
         );
     }
 
@@ -501,7 +502,7 @@ class DataObject implements \ArrayAccess
         if (isset(self::$_underscoreCache[$name])) {
             return self::$_underscoreCache[$name];
         }
-        $result                        = strtolower(trim(preg_replace('/([A-Z]|[0-9]+)/', '_$1', $name), '_'));
+        $result = strtolower(trim(preg_replace('/([A-Z]|[0-9]+)/', '_$1', $name), '_'));
         self::$_underscoreCache[$name] = $result;
 
         return $result;
@@ -551,11 +552,11 @@ class DataObject implements \ArrayAccess
     {
         if ($data === null) {
             $hash = spl_object_hash($this);
-            if (! empty($objects[$hash])) {
+            if (!empty($objects[$hash])) {
                 return '*** RECURSION ***';
             }
             $objects[$hash] = true;
-            $data           = $this->getData();
+            $data = $this->getData();
         }
         $debug = [];
         foreach ($data as $key => $value) {
@@ -621,7 +622,7 @@ class DataObject implements \ArrayAccess
      * @return mixed|null
      * @link http://www.php.net/manual/en/arrayaccess.offsetget.php
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if (isset($this->_data[$offset])) {
             return $this->_data[$offset];

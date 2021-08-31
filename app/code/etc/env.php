@@ -63,5 +63,7 @@
       ),
     ),
   ),
-  'deploy' => 'prod',
+  'deploy' => 'dev',
+  'admin' => 'admin_612e37e14d732',
+  'api_admin' => 'api_612e37e14d734',
 );

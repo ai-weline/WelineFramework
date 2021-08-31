@@ -125,9 +125,11 @@ class LinkerFactory
      * @DateTime: 2021/8/18 21:06
      * 参数区：
      * @return PDO
+     * @throws LinkException
      */
     public function getLink(): PDO
     {
+        $this->__init();
         return $this->linker;
     }
 
@@ -152,7 +154,7 @@ class LinkerFactory
 
     function query(string $sql): QueryInterface
     {
-        return $this->query->query($sql);
+        return $this->getQuery()->query($sql);
     }
 
     /**
