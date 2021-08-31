@@ -113,7 +113,7 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         if (! is_file($install_file)) {
             $this->printer->note('生成安装锁文件...');
             $file = new \Weline\Framework\System\File\Io\File();
-            $file->open(BP . 'setup/install.lock', $file::mode_w);
+            $file->open($install_file, $file::mode_w);
             $file->close();
         }
         $this->printer->success(str_pad('admin后台入口: ', 20, ' ', STR_PAD_LEFT) . $initData['admin']);

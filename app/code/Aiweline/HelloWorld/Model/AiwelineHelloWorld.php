@@ -9,8 +9,22 @@
 
 namespace Aiweline\HelloWorld\Model;
 
-use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Database\Model;
 
-class AiwelineHelloWorld extends AbstractModel
+class AiwelineHelloWorld extends Model
 {
+    function providerTable(): string
+    {
+        return '';
+    }
+
+    function providerPrimaryField(): string
+    {
+        return '';
+    }
+
+    function providerFields(): array
+    {
+        return [];
+    }
 }

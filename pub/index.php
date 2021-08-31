@@ -8,7 +8,7 @@
  */
 
 // 检查安装
-if (PHP_SAPI != 'cli' and !file_exists(dirname(__DIR__) . '/setup/install.lock1')) {
+if (PHP_SAPI != 'cli' and !file_exists(dirname(__DIR__) . '/setup/install.lock')) {
     require dirname(__DIR__) . '/setup/index.php';
     exit();
 }
