@@ -21,11 +21,16 @@ class ThemeTest extends TestCore
      */
     private WelineTheme $theme;
 
-    public function testGetMode()
+    function setUp(): void
     {
         $this->theme = ObjectManager::getInstance(WelineTheme::class);
+    }
+
+    public function testGetMode()
+    {
+
 //        $theme       = $this->theme->load(1);
-//        p($theme->getActiveTheme());
+        p($this->theme->getActiveTheme());
         $save_result = $this->theme->setData(Env::default_theme_DATA)->save();
         p($save_result);
     }

@@ -23,7 +23,7 @@ interface ModelInterface
      * 参数区：
      * @return string
      */
-    function providerTable():string;
+    function provideTable():string;
 
     /**
      * @DESC          # 提供主键字段
@@ -34,7 +34,7 @@ interface ModelInterface
      * 参数区：
      * @return string
      */
-    function providerPrimaryField():string;
+    function providePrimaryField():string;
 
     /**
      * @DESC          # 提供模型字段
@@ -45,5 +45,5 @@ interface ModelInterface
      * 参数区：
      * @return array
      */
-    function providerFields():array;
+    function provideFields():array;
 }

@@ -103,7 +103,7 @@ class DataObject implements \ArrayAccess
      * @param null $key
      * @return $this
      */
-    public function unsetData($key = null)
+    public function unsetData($key = null): DataObject
     {
         if ($key === null) {
             $this->setData([]);
@@ -117,6 +117,21 @@ class DataObject implements \ArrayAccess
             }
         }
 
+        return $this;
+    }
+
+    /**
+     * @DESC          # 清空数据
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/1 22:52
+     * 参数区：
+     * @return $this
+     */
+    function clearDataObject():DataObject
+    {
+        $this->_data = [];
         return $this;
     }
 
@@ -136,7 +151,7 @@ class DataObject implements \ArrayAccess
      * @param null $index
      * @return array|mixed|string|null
      */
-    public function getData($key = '', $index = null)
+    public function getData(string $key = '', $index = null): mixed
     {
         if ('' === $key) {
             return $this->_data;
@@ -175,7 +190,7 @@ class DataObject implements \ArrayAccess
      * @param $path
      * @return array|mixed|null
      */
-    public function getDataByPath($path)
+    public function getDataByPath($path): mixed
     {
         $keys = explode('/', $path);
 
@@ -201,7 +216,7 @@ class DataObject implements \ArrayAccess
      * @param $key
      * @return mixed|null
      */
-    public function getDataByKey($key)
+    public function getDataByKey($key): mixed
     {
         return $this->_getData($key);
     }
@@ -214,7 +229,7 @@ class DataObject implements \ArrayAccess
      * @param $key
      * @return mixed|null
      */
-    protected function _getData($key)
+    protected function _getData($key): mixed
     {
         if (isset($this->_data[$key])) {
             return $this->_data[$key];
@@ -232,7 +247,7 @@ class DataObject implements \ArrayAccess
      * @param array $args
      * @return $this
      */
-    public function setDataUsingMethod($key, $args = [])
+    public function setDataUsingMethod($key, array $args = []): static
     {
         $method = 'set' . str_replace('_', '', ucwords($key, '_'));
         $this->{$method}($args);
@@ -249,7 +264,7 @@ class DataObject implements \ArrayAccess
      * @param null $args
      * @return mixed
      */
-    public function getDataUsingMethod($key, $args = null)
+    public function getDataUsingMethod($key, $args = null): mixed
     {
         $method = 'get' . str_replace('_', '', ucwords($key, '_'));
 
@@ -267,7 +282,7 @@ class DataObject implements \ArrayAccess
      * @param string $key
      * @return bool
      */
-    public function hasData($key = ''): bool
+    public function hasData(string $key = ''): bool
     {
         if (empty($key) || !is_string($key)) {
             return !empty($this->_data);
@@ -365,9 +380,9 @@ class DataObject implements \ArrayAccess
      */
     public function convertToXml(
         array $arrAttributes = [],
-        $rootName = 'item',
-        $addOpenTag = false,
-        $addCdata = true
+        string $rootName = 'item',
+        bool $addOpenTag = false,
+        bool $addCdata = true
     ): string
     {
         return $this->toXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
@@ -381,7 +396,7 @@ class DataObject implements \ArrayAccess
      * @param array $keys 需要转化的keys
      * @return mixed
      */
-    public function toJson(array $keys = [])
+    public function toJson(array $keys = []): string
     {
         $data = $this->toArray($keys);
 
@@ -396,7 +411,7 @@ class DataObject implements \ArrayAccess
      * @param array $keys
      * @return mixed
      */
-    public function convertToJson(array $keys = [])
+    public function convertToJson(array $keys = []): string
     {
         return $this->toJson($keys);
     }
@@ -418,7 +433,7 @@ class DataObject implements \ArrayAccess
      * @param string $format
      * @return string|string[]
      */
-    public function toString($format = '')
+    public function toString(string $format = ''): array|string
     {
         if (empty($format)) {
             $result = implode(', ', $this->getData());
@@ -441,6 +456,7 @@ class DataObject implements \ArrayAccess
      * @param $method
      * @param $args
      * @return $this|array|bool|mixed|string|null
+     * @throws \Weline\Framework\Exception\Core
      */
     public function __call($method, $args)
     {
@@ -477,7 +493,7 @@ class DataObject implements \ArrayAccess
      *
      * @return bool
      */
-    public function isEmpty()
+    public function isEmpty(): bool
     {
         if (empty($this->_data)) {
             return true;
@@ -497,7 +513,7 @@ class DataObject implements \ArrayAccess
      * @param $name
      * @return mixed|string
      */
-    protected function _underscore($name)
+    protected function _underscore($name): mixed
     {
         if (isset(self::$_underscoreCache[$name])) {
             return self::$_underscoreCache[$name];
@@ -523,7 +539,7 @@ class DataObject implements \ArrayAccess
      * @param string $quote 引用标志
      * @return string
      */
-    public function serialize($keys = [], $valueSeparator = '=', $fieldSeparator = ' ', $quote = '"'): string
+    public function serialize(array $keys = [], string $valueSeparator = '=', string $fieldSeparator = ' ', string $quote = '"'): string
     {
         $data = [];
         if (empty($keys)) {
@@ -548,7 +564,7 @@ class DataObject implements \ArrayAccess
      * @param array $objects
      * @return array|string
      */
-    public function debug($data = null, &$objects = [])
+    public function debug($data = null, array &$objects = []): array|string
     {
         if ($data === null) {
             $hash = spl_object_hash($this);

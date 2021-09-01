@@ -14,17 +14,17 @@ namespace Weline\Framework\Database\test\ModelTest;
 class WelineModel extends \Weline\Framework\Database\Model
 {
 
-    function providerTable(): string
+    function provideTable(): string
+    {
+        return 'weline';
+    }
+
+    function providePrimaryField(): string
     {
         return '';
     }
 
-    function providerPrimaryField(): string
-    {
-        return '';
-    }
-
-    function providerFields(): array
+    function provideFields(): array
     {
         return [];
     }

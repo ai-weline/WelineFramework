@@ -30,6 +30,7 @@ abstract class Query implements QueryInterface
     const attr_JOIN = 'joins';
     const attr_FIELD = 'fields';
     const attr_UPDATE = 'updates';
+    const attr_SINGLE_UPDATE = 'single_updates';
     const attr_WHERE = 'wheres';
     const attr_BOUND_VALUE = 'bound_values';
     const attr_LIMIT = 'limit';
@@ -45,6 +46,7 @@ abstract class Query implements QueryInterface
         self::attr_JOIN => array(),
         self::attr_FIELD => '*',
         self::attr_UPDATE => array(),
+        self::attr_SINGLE_UPDATE => array(),
         self::attr_WHERE => array(),
         self::attr_BOUND_VALUE => array(),
         self::attr_LIMIT => '',
@@ -58,6 +60,7 @@ abstract class Query implements QueryInterface
         self::attr_JOIN => array(),
         self::attr_FIELD => '*',
         self::attr_UPDATE => array(),
+        self::attr_SINGLE_UPDATE => array(),
         self::attr_WHERE => array(),
         self::attr_BOUND_VALUE => array(),
         self::attr_LIMIT => '',
@@ -72,6 +75,7 @@ abstract class Query implements QueryInterface
     private array $insert = array();
     private array $joins = array();
     private string $fields = '*';
+    private array $single_updates = array();
     private array $updates = array();
     private array $wheres = array();
     private array $bound_values = array();
@@ -117,20 +121,24 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function update(array $data, string $condition_field = 'id'): QueryInterface
+    function update(array|string $field, int|string $value_or_condition_field = 'id'): QueryInterface
     {
-        if (empty($data)) {
+        if (empty($field)) {
             throw new DbException(__('更新异常，不可更新空数据！'));
         }
-        $data = $this->parserFiledValue($data);
-        // 设置数据更新依赖条件主键
-        if ($this->identity_field !== $condition_field) {
-            $this->identity_field = $condition_field;
-        }
-        if (is_string(array_key_first($data))) {
-            $this->updates[] = $data;
+        # 单条记录更新
+        if (is_string($field)) {
+            $this->single_updates[$field] = $value_or_condition_field;
         } else {
-            $this->updates = $data;
+            // 设置数据更新依赖条件主键
+            if ($this->identity_field !== $value_or_condition_field) {
+                $this->identity_field = $value_or_condition_field;
+            }
+            if (is_string(array_key_first($field))) {
+                $this->updates[] = $field;
+            } else {
+                $this->updates = $field;
+            }
         }
         $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
@@ -172,15 +180,9 @@ abstract class Query implements QueryInterface
                 $this->checkWhereArray($where_array, $f_key);
                 # 检测条件数组 检测第二个元素必须是限定的 条件操作符
                 $this->checkConditionString($where_array);
-                if (isset($where_array[2]) && is_string($where_array[2])) {
-                    $where_array[2] = "'{$where_array[2]}'";
-                }
                 $this->wheres[] = $where_array;
             }
         } else {
-            if (is_string($value)) {
-                $value = "'{$value}'";
-            }
             if ($value) {
                 $where_array = [$field, $condition, $value, $where_logic];
                 # 检测条件数组 下角标 必须为数字
@@ -211,6 +213,7 @@ abstract class Query implements QueryInterface
 
     function find(): QueryInterface
     {
+        $this->limit(1, 0);
         $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         return $this;
@@ -243,31 +246,31 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function fetch(): array|bool
+    function fetch(string $model_class = ''): mixed
     {
         $result = $this->PDOStatement->execute($this->bound_values);
-        $data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
-        if ($result && $data) {
-            switch ($this->fetch_type) {
-                case 'find':
-                    if (isset($data[0])) {
-                        // FIXME 处理主键数字字段变成字符串返回的问题
-                        $identity_value = $data[0][$this->identity_field];
-                        $data[0][$this->identity_field] = is_numeric($identity_value) ? (int)$identity_value : $identity_value;
-                        $data = $data[0];
-                    }
-                    break;
-                case 'insert':
-                    $data = $this->clearQuery()->query('SELECT LAST_INSERT_ID();')->fetch();
-                    break;
-                case 'delete':
-                case 'select':
-                case 'update':
-                case 'query':
-                default:
-                    break;
-            }
-            return $data;
+
+        if ($model_class) {
+            $data = $this->PDOStatement->fetchObject($model_class);
+        } else {
+            $data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
+        }
+        if (is_object($data)) return $data;
+        switch ($this->fetch_type) {
+            case 'find':
+                $result = array_shift($data);
+                break;
+            case 'insert':
+                $result = $this->clearQuery()->query('SELECT LAST_INSERT_ID();')->fetch();
+                break;
+            case 'query':
+            case 'select':
+                $result = $data;
+                break;
+            case 'delete':
+            case 'update':
+            default:
+                break;
         }
         $this->fetch_type = '';
         return $result;
@@ -328,16 +331,23 @@ abstract class Query implements QueryInterface
         $this->linker->getLink()->commit();
     }
 
-    public function getLastSql(): string
+    public function getLastSql(bool $format = true): string
     {
         foreach ($this->bound_values as $where_key => $wheres_value) {
-            $this->sql = str_replace($where_key, (string)$wheres_value, $this->sql);
+            $wheres_value = "'{$wheres_value}'";
+            $this->sql = str_replace($where_key, $wheres_value, $this->sql);
         }
-        return \SqlFormatter::format($this->sql);
+        if ($format) {
+            return \SqlFormatter::format($this->sql);
+        }
+        return $this->sql;
     }
 
-    public function getPrepareSql(): string
+    public function getPrepareSql(bool $format = true): string
     {
-        return \SqlFormatter::format($this->sql);
+        if ($format) {
+            return \SqlFormatter::format($this->sql);
+        }
+        return $this->sql;
     }
 }

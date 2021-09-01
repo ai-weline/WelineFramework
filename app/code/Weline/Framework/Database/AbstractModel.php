@@ -52,9 +52,7 @@ abstract class AbstractModel extends DataObject
 {
     protected string $table = '';
     private LinkerFactory $linker;
-    private CacheInterface $cache;
-    public string $suffix;
-    public bool $have_suffix = true;
+    public string $suffix = '';
     public string $primary_key = 'id';
     public array $fields = [];
 
@@ -68,13 +66,13 @@ abstract class AbstractModel extends DataObject
      */
     public function __init()
     {
+        # 类属性
         $this->linker = ObjectManager::getInstance(DbManager::class . 'Factory');
         $this->suffix = $this->linker->getConfigProvider()->getPrefix();
-        $this->cache = ObjectManager::getInstance(DbCache::class . 'Factory');
         # 模型属性
-        $this->table = $this->providerTable()?:$this->processTable();
-        $this->primary_key = $this->providerPrimaryField() ?: $this->primary_key;
-        $this->fields = $this->providerFields() ?: $this->fields;
+        $this->table = $this->provideTable() ?: $this->processTable();
+        $this->primary_key = $this->providePrimaryField() ?: $this->primary_key;
+        $this->fields = $this->provideFields() ?: $this->fields;
     }
 
     /**
@@ -92,7 +90,7 @@ abstract class AbstractModel extends DataObject
             $class_file_name_arr = explode('\\', $this::class);
             $class_file_name = array_pop($class_file_name_arr);
             $table_name = str_replace('Model', '', $class_file_name);
-            $this->table = ($this->have_suffix ? $this->suffix : '') . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
+            $this->table = $this->suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
         }
         return $this->table;
     }
@@ -106,9 +104,46 @@ abstract class AbstractModel extends DataObject
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function getQuery(): QueryInterface
+    public function getQuery(bool $keep_condition = false): QueryInterface
     {
+        if ($keep_condition) {
+            return $this->linker->getQuery()->table($this->table)->identity($this->primary_key);
+        }
         return $this->linker->getQuery()->clearQuery()->table($this->table)->identity($this->primary_key);
+    }
+
+    /**
+     * @DESC         |读取当前模型的数据
+     * 如果只给一个参数则当做读取主键的值
+     * 如果给定一个字段，那么必填第二个参数，当做这个字段的值
+     *
+     * 参数区：
+     *
+     * @param int|string $field_or_pk_value 字段或者主键的值
+     * @param null $value 字段的值，只读取主键就不填
+     * @return mixed
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\Exception\Core
+     */
+    public function load(int|string $field_or_pk_value, $value = null): AbstractModel
+    {
+        // 加载之前
+        $this->load_before();
+        // 清空之前的数据
+        $this->clearDataObject();
+        // load之前事件
+        $this->getEvenManager()->dispatch($this->processTable() . '_model_load_before', ['model' => $this]);
+        if (is_null($value)) {
+            $data = $this->getQuery()->where($this->primary_key, $field_or_pk_value)->find()->fetch();
+        } else {
+            $data = $this->getQuery()->where($field_or_pk_value, $value)->find()->fetch();
+        }
+        if (is_array($data)) $this->setData($data);
+        // load之之后事件
+        $this->getEvenManager()->dispatch($this->processTable() . '_model_load_after', ['model' => $this]);
+        // 加载之后
+        $this->load_after();
+        return $this;
     }
 
     /**
@@ -136,41 +171,6 @@ abstract class AbstractModel extends DataObject
     {
         return $this->setData($this->primary_key, $primary_id);
     }
-
-    /**
-     * @DESC         |读取当前模型的数据
-     * 如果只给一个参数则当做读取主键的值
-     * 如果给定一个字段，那么必填第二个参数，当做这个字段的值
-     *
-     * 参数区：
-     *
-     * @param int|string $field_or_pk_value 字段或者主键的值
-     * @param null $value 字段的值，只读取主键就不填
-     * @return mixed
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\Exception\Core
-     */
-    public function load(int|string $field_or_pk_value, $value = null): AbstractModel
-    {
-        // 清空之前的数据
-        $this->unsetData();
-        // 加载之前
-        $this->load_before();
-        // load之前事件
-        $this->getEvenManager()->dispatch($this->processTable() . '_model_load_before', ['model' => $this]);
-        if (empty($value)) {
-            $data = $this->getQuery()->where($this->primary_key, $field_or_pk_value)->find()->fetch();
-        } else {
-            $data = $this->getQuery()->where($field_or_pk_value, $value)->find()->fetch();
-        }
-        if (is_array($data)) $this->setData($data);
-        // load之之后事件
-        $this->getEvenManager()->dispatch($this->processTable() . '_model_load_after', ['model' => $this]);
-        // 加载之后
-        $this->load_after();
-        return $this;
-    }
-
 
     /**
      * @DESC         |载入前
@@ -217,10 +217,12 @@ abstract class AbstractModel extends DataObject
         $this->getQuery()->beginTransaction();
         try {
             // 保存前才检查 是否已经存在
-            if ($old_id == $this->getId()) {
+            if ($old_id && $old_id == $this->getId()) {
                 $save_result = $this->getQuery()->where($this->primary_key, $old_id)->update($this->getData())->fetch();
             } else {
-                $save_result = $this->getQuery()->insert($data)->fetch();
+                $save_result = $this->getQuery()->insert($this->getData())->fetch();
+                $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                $this->setData($this->primary_key,$save_result );
             }
             $this->getQuery()->commit();
         } catch (\Exception $exception) {
@@ -295,20 +297,6 @@ abstract class AbstractModel extends DataObject
     }
 
     /**
-     * @DESC          # 清空数据
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/8/30 21:04
-     * 参数区：
-     * @return AbstractModel
-     */
-    function clearData(): AbstractModel
-    {
-        return $this->setData(array());
-    }
-
-    /**
      * @DESC         |访问不存在的方法时，默认为查询
      *
      * 参数区：
@@ -320,37 +308,17 @@ abstract class AbstractModel extends DataObject
      */
     function __call($method, $args)
     {
-        // 判断是查询方法
-        $cache_key = 'query_methods';
-        $query_funcs = $this->cache->get($cache_key);
-        if (empty($query_funcs)) {
-            $query_funcs = get_class_methods(QueryInterface::class);
-            unset($query_funcs['fetch']);
-            $this->cache->set($cache_key, $query_funcs);
-        }
         // 模型查询
-        if (in_array($method, $query_funcs)) {
+        if (in_array($method, get_class_methods(QueryInterface::class))) {
+            if ('fetch' === $method) {
+                $args[] = $this::class;
+                p();
+            }
             return $this->linker->getQuery()->$method(... $args);
         }
         /**
          * 重载方法
          */
         return parent::__call($method, $args);
-    }
-
-    /**
-     * @DESC          # 是否有前缀
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/8/26 20:56
-     * 参数区：
-     * @param bool $have_suffix
-     * @return AbstractModel
-     */
-    protected function setHaveSuffix(bool $have_suffix): static
-    {
-        $this->have_suffix = $have_suffix;
-        return $this;
     }
 }

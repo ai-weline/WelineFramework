@@ -59,8 +59,9 @@ class ModelTest extends TestCore
     }
     function testUpdate()
     {
-        $this->model->find(6);
-        p($this->model->update(['stores'=>767])->fetch());
+        $this->model->load('6');
+        p($this->model->getData(),true);
+        p($this->model->save(['stores'=>777]));
     }
 
 }

@@ -8,10 +8,10 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Database;
+namespace Weline\Framework\Database\Exception;
 
 
-abstract class Model extends AbstractModel implements ModelInterface
+class QueryException extends \Weline\Framework\Exception\Core
 {
 
 }

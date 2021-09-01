@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace Weline\Framework\Database\Linker\Query;
 
 
+use Weline\Framework\Database\Exception\ModelException;
+use Weline\Framework\Database\Exception\QueryException;
 use Weline\Framework\Database\Exception\SqlParserException;
 use Weline\Framework\Database\LinkerFactory;
 use Weline\Framework\Cache\CacheInterface;
@@ -110,8 +112,9 @@ trait QueryTrait
     {
         $conditions = [
             '>',
-            '>=',
             '<',
+            '>=',
+            '!=',
             '=<',
             '<>',
             'like',
@@ -165,7 +168,7 @@ trait QueryTrait
                     default:
                         $param = ':' . trim($where[0], '`');
                         $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
-                        # 处理别名
+                        # 处理带别名的参数键
                         $param = str_replace('.', '__', $param) . $key;
                         $this->bound_values[$param] = (string)$where[2];
                         $where[2] = $param;
@@ -200,9 +203,6 @@ trait QueryTrait
                 $values = rtrim($values, ',');
                 $sql = "INSERT INTO {$this->table} {$this->fields} VALUES {$values}";
                 break;
-            case 'select' :
-                $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres} {$order} {$this->additional_sql} {$this->limit}";
-                break;
             case 'delete' :
                 $sql = "DELETE FROM {$this->table} {$wheres} {$this->additional_sql}";
                 break;
@@ -220,41 +220,56 @@ trait QueryTrait
                 if (empty($wheres)) {
                     throw new DbException(__('请设置更新条件：第一种方式，->where($condition)设置，第二种方式，更新数据中包含条件值（默认为字段id,可自行设置->update($arg1,$arg2)第二参数指定根据数组中的某个字段值作为依赖条件更新。）'));
                 }
-                $updates = '';
-                # 存在$identity_values 表示多维数组更新
-                if ($identity_values) {
-                    $keys = array_keys(current($this->updates));
-                    foreach ($keys as $column) {
-                        $updates .= sprintf("`%s` = CASE `%s` \n", $column, $this->identity_field);
-                        foreach ($this->updates as $update_key => $line) {
-                            # 主键值
-                            $update_key += 1;
-                            $identity_field_column_key = ":{$this->identity_field}_{$column}_key_{$update_key}";
-                            $this->bound_values[$identity_field_column_key] = $line[$this->identity_field];
 
-                            # 更新键值
-                            $identity_field_column_value = ":update_{$column}_value_{$update_key}";
-                            $this->bound_values[$identity_field_column_value] = $line[$column];
-                            # 组装
-                            $updates .= sprintf("WHEN %s THEN %s ", $identity_field_column_key, $identity_field_column_value);
+                # 配置更新语句
+                $updates = '';
+                # 多条更新
+                if ($this->updates) {
+                    # 存在$identity_values 表示多维数组更新
+                    if ($identity_values) {
+                        $keys = array_keys(current($this->updates));
+                        foreach ($keys as $column) {
+                            $updates .= sprintf("`%s` = CASE `%s` \n", $column, $this->identity_field);
+                            foreach ($this->updates as $update_key => $line) {
+                                # 主键值
+                                $update_key += 1;
+                                $identity_field_column_key = ":{$this->identity_field}_{$column}_key_{$update_key}";
+                                $this->bound_values[$identity_field_column_key] = $line[$this->identity_field];
+
+                                # 更新键值
+                                $identity_field_column_value = ":update_{$column}_value_{$update_key}";
+                                $this->bound_values[$identity_field_column_value] = $line[$column];
+                                # 组装
+                                $updates .= sprintf("WHEN %s THEN %s ", $identity_field_column_key, $identity_field_column_value);
 //                            $updates .= sprintf("WHEN '%s' THEN '%s' \n", $line[$this->identity_field], $identity_field_column_value);
+                            }
+                            $updates .= "END,";
                         }
-                        $updates .= "END,";
+                    } else { # 普通单条更新
+                        if (1 < count($this->updates)) {
+                            throw new SqlParserException(__('更新条数大于一条时请使用示例更新：$query->table("demo")->identity("id")->update(["id"=>1,"name"=>"测试1"])->update(["id"=>2,"name"=>"测试2"])或者update中指定条件字段id：$query->table("demo")->update([["id"=>1,"name"=>"测试1"],["id"=>2,"name"=>"测试2"]],"id")'));
+                        }
+                        foreach ($this->updates[0] as $update_field => $field_value) {
+                            $update_field = $this->parserFiled($update_field);
+                            $updates .= "$update_field = $field_value,";
+                        }
                     }
-                } else { # 普通单条更新
-                    if (1 < count($this->updates)) {
-                        throw new SqlParserException(__('更新条数大于一条时请使用示例更新：$query->table("demo")->identity("id")->update(["id"=>1,"name"=>"测试1"])->update(["id"=>2,"name"=>"测试2"])或者update中指定条件字段id：$query->table("demo")->update([["id"=>1,"name"=>"测试1"],["id"=>2,"name"=>"测试2"]],"id")'));
-                    }
-                    foreach ($this->updates[0] as $update_field => $field_value) {
+                } else if ($this->single_updates) {
+                    foreach ($this->single_updates as $update_field => $update_value) {
                         $update_field = $this->parserFiled($update_field);
-                        $updates .= "$update_field = $field_value,";
+                        $updates .= "$update_field=$update_value,";
                     }
+                } else {
+                    throw new QueryException(__('无法解析更新数据！多记录更新数据：%1，单记录更新数据：%2', [var_export($this->updates, true), var_export($this->single_updates, true)]));
                 }
                 $updates = rtrim($updates, ',');
+
                 $sql = "UPDATE {$this->table} {$this->table_alias} SET {$updates} {$wheres} {$this->additional_sql} ";
                 break;
+            case 'find':
+            case 'select' :
             default :
-                $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres} {$order} {$this->additional_sql} LIMIT 1";
+                $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres} {$order} {$this->additional_sql} {$this->limit}";
                 break;
         };
         # 预置sql
@@ -286,34 +301,6 @@ trait QueryTrait
             }
         }
         return $field;
-    }
-
-    /**
-     * @DESC          # 解析数组键值
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/8/25 22:34
-     * 参数区：
-     * @param array $data 解析数据：一维数组值 或者 二维数组值
-     * @return array
-     */
-    function parserFiledValue(array &$data): array
-    {
-        foreach ($data as &$item) {
-            if (is_array($item)) {
-                foreach ($item as &$it) {
-                    if (is_string($it)) {
-                        $item = "'$it'";
-                    }
-                }
-            } else {
-                if (is_string($item)) {
-                    $item = "'$item'";
-                }
-            }
-        }
-        return $data;
     }
 
     /**

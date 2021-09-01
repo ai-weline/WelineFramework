@@ -49,8 +49,11 @@ class Installer implements RegisterInterface
      * @param $data
      * @param string $version
      * @param string $description
+     * @return string
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\Exception\Core
      */
-    public function register($data, string $version = '', string $description = '')
+    public function register($data, string $version = '', string $description = ''): string
     {
         // 参数检查
         if (!isset($data['name']) || !isset($data['path'])) {
@@ -59,7 +62,7 @@ class Installer implements RegisterInterface
 
         // 检查主题是否已经安装
         $this->welineTheme->load('name', $data['name']);
-//        $this->welineTheme->where('name=:name', ['name'=>$data['name']])->find();
+//        pp($data['name']);
         $action_string = __('安装');
         if ($this->welineTheme->getId()) {
             if ($this->welineTheme->getPath() !== $data['path'] . DIRECTORY_SEPARATOR) {
@@ -90,9 +93,8 @@ class Installer implements RegisterInterface
 
             $this->printing->success($data['name'] . __(" 主题{$action_string}完成!"));
         } catch (\Exception $exception) {
-            $this->printing->success($data['name'] . __(" 主题{$action_string}异常!"));
+            $this->printing->error($data['name'] . __(" 主题{$action_string}异常!"));
             $this->printing->success($exception->getMessage());
-
             throw  $exception;
         }
 

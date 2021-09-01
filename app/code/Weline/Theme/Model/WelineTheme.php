@@ -11,11 +11,9 @@ namespace Weline\Theme\Model;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Theme\Cache\ThemeCache;
-use Weline\Theme\Setup\Install;
 
 class WelineTheme extends Model
 {
@@ -33,7 +31,7 @@ class WelineTheme extends Model
 
     const filed_CREATE_TIME = 'create_time';
 
-    protected $pk = self::filed_ID;
+    protected string $pk = self::filed_ID;
 
 //    protected $table = Install::table_THEME; # 如果需要设置特殊表名 需要加前缀
 
@@ -42,7 +40,7 @@ class WelineTheme extends Model
      */
     private CacheInterface $themeCache;
 
-    public function __construct(
+     public function __construct(
         array $data = []
     )
     {
@@ -69,17 +67,18 @@ class WelineTheme extends Model
     public function getActiveTheme(): static
     {
         if ($theme = $this->themeCache->get('theme')) {
-            return $theme;
+            return $this->setData($theme);
         }
         $this->load(self::filed_IS_ACTIVE, 1);
+
         if ($this->getId()) {
-            $this->themeCache->set('theme', $this, static::cache_TIME);
+            $this->themeCache->set('theme', $this->getData(), static::cache_TIME);
             Env::getInstance()->setConfig('theme', $this->getData());
         }
         return $this;
     }
 
-    public function getName_()
+    public function getName()
     {
         return $this->getData(self::filed_NAME);
     }
@@ -153,28 +152,28 @@ class WelineTheme extends Model
      */
     public function save_after()
     {
-        if ($this->isActive()) {
-            $this->where(self::filed_NAME, $this->getName_())
-                ->find();
-            if ($this->getId()) {
-                $this->getDb()
-                    ->query('UPDATE ' . $this->getTable() . ' SET `is_active`=0 WHERE id != ' . $this->getId());
-            }
+        if ($this->isActive() && $this->getId()) {
+            #$this->query('UPDATE ' . $this->getTable() . ' SET `is_active`=0 WHERE id != ' . $this->getId())->fetch();
+            $this->getQuery()
+                ->where(self::filed_IS_ACTIVE, 1)
+                ->where(self::filed_ID, $this->getId(), '!=')
+                ->update(self::filed_IS_ACTIVE,0)
+                ->fetch();
         }
     }
 
-    function providerTable(): string
+    function provideTable(): string
     {
         return '';
     }
 
-    function providerFields(): array
+    function provideFields(): array
     {
         return [];
     }
 
-    function providerPrimaryField(): string
+    function providePrimaryField(): string
     {
-        return '';
+        return 'id';
     }
 }

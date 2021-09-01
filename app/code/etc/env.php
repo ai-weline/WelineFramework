@@ -66,4 +66,14 @@
   'deploy' => 'dev',
   'admin' => 'admin_612e37e14d732',
   'api_admin' => 'api_612e37e14d734',
+  'theme' => 
+  array (
+    'id' => 1,
+    'name' => 'default',
+    'path' => 'Weline\\default',
+    'parent_id' => NULL,
+    'is_active' => '1',
+    'create_time' => '2021-09-01 04:36:49',
+    'update_time' => '2021-09-01 04:36:49',
+  ),
 );

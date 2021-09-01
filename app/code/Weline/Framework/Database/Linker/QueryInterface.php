@@ -63,11 +63,11 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/18 0:20
      * 参数区：
-     * @param string $condition_field 更新条件字段，如果查询设置有表主键则自动使用表主键
-     * @param array $data 更新数据示例：['id'=>1,'name'=>'用户']或者多值更新[['id'=>1,'name'=>'用户1'],['id'=>2,'name'=>'用户2']]
+     * @param array|string $field 更新条件字段，如果查询设置有表主键则自动使用表主键
+     * @param int|string $value_or_condition_field 更新数据示例：['id'=>1,'name'=>'用户']或者多值更新[['id'=>1,'name'=>'用户1'],['id'=>2,'name'=>'用户2']]
      * @return QueryInterface
      */
-    function update(array $data,string $condition_field='id'): QueryInterface;
+    function update(array|string $field, int|string $value_or_condition_field = 'id'): QueryInterface;
 
     /**
      * @DESC          # 表名设置
@@ -212,9 +212,10 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 21:09
      *
-     * @return array|bool
+     * @param string $model_class
+     * @return mixed
      */
-    function fetch(): array|bool;
+    function fetch(string $model_class=''): mixed;
 
     /**
      * @DESC          # 清理特定条件
@@ -290,9 +291,11 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/26 21:42
      * 参数区：
+     * @param bool $format
      * @return string
      */
-    function getLastSql():string;
+    function getLastSql(bool $format = true):string;
+
     /**
      * @DESC          # 读取预编译sql
      *
@@ -300,7 +303,8 @@ interface QueryInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/26 21:42
      * 参数区：
+     * @param bool $format
      * @return string
      */
-    function getPrepareSql():string;
+    function getPrepareSql(bool $format = true):string;
 }
