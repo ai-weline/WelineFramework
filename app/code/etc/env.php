@@ -47,9 +47,20 @@
   'php-cs' => true,
   'db' => 
   array (
-    'default' => 'mysql',
+    'default' => 'frontend',
     'connections' => 
     array (
+      'frontend' => 
+      array (
+        'hostname' => '127.0.0.1',
+        'database' => 'weline',
+        'username' => 'weline',
+        'password' => 'weline',
+        'type' => 'mysql',
+        'hostport' => '3306',
+        'prefix' => 'm_',
+        'charset' => 'utf8',
+      ),
       'mysql' => 
       array (
         'hostname' => '192.168.1.3',
@@ -68,12 +79,12 @@
   'api_admin' => 'api_612e37e14d734',
   'theme' => 
   array (
-    'id' => 1,
-    'name' => 'default',
-    'path' => 'Weline\\default',
+    'id' => '3',
+    'name' => 'test',
+    'path' => 'Weline\\test',
     'parent_id' => NULL,
     'is_active' => '1',
-    'create_time' => '2021-09-01 04:36:49',
-    'update_time' => '2021-09-01 04:36:49',
+    'create_time' => '2021-09-03 19:29:54',
+    'update_time' => '2021-09-03 19:29:54',
   ),
 );

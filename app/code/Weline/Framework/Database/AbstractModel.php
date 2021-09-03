@@ -96,10 +96,25 @@ abstract class AbstractModel extends DataObject
     }
 
     /**
+     * @DESC          # 读取表名
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/3 20:14
+     * 参数区：
+     * @return string
+     */
+    function getTable(): string
+    {
+        return $this->processTable();
+    }
+
+    /**
      * @DESC         |获取数据库基类
      *
      * 参数区：
      *
+     * @param bool $keep_condition
      * @return QueryInterface
      * @throws Exception
      * @throws \ReflectionException
@@ -110,6 +125,20 @@ abstract class AbstractModel extends DataObject
             return $this->linker->getQuery()->table($this->table)->identity($this->primary_key);
         }
         return $this->linker->getQuery()->clearQuery()->table($this->table)->identity($this->primary_key);
+    }
+
+    /**
+     * @DESC          # 获取链接
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/3 19:59
+     * 参数区：
+     * @return LinkerFactory
+     */
+    function getLink(): LinkerFactory
+    {
+        return $this->linker;
     }
 
     /**
@@ -222,7 +251,7 @@ abstract class AbstractModel extends DataObject
             } else {
                 $save_result = $this->getQuery()->insert($this->getData())->fetch();
                 $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
-                $this->setData($this->primary_key,$save_result );
+                $this->setData($this->primary_key, $save_result);
             }
             $this->getQuery()->commit();
         } catch (\Exception $exception) {
@@ -305,16 +334,13 @@ abstract class AbstractModel extends DataObject
      * @param $args
      * @return array|bool|mixed|string|AbstractModel|null
      * @throws \Weline\Framework\Exception\Core
+     * @throws \ReflectionException
      */
     function __call($method, $args)
     {
         // 模型查询
         if (in_array($method, get_class_methods(QueryInterface::class))) {
-            if ('fetch' === $method) {
-                $args[] = $this::class;
-                p();
-            }
-            return $this->linker->getQuery()->$method(... $args);
+            return $this->getQuery()->$method(... $args);
         }
         /**
          * 重载方法

@@ -39,7 +39,7 @@ class Install
         $this->setup    = $setup;
     }
 
-    #[\JetBrains\PhpStorm\ArrayShape(['data' => "array", 'hasErr' => "bool", 'msg' => "string"])] public function run(): array
+    public function run(): array
     {
         // 阻塞等待配置文件写入
         $break      = false;

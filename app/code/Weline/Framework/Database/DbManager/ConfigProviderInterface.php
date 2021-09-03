@@ -17,6 +17,24 @@ namespace Weline\Framework\Database\DbManager;
 interface ConfigProviderInterface
 {
     /**
+     * @DESC         |设置连接名
+     *
+     * 参数区：
+     *
+     * @return string
+     */
+    function getConnectionName():string;
+
+    /**
+     * @DESC         |获取连接名
+     *
+     * 参数区：
+     *
+     * @param string $connection_name
+     * @return ConfigProviderInterface
+     */
+    function setConnectionName(string $connection_name):ConfigProviderInterface;
+    /**
      * @DESC         |设置数据库类型
      *
      * 参数区：
@@ -33,7 +51,7 @@ interface ConfigProviderInterface
      *
      * @return string
      */
-    function getDbType():string;
+    function getDbType():string|null;
 
     /**
      * @DESC         |设置数据库主机

@@ -13,18 +13,19 @@ use Weline\Framework\Database\Model;
 
 class AiwelineHelloWorld extends Model
 {
-    function providerTable(): string
+
+    function provideTable(): string
     {
         return '';
     }
 
-    function providerPrimaryField(): string
+    function providePrimaryField(): string
     {
         return '';
     }
 
-    function providerFields(): array
+    function provideFields(): array
     {
-        return [];
+        return array();
     }
 }

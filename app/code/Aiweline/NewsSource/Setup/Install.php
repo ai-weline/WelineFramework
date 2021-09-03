@@ -32,7 +32,7 @@ class Install implements InstallInterface
         $db = $setup->getDb();
         /**新闻分类表*/
         $printer->warning('安装数据库表：' . self::table_NEWS_CATEGORY);
-        if (! $db->tableExist(self::table_NEWS_CATEGORY)) {
+        if (!$db->tableExist(self::table_NEWS_CATEGORY)) {
             $setup->getDb()->createTable(
                 self::table_NEWS_CATEGORY,
                 '新闻分类表'
@@ -45,7 +45,7 @@ class Install implements InstallInterface
             )->addColumn(
                 'name',
                 Table::column_type_VARCHAR,
-                '60',
+                60,
                 'NOT NULL',
                 '分类名'
             )->addColumn(
@@ -67,7 +67,7 @@ class Install implements InstallInterface
 
         /**新闻来源表*/
         $printer->warning('安装数据库表：' . self::table_NEWS_SOURCE);
-        if (! $db->tableExist(self::table_NEWS_SOURCE)) {
+        if (!$db->tableExist(self::table_NEWS_SOURCE)) {
             $db->createTable(
                 self::table_NEWS_SOURCE,
                 '新闻来源表'
@@ -92,7 +92,7 @@ class Install implements InstallInterface
             )->addColumn(
                 'create_time',
                 Table::column_type_DATETIME,
-                '',
+                0,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '建立时间'
             )->addIndex(
@@ -106,7 +106,7 @@ class Install implements InstallInterface
 
         /**新闻表*/
         $printer->warning('安装数据库表：' . self::table_NEWS);
-        if (! $db->tableExist(self::table_NEWS)) {
+        if (!$db->tableExist(self::table_NEWS)) {
             $foreign_table = $db->getTable(self::table_NEWS_CATEGORY);
             $setup->getDb()->createTable(
                 self::table_NEWS,
@@ -132,31 +132,31 @@ class Install implements InstallInterface
             )->addColumn(
                 'title',
                 Table::column_type_VARCHAR,
-                '60',
+                60,
                 'NOT NULL',
                 '新闻标题'
             )->addColumn(
                 'author',
                 Table::column_type_VARCHAR,
-                '20',
+                20,
                 'NOT NULL',
                 '作者'
             )->addColumn(
                 'abstract',
                 Table::column_type_VARCHAR,
-                '120',
+                120,
                 'NOT NULL',
                 '新闻摘要'
             )->addColumn(
                 'pushtime',
                 Table::column_type_TIMESTAMP,
-                '',
+                0,
                 '',
                 '发布时间'
             )->addColumn(
                 'create_time',
                 Table::column_type_DATETIME,
-                '',
+                0,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '创建时间'
             )->addIndex(
@@ -172,7 +172,7 @@ class Install implements InstallInterface
             )
                 /*外键不支持分区使用，只能舍去分区*/
                 /*->addAdditional(
-                "partition by range(create_time)(
+                    "partition by range(create_time)(
         partition p202007 values less than (TO_DAYS('20200701')),
         partition p202008 values less than (TO_DAYS('20200801')),
         partition p202009 values less than (TO_DAYS('20200901')),
@@ -204,13 +204,13 @@ class Install implements InstallInterface
         partition p202211 values less than (TO_DAYS('20221101')),
         partition p202212 values less than (TO_DAYS('20221201'))
     )"
-            )*/
+                )*/
                 ->create();
         }
 
         /**新闻数据表*/
         $printer->warning('安装数据库表：' . self::table_NEWS_POST);
-        if (! $db->tableExist(self::table_NEWS_POST)) {
+        if (!$db->tableExist(self::table_NEWS_POST)) {
             $foreign_table = $db->getTable(self::table_NEWS);
             $db->createTable(
                 self::table_NEWS_POST,
@@ -230,7 +230,7 @@ class Install implements InstallInterface
             )->addColumn(
                 'create_time',
                 Table::column_type_DATETIME,
-                '',
+                0,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '创建时间'
             )->addIndex(
@@ -240,7 +240,7 @@ class Install implements InstallInterface
             )->addConstraints(
                 "foreign key (post_id) references {$foreign_table}(id) on delete cascade on update cascade,UNIQUE KEY(post_id)"
             )/*->addAdditional(
-            "partition by range(post_id)(
+                "partition by range(post_id)(
     partition p1 values less than (100000),
     partition p2 values less than (200000),
     partition p3 values less than (300000),
@@ -263,12 +263,12 @@ class Install implements InstallInterface
     partition p20 values less than (2000000),
   partition p_end values less than MAXVALUE
 )"
-        )*/ ->create();
+            ) */->create();
         }
 
         /**新闻用户表*/
         $printer->warning('安装数据库表：' . self::table_NEWS_USER);
-        if (! $db->tableExist(self::table_NEWS_USER)) {
+        if (!$db->tableExist(self::table_NEWS_USER)) {
             $db->createTable(
                 self::table_NEWS_USER,
                 '新闻用户表'
@@ -305,19 +305,19 @@ class Install implements InstallInterface
             )->addColumn(
                 'login_time',
                 Table::column_type_DATETIME,
-                '',
+                0,
                 'NULL',
                 '登录时间'
             )->addColumn(
                 'expire_time',
                 Table::column_type_DATETIME,
-                '',
+                0,
                 'NULL',
                 'token过期时间'
             )->addColumn(
                 'create_time',
                 Table::column_type_DATETIME,
-                '',
+                0,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '创建时间'
             )->addIndex(

@@ -35,6 +35,8 @@ use Weline\Framework\Output\Cli\Printing;
  */
 class ConfigProvider extends DataObject implements ConfigProviderInterface
 {
+    public string $connection_name = 'default';
+
     /**
      * @throws Exception
      */
@@ -73,18 +75,31 @@ class ConfigProvider extends DataObject implements ConfigProviderInterface
                 throw new Exception('数据库尚未配置，请安装系统后操作:bin/m system:install');
             }
         }
-        $db_conf['connections'][$db_conf['default']]['db_type'] = $db_conf['default'];
-        return $db_conf['connections'][$db_conf['default']];
+        $connection_name = $db_conf['default'];
+        $this->setConnectionName($connection_name);
+        return $db_conf['connections'][$connection_name];
+    }
+
+
+    function getConnectionName(): string
+    {
+        return $this->connection_name;
+    }
+
+    function setConnectionName($connection_name): ConfigProviderInterface
+    {
+        $this->connection_name = $connection_name;
+        return $this;
     }
 
     function setDbType(string $type): ConfigProviderInterface
     {
-        return $this->setData('db_type', $type);
+        return $this->setData('type', $type);
     }
 
-    function getDbType(): string
+    function getDbType(): string|null
     {
-        return $this->getData('db_type');
+        return $this->getData('type');
     }
 
     function setHostName(string $hostname): ConfigProviderInterface
@@ -164,6 +179,6 @@ class ConfigProvider extends DataObject implements ConfigProviderInterface
 
     function getOptions(): array
     {
-        return $this->getData('options')??[];
+        return $this->getData('options') ?? [];
     }
 }
