@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Weline\DevTool\Setup;
 
 
-use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Database\Db\Ddl\Create;
 use Weline\Framework\Setup\Data;
 
 class Install implements \Weline\Framework\Setup\InstallInterface
@@ -32,19 +32,19 @@ class Install implements \Weline\Framework\Setup\InstallInterface
             $db->createTable(self::table_DEV_DOCUMENT)
                 ->addColumn(
                     'id',
-                    Table::column_type_INTEGER,
+                    Create::column_type_INTEGER,
                     null,
                     'primary key NOT NULL AUTO_INCREMENT',
                     'ID'
                 )->addColumn(
                     'name',
-                    Table::column_type_VARCHAR,
+                    Create::column_type_VARCHAR,
                     60,
                     'NOT NULL',
                     '分类名'
                 )->addColumn(
                     'parent_id',
-                    Table::column_type_INTEGER,
+                    Create::column_type_INTEGER,
                     null,
                     'DEFAULT NULL',
                     '父分类ID'

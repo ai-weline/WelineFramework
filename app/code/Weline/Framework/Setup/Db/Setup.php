@@ -11,41 +11,60 @@ namespace Weline\Framework\Setup\Db;
 
 use PDOException;
 use Weline\Framework\App\Exception;
+use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Database\Db\DdlFactory;
 use Weline\Framework\Database\DbManager;
 use Weline\Framework\Database\DbManager\ConfigProvider;
 
 class Setup extends DbManager
 {
-    private Table $table;
+    private Table $ddl_table;
 
     /**
      * Setup constructor.
      * @param ConfigProvider $configProvider
-     * @param Table $table
+     * @param DdlFactory $ddl_table
+     * @throws Exception
+     * @throws \ReflectionException
      */
     function __construct(
         ConfigProvider $configProvider,
-        Table $table
+        DdlFactory $ddl_table
     )
     {
-        $this->table = $table;
         parent::__construct($configProvider);
+        $this->ddl_table = $ddl_table->create();
     }
 
     /**
-     * @DESC         |方法描述
+     * @DESC         | 创建表
      *
      * 参数区：
      *
      * @param string $table_name
      * @param string $comment
-     * @return Table
+     * @return Table\Create
      */
-    public function createTable(string $table_name, string $comment = ''): Table
+    public function createTable(string $table_name, string $comment = ''): Table\Create
     {
         $table_name = $this->getTable($table_name);
-        return $this->table->createTable($table_name, $comment);
+        return $this->ddl_table->createTable()->createTable($table_name, $comment);
+    }
+
+    /**
+     * @DESC         |修改表
+     *
+     * 参数区：
+     *
+     * @param string $table_name
+     * @param string $comment
+     * @return Table\Alter
+     */
+    public function alterTable(string $table_name, string $comment = ''): Table\Alter
+    {
+        $table_name = $this->getTable($table_name);
+        return $this->ddl_table->alterTable()->forTable($table_name, $comment);
     }
 
     /**
@@ -75,7 +94,7 @@ class Setup extends DbManager
         $table = $this->getTable($table);
 
         try {
-            $this->table->getLinker()->query("desc {$table}");
+            $this->query("desc {$table}");
             return true;
         } catch (PDOException $exception) {
             return false;
@@ -95,7 +114,6 @@ class Setup extends DbManager
         if (!strstr($name, $this->getTablePrefix())) {
             $name = $this->getTablePrefix() . $name;
         }
-
         return $name;
     }
 
@@ -107,17 +125,15 @@ class Setup extends DbManager
      * @param string $tableName
      * @return bool
      */
-    public function dropTable(string $tableName)
+    public function dropTable(string $tableName): bool
     {
         if (!strstr($tableName, $this->getTablePrefix())) {
             $tableName = $this->getTable($tableName);
         }
-
         try {
             $this->query('drop table ' . $tableName);
-
             return true;
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return false;
         }
     }
@@ -131,9 +147,12 @@ class Setup extends DbManager
      * 参数区：
      * @param string $sql
      * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\Database\Exception\LinkException
      */
-    function query(string $sql)
+    function query(string $sql): mixed
     {
-        return $this->table->getLinker()->query($sql);
+        return $this->getLinker()->query($sql)->fetch();
     }
 }

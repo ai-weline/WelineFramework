@@ -12,6 +12,7 @@ namespace Weline\Framework\Database;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Cache\DbCache;
+use Weline\Framework\Database\Db\Ddl\Create;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\Database\Linker\QueryInterface;
@@ -72,7 +73,6 @@ abstract class AbstractModel extends DataObject
         # 模型属性
         $this->table = $this->provideTable() ?: $this->processTable();
         $this->primary_key = $this->providePrimaryField() ?: $this->primary_key;
-        $this->fields = $this->provideFields() ?: $this->fields;
     }
 
     /**

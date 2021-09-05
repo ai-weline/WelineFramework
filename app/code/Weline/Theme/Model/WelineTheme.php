@@ -176,4 +176,9 @@ class WelineTheme extends Model
     {
         return 'id';
     }
+
+    function setup(): void
+    {
+        // TODO: Implement setup() method.
+    }
 }

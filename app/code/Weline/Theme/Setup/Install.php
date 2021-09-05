@@ -10,7 +10,7 @@
 namespace Weline\Theme\Setup;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Database\Db\Ddl\Create;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data;
 use Weline\Framework\Setup\InstallInterface;
@@ -33,48 +33,48 @@ class Install implements InstallInterface
                 '主题表'
             )->addColumn(
                 'id',
-                Table::column_type_INTEGER,
+                Create::column_type_INTEGER,
                 11,
                 'primary key NOT NULL AUTO_INCREMENT',
                 'ID'
             )->addColumn(
                 'name',
-                Table::column_type_VARCHAR,
+                Create::column_type_VARCHAR,
                 '60',
                 'UNIQUE NOT NULL ',
                 '主题名'
             )->addColumn(
                 'path',
-                Table::column_type_VARCHAR,
+                Create::column_type_VARCHAR,
                 '128',
                 'UNIQUE NOT NULL ',
                 '主题路径'
             )->addColumn(
                 'parent_id',
-                Table::column_type_INTEGER,
+                Create::column_type_INTEGER,
                 11,
                 '',
                 '父级主题'
             )->addColumn(
                 'is_active',
-                Table::column_type_INTEGER,
+                Create::column_type_INTEGER,
                 11,
                 '',
                 '是否激活'
             )->addColumn(
                 'create_time',
-                Table::column_type_DATETIME,
+                Create::column_type_DATETIME,
                 null,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '安装时间'
             )->addColumn(
                 'update_time',
-                Table::column_type_DATETIME,
+                Create::column_type_DATETIME,
                 null,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '更新时间'
             )->addIndex(
-                Table::index_type_DEFAULT,
+                Create::index_type_DEFAULT,
                 'parent_id',
                 'parent_id'
             )->create();

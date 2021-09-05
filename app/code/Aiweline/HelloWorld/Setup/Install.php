@@ -9,7 +9,7 @@
 
 namespace Aiweline\HelloWorld\Setup;
 
-use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Database\Db\Ddl\Create;
 use Weline\Framework\Setup\Data;
 use Weline\Framework\Setup\InstallInterface;
 
@@ -34,13 +34,13 @@ class Install implements InstallInterface
                 '开发测试'
             )->addColumn(
                 'entity_id',
-                Table::column_type_INTEGER,
+                Create::column_type_INTEGER,
                 11,
                 'primary key NOT NULL AUTO_INCREMENT',
                 '实例ID'
             )->addColumn(
                 'demo',
-                Table::column_type_TEXT,
+                Create::column_type_TEXT,
                 256,
                 'NOT NULL',
                 '测试'

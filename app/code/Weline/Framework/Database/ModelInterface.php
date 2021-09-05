@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace Weline\Framework\Database;
 
 
+use Weline\Framework\Database\Db\Ddl\Create;
+
 interface ModelInterface
 {
 
@@ -26,7 +28,7 @@ interface ModelInterface
     function provideTable():string;
 
     /**
-     * @DESC          # 提供主键字段
+     * @DESC          # 提供主键字段 【如果为空 默认为 id 】
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
@@ -37,13 +39,13 @@ interface ModelInterface
     function providePrimaryField():string;
 
     /**
-     * @DESC          # 提供模型字段
+     * @DESC          # 开发升级方法 【仅有开发模式会触发】
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/8/26 21:17
+     * @DateTime: 2021/9/3 21:12
      * 参数区：
-     * @return array
+     * @return void
      */
-    function provideFields():array;
+    function setup():void;
 }

@@ -16,9 +16,11 @@ namespace Weline\Framework\Database;
 
 use PDO;
 use PDOException;
+use Weline\Framework\Database\Api\Linker\AlterInterface;
+use Weline\Framework\Database\Api\Linker\QueryInterface;
+
 use Weline\Framework\Database\DbManager\ConfigProvider;
 use Weline\Framework\Database\Exception\LinkException;
-use Weline\Framework\Database\Linker\QueryInterface;
 use Weline\Framework\Manager\ObjectManager;
 
 class LinkerFactory
@@ -26,6 +28,7 @@ class LinkerFactory
     protected ?PDO $linker = null;
     protected ConfigProvider $configProvider;
     protected ?QueryInterface $query = null;
+    protected ?AlterInterface $alter = null;
 
     /**
      * Linker 初始函数...
@@ -152,17 +155,49 @@ class LinkerFactory
         return $this->query;
     }
 
+    /**
+     * @DESC          # 查询
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/5 22:40
+     * 参数区：
+     * @param string $sql
+     * @return QueryInterface
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
+     */
     function query(string $sql): QueryInterface
     {
         return $this->getQuery()->query($sql);
     }
+    /**
+     * @DESC          # 获取修改者
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/5 21:11
+     * 参数区：
+     * @return AlterInterface
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
+     */
+    public function getAlter(): AlterInterface
+    {
+        if (is_null($this->alter)) {
+            $this->alter = ObjectManager::getInstance($this->getAdapter('alert'));
+        }
+        return $this->alter;
+    }
 
     /**
      * 获取适配器
+     * @param string $driver_type
      * @return string
      */
-    function getAdapter(): string
+    function getAdapter(string $driver_type='Query'): string
     {
-        return 'Weline\\Framework\\Database\\Linker\\Query\\Adapter\\' . ucfirst($this->configProvider->getDbType());
+        $driver_type = ucfirst($driver_type);
+        return "Weline\\Framework\\Database\\Linker\\{$driver_type}\\Adapter\\" . ucfirst($this->configProvider->getDbType());
     }
 }

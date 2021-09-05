@@ -35,6 +35,10 @@ class DbManager
         $this->configProvider = $configProvider;
     }
 
+    function __init(){
+        $this->create();
+    }
+
     /**
      * @DESC         |设置数据库配置
      *

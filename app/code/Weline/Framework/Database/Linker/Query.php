@@ -13,61 +13,13 @@ namespace Weline\Framework\Database\Linker;
 
 use PDO;
 use PDOStatement;
+use Weline\Framework\Database\Api\Linker\QueryInterface;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Linker\Query\QueryTrait;
-use Weline\Framework\Database\AbstractModel;
-use Weline\Framework\Exception\Core;
-use function PHPUnit\Framework\isInstanceOf;
 
 abstract class Query implements QueryInterface
 {
     use QueryTrait;
-
-    const attr_IDENTITY_FIELD = 'identity_field';
-    const attr_TABLE = 'table';
-    const attr_TABLE_ALIA = 'table_alias';
-    const attr_INSERT = 'insert';
-    const attr_JOIN = 'joins';
-    const attr_FIELD = 'fields';
-    const attr_UPDATE = 'updates';
-    const attr_SINGLE_UPDATE = 'single_updates';
-    const attr_WHERE = 'wheres';
-    const attr_BOUND_VALUE = 'bound_values';
-    const attr_LIMIT = 'limit';
-    const attr_ORDER = 'order';
-    const attr_SQL = 'sql';
-    const attr_ADDITIONAL_SQL = 'additional_sql';
-
-    const init_vars = [
-        self::attr_IDENTITY_FIELD => 'id',
-        self::attr_TABLE => '',
-        self::attr_TABLE_ALIA => 'main_table',
-        self::attr_INSERT => array(),
-        self::attr_JOIN => array(),
-        self::attr_FIELD => '*',
-        self::attr_UPDATE => array(),
-        self::attr_SINGLE_UPDATE => array(),
-        self::attr_WHERE => array(),
-        self::attr_BOUND_VALUE => array(),
-        self::attr_LIMIT => '',
-        self::attr_ORDER => array(),
-        self::attr_SQL => '',
-        self::attr_ADDITIONAL_SQL => '',
-    ];
-
-    const query_vars = [
-        self::attr_INSERT => array(),
-        self::attr_JOIN => array(),
-        self::attr_FIELD => '*',
-        self::attr_UPDATE => array(),
-        self::attr_SINGLE_UPDATE => array(),
-        self::attr_WHERE => array(),
-        self::attr_BOUND_VALUE => array(),
-        self::attr_LIMIT => '',
-        self::attr_ORDER => array(),
-        self::attr_SQL => '',
-        self::attr_ADDITIONAL_SQL => '',
-    ];
 
     private string $identity_field = 'id';
     private string $table = '';
@@ -235,6 +187,7 @@ abstract class Query implements QueryInterface
 
     function query(string $sql): QueryInterface
     {
+        $this->sql = $sql;
         $this->fetch_type = __FUNCTION__;
         $this->PDOStatement = $this->linker->getLink()->query($sql);
         return $this;
