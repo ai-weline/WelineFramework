@@ -11,6 +11,7 @@ namespace Aiweline\NewsSource\Model;
 
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Setup\Db\ModelSetup;
 
 class AiwelineNewsPost extends AbstractModel
 {
@@ -40,5 +41,20 @@ class AiwelineNewsPost extends AbstractModel
         } catch (Exception $exception) {
             return false;
         }
+    }
+
+    function provideTable(): string
+    {
+        return '';
+    }
+
+    function providePrimaryField(): string
+    {
+        return '';
+    }
+
+    function setup(ModelSetup $setup): void
+    {
+        // TODO: Implement setup() method.
     }
 }

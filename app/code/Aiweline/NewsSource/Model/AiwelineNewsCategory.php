@@ -10,6 +10,7 @@
 namespace Aiweline\NewsSource\Model;
 
 use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Setup\Db\ModelSetup;
 
 class AiwelineNewsCategory extends AbstractModel
 {
@@ -29,5 +30,20 @@ class AiwelineNewsCategory extends AbstractModel
         $exist_category = $this->where('name', '=', $category)->find();
 
         return $exist_category['id'] ?? $this->insert(['name' => $category]);
+    }
+
+    function provideTable(): string
+    {
+        return '';
+    }
+
+    function providePrimaryField(): string
+    {
+        return '';
+    }
+
+    function setup(ModelSetup $setup): void
+    {
+        // TODO: Implement setup() method.
     }
 }

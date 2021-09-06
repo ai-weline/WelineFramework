@@ -13,6 +13,8 @@ use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Setup\Db\ModelSetup;
+use Weline\Framework\Setup\Db\Setup;
 use Weline\Theme\Cache\ThemeCache;
 
 class WelineTheme extends Model
@@ -177,7 +179,7 @@ class WelineTheme extends Model
         return 'id';
     }
 
-    function setup(): void
+    function setup(ModelSetup $setup): void
     {
         // TODO: Implement setup() method.
     }

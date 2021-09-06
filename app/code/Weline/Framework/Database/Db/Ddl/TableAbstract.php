@@ -22,6 +22,9 @@ abstract class TableAbstract implements TableInterface
     // 数据字段
     protected string $table;
 
+    protected string $primary_key = 'id';
+    protected string $new_table_name = '';
+
     protected string $comment;
 
     protected array $fields = array();
@@ -66,14 +69,18 @@ abstract class TableAbstract implements TableInterface
      * @DateTime: 2021/9/5 18:23
      * 参数区：
      * @param string $table
+     * @param string $primary_key
      * @param string $comment
+     * @param string $new_table_name
      */
-    protected function startTable(string $table, string $comment = '')
+    protected function startTable(string $table, string $comment = '', string $primary_key='',string $new_table_name = '')
     {
         # 清空所有表操作属性
         $this->init_vars();
         # 重新赋予新表的值
+        if ($primary_key) $this->primary_key = $primary_key;
         $this->table = '`' . $this->linker->getConfigProvider()->getDatabase() . '`.`' . $table . '`';
+        $this->new_table_name = $new_table_name ? '`' . $this->linker->getConfigProvider()->getDatabase() . '`.`' . $new_table_name . '`' : '';
         $this->comment = $comment;
     }
 

@@ -17,11 +17,10 @@ use Weline\Framework\Database\Exception\DbException;
 
 class Alter extends TableAbstract implements AlterInterface
 {
-
-    public function forTable(string $table, string $comment = ''): AlterInterface
+    public function forTable(string $table_name, string $primary_key, string $comment = '', string $new_table_name = ''): AlterInterface
     {
         # 开始表操作
-        $this->startTable($table, $comment);
+        $this->startTable($table_name, $comment, $primary_key, $new_table_name);
         return $this;
     }
 
@@ -151,41 +150,43 @@ class Alter extends TableAbstract implements AlterInterface
 
     public function alter(): bool
     {
-//        try {
-        # 检测更新表注释 TODO 持续完成ORM修改表
-        $ddl = $this->getCreateTableSql();
-        $ddl_comment_array = explode('COMMENT=', $ddl);
-        $comment = str_replace('"', '', array_pop($ddl_comment_array));
-        $comment = str_replace('\'', '', $comment);
-        # --检测存在评论，并且评论不相同时，更新表评论
-        if ($this->comment && $comment !== $this->comment) {
-            $this->query->beginTransaction();
-            try {
-                $this->query->query("ALTER TABLE {$this->table} COMMENT='{$this->comment}'")->fetch();
-                $this->query->commit();
-            } catch (\Exception $exception) {
-                $this->query->rollBack();
-                throw new DbException(__('更新表注释错误：%1', $exception->getMessage()));
-            }
+        try {
+            # 检测更新表注释
+            $ddl = $this->getCreateTableSql();
+            $ddl_comment_array = explode('COMMENT=', $ddl);
+            $comment = str_replace('"', '', array_pop($ddl_comment_array));
+            $comment = str_replace('\'', '', $comment);
+            # --检测存在评论，并且评论不相同时，更新表评论
+            if ($this->comment && $comment !== $this->comment) {
+                try {
+                    $this->query->query("ALTER TABLE {$this->table} COMMENT='{$this->comment}'")->fetch();
+                } catch (\Exception $exception) {
+                    throw new DbException(__('更新表注释错误：%1', $exception->getMessage()));
+                }
 
-        }
-        $table_fields = $this->getTableColumns();
-        foreach ($table_fields as $table_field) {
-            # --如果存在则修改
-            if (isset($this->alter_fields[$table_field['Field']]) && $alter_field = $this->alter_fields[$table_field['Field']]) {
-                if ($table_field['Field'] !== $alter_field['field_name']) {
+            }
+            $table_fields = $this->getTableColumns();
+
+            # 字段编辑
+            foreach ($table_fields as $table_field) {
+                # --如果存在修改数组中则修改 暂不删除字段，以免修改字段异常，先修改后删除
+                if (isset($this->alter_fields[$table_field['Field']]) && $alter_field = $this->alter_fields[$table_field['Field']]) {
+                    if ($table_field['Field'] !== $alter_field['field_name']) {
+                        $field_action = "CHANGE `{$table_field['Field']}` `{$alter_field['field_name']}`";
+                    } else {
+                        $field_action = "MODIFY {$table_field['Field']}";
+                    }
                     # --与数据库中的字段类型 比较
                     $type_length = $table_field['Type'];
-                    if ($alter_field['type_length'] && ($table_field['Type'] === $alter_field['type_length'])) {
+                    if (empty(strstr($table_field['Type'], $alter_field['type_length']))) {
                         $type_length = $alter_field['type_length'];
                     }
                     # --与数据库中的字段评论 比较
                     $comment = $table_field['Comment'];
-                    if ($alter_field['comment'] && ($table_field['Comment'] === $alter_field['comment'])) {
+                    if ($alter_field['comment'] && ($table_field['Comment'] !== $alter_field['comment'])) {
                         $comment = $alter_field['comment'];
                     }
                     # --与数据库中的字段其他参数 比较
-                    p($table_field, true);
                     $options = '';
                     if ($alter_options = $alter_field['options']) {
                         $options = $alter_options;
@@ -194,7 +195,7 @@ class Alter extends TableAbstract implements AlterInterface
                         if ('YES' === $table_field['Null']) {
                             $options .= ' IS NULL ';
                         } else {
-                            $options .= ' NOTE NULL ';
+                            $options .= ' NOT NULL ';
                         }
                         # --默认值
                         if ($table_field['Default']) {
@@ -208,17 +209,48 @@ class Alter extends TableAbstract implements AlterInterface
                                 'MUL' => ' ',
                             };
                         }
+                        # --Extra额外参数
+                        if ($Extra = $table_field['Extra']) {
+                            $options .= $Extra;
+                        }
                     }
-                    $sql = "ALERT TABLE {$this->table} CHANGE `{$table_field['Field']}` `{$alter_field['field_name']}` {$type_length} {$options} comment '{$comment}'";
-                    p($sql);
+                    # --检查字段排序
+                    if ($this->primary_key === $alter_field['field_name']) {
+                        $field_sort = 'FIRST';
+                    } else {
+                        $field_sort = $alter_field['after_field'] ? "AFTER `{$alter_field['after_field']}`" : '';
+                    }
+                    # --检测是更新字段名还是修改字段属性
+
+                    $sql = "ALTER TABLE {$this->table} {$field_action} {$type_length} {$options} COMMENT '{$comment}' {$field_sort}";
+                    try {
+                        $this->query($sql)->fetch();
+                    } catch (\Exception) {
+
+                    }
+
                 }
+                # --如果存在删除数组中则删除字段
+                if (isset($this->delete_fields[$table_field['Field']])) {
+                    try {
+                        $this->query->query("ALTER TABLE {$this->table} DROP {$table_field['Field']}")->fetch();
+                    } catch (\Exception) {
 
-                p("ALERT TABLE {$this->table} {$action} column `{$alter_field['field_name']}` {$alter_field['type_length']} comment '主键ID'");
+                    }
 
-                $this->query("ALERT TABLE {$this->table} modify column `{$alter_field['field_name']}` {$alter_field['type_length']} comment '主键ID'")->fetch();
+                }
             }
-        }
+            # 是否修改表名
+            if ($this->new_table_name) {
+                try {
+                    $this->query->query("ALTER TABLE {$this->table} RENAME TO {$this->new_table_name}")->fetch();
+                } catch (\Exception) {
 
+                }
+            }
+        } catch (\Exception) {
+            return false;
+        }
 
         return true;
     }

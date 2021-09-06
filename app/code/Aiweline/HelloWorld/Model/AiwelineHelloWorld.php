@@ -10,6 +10,7 @@
 namespace Aiweline\HelloWorld\Model;
 
 use Weline\Framework\Database\Model;
+use Weline\Framework\Setup\Db\ModelSetup;
 
 class AiwelineHelloWorld extends Model
 {
@@ -24,8 +25,8 @@ class AiwelineHelloWorld extends Model
         return '';
     }
 
-    function provideFields(): array
+    function setup(ModelSetup $setup): void
     {
-        return array();
+        // TODO: Implement setup() method.
     }
 }

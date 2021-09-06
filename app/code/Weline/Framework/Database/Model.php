@@ -11,13 +11,9 @@ declare(strict_types=1);
 namespace Weline\Framework\Database;
 
 
-use Weline\Framework\Database\Db\Ddl\Create;
+use Weline\Framework\Setup\Db\ModelSetup;
 
 abstract class Model extends AbstractModel implements ModelInterface
 {
-    function __init()
-    {
-        parent::__init();
-        if (DEV) $this->setup();
-    }
+
 }

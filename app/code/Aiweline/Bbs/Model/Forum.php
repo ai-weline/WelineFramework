@@ -9,8 +9,23 @@
 
 namespace Aiweline\Bbs\Model;
 
-use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Database\Model;
+use Weline\Framework\Setup\Db\ModelSetup;
 
-class Forum extends AbstractModel
+class Forum
 {
+    function provideTable(): string
+    {
+        return '';
+    }
+
+    function providePrimaryField(): string
+    {
+        return '';
+    }
+
+    function setup(ModelSetup $setup): void
+    {
+
+    }
 }

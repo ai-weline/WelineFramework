@@ -92,14 +92,17 @@ class Scanner extends Scan
     }
 
     /**
-     * @DESC         |扫描带有文件的模块
+     * @DESC          # 扫描带有文件的模块
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/6 22:08
      * 参数区：
-     *
      * @param string $file_or_dir
+     * @param \Closure|null $callback
      * @return array
      */
-    public function scanVendorModulesWithFiles($file_or_dir = '')
+    public function scanVendorModulesWithFiles(string $file_or_dir = '', \Closure $callback=null): array
     {
         $vendors         = $this->scanAppVendors();
         $vendors_modules = [];
@@ -139,7 +142,10 @@ class Scanner extends Scan
                 $vendors_modules[$vendor] = $modules;
             }
         }
-
+        # 带有回调处理的方法
+        if($callback){
+            $vendors_modules = $callback($vendors_modules);
+        }
         return $vendors_modules;
     }
 }

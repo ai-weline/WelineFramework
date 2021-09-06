@@ -21,14 +21,15 @@ interface AlterInterface extends TableInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/5 17:23
      * 参数区：
-     * @param string $table 表名
+     * @param string $table_name
+     * @param string $primary_key
      * @param string $comment 表注释
      * @return AlterInterface
      */
-    public function forTable(string $table, string $comment = ''): AlterInterface;
+    public function forTable(string $table_name, string $primary_key,string $comment = '',string $new_table_name=''): AlterInterface;
 
     /**
-     * @DESC          # 修改字段
+     * @DESC          # 修改字段 【$old_field和$field_name相同则是修改字段属性，不同则是修改字段名】
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com

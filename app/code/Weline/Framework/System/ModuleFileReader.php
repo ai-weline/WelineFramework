@@ -10,6 +10,7 @@
 namespace Weline\Framework\System;
 
 use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\System\File\Data\File;
 use Weline\Framework\System\File\Scanner;
 
 class ModuleFileReader extends DataObject
@@ -30,20 +31,31 @@ class ModuleFileReader extends DataObject
      */
     public function __construct(
         Scanner $scanner,
-        $path = 'etc' . DIRECTORY_SEPARATOR . 'module.xml'
-    ) {
-        $this->scanner  = $scanner;
-        $this->path     = $path;
-        $this->fileList = $this->scanner->scanVendorModulesWithFiles($path);
+        string  $path = 'etc' . DIRECTORY_SEPARATOR . 'module.xml'
+    )
+    {
+        $this->scanner = $scanner;
+        $this->path = $path;
         parent::__construct();
     }
 
-    public function getFileList()
+    /**
+     * @DESC          # 读取文件
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/6 22:55
+     * 参数区：
+     * @param \Closure|null $callback
+     * @return array
+     */
+    public function getFileList(\Closure $callback=null): array
     {
+        $this->fileList = $this->scanner->scanVendorModulesWithFiles($this->path, $callback);
         return $this->fileList;
     }
 
-    public function getFilePath()
+    public function getFilePath(): string
     {
         return $this->path;
     }

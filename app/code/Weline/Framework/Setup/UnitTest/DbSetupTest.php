@@ -16,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 class DbSetupTest extends TestCase
 {
-    private Setup $setup;
+    private ModelSetup $setup;
 
     protected function setUp(): void
     {

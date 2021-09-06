@@ -10,6 +10,7 @@
 namespace Aiweline\NewsSource\Model;
 
 use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Setup\Db\ModelSetup;
 
 class AiwelineNewsSource extends AbstractModel
 {
@@ -29,5 +30,20 @@ class AiwelineNewsSource extends AbstractModel
         $exist_source = $this->where('name', '=', $source)->find();
 
         return $exist_source['id'] ?? $this->insert(['name' => $source]);
+    }
+
+    function provideTable(): string
+    {
+        return '';
+    }
+
+    function providePrimaryField(): string
+    {
+        return '';
+    }
+
+    function setup(ModelSetup $setup): void
+    {
+        // TODO: Implement setup() method.
     }
 }

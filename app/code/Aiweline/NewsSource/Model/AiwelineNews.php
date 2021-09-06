@@ -9,9 +9,10 @@
 
 namespace Aiweline\NewsSource\Model;
 
-use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Database\Model;
+use Weline\Framework\Setup\Db\ModelSetup;
 
-class AiwelineNews extends AbstractModel
+class AiwelineNews extends Model
 {
     public function add($data)
     {
@@ -48,5 +49,19 @@ class AiwelineNews extends AbstractModel
     {
         return $this->hasOne(AiwelineNewsCategory::class, 'id')
             ->bind(['source' => 'name']);
+    }
+    function provideTable(): string
+    {
+        return '';
+    }
+
+    function providePrimaryField(): string
+    {
+        return '';
+    }
+
+    function setup(ModelSetup $setup): void
+    {
+        // TODO: Implement setup() method.
     }
 }

@@ -10,12 +10,8 @@
 namespace Weline\Framework\Database;
 
 use Weline\Framework\App\Exception;
-use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Database\Cache\DbCache;
-use Weline\Framework\Database\Db\Ddl\Create;
-use Weline\Framework\Database\Exception\DbException;
+use Weline\Framework\Database\Api\Linker\QueryInterface;
 use Weline\Framework\Database\Exception\ModelException;
-use Weline\Framework\Database\Linker\QueryInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Exception\Core;
@@ -52,6 +48,7 @@ use Weline\Framework\Manager\ObjectManager;
 abstract class AbstractModel extends DataObject
 {
     protected string $table = '';
+    protected string $origin_table_name = '';
     private LinkerFactory $linker;
     public string $suffix = '';
     public string $primary_key = 'id';
@@ -69,9 +66,10 @@ abstract class AbstractModel extends DataObject
     {
         # 类属性
         $this->linker = ObjectManager::getInstance(DbManager::class . 'Factory');
-        $this->suffix = $this->linker->getConfigProvider()->getPrefix();
+        $this->suffix = $this->linker->getConfigProvider()->getPrefix() ?: '';
         # 模型属性
         $this->table = $this->provideTable() ?: $this->processTable();
+        if (empty($this->origin_table_name)) $this->origin_table_name = $this->provideTable();
         $this->primary_key = $this->providePrimaryField() ?: $this->primary_key;
     }
 
@@ -90,7 +88,8 @@ abstract class AbstractModel extends DataObject
             $class_file_name_arr = explode('\\', $this::class);
             $class_file_name = array_pop($class_file_name_arr);
             $table_name = str_replace('Model', '', $class_file_name);
-            $this->table = $this->suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
+            $this->origin_table_name = $this->suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
+            $this->table = "`{$this->linker->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
         }
         return $this->table;
     }
@@ -110,6 +109,21 @@ abstract class AbstractModel extends DataObject
     }
 
     /**
+     * @DESC          # 读取原始表名
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/3 20:14
+     * 参数区：
+     * @return string
+     */
+    function getOriginTableName(): string
+    {
+        $this->processTable();
+        return $this->origin_table_name;
+    }
+
+    /**
      * @DESC         |获取数据库基类
      *
      * 参数区：
@@ -122,9 +136,9 @@ abstract class AbstractModel extends DataObject
     public function getQuery(bool $keep_condition = false): QueryInterface
     {
         if ($keep_condition) {
-            return $this->linker->getQuery()->table($this->table)->identity($this->primary_key);
+            return $this->linker->getQuery()->table($this->getOriginTableName())->identity($this->primary_key);
         }
-        return $this->linker->getQuery()->clearQuery()->table($this->table)->identity($this->primary_key);
+        return $this->linker->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->primary_key);
     }
 
     /**
@@ -161,7 +175,7 @@ abstract class AbstractModel extends DataObject
         // 清空之前的数据
         $this->clearDataObject();
         // load之前事件
-        $this->getEvenManager()->dispatch($this->processTable() . '_model_load_before', ['model' => $this]);
+        $this->getEvenManager()->dispatch($this->getOriginTableName() . '_model_load_before', ['model' => $this]);
         if (is_null($value)) {
             $data = $this->getQuery()->where($this->primary_key, $field_or_pk_value)->find()->fetch();
         } else {
@@ -169,7 +183,7 @@ abstract class AbstractModel extends DataObject
         }
         if (is_array($data)) $this->setData($data);
         // load之之后事件
-        $this->getEvenManager()->dispatch($this->processTable() . '_model_load_after', ['model' => $this]);
+        $this->getEvenManager()->dispatch($this->getOriginTableName() . '_model_load_after', ['model' => $this]);
         // 加载之后
         $this->load_after();
         return $this;

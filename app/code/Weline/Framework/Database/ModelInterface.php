@@ -12,6 +12,8 @@ namespace Weline\Framework\Database;
 
 
 use Weline\Framework\Database\Db\Ddl\Create;
+use Weline\Framework\Setup\Db\ModelSetup;
+use Weline\Framework\Setup\Db\Setup;
 
 interface ModelInterface
 {
@@ -45,7 +47,19 @@ interface ModelInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/3 21:12
      * 参数区：
+     * @param ModelSetup $setup
      * @return void
      */
-    function setup():void;
+    function devSetup(ModelSetup $setup):void;
+
+    /** TODO 持续完成模块安装 模块升级 模块更新 模型目前只有ModelSetup 其余还需要开发
+     * @DESC          # 安装执行函数
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/7 0:01
+     * 参数区：
+     * @param ModelSetup $setup
+     */
+    function install(ModelSetup $setup):void;
 }
