@@ -65,13 +65,13 @@ abstract class AbstractPrint implements PrintInterface
      *
      * 参数区：
      *
-     * @param array|string $data
+     * @param string $data
      * @param string $message
      * @param string $color
      * @param int $pad_length
      * @return mixed|void
      */
-    public function success($data = 'CLI Success!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
+    public function success(string $data = 'CLI Success!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
     {
         $this->doPrint($data, $message, self::SUCCESS);
     }
@@ -86,13 +86,13 @@ abstract class AbstractPrint implements PrintInterface
      *
      * 参数区：
      *
-     * @param array|string $data
+     * @param string $data
      * @param string $message
      * @param string $color
      * @param int $pad_length
      * @return mixed|void
      */
-    public function warning($data = 'CLI Warning!', string $message = '', string $color = self::WARNING, int $pad_length = 25)
+    public function warning(string $data = 'CLI Warning!', string $message = '', string $color = self::WARNING, int $pad_length = 25)
     {
         $this->doPrint($data, $message, self::WARNING);
     }
@@ -107,13 +107,13 @@ abstract class AbstractPrint implements PrintInterface
      *
      * 参数区：
      *
-     * @param array|string $data
+     * @param string $data
      * @param string $message
      * @param string $color
      * @param int $pad_length
      * @return mixed|void
      */
-    public function note($data = 'CLI Note!', string $message = '', string $color = self::NOTE, int $pad_length = 25)
+    public function note(string $data = 'CLI Note!', string $message = '', string $color = self::NOTE, int $pad_length = 25)
     {
         $this->doPrint($data, $message, self::NOTE);
     }

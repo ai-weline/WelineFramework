@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Controller\Cache;
 
-class ControllerCache extends \Weline\Framework\Cache\CacheManager
+class ControllerCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_controller')
     {

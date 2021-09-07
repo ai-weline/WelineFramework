@@ -14,9 +14,9 @@ declare(strict_types=1);
 namespace Weline\Framework\Database\Cache;
 
 
-class DbCache extends \Weline\Framework\Cache\CacheFactory
+class DbModelCache extends \Weline\Framework\Cache\CacheFactory
 {
-    function __construct(string $identity = 'database')
+    function __construct(string $identity = 'database_model')
     {
         parent::__construct($identity);
     }

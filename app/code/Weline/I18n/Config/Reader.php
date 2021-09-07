@@ -23,22 +23,22 @@ class Reader extends ModuleFileReader
     /**
      * @var Request
      */
-    private Request $request;
+    protected Request $request;
 
     /**
      * @var CacheInterface
      */
-    private CacheInterface $i18nCache;
+    protected CacheInterface $i18nCache;
 
     /**
      * @var Scanner
      */
-    private Scanner $scanner;
+    protected Scanner $scanner;
 
     /**
      * @var Parser
      */
-    private Parser $parser;
+    protected Parser $parser;
 
     /**
      * Read 初始函数...
@@ -84,7 +84,6 @@ class Reader extends ModuleFileReader
                 }
             }
         }
-
         return array_merge($lang_packs, $vendor_module_i18ns);
     }
 }

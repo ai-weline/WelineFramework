@@ -99,7 +99,7 @@ class Setup extends DbManager
         $table = $this->getTable($table);
 
         try {
-            $this->query("desc {$table}");
+            $this->query("DESC {$table}");
             return true;
         } catch (PDOException $exception) {
             return false;
@@ -136,7 +136,7 @@ class Setup extends DbManager
             $tableName = $this->getTable($tableName);
         }
         try {
-            $this->query('drop table ' . $tableName);
+            $this->query('DROP TABLE ' . $tableName);
             return true;
         } catch (\Exception $exception) {
             return false;

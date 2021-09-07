@@ -104,11 +104,9 @@ class ModelSetup extends DbManager
      * @DESC         |方法描述
      *
      * 参数区：
-     * @param string $table
      * @return bool
      * @throws Exception
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\Database\Exception\LinkException
+     * @throws \ReflectionException|\Weline\Framework\Database\Exception\LinkException
      */
     public function tableExist(): bool
     {

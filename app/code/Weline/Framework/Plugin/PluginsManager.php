@@ -49,7 +49,7 @@ class PluginsManager
      * @throws \Weline\Framework\App\Exception
      * @return array
      */
-    public function scanPlugins(bool $cache = true)
+    public function scanPlugins(bool $cache = true): array
     {
         // 避免重复加载
         if ($this->plugins) {
@@ -269,9 +269,11 @@ class PluginsManager
      * 参数区：
      *
      * @param string $class
-     * @return array|mixed
+     * @return mixed
+     * @throws \Weline\Framework\App\Exception
+     * @throws \Weline\Framework\Exception\Core
      */
-    public function getClassPluginInstanceList(string $class = '')
+    public function getClassPluginInstanceList(string $class = ''): mixed
     {
         $plugins = $this->scanPlugins();
         if ($class) {
@@ -289,8 +291,11 @@ class PluginsManager
      * @param string $type
      * @param string $method
      * @param string|null $code
+     * @return array|mixed
+     * @throws \Weline\Framework\App\Exception
+     * @throws \Weline\Framework\Exception\Core
      */
-    public function getPluginInfo(string $type, string $method, string $code = null)
+    public function getPluginInfo(string $type, string $method, string $code = null): mixed
     {
         // 避免多次读取
         if (isset($this->plugin_map[$type . $method])) {
@@ -315,7 +320,7 @@ class PluginsManager
      * @param string $code
      * @return array
      */
-    public function getNext($type, $method, $code = '__self')
+    public function getNext($type, $method, $code = '__self'): ?array
     {
         if (! isset($this->plugin_map[$type . $method])) {
             $this->_inheritPlugins($type);
@@ -337,7 +342,7 @@ class PluginsManager
      * @throws \ReflectionException
      * @return Proxy\Generator
      */
-    public function generatorInterceptor(string $class = '', bool $cache = false)
+    public function generatorInterceptor(string $class = '', bool $cache = false): Proxy\Generator
     {
         /**@var \Weline\Framework\Plugin\Proxy\Generator $generator */
         $generator = ObjectManager::getInstance(\Weline\Framework\Plugin\Proxy\Generator::class);

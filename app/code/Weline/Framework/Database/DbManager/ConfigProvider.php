@@ -43,11 +43,7 @@ class ConfigProvider extends DataObject implements ConfigProviderInterface
     function __construct($db_conf = [])
     {
         if (empty($db_conf)) {
-            try {
-                $db_conf = $this->getConfig();
-            } catch (Exception $e) {
-                throw new Exception('数据库配置读取异常');
-            }
+            $db_conf = $this->getConfig();
         }
         parent::__construct($db_conf);
     }

@@ -11,8 +11,10 @@ namespace Weline\Theme\Model;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 use Weline\Framework\Setup\Db\Setup;
 use Weline\Theme\Cache\ThemeCache;
@@ -169,18 +171,27 @@ class WelineTheme extends Model
         return '';
     }
 
-    function provideFields(): array
-    {
-        return [];
-    }
-
-    function providePrimaryField(): string
-    {
-        return 'id';
-    }
-
-    function setup(ModelSetup $setup): void
+    function setup(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement setup() method.
+    }
+
+    function upgrade(ModelSetup $setup, Context $context): void
+    {
+        // TODO: Implement upgrade() method.
+    }
+
+    function install(ModelSetup $setup, Context $context): void
+    {
+        if(!$setup->tableExist()){
+            $setup->createTable()
+                ->addColumn('id', TableInterface::column_type_INTEGER, 11, 'not null primary key unsigned auto_increment', '菜单ID')
+                ->addColumn('p_id', TableInterface::column_type_INTEGER, 11, 'unsigned', '父级ID')
+                ->addColumn('name', TableInterface::column_type_VARCHAR, 20, 'not null ', '菜单')
+                ->addColumn('url', TableInterface::column_type_VARCHAR, 255, 'not null ', 'URL')
+                ->addColumn('module', TableInterface::column_type_VARCHAR, 60, 'not null ', '模组名')
+                ->create();
+        }
+
     }
 }

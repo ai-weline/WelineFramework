@@ -11,9 +11,8 @@ declare(strict_types=1);
 namespace Weline\Framework\Database;
 
 
-use Weline\Framework\Database\Db\Ddl\Create;
+use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
-use Weline\Framework\Setup\Db\Setup;
 
 interface ModelInterface
 {
@@ -25,9 +24,10 @@ interface ModelInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/25 23:45
      * 参数区：
+     * @Suppress("unused")
      * @return string
      */
-    function provideTable():string;
+    function provideTable(): string;
 
     /**
      * @DESC          # 提供主键字段 【如果为空 默认为 id 】
@@ -36,30 +36,42 @@ interface ModelInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/26 20:58
      * 参数区：
+     * @Suppress("unused")
      * @return string
      */
-    function providePrimaryField():string;
+    function providePrimaryField(): string;
+
 
     /**
-     * @DESC          # 开发升级方法 【仅有开发模式会触发】
+     * @DESC          # 设置 【开发模式下每次都会执行】
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/9/3 21:12
+     * @DateTime: 2021/9/7 20:05
      * 参数区：
-     * @param ModelSetup $setup
-     * @return void
+     * @Suppress("unused")
      */
-    function devSetup(ModelSetup $setup):void;
+    function setup(ModelSetup $setup, Context $context): void;
 
-    /** TODO 持续完成模块安装 模块升级 模块更新 模型目前只有ModelSetup 其余还需要开发
-     * @DESC          # 安装执行函数
+    /**
+     * @DESC          # 模块更新时执行
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/9/7 0:01
+     * @DateTime: 2021/9/7 20:07
      * 参数区：
-     * @param ModelSetup $setup
+     * @Suppress("unused")
      */
-    function install(ModelSetup $setup):void;
+    function upgrade(ModelSetup $setup, Context $context): void;
+
+    /**
+     * @DESC          # 模块安装时执行
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/7 20:07
+     * 参数区：
+     * @Suppress("unused")
+     */
+    function install(ModelSetup $setup, Context $context): void;
 }

@@ -9,7 +9,7 @@
 
 namespace Weline\Theme\Cache;
 
-class ThemeCache extends \Weline\Framework\Cache\CacheManager
+class ThemeCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'weline_theme')
     {

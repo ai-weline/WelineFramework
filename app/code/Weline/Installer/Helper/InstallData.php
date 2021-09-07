@@ -23,19 +23,7 @@ class InstallData
                 'bin/m module:upgrade',
                 'bin/m deploy:mode:set dev',
                 'bin/m cache:clear',
-            ],
-            'db' => [
-                'tables' => [
-                    'm_core_menu' => 'CREATE TABLE m_core_menu
-(
-id int primary key comment "菜单ID",
-p_id int default 0 comment "父级ID",
-name varchar(20) comment "菜单",
-action varchar(255) comment "菜单动作",
-module varchar(20)  comment "模块"
-)',
-                ],
-            ],
+            ]
         ];
 
         return $data[$key] ?? $data;

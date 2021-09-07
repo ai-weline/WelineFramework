@@ -13,26 +13,26 @@ use Weline\Framework\System\File\Io\File;
 
 abstract class AbstractPrint implements PrintInterface
 {
-    public $out;
+    protected $out;
 
-    private $file;
+    private File $file;
 
-    public function error($data = 'Error!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
+    public function error(mixed $data = 'Error!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
     {
         return $this->printing('Error!');
     }
 
-    public function success($data = 'Success!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
+    public function success(string $data = 'Success!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
     {
         // TODO: Implement success() method.
     }
 
-    public function warning($data = 'Warning!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
+    public function warning(string $data = 'Warning!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
     {
         // TODO: Implement warning() method.
     }
 
-    public function note($data = 'Note!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
+    public function note(string $data = 'Note!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
     {
         // TODO: Implement note() method.
     }

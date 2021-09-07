@@ -7,6 +7,12 @@
  * 论坛：https://bbs.aiweline.com
  */
 
+// 检查安装
+if ('cli'!==PHP_SAPI and !file_exists(dirname(__DIR__) . '/setup/install.lock')) {
+    require dirname(__DIR__) . '/setup/index.php';
+    exit();
+}
+$start_time= microtime(true);
 
 // 运行模式
 defined('CLI') || define('CLI', PHP_SAPI === 'cli');

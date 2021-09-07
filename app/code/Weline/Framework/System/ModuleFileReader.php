@@ -18,11 +18,9 @@ class ModuleFileReader extends DataObject
     /**
      * @var Scanner
      */
-    private Scanner $scanner;
+    protected Scanner $scanner;
 
-    private array $fileList = [];
-
-    private string $path;
+    protected string $path;
 
     /**
      * ModuleFileReader 初始函数...
@@ -51,8 +49,7 @@ class ModuleFileReader extends DataObject
      */
     public function getFileList(\Closure $callback=null): array
     {
-        $this->fileList = $this->scanner->scanVendorModulesWithFiles($this->path, $callback);
-        return $this->fileList;
+        return $this->scanner->scanVendorModulesWithFiles($this->path, $callback);
     }
 
     public function getFilePath(): string

@@ -224,7 +224,7 @@ class Env
      * @param  $default
      * @return mixed
      */
-    public function getConfig(string $name = '', $default = null)
+    public function getConfig(string $name = '', $default = null): mixed
     {
         if ('' === $name) {
             return $this->config;
@@ -255,7 +255,6 @@ class Env
             $file->close();
             // 重置环境参数
             $this->reload();
-
             return true;
         } catch (Exception $exception) {
             return false;

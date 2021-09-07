@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Phrase\Cache;
 
-class PhraseCache extends \Weline\Framework\Cache\CacheManager
+class PhraseCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_phrase')
     {

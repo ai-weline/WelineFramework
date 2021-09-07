@@ -251,7 +251,7 @@ class Core extends \Exception
      * @throws \Weline\Framework\App\Exception
      * @return string
      */
-    public function getErrorCode()
+    public function getErrorCode(): string
     {
         $startColor  = chr(27) . '[36m ';
         $endColor    = chr(27) . '[0m ';
@@ -263,8 +263,8 @@ class Core extends \Exception
 
         $returnTxt  = $isCli ? $startColor : '<div style="padding:25px;color:#767678;background-color:#9e9e9e42;margin: 15px 8px 8px 8px">'; // 初始化返回
         $i          = 1; // 行数
-        $start_line = $this->line - 1;
-        $end_line   = $this->line + 1;
+        $start_line = $this->line - 10;
+        $end_line   = $this->line + 10;
         while (! feof($fileSource)) {
             $buffer = fgets($fileSource);
             $buffer = $isCli ? $buffer : str_replace(' ', '&nbsp;', $buffer);

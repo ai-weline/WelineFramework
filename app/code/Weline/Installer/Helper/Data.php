@@ -23,13 +23,6 @@ class Data
         return $this->installData->getData('env');
     }
 
-    public function getDbTables()
-    {
-        $db = $this->installData->getData('db');
-
-        return $db['tables'];
-    }
-
     public function getCommands()
     {
         return $this->installData->getData('commands');

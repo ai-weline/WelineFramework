@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Module;
 
+use Weline\Framework\Database\Model\ModelManager;
 use Weline\Framework\Register\RegisterInterface;
 use Weline\Framework\System\File\Compress;
 use Weline\Framework\App\Env;
@@ -159,6 +160,9 @@ class Handle implements HandleInterface, RegisterInterface
     {
         // 模块路径
         $module_path = APP_PATH . $this->helper->moduleNameToPath($this->modules, $name) . DIRECTORY_SEPARATOR;
+        // 模型管理器
+        /**@var ModelManager $modelManager*/
+        $modelManager = ObjectManager::getInstance(ModelManager::class);
         // 检测文件完整
         $router = '';
         foreach (DataInterface::files as $filename) {
@@ -180,7 +184,6 @@ class Handle implements HandleInterface, RegisterInterface
             }
         }
 
-//        $this->setup_context = new SetupContext($name, $version);
         $this->setup_context = ObjectManager::make(SetupContext::class, '__construct', ['module_name' => $name, 'module_version' => $version]);
         $setup_dir           = $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
 
@@ -191,6 +194,10 @@ class Handle implements HandleInterface, RegisterInterface
             if ($this->helper->isUpgrade($this->modules, $name, $version)) {
                 $this->printer->note("扩展{$name}升级中...");
                 $this->printer->setup(__('升级') . $old_version . __('到') . $version);
+
+                # 升级模块的模型
+                $modelManager->update($name, $this->setup_context, 'upgrade');
+
                 foreach (\Weline\Framework\Setup\Data\DataInterface::upgrade_FILES as $upgrade_FILE) {
                     $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $upgrade_FILE . '.php';
                     if (file_exists($setup_file)) {
@@ -207,6 +214,9 @@ class Handle implements HandleInterface, RegisterInterface
                 // 更新模块
                 $this->helper->updateModules($this->modules);
             }
+            # 升级模块的模型
+            $modelManager->update($name, $this->setup_context, 'upgrade');
+
             if ($this->helper->isDisabled($this->modules, $name)) {
                 echo $this->printer->warning(str_pad($name, 45) . '已禁用！');
 
@@ -217,6 +227,8 @@ class Handle implements HandleInterface, RegisterInterface
             echo $this->printer->success(str_pad($name, 45) . '已更新！');
         } else {
             $this->printer->note("扩展{$name}安装中...");
+            # 模型安装
+            $modelManager->update($name, $this->setup_context, 'install');
             // 全新安装
             $moduleData = [
                 'status'      => 1,
@@ -243,6 +255,9 @@ class Handle implements HandleInterface, RegisterInterface
             } catch (Exception $exception) {
                 throw $exception;
             }
+
+            # 执行模型setup
+            $modelManager->update($name, $this->setup_context, 'install');
 
             // 更新模块
             $this->helper->updateModules($this->modules);

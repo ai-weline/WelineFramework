@@ -11,11 +11,11 @@ namespace Weline\Framework\Cache;
 
 use Weline\Framework\App\Env;
 
-class CacheManager
+class CacheFactory
 {
     const driver_NAMESPACE = Env::framework_name . '\\Framework\\Cache\\Driver\\';
 
-    private static CacheManager $instance;
+    private static CacheFactory $instance;
 
     private array $config;
 

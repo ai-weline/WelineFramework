@@ -9,7 +9,7 @@
 
 namespace Weline\I18n\Cache;
 
-class I18nCache extends \Weline\Framework\Cache\CacheManager
+class I18nCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_i18n')
     {

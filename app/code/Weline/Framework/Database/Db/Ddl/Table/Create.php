@@ -11,6 +11,7 @@ namespace Weline\Framework\Database\Db\Ddl\Table;
 
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Api\Db\Ddl\Table\CreateInterface;
+use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Database\Api\Linker\QueryInterface;
 use Weline\Framework\Database\Db\Ddl\TableAbstract;
 
@@ -25,6 +26,18 @@ class Create extends TableAbstract implements CreateInterface
 
     public function addColumn(string $field_name, string $type, ?int $length, string $options, string $comment): CreateInterface
     {
+        # 数字字段
+        if ($type === TableInterface::column_type_INTEGER) {
+            if ($length <= 2) {
+                $type = 'smallint';
+            }
+            if (2 < $length and $length <= 11) {
+                $type = 'int';
+            }
+            if (11 < $length) {
+                $type = 'bigint';
+            }
+        }
         $type_length = $length ? "{$type}({$length})" : $type;
         $this->fields[] = "`{$field_name}` {$type_length} {$options} COMMENT '{$comment}'," . PHP_EOL;
 

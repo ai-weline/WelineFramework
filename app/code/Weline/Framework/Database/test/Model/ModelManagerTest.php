@@ -10,17 +10,17 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\test\Model;
 
-use Weline\Framework\Database\Model\Reader;
+use Weline\Framework\Database\Model\ModelManager;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 
-class ReaderTest extends TestCore
+class ModelManagerTest extends TestCore
 {
-    private Reader $model;
+    private ModelManager $model;
 
     function setUp(): void
     {
-        $this->model = ObjectManager::getInstance(Reader::class);
+        $this->model = ObjectManager::getInstance(ModelManager::class);
     }
 
     public function testUpdate()

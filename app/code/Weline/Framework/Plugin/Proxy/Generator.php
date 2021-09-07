@@ -60,7 +60,7 @@ ${functionList}
         return $proxyClass;
     }
 
-    private static function genProxyClass(string $class)
+    #[\JetBrains\PhpStorm\ArrayShape(['name' => "string", 'body' => "string|string[]", 'file' => "string"])] private static function genProxyClass(string $class): array
     {
         try {
             $classRef = new \ReflectionClass($class);

@@ -45,12 +45,14 @@
     'debug' => 'var\\log\\debug.log',
   ),
   'php-cs' => true,
+  0 => 1,
+  'deploy' => 'dev',
   'db' => 
   array (
-    'default' => 'frontend',
+    'default' => 'mysql',
     'connections' => 
     array (
-      'frontend' => 
+      'mysql' => 
       array (
         'hostname' => '127.0.0.1',
         'database' => 'weline',
@@ -61,30 +63,8 @@
         'prefix' => 'm_',
         'charset' => 'utf8',
       ),
-      'mysql' => 
-      array (
-        'hostname' => '192.168.1.3',
-        'database' => 'weline',
-        'username' => 'weline',
-        'password' => 'weline',
-        'type' => 'mysql',
-        'hostport' => '3306',
-        'prefix' => 'm_',
-        'charset' => 'utf8',
-      ),
     ),
   ),
-  'deploy' => 'dev',
-  'admin' => 'admin_612e37e14d732',
-  'api_admin' => 'api_612e37e14d734',
-  'theme' => 
-  array (
-    'id' => '3',
-    'name' => 'test',
-    'path' => 'Weline\\test',
-    'parent_id' => NULL,
-    'is_active' => '1',
-    'create_time' => '2021-09-03 19:29:54',
-    'update_time' => '2021-09-03 19:29:54',
-  ),
+  'admin' => 'admin_6137967ca8c5c',
+  'api_admin' => 'api_6137967ca8c5d',
 );

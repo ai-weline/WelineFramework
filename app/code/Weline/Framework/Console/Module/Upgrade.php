@@ -119,21 +119,11 @@ class Upgrade extends CommandAbstract
 
         $this->printer->note('模块更新完毕！');
 
-        # 开发模式更新Model
-        if(DEV){
-            $this->printer->setup('5、开发模式更新Model...');
-            /**@var Reader $modelReader*/
-            $modelReader = ObjectManager::getInstance(Reader::class);
-            $modelReader->update();
-        }else{
-            $this->printer->note('5、非开发模式 跳过 更新Model...');
-        }
-
         // 清理其他
         /**@var EventsManager $eventsManager*/
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
         $eventsManager->dispatch('Framework_upgrade');
-        $this->printer->note('6、清理缓存...');
+        $this->printer->note('5、清理缓存...');
         /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
         $cacheManagerConsole->execute();

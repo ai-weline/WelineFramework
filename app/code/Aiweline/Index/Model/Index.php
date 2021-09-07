@@ -16,6 +16,7 @@ use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Database\Db\Ddl\Create;
 use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 use Weline\Framework\Setup\Db\Setup;
 
@@ -37,7 +38,7 @@ class Index extends Model
      * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Database\Exception\LinkException
      */
-    function setup(ModelSetup $setup): void
+    function setup(ModelSetup $setup,Context $context): void
     {
         # 有表则删除
         if ($setup->tableExist()) {
@@ -58,5 +59,15 @@ class Index extends Model
 //            ->alterColumn('ii', 'ii_test','id',TableInterface::column_type_VARCHAR,11,"default '111'",'reiurhrhhsadifha')
 //            ->alterColumn('i', 'i','id',TableInterface::column_type_VARCHAR,11,"default '111'",'ddddd')
 //            ->alter();
+    }
+
+    function upgrade(ModelSetup $setup, Context $context): void
+    {
+        // TODO: Implement upgrade() method.
+    }
+
+    function install(ModelSetup $setup, Context $context): void
+    {
+        // TODO: Implement install() method.
     }
 }

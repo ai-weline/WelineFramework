@@ -56,33 +56,6 @@ class Install
             }
         }
 
-        $db = $this->setup->getDb();
-
-        $tables = $this->data->getDbTables();
-        $tmp    = [];
-        $hasErr = false;
-        foreach ($tables as $table => $createSql) {
-            if ($db->tableExist($table)) {
-                if (CLI) {
-                    $this->printing->warning('删除表：' . $table);
-                }
-                $db->dropTable($table);
-            }
-
-            try {
-                if (CLI) {
-                    $this->printing->note('新增表：' . $table);
-                }
-                $db->query($createSql);
-                $result = true;
-            } catch (Exception $exception) {
-                $hasErr = true;
-                $result = false;
-            }
-//            $db->query('drop table ' . $table);
-            $tmp['---install table "' . $table . '"'] = 'Create table ' . $table . ($result ? ' is success!(✔)' : ' is failed!(✖)');
-        }
-
-        return ['data' => $tmp, 'hasErr' => $hasErr, 'msg' => '-------  系统安装...  -------'];
+        return ['data' => '', 'hasErr' => false, 'msg' => '-------  系统安装...  -------'];
     }
 }

@@ -11,9 +11,15 @@ declare(strict_types=1);
 namespace Weline\Framework\Database;
 
 
-use Weline\Framework\Setup\Db\ModelSetup;
-
 abstract class Model extends AbstractModel implements ModelInterface
 {
+    function provideTable(): string
+    {
+        return '';
+    }
 
+    function providePrimaryField(): string
+    {
+        return 'id';
+    }
 }

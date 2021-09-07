@@ -25,7 +25,7 @@ namespace Weline\Framework\Plugin\Cache;
  * @package M\Framework\Event\Cache
  * @since 100
  */
-class PluginCache extends \Weline\Framework\Cache\CacheManager
+class PluginCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_plugin')
     {

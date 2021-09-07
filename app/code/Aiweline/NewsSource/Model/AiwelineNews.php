@@ -10,6 +10,7 @@
 namespace Aiweline\NewsSource\Model;
 
 use Weline\Framework\Database\Model;
+use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class AiwelineNews extends Model
@@ -50,18 +51,19 @@ class AiwelineNews extends Model
         return $this->hasOne(AiwelineNewsCategory::class, 'id')
             ->bind(['source' => 'name']);
     }
-    function provideTable(): string
-    {
-        return '';
-    }
 
-    function providePrimaryField(): string
-    {
-        return '';
-    }
-
-    function setup(ModelSetup $setup): void
+    function setup(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement setup() method.
+    }
+
+    function upgrade(ModelSetup $setup, Context $context): void
+    {
+        // TODO: Implement upgrade() method.
+    }
+
+    function install(ModelSetup $setup, Context $context): void
+    {
+        // TODO: Implement install() method.
     }
 }

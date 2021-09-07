@@ -25,7 +25,7 @@ namespace Weline\Framework\Event\Cache;
  * @package Weline\Framework\Event\Cache
  * @since 100
  */
-class EventCache extends \Weline\Framework\Cache\CacheManager
+class EventCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_event')
     {

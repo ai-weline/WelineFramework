@@ -51,7 +51,7 @@ class Context
      *
      * @return bool|mixed
      */
-    public function getVersion()
+    public function getVersion(): mixed
     {
         return isset($this->modules[$this->module_name]['version']) ? $this->modules[$this->module_name]['version'] : false;
     }
@@ -99,7 +99,7 @@ class Context
      *
      * @return bool
      */
-    public function isDisable()
+    public function isDisable(): bool
     {
         $module_status = $this->modules[$this->module_name]['status'];
 

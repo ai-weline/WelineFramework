@@ -9,12 +9,9 @@
 
 namespace Weline\Theme\Setup;
 
-use Weline\Framework\App\Env;
-use Weline\Framework\Database\Db\Ddl\Create;
-use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Database\Db\Ddl\Table\Create;
 use Weline\Framework\Setup\Data;
 use Weline\Framework\Setup\InstallInterface;
-use Weline\Theme\Model\WelineTheme;
 
 class Install implements InstallInterface
 {

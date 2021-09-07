@@ -9,7 +9,7 @@
 
 namespace Aiweline\Bbs\Cache;
 
-class BbsCache extends \Weline\Framework\Cache\CacheManager
+class BbsCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'bbs_cache')
     {

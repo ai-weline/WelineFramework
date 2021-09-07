@@ -31,9 +31,13 @@ interface PrintInterface
      *
      * 参数区：
      *
+     * @param mixed $data
+     * @param string $message
+     * @param string $color
+     * @param int $pad_length
      * @return mixed
      */
-    public function error();
+    public function error(string $data = 'Error!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
 
     /**
      * @DESC         |成功打印
@@ -45,9 +49,13 @@ interface PrintInterface
      *
      * 参数区：
      *
+     * @param string $data
+     * @param string $message
+     * @param string $color
+     * @param int $pad_length
      * @return mixed
      */
-    public function success();
+    public function success(string $data = 'Success!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
 
     /**
      * @DESC         |警告打印
@@ -59,9 +67,13 @@ interface PrintInterface
      *
      * 参数区：
      *
+     * @param string $data
+     * @param string $message
+     * @param string $color
+     * @param int $pad_length
      * @return mixed
      */
-    public function warning();
+    public function warning(string $data = 'Warning!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
 
     /**
      * @DESC         |提示打印
@@ -73,9 +85,13 @@ interface PrintInterface
      *
      * 参数区：
      *
+     * @param string $data
+     * @param string $message
+     * @param string $color
+     * @param int $pad_length
      * @return mixed
      */
-    public function note();
+    public function note(string $data = 'Note!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
 
     /**
      * @DESC         |错误打印
@@ -87,7 +103,8 @@ interface PrintInterface
      *
      * 参数区：
      *
+     * @param string $message
      * @return mixed
      */
-    public function printing();
+    public function printing(string $message = 'Printing!');
 }

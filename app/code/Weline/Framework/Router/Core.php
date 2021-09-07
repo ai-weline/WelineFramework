@@ -48,7 +48,7 @@ class Core
         $this->area_router  = $this->request->getAreaRouter();
         $this->_etc         = Env::getInstance();
         $area_tower         = strtolower($this->request_area);
-        $this->is_admin     = strstr($area_tower, \Weline\Framework\Router\DataInterface::area_BACKEND) ? true : false;
+        $this->is_admin     = (bool)strstr($area_tower, \Weline\Framework\Router\DataInterface::area_BACKEND);
     }
 
     /**
@@ -57,6 +57,7 @@ class Core
      * 参数区：
      *
      * @throws Exception
+     * @throws \ReflectionException
      */
     public function start()
     {
@@ -83,6 +84,7 @@ class Core
             $url = self::default_index_url;
         }
         $url = trim($url, self::url_path_split);
+
         // API
         if ($api_result = $this->Api($url)) {
             return $api_result;
@@ -92,22 +94,18 @@ class Core
         if ($pc_result = $this->Pc($url)) {
             return $pc_result;
         }
-
+        p(DEV);
         // 非开发模式（匹配不到任何路由将报错）
-        if (! DEV) {
-            return $this->request->getResponse()->noRouter();
-        }
-        // 开发模式(静态资源可访问app本地静态资源)
-        if (DEV) {
+        if (!DEV) {
+            $this->request->getResponse()->noRouter();
+        }else{
+            // 开发模式(静态资源可访问app本地静态资源)
             $static = $this->StaticFile($url);
             if ($static) {
                 return $static;
             }
-
             throw new Exception('未知的路由！');
         }
-        // 404
-        return $this->request->getResponse()->noRouter();
     }
 
     /**
@@ -116,7 +114,9 @@ class Core
      * 参数区：
      *
      * @param string $url
-     * @throws Exception|\ReflectionException
+     * @return false|void
+     * @throws Exception
+     * @throws \ReflectionException
      */
     public function Api(string $url)
     {
@@ -160,6 +160,7 @@ class Core
      * 参数区：
      *
      * @param string $url
+     * @return false|void
      * @throws Exception
      * @throws \ReflectionException
      */
@@ -203,12 +204,15 @@ class Core
      * 参数区：
      *
      * @param string $url
-     * @return bool|mixed
+     * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
      */
-    public function StaticFile(string &$url)
+    public function StaticFile(string &$url): mixed
     {
         $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
 
+        p($filename);
         // 阻止读取其他文件
         if (is_bool(strpos($filename, \Weline\Framework\View\Data\DataInterface::dir))) {
             $this->request->getResponse()->noRouter();

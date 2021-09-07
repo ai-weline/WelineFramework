@@ -37,7 +37,7 @@ class File implements CacheInterface, DriverInterface
      */
     public function __init()
     {
-        $this->processCacheFile($this->cachePath . DIRECTORY_SEPARATOR . 'tmp');
+        $this->processCacheFile($this->cachePath . DIRECTORY_SEPARATOR);
     }
 
     public function __wakeup()
@@ -324,9 +324,8 @@ class File implements CacheInterface, DriverInterface
         }
         if (! file_exists($cacheFile)) {
             touch($cacheFile);
+            chmod($cacheFile, 0755);
         }
-        chmod($cacheFile, 0755);
-
         return $cacheFile;
     }
 }

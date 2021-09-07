@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\View\Cache;
 
-class ViewCache extends \Weline\Framework\Cache\CacheManager
+class ViewCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_view')
     {

@@ -7,10 +7,5 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-// 检查安装
-if (PHP_SAPI != 'cli' and !file_exists(dirname(__DIR__) . '/setup/install.lock')) {
-    require dirname(__DIR__) . '/setup/index.php';
-    exit();
-}
 // 加载启动器
 require dirname(__DIR__) . '/app/bootstrap.php';

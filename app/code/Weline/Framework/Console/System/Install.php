@@ -46,7 +46,7 @@ class Install extends \Weline\Framework\Console\CommandAbstract
             // 判断系统
             $input = $this->system->input();
             if (strtolower(chop($input)) !== 'y') {
-                $this->printer->setup('操作已成功取消！', '提示');
+                $this->printer->setup('操作已取消！', '提示');
                 exit();
             }
         }
@@ -132,9 +132,9 @@ class Install extends \Weline\Framework\Console\CommandAbstract
 }
 /*
 php bin/m system:install ^
-    --db-type=mysql ^
-    --db-hostname=192.168.1.3 ^
-    --db-database=weline ^
-    --db-username=weline ^
-    --db-password=weline
+--db-type=mysql ^
+--db-hostname=127.0.0.1 ^
+--db-database=weline ^
+--db-username=weline ^
+--db-password=weline
 */

@@ -32,18 +32,4 @@ class AiwelineNewsCategory extends AbstractModel
         return $exist_category['id'] ?? $this->insert(['name' => $category]);
     }
 
-    function provideTable(): string
-    {
-        return '';
-    }
-
-    function providePrimaryField(): string
-    {
-        return '';
-    }
-
-    function setup(ModelSetup $setup): void
-    {
-        // TODO: Implement setup() method.
-    }
 }

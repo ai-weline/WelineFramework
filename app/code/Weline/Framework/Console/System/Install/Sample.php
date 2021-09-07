@@ -19,11 +19,13 @@ class Sample extends CommandAbstract
         $line_break = IS_WIN ? '^' : '\\';
         $this->printer->success('php bin/m system:install ' . $line_break . '
 --db-type=mysql ' . $line_break . '
---db-hostname=192.168.1.3 ' . $line_break . '
+--db-hostname=127.0.0.1 ' . $line_break . '
 --db-database=weline ' . $line_break . '
 --db-username=weline ' . $line_break . '
 --db-password=weline
             ');
+        $this->printer->note('如果你是Windows11：');
+        $this->printer->success('php bin/m system:install --db-type=mysql --db-hostname=127.0.0.1 --db-database=weline --db-username=weline --db-password=weline');
         exit();
     }
 

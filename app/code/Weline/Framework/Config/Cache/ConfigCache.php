@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Config\Cache;
 
-class ConfigCache extends \Weline\Framework\Cache\CacheManager
+class ConfigCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'config')
     {

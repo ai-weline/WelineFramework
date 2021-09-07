@@ -10,17 +10,17 @@
 namespace Weline\Framework\App;
 
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Cache\CacheManager;
+use Weline\Framework\Cache\CacheFactory;
 
 class Cache
 {
     /**
-     * @var CacheManager
+     * @var CacheFactory
      */
-    private CacheManager $cacheManager;
+    private CacheFactory $cacheManager;
 
     public function __construct(
-        CacheManager $cacheManager
+        CacheFactory $cacheManager
     ) {
         $this->cacheManager = $cacheManager;
     }

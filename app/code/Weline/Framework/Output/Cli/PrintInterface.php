@@ -46,7 +46,6 @@ interface PrintInterface extends \Weline\Framework\Output\PrintInterface
      * @return mixed
      */
     public function setup($data = 'CLI Error!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
-
     /**
      * @DESC         |CLI 成功打印
      *
@@ -63,7 +62,7 @@ interface PrintInterface extends \Weline\Framework\Output\PrintInterface
      * @param int $pad_length
      * @return mixed
      */
-    public function success($data = 'CLI Success!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
+    public function success(string $data = 'CLI Success!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
 
     /**
      * @DESC         |CLI 警告打印
@@ -81,7 +80,7 @@ interface PrintInterface extends \Weline\Framework\Output\PrintInterface
      * @param int $pad_length
      * @return mixed
      */
-    public function warning($data = 'CLI Warning!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
+    public function warning(string $data = 'CLI Warning!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
 
     /**
      * @DESC         |CLI 提示打印
@@ -99,5 +98,5 @@ interface PrintInterface extends \Weline\Framework\Output\PrintInterface
      * @param int $pad_length
      * @return mixed
      */
-    public function note($data = 'CLI Note!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
+    public function note(string $data = 'CLI Note!', string $message = '', string $color = self::ERROR, int $pad_length = 25);
 }
