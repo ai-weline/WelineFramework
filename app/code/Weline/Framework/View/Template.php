@@ -255,7 +255,7 @@ class Template
         }
         $comFileName = $this->fetchFile($comFileName);
 
-        if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+        if (!DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中
@@ -274,9 +274,9 @@ class Template
      */
     protected function fetchFile(string $filename)
     {
-//        if (! DEV && $cache_filename = $this->viewCache->get($filename)) {
-//            return $cache_filename;
-//        }
+        if (! DEV && $cache_filename = $this->viewCache->get($filename)) {
+            return $cache_filename;
+        }
         /*---------观察者模式 检测文件是否被继承-----------*/
         $fileData = new DataObject(['filename' => $filename, 'type' => 'compile']);
         $this->eventsManager->dispatch(
