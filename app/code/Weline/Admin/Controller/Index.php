@@ -10,23 +10,35 @@
 namespace Weline\Admin\Controller;
 
 use Weline\Framework\App\Controller\BackendController;
+use Weline\Framework\App\Session\BackendSession;
+use Weline\Framework\Session\Session;
 
 class Index extends BackendController
 {
+    private BackendSession $backendSession;
+
+    function __construct(
+        BackendSession $backendSession
+    )
+    {
+        $this->backendSession = $backendSession;
+    }
+
     /**
      * @DESC         |方法描述
      *
      * 参数区：
      *
-     * @throws \Weline\Framework\App\Exception
-     * @return bool
      */
     public function index()
     {
-        return $this->fetch();
+        if ($this->backendSession->isLogin()) {
+            return $this->fetch();
+        }
+        return $this->fetch('login');
     }
 
-    public function test()
+    public function test(): string
     {
         return '111111111';
     }

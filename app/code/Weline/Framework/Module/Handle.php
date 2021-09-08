@@ -215,7 +215,7 @@ class Handle implements HandleInterface, RegisterInterface
                 $this->helper->updateModules($this->modules);
             }
             # 升级模块的模型
-            $modelManager->update($name, $this->setup_context, 'upgrade');
+            if(DEV)$modelManager->update($name, $this->setup_context, 'setup');
 
             if ($this->helper->isDisabled($this->modules, $name)) {
                 echo $this->printer->warning(str_pad($name, 45) . '已禁用！');
@@ -227,7 +227,7 @@ class Handle implements HandleInterface, RegisterInterface
             echo $this->printer->success(str_pad($name, 45) . '已更新！');
         } else {
             $this->printer->note("扩展{$name}安装中...");
-            # 模型安装
+            # 模型安装install
             $modelManager->update($name, $this->setup_context, 'install');
             // 全新安装
             $moduleData = [
@@ -257,7 +257,7 @@ class Handle implements HandleInterface, RegisterInterface
             }
 
             # 执行模型setup
-            $modelManager->update($name, $this->setup_context, 'install');
+            if(DEV)$modelManager->update($name, $this->setup_context, 'setup');
 
             // 更新模块
             $this->helper->updateModules($this->modules);

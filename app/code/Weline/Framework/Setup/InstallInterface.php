@@ -11,5 +11,5 @@ namespace Weline\Framework\Setup;
 
 interface InstallInterface
 {
-    public function setup(Data\ModelSetup $setup, Data\Context $context): void;
+    public function setup(Data\Setup $setup, Data\Context $context): void;
 }

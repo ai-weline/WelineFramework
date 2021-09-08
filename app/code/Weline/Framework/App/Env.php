@@ -14,7 +14,7 @@ use Weline\Framework\System\File\Io\File;
 
 class Env
 {
-    const app_path='';
+    const app_path = '';
     const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
 
     const framework_name = 'Weline';
@@ -176,7 +176,7 @@ class Env
         try {
             $this->reload();
         } catch (Exception $e) {
-            throw new Exception(__('系统加载错误：%1',$e->getMessage()));
+            throw new Exception(__('系统加载错误：%1', $e->getMessage()));
         }
     }
 
@@ -291,9 +291,10 @@ class Env
      *
      * 参数区：
      *
+     * @param bool $reget
      * @return array
      */
-    public function getModuleList(bool $reget = false)
+    public function getModuleList(bool $reget = false): array
     {
         if (!$reget && $this->module_list) {
             return $this->module_list;
@@ -302,4 +303,12 @@ class Env
 
         return $this->module_list;
     }
+
+    static function getCommands(): array
+    {
+        $commands = [];
+        if (file_exists(Env::path_COMMANDS_FILE)) $commands = (array)require self::path_COMMANDS_FILE;
+        return $commands;
+    }
+
 }

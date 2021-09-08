@@ -23,7 +23,7 @@ class System
      * @param bool $preview
      * @return array
      */
-    public function exec(string $linux_command, bool $preview = false)
+    public function exec(string $linux_command, bool $preview = false): array|string
     {
         if (IS_WIN) {
             // 删除
@@ -49,8 +49,11 @@ class System
         if ($preview) {
             return $linux_command;
         }
-        exec($linux_command, $output, $return_var);
+        # 检测函数是否解禁
+        if(!function_exists('exec'))throw new Exception(__(' exec() 函数需要解禁: 请到 php.ini 中找到 disable_function 删除 exec '));
 
+        exec($linux_command, $output, $return_var);
+        
         return [$output, $return_var];
     }
 

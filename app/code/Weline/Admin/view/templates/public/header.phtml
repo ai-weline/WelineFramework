@@ -8,9 +8,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title><?php echo $this->getData('title');?></title>
+    <title><?php echo $this->getData('title'); ?></title>
     <link rel="Shortcut Icon" href="@static/img/favicon.png">
     <link rel="Shortcut Icon" href="@static/img/favicon.png">
     <link rel="Bookmark" href="@static/img/favicon.png">
-<!--    <script src="@static/lib/vue/vue2.6.11.js"></script>-->
+    <!--加载requirejs-->
+    <?php if (DEV) : ?>
+        <script src="@static/lib/requirejs/2.3.6/requirejs.js"></script>
+    <?php
+    else:
+    ?>
+        <script src="@static/lib/requirejs/2.3.6/requirejs.min.js"></script>
+    <?php endif; ?>
+    <!--加载require常用js模块-->
+    <script src="@static/require.config.js"></script>
+    <!--    <script src="@static/lib/vue/vue2.6.11.js"></script>-->
 

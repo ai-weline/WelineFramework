@@ -17,6 +17,7 @@ use Weline\Framework\Database\Db\Ddl\Table\Alter;
 use Weline\Framework\Database\Db\DdlFactory;
 use Weline\Framework\Database\DbManager;
 use Weline\Framework\Database\DbManager\ConfigProvider;
+use Weline\Framework\Output\Cli\Printing;
 
 /**
  * 这个类用来对Model表结构修改，自动读取Model模型的表名和主键
@@ -26,6 +27,7 @@ class ModelSetup extends DbManager
     protected AbstractModel $model;
 
     private Table $ddl_table;
+    private Printing $printing;
 
     /**
      * Setup constructor.
@@ -36,11 +38,13 @@ class ModelSetup extends DbManager
      */
     function __construct(
         ConfigProvider $configProvider,
+        Printing $printing,
         DdlFactory     $ddl_table
     )
     {
         parent::__construct($configProvider);
         $this->ddl_table = $ddl_table->create();
+        $this->printing = $printing;
     }
 
     /**
@@ -167,5 +171,19 @@ class ModelSetup extends DbManager
     function query(string $sql): mixed
     {
         return $this->getLinker()->query($sql)->fetch();
+    }
+
+    /**
+     * @DESC          # 读取打印器
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/8 21:56
+     * 参数区：
+     * @return Printing
+     */
+    function getPrinting(): Printing
+    {
+        return $this->printing;
     }
 }

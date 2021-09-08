@@ -20,12 +20,12 @@ class WelineMenu extends Model
 
     function setup(ModelSetup $setup, Context $context): void
     {
-        // TODO: Implement setup() method.
+        $setup->getPrinting()->setup('setup');
     }
 
     function upgrade(ModelSetup $setup, Context $context): void
     {
-        // TODO: Implement upgrade() method.
+        $setup->getPrinting()->warning('upgrade');
     }
 
     /**
@@ -35,9 +35,11 @@ class WelineMenu extends Model
      */
     function install(ModelSetup $setup, Context $context): void
     {
-        if($setup->tableExist()){
+        $printing = $setup->getPrinting();
+        $printing->setup('安装'.$this->getTable().'...');
+        if(!$setup->tableExist()){
             $setup->createTable()
-                ->addColumn('id', TableInterface::column_type_INTEGER, 11, 'not null primary key unsigned auto_increment', '菜单ID')
+                ->addColumn('id', TableInterface::column_type_INTEGER, 11, 'not null primary key auto_increment', '菜单ID')
                 ->addColumn('p_id', TableInterface::column_type_INTEGER, 11, 'unsigned', '父级ID')
                 ->addColumn('name', TableInterface::column_type_VARCHAR, 20, 'not null ', '菜单')
                 ->addColumn('url', TableInterface::column_type_VARCHAR, 255, 'not null ', 'URL')

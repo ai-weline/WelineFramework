@@ -9,7 +9,7 @@
 
 namespace Aiweline\NewsSource\Setup;
 
-use Weline\Framework\Database\Db\Ddl\Create;
+use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Setup\Data;
 use Weline\Framework\Setup\InstallInterface;
 
@@ -38,28 +38,28 @@ class Install implements InstallInterface
                 '新闻分类表'
             )->addColumn(
                 'id',
-                Create::column_type_INTEGER,
+                TableInterface::column_type_INTEGER,
                 11,
                 'primary key NOT NULL AUTO_INCREMENT',
                 'ID'
             )->addColumn(
                 'name',
-                Create::column_type_VARCHAR,
+                TableInterface::column_type_VARCHAR,
                 60,
                 'NOT NULL',
                 '分类名'
             )->addColumn(
                 'parent_id',
-                Create::column_type_INTEGER,
+                TableInterface::column_type_INTEGER,
                 11,
                 '',
                 '父分类'
             )->addIndex(
-                Create::index_type_FULLTEXT,
+                TableInterface::index_type_FULLTEXT,
                 'name',
                 'name'
             )->addIndex(
-                Create::index_type_DEFAULT,
+                TableInterface::index_type_DEFAULT,
                 'parent_id',
                 'parent_id'
             )->create();
@@ -73,30 +73,30 @@ class Install implements InstallInterface
                 '新闻来源表'
             )->addColumn(
                 'id',
-                Create::column_type_INTEGER,
+                TableInterface::column_type_INTEGER,
                 11,
                 'primary key NOT NULL AUTO_INCREMENT',
                 'ID'
             )->addColumn(
                 'name',
-                Create::column_type_VARCHAR,
+                TableInterface::column_type_VARCHAR,
                 '60',
                 'NOT NULL',
                 '来源名称'
             )->addColumn(
                 'info',
-                Create::column_type_TEXT,
+                TableInterface::column_type_TEXT,
                 1000,
                 '',
                 '信息'
             )->addColumn(
                 'create_time',
-                Create::column_type_DATETIME,
+                TableInterface::column_type_DATETIME,
                 0,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '建立时间'
             )->addIndex(
-                Create::index_type_FULLTEXT,
+                TableInterface::index_type_FULLTEXT,
                 'name',
                 'name'
             )->addConstraints(
@@ -113,58 +113,58 @@ class Install implements InstallInterface
                 '新闻表'
             )->addColumn(
                 'id',
-                Create::column_type_INTEGER,
+                TableInterface::column_type_INTEGER,
                 11,
                 'primary key NOT NULL AUTO_INCREMENT',
                 'ID'
             )->addColumn(
                 'source_id',
-                Create::column_type_INTEGER,
+                TableInterface::column_type_INTEGER,
                 11,
                 'NOT NULL',
                 '资源ID'
             )->addColumn(
                 'category_id',
-                Create::column_type_INTEGER,
+                TableInterface::column_type_INTEGER,
                 11,
                 'NOT NULL',
                 '分类ID'
             )->addColumn(
                 'title',
-                Create::column_type_VARCHAR,
+                TableInterface::column_type_VARCHAR,
                 60,
                 'NOT NULL',
                 '新闻标题'
             )->addColumn(
                 'author',
-                Create::column_type_VARCHAR,
+                TableInterface::column_type_VARCHAR,
                 20,
                 'NOT NULL',
                 '作者'
             )->addColumn(
                 'abstract',
-                Create::column_type_VARCHAR,
+                TableInterface::column_type_VARCHAR,
                 120,
                 'NOT NULL',
                 '新闻摘要'
             )->addColumn(
                 'pushtime',
-                Create::column_type_TIMESTAMP,
+                TableInterface::column_type_TIMESTAMP,
                 0,
                 '',
                 '发布时间'
             )->addColumn(
                 'create_time',
-                Create::column_type_DATETIME,
+                TableInterface::column_type_DATETIME,
                 0,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '创建时间'
             )->addIndex(
-                Create::index_type_DEFAULT,
+                TableInterface::index_type_DEFAULT,
                 'category_id',
                 'category_id'
             )->addIndex(
-                Create::index_type_FULLTEXT,
+                TableInterface::index_type_FULLTEXT,
                 'title',
                 'title'
             )->addConstraints(
@@ -217,24 +217,24 @@ class Install implements InstallInterface
                 '新闻数据表'
             )->addColumn(
                 'post_id',
-                Create::column_type_INTEGER,
+                TableInterface::column_type_INTEGER,
                 11,
                 'NOT NULL',
                 'POST ID'
             )->addColumn(
                 'content',
-                Create::column_type_TEXT,
+                TableInterface::column_type_TEXT,
                 20000,
                 'NOT NULL',
                 '新闻内容'
             )->addColumn(
                 'create_time',
-                Create::column_type_DATETIME,
+                TableInterface::column_type_DATETIME,
                 0,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '创建时间'
             )->addIndex(
-                Create::index_type_DEFAULT,
+                TableInterface::index_type_DEFAULT,
                 'post_id',
                 'post_id'
             )->addConstraints(
@@ -274,58 +274,58 @@ class Install implements InstallInterface
                 '新闻用户表'
             )->addColumn(
                 'id',
-                Create::column_type_INTEGER,
+                TableInterface::column_type_INTEGER,
                 11,
                 'primary key NOT NULL AUTO_INCREMENT',
                 '用户ID'
             )->addColumn(
                 'name',
-                Create::column_type_VARCHAR,
+                TableInterface::column_type_VARCHAR,
                 12,
                 'NOT NULL',
                 '姓名'
             )->addColumn(
                 'pw',
-                Create::column_type_VARCHAR,
+                TableInterface::column_type_VARCHAR,
                 18,
                 'NOT NULL',
                 '密码'
             )->addColumn(
                 'email',
-                Create::column_type_VARCHAR,
+                TableInterface::column_type_VARCHAR,
                 60,
                 'NOT NULL',
                 '邮箱'
             )->addColumn(
                 'token',
-                Create::column_type_TEXT,
+                TableInterface::column_type_TEXT,
                 256,
                 'NULL',
                 '令牌'
             )->addColumn(
                 'login_time',
-                Create::column_type_DATETIME,
+                TableInterface::column_type_DATETIME,
                 0,
                 'NULL',
                 '登录时间'
             )->addColumn(
                 'expire_time',
-                Create::column_type_DATETIME,
+                TableInterface::column_type_DATETIME,
                 0,
                 'NULL',
                 'token过期时间'
             )->addColumn(
                 'create_time',
-                Create::column_type_DATETIME,
+                TableInterface::column_type_DATETIME,
                 0,
                 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
                 '创建时间'
             )->addIndex(
-                Create::index_type_DEFAULT,
+                TableInterface::index_type_DEFAULT,
                 'id',
                 'id'
             )->addIndex(
-                Create::index_type_FULLTEXT,
+                TableInterface::index_type_FULLTEXT,
                 'name',
                 'name'
             )->create();

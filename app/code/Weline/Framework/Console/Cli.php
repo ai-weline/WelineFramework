@@ -36,15 +36,13 @@ class Cli extends CliAbstract
         switch (count($this->argv)) {
             case 1:
                 ObjectManager::getInstance($command_class['class'])->execute();
-
                 break;
             default:
                 ObjectManager::getInstance($command_class['class'])->execute($this->argv);
-
                 break;
         }
         $this->printer->printing("\n");
-        $this->printer->note(__('执行命令：') . $command_class['command'] . ' ' . (isset($this->argv[1]) ? $this->argv[1] : '')/*,$this->printer->colorize('CLI-System','red')*/);
+        $this->printer->note(__('执行命令：') . $command_class['command'] . ' ' . ($this->argv[1] ?? '')/*,$this->printer->colorize('CLI-System','red')*/);
     }
 
     /**
@@ -60,7 +58,7 @@ class Cli extends CliAbstract
      * @param array $commands
      * @return array
      */
-    private function recommendCommand(array $commands)
+    private function recommendCommand(array $commands): array
     {
         // 新算法
 
@@ -110,7 +108,7 @@ class Cli extends CliAbstract
      * @throws Exception
      * @return array
      */
-    private function checkCommand()
+    private function checkCommand(): array
     {
         $arg0 = strtolower(trim($this->argv[0]));
         if ($arg0 === 'command:upgrade') {
@@ -121,11 +119,11 @@ class Cli extends CliAbstract
                 exit();
             }
         }
-        if ($arg0 !== 'command:upgrade' && ! file_exists(Env::path_COMMANDS_FILE)) {
+        $commands = Env::getCommands();
+        if ($arg0 !== 'command:upgrade' && empty($commands)) {
             exit($this->printer->error('命令系统异常！请完整执行（不能简写）更新模块命令后重试：php bin/m command:upgrade'));
         }
 
-        $commands = include Env::path_COMMANDS_FILE;
         // 检查命令
         $command_path = '';
         foreach ($commands as $group => $group_commands) {

@@ -11,14 +11,9 @@ declare(strict_types=1);
 namespace Aiweline\Index\Model;
 
 
-use Weline\Framework\Database\Api\Db\Ddl\Table\CreateInterface;
-use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
-use Weline\Framework\Database\Db\Ddl\Create;
 use Weline\Framework\Database\Model;
-use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
-use Weline\Framework\Setup\Db\Setup;
 
 class Index extends Model
 {
@@ -63,7 +58,7 @@ class Index extends Model
 
     function upgrade(ModelSetup $setup, Context $context): void
     {
-        // TODO: Implement upgrade() method.
+        // TODO: 处理安装时配置不写，以及删除模组后模型安装列表依然存在问题
     }
 
     function install(ModelSetup $setup, Context $context): void

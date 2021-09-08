@@ -105,7 +105,7 @@ class Upgrade extends CommandAbstract
      *
      * @return array
      */
-    public function scan()
+    public function scan(): array
     {
         return $this->getDirFileCommand();
     }
@@ -123,7 +123,7 @@ class Upgrade extends CommandAbstract
      * @throws \ReflectionException
      * @return array
      */
-    private function getDirFileCommand()
+    private function getDirFileCommand(): array
     {
         $commands = [];
         /**@var $scanner Scan */
@@ -158,7 +158,7 @@ class Upgrade extends CommandAbstract
                         if ($command) {
                             $command_tip        = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
                             $command_class_path = $this->command->getCommandPath($module_name, $command);
-                            // 排除不存在的类
+                            // 排除非框架系统命令类
                             if (class_exists($command_class_path)) {
                                 try {
                                     $command_class = ObjectManager::getInstance($command_class_path);

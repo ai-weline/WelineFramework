@@ -226,7 +226,6 @@ abstract class Query implements QueryInterface
                 break;
         }
         $this->fetch_type = '';
-        $this->linker->getLink()->commit();
         return $result;
     }
 

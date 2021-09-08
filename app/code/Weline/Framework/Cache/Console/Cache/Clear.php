@@ -46,6 +46,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                     foreach ($cache as $app_cache) {
                         $this->printing->printing(__($app_cache['class'] . '...'));
                         ObjectManager::getInstance($app_cache['class'] . 'Factory')->clear();
+                        # TODO 清理tpl全页缓存 FIXME存在一个tpl缓存存到了vendor目录的问题
                     }
 
                     break;
@@ -54,6 +55,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                     foreach ($cache as $framework_cache) {
                         $this->printing->printing(__($framework_cache['class'] . '...'));
                         ObjectManager::getInstance($framework_cache['class'] . 'Factory')->clear();
+                        # TODO 清理tpl全页缓存 FIXME存在一个tpl缓存存到了vendor目录的问题
                     }
 
                     break;

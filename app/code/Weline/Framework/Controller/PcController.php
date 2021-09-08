@@ -38,7 +38,7 @@ class PcController extends Core
      * @param Template $template
      * @return PcController
      */
-    public function setTemplate(Template $template)
+    public function setTemplate(Template $template): static
     {
         $this->_template = $template;
 
@@ -53,7 +53,7 @@ class PcController extends Core
      * @param string $key
      * @return array|mixed|null
      */
-    public function getData(string $key = null)
+    public function getData(string $key = null): mixed
     {
         return $this->getTemplate()->getData($key);
     }
@@ -80,10 +80,10 @@ class PcController extends Core
      * 参数区：
      *
      * @param array|string $tpl_var
-     * @param array|string $value
+     * @param array|string|null $value
      * @return PcController
      */
-    protected function assign($tpl_var, $value = null)
+    protected function assign(array|string $tpl_var, array|string $value = null): static
     {
         if (is_string($tpl_var)) {
             $this->getTemplate()->assign($tpl_var, $value);
@@ -102,12 +102,10 @@ class PcController extends Core
      *
      * 参数区：
      *
-     * @param string $fileName
-     * @throws \Weline\Framework\Exception\Core
-     * @throws Exception
+     * @param string|null $fileName
      * @return bool
      */
-    protected function fetch(string $fileName = null)
+    protected function fetch(string $fileName = null): void
     {
         if ($fileName === null) {
             $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
@@ -115,7 +113,7 @@ class PcController extends Core
             $fileName         = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $parent_call_info['function'];
         }
 
-        return $this->getTemplate()->fetch($fileName);
+        $this->getTemplate()->fetch($fileName);
     }
 
     /**
@@ -125,7 +123,7 @@ class PcController extends Core
      *
      * @return string
      */
-    public function getViewBaseDir()
+    public function getViewBaseDir(): string
     {
         $class_name = get_class($this);
         $cache_key  = 'module_of_' . $class_name;

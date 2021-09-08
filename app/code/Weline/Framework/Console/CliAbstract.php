@@ -19,24 +19,24 @@ abstract class CliAbstract implements CommandInterface
     /**
      * @var array
      */
-    protected $argv;
+    protected array $argv;
 
     /**
      * @var string
      */
-    protected $msg;
+    protected string $msg;
 
     /**
      * @var string
      */
-    protected $command_file;
+    protected mixed $command_file;
 
     /**
      * @var \ReflectionClass
      */
-    protected $reflection_class;
+    protected \ReflectionClass $reflection_class;
 
-    public $printer;
+    public \Weline\Framework\Output\Cli\Printing $printer;
 
     /**
      * Cli 初始函数...
@@ -44,7 +44,7 @@ abstract class CliAbstract implements CommandInterface
      * @param array $argv
      * @throws \ReflectionException
      */
-    public function __construct($msg, $argv)
+    public function __construct(string $msg, array $argv)
     {
         $this->command_file     = array_shift($argv);
         $this->argv             = $argv;
@@ -103,13 +103,13 @@ abstract class CliAbstract implements CommandInterface
      *
      * 参数区：
      *
-     * @param string|null $group
-     * @throws \Weline\Framework\App\Exception
+     * @param string|null $args
      * @return mixed|void
+     *@throws \Weline\Framework\App\Exception
      */
-    public function execute($group = null)
+    public function execute($args = null)
     {
-        $commands = isset($this->getCommandList()[$group]) ? $this->getCommandList()[$group] : $this->getCommandList();
+        $commands = isset($this->getCommandList()[$args]) ? $this->getCommandList()[$args] : $this->getCommandList();
 
         $this->printer->printList($commands);
     }
@@ -130,25 +130,11 @@ abstract class CliAbstract implements CommandInterface
     public function getCommandList(): array
     {
         // 扫描所有命令
-        $file_path = Env::path_COMMANDS_FILE;
-        if (is_file($file_path)) {
-            $commands = include $file_path;
-            if (empty($commands)) {
-                exec('php ' . BP . 'bin/m command:upgrade', $result);
-
-                return require $file_path;
-            }
-
-            return $commands;
+        $commands = Env::getCommands();
+        if (empty($commands)) {
+            exec('php ' . BP . 'bin/m command:upgrade', $result);
+            return Env::getCommands();
         }
-
-        $file = new File();
-        $file->open($file_path);
-        $text = '<?php return array();';
-        $file->write($text);
-        $file->close();
-        exec('php ' . BP . 'bin/m module:command:upgrade');
-
-        return require $file_path;
+        return $commands;
     }
 }

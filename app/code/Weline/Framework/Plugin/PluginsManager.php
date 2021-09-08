@@ -255,10 +255,11 @@ class PluginsManager
 //        p($types_plugins_info['Aiweline\Index\Controller\Index']);
         // 正式环境则缓存
         if ($cache) {
-            $this->plugins = $this->pluginCache->set('plugins_data', $types_plugins_info);
+            $this->pluginCache->set('plugins_data', $types_plugins_info);
+            $this->plugins = $this->pluginCache->get('plugins_data');
+        }else{
+            $this->plugins = $types_plugins_info;
         }
-        $this->pluginCache->set('plugins_data', $types_plugins_info);
-        $this->plugins = $this->pluginCache->get('plugins_data');
 
         return $this->plugins;
     }

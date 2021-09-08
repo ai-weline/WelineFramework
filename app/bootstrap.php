@@ -8,11 +8,11 @@
  */
 
 // 检查安装
-if ('cli'!==PHP_SAPI and !file_exists(dirname(__DIR__) . '/setup/install.lock')) {
+if ('cli' !== PHP_SAPI and !file_exists(dirname(__DIR__) . '/setup/install.lock')) {
     require dirname(__DIR__) . '/setup/index.php';
     exit();
 }
-$start_time= microtime(true);
+$start_time = microtime(true);
 
 // 运行模式
 defined('CLI') || define('CLI', PHP_SAPI === 'cli');
@@ -23,7 +23,7 @@ defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // 应用 目录 (默认访问 web)
 defined('APP_PATH') || define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
 // 应用 配置 目录 (默认访问 etc)
-defined('APP_ETC_PATH') || define('APP_ETC_PATH', APP_PATH. 'etc' . DIRECTORY_SEPARATOR);
+defined('APP_ETC_PATH') || define('APP_ETC_PATH', BP . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
 // 检测自动加载
 try {
     $autoloader = BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';

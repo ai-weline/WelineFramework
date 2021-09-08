@@ -22,7 +22,7 @@ use Weline\Framework\System\File\Scanner;
 class Reader extends \Weline\Framework\System\ModuleFileReader
 {
     private CacheInterface $dbModelCache;
-    private array $models;
+    private ?array $models;
 
     function __construct(
         DbModelCache $dbModelCache,
@@ -50,8 +50,8 @@ class Reader extends \Weline\Framework\System\ModuleFileReader
         if (empty($this->models)) {
             $cache_key = 'db_models';
             # 非开发模式读取缓存
-            if (!DEV && $this->models = $this->dbModelCache->get($cache_key)) {
-                return $this->models;
+            if (!DEV && $models = $this->dbModelCache->get($cache_key)) {
+                return $this->models = $models;
             }
             # 模型读取回调（排除非模型文件）
             $callback = function ($files) {

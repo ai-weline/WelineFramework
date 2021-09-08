@@ -94,7 +94,6 @@ class Core
         if ($pc_result = $this->Pc($url)) {
             return $pc_result;
         }
-        p(DEV);
         // 非开发模式（匹配不到任何路由将报错）
         if (!DEV) {
             $this->request->getResponse()->noRouter();
@@ -212,7 +211,6 @@ class Core
     {
         $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
 
-        p($filename);
         // 阻止读取其他文件
         if (is_bool(strpos($filename, \Weline\Framework\View\Data\DataInterface::dir))) {
             $this->request->getResponse()->noRouter();
