@@ -59,39 +59,22 @@ class TemplateFetchFile implements ObserverInterface
         $fileData = $event->getData('data');
 
         $module_file_path = $fileData->getData('filename');
-        // 非开发模式 判断缓存中是否存在 主题文件，存在则直接返回 不存在则解析主题文件
-        if (! DEV && $cache_theme_file_path = $this->themeCache->get($module_file_path)) {
-            $fileData->setData('filename', $cache_theme_file_path);
-        }
 
         # 开始分析主题路径
         try {
             $theme = $this->welineTheme->getActiveTheme();
-        } catch (DataNotFoundException $e) {
-            if (DEV) {
-                throw  new Exception(__('主题数据找不到:') . $e->getMessage());
-            }
-        } catch (ModelNotFoundException $e) {
-            if (DEV) {
-                throw  new Exception(__('主题Mode找不到:') . $e->getMessage());
-            }
-        } catch (DbException $e) {
-            if (DEV) {
-                throw  new Exception(__('数据库异常：') . $e->getMessage());
-            }
+        } catch (\Exception $exception){
+            throw  new Exception(__('主题异常：') . $exception->getMessage());
         }
+
         if (! isset($theme)) {
             $theme = $this->welineTheme->setData(Env::default_theme_DATA);
         }
 
         // 组织主题文件位置
         $theme_file_path = str_replace(APP_PATH, $theme->getPath(), $module_file_path);
-        // 非开发模式启用缓存
-        if (is_file($theme_file_path)) {
-            if (! DEV) {
-                $this->themeCache->set($module_file_path, $theme_file_path);
-            }
-        } else {
+        // 如果未被继承则还原为原Module模板文件
+        if (!is_file($theme_file_path)) {
             $theme_file_path = $module_file_path;
         }
         $fileData->setData('filename', $theme_file_path);

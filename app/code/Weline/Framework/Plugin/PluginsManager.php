@@ -56,7 +56,8 @@ class PluginsManager
             return $this->plugins;
         }
         // 检测插件缓存
-        if ($cache && $this->plugins = $this->pluginCache->get('plugins_data')) {
+        if ($cache && $plugins = $this->pluginCache->get('plugins_data')) {
+            $this->plugins = $plugins;
             return $this->plugins;
         }
 

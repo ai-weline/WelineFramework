@@ -287,6 +287,7 @@ class Template
         if (!DEV) {
             $this->viewCache->set($filename, $event_filename);
         }
+
         return $event_filename;
     }
 

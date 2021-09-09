@@ -39,7 +39,7 @@ class System
                 'rm' => 'del',
                 '-f' => '/F',
                 'cp' => 'xcopy',
-                '-r' => '/S/Q/Y',
+                '-r' => '/S/Q',
             ];
 
             foreach ($linux_to_win as $key => $item) {
