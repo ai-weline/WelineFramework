@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8">
     <title>欢迎加入 Weline Framework 的世界! 发现不一样的世界！</title>
-    <link rel="Shortcut Icon" href="@static/img/favicon.png">
+    <link rel="Shortcut Icon" href="@static(/img/favicon.png)">
     <?php
     /**
      * @var $this \Weline\Framework\View\Template
      */
     ?>
-    <link href="@static/css/index.css" type="text/css" rel="stylesheet">
-    <script src="@static/js/demo.js"></script>
+    <link href="@static(/css/index.css)" type="text/css" rel="stylesheet">
+    <script src="@static(/js/demo.js)"></script>
 </head>
 <body>
 <div class="header">
@@ -58,6 +58,7 @@
         <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('api_admin', 'api_admin'); ?>/rest/V1/index"
            target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>
         <a href="hello/rest/v1/index/index" target="_blank" onclick="openWindow(this.href,'前台api')">前台api</a>
+        <a href="/index/moduleTemplateFetch" target="_blank" onclick="openWindow(this.href,'调用其他Module模板文件')">调用其他Module模板文件</a>
     </div>
 </div>
 </body>

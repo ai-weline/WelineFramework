@@ -34,7 +34,7 @@ class Register implements RegisterDataInterface
      * @throws ConsoleException
      * @throws \Weline\Framework\App\Exception
      */
-    public static function register(string $type, $param, string $version = '', string $description = '')
+    public static function register(string $type, array|string $param, string $version = '', string $description = '')
     {
         $install_params = func_get_args();
         switch ($type) {

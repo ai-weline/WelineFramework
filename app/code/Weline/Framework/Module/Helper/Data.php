@@ -43,7 +43,6 @@ class Data extends AbstractHelper
             $moduleDir      = $appScanner->scanDirTree(APP_PATH . $this->moduleNameToPath($modules, $name), 12);
 
             $routerRegister = new Register();
-
             /** @var $Files \Weline\Framework\System\File\Data\File[] */
             foreach ($moduleDir as $dir => $Files) {
                 // Api路由
@@ -82,7 +81,7 @@ class Data extends AbstractHelper
                             ]);
                         }
                     }
-                } // PC路由 TODO 处理PC路由基类引起的未知路由
+                } // PC路由
                 elseif (strstr($dir, Handle::pc_DIR)) {
                     foreach ($Files as $controllerFile) {
                         $controllerDirArray  = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
@@ -108,7 +107,7 @@ class Data extends AbstractHelper
                                 'type'           => DataInterface::type_PC,
                                 'area'           => $ctl_area,
                                 'module'         => $name,
-                                'router'         => $baseRouter . '/' . $method,
+                                'router'         => $baseRouter . '/' . strtolower($method),
                                 'class'          => $controllerClassName,
                                 'method'         => $method,
                                 'request_method' => $request_method,
