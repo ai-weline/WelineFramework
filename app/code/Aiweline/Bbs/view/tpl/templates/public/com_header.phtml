@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<!-- saved from url=(0025)https://bbs.aiweline.com/ -->
+
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+
+    <?php $this->getData('data');?>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="keywords" content="新闻,程序员,编程论坛,下载中心,编程网,IT,aiweline,bbs,微蓝,微蓝网,网际在线,技术栈,破解,软件">
+
+    <meta name="description"
+          content="欢迎来到网际技术论坛(bbs.aiweline.com),这里有你想要的一切助力,助你尽快成为coder界大神! 注意:请发布教程时尽量跟随版本更新,不要让教程版本落后,让未来新秀躺坑！">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+
+    <title><?php echo $this->vars["title"]; ?></title>
+
+    <style type="text/css">
+        @import url("http://at.alicdn.com/t/font_768030_fzvpgls89y6.css");
+
+        .icon-v1 {
+            color:;
+        }
+
+        .icon-v2 {
+            color:;
+        }
+
+        .icon-v3 {
+            color:;
+        }
+
+        .icon-v4 {
+            color:;
+        }
+
+        .icon-v5 {
+            color:;
+        }
+
+        .icon-v6 {
+            color:;
+        }
+
+        .icon-v101 {
+            color:;
+        }
+
+        .icon-v102 {
+            color:;
+        }
+
+        .icon-v103 {
+            color:;
+        }
+
+        .icon-v104 {
+            color:;
+        }
+
+        .icon-v105 {
+            color:;
+        }
+
+        .icon-v106 {
+            color:;
+        }
+    </style>
+
+    <link rel="shortcut icon" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/favicon.ico"));// 读取资源文件 ?>">
+    <link rel="icon" sizes="32x32" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/favicon.ico"));// 读取资源文件 ?>">
+    <link rel="Bookmark" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/favicon.ico"));// 读取资源文件 ?>">
+
+    <style>
+        table.nav_tag_list {
+            margin-bottom: 0.2rem;
+        }
+
+        table.nav_tag_list td {
+            padding: 0.3rem;
+        }
+
+        table.nav_tag_list td a {
+            margin-right: 0.2rem;
+        }
+
+        .nav_tag_list .active {
+            font-weight: normal
+        }
+
+        .tag_option {
+            border: 1px solid #bbb;
+            padding: 1px 10px;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .tag_option:active, .tag_option.active {
+            border: 1px solid #000;
+            background: #000;
+            color: #fff;
+            text-decoration: none;
+        }
+    </style>
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/bootstrap.css"));// 读取资源文件 ?>">
+
+
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/bootstrap-bbs.css"));// 读取资源文件 ?>">
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/huux-notice.css"));// 读取资源文件 ?>" name="huux_notice">
+    <style data-for="huux-postlist">.postlist-orderby-uid {
+            font-size: 12px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .postlist-orderby-uid > span:last-child {
+            display: none
+        }
+
+        .postlist-orderby-uid.active > span:first-child {
+            display: none
+        }
+
+        .postlist-orderby-uid.active > span:last-child {
+            display: inline-block
+        }
+
+        .postlist-sort {
+            cursor: pointer;
+            vertical-align: middle;
+            outline: none;
+            width: 16px;
+            height: 16px;
+        }
+
+        .postlist-sort svg {
+            fill: var(--gray)
+        }
+
+        .postlist-sort.active > .desc, .postlist-sort > .asc {
+            display: none
+        }
+
+        .postlist-sort.active > .asc {
+            display: block
+        }
+
+        .postlist .post.newpost {
+            opacity: 1
+        }
+    </style>
+    <style type="text/css">
+        .avatar-1, .avatar-2, .avatar-3, .avatar-4, .avatar-5 {
+            border-radius: 0;
+        }
+    </style>
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/zaesky_theme_zhihulan.css"));// 读取资源文件 ?>">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/style.css"));// 读取资源文件 ?>">
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/style(1).css"));// 读取资源文件 ?>">
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/style2.css"));// 读取资源文件 ?>">
+
+    <!-- 限制只在显示签名的页面（帖子页)加载css，避免增加其它页面负担。 -->
+    <!-- TAG Style -->
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::tag.css"));// 读取资源文件 ?>">
+    <style>
+        .haya-post-info-username.today .username {
+            color: var(--danger) !important;
+        }
+
+        .haya-post-info-username.today .date {
+            color: var(--danger) !important;
+        }
+    </style>
+    <style type="text/css" data-model="huux_hlight">.huux_thread_hlight_style1 {
+            color: #D9534D;
+            font-weight: normal
+        }
+
+        .huux_thread_hlight_style2 {
+            color: #F0AD4E;
+            font-weight: normal
+        }
+
+        .huux_thread_hlight_style3 {
+            color: #5BC0DE;
+            font-weight: normal
+        }
+
+        .huux_thread_hlight_style4 {
+            color: #5CB85C;
+            font-weight: normal
+        }
+
+        .huux_thread_hlight_style5 {
+            color: #337AB7;
+            font-weight: normal
+        }</style>
+    <link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="https://bbs.aiweline.com/index-0.htm?rss=1">
+    <link rel="alternate" type="application/rdf+xml" title="RSS 1.0" href="https://bbs.aiweline.com/index-0.htm?rss=1">
+    <style>
+        /*
+        box-shadow: 0 0 5px red;
+        */
+        @keyframes xndigest {
+            0% {
+                color: red;
+                text-shadow: 0 0 3px #FF8D8D;
+            }
+            20% {
+                color: orange;
+                text-shadow: 0 0 3px #FFE1AD;
+            }
+            40% {
+                color: green;
+                text-shadow: 0 0 3px #B3FFAF;
+            }
+            65% {
+                color: blue;
+                text-shadow: 0 0 3px #AFE4FF;
+            }
+            80% {
+                color: purple;
+                text-shadow: 0 0 3px #FFC9F3;
+            }
+            100% {
+                color: red;
+                text-shadow: 0 0 3px #FF8D8D;
+            }
+        }
+
+        /*水晶闪烁效果 占内存*/
+        i.icon-diamond.flash {
+            color: #D53D38; /*animation: xndigest 5s linear infinite;*/
+        }
+
+        i.icon-digest-1 {
+            text-shadow: 0 0 3px #AFE4FF;
+        }
+
+        i.icon-digest-2 {
+            text-shadow: 0 0 3px #FFF177;
+        }
+
+        i.icon-digest-3 {
+            text-shadow: 0 0 3px #FF8D8D;
+        }
+
+        .icon-digest-1:before {
+            content: "\f219";
+            color: #5BC0DE;
+        }
+
+        /* "\f0a5" */
+        .icon-digest-2:before {
+            content: "\f219";
+            color: #ECA541;
+        }
+
+        .icon-digest-3:before {
+            content: "\f219";
+            color: #D53D38;
+        }
+
+        .icon-digest-3:afteer {
+            content: "精";
+            color: #D53D38;
+        }
+    </style>
+    <style>
+        /*
+        .toggle_more {
+            max-height: 100px;
+        }
+        */
+        .update_log_list a.update_log_history,
+        .update_log_list a.update_log_delete {
+            display: none;
+        }
+
+        .update_log_list > li:hover {
+            background: var(--gray-300);
+        }
+
+        .update_log_list > li:hover > a.update_log_history,
+        .update_log_list > li:hover > a.update_log_delete {
+            display: inline-block;
+        }
+
+    </style>
+    <link rel="stylesheet" href="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::share.min.css"));// 读取资源文件 ?>">
+
+    <script src="<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Bbs::/hm.js"));// 读取资源文件 ?>"></script>
+    <script type="text/javascript"
+            src="chrome-extension://dbjbempljhcmhlfpfacalomonjpalpko/scripts/inspector.js"></script>
+    <input type="hidden" id="_w_brink">
+    <script style="display: none;">var tvt = tvt || {};
+        tvt.captureVariables = function (a) {
+            for (var b =
+                new Date, c = {}, d = Object.keys(a || {}), e = 0, f; f = d[e]; e++) if (a.hasOwnProperty(f) && "undefined" != typeof a[f]) try {
+                var g = [];
+                c[f] = JSON.stringify(a[f], function (l, t) {
+                    try {
+                        if ("function" !== typeof t) {
+                            if ("object" === typeof t && null !== t) {
+                                if (t instanceof HTMLElement || t instanceof Node || -1 != g.indexOf(t)) return;
+                                g.push(t)
+                            }
+                            return t
+                        }
+                    } catch (A) {
+                    }
+                })
+            } catch (l) {
+            }
+            a = document.createEvent("CustomEvent");
+            a.initCustomEvent("TvtRetrievedVariablesEvent", !0, !0, {variables: c, date: b});
+            window.dispatchEvent(a)
+        };
+        window.setTimeout(function () {
+            tvt.captureVariables({
+                'dataLayer.hide': (function (a) {
+                    a = a.split(".");
+                    for (var b = window, c = 0; c < a.length && (b = b[a[c]], b); c++) ;
+                    return b
+                })('dataLayer.hide'), 'gaData': window['gaData'], 'dataLayer': window['dataLayer']
+            })
+        }, 2000);</script>

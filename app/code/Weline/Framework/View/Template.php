@@ -322,9 +322,10 @@ class Template
      */
     private function tmp_replace($content): array|string|null
     {
+        $static_url_path = $this->getUrlPath($this->statics_dir);
         $replaces = [
-            '__static__' => $this->getUrlPath($this->statics_dir),
-            '__STATIC__' => $this->getUrlPath($this->statics_dir),
+            '__static__' => $static_url_path,
+            '__STATIC__' => $static_url_path,
             '<php>' => '<?php ',
             '</php>' => '?>',
         ];
@@ -339,39 +340,35 @@ class Template
             '/\@static\((.*)\)/',
             '/\@view\((.*)\)/',
             '/\@p\((.+)\)/',
-            '/\@if\((.*)\)\{(.*)\}/',
-            '/\@foreach\((.*)\)\{(.*)end}/',
+            /*'/\@if\((.*)\)\{(.*)\}/',
+            '/\@foreach\((.*)\)\:(.*)foreach\;/m',//TODO 完成foreach多行模式兼容*/
         ];
         $replacement = [
             '<?php echo $this->vars["${1}"]; ?>',
             '<?php ${1} ?>',
             '<?php include(trim("${1}")); ?>',
-            '<?php 
-               echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件
-             ?>',
-            '<?php 
-               echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件
-             ?>',
+            '<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件 ?>',
+            '<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件 ?>',
             '<?php $this->fetch(trim("${1}")); ?>',
             '<?php p(isset($this->getData("${1}"))??${1}); ?>',
-            '<?php if(${1})echo addslashes("${2}"); ?>',
-            "<?php 
+            /*'<?php if(${1})echo addslashes("${2}"); ?>',
+            "<?php
             \$func_data = \"\${1}\";
             \$func_data_arr = explode(\" as \",\$func_data);
             if(count(\$func_data_arr)!=2) throw new \Weline\Framework\App\Exception('foreach模板语法使用错误！提示：forum as v,k,{渲染元素} 示例用法：@foreach(forum as v,k,<li>键{k}:值{v}</li>)');
-            \$foreach_data = \$this->getData(array_shift(\$func_data_arr));
-            \$_k_v_loop_arr = explode('=>',array_shift(\$func_data_arr));
+            \$foreach_data = \$this->getData(trim(array_shift(\$func_data_arr)));
+            \$_k_v_loop_arr = explode('=>',trim(array_shift(\$func_data_arr)));
             if(count(\$_k_v_loop_arr)!=2)throw new \Weline\Framework\App\Exception('foreach模板语法使用错误！提示：v,k 示例用法：@foreach(forum as v,k,<li>键{k}:值{v}</li>)');
             \$foreach_loop_str = '\${2}';
-            \$k_name = '$'.\$_k_v_loop_arr[0];
-            \$v_name = '$'.\$_k_v_loop_arr[1];
+            \$k_name = '$'.trim(\$_k_v_loop_arr[0]);
+            \$v_name = '$'.trim(\$_k_v_loop_arr[1]);
             if(is_array(\$foreach_data))
             {
                 foreach (\$foreach_data as \$k_name => \$v_name){
                     \$foreach_loop_str_tmp = \$foreach_loop_str;
                     foreach(array_unique(getStringBetweenContents(\$foreach_loop_str_tmp,'{','}')) as \$t_k_t=>\$t_v_t){  
                         \$t_v_t_arr = explode('.',\$t_v_t);
-                        \$t_v_t_key = isset(\$t_v_t_arr[1])??false;
+                        \$t_v_t_key = isset(\$t_v_t_arr[1])?trim(\$t_v_t_arr[1]):false;
                         if(\$t_v_t_key){
                             \$foreach_loop_str_tmp = str_replace('{'.\$t_v_t.'}',\$v_name[\$t_v_t_key],\$foreach_loop_str);
                         }else{
@@ -381,12 +378,9 @@ class Template
                 }
                 echo \$foreach_loop_str_tmp;
             }
-            ?>",
+            ?>",*/
         ];
-        // TODO 完善foreach模板
-        $content = preg_replace($pattern, $replacement, $content);
-
-//        $foreach_str_arr = explode(',',$foreach_str);
+        //        $foreach_str_arr = explode(',',$foreach_str);
 
 //        if(count($foreach_str_arr) != 3) throw new Exception('foreach模板语法使用错误！示例用法：@foreach(data,<li>键{$k}:值{$v}</li>,$k:$v)');
 //        $data = $this->getData($foreach_str_arr[0]);
@@ -396,7 +390,7 @@ class Template
 //        foreach($data as $loop_k_v[0]=>$loop_k_v[1]){
 //            echo $loop_str;
 //        }
-        return $content;
+        return preg_replace($pattern, $replacement, $content);
     }
 
     public function getUrl(string $path): string
