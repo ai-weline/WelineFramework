@@ -54,6 +54,8 @@ abstract class AbstractModel extends DataObject
     public string $primary_key = 'id';
     public array $fields = [];
 
+    private bool $force_check_flag = false;
+
     /**
      * @DESC         |初始化连接、缓存、表前缀 读取模型自身表名字等
      *
@@ -258,14 +260,28 @@ abstract class AbstractModel extends DataObject
             $this->setData($data);
         }
         $this->getQuery()->beginTransaction();
+        $save_result = false;
         try {
             // 保存前才检查 是否已经存在
-            if ($old_id && $old_id == $this->getId()) {
+            if (!$this->force_check_flag && $old_id && $old_id == $this->getId()) {
                 $save_result = $this->getQuery()->where($this->primary_key, $old_id)->update($this->getData())->fetch();
             } else {
-                $save_result = $this->getQuery()->insert($this->getData())->fetch();
-                $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
-                $this->setData($this->primary_key, $save_result);
+                if ($this->force_check_flag) {
+                    if ($data = $this->getQuery()->where($this->primary_key, $old_id)->find()->fetch()) {
+                        # 数据相同则不更新
+                        if ($data != $this->getData()) {
+                            $save_result = $this->getQuery()->where($this->primary_key, $old_id)->update($this->getData())->fetch();
+                        }
+                    } else {
+                        $save_result = $this->getQuery()->insert($this->getData())->fetch();
+                        $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                        $this->setData($this->primary_key, $save_result);
+                    }
+                } else {
+                    $save_result = $this->getQuery()->insert($this->getData())->fetch();
+                    $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                    $this->setData($this->primary_key, $save_result);
+                }
             }
             $this->getQuery()->commit();
         } catch (\Exception $exception) {
@@ -286,6 +302,22 @@ abstract class AbstractModel extends DataObject
 
     public function save_after()
     {
+    }
+
+    /**
+     * @DESC          # 【强制检测】 true:强制查询数据库，检测数据是否存在 不存在则插入记录 false:检测当前模型是否存在主键，存在则更新，不存在则插入
+     *                # 【原因】 如果主键非ID自增键时，因为主键就是数据，无法检测，只能先查询后操作，遇到此类情况时使用此函数
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/14 22:49
+     * 参数区：
+     * @param bool $force_check_flag
+     * @return AbstractModel
+     */
+    function forceCheck(bool $force_check_flag = true): AbstractModel
+    {
+        $this->force_check_flag = $force_check_flag;
+        return $this;
     }
 
     /**

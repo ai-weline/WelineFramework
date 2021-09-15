@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Event;
 
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\Config\Reader;
 use Weline\Framework\App\Exception;
 
@@ -27,7 +28,8 @@ class EventsManager
 
     public function __construct(
         Reader $reader
-    ) {
+    )
+    {
         $this->reader = $reader;
     }
 
@@ -65,14 +67,14 @@ class EventsManager
      *
      * @param string $eventName
      * @param array $data
-     * @throws \Weline\Framework\Exception\Core
      * @return $this
+     * @throws \Weline\Framework\Exception\Core
      */
-    public function dispatch(string $eventName, array $data = [])
+    public function dispatch(string $eventName, array $data = []): static
     {
-        if (! isset($this->events[$eventName])) {
+        if (!isset($this->events[$eventName])) {
             $data['observers'] = $this->getEventObservers($eventName);
-            $this->events      = array_merge($this->events, [$eventName => (new Event($data))->setName($eventName)]);
+            $this->events = array_merge($this->events, [$eventName => (new Event($data))->setName($eventName)]);
 //            $this->events[$eventName] = (new Event($data))->setName($eventName);
         }
 //        p($this->events, 1);
@@ -82,18 +84,36 @@ class EventsManager
     }
 
     /**
+     * @DESC          # 读取事件数据 读取非对象数值传输时的事件更改结果 如果是对象数据则不需要这个函数
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/15 21:57
+     * 参数区：
+     * @param string $eventName
+     * @return DataObject|null
+     */
+    function getEventData(string $eventName): DataObject|null
+    {
+        if (isset($this->events[$eventName])) {
+            return $this->events[$eventName];
+        }
+        return null;
+    }
+
+    /**
      * @DESC         |添加观察者
      *
      * 参数区：
      *
      * @param string $eventName
      * @param Observer $observer
-     * @throws Exception
      * @return $this
+     * @throws Exception
      */
     public function addObserver(string $eventName, Observer $observer)
     {
-        if (! isset($this->events[$eventName])) {
+        if (!isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];
@@ -111,7 +131,7 @@ class EventsManager
      */
     public function trigger(string $eventName)
     {
-        if (! isset($this->events[$eventName])) {
+        if (!isset($this->events[$eventName])) {
             throw new Exception(__(sprintf('事件异常：%1 事件不存在！', $eventName)));
         }
         $event = $this->events[$eventName];

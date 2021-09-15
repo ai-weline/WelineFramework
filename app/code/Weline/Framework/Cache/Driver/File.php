@@ -261,15 +261,17 @@ class File implements CacheInterface, DriverInterface
         return unlink($cacheFile);
     }
 
-    /**。
-     * @DESC         |从缓存中删除所有值。
-     *                如果在多个应用程序之间执行共享缓存操作，请小心操作。
+    /**
+     * @DESC          # 从缓存中删除所有值。
+     *                  如果在多个应用程序之间执行共享缓存操作，请小心操作。
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/14 22:10
      * 参数区：
-     *
-     * @return mixed|void
+     * @return mixed
      */
-    public function flush()
+    public function flush():mixed
     {
         // 打开cache文件所在目录
         if ($dir = @dir($this->cachePath)) {
@@ -286,13 +288,15 @@ class File implements CacheInterface, DriverInterface
     }
 
     /**
-     * @DESC         |从缓存中删除所有键的值。（清理缓存）
+     * @DESC          # 从缓存中删除所有键的值。（清理缓存）
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/14 22:10
      * 参数区：
-     *
-     * @return mixed|void
+     * @return bool
      */
-    public function clear()
+    public function clear(): bool
     {
         // 打开cache文件所在目录
         $this->processCacheFile($this->cachePath . DIRECTORY_SEPARATOR . 'tmp');
@@ -305,7 +309,9 @@ class File implements CacheInterface, DriverInterface
             }
             // 关闭目录
             $dir->close();
+            return true;
         }
+        return false;
     }
 
     /**

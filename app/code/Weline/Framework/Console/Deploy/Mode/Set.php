@@ -44,7 +44,6 @@ class Set extends CommandAbstract
                 /**@var $deploy_upgrade Upgrade */
                 $deploy_upgrade = ObjectManager::getInstance(Upgrade::class);
                 $deploy_upgrade->execute();
-
                 break;
             case 'dev':
                 $this->printer->note('正在清除模组模板编译文件...');
@@ -100,6 +99,7 @@ class Set extends CommandAbstract
      *
      * 参数区：
      * @param string $theme
+     * @throws \Weline\Framework\App\Exception
      */
     protected function cleanThemeDir(string $theme = 'default')
     {

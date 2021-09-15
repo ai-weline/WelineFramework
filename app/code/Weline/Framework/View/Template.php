@@ -9,18 +9,20 @@
 
 namespace Weline\Framework\View;
 
-use think\db\Fetch;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Console\Dev\Debug;
 use Weline\Framework\Controller\PcController;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Output\Debug\Printing;
 use Weline\Framework\View\Cache\ViewCache;
 use Weline\Framework\View\Data\DataInterface;
+use Weline\Framework\View\Data\HtmlInterface;
 
 class Template
 {
@@ -81,6 +83,47 @@ class Template
         $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
         $this->template_dir = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
         $this->compile_dir = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
+    }
+
+    /**
+     * @DESC          # 读取页头代码
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/14 23:24
+     * 参数区：
+     * @return HtmlInterface|string
+     */
+    function getHeader(): HtmlInterface|string
+    {
+        return $this->fetchClassObject('header');
+    }
+
+    /**
+     * @DESC          # 读取页脚代码
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/14 23:26
+     * 参数区：
+     * @return HtmlInterface|string
+     */
+    function getFooter(): HtmlInterface|string
+    {
+        return $this->fetchClassObject('footer');
+    }
+
+    private function fetchClassObject(string $position){
+        $cache_key = ($this->_request->isBackend() ? 'backend' : 'frontend') . "_{$position}_object";
+        if (!DEV && $object = $this->viewCache->get($cache_key)) {
+            return $object;
+        }
+        $this->eventsManager->dispatch("Framework_View::{$position}", ['is_backend' => $this->_request->isBackend(), 'class' => '']);
+        $class = $this->eventsManager->getEventData("Framework_View::{$position}")->getData('class');
+        if (empty($class) || !class_exists($class)) return '';
+        $object = ObjectManager::getInstance($class);
+        if (!DEV) $this->viewCache->set($cache_key, $object);
+        return $object;
     }
 
     /**
@@ -154,10 +197,10 @@ class Template
      *
      * 参数区：
      *
-     * @param null|string $key
+     * @param string|null $key
      * @return mixed|null
      */
-    public function getData($key = null): mixed
+    public function getData(string $key = null): mixed
     {
         if ($key === null) {
             return $this->vars;
@@ -301,7 +344,7 @@ class Template
         /*---------观察者模式 检测文件是否被继承-----------*/
         $fileData = new DataObject(['filename' => $filename, 'type' => 'compile']);
         $this->eventsManager->dispatch(
-            'Framework_View_event::template_fetch_file',
+            'Framework_View::fetch_file',
             ['object' => $this, 'data' => $fileData]
         );
         $event_filename = $fileData->getData('filename');
@@ -477,8 +520,8 @@ class Template
                         $t_f = str_replace($module_name . '::', '', $t_f);
                     }
                 }
-                $data = $this->getUrlPath($static_base_path) . DIRECTORY_SEPARATOR . $t_f;
-
+                $filename = $this->getUrlPath($static_base_path) . DIRECTORY_SEPARATOR . $t_f;
+                $data = $this->fetchFile($filename);
                 if (!DEV) $this->viewCache->set($cache_key, $data);
                 break;
             default:

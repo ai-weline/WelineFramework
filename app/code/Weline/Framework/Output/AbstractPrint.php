@@ -71,7 +71,7 @@ abstract class AbstractPrint implements PrintInterface
      */
     protected function write(string $log_path, string $content, int $type)
     {
-        if ($this->file === null) {
+        if (!isset($this->file)) {
             $this->file = new File();
         }
         $this->file->open($log_path);

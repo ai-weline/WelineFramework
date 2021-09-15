@@ -25603,7 +25603,7 @@ var requirejs, require, define, xpcUtil;
                             c.object.name === 'requirejs') &&
                         c.property && c.property.name === 'config') {
                         // require/requirejs.config({}) call
-                        callName = c.object.name + 'Config';
+                        callName = c.object.name + 'SystemConfig';
                     }
                 }
 

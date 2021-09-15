@@ -42,9 +42,14 @@ class System
                 '-r' => '/S/Q',
             ];
 
+
             foreach ($linux_to_win as $key => $item) {
                 $linux_command = str_replace($key, $item, $linux_command);
             }
+            if(strstr($linux_command, 'xcopy')){
+                $linux_command = str_replace('/S/Q', '/S/Q/Y', $linux_command);
+            }
+
         }
         if ($preview) {
             return $linux_command;

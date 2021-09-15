@@ -250,8 +250,10 @@ trait QueryTrait
                             throw new SqlParserException(__('更新条数大于一条时请使用示例更新：$query->table("demo")->identity("id")->update(["id"=>1,"name"=>"测试1"])->update(["id"=>2,"name"=>"测试2"])或者update中指定条件字段id：$query->table("demo")->update([["id"=>1,"name"=>"测试1"],["id"=>2,"name"=>"测试2"]],"id")'));
                         }
                         foreach ($this->updates[0] as $update_field => $field_value) {
+                            $update_key = ":$update_field";
                             $update_field = $this->parserFiled($update_field);
-                            $updates .= "$update_field = $field_value,";
+                            $this->bound_values[$update_key] = $field_value;
+                            $updates .= "$update_field = $update_key,";
                         }
                     }
                 } else if ($this->single_updates) {

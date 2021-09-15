@@ -80,15 +80,6 @@ function p($data = null, bool $pass = false, int $trace_deep = 1): void
     $echo_pre = ($isCli ? PHP_EOL : '<pre>');
     echo $echo_pre;
     var_dump($data);
-//    $type = gettype($data);
-//    switch ($type) {
-//        case 'boolean':
-//            var_dump($data);
-//            break;
-//        default:
-//            var_dump($data);
-//            break;
-//    }
     echo $isCli ? PHP_EOL : '</div><br><div>调试时间：<br>--' . ($exe_time * 1000) . '(ms/毫秒)<br>--' . $exe_time . '(s/秒)<br></div></div></pre>';
     if (!$pass) {
         die;

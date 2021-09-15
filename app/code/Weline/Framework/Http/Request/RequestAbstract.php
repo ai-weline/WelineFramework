@@ -44,10 +44,10 @@ abstract class RequestAbstract
 
     public function __init()
     {
-        $url_arr           = explode('/', trim($this->getUrl(), '/'));
+        $url_arr = explode('/', trim($this->getUrl(), '/'));
         $this->area_router = array_shift($url_arr);
-        $this->_filter     = RequestFilter::getInstance();
-        $this->_response   = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
+        $this->_filter = RequestFilter::getInstance();
+        $this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
     }
 
     /**
@@ -93,17 +93,13 @@ abstract class RequestAbstract
      *
      * @return string
      */
-    public function getRequestArea()
+    public function getRequestArea(): string
     {
-        switch ($this->area_router) {
-            case Env::getInstance()->getConfig('admin', 'admin'):
-                return DataInterface::type_pc_BACKEND;
-            case Env::getInstance()->getConfig('api_admin', 'api_admin'):
-                return DataInterface::type_api_BACKEND;
-            case '':
-            default:
-                return DataInterface::type_pc_FRONTEND;
-        }
+        return match ($this->area_router) {
+            Env::getInstance()->getConfig('admin', 'admin') => DataInterface::type_pc_BACKEND,
+            Env::getInstance()->getConfig('api_admin', 'api_admin') => DataInterface::type_api_BACKEND,
+            default => DataInterface::type_pc_FRONTEND,
+        };
     }
 
     /**
@@ -113,9 +109,23 @@ abstract class RequestAbstract
      *
      * @return mixed|string
      */
-    public function getAreaRouter()
+    public function getAreaRouter(): mixed
     {
         return $this->area_router;
+    }
+
+    /**
+     * @DESC          # 是否后端请求
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/14 23:20
+     * 参数区：
+     * @return bool
+     */
+    public function isBackend(): bool
+    {
+        return (bool)strstr($this->getRequestArea(), \Weline\Framework\Router\DataInterface::area_BACKEND);
     }
 
     /**
@@ -220,7 +230,7 @@ abstract class RequestAbstract
 
     public function getUrl(): string
     {
-        $uri     = $this->getUri();
+        $uri = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return array_shift($url_exp);
@@ -228,7 +238,7 @@ abstract class RequestAbstract
 
     public function getBaseUrl(): string
     {
-        $uri     = $this->getUri();
+        $uri = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return $this->getBaseHost() . array_shift($url_exp);
@@ -236,7 +246,7 @@ abstract class RequestAbstract
 
     public function getBaseUri(): string
     {
-        $uri     = $this->getUri();
+        $uri = $this->getUri();
         $url_exp = explode('?', $uri);
 
         return $this->getBaseHost() . array_shift($url_exp);
@@ -252,9 +262,9 @@ abstract class RequestAbstract
      *
      * 参数区：
      *
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\App\Exception
      * @return Response
+     * @throws \Weline\Framework\App\Exception
+     * @throws \ReflectionException
      */
     public function getResponse(): Response
     {

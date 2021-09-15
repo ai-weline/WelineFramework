@@ -40,7 +40,7 @@ interface CacheInterface
      * @param $key
      * @return mixed
      */
-    public function buildKey($key);
+    public function buildKey($key): mixed;
 
     /**
      * @DESC         |使用指定键从缓存中检索值。
@@ -50,7 +50,7 @@ interface CacheInterface
      * @param $key
      * @return mixed
      */
-    public function get($key);
+    public function get($key): mixed;
 
     /**
      * @DESC         |检查缓存中是否存在指定的键。
@@ -60,7 +60,7 @@ interface CacheInterface
      * @param $key
      * @return mixed
      */
-    public function exists($key);
+    public function exists($key): mixed;
 
     /**
      * @DESC         |使用指定的键从缓存中检索多个值。
@@ -70,7 +70,7 @@ interface CacheInterface
      * @param $keys
      * @return mixed
      */
-    public function getMulti($keys);
+    public function getMulti($keys): mixed;
 
     /**
      * @DESC         |将键标识的值存储到缓存中。
@@ -82,7 +82,7 @@ interface CacheInterface
      * @param int $duration
      * @return mixed
      */
-    public function set($key, $value, int $duration = 0);
+    public function set($key, $value, int $duration = 0): mixed;
 
     /**
      * @DESC         |在缓存中存储多个项目。每个项包含一个由键标识的值。
@@ -93,7 +93,7 @@ interface CacheInterface
      * @param int $duration
      * @return mixed
      */
-    public function setMulti($items, int $duration = 0);
+    public function setMulti($items, int $duration = 0): mixed;
 
     /**
      * @DESC         |如果缓存不包含该键，则将由键标识的值存储到缓存中。
@@ -106,7 +106,7 @@ interface CacheInterface
      * @param int $duration
      * @return mixed
      */
-    public function add($key, $value, int $duration = 0);
+    public function add($key, $value, int $duration = 0): mixed;
 
     /**
      * @DESC         |在缓存中存储多个项目。每个项包含一个由键标识的值。
@@ -118,7 +118,7 @@ interface CacheInterface
      * @param int $duration
      * @return mixed
      */
-    public function addMulti($items, int $duration = 0);
+    public function addMulti($items, int $duration = 0): mixed;
 
     /**
      * @DESC         |从缓存中删除具有指定键的值
@@ -128,7 +128,7 @@ interface CacheInterface
      * @param $key
      * @return mixed
      */
-    public function delete($key);
+    public function delete($key): mixed;
 
     /**
      * @DESC         |从缓存中删除所有值。（刷新缓存文件）
@@ -137,14 +137,16 @@ interface CacheInterface
      *
      * @return mixed
      */
-    public function flush();
+    public function flush(): mixed;
 
     /**
-     * @DESC         |从缓存中删除所有键的值。（清理缓存）
+     * @DESC          # 从缓存中删除所有键的值。（清理缓存）
      *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/14 22:13
      * 参数区：
-     *
-     * @return mixed
+     * @return bool
      */
-    public function clear();
+    public function clear(): bool;
 }

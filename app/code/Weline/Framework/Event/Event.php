@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Event;
 
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Debug\Printing;
@@ -44,7 +45,7 @@ class Event extends \Weline\Framework\DataObject\DataObject
      */
     public function addObserver(Observer $observer)
     {
-        $observers   = $this->getData('observers');
+        $observers = $this->getData('observers');
         $observers[] = $observer;
         $this->setData('observers', $observers);
 
@@ -97,4 +98,5 @@ class Event extends \Weline\Framework\DataObject\DataObject
             $observer->execute($this);
         }
     }
+
 }

@@ -59,7 +59,6 @@ class TemplateFetchFile implements ObserverInterface
         $fileData = $event->getData('data');
 
         $module_file_path = $fileData->getData('filename');
-
         # 开始分析主题路径
         try {
             $theme = $this->welineTheme->getActiveTheme();
@@ -70,13 +69,14 @@ class TemplateFetchFile implements ObserverInterface
         if (! isset($theme)) {
             $theme = $this->welineTheme->setData(Env::default_theme_DATA);
         }
-
         // 组织主题文件位置
         $theme_file_path = str_replace(APP_PATH, $theme->getPath(), $module_file_path);
         // 如果未被继承则还原为原Module模板文件
         if (!is_file($theme_file_path)) {
             $theme_file_path = $module_file_path;
         }
+        // TODO 处理非开发模式 静态文件的读取位置 包含了代码绝对路径问题 应该读取主题中的绝对路径 并返回静态文件的URL
+
         $fileData->setData('filename', $theme_file_path);
     }
 }
