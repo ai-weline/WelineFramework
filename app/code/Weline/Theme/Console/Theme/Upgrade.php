@@ -72,31 +72,11 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
             foreach ($modules as $module) {
                 $this->printing->note($module);
                 $module_path = str_replace('_', DIRECTORY_SEPARATOR, $module);
-                $theme_extend_files = $this->scan->scanDirTree($theme->getPath() . $module_path);
-                foreach ($theme_extend_files as $theme_extend_file) {
-                    /**@var \Weline\Framework\System\File\Data\File $file */
-                    foreach ($theme_extend_file as $file) {
-                        $file_path = $file->getOrigin();
-                        if (!strpos($file_path, 'templates')) {
-                            $new_file_path = str_replace($theme->getPath(), APP_STATIC_PATH . $theme->getOriginPath() . DIRECTORY_SEPARATOR, $file_path);
-                            $themes_files_data[$file_path] = dirname($new_file_path) . DIRECTORY_SEPARATOR;
-                        }
-                    }
-                }
+                $themes_files_data = array_merge($themes_files_data, $this->fetchThemeFiles($theme, $theme->getPath() . $module_path));
             }
         } else {
             # 未指定特定模块 全部纳入迁移数组
-            $theme_extend_files = $this->scan->scanDirTree($theme->getPath());
-            foreach ($theme_extend_files as $theme_extend_file) {
-                /**@var \Weline\Framework\System\File\Data\File $file */
-                foreach ($theme_extend_file as $file) {
-                    $file_path = $file->getOrigin();
-                    if (!strpos($file_path, 'templates')) {
-                        $themes_files_data[] = $file_path;
-                    };
-                }
-
-            }
+            $themes_files_data = $this->fetchThemeFiles($theme, $theme->getPath());
         }
         # 开始搬迁文件
         $this->printing->warning(__('开始搬迁文件...'));
@@ -112,5 +92,22 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
     public function getTip(): string
     {
         return __('更新主题文件！');
+    }
+
+    public function fetchThemeFiles($theme, $path): array
+    {
+        $themes_files_data = [];
+        $theme_extend_files = $this->scan->scanDirTree($path);
+        foreach ($theme_extend_files as $theme_extend_file) {
+            /**@var \Weline\Framework\System\File\Data\File $file */
+            foreach ($theme_extend_file as $file) {
+                $file_path = $file->getOrigin();
+                if (!strpos($file_path, 'templates') && !strpos($file_path, 'register.php')) {
+                    $new_file_path = str_replace($theme->getPath(), APP_STATIC_PATH . $theme->getOriginPath() . DIRECTORY_SEPARATOR, $file_path);
+                    $themes_files_data[$file_path] = dirname($new_file_path) . DIRECTORY_SEPARATOR;
+                }
+            }
+        }
+        return $themes_files_data;
     }
 }

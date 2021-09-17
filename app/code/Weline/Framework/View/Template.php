@@ -9,12 +9,10 @@
 
 namespace Weline\Framework\View;
 
-use PhpParser\Node\Scalar\MagicConst\Dir;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\App\System;
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Console\Dev\Debug;
 use Weline\Framework\Controller\PcController;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
@@ -530,20 +528,8 @@ class Template
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
                         $static_base_path = $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
                         $t_f = str_replace($module_name . '::', '', $t_f);
-                        $filename = $static_base_path . DIRECTORY_SEPARATOR . $t_f;
                         # 替换掉
                         $base_url_path = rtrim($this->getModuleViewDir($static_base_path, DataInterface::dir_type_STATICS),DataInterface::dir_type_STATICS);
-                        # 检查主题是否替换静态文件
-                        $theme_filename = $this->fetchFile($filename);
-                        if($theme_filename !=$filename){
-                            /**@var System $system */
-                            $system = ObjectManager::getInstance(System::class);
-                            # 移动文件到静态目录覆盖原文件
-                            $base_url_file_dir = $base_url_path.DIRECTORY_SEPARATOR.'theme'.DIRECTORY_SEPARATOR.$this->theme['name'].DIRECTORY_SEPARATOR;
-                            $printer->debug($system->exec("cp -rf {$filename} {$base_url_file_dir}",true));
-                            $system->exec("cp -rf {$filename} {$base_url_file_dir}");
-                            $t_f = $base_url_file_dir.$t_f;
-                        }
                     }
                 }
 
