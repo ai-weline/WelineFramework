@@ -73,7 +73,6 @@ class Parser
                 $words_file = $file_data->getData('file_path');
                 if (is_file($words_file)) {
                     try {
-                        /** @noinspection PhpIncludeInspection */
                         self::$words = (array)include $words_file;
                         $phraseCache->set('phrase_words', self::$words);
                     } catch (\Weline\Framework\App\Exception $exception) {

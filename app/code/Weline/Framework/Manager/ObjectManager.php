@@ -14,6 +14,7 @@ use ReflectionClass;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Manager\Cache\ObjectCache;
+use Weline\Framework\View\Template;
 
 class ObjectManager implements ManagerInterface
 {
@@ -59,6 +60,7 @@ class ObjectManager implements ManagerInterface
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true): mixed
     {
+
         if (empty($class)) {
             return self::$instance ?? new self();
         }
@@ -66,16 +68,17 @@ class ObjectManager implements ManagerInterface
             return self::$instances[$class];
         }
 
-        // 缓存对象读取 FIXME 需要换回 ！DEV
+        // 缓存对象读取
         if (!CLI && $shared && !DEV && $cache_class_object = self::getCache()->get($class)) {
             self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
             return self::$instances[$class];
         }
+
         // 类名规则处理
         $new_class = self::parserClass($class);
-
         $arguments = $arguments ?: self::getMethodParams($new_class);
         $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
+
         self::$instances[$class] = self::initClassInstance($class, $new_object);
 
         // 缓存可缓存对象

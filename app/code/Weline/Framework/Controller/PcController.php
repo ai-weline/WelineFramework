@@ -26,7 +26,7 @@ class PcController extends Core
 
     public function getControllerCache(): CacheInterface
     {
-        if (! isset($this->controllerCache)) {
+        if (!isset($this->controllerCache)) {
             $this->controllerCache = ObjectManager::getInstance(ControllerCache::class)->create();
         }
 
@@ -64,10 +64,12 @@ class PcController extends Core
      * 参数区：
      *
      * @return Template
+     * @throws Exception
+     * @throws \ReflectionException
      */
     public function getTemplate(): Template
     {
-        if (! isset($this->_template)) {
+        if (!isset($this->_template)) {
             $this->_template = ObjectManager::getInstance(Template::class, ['controller' => $this], false);
         }
 
@@ -103,17 +105,18 @@ class PcController extends Core
      * 参数区：
      *
      * @param string|null $fileName
-     * @return bool
+     * @return void
+     * @throws \Weline\Framework\Exception\Core
      */
-    protected function fetch(string $fileName = null): void
+    protected function fetch(string $fileName = null)
     {
         if ($fileName === null) {
             $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-            $fileNameArr      = explode(\Weline\Framework\Controller\Data\DataInterface::dir, $parent_call_info['class']);
-            $fileName         = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $parent_call_info['function'];
+            $fileNameArr = explode(\Weline\Framework\Controller\Data\DataInterface::dir, $parent_call_info['class']);
+            $fileName = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $parent_call_info['function'];
         }
 
-        $this->getTemplate()->fetch($fileName);
+        return $this->getTemplate()->fetch($fileName);
     }
 
     /**
@@ -126,18 +129,18 @@ class PcController extends Core
     public function getViewBaseDir(): string
     {
         $class_name = get_class($this);
-        $cache_key  = 'module_of_' . $class_name;
+        $cache_key = 'module_of_' . $class_name;
         // 设置缓存，以免每次都去反射解析控制器的模块基础目录
         if ($module_dir = $this->getControllerCache()->get($cache_key)) {
             return $module_dir;
         }
-        $reflect             = new ReflectionObject($this);
-        $filename            = $reflect->getFileName();
-        $filename            = str_replace(Env::GENERATED_DIR, 'app', $filename);
+        $reflect = new ReflectionObject($this);
+        $filename = $reflect->getFileName();
+        $filename = str_replace(Env::GENERATED_DIR, 'app', $filename);
         $ctl_dir_reflect_arr = explode(self::dir, $filename);
-        $module_dir          = array_shift($ctl_dir_reflect_arr);
-        $module_dir          = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
-        if (! is_dir($module_dir)) {
+        $module_dir = array_shift($ctl_dir_reflect_arr);
+        $module_dir = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
+        if (!is_dir($module_dir)) {
             mkdir($module_dir, 0775, true);
         }
         $this->getControllerCache()->set($cache_key, $module_dir);
