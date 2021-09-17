@@ -28,6 +28,8 @@
     
     5、配置文件统一化。文件位置：app/etc/env.php
 
+    6、多主题继承模组Module文件。
+
 #### 软件架构
 
     PHP>=8.0
@@ -40,21 +42,27 @@
     1.  WEB项目部署
     2.  无需设置繁杂的nginx（项目中有样例设置，include到配置中就可以）或者Apache设置（针对Apache项目中编写有伪静态），仅设置项目目录为部署目录即可。
 
-###二、代码安装
+###二、框架命令
 
     1.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
     2.  模块安装命令 bin/m module:disable <module_name> 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
     3.  模块卸载命令 bin/m module:remove <module_name> 此命令备份模块并删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
+    4.  其他命令 php bin/m 回车可见
 
 #### 使用说明
 
-    1.  应用模块化
-    2.  bin/m 命令
-    3.  xxxx
+    1.  框架可快速实现Rest Api,前后端。
+    2.  后期会自带开发文档模块。
     
     
 #### 更新说明
 
+#2.0
+1、i18n国际化翻译。
+2、事件管理可直接传非对象常值，无需构建对象（完成事件Wrapper）。
+3、
+
+#V1.0
 1.  配置xml化
 2.  新增事件观察者机制（event.xml)
 3.  新增命令简化机制.

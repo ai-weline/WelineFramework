@@ -9,8 +9,10 @@
 
 namespace Weline\Framework\View;
 
+use PhpParser\Node\Scalar\MagicConst\Dir;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\App\System;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Console\Dev\Debug;
 use Weline\Framework\Controller\PcController;
@@ -60,6 +62,8 @@ class Template
      */
     private array $vars = [];
 
+    private array $theme;
+
     private EventsManager $eventsManager;
 
     /**
@@ -83,6 +87,7 @@ class Template
         $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
         $this->template_dir = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
         $this->compile_dir = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
+        $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);;
     }
 
     /**
@@ -113,7 +118,8 @@ class Template
         return $this->fetchClassObject('footer');
     }
 
-    private function fetchClassObject(string $position){
+    private function fetchClassObject(string $position)
+    {
         $cache_key = ($this->_request->isBackend() ? 'backend' : 'frontend') . "_{$position}_object";
         if (!DEV && $object = $this->viewCache->get($cache_key)) {
             return $object;
@@ -136,13 +142,18 @@ class Template
      */
     private function getViewDir(string $type = ''): string
     {
+        return $this->getModuleViewDir($this->view_dir, $type);
+    }
+
+    private function getModuleViewDir(string $module_view_dir_path, string $type)
+    {
         switch ($type) {
             case DataInterface::dir_type_TEMPLATE:
-                $path = $this->view_dir . DataInterface::view_TEMPLATE_DIR;
+                $path = $module_view_dir_path . DataInterface::view_TEMPLATE_DIR;
 
                 break;
             case DataInterface::dir_type_TEMPLATE_COMPILE:
-                $path = $this->view_dir . DataInterface::view_TEMPLATE_COMPILE_DIR;
+                $path = $module_view_dir_path . DataInterface::view_TEMPLATE_COMPILE_DIR;
 
                 break;
             case DataInterface::dir_type_STATICS:
@@ -150,17 +161,15 @@ class Template
                 if (!DEV && $cache_static_dir = $this->viewCache->get($cache_key)) {
                     return $cache_static_dir;
                 }
-                $path = $this->view_dir . DataInterface::view_STATICS_DIR . DIRECTORY_SEPARATOR;
-                $theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
-
+                $path = $module_view_dir_path . DataInterface::view_STATICS_DIR . DIRECTORY_SEPARATOR;
                 if (!DEV) {
-                    $path = str_replace(APP_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $theme['path'] . DIRECTORY_SEPARATOR, $path);
+                    $path = str_replace(APP_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $this->theme['path'] . DIRECTORY_SEPARATOR, $path);
                     $this->viewCache->set($cache_key, $path);
                 }
 
                 break;
             default:
-                $path = $this->view_dir;
+                $path = $module_view_dir_path;
 
                 break;
         }
@@ -210,7 +219,7 @@ class Template
     }
 
     /**
-     * @DESC         |方法描述
+     * @DESC         |转化静态文件的URL路径
      *
      * 参数区：
      *
@@ -223,8 +232,7 @@ class Template
         if (DEV) {
             $explode_str = APP_PATH;
         }
-        $dir_arr = explode($explode_str, $real_path);
-        return rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . array_pop($dir_arr)), '/');
+        return rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace($explode_str, '', $real_path)), '/');
     }
 
     /**
@@ -511,18 +519,37 @@ class Template
                 if (!DEV && $data = $this->viewCache->get($cache_key)) {
                     break;
                 }
+                /**@var Printing $printer */
+                $printer = ObjectManager::getInstance(Printing::class);
+
                 list($t_f, $module_name) = $this->processModuleSourceFilePath($type, $source);
-                $static_base_path = str_replace($type, '', $this->statics_dir);
+                $base_url_path = rtrim($this->statics_dir,DataInterface::dir_type_STATICS);
+                # 第三方模组 TODO 主题继承静态文件
                 if ($module_name) {
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
                         $static_base_path = $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
                         $t_f = str_replace($module_name . '::', '', $t_f);
+                        $filename = $static_base_path . DIRECTORY_SEPARATOR . $t_f;
+                        # 替换掉
+                        $base_url_path = rtrim($this->getModuleViewDir($static_base_path, DataInterface::dir_type_STATICS),DataInterface::dir_type_STATICS);
+                        # 检查主题是否替换静态文件
+                        $theme_filename = $this->fetchFile($filename);
+                        if($theme_filename !=$filename){
+                            /**@var System $system */
+                            $system = ObjectManager::getInstance(System::class);
+                            # 移动文件到静态目录覆盖原文件
+                            $base_url_file_dir = $base_url_path.DIRECTORY_SEPARATOR.'theme'.DIRECTORY_SEPARATOR.$this->theme['name'].DIRECTORY_SEPARATOR;
+                            $printer->debug($system->exec("cp -rf {$filename} {$base_url_file_dir}",true));
+                            $system->exec("cp -rf {$filename} {$base_url_file_dir}");
+                            $t_f = $base_url_file_dir.$t_f;
+                        }
                     }
                 }
-                $filename = $this->getUrlPath($static_base_path) . DIRECTORY_SEPARATOR . $t_f;
-                $data = $this->fetchFile($filename);
-                if (!DEV) $this->viewCache->set($cache_key, $data);
+
+                $url_path = $this->getUrlPath($base_url_path).$t_f;
+
+                if (!DEV) $this->viewCache->set($cache_key, $url_path);
                 break;
             default:
 

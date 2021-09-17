@@ -22,6 +22,10 @@ defined('BP') || define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // 应用 目录 (默认访问 web)
 defined('APP_PATH') || define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
+// 主题 目录
+defined('APP_DESIGN_PATH') || define('APP_DESIGN_PATH', APP_PATH . 'design' . DIRECTORY_SEPARATOR);
+// 静态 目录
+defined('APP_STATIC_PATH') || define('APP_STATIC_PATH', PUB . 'static' . DIRECTORY_SEPARATOR);
 // 应用 配置 目录 (默认访问 etc)
 defined('APP_ETC_PATH') || define('APP_ETC_PATH', BP . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
 // 检测自动加载

@@ -98,6 +98,10 @@ class WelineTheme extends Model
     {
         return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
     }
+    public function getOriginPath(): string
+    {
+        return $this->getData(self::filed_PATH);
+    }
 
     public function getRelatePath(): string
     {

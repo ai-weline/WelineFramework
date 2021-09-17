@@ -23,7 +23,6 @@ class Footer implements HtmlInterface
         Config $backendConfig
     )
     {
-
         $this->backendConfig = $backendConfig;
     }
 

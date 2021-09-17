@@ -304,6 +304,26 @@ class Env
         return $this->module_list;
     }
 
+    /**
+     * @DESC          # 获取模块信息
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/17 9:13
+     * 参数区：
+     * @param string $module_name
+     * @return mixed
+     */
+    public function getModuleInfo(string $module_name): mixed
+    {
+        if ($modules = $this->getModuleList()) {
+            if (isset($modules[$module_name])) {
+                return $modules[$module_name];
+            }
+        }
+        return null;
+    }
+
     static function getCommands(): array
     {
         $commands = [];
