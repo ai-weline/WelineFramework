@@ -396,17 +396,17 @@ abstract class AbstractModel extends DataObject
 
     function setData($key, $value = null): static
     {
-        $this->set_data_before();
+        $this->set_data_before($key, $value);
         parent::setData($key, $value);
-        $this->set_data_after();
+        $this->set_data_after($key, $value);
         return $this;
     }
 
-    function set_data_before()
+    function set_data_before(string|array $key, mixed $value=null)
     {
 
     }
-    function set_data_after(){
+    function set_data_after(string|array $key, mixed $value=null){
 
     }
 }

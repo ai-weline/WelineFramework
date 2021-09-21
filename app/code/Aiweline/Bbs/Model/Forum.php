@@ -40,4 +40,8 @@ class Forum extends Model
         // TODO: Implement install() method.
     }
 
+    function set_data_before(string|array $key, mixed $value = null)
+    {
+        p($key);
+    }
 }
