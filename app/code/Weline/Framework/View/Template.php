@@ -313,7 +313,6 @@ class Template
 
     public function getUrl(string $path): string
     {
-//        return $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . '/' . $path;
         return $this->_request->getUrl($path);
     }
 
