@@ -84,8 +84,10 @@ class PcController extends Core
      * @param array|string $tpl_var
      * @param array|string|null $value
      * @return PcController
+     * @throws Exception
+     * @throws \ReflectionException
      */
-    protected function assign(array|string $tpl_var, array|string $value = null): static
+    protected function assign(array|string $tpl_var, mixed $value = null): static
     {
         if (is_string($tpl_var)) {
             $this->getTemplate()->assign($tpl_var, $value);

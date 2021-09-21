@@ -228,12 +228,15 @@ abstract class RequestAbstract
         return $this->getServer('REQUEST_URI');
     }
 
-    public function getUrl(): string
+    public function getUrl(string $path = ''): string
     {
         $uri = $this->getUri();
         $url_exp = explode('?', $uri);
-
-        return array_shift($url_exp);
+        $base_url = array_shift($url_exp);
+        if ($path) {
+            $base_url = $base_url . $path;
+        }
+        return $base_url;
     }
 
     public function getBaseUrl(): string

@@ -23,6 +23,9 @@ class Env
 
     const path_framework_generated_code = self::path_framework_generated . 'code' . DIRECTORY_SEPARATOR;
 
+    # 框架模板文件位置
+    const path_framework_generated_framework = self::path_framework_generated . 'code' . DIRECTORY_SEPARATOR . 'tpl' . DIRECTORY_SEPARATOR;
+
     // -----------------路径--------------------
     const path_ENV_FILE = APP_ETC_PATH . 'env.php';
 

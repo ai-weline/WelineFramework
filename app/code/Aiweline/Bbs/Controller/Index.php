@@ -15,7 +15,7 @@ class Index extends BasePcController
     {
         $this->assign('data', 122);
 
-        return $this->fetch();
+        $this->fetch();
     }
 
     public function test()

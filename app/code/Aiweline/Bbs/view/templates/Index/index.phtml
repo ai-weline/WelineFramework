@@ -1,5 +1,7 @@
+<?php
+/**@var \Weline\Framework\View\Template $this*/
+?>
 @template(Aiweline_Bbs::public/header.phtml)
-</head>
 <body>
 
 <script src="@static(Aiweline_Bbs::push.js)"></script>
@@ -30,11 +32,16 @@
 <div class="hidden-sm hidden-md" id="nav_pc_2">
     <div class="container">
         <ul class="nav" style="float:left">
-            @foreach(forum as k=>v):
-                <li class="nav-item" data-fid="{v.fid}" data-active="fid-{v.fid}">
-                    <a class="nav-link" href="https://bbs.aiweline.com/forum-{v.fid}.htm">{v.name}</a>
+            <?php
+            foreach ($this->getData('forum') as $datum) {
+//                p($datum);
+                ?>
+                <li class="nav-item" data-fid="<?=$datum['fid']?>" data-active="fid-<?=$datum['fid']?>">
+                    <a class="nav-link" href="https://bbs.aiweline.com/forum-<?=$datum['fid']?>.htm"><?=$datum['name']?></a>
                 </li>
-            foreach;
+                <?php
+            }
+            ?>
         </ul>
         <a role="button" class="btn btn-primary ft" href="https://bbs.aiweline.com/thread-create-0.htm"
            style="float:right;margin:0px;color:white;padding:7px 20px;width:100px">发新帖</a>
@@ -2278,94 +2285,110 @@
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-63.htm" data-toggle="tooltip"
                                title="rfed">
-                                <img src="@static(Aiweline_Bbs::/63.png)" alt="rfed" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/63.png)" alt="rfed" width="39" height="39"
+                                     class="img-circle"><br>
                                 rfed </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-62.htm" data-toggle="tooltip" title="通讯">
-                                <img src="@static(Aiweline_Bbs::/62.png)" alt="通讯" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/62.png)" alt="通讯" width="39" height="39"
+                                     class="img-circle"><br>
                                 通讯 </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-61.htm" data-toggle="tooltip"
                                title="西瓜啦啦">
-                                <img src="@static(Aiweline_Bbs::/61.png)" alt="西瓜啦啦" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/61.png)" alt="西瓜啦啦" width="39" height="39"
+                                     class="img-circle"><br>
                                 西瓜啦啦 </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-60.htm" data-toggle="tooltip"
                                title="Meet">
-                                <img src="@static(Aiweline_Bbs::/60.png)" alt="Meet" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/60.png)" alt="Meet" width="39" height="39"
+                                     class="img-circle"><br>
                                 Meet </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-59.htm" data-toggle="tooltip"
                                title="lunt">
-                                <img src="@static(Aiweline_Bbs::/59.png)" alt="lunt" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/59.png)" alt="lunt" width="39" height="39"
+                                     class="img-circle"><br>
                                 lunt </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-58.htm" data-toggle="tooltip"
                                title="zoro">
-                                <img src="@static(Aiweline_Bbs::/58.png)" alt="zoro" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/58.png)" alt="zoro" width="39" height="39"
+                                     class="img-circle"><br>
                                 zoro </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-57.htm" data-toggle="tooltip"
                                title="ding">
-                                <img src="@static(Aiweline_Bbs::/57.png)" alt="ding" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/57.png)" alt="ding" width="39" height="39"
+                                     class="img-circle"><br>
                                 ding </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-56.htm" data-toggle="tooltip"
                                title="tong">
-                                <img src="@static(Aiweline_Bbs::/56.png)" alt="tong" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/56.png)" alt="tong" width="39" height="39"
+                                     class="img-circle"><br>
                                 tong </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-55.htm" data-toggle="tooltip"
                                title="不懂球的">
-                                <img src="@static(Aiweline_Bbs::/55.png)" alt="不懂球的" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/55.png)" alt="不懂球的" width="39" height="39"
+                                     class="img-circle"><br>
                                 不懂球的 </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-54.htm" data-toggle="tooltip" title="ABC">
-                                <img src="@static(Aiweline_Bbs::/54.png)" alt="ABC" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/54.png)" alt="ABC" width="39" height="39"
+                                     class="img-circle"><br>
                                 ABC </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-53.htm" data-toggle="tooltip"
                                title="兰兰的天">
-                                <img src="@static(Aiweline_Bbs::/53.png)" alt="兰兰的天" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/53.png)" alt="兰兰的天" width="39" height="39"
+                                     class="img-circle"><br>
                                 兰兰的天 </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-52.htm" data-toggle="tooltip"
                                title="三河讲P">
-                                <img src="@static(Aiweline_Bbs::/52.png)" alt="三河讲P" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/52.png)" alt="三河讲P" width="39" height="39"
+                                     class="img-circle"><br>
                                 三河讲P </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-51.htm" data-toggle="tooltip"
                                title="Qfyf">
-                                <img src="@static(Aiweline_Bbs::/51.png)" alt="Qfyf" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/51.png)" alt="Qfyf" width="39" height="39"
+                                     class="img-circle"><br>
                                 Qfyf </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-50.htm" data-toggle="tooltip"
                                title="天道酬勤">
-                                <img src="@static(Aiweline_Bbs::/50.png)" alt="天道酬勤" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/50.png)" alt="天道酬勤" width="39" height="39"
+                                     class="img-circle"><br>
                                 天道酬勤 </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-49.htm" data-toggle="tooltip"
                                title="uydg">
-                                <img src="@static(Aiweline_Bbs::/49.png)" alt="uydg" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/49.png)" alt="uydg" width="39" height="39"
+                                     class="img-circle"><br>
                                 uydg </a>
                         </div>
                         <div class="col-xs-4 text-center mb-3">
                             <a class="tt" href="https://bbs.aiweline.com/user-48.htm" data-toggle="tooltip" title="　">
-                                <img src="@static(Aiweline_Bbs::/48.png)" alt="　" width="39" height="39" class="img-circle"><br>
+                                <img src="@static(Aiweline_Bbs::/48.png)" alt="　" width="39" height="39"
+                                     class="img-circle"><br>
                                 　 </a>
                         </div>
                     </div>
@@ -2448,7 +2471,8 @@
                             <div class="media-body">
                                 <div class="subject">
                                     <a href="https://bbs.aiweline.com/thread-120645.htm"><p><br><img
-                                                    src="@static(Aiweline_Bbs::/div__div class=)" d-flex="" justify-content-between=""
+                                                    src="@static(Aiweline_Bbs::/div__div class=)" d-flex=""
+                                                    justify-content-between=""
                                                     small="" mt-1"="">
                                         </p>
                                         <div>
