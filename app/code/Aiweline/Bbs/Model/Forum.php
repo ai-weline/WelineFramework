@@ -39,4 +39,5 @@ class Forum extends Model
     {
         // TODO: Implement install() method.
     }
+
 }

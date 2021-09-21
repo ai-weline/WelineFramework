@@ -393,4 +393,20 @@ abstract class AbstractModel extends DataObject
          */
         return parent::__call($method, $args);
     }
+
+    function setData($key, $value = null): static
+    {
+        $this->set_data_before();
+        parent::setData($key, $value);
+        $this->set_data_after();
+        return $this;
+    }
+
+    function set_data_before()
+    {
+
+    }
+    function set_data_after(){
+
+    }
 }
