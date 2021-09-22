@@ -17,6 +17,7 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Forum extends Model
 {
+    const table = 'm_forum';
     const url = 'url';
 
     function __construct(
@@ -33,7 +34,7 @@ class Forum extends Model
 
     function providePrimaryField(): string
     {
-        return '';
+        return 'fid';
     }
 
     function setup(ModelSetup $setup, Context $context): void
@@ -56,11 +57,21 @@ class Forum extends Model
         return ObjectManager::getInstance(Request::class);
     }
 
+    /**
+     * @DESC          # 设置URL
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/22 20:37
+     * 参数区：
+     * @param string|array $key
+     * @param mixed|null $value
+     */
     function set_data_before(string|array $key, mixed $value = null)
     {
         if ($this::fetch_data === $key) {
             foreach ($value as &$item) {
-                $item->setUrl($this->getRequest()->getUrl("forum-{$item['fid']}.htm"));
+                $item->setUrl("forum/?fid={$item['fid']}");
             }
         }
     }
@@ -91,5 +102,10 @@ class Forum extends Model
     function setUrl(string $path): Forum
     {
         return $this->setData(self::url, $this->getRequest()->getUrl($path));
+    }
+
+    function getThreads($page=1,$pageSize=20,$order='create_date',$order_sort='DESC'):array
+    {
+        return $this->getQuery()->join(Thread::table.' t', 'main_table.fid=t.fid')->page($page,$pageSize)->order('t.'.$order,$order_sort)->select()->fetch();
     }
 }

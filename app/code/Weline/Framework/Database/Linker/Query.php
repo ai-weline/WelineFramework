@@ -158,6 +158,16 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
+    function page(int $page = 1, int $pageSize = 20): QueryInterface
+    {
+        $offset = 0;
+        if (1 < $page) {
+            $offset = $pageSize * ($page-1)+1;
+        }
+        $this->limit = " LIMIT $offset,$pageSize";
+        return $this;
+    }
+
     function order(string $fields, string $sort = 'DESC'): QueryInterface
     {
         $this->order[$fields] = $sort;
@@ -208,7 +218,7 @@ abstract class Query implements QueryInterface
         $data = [];
         if ($model_class) {
             foreach ($origin_data as $origin_datum) {
-                $data[] = ObjectManager::make($model_class, '__construct', ['data' => $origin_datum]);
+                $data[] = ObjectManager::make($model_class, ['data' => $origin_datum], '__construct');
             }
         } else {
             $data = $origin_data;

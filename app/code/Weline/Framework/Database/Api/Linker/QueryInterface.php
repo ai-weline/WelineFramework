@@ -171,6 +171,19 @@ interface QueryInterface
     function limit(int $size, int $offset = 0): QueryInterface;
 
     /**
+     * @DESC          # 限制查询
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/18 22:44
+     * 参数区：
+     * @param int $page
+     * @param int $pageSize
+     * @return QueryInterface
+     */
+    function page(int $page=1, int $pageSize=20): QueryInterface;
+
+    /**
      * @DESC          # 方法描述
      *
      * @AUTH  秋枫雁飞

@@ -20,7 +20,7 @@ interface ManagerInterface
      * @param string $method
      * @param array $params
      */
-    public static function make(string $class, string $method, array $params);
+    public static function make(string $class, array $params=[],string $method='__construct');
 
     /**
      * @DESC         |获取实例

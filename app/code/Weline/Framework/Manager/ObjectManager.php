@@ -143,14 +143,20 @@ class ObjectManager implements ManagerInterface
      * @throws \ReflectionException
      * @throws Exception
      */
-    public static function make($class, string $method = '__construct', array $params = []): mixed
+    public static function make($class, array $params = [],string $method = '__construct'): mixed
     {
         // 拦截器处理
         $new_class = self::parserClass($class);
         if ('__construct' === $method) {
             $instance = (new ReflectionClass($new_class))->newInstanceArgs($params);
+            if (method_exists($instance, '__init')) {
+                $instance->__init();
+            }
         } else {
             $instance = new ReflectionClass($new_class);
+            if (method_exists($instance, '__init')) {
+                $instance->__init();
+            }
             $paramArr = self::getMethodParams($instance, $method);
             $instance = $instance->{$method}(...array_merge($paramArr, $params));
         }

@@ -185,7 +185,7 @@ class Handle implements HandleInterface, RegisterInterface
             }
         }
 
-        $this->setup_context = ObjectManager::make(SetupContext::class, '__construct', ['module_name' => $name, 'module_version' => $version]);
+        $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $name, 'module_version' => $version],'__construct' );
         $setup_dir = $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
 
         // 已经存在模块则更新

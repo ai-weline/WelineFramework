@@ -147,49 +147,6 @@ abstract class AbstractModel extends DataObject
     }
 
     /**
-     * @DESC          # 设置保存查询
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/9/21 21:34
-     * 参数区：
-     * @param QueryInterface $query
-     * @return $this
-     */
-    private function setKeepQuery(QueryInterface $query): static
-    {
-        return $this->setData('keep_query', $query);
-    }
-
-    /**
-     * @DESC          # 清理保存查询
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/9/21 21:35
-     * 参数区：
-     * @return AbstractModel|DataObject
-     */
-    private function clearKeepQuery(): DataObject|AbstractModel
-    {
-        return $this->unsetData('keep_query');
-    }
-
-    /**
-     * @DESC          # 获取保存查询
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/9/21 21:35
-     * 参数区：
-     * @return mixed
-     */
-    function getKeepQuery(): mixed
-    {
-        return $this->getData('keep_query');
-    }
-
-    /**
      * @DESC          # 获取链接
      *
      * @AUTH  秋枫雁飞

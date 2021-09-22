@@ -138,10 +138,10 @@ abstract class RequestAbstract
      *
      * 参数区：
      *
-     * @param string $key
-     * @return string
+     * @param string|null $key
+     * @return string|array
      */
-    public function getServer(string $key = null): string
+    public function getServer(string $key = null): string|array
     {
         $filter = RequestFilter::getInstance();
         $filter->init();
@@ -228,21 +228,35 @@ abstract class RequestAbstract
         return $this->getServer('REQUEST_URI');
     }
 
-    public function getUrl(string $path = ''): string
+    /**
+     * @DESC          # 获取请求的路由路径
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/22 20:24
+     * 参数区：
+     * @return string
+     */
+    public function getUrlPath(): string
     {
         $uri = $this->getUri();
-        $url_exp = explode('?', $uri);
-        $base_url = array_shift($url_exp);
+        $url_exp = parse_url($uri);
+        return array_shift($url_exp);
+    }
+
+    public function getUrl(string $path = ''): string
+    {
+        $url = $this->getBaseUrl();
         if ($path) {
-            $base_url = $base_url . $path;
+            $url .=  '/'.$path;
         }
-        return $base_url;
+        return $url;
     }
 
     public function getBaseUrl(): string
     {
         $uri = $this->getUri();
-        $url_exp = explode('?', $uri);
+        $url_exp = explode('?', rtrim($uri,'/'));
 
         return $this->getBaseHost() . array_shift($url_exp);
     }
@@ -251,13 +265,12 @@ abstract class RequestAbstract
     {
         $uri = $this->getUri();
         $url_exp = explode('?', $uri);
-
         return $this->getBaseHost() . array_shift($url_exp);
     }
 
     public function getBaseHost(): string
     {
-        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('HTTP_HOST');
+        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . ($this->getServer('SERVER_PORT') !== '80' ?: '');
     }
 
     /**

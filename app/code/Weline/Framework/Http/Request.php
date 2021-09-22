@@ -20,7 +20,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
      */
     protected RequestFilter $_filter;
 
-    private string $module_name;
+    private string $module_name='';
 
     private string $module_path;
 

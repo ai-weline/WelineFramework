@@ -62,7 +62,7 @@ class Core
     public function start()
     {
         // 读取url
-        $url = $this->request->getUrl();
+        $url = $this->request->getUrlPath();
         // 前后台路由处理
         if ($this->is_admin) {
             if ($this->area_router === $this->_etc->getConfig('admin', '')) {

@@ -33,11 +33,12 @@
     <div class="container">
         <ul class="nav" style="float:left">
             <?php
+            /**@var \Aiweline\Bbs\Model\Forum $datum*/
             foreach ($this->getData('forum') as $datum) {
-//                p($datum);
+                p($datum->getThreads());
                 ?>
                 <li class="nav-item" data-fid="<?=$datum['fid']?>" data-active="fid-<?=$datum['fid']?>">
-                    <a class="nav-link" href="<?=$datum['url']?>"><?=$datum['name']?></a>
+                    <a class="nav-link" href="<?=$datum->getUrl()?>"><?=$datum['name']?></a>
                 </li>
                 <?php
             }
