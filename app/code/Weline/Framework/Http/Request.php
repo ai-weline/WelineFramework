@@ -72,10 +72,9 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     final public static function getInstance(string $module_path): self
     {
-        if (! isset(self::$instance)) {
+        if (!isset(self::$instance)) {
             self::$instance = (new self())->setModulePath($module_path);
         }
-
         return self::$instance;
     }
 
@@ -165,5 +164,14 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getApiKey(string $key): string
     {
         return $this->getHeader($key);
+    }
+
+    public function getModuleName(): string
+    {
+        if ($module_name = parent::getModuleName()) {
+            return $module_name;
+        } else {
+            return $this->module_name;
+        }
     }
 }

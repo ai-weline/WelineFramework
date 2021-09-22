@@ -83,7 +83,7 @@ abstract class RequestAbstract
      */
     public function getModuleName(): string
     {
-        return isset($this->router['name']) ? $this->router['name'] : '';
+        return $this->router['name'] ?? '';
     }
 
     /**

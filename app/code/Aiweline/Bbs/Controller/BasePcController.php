@@ -23,7 +23,6 @@ class BasePcController extends FrontendController
         Forum $forum
     ) {
         $forum->select();
-        p($forum->fetch());
-        $this->assign('forum', 1);
+        $this->assign('forum', $forum->fetch());
     }
 }

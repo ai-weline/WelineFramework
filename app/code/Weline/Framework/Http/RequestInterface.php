@@ -207,4 +207,15 @@ interface RequestInterface
      * @return string
      */
     public function getUrl(string $path=''):string;
+
+    /**
+     * @DESC          # 获取模组名字
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/22 19:46
+     * 参数区：
+     * @return string
+     */
+    public function getModuleName():string;
 }

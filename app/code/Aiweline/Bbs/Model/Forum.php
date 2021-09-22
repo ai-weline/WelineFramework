@@ -11,22 +11,19 @@ namespace Aiweline\Bbs\Model;
 
 use Weline\Framework\Database\Model;
 use Weline\Framework\Http\Request;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class Forum extends Model
 {
-    private Request $request;
-    private array $data;
+    const url = 'url';
 
     function __construct(
-        Request $request,
         array $data = []
     )
     {
         parent::__construct($data);
-        $this->request = $request;
-        $this->data = $data;
     }
 
     function provideTable(): string
@@ -54,12 +51,16 @@ class Forum extends Model
         // TODO: Implement install() method.
     }
 
+    private function getRequest(): Request
+    {
+        return ObjectManager::getInstance(Request::class);
+    }
+
     function set_data_before(string|array $key, mixed $value = null)
     {
-        if($this::fetch_data===$key){
+        if ($this::fetch_data === $key) {
             foreach ($value as &$item) {
-                p($item);
-                $item->setData();
+                $item->setUrl($this->getRequest()->getUrl("forum-{$item['fid']}.htm"));
             }
         }
     }
@@ -72,8 +73,9 @@ class Forum extends Model
      * @DateTime: 2021/9/22 19:35
      * 参数区：
      */
-    function getUrl(){
-        return $this->getData('urt');
+    function getUrl()
+    {
+        return $this->getData('url');
     }
 
     /**
@@ -88,6 +90,6 @@ class Forum extends Model
      */
     function setUrl(string $path): Forum
     {
-        return $this->setData('url',$this->request->getUrl($path));
+        return $this->setData(self::url, $this->getRequest()->getUrl($path));
     }
 }
