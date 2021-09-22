@@ -16,7 +16,7 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Catalog extends \Weline\Framework\Database\Model
 {
-    const table ='m_dev_tool_document_catalog';
+    const table = 'm_dev_tool_document_catalog';
 
     const fields_ID = 'id';
     const fields_NAME = 'name';
@@ -60,5 +60,25 @@ class Catalog extends \Weline\Framework\Database\Model
     function provideTable(): string
     {
         return self::table;
+    }
+
+    function getName()
+    {
+        return $this->getData(self::fields_NAME);
+    }
+
+    function setName(string $name): Catalog
+    {
+        return $this->setData(self::fields_NAME, $name);
+    }
+
+    function getPid()
+    {
+        return $this->getData(self::fields_PID);
+    }
+
+    function setPid(string|int $pid): Catalog
+    {
+        return $this->setData(self::fields_PID, $pid);
     }
 }

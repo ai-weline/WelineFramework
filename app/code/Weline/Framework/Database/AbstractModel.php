@@ -49,8 +49,8 @@ use Weline\Framework\Manager\ObjectManager;
 abstract class AbstractModel extends DataObject
 {
     const fetch_data = 'fetch_data';
-    const fields_CREATE_TIME='create_time';
-    const fields_UPDATE_TIME='update_time';
+    const fields_CREATE_TIME = 'create_time';
+    const fields_UPDATE_TIME = 'update_time';
 
     protected string $table = '';
     protected string $origin_table_name = '';
@@ -201,32 +201,6 @@ abstract class AbstractModel extends DataObject
         // 加载之后
         $this->load_after();
         return $this;
-    }
-
-    /**
-     * @DESC          # 读取模型的主键字段值
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/8/26 21:54
-     * 参数区：
-     */
-    function getId()
-    {
-        return $this->getData($this->primary_key);
-    }
-
-    /**
-     * @DESC          # 设置模型的主键字段值
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/8/26 21:54
-     * 参数区：
-     */
-    function setId($primary_id): AbstractModel
-    {
-        return $this->setData($this->primary_key, $primary_id);
     }
 
     /**
@@ -454,6 +428,54 @@ abstract class AbstractModel extends DataObject
     }
 
 
+    /**----------参数获取---------------*/
+
+    /**
+     * @DESC          # 读取模型的主键字段值
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/26 21:54
+     * 参数区：
+     */
+    function getId()
+    {
+        return $this->getData($this->primary_key);
+    }
+
+    /**
+     * @DESC          # 设置模型的主键字段值
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/26 21:54
+     * 参数区：
+     */
+    function setId($primary_id): AbstractModel
+    {
+        return $this->setData($this->primary_key, $primary_id);
+    }
+
+    function getCreateTime()
+    {
+        return $this->getData(self::fields_CREATE_TIME);
+    }
+
+    function setCreateTime(string $create_time): static
+    {
+        return $this->setData(self::fields_CREATE_TIME, $create_time);
+    }
+
+    function getUpdateTime()
+    {
+        return $this->getData(self::fields_UPDATE_TIME);
+    }
+
+    function setUpdateTime(string $update_time): static
+    {
+        return $this->setData(self::fields_CREATE_TIME, $update_time);
+    }
+
     /**----------链接查询--------------*/
 
     function bindQuery(QueryInterface $query): static
@@ -462,11 +484,11 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    function joinModel(AbstractModel|string $model, string $alias, $condition,$type='LEFT'): AbstractModel
+    function joinModel(AbstractModel|string $model, string $alias, $condition, $type = 'LEFT'): AbstractModel
     {
         if (is_string($model)) {
             $model = ObjectManager::getInstance($model);
         }
-        return $model->bindQuery($this->getQuery()->join($model->getTable() . ' ' . $alias, $condition,$type));
+        return $model->bindQuery($this->getQuery()->join($model->getTable() . ' ' . $alias, $condition, $type));
     }
 }
