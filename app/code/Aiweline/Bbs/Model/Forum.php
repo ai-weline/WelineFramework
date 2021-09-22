@@ -19,6 +19,7 @@ class Forum extends Model
 {
     const table = 'm_forum';
     const url = 'url';
+    const fields_fid = 'fid';
 
     function __construct(
         array $data = []
@@ -104,8 +105,18 @@ class Forum extends Model
         return $this->setData(self::url, $this->getRequest()->getUrl($path));
     }
 
-    function getThreads($page=1,$pageSize=20,$order='create_date',$order_sort='DESC'):array
+    function getFid()
     {
-        return $this->getQuery()->join(Thread::table.' t', 'main_table.fid=t.fid')->page($page,$pageSize)->order('t.'.$order,$order_sort)->select()->fetch();
+        return $this->getData(self::fields_fid);
+    }
+
+    function setFid(string|int $fid): Forum
+    {
+        return $this->setData(self::fields_fid, $fid);
+    }
+
+    function getThreads($page = 1, $pageSize = 20, $order = 'create_date', $order_sort = 'DESC'): array
+    {
+        return $this->joinModel(Thread::class , 't', 'main_table.fid=t.fid AND t.fid=' . $this->getFid(),'LEFT')->page($page, $pageSize)->order('t.' . $order, $order_sort)->select()->fetch();
     }
 }

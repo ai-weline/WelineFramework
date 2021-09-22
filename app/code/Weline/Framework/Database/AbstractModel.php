@@ -27,6 +27,7 @@ use Weline\Framework\Manager\ObjectManager;
  * @method QueryInterface join(string $table, string $condition, string $type = 'left')
  * @method QueryInterface where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND')
  * @method QueryInterface limit(int $size, int $offset = 0)
+ * @method QueryInterface page(int $page = 1, int $pageSize = 20)
  * @method QueryInterface order(string $fields, string $sort = 'ASC')
  * @method QueryInterface find()
  * @method QueryInterface select()
@@ -57,7 +58,7 @@ abstract class AbstractModel extends DataObject
 
     private bool $force_check_flag = false;
 
-    private QueryInterface $keep_query;
+    private ?QueryInterface $bind_query = null;
 
     /**
      * @DESC         |初始化连接、缓存、表前缀 读取模型自身表名字等
@@ -140,6 +141,11 @@ abstract class AbstractModel extends DataObject
      */
     public function getQuery(bool $keep_condition = false): QueryInterface
     {
+        # 如果绑定了查询
+        if ($this->bind_query) {
+            return $this->bind_query;
+        }
+        # 区分是否保持查询
         if ($keep_condition) {
             return $this->linker->getQuery()->table($this->getOriginTableName())->identity($this->primary_key);
         }
@@ -401,9 +407,10 @@ abstract class AbstractModel extends DataObject
             if ($is_fetch) {
                 $this->getQuery()->clearQuery();
                 $this->setFetchData($query_data);
+                return $query_data;
             }
 
-            return $query_data;
+            return $this;
         }
         /**
          * 重载方法
@@ -420,7 +427,7 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      * @param AbstractModel[] $value
      */
-    function setFetchData(array $value):self
+    function setFetchData(array $value): self
     {
         return $this->setData(self::fetch_data, $value);
     }
@@ -441,5 +448,22 @@ abstract class AbstractModel extends DataObject
     function set_data_after(string|array $key, mixed $value = null)
     {
 
+    }
+
+
+    /**----------链接查询--------------*/
+
+    function bindQuery(QueryInterface $query): static
+    {
+        $this->bind_query = $query;
+        return $this;
+    }
+
+    function joinModel(AbstractModel|string $model, string $alias, $condition,$type='LEFT'): AbstractModel
+    {
+        if (is_string($model)) {
+            $model = ObjectManager::getInstance($model);
+        }
+        return $model->bindQuery($this->getQuery()->join($model->getTable() . ' ' . $alias, $condition,$type));
     }
 }
