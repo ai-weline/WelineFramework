@@ -47,6 +47,7 @@ use Weline\Framework\Manager\ObjectManager;
  */
 abstract class AbstractModel extends DataObject
 {
+    const fetch_data = 'fetch_data';
     protected string $table = '';
     protected string $origin_table_name = '';
     private LinkerFactory $linker;
@@ -55,6 +56,8 @@ abstract class AbstractModel extends DataObject
     public array $fields = [];
 
     private bool $force_check_flag = false;
+
+    private QueryInterface $keep_query;
 
     /**
      * @DESC         |初始化连接、缓存、表前缀 读取模型自身表名字等
@@ -141,6 +144,49 @@ abstract class AbstractModel extends DataObject
             return $this->linker->getQuery()->table($this->getOriginTableName())->identity($this->primary_key);
         }
         return $this->linker->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->primary_key);
+    }
+
+    /**
+     * @DESC          # 设置保存查询
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/21 21:34
+     * 参数区：
+     * @param QueryInterface $query
+     * @return $this
+     */
+    private function setKeepQuery(QueryInterface $query): static
+    {
+        return $this->setData('keep_query', $query);
+    }
+
+    /**
+     * @DESC          # 清理保存查询
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/21 21:35
+     * 参数区：
+     * @return AbstractModel|DataObject
+     */
+    private function clearKeepQuery(): DataObject|AbstractModel
+    {
+        return $this->unsetData('keep_query');
+    }
+
+    /**
+     * @DESC          # 获取保存查询
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/21 21:35
+     * 参数区：
+     * @return mixed
+     */
+    function getKeepQuery(): mixed
+    {
+        return $this->getData('keep_query');
     }
 
     /**
@@ -386,12 +432,40 @@ abstract class AbstractModel extends DataObject
     {
         // 模型查询
         if (in_array($method, get_class_methods(QueryInterface::class))) {
-            return $this->getQuery()->$method(... $args);
+            # 非链式操作的Fetch
+            $is_fetch = false;
+            # 拦截fetch操作 注入返回的模型
+            if ('fetch' === $method) {
+                $args[] = $this::class;
+                $is_fetch = true;
+            }
+            $query_data = $this->getQuery(true)->$method(... $args);
+            # 拦截fetch返回的数据注入模型
+            if ($is_fetch) {
+                $this->getQuery()->clearQuery();
+                $this->setFetchData($query_data);
+            }
+
+            return $query_data;
         }
         /**
          * 重载方法
          */
         return parent::__call($method, $args);
+    }
+
+    /**
+     * @DESC          # 设置取得的珊瑚橘
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/22 19:32
+     * 参数区：
+     * @param AbstractModel[] $value
+     */
+    function setFetchData(array $value):self
+    {
+        return $this->setData(self::fetch_data, $value);
     }
 
     function setData($key, $value = null): static
@@ -402,11 +476,13 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    function set_data_before(string|array $key, mixed $value=null)
+    function set_data_before(string|array $key, mixed $value = null)
     {
 
     }
-    function set_data_after(string|array $key, mixed $value=null){
+
+    function set_data_after(string|array $key, mixed $value = null)
+    {
 
     }
 }

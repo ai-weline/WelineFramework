@@ -129,7 +129,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      * @return $this
      */
-    function clearDataObject():DataObject
+    function clearDataObject(): DataObject
     {
         $this->_data = [];
         return $this;
@@ -175,6 +175,10 @@ class DataObject implements \ArrayAccess
             } else {
                 $data = null;
             }
+        }
+        # 尝试加载类本身的属性
+        if (isset($this->$key) && null === $data && is_string($key)) {
+            $data = $this->$key;
         }
 
         return $data;
@@ -379,10 +383,10 @@ class DataObject implements \ArrayAccess
      * @return string
      */
     public function convertToXml(
-        array $arrAttributes = [],
+        array  $arrAttributes = [],
         string $rootName = 'item',
-        bool $addOpenTag = false,
-        bool $addCdata = true
+        bool   $addOpenTag = false,
+        bool   $addCdata = true
     ): string
     {
         return $this->toXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
@@ -477,7 +481,8 @@ class DataObject implements \ArrayAccess
                 return $this->unsetData($key);
             case 'has':
                 $key = $this->_underscore(substr($method, 3));
-
+                return isset($this->_data[$key]);
+            default:
                 return isset($this->_data[$key]);
         }
 

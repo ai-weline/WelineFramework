@@ -16,6 +16,7 @@ use PDOStatement;
 use Weline\Framework\Database\Api\Linker\QueryInterface;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Linker\Query\QueryTrait;
+use Weline\Framework\Manager\ObjectManager;
 
 abstract class Query implements QueryInterface
 {
@@ -203,12 +204,15 @@ abstract class Query implements QueryInterface
     {
         $result = $this->PDOStatement->execute($this->bound_values);
 
+        $origin_data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
+        $data = [];
         if ($model_class) {
-            $data = $this->PDOStatement->fetchObject($model_class);
+            foreach ($origin_data as $origin_datum) {
+                $data[] = ObjectManager::make($model_class, '__construct', ['data' => $origin_datum]);
+            }
         } else {
-            $data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
+            $data = $origin_data;
         }
-        if (is_object($data)) return $data;
         switch ($this->fetch_type) {
             case 'find':
                 $result = array_shift($data);

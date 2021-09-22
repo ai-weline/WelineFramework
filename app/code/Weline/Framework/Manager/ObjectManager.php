@@ -143,35 +143,18 @@ class ObjectManager implements ManagerInterface
      * @throws \ReflectionException
      * @throws Exception
      */
-    public static function make($class, string $method = '__construct', $params = []): mixed
+    public static function make($class, string $method = '__construct', array $params = []): mixed
     {
         // 拦截器处理
         $new_class = self::parserClass($class);
         if ('__construct' === $method) {
-//            throw  new Exception(__('无法通过make方式执行__construct函数！'));
-            if (isset(self::$instances[$class])) {
-                return self::$instances[$class];
-            }
-            // 如果是初始化函数则返回一个初始化后的对象
-            // 缓存对象读取
-            if (!DEV && $cache_class_object = self::getCache()->get($new_class)) {
-                self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
-
-                return self::$instances[$class];
-            }
             $instance = (new ReflectionClass($new_class))->newInstanceArgs($params);
-            self::$instances[$class] = $instance;
-            self::getCache()->set($class, $instance);
-
-            return self::$instances[$class];
+        } else {
+            $instance = new ReflectionClass($new_class);
+            $paramArr = self::getMethodParams($instance, $method);
+            $instance = $instance->{$method}(...array_merge($paramArr, $params));
         }
-        // 如果不是则实例化后立即执行该函数
-        // 获取该方法所需要依赖注入的参数
-        $paramArr = self::getMethodParams($class, $method);
-        // 获取类的实例
-        self::$instances[$class] = self::getInstance($class);
-
-        return self::$instances[$class]->{$method}(...array_merge($paramArr, $params));
+        return $instance;
     }
 
     /**
@@ -181,18 +164,23 @@ class ObjectManager implements ManagerInterface
      * @return array
      * @throws Exception
      */
-    protected static function getMethodParams($className, string $methodsName = '__construct'): array
+    protected static function getMethodParams($instance_or_class, string $methodsName = '__construct'): array
     {
         // 通过反射获得该类
-        try {
-            $class = new ReflectionClass($className);
-        } catch (\ReflectionException $e) {
-            if (CLI or DEV) {
-                echo('无法实例化该类：' . $className . '，错误：' . $e->getMessage());
+        if (is_object($instance_or_class)) {
+            $className = $instance_or_class::class;
+            $class = $instance_or_class;
+        } else {
+            $className = $instance_or_class;
+            try {
+                $class = new ReflectionClass($className);
+            } catch (\ReflectionException $e) {
+                if (CLI or DEV) {
+                    echo('无法实例化该类：' . $className . '，错误：' . $e->getMessage());
+                }
+                throw new Exception(__('无法实例化该类：%1，错误：%2', [$className, $e->getMessage()]), $e);
             }
-            throw new Exception(__('无法实例化该类：%1，错误：%2', [$className, $e->getMessage()]), $e);
         }
-
         $paramArr = []; // 记录参数，和参数类型（例如：class,string等）
 
         // 判断该类是否有函数

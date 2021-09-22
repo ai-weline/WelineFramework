@@ -22,6 +22,8 @@ class BasePcController extends FrontendController
     public function __construct(
         Forum $forum
     ) {
-        $this->assign('forum', $forum->select()->fetch());
+        $forum->select();
+        p($forum->fetch());
+        $this->assign('forum', 1);
     }
 }

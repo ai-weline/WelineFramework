@@ -108,7 +108,6 @@ class PcController extends Core
      *
      * @param string|null $fileName
      * @return void
-     * @throws \Weline\Framework\Exception\Core
      */
     protected function fetch(string $fileName = null)
     {
@@ -117,8 +116,13 @@ class PcController extends Core
             $fileNameArr = explode(\Weline\Framework\Controller\Data\DataInterface::dir, $parent_call_info['class']);
             $fileName = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $parent_call_info['function'];
         }
-
-        return $this->getTemplate()->fetch($fileName);
+        try {
+            $result = $this->getTemplate()->fetch($fileName);
+        }catch (\Exception $exception){
+            echo ($exception->getMessage());
+            die($exception->getTraceAsString());
+        }
+        return $result;
     }
 
     /**
