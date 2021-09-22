@@ -49,6 +49,9 @@ use Weline\Framework\Manager\ObjectManager;
 abstract class AbstractModel extends DataObject
 {
     const fetch_data = 'fetch_data';
+    const fields_CREATE_TIME='create_time';
+    const fields_UPDATE_TIME='update_time';
+
     protected string $table = '';
     protected string $origin_table_name = '';
     private LinkerFactory $linker;
