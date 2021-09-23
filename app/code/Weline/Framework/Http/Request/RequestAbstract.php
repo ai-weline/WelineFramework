@@ -44,7 +44,7 @@ abstract class RequestAbstract
 
     public function __init()
     {
-        $url_arr = explode('/', trim($this->getUrl(), '/'));
+        $url_arr = explode('/', trim($this->getUrlPath(), '/'));
         $this->area_router = array_shift($url_arr);
         $this->_filter = RequestFilter::getInstance();
         $this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);

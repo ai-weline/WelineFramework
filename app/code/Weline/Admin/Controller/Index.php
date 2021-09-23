@@ -32,10 +32,7 @@ class Index extends BackendController
      */
     public function index()
     {
-        if ($this->backendSession->isLogin()) {
-            return $this->fetch();
-        }
-        return $this->fetch('login/login_type2');
+        return $this->backendSession->isLogin() ? $this->fetch() : $this->fetch('login/login_type2');
     }
 
     public function test(): string
