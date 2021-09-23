@@ -56,6 +56,7 @@ trait TraitTemplate
         }
         $this->eventsManager->dispatch("Framework_View::{$position}", ['is_backend' => $this->_request->isBackend(), 'class' => '']);
         $class = $this->eventsManager->getEventData("Framework_View::{$position}")->getData('class');
+        p($class);
         if (empty($class) || !class_exists($class)) return '';
         $object = ObjectManager::getInstance($class);
         if (!DEV) $this->viewCache->set($cache_key, $object);
