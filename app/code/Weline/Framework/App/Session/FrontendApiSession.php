@@ -11,12 +11,12 @@ namespace Weline\Framework\App\Session;
 
 use Weline\Framework\Session\Session;
 
-class BackendSession extends Session
+class FrontendApiSession extends Session
 {
-    const login_KEY = 'WL_BACKEND';
+    const login_KEY = 'WL_FRONTEND_API';
 
     function __init()
     {
-        $this->setType('backend');
+        $this->setType('frontend_api');
     }
 }

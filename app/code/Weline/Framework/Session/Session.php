@@ -11,7 +11,7 @@ namespace Weline\Framework\Session;
 
 class Session
 {
-    const login_KEY = 'WELINE_USER';
+    const login_KEY = 'WL_USER';
 
     private SessionInterface $session;
 
@@ -39,7 +39,7 @@ class Session
      *
      * @return mixed
      */
-    public function isLogin()
+    public function isLogin(): mixed
     {
         return $this->session->get(self::login_KEY);
     }
@@ -52,5 +52,21 @@ class Session
     public function loginOut()
     {
         return $this->session->des();
+    }
+
+    function getType(): string
+    {
+        return $this->session->get('type');
+    }
+
+    function setType(string $type): static
+    {
+        $this->session->set('type', $type);
+        return $this;
+    }
+
+    function isBackend():bool
+    {
+        return (bool)strstr($this->getType(), 'backend');
     }
 }

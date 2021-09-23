@@ -13,5 +13,10 @@ use Weline\Framework\Session\Session;
 
 class FrontendSession extends Session
 {
-    const login_KEY = 'M_USER';
+    const login_KEY = 'WL_USER';
+
+    function __init()
+    {
+        $this->setType('frontend');
+    }
 }

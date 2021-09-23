@@ -10,6 +10,7 @@
 namespace Weline\Framework\Http;
 
 use Weline\Framework\Http\Request\RequestFilter;
+use Weline\Framework\Manager\ObjectManager;
 
 class Request extends Request\RequestAbstract implements RequestInterface
 {

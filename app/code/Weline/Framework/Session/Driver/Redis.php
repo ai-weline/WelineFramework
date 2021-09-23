@@ -20,7 +20,7 @@ class Redis extends AbstractSessionDriverHandle implements DriverInterface
         // TODO: Implement set() method.
     }
 
-    public function get($name)
+    public function get($name):mixed
     {
         // TODO: Implement get() method.
     }

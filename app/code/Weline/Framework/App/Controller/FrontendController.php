@@ -9,8 +9,25 @@
 
 namespace Weline\Framework\App\Controller;
 
+use Weline\Framework\App\Session\FrontendSession;
 use Weline\Framework\Controller\PcController;
+use Weline\Framework\Manager\ObjectManager;
 
 class FrontendController extends PcController
 {
+    private ?FrontendSession $session = null;
+
+    function __init()
+    {
+        parent::__init();
+        $this->getSession();
+    }
+
+    function getSession()
+    {
+        if (!$this->session) {
+            $this->session = ObjectManager::getInstance(FrontendSession::class);
+        }
+        return $this->session;
+    }
 }

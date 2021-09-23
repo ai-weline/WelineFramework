@@ -58,7 +58,7 @@ class File extends AbstractSessionDriverHandle
      * @param $name
      * @return bool|mixed
      */
-    public function get($name)
+    public function get($name):mixed
     {
         if (isset($_SESSION[$name])) {
             return $_SESSION[$name];

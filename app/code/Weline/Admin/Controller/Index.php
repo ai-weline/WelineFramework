@@ -15,15 +15,6 @@ use Weline\Framework\Session\Session;
 
 class Index extends BackendController
 {
-    private BackendSession $backendSession;
-
-    function __construct(
-        BackendSession $backendSession
-    )
-    {
-        $this->backendSession = $backendSession;
-    }
-
     /**
      * @DESC         |方法描述
      *
@@ -32,7 +23,7 @@ class Index extends BackendController
      */
     public function index()
     {
-        return $this->backendSession->isLogin() ? $this->fetch() : $this->fetch('login/login_type2');
+        return $this->getSession()->isLogin() ? $this->fetch() : $this->fetch('login/login_type2');
     }
 
     public function test(): string

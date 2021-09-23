@@ -15,6 +15,7 @@ use Weline\Framework\App\Exception;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Session\Session;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Data\HtmlInterface;
 
@@ -50,13 +51,19 @@ trait TraitTemplate
 
     private function fetchClassObject(string $position)
     {
-        $cache_key = ($this->_request->isBackend() ? 'backend' : 'frontend') . "_{$position}_object";
+        $is_backend = false;
+        $is_backend_cache_key = $this->_request->getFirstUrlPath();
+        if (!DEV && !$is_backend = (bool)$this->viewCache->get($is_backend_cache_key)) {
+            $is_backend = ObjectManager::getInstance(Session::class)->isBackend();
+        }
+        // TODO 处理session
+        p((new Session())->isBackend());
+        $cache_key = ($is_backend ? 'backend' : 'frontend') . "_{$position}_object";
         if (!DEV && $object = $this->viewCache->get($cache_key)) {
             return $object;
         }
-        $this->eventsManager->dispatch("Framework_View::{$position}", ['is_backend' => $this->_request->isBackend(), 'class' => '']);
+        $this->eventsManager->dispatch("Framework_View::{$position}", ['is_backend' => $is_backend, 'class' => '']);
         $class = $this->eventsManager->getEventData("Framework_View::{$position}")->getData('class');
-        p($class);
         if (empty($class) || !class_exists($class)) return '';
         $object = ObjectManager::getInstance($class);
         if (!DEV) $this->viewCache->set($cache_key, $object);

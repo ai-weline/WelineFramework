@@ -11,7 +11,8 @@ namespace Weline\Framework\Http;
 
 class Cookie
 {
-    public function setCookie()
+    public function setCookie(string $key, string $value)
     {
+        setcookie($key, $value);
     }
 }

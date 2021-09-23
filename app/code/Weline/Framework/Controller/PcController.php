@@ -50,8 +50,10 @@ class PcController extends Core
      *
      * 参数区：
      *
-     * @param string $key
-     * @return array|mixed|null
+     * @param string|null $key
+     * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
      */
     public function getData(string $key = null): mixed
     {

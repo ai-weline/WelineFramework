@@ -12,6 +12,8 @@ namespace Weline\Framework\Http\Request;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\State;
 use Weline\Framework\Controller\Data\DataInterface;
+use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Http\Cookie;
 use Weline\Framework\Http\Response;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -95,11 +97,15 @@ abstract class RequestAbstract
      */
     public function getRequestArea(): string
     {
-        return match ($this->area_router) {
+        $area =  match ($this->area_router) {
             Env::getInstance()->getConfig('admin', 'admin') => DataInterface::type_pc_BACKEND,
             Env::getInstance()->getConfig('api_admin', 'api_admin') => DataInterface::type_api_BACKEND,
             default => DataInterface::type_pc_FRONTEND,
         };
+        /**@var EventsManager $eventManager */
+        $eventManager = ObjectManager::getInstance(EventsManager::class);
+        $eventManager->dispatch('WelineFramework_Http::process_area',['area'=>$area,'path'=>$this->area_router]);
+        return $area;
     }
 
     /**
@@ -266,6 +272,12 @@ abstract class RequestAbstract
         $uri = $this->getUri();
         $url_exp = explode('?', $uri);
         return $this->getBaseHost() . array_shift($url_exp);
+    }
+    public function getFirstUrlPath(): string
+    {
+        $uri = $this->getUri();
+        $url_exp = explode('?', $uri);
+        return trim(array_shift($url_exp),'/');
     }
 
     public function getBaseHost(): string

@@ -23,7 +23,7 @@ interface SessionInterface
      * @param $name
      * @return mixed
      */
-    public function get($name);
+    public function get($name): mixed;
 
     public function del($name);
 
