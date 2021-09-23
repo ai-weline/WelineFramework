@@ -49,6 +49,7 @@ use Weline\Framework\Manager\ObjectManager;
 abstract class AbstractModel extends DataObject
 {
     const fetch_data = 'fetch_data';
+    const fields_ID = 'id';
     const fields_CREATE_TIME = 'create_time';
     const fields_UPDATE_TIME = 'update_time';
 

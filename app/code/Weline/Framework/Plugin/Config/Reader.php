@@ -47,7 +47,7 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
      *
      * @return mixed
      */
-    public function read()
+    public function read():array
     {
         if (! DEV && $plugin = $this->pluginCache->get('plugin')) {
             return $plugin;

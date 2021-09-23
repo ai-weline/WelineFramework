@@ -47,8 +47,9 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
      *
      * @param bool $cache
      * @return mixed
+     * @throws Core
      */
-    public function read($cache = true)
+    public function read(bool $cache = true):array
     {
         if ($cache && $event = $this->eventCache->get('event')) {
             return $event;

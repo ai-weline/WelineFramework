@@ -17,14 +17,10 @@ class Reader extends ModuleFileReader
 {
     const ROOT_NAMESPACE_PREFIX = 'x';
 
-    private static $urnResolver;
-
     /**
      * Format of items in errors array to be used by default. Available placeholders - fields of \LibXMLError.
      */
     const ERROR_FORMAT_DEFAULT = "%message%\nLine: %line%\n";
-
-    private static $resolvedSchemaPaths;
 
     /**
      * @var Parser
@@ -44,9 +40,9 @@ class Reader extends ModuleFileReader
      * @DESC         |读取配置信息
      *
      * 参数区：
-     * @param string $path
+     * @return array
      */
-    public function read()
+    public function read(): array
     {
         $data = [];
         foreach ($this->getFileList() as $vendor => $module_files) {
@@ -70,7 +66,7 @@ class Reader extends ModuleFileReader
      * @param $pathArr
      * @return array
      */
-    public function getByPath($xmlArray, $pathArr)
+    public function getByPath($xmlArray, $pathArr): array
     {
         $data = [];
         if (empty($pathArr)) {
