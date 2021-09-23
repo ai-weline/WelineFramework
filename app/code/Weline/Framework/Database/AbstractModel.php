@@ -384,7 +384,7 @@ abstract class AbstractModel extends DataObject
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
                 $this->getQuery()->clearQuery();
-                $this->setFetchData($query_data);
+                if($query_data)$this->setFetchData($query_data);
                 return $query_data;
             }
 
