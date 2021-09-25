@@ -13,6 +13,7 @@ class Redis extends AbstractSessionDriverHandle implements DriverInterface
 {
     public function __construct(array $config)
     {
+
     }
 
     public function set($name, $value)

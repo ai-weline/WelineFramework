@@ -20,6 +20,7 @@ use Weline\Framework\Exception\Core;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Debug\Printing;
+use Weline\Framework\Session\Session;
 use Weline\Framework\View\Cache\ViewCache;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Data\HtmlInterface;
@@ -27,9 +28,11 @@ use Weline\Framework\View\Data\HtmlInterface;
 class Template
 {
     use TraitTemplate;
+
     const file_ext = '.phtml';
 
     protected Request $_request;
+    private Session $session;
 
     /**
      * @var PcController
@@ -75,9 +78,11 @@ class Template
         $this->controller = $controller;
     }
 
-    //FIXME 实现拓展第三方自定义模板引擎
     public function __init()
     {
+        if (!isset($this->session)) {
+            $this->session = ObjectManager::getInstance(Session::class, [], false);
+        }
         $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
         $this->_request = $this->controller->getRequest();
         $this->view_dir = $this->controller->getViewBaseDir();
@@ -88,6 +93,11 @@ class Template
         $this->template_dir = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
         $this->compile_dir = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
 
+    }
+
+    function __wakeup()
+    {
+        $this->__init();
     }
 
     /**

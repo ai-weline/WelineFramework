@@ -148,7 +148,15 @@ class ObjectManager implements ManagerInterface
         // 拦截器处理
         $new_class = self::parserClass($class);
         if ('__construct' === $method) {
-            $instance = (new ReflectionClass($new_class))->newInstanceArgs($params);
+            $instance = (new ReflectionClass($new_class));
+            $method_params=self::getMethodParams($instance, $method);
+            foreach ($method_params as $key=>$method_param) {
+                if(empty($method_param)){
+                    unset($method_params[$key]);
+                }
+            }
+            $method_params = array_merge($method_params,$params);
+            $instance = $instance->newInstanceArgs($method_params);
             if (method_exists($instance, '__init')) {
                 $instance->__init();
             }

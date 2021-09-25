@@ -16,7 +16,9 @@ use PDOStatement;
 use Weline\Framework\Database\Api\Linker\QueryInterface;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Linker\Query\QueryTrait;
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Manager\ObjectManager;
+use function PHPUnit\Framework\isInstanceOf;
 
 abstract class Query implements QueryInterface
 {

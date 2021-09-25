@@ -13,11 +13,8 @@ use Weline\Framework\Session\SessionInterface;
 
 abstract class AbstractSessionDriverHandle implements SessionInterface, DriverInterface
 {
-    protected array $config;
-
     public function __construct(array $config)
     {
-        $this->config = $config;
         session_set_save_handler(
             [&$this, 'open'],
             [&$this, 'del'],

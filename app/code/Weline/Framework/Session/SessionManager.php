@@ -58,7 +58,7 @@ class SessionManager
             $driver = $this->config['default'];
         }
         $driver_class = self::driver_NAMESPACE . ucfirst($driver);
-
-        return new $driver_class($this->config['drivers'][$driver]);
+        $driver_config = $this->config['drivers'][$driver];
+        return new $driver_class($driver_config);
     }
 }

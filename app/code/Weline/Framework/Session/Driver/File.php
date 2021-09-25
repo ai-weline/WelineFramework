@@ -21,7 +21,8 @@ class File extends AbstractSessionDriverHandle
     {
         parent::__construct($config);
         $this->sessionPath = BP . $config['path'] ?? BP . 'var/session/';
-        if (session_status() !== 2) {
+        # 会话启用 但是不存在时 新建会话
+        if (session_status() !== PHP_SESSION_NONE) {
             if (! is_dir($this->sessionPath)) {
                 mkdir($this->sessionPath, 0700);
             }

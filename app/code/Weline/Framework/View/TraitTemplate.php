@@ -51,13 +51,7 @@ trait TraitTemplate
 
     private function fetchClassObject(string $position)
     {
-        $is_backend = false;
-        $is_backend_cache_key = $this->_request->getFirstUrlPath();
-        if (!DEV && !$is_backend = (bool)$this->viewCache->get($is_backend_cache_key)) {
-            $is_backend = ObjectManager::getInstance(Session::class)->isBackend();
-        }
-        // TODO 处理session
-        p((new Session())->isBackend());
+        $is_backend = $this->session->isBackend();
         $cache_key = ($is_backend ? 'backend' : 'frontend') . "_{$position}_object";
         if (!DEV && $object = $this->viewCache->get($cache_key)) {
             return $object;
