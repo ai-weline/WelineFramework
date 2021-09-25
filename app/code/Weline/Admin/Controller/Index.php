@@ -10,8 +10,6 @@
 namespace Weline\Admin\Controller;
 
 use Weline\Framework\App\Controller\BackendController;
-use Weline\Framework\App\Session\BackendSession;
-use Weline\Framework\Session\Session;
 
 class Index extends BackendController
 {
@@ -23,7 +21,12 @@ class Index extends BackendController
      */
     public function index()
     {
-        return $this->getSession()->isLogin() ? $this->fetch() : $this->fetch('login/login_type2');
+        // TODO 需要新增后台静态文件特殊路径，否则会读取前台的session 导致默写调用session异常 产生大量的无用调用，影响性能
+        if ($this->getSession()->isLogin()) {
+            $this->fetch();
+        } else {
+            $this->fetch('login/login_type2');
+        }
     }
 
     public function test(): string

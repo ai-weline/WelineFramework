@@ -149,7 +149,7 @@ class DataObject implements \ArrayAccess
      *
      * @param string $key
      * @param null $index
-     * @return array|mixed|string|null
+     * @return mixed
      */
     public function getData(string $key = '', $index = null): mixed
     {
@@ -158,7 +158,7 @@ class DataObject implements \ArrayAccess
         }
 
         /* 处理 a/b/c key as ['a']['b']['c'] */
-        if (strpos($key, '/') !== false) {
+        if (str_contains($key, '/')) {
             $data = $this->getDataByPath($key);
         } else {
             $data = $this->_getData($key);
@@ -170,7 +170,7 @@ class DataObject implements \ArrayAccess
             } elseif (is_string($data)) {
                 $data = explode(PHP_EOL, $data);
                 $data = $data[$index] ?? null;
-            } elseif ($data instanceof \Weline\Framework\DataObject\DataObject) {
+            } elseif ($data instanceof DataObject) {
                 $data = $data->getData($index);
             } else {
                 $data = null;
@@ -192,7 +192,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param $path
-     * @return array|mixed|null
+     * @return mixed
      */
     public function getDataByPath($path): mixed
     {
@@ -202,7 +202,7 @@ class DataObject implements \ArrayAccess
         foreach ($keys as $key) {
             if ((array)$data === $data && isset($data[$key])) {
                 $data = $data[$key];
-            } elseif ($data instanceof \Weline\Framework\DataObject\DataObject) {
+            } elseif ($data instanceof DataObject) {
                 $data = $data->getDataByKey($key);
             } else {
                 return null;
@@ -218,7 +218,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param $key
-     * @return mixed|null
+     * @return mixed
      */
     public function getDataByKey($key): mixed
     {
@@ -231,7 +231,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param $key
-     * @return mixed|null
+     * @return mixed
      */
     protected function _getData($key): mixed
     {
@@ -345,13 +345,13 @@ class DataObject implements \ArrayAccess
      * @param bool $addCdata 需要在CDATA中包装所有值的标志
      * @return string
      */
-    public function toXml(array $keys = [], $rootName = 'item', $addOpenTag = false, $addCdata = true): string
+    public function toXml(array $keys = [], string $rootName = 'item', bool $addOpenTag = false, bool $addCdata = true): string
     {
         $xml = '';
         $data = $this->toArray($keys);
         foreach ($data as $fieldName => $fieldValue) {
             if ($addCdata === true) {
-                $fieldValue = "<![CDATA[{$fieldValue}]]>";
+                $fieldValue = "<![CDATA[$fieldValue]]>";
             } else {
                 $fieldValue = str_replace(
                     ['&', '"', "'", '<', '>'],
@@ -359,10 +359,10 @@ class DataObject implements \ArrayAccess
                     $fieldValue
                 );
             }
-            $xml .= "<{$fieldName}>{$fieldValue}</{$fieldName}>\n";
+            $xml .= "<$fieldName>$fieldValue</$fieldName>\n";
         }
         if ($rootName) {
-            $xml = "<{$rootName}>\n{$xml}</{$rootName}>\n";
+            $xml = "<$rootName>\n$xml</$rootName>\n";
         }
         if ($addOpenTag) {
             $xml = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . $xml;
@@ -423,7 +423,7 @@ class DataObject implements \ArrayAccess
     /**
      * 将对象数据转换为预定义格式的字符串
      *
-     * Will use $format as an template and substitute {{key}} for attributes
+     * Will use $format as a template and substitute {{key}} for attributes
      *
      * @param string $format
      * @return string
@@ -442,7 +442,7 @@ class DataObject implements \ArrayAccess
         if (empty($format)) {
             $result = implode(', ', $this->getData());
         } else {
-            preg_match_all('/\{\{([a-z0-9_]+)\}\}/is', $format, $matches);
+            preg_match_all('/{{([a-z0-9_]+)}}/is', $format, $matches);
             foreach ($matches[1] as $var) {
                 $format = str_replace('{{' . $var . '}}', $this->getData($var), $format);
             }
@@ -460,7 +460,6 @@ class DataObject implements \ArrayAccess
      * @param $method
      * @param $args
      * @return $this|array|bool|mixed|string|null
-     * @throws \Weline\Framework\Exception\Core
      */
     public function __call($method, $args)
     {
@@ -468,7 +467,6 @@ class DataObject implements \ArrayAccess
             case 'get':
                 $key = $this->_underscore(substr($method, 3));
                 $index = $args[0] ?? null;
-
                 return $this->getData($key, $index);
             case 'set':
                 $key = $this->_underscore(substr($method, 3));
@@ -483,12 +481,8 @@ class DataObject implements \ArrayAccess
                 $key = $this->_underscore(substr($method, 3));
                 return isset($this->_data[$key]);
             default:
-                return isset($this->_data[$key]);
+                return isset($this->_data[$method]);
         }
-
-        throw new \Weline\Framework\Exception\Core(
-            sprintf('Invalid method %s::%s', get_class($this), $method)
-        );
     }
 
     /**
@@ -516,7 +510,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param $name
-     * @return mixed|string
+     * @return mixed
      */
     protected function _underscore($name): mixed
     {
@@ -585,7 +579,7 @@ class DataObject implements \ArrayAccess
                 $debug[$key] = $value;
             } elseif (is_array($value)) {
                 $debug[$key] = $this->debug($value, $objects);
-            } elseif ($value instanceof \Weline\Framework\DataObject\DataObject) {
+            } elseif ($value instanceof DataObject) {
                 $debug[$key . ' (' . get_class($value) . ')'] = $value->debug(null, $objects);
             }
         }
@@ -640,7 +634,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param mixed $offset
-     * @return mixed|null
+     * @return mixed
      * @link http://www.php.net/manual/en/arrayaccess.offsetget.php
      */
     public function offsetGet($offset): mixed

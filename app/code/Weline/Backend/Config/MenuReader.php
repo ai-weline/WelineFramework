@@ -10,10 +10,11 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Config;
 
+use Weline\Framework\Config\Xml\Reader;
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\Xml\Parser;
 
-class MenuReader extends \Weline\Framework\Config\Xml\Reader
+class MenuReader extends Reader
 {
     function __construct(Scanner $scanner, Parser $parser, $path = 'adminhtml/menu.xml')
     {

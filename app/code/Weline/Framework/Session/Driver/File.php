@@ -23,7 +23,7 @@ class File extends AbstractSessionDriverHandle
         $this->sessionPath = BP . $config['path'] ?? BP . 'var/session/';
         # 会话启用 但是不存在时 新建会话
         if (session_status() !== PHP_SESSION_NONE) {
-            if (! is_dir($this->sessionPath)) {
+            if (!is_dir($this->sessionPath)) {
                 mkdir($this->sessionPath, 0700);
             }
             ini_set('session.save_handler', DriverInterface::driver_FILE);
@@ -41,13 +41,12 @@ class File extends AbstractSessionDriverHandle
      * @param $value
      * @return bool
      */
-    public function set($name, $value)
+    public function set($name, $value): bool
     {
         $_SESSION[$name] = $value;
         if ($_SESSION[$name]) {
             return true;
         }
-
         return false;
     }
 
@@ -57,14 +56,13 @@ class File extends AbstractSessionDriverHandle
      * 参数区：
      *
      * @param $name
-     * @return bool|mixed
+     * @return mixed
      */
-    public function get($name):mixed
+    public function get($name): mixed
     {
         if (isset($_SESSION[$name])) {
             return $_SESSION[$name];
         }
-
         return false;
     }
 
@@ -76,10 +74,9 @@ class File extends AbstractSessionDriverHandle
      * @param $name
      * @return bool
      */
-    public function del($name)
+    public function del($name): bool
     {
         unset($_SESSION[$name]);
-
         return true;
     }
 
@@ -90,22 +87,20 @@ class File extends AbstractSessionDriverHandle
      *
      * @return bool
      */
-    public function des()
+    public function des(): bool
     {
         $_SESSION = [];
-
         return session_destroy();
     }
 
-    public function open()
+    public function open(): bool
     {
         return true;
     }
 
-    public function gc(int $sessMaxLifeTime)
+    public function gc(int $sessMaxLifeTime): bool
     {
         ini_set('session.gc_maxlifetime', $sessMaxLifeTime);
-
         return true;
     }
 }

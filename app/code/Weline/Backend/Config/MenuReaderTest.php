@@ -10,12 +10,17 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Config;
 
+use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 
 class MenuReaderTest extends TestCore
 {
 
+    /**
+     * @throws \ReflectionException
+     * @throws Exception
+     */
     public function test__construct()
     {
         $menu_xml = ObjectManager::getInstance(MenuReader::class)->read();

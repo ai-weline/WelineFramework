@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Cache;
 
-class BackendCache extends \Weline\Framework\Cache\CacheFactory
+use Weline\Framework\Cache\CacheFactory;
+
+class BackendCache extends CacheFactory
 {
     function __construct(string $identity = 'backend_cache')
     {

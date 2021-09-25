@@ -25,9 +25,9 @@ interface SessionInterface
      */
     public function get($name): mixed;
 
-    public function del($name);
+    public function del($name):bool;
 
-    public function des();
+    public function des():bool;
 
-    public function gc(int $sessMaxLifeTime);
+    public function gc(int $sessMaxLifeTime):bool;
 }
