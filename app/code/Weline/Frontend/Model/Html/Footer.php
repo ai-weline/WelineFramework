@@ -37,7 +37,7 @@ class Footer implements HtmlInterface
      */
     function getHtml(): string
     {
-        return $this->backendConfig->getConfig(self::key, self::module);
+        return $this->backendConfig->getConfig(self::key, self::module)??'';
     }
 
     /**

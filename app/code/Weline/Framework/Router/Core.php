@@ -88,7 +88,6 @@ class Core
         if ($api_result = $this->Api($url)) {
             return $api_result;
         }
-
         // PC
         if ($pc_result = $this->Pc($url)) {
             return $pc_result;
@@ -174,7 +173,7 @@ class Core
         }
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
-            if (isset($routers[$url])|| isset($routers[$url . '/index']) || isset($routers[$url . self::default_index_url])) {
+            if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . self::default_index_url])) {
                 $router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url];
 
                 $class = json_decode(json_encode($router['class']));
@@ -186,7 +185,7 @@ class Core
                     exit(call_user_func([$dispatch, $method], $this->request->getParams()));
                 }
 
-                throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
+                throw new Exception(__("%1}: 控制器方法 %2 不存在!", [$class->name, $method]));
             }
         }
         // 如果是PC后端请求，找不到路由就直接404

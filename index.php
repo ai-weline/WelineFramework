@@ -7,6 +7,6 @@ declare(strict_types=1);
  * 邮箱：aiweline@qq.com
  * 网址：aiweline.com
  * 论坛：https://bbs.aiweline.com
- */
+ */;
 
 require __DIR__ . '/pub/index.php';

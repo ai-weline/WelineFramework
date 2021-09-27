@@ -7,13 +7,13 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Admin\Api\Rest\V1;
+namespace Weline\Backend\Api\Rest\V1;
 
 use Weline\Framework\App\Controller\BackendRestController;
 
 class Index extends BackendRestController
 {
-    public function index()
+    public function index(): bool|string
     {
         $data = ['name' => '后台rest接口！', 'params' => $this->_request->getParams()];
 

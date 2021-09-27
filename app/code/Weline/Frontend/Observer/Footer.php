@@ -20,7 +20,7 @@ class Footer implements \Weline\Framework\Event\ObserverInterface
      */
     public function execute(Event $event)
     {
-        if ($event->getData('is_backend')) {
+        if (!$event->getData('is_backend')) {
             $event->setData('class', \Weline\Frontend\Model\Html\Footer::class);
         }
     }

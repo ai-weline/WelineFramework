@@ -36,28 +36,29 @@
 <IfModule mod_deflate.c>
 
 ############################################
-## 启用apache服务的文件压缩
+## 启用apache服务的文件压缩（要求Apache 2.x以上版本）
 ## http://developer.yahoo.com/performance/rules.html#gzip
 
     # 在所有内容上插入筛选器
-    ###SetOutputFilter DEFLATE
-    # 仅在选定内容类型上插入筛选器
-    #AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml
+    SetOutputFilter DEFLATE
+    # 仅在选定内容类型上插入筛选器(要压缩的文件类型)
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json image/svg+xml
 
     # Netscape（网景浏览器） 4.x存在的问题...
-    #BrowserMatch ^Mozilla/4 gzip-only-text/html
+    BrowserMatch ^Mozilla/4 gzip-only-text/html
 
     # Netscape（网景浏览器） 4.06-4.08 存在的问题
-    #BrowserMatch ^Mozilla/4\.0[678] no-gzip
+    BrowserMatch ^Mozilla/4\.0[678] no-gzip
 
     # MSIE 伪装 Netscape, 但属正常
-    #BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
+    BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 
     # 不压缩图像
-    #SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary
+    SetEnvIfNoCase Request_URI \.(?:gif|jpe?g|png)$ no-gzip dont-vary # 仅图片不压缩
+    #SetEnvIfNoCase Request_URI .(?:gif|jpe?g|png|exe|t?gz|zip|bz2|sit|rar|pdf|mov|avi|mp3|mp4|rm)$ no-gzip dont-vary #设置不对压缩的文件
 
     # 确保代理不会传递错误的内容
-    #Header append Vary User-Agent env=!dont-vary
+    Header append Vary User-Agent env=!dont-vary
 
 </IfModule>
 
