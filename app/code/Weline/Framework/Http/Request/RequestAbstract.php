@@ -46,7 +46,7 @@ abstract class RequestAbstract
 
     public function __init()
     {
-        $url_arr = explode('/', trim($this->getUrlPath(), '/'));
+        $url_arr = explode('/', trim($this->getModuleUrlPath(), '/'));
         $this->area_router = array_shift($url_arr);
         $this->_filter = RequestFilter::getInstance();
         $this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
@@ -234,8 +234,9 @@ abstract class RequestAbstract
         return $this->getServer('REQUEST_URI');
     }
 
+
     /**
-     * @DESC          # 获取请求的路由路径
+     * @DESC          # 获取请求的module路由路径
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
@@ -243,13 +244,17 @@ abstract class RequestAbstract
      * 参数区：
      * @return string
      */
-    public function getUrlPath(): string
+    public function getModuleUrlPath(): string
     {
-        $uri = $this->getUri();
-        $url_exp = parse_url($uri);
+        $url_exp = parse_url($this->getUri());
         return array_shift($url_exp);
     }
 
+    public function getUrlPath(): string
+    {
+        $url_path = explode('?', $this->getUri());
+        return array_shift($url_path);
+    }
     public function getUrl(string $path = ''): string
     {
         $url = $this->getBaseUrl();
