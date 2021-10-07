@@ -100,7 +100,7 @@ class Scan
      */
     public function scanDir(string $dirPath): array
     {
-        if (! is_dir($dirPath)) {
+        if (! is_dir(trim($dirPath,DIRECTORY_SEPARATOR))) {
             return [];
         }
         if ($this->dirs = (scandir($dirPath)) ? scandir($dirPath) : []) {

@@ -37,7 +37,6 @@ class Scanner extends Scan
             }
             //
         }
-
         return $vendors;
     }
 
@@ -108,7 +107,9 @@ class Scanner extends Scan
 //        $modules = array_merge($modules, $theme_modules);
         $modules = [];
         foreach (Env::register_FILE_PATHS as $register_FILE_PATH) {
-            $modules = array_merge($modules, $this->scanDir($register_FILE_PATH . $vendor));
+            if(is_dir($register_FILE_PATH . $vendor)){
+                $modules = array_merge($modules, $this->scanDir($register_FILE_PATH . $vendor));
+            }
         }
         foreach ($modules as $key => $module) {
             unset($modules[$key]);
@@ -128,11 +129,14 @@ class Scanner extends Scan
 //                    $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
 //                }
 //            }
-
-            foreach (Env::register_FILE_PATHS as $register_FILE_PATH) {
-                if (is_file($register_FILE_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
-                    $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
+            foreach (Env::register_FILE_PATHS as $type=>$register_FILE_PATH) {
+                $app_module_path = $register_FILE_PATH . $vendor . DIRECTORY_SEPARATOR . $module ;
+                if(is_dir($app_module_path)){
+                    if (is_file($app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
+                        $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
+                    }
                 }
+
             }
         }
 

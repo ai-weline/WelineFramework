@@ -13,7 +13,6 @@ if ('cli' !== PHP_SAPI and !file_exists(dirname(__DIR__) . '/setup/install.lock'
     exit();
 }
 $start_time = microtime(true);
-
 // 运行模式
 defined('CLI') || define('CLI', PHP_SAPI === 'cli');
 // 项目根目录

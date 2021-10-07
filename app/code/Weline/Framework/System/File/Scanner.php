@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\System\File;
 
+use Weline\Framework\App\Exception;
 use Weline\Framework\Register\RegisterInterface;
 
 class Scanner extends Scan
@@ -52,7 +53,7 @@ class Scanner extends Scan
      */
     public function scanAppVendors()
     {
-        $apps    = $this->scanDir(APP_PATH);
+        $apps = $this->scanDir(APP_PATH);
         $vendors = $this->scanDir(BP . 'vendor');
 
         return array_merge($vendors, $apps);
@@ -72,16 +73,16 @@ class Scanner extends Scan
      */
     public function scanVendorModules($vendor)
     {
-        $app_modules  = $this->scanDir(APP_PATH . $vendor);
+        $app_modules = $this->scanDir(APP_PATH . $vendor);
         $core_modules = $this->scanDir(BP . 'vendor/' . $vendor);
-        $modules      = array_merge($core_modules, $app_modules);
+        $modules = array_merge($core_modules, $app_modules);
         foreach ($modules as $key => $module) {
             unset($modules[$key]);
             if (file_exists(APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
                 $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
             }
             // app下的代码优先度更高
-            if (! isset($modules[$module])) {
+            if (!isset($modules[$module])) {
                 if (file_exists(BP . 'vendor/' . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
                     $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
                 }
@@ -102,39 +103,57 @@ class Scanner extends Scan
      * @param \Closure|null $callback
      * @return array
      */
-    public function scanVendorModulesWithFiles(string $file_or_dir = '', \Closure $callback=null): array
+    public function scanVendorModulesWithFiles(string $file_or_dir = '', \Closure $callback = null): array
     {
-        $vendors         = $this->scanAppVendors();
+        $vendors = $this->scanAppVendors();
         $vendors_modules = [];
         foreach ($vendors as $vendor) {
-            $app_modules  = $this->scanDir(APP_PATH . $vendor . DIRECTORY_SEPARATOR);
+            $app_modules = $this->scanDir(APP_PATH . $vendor . DIRECTORY_SEPARATOR);
             $core_modules = $this->scanDir(BP . 'vendor' . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR);
-            $modules      = array_merge($core_modules, $app_modules);
+            $modules = array_merge($core_modules, $app_modules);
             foreach ($modules as $key => $module) {
                 // app下的代码优先度更高
-                $app_module_path = APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
+                $app_module_path = APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module;
                 unset($modules[$key]);
-                if (is_file($app_module_path . RegisterInterface::register_file)) {
-                    if (is_file($app_module_path . $file_or_dir)) {
-                        $modules[$module] = $app_module_path . $file_or_dir;
-                    } else {
-                        $this->init();
-                        $modules[$module] = $this->scanDirTree($app_module_path . $file_or_dir, 3);
-                        $this->init();
-                    }
-                }
-                // vendor下的代码会被覆盖
-                $vendor_app_module_path = BP . 'vendor/' . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
-                if (! isset($modules[$module])) {
-                    if (is_file($vendor_app_module_path . RegisterInterface::register_file)) {
-                        if (is_file($vendor_app_module_path . $file_or_dir)) {
-                            $modules[$module] = $vendor_app_module_path . $file_or_dir;
+                $app_need_file_or_dir = $app_module_path. DIRECTORY_SEPARATOR . $file_or_dir;
+                if (is_dir($app_module_path)) {
+                    if (is_file($app_module_path . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
+                        if (is_file($app_need_file_or_dir)) {
+                            $modules[$module] = $app_need_file_or_dir;
                         } else {
                             $this->init();
-                            $modules[$module] = $this->scanDirTree($vendor_app_module_path . $file_or_dir, 3);
+                            $modules[$module] = $this->scanDirTree($app_need_file_or_dir, 3);
                             $this->init();
                         }
                     }
+                }
+                // vendor下的代码会被覆盖
+                $vendor_app_module_path = BP . 'vendor' . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR . $module;
+                $vendor_app_need_file_or_dir = $app_module_path. DIRECTORY_SEPARATOR . $file_or_dir;
+                if (!isset($modules[$module])) {
+                    if (is_dir($vendor_app_module_path)) {
+                        if (file_exists($vendor_app_module_path . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
+                            if (is_dir($vendor_app_need_file_or_dir)) {
+                                $modules[$module] = $vendor_app_need_file_or_dir;
+                            } else if (is_file($vendor_app_need_file_or_dir)) {
+                                $modules[$module] = $vendor_app_need_file_or_dir;
+                            } else {
+                                $this->init();
+                                $modules[$module] = $this->scanDirTree($vendor_app_need_file_or_dir, 3);
+                                $this->init();
+                            }
+                            /*try {
+                                if(is_file($vendor_app_module_path . $file_or_dir)){
+                                    $modules[$module] = $vendor_app_module_path . $file_or_dir;
+                                }
+                            }catch (Exception){
+                                $this->init();
+                                $modules[$module] = $this->scanDirTree($vendor_app_module_path . $file_or_dir, 3);
+                                $this->init();
+                            }*/
+                        }
+                    }
+
                 }
             }
 
@@ -143,7 +162,7 @@ class Scanner extends Scan
             }
         }
         # 带有回调处理的方法
-        if($callback){
+        if ($callback) {
             $vendors_modules = $callback($vendors_modules);
         }
         return $vendors_modules;

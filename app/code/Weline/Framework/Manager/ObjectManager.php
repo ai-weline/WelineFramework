@@ -238,7 +238,9 @@ class ObjectManager implements ManagerInterface
                         }
                     } else {
                         try {
-                            $paramArr[] = $param->getDefaultValue();
+                            if($param->isDefaultValueAvailable()){
+                                $paramArr[] = $param->getDefaultValue();
+                            }
                         } catch (\ReflectionException $e) {
                             if (CLI or DEV) {
                                 echo('无法实例化该类：' . $className . '，错误：' . $e->getMessage());

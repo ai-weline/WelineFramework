@@ -63,8 +63,9 @@ class Upgrade extends CommandAbstract
      */
     public function execute($args = [])
     {
+        $i = 1;
         // 删除路由文件
-        $this->printer->warning('1、路由更新...', '系统');
+        $this->printer->warning($i.'、路由更新...', '系统');
         $this->printer->warning('清除文件：');
         foreach (Env::router_files_PATH as $path) {
             $this->printer->warning($path);
@@ -75,16 +76,23 @@ class Upgrade extends CommandAbstract
                 }
             }
         }
-        $this->printer->warning('2、generated生成目录代码code清理...', '系统');
+        $i +=1;
+        $this->printer->warning($i.'、generated生成目录代码code清理...', '系统');
         $this->system->exec('rm -rf ' . Env::path_framework_generated_code);
         // 扫描代码
         $registers = $this->scanner->scanAppModules();
-
-        $this->printer->note('3、依赖编译...');
+        $i +=1;
+        $this->printer->note($i.'、事件清理...');
+        /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
+        $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Event\Console\Event\Cache\Clear::class);
+        $cacheManagerConsole->execute();
+        $i +=1;
+        $this->printer->note($i.'、插件编译...');
         /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Plugin\Console\Plugin\Di\Compile::class);
         $cacheManagerConsole->execute();
-        $this->printer->note('4、module模块更新...');
+        $i +=1;
+        $this->printer->note($i.'、module模块更新...');
         // 注册模块
         $all_modules = [];
 
@@ -123,7 +131,8 @@ class Upgrade extends CommandAbstract
         /**@var EventsManager $eventsManager*/
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
         $eventsManager->dispatch('Framework_upgrade');
-        $this->printer->note('5、清理缓存...');
+        $i +=1;
+        $this->printer->note($i.'、清理缓存...');
         /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
         $cacheManagerConsole->execute();

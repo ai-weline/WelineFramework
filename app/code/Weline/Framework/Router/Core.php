@@ -79,6 +79,7 @@ class Core
                 }
             }
         }
+
         // 找不到则访问默认控制器
         if (self::url_path_split === $url) {
             $url = self::default_index_url;

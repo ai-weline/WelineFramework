@@ -12,6 +12,7 @@ namespace Weline\Theme\Model;
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Db\TableInterface;
+use Weline\Framework\Database\Db\Ddl\Table\Create;
 use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
@@ -44,7 +45,7 @@ class WelineTheme extends Model
      */
     private CacheInterface $themeCache;
 
-     public function __construct(
+    public function __construct(
         array $data = []
     )
     {
@@ -98,6 +99,7 @@ class WelineTheme extends Model
     {
         return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
     }
+
     public function getOriginPath(): string
     {
         return $this->getData(self::filed_PATH);
@@ -165,7 +167,7 @@ class WelineTheme extends Model
             $this->getQuery()
                 ->where(self::filed_IS_ACTIVE, 1)
                 ->where(self::filed_ID, $this->getId(), '!=')
-                ->update(self::filed_IS_ACTIVE,0)
+                ->update(self::filed_IS_ACTIVE, 0)
                 ->fetch();
         }
     }
@@ -177,7 +179,61 @@ class WelineTheme extends Model
 
     function setup(ModelSetup $setup, Context $context): void
     {
-        // TODO: Implement setup() method.
+        /*if($setup->tableExist()){
+            $setup->dropTable();
+        }
+        if (!$setup->tableExist()) {
+            $setup->getPrinting()->warning('安装数据库表：' . $this->getTable());
+            $setup->createTable(
+                '主题表'
+            )->addColumn(
+                'id',
+                Create::column_type_INTEGER,
+                11,
+                'primary key NOT NULL AUTO_INCREMENT',
+                'ID'
+            )->addColumn(
+                'name',
+                Create::column_type_VARCHAR,
+                '60',
+                'UNIQUE NOT NULL ',
+                '主题名'
+            )->addColumn(
+                'path',
+                Create::column_type_VARCHAR,
+                '128',
+                'UNIQUE NOT NULL ',
+                '主题路径'
+            )->addColumn(
+                'parent_id',
+                Create::column_type_INTEGER,
+                11,
+                '',
+                '父级主题'
+            )->addColumn(
+                'is_active',
+                Create::column_type_INTEGER,
+                11,
+                '',
+                '是否激活'
+            )->addColumn(
+                'create_time',
+                Create::column_type_DATETIME,
+                null,
+                'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+                '安装时间'
+            )->addColumn(
+                'update_time',
+                Create::column_type_DATETIME,
+                null,
+                'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+                '更新时间'
+            )->addIndex(
+                Create::index_type_DEFAULT,
+                'parent_id',
+                'parent_id'
+            )->create();
+        }*/
     }
 
     function upgrade(ModelSetup $setup, Context $context): void
@@ -187,14 +243,57 @@ class WelineTheme extends Model
 
     function install(ModelSetup $setup, Context $context): void
     {
-        if(!$setup->tableExist()){
-            $setup->createTable()
-                ->addColumn('id', TableInterface::column_type_INTEGER, 11, 'not null primary key unsigned auto_increment', '菜单ID')
-                ->addColumn('p_id', TableInterface::column_type_INTEGER, 11, 'unsigned', '父级ID')
-                ->addColumn('name', TableInterface::column_type_VARCHAR, 20, 'not null ', '菜单')
-                ->addColumn('url', TableInterface::column_type_VARCHAR, 255, 'not null ', 'URL')
-                ->addColumn('module', TableInterface::column_type_VARCHAR, 60, 'not null ', '模组名')
-                ->create();
+        if (!$setup->tableExist()) {
+            $setup->getPrinting()->warning('安装数据库表：' . $this->getTable());
+            $setup->createTable(
+                '主题表'
+            )->addColumn(
+                'id',
+                Create::column_type_INTEGER,
+                11,
+                'primary key NOT NULL AUTO_INCREMENT',
+                'ID'
+            )->addColumn(
+                'name',
+                Create::column_type_VARCHAR,
+                '60',
+                'UNIQUE NOT NULL ',
+                '主题名'
+            )->addColumn(
+                'path',
+                Create::column_type_VARCHAR,
+                '128',
+                'UNIQUE NOT NULL ',
+                '主题路径'
+            )->addColumn(
+                'parent_id',
+                Create::column_type_INTEGER,
+                11,
+                '',
+                '父级主题'
+            )->addColumn(
+                'is_active',
+                Create::column_type_INTEGER,
+                11,
+                '',
+                '是否激活'
+            )->addColumn(
+                'create_time',
+                Create::column_type_DATETIME,
+                null,
+                'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+                '安装时间'
+            )->addColumn(
+                'update_time',
+                Create::column_type_DATETIME,
+                null,
+                'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+                '更新时间'
+            )->addIndex(
+                Create::index_type_DEFAULT,
+                'parent_id',
+                'parent_id'
+            )->create();
         }
 
     }

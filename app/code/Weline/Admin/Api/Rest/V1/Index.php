@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Backend\Api\Rest\V1;
+namespace Weline\Admin\Api\Rest\V1;
 
 use Weline\Framework\App\Controller\BackendRestController;
 

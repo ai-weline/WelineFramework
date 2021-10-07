@@ -51,12 +51,13 @@ class PluginsManager
      */
     public function scanPlugins(bool $cache = true): array
     {
+        $cache_key = 'plugins_data';
         // 避免重复加载
         if ($this->plugins) {
             return $this->plugins;
         }
         // 检测插件缓存
-        if ($cache && $plugins = $this->pluginCache->get('plugins_data')) {
+        if ($cache && $plugins = $this->pluginCache->get($cache_key)) {
             $this->plugins = $plugins;
             return $this->plugins;
         }
@@ -69,7 +70,7 @@ class PluginsManager
                         if (isset($instance['plugins']['disabled']) && 'true' === $instance['plugins']['disabled']) {
                             unset($instances[$k]);
                         }
-                        $plugins[$instance['class']][] = $instance['plugins'];
+                        $this->plugins[$instance['class']][] = $instance['plugins'];
                     }
                 }
             }
@@ -79,9 +80,8 @@ class PluginsManager
         //1、 读取所有插件的方法的名字必须在被侦听的类中的方法中存在
         //2、 全局原始类函数，用于创建侦听类使用
         //）
-
         // 反射所有插件类方法
-        foreach ($plugins as $type => $type_plugins) {
+        foreach ($this->plugins as $type => $type_plugins) {
             $plugin_listen_methods = [];
 
             try {
@@ -256,8 +256,8 @@ class PluginsManager
 //        p($types_plugins_info['Aiweline\Index\Controller\Index']);
         // 正式环境则缓存
         if ($cache) {
-            $this->pluginCache->set('plugins_data', $types_plugins_info);
-            $this->plugins = $this->pluginCache->get('plugins_data');
+            $this->pluginCache->set($cache_key, $types_plugins_info);
+            $this->plugins = $this->pluginCache->get($cache_key);
         }else{
             $this->plugins = $types_plugins_info;
         }
