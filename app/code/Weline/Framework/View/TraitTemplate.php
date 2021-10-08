@@ -156,7 +156,7 @@ trait TraitTemplate
                 break;
             default:
         }
-        if($data)$data = str_replace('\\', '', $data);
+//        if($data)$data = str_replace('\\', '', $data);
         return $data;
     }
 
