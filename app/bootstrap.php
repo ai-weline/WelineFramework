@@ -30,7 +30,7 @@ defined('APP_ETC_PATH') || define('APP_ETC_PATH', BP . DIRECTORY_SEPARATOR . 'ap
 // 检测自动加载
 try {
     $autoloader = BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-    if (@is_file($autoloader)) {
+    if (is_file($autoloader)) {
         require $autoloader;
     } else {
         exit('Composer自动加载异常!尝试执行：php composer.phar install');
@@ -47,6 +47,9 @@ try {
     \Weline\Framework\App::run();
 } catch (Exception $exception) {
     if (DEV) {
-        exit('应用启动失败：' . $exception->getMessage());
+        echo '<pre>';
+        echo '应用启动失败：' . $exception->getMessage().PHP_EOL;
+        if(DEV)var_dump($exception->getTrace());
+        exit(0);
     }
 }

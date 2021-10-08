@@ -183,7 +183,7 @@ class Core
                 $dispatch = ObjectManager::getInstance($class->name);
                 $method = $class->method ?: 'index';
                 if (method_exists($dispatch, $method)) {
-                    exit(call_user_func([$dispatch, $method], $this->request->getParams()));
+                    return call_user_func([$dispatch, $method], $this->request->getParams());
                 }
 
                 throw new Exception(__("%1}: 控制器方法 %2 不存在!", [$class->name, $method]));

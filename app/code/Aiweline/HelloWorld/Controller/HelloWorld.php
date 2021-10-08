@@ -107,10 +107,10 @@ class HelloWorld extends FrontendController
         if (empty($data)) {
             $this->aiwelineHelloWorld->insert([
                 'demo' => 1,
-            ]);
+            ])->fetch();
         }
-        $data = $this->aiwelineHelloWorld->query("select * from {$this->aiwelineHelloWorld->getTable()}")->fetch();
-        $this->assign('data', $data);
+        $data = $this->aiwelineHelloWorld->query("select * from {$this->aiwelineHelloWorld->getTable()}")->find()->fetch();
+        $this->assign('data', $data->getData());
         $this->fetch();
     }
 

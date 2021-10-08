@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace M\Framework\Exception;
+namespace Weline\Framework\Exception;
 
 class FileReadException extends \Weline\Framework\Exception\Core
 {
