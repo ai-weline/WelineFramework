@@ -102,6 +102,8 @@ class Env
 
     // 主题设计
     const path_THEME_DESIGN_DIR = BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR;
+    // 主题设计
+    const path_UPLOAD_DIR = PUB . 'upload' . DIRECTORY_SEPARATOR;
 
     // 变量
 
