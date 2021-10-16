@@ -9,11 +9,28 @@
 
 namespace Aiweline\Bbs\Controller;
 
-class Index extends BasePcController
+use Weline\Framework\Controller\PcController;
+
+class Index extends PcController
 {
+
+    private \Aiweline\Bbs\Model\Forum $forum;
+    private \Aiweline\Bbs\Model\Thread $thread;
+
+    function __construct(
+        \Aiweline\Bbs\Model\Forum $forum,
+        \Aiweline\Bbs\Model\Thread $thread,
+    )
+    {
+        $this->forum = $forum;
+        $this->thread = $thread;
+    }
+
     public function index()
     {
-        $this->assign('data', 122);
+        // 读取排行置顶的
+        $this->assign('forum', $this->forum->select()->fetch());
+        $this->assign('new_thread', $this->thread->order('`create_date`','DESC')->limit(10)->select()->fetch());
         $this->fetch();
     }
 

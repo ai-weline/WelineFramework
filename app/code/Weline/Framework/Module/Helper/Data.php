@@ -36,11 +36,11 @@ class Data extends AbstractHelper
      */
     public function registerModuleRouter(array &$modules, string $name, string $router)
     {
-        if (! $this->isDisabled($modules, $name)) {
+        if (!$this->isDisabled($modules, $name)) {
             // 禁用则不进行注册
             $appScanner = new Scanner();
             // 扫描模块
-            $moduleDir      = $appScanner->scanDirTree(APP_PATH . $this->moduleNameToPath($modules, $name), 12);
+            $moduleDir = $appScanner->scanDirTree(APP_PATH . $this->moduleNameToPath($modules, $name), 12);
 
             $routerRegister = new Register();
             /** @var $Files \Weline\Framework\System\File\Data\File[] */
@@ -48,35 +48,35 @@ class Data extends AbstractHelper
                 // Api路由
                 if (strstr($dir, Handle::api_DIR)) {
                     foreach ($Files as $apiFile) {
-                        $apiDirArray  = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
-                        $baseRouter   = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
-                        $baseRouter   = $router . ($baseRouter ?? '');
-                        $baseRouter   = trim($baseRouter, '/');
+                        $apiDirArray = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
+                        $baseRouter = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
+                        $baseRouter = $router . ($baseRouter ?? '');
+                        $baseRouter = trim($baseRouter, '/');
                         $apiClassName = $apiFile->getNamespace() . '\\' . $apiFile->getFilename();
 
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
-                        $ctl_data               = $this->parserController($apiClassName);
-                        $ctl_methods            = $ctl_data['methods'];
-                        $ctl_area               = $ctl_data['area'];
+                        $ctl_data = $this->parserController($apiClassName);
+                        $ctl_methods = $ctl_data['methods'];
+                        $ctl_area = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
-                            $request_method             = array_shift($request_method_split_array);
-                            $class_method               = strtolower(str_replace($request_method, '', $method));
-                            $request_method             = strtoupper($request_method);
-                            $request_method             = $request_method ? $request_method : RequestInterface::GET;
-                            if (! in_array($request_method, RequestInterface::METHODS, true)) {
+                            $request_method = array_shift($request_method_split_array);
+                            $class_method = strtolower(str_replace($request_method, '', $method));
+                            $request_method = strtoupper($request_method);
+                            $request_method = $request_method ? $request_method : RequestInterface::GET;
+                            if (!in_array($request_method, RequestInterface::METHODS, true)) {
                                 $request_method = RequestInterface::GET;
                             }
                             // 路由注册+
                             $routerRegister::register(Register::ROUTER, [
-                                'type'           => DataInterface::type_API,
-                                'area'           => $ctl_area,
-                                'module'         => $name,
-                                'router'         => $baseRouter . ($class_method ? '/' . $class_method : '') . '::' . $request_method,
-                                'class'          => $apiClassName,
-                                'method'         => $method,
+                                'type' => DataInterface::type_API,
+                                'area' => $ctl_area,
+                                'module' => $name,
+                                'router' => $baseRouter . ($class_method ? '/' . $class_method : '') . '::' . $request_method,
+                                'class' => $apiClassName,
+                                'method' => $method,
                                 'request_method' => $request_method,
                             ]);
                         }
@@ -84,32 +84,32 @@ class Data extends AbstractHelper
                 } // PC路由
                 elseif (strstr($dir, Handle::pc_DIR)) {
                     foreach ($Files as $controllerFile) {
-                        $controllerDirArray  = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
-                        $baseRouter          = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
-                        $baseRouter          = $router . ($baseRouter ?? '');
-                        $baseRouter          = trim($baseRouter, '/');
+                        $controllerDirArray = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
+                        $baseRouter = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
+                        $baseRouter = $router . ($baseRouter ?? '');
+                        $baseRouter = trim($baseRouter, '/');
                         $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
-                        $ctl_data               = $this->parserController($controllerClassName);
-                        $ctl_methods            = $ctl_data['methods'];
-                        $ctl_area               = $ctl_data['area'];
+                        $ctl_data = $this->parserController($controllerClassName);
+                        $ctl_methods = $ctl_data['methods'];
+                        $ctl_area = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
-                            $request_method             = array_shift($request_method_split_array);
-                            $request_method             = $request_method ? $request_method : RequestInterface::GET;
-                            if (! in_array($request_method, RequestInterface::METHODS, true)) {
+                            $request_method = array_shift($request_method_split_array);
+                            $request_method = $request_method ? $request_method : RequestInterface::GET;
+                            if (!in_array($request_method, RequestInterface::METHODS, true)) {
                                 $request_method = RequestInterface::GET;
                             }
 
                             $routerRegister::register(Register::ROUTER, [
-                                'type'           => DataInterface::type_PC,
-                                'area'           => $ctl_area,
-                                'module'         => $name,
-                                'router'         => $baseRouter . '/' . strtolower($method),
-                                'class'          => $controllerClassName,
-                                'method'         => $method,
+                                'type' => DataInterface::type_PC,
+                                'area' => $ctl_area,
+                                'module' => $name,
+                                'router' => $baseRouter . '/' . strtolower($method),
+                                'class' => $controllerClassName,
+                                'method' => $method,
                                 'request_method' => $request_method,
                             ]);
                         }
@@ -163,46 +163,49 @@ class Data extends AbstractHelper
      *
      * 参数区：
      * @param string $class
-     * @throws \ReflectionException
      * @return array
+     * @throws \ReflectionException
      */
     private function parserController(string $class)
     {
         // 默认前端控制器
 //        $ctl_area = \Weline\Framework\Controller\Data\DataInterface::type_pc_FRONTEND;
-
-        $reflect            = new \ReflectionClass($class);
-        $controller_methods = [];
-        foreach ($reflect->getMethods() as $method) {
-            if (strstr($method->getName(), '__')) {
-                continue;
-            }
-            $controller_methods[] = $method->getName();
-        }
-        // 存在父类则过滤父类方法
-        if ($parent_class = $reflect->getParentClass()) {
-            $controller_class = [];
-            foreach (explode('\\', $parent_class->getName()) as $item) {
-                if (strstr($item, 'Controller')) {
-                    $controller_class[] = $item;
-                }
-            }
-            $this->parent_class_arr = array_merge($this->parent_class_arr, $controller_class);
-            $parent_methods         = [];
-            foreach ($parent_class->getMethods() as $method) {
+        if (class_exists($class)) {
+            $reflect = new \ReflectionClass($class);
+            $controller_methods = [];
+            foreach ($reflect->getMethods() as $method) {
                 if (strstr($method->getName(), '__')) {
                     continue;
                 }
-                $parent_methods[] = $method->getName();
+                $controller_methods[] = $method->getName();
             }
-            $controller_methods = array_diff($controller_methods, $parent_methods);
-            // 实例化类
-            if (! $parent_class->isAbstract()) {
-                $this->parent_class_arr = array_merge($this->parent_class_arr, $this->parserController($parent_class->getName())['area']);
+            // 存在父类则过滤父类方法
+            if ($parent_class = $reflect->getParentClass()) {
+                $controller_class = [];
+                foreach (explode('\\', $parent_class->getName()) as $item) {
+                    if (strstr($item, 'Controller')) {
+                        $controller_class[] = $item;
+                    }
+                }
+                $this->parent_class_arr = array_merge($this->parent_class_arr, $controller_class);
+                $parent_methods = [];
+                foreach ($parent_class->getMethods() as $method) {
+                    if (strstr($method->getName(), '__')) {
+                        continue;
+                    }
+                    $parent_methods[] = $method->getName();
+                }
+                $controller_methods = array_diff($controller_methods, $parent_methods);
+                // 实例化类
+                if (!$parent_class->isAbstract()) {
+                    $this->parent_class_arr = array_merge($this->parent_class_arr, $this->parserController($parent_class->getName())['area']);
+                }
             }
-        }
 
-        return ['area' => array_unique($this->parent_class_arr), 'methods' => $controller_methods];
+            return ['area' => array_unique($this->parent_class_arr), 'methods' => $controller_methods];
+        } else {
+            return [];
+        }
     }
 
     /**

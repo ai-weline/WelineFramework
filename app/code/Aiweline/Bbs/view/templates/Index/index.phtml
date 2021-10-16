@@ -1,5 +1,5 @@
 <?php
-/**@var \Weline\Framework\View\Template $this*/
+/**@var \Weline\Framework\View\Template $this */
 ?>
 @template(Aiweline_Bbs::public/header.phtml)
 <body>
@@ -33,19 +33,19 @@
     <div class="container">
         <ul class="nav" style="float:left">
             <?php
-            /**@var \Aiweline\Bbs\Model\Forum $datum*/
+            /**@var \Aiweline\Bbs\Model\Forum $datum */
             foreach ($this->getData('forum') as $datum) {
-                p($datum->getThreads());
                 ?>
-                <li class="nav-item" data-fid="<?=$datum['fid']?>" data-active="fid-<?=$datum['fid']?>">
-                    <a class="nav-link" href="<?=$datum->getUrl()?>"><?=$datum['name']?></a>
+                <li class="nav-item" data-fid="<?= $datum->getData('fid') ?>"
+                    data-active="fid-<?= $datum->getData('fid') ?>?>">
+                    <a class="nav-link" href="<?= $datum->getUrl() ?>"><?= $datum->getName() ?></a>
                 </li>
                 <?php
             }
             ?>
         </ul>
-        <a role="button" class="btn btn-primary ft" href="https://bbs.aiweline.com/thread-create-0.htm"
-           style="float:right;margin:0px;color:white;padding:7px 20px;width:100px">发新帖</a>
+        <a role="button" class="btn btn-primary ft" href="https://bbs.aiweline.com/thread-create.htm"
+           style="float:right;margin:0px;color:white;padding:7px 20px;width:100px"><?php echo __('发新帖'); ?></a>
 
         <div class="top-search" style="width:250px;float:right;margin-right:10px;">
             <div class="form-group" style="margin-bottom:0px;">
@@ -252,7 +252,89 @@
                                     word-break: normal;
                                 }</style>
 
+                            <?php
+                            /**@var \Aiweline\Bbs\Model\Thread $thread*/
+                            foreach ($this->getData('new_thread') as $thread) {
+                                ?>
+                                <li class="media thread tap top_3 " data-href="thread.htm?tid=<?=$thread->getTid()?>" data-tid="<?=$thread->getTid()?>">
+                                    <input type="checkbox" name="modtid" class="mt-3 mr-2" value="<?=$thread->getTid()?>">
+                                    <a href="https://bbs.aiweline.com/user.htm?uid=<?=$thread->getUid()?>" tabindex="-1" class="ml-1 mt-1 mr-3">
+                                        <img class="avatar-3" src="@static(Aiweline_Bbs::/1.png)">
+                                    </a>
+                                    <div class="media-body">
 
+                                        <div class="subject break-all">
+
+
+                                            <i class="icon-top-3"></i>
+
+
+                                            <a href="https://bbs.aiweline.com/forum-2.htm" target="_blank" title="PHP"
+                                               class="text-grey haya-post-info-home-thread-forum">[PHP]</a>
+                                            <a href="https://bbs.aiweline.com/thread-1.htm"><span
+                                                        class="huux_thread_hlight_style1">[hot] Magento安装部署：宝塔面板Nginx服务器安装部署magento2.3网站流程|Magento2 deployment on Nginx server</span></a>
+                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=78"
+                                               class="badge badge-pill badge-secondary">Magento2.3.2</a>
+                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=90"
+                                               class="badge badge-pill badge-secondary">Nginx</a>
+                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=76"
+                                               class="badge badge-pill badge-secondary">安装</a>
+                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=89"
+                                               class="badge badge-pill badge-secondary">部署</a>
+                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=82"
+                                               class="badge badge-pill badge-secondary">命令行</a>
+
+
+                                            <i class="icon-digest-1 icon-1x" aria-hidden="true" title="一级精华"></i>
+
+
+                                        </div>
+                                        <div class="d-flex justify-content-between small mt-1">
+                                            <div>
+                                                <a href="https://bbs.aiweline.com/forum-2.htm" target="_blank"
+                                                   title="PHP"
+                                                   class="badge badge-secondary small mr-2 haya-post-info-home-thread-forum-username-before">
+                                                    PHP </a>
+
+                                                <span class="haya-post-info-username ">
+
+<span style="padding-bottom:0;margin-bottom:0;color:	#FFD700; ">
+
+	<i class="iconfont icon-v1" style="font-size:10 !important;"></i>
+
+</span>
+									<span class="username text-grey mr-1  " uid="1">admin</span>
+									<span class="date text-grey hidden-sm">2019-6-24</span>
+									</span>
+
+
+                                            </div>
+                                            <div class="text-muted small">
+
+
+                                                <span class="ml-2"><i class="icon-eye"></i> 4402</span>
+
+
+                                                <span>
+										<span class="text-grey mx-2"><i class="icon-reply"></i></span>
+										<span class="text-grey">7月前</span>
+									</span>
+                                                <span class="ml-2"
+                                                      style="background: #aab0c6;color:#fff;padding: 2px 10px 2px 10px;border-radius: 12px;">1</span>
+                                                <span class="ml-2">
+			<i class="icon-thumbs-o-up" aria-hidden="true"></i>
+			1		</span>
+
+                                                <span class="ml-2" title="1 收藏">
+	<i class="icon-star-o" aria-hidden="true"></i>
+	1</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                                <?php
+                            }
+                            ?>
                             <li class="media thread tap top_3 " data-href="thread-1.htm" data-tid="1">
                                 <input type="checkbox" name="modtid" class="mt-3 mr-2" value="1">
 
@@ -264,6 +346,7 @@
 
 
                                 <div class="media-body">
+
                                     <div class="subject break-all">
 
 

@@ -13,14 +13,11 @@ namespace Aiweline\Bbs\Model;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
-class Thread extends \Weline\Framework\Database\Model
+class User extends \Weline\Framework\Database\Model
 {
-    function provideTable(): string
-    {
-        return 'bbs_thread';
-    }
 
-    const table = 'm_thread';
+    const table='bbs_user';
+
     /**
      * @inheritDoc
      */
@@ -45,4 +42,8 @@ class Thread extends \Weline\Framework\Database\Model
         // TODO: Implement install() method.
     }
 
+    function provideTable(): string
+    {
+        return self::table;
+    }
 }

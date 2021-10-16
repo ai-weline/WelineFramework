@@ -381,15 +381,25 @@ abstract class AbstractModel extends DataObject
                 $is_fetch = true;
             }
             $query_data = $this->getQuery(true)->$method(... $args);
+            $this->setQueryData($query_data);
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
+                $this->fetch_before($this);
                 $this->getQuery()->clearQuery();
-                if(is_array($query_data)){
+                if (is_array($query_data)) {
                     $this->setFetchData($query_data);
-                }elseif(is_object($query_data)){
-                    /**@var AbstractModel $query_data*/
+                } elseif (is_object($query_data)) {
+                    /**@var AbstractModel $query_data */
                     $this->setFetchData($query_data->getData());
                 }
+                $this->fetch_after();
+                return $query_data;
+            }
+            $query_methods = [
+                'getPrepareSql',
+                'getLastSql',
+            ];
+            if (in_array($method, $query_methods)) {
                 return $query_data;
             }
 
@@ -399,6 +409,26 @@ abstract class AbstractModel extends DataObject
          * 重载方法
          */
         return parent::__call($method, $args);
+    }
+
+    protected function setQueryData($query_data)
+    {
+        return $this->setData('query_data', $query_data);
+    }
+
+    function getQueryData()
+    {
+        return $this->getData('query_data');
+    }
+
+    function fetch_before()
+    {
+
+    }
+
+    function fetch_after()
+    {
+
     }
 
     /**

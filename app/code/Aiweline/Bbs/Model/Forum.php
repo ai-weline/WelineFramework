@@ -20,6 +20,22 @@ class Forum extends Model
     const table = 'm_forum';
     const url = 'url';
     const fields_fid = 'fid';
+    const fields_name = 'name';
+    const fields_rank = 'rank';
+    const fields_threads = 'threads';
+    const fields_todayposts = 'todayposts';
+    const fields_todaythreads = 'todaythreads';
+    const fields_brief = 'brief';
+    const fields_announcement = 'announcement';
+    const fields_accesson = 'accesson';
+    const fields_create_date = 'create_date';
+    const fields_icon = 'icon';
+    const fields_moduids = 'moduids';
+    const fields_seo_title = 'seo_title';
+    const fields_seo_keywords = 'seo_keywords';
+    const fields_well_nav_display = 'well_nav_display';
+    const fields_well_display = 'well_display';
+    const fields_well_news = 'well_news';
 
     function __construct(
         array $data = []
@@ -30,7 +46,7 @@ class Forum extends Model
 
     function provideTable(): string
     {
-        return '';
+        return 'bbs_forum';
     }
 
     function providePrimaryField(): string
@@ -113,6 +129,10 @@ class Forum extends Model
     function setFid(string|int $fid): Forum
     {
         return $this->setData(self::fields_fid, $fid);
+    }
+
+    function getName(){
+        return $this->getData('name');
     }
 
     function getThreads($page = 1, $pageSize = 20, $order = 'create_date', $order_sort = 'DESC'): array
