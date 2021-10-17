@@ -16,12 +16,17 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Thread extends \Weline\Framework\Database\Model
 {
+    const table = 'bbs_thread';
+    const fields_ID = 'tid';
     function provideTable(): string
     {
-        return 'bbs_thread';
+        return self::table;
+    }
+    public function providePrimaryField(): string
+    {
+        return self::fields_ID;
     }
 
-    const table = 'm_thread';
 
     /**
      * @inheritDoc
@@ -54,11 +59,9 @@ class Thread extends \Weline\Framework\Database\Model
             $tagModel = ObjectManager::getInstance(Tag::class);
             // 读取标签tag
             foreach ($this->getData('query_data') as $key => &$thread) {
-                $thread->setTags('11');
                 $tagids = $thread->getData('tagids');
-                $tags = $tagModel->where("tagid",$tagids,'in')->select()->getLastSql();
-                p( $tags);
-                p($thread->getData());
+                $tags = $tagModel->where("tagid",$tagids,'in')->select()->fetch();
+                $thread->setData('tags',$tags);
             }
         }
 
