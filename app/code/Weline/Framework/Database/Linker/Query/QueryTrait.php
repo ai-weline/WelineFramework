@@ -171,7 +171,10 @@ trait QueryTrait
                         # 处理带别名的参数键
                         $param = str_replace('.', '__', $param) . $key;
                         $this->bound_values[$param] = (string)$where[2];
-                        $where[2] = $param;
+                        $where[2] = match (strtolower($where[1])) {
+                            'in', 'find_in_set' => '(' . $param . ')',
+                            default => $param,
+                        };
                         $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
                 }
 

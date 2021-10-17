@@ -56,7 +56,7 @@ class Thread extends \Weline\Framework\Database\Model
             foreach ($this->getData('query_data') as $key => &$thread) {
                 $thread->setTags('11');
                 $tagids = $thread->getData('tagids');
-                $tags = $tagModel->additional("find_in_set('tagid','{$tagids}')")->select()->getLastSql();
+                $tags = $tagModel->where("tagid",$tagids,'in')->select()->getLastSql();
                 p( $tags);
                 p($thread->getData());
             }

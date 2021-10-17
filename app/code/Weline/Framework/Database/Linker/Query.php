@@ -164,7 +164,7 @@ abstract class Query implements QueryInterface
     {
         $offset = 0;
         if (1 < $page) {
-            $offset = $pageSize * ($page-1)+1;
+            $offset = $pageSize * ($page - 1) + 1;
         }
         $this->limit = " LIMIT $offset,$pageSize";
         return $this;
@@ -172,7 +172,7 @@ abstract class Query implements QueryInterface
 
     function order(string $field, string $sort = 'DESC'): QueryInterface
     {
-        if(!strstr($field, '`')){
+        if (!strstr($field, '`')) {
             $field = "`{$field}`";
         }
         $this->order[$field] = $sort;
