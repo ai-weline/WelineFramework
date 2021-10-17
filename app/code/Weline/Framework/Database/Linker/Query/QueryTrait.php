@@ -181,8 +181,9 @@ trait QueryTrait
         # 排序
         $order = '';
         foreach ($this->order as $field => $dir) {
-            $order .= "$field $dir";
+            $order .= "$field $dir,";
         }
+        $order = rtrim($order,',');
         if ($order) $order = 'ORDER BY ' . $order;
 
         # 匹配sql

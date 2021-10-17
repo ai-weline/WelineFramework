@@ -10,18 +10,22 @@ declare(strict_types=1);
 
 namespace Aiweline\Bbs\Model;
 
-use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
-class Thread extends \Weline\Framework\Database\Model
+class Tag extends \Weline\Framework\Database\Model
 {
-    function provideTable(): string
-    {
-        return 'bbs_thread';
-    }
+    const table='bbs_tag';
+    const fields_ID = 'tagid';
 
-    const table = 'm_thread';
+    public function provideTable(): string
+    {
+        return self::table;
+    }
+    public function providePrimaryField(): string
+    {
+        return self::fields_ID;
+    }
 
     /**
      * @inheritDoc
@@ -47,20 +51,5 @@ class Thread extends \Weline\Framework\Database\Model
         // TODO: Implement install() method.
     }
 
-    function fetch_after()
-    {
-        if ($threads = $this->getData('query_data')) {
-            /**@var Tag $tagModel*/
-            $tagModel = ObjectManager::getInstance(Tag::class);
-            // 读取标签tag
-            foreach ($this->getData('query_data') as $key => &$thread) {
-                $thread->setTags('11');
-                $tagids = $thread->getData('tagids');
-                $tags = $tagModel->additional("find_in_set('tagid','{$tagids}')")->select()->getLastSql();
-                p( $tags);
-                p($thread->getData());
-            }
-        }
 
-    }
 }

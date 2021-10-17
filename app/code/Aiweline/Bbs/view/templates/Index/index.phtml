@@ -253,12 +253,15 @@
                                 }</style>
 
                             <?php
-                            /**@var \Aiweline\Bbs\Model\Thread $thread*/
+                            /**@var \Aiweline\Bbs\Model\Thread $thread */
                             foreach ($this->getData('new_thread') as $thread) {
                                 ?>
-                                <li class="media thread tap top_3 " data-href="thread.htm?tid=<?=$thread->getTid()?>" data-tid="<?=$thread->getTid()?>">
-                                    <input type="checkbox" name="modtid" class="mt-3 mr-2" value="<?=$thread->getTid()?>">
-                                    <a href="https://bbs.aiweline.com/user.htm?uid=<?=$thread->getUid()?>" tabindex="-1" class="ml-1 mt-1 mr-3">
+                                <li class="media thread tap top_3 " data-href="thread.htm?tid=<?= $thread->getTid() ?>"
+                                    data-tid="<?= $thread->getTid() ?>">
+                                    <input type="checkbox" name="modtid" class="mt-3 mr-2"
+                                           value="<?= $thread->getTid() ?>">
+                                    <a href="https://bbs.aiweline.com/user.htm?uid=<?= $thread->getUid() ?>"
+                                       tabindex="-1" class="ml-1 mt-1 mr-3">
                                         <img class="avatar-3" src="@static(Aiweline_Bbs::/1.png)">
                                     </a>
                                     <div class="media-body">
@@ -271,8 +274,13 @@
 
                                             <a href="https://bbs.aiweline.com/forum-2.htm" target="_blank" title="PHP"
                                                class="text-grey haya-post-info-home-thread-forum">[PHP]</a>
-                                            <a href="https://bbs.aiweline.com/thread-1.htm"><span
-                                                        class="huux_thread_hlight_style1">[hot] Magento安装部署：宝塔面板Nginx服务器安装部署magento2.3网站流程|Magento2 deployment on Nginx server</span></a>
+                                            <a href="https://bbs.aiweline.com/thread-1.htm">
+                                                <span class="<?php if ($thread->getData('highlight')) {
+                                                    echo 'huux_thread_hlight_style' . $thread->getData('hlight');
+                                                } ?>">
+                                                    <?= $thread->getSubject() ?>
+                                                </span>
+                                            </a>
                                             <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=78"
                                                class="badge badge-pill badge-secondary">Magento2.3.2</a>
                                             <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=90"
@@ -303,7 +311,7 @@
 	<i class="iconfont icon-v1" style="font-size:10 !important;"></i>
 
 </span>
-									<span class="username text-grey mr-1  " uid="1">admin</span>
+									<span class="username text-grey mr-1  " uid="<?= $thread->getUid() ?>">admin</span>
 									<span class="date text-grey hidden-sm">2019-6-24</span>
 									</span>
 

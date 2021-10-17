@@ -30,7 +30,9 @@ class Index extends PcController
     {
         // 读取排行置顶的
         $this->assign('forum', $this->forum->select()->fetch());
-        $this->assign('new_thread', $this->thread->order('`create_date`','DESC')->limit(10)->select()->fetch());
+//        p($this->thread->order('top')->order('`create_date`','DESC')->limit(10)->select()->getLastSql());
+        $this->assign('new_thread', $this->thread->order('top')->order('`create_date`','DESC')->limit(10)->select()->fetch());
+        $this->assign('index_thread', $this->thread->order('`create_date`','DESC')->limit(10)->select()->fetch());
         $this->fetch();
     }
 
