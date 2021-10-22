@@ -28,40 +28,8 @@
 -->
 
 @template(Aiweline_Bbs::public/header/header.phtml)
-<!-- 版块放在第二级别显示 -->
-<div class="hidden-sm hidden-md" id="nav_pc_2">
-    <div class="container">
-        <ul class="nav" style="float:left">
-            <?php
-            /**@var \Aiweline\Bbs\Model\Forum $datum */
-            foreach ($this->getData('forum') as $datum) {
-                ?>
-                <li class="nav-item" data-fid="<?= $datum->getData('fid') ?>"
-                    data-active="fid-<?= $datum->getData('fid') ?>?>">
-                    <a class="nav-link" href="<?= $datum->getUrl() ?>"><?= $datum->getName() ?></a>
-                </li>
-                <?php
-            }
-            ?>
-        </ul>
-        <a role="button" class="btn btn-primary ft" href="https://bbs.aiweline.com/thread-create.htm"
-           style="float:right;margin:0px;color:white;padding:7px 20px;width:100px"><?php echo __('发新帖'); ?></a>
+@template(Aiweline_Bbs::public/nav.phtml)
 
-        <div class="top-search" style="width:250px;float:right;margin-right:10px;">
-            <div class="form-group" style="margin-bottom:0px;">
-                <form action="https://bbs.aiweline.com/search.htm" id="search_form">
-                    <div class="input-group" style="height:36px;">
-                        <input type="text" class="form-control" name="keyword" placeholder="search...">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-    </div>
-</div>
 
 <style>
     .personal li {
@@ -272,8 +240,10 @@
                                             <i class="icon-top-3"></i>
 
 
-                                            <a href="https://bbs.aiweline.com/forum-<?= $thread->getFid() ?>.htm" target="_blank" title="PHP"
-                                               class="text-grey haya-post-info-home-thread-forum">[PHP]</a>
+                                            <a href="https://bbs.aiweline.com/forum-<?= $thread->getFid() ?>.htm"
+                                               target="_blank" title="<?= $thread->getData('forum') ?>"
+                                               class="text-grey haya-post-info-home-thread-forum">[<?= $thread->getData('forum') ?>
+                                                ]</a>
                                             <a href="https://bbs.aiweline.com/thread-<?= $thread->getTid() ?>.htm">
                                                 <span class="<?php if ($thread->getData('highlight')) {
                                                     echo 'huux_thread_hlight_style' . $thread->getData('hlight');
@@ -282,29 +252,24 @@
                                                 </span>
                                             </a>
                                             <?php
-                                            /**@var \Aiweline\Bbs\Model\Tag $tag*/
-                                            foreach ($thread->getData('tags') as $tag) {
-                                                ?>
-                                                <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=<?=$tag->getId()?>"
-                                                   class="badge badge-pill badge-secondary"><?=$tag->getData('name')?></a>
-                                            <?php
+                                            /**@var \Aiweline\Bbs\Model\Tag $tag */
+                                            if ($tags = $thread->getData('tags')) {
+                                                foreach ($thread->getData('tags') as $tag) {
+                                                    ?>
+                                                    <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=<?= $tag->getId() ?>"
+                                                       class="badge badge-pill badge-secondary"><?= $tag->getData('name') ?></a>
+                                                    <?php
+                                                }
                                             }
                                             ?>
-                                            <!--<a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=78"
-                                               class="badge badge-pill badge-secondary">Magento2.3.2</a>
-                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=90"
-                                               class="badge badge-pill badge-secondary">Nginx</a>
-                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=76"
-                                               class="badge badge-pill badge-secondary">安装</a>
-                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=89"
-                                               class="badge badge-pill badge-secondary">部署</a>
-                                            <a href="https://bbs.aiweline.com/forum-2-1.htm?tagids=82"
-                                               class="badge badge-pill badge-secondary">命令行</a>-->
-
-
-                                            <i class="icon-digest-1 icon-1x" aria-hidden="true" title="一级精华"></i>
-
-
+                                            <?php
+                                            if ($digest = $thread->getData('digest')) {
+                                                ?>
+                                                <i class="icon-digest-<?= $digest ?> icon-1x" aria-hidden="true"
+                                                   title="一级精华"></i>
+                                                <?php
+                                            }
+                                            ?>
                                         </div>
                                         <div class="d-flex justify-content-between small mt-1">
                                             <div>

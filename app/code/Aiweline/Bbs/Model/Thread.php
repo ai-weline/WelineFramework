@@ -10,18 +10,34 @@ declare(strict_types=1);
 
 namespace Aiweline\Bbs\Model;
 
+use Aiweline\Bbs\Cache\BbsCache;
+use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class Thread extends \Weline\Framework\Database\Model
 {
+
+    private CacheInterface $bbsCache;
+
+    function __construct(
+        BbsCache $bbsCache,
+        array    $data = []
+    )
+    {
+        parent::__construct($data);
+        $this->bbsCache = $bbsCache->create();
+    }
+
     const table = 'bbs_thread';
     const fields_ID = 'tid';
+
     function provideTable(): string
     {
         return self::table;
     }
+
     public function providePrimaryField(): string
     {
         return self::fields_ID;
@@ -54,16 +70,28 @@ class Thread extends \Weline\Framework\Database\Model
 
     function fetch_after()
     {
-        if ($threads = $this->getData('query_data')) {
-            /**@var Tag $tagModel*/
+        $cache_key = 'bbs_thread_cache';
+        if ($threads = $this->bbsCache->get($cache_key)) {
+            return $threads;
+        }
+        $threads = $this->getData('query_data');
+        if ($threads) {
+            /**@var Tag $tagModel */
             $tagModel = ObjectManager::getInstance(Tag::class);
-            // 读取标签tag
-            foreach ($this->getData('query_data') as $key => &$thread) {
+            /**@var Forum $forumModel */
+            $forumModel = ObjectManager::getInstance(Forum::class);
+            foreach ($threads as $key => &$thread) {
+                // 读取标签tag
                 $tagids = $thread->getData('tagids');
-                $tags = $tagModel->where("tagid",$tagids,'in')->select()->fetch();
-                $thread->setData('tags',$tags);
+                $tags = $tagModel->where("tagid", $tagids, 'in')->select()->fetch();
+                $thread->setData('tags', $tags);
+                // 读取主题名
+                $fid = $thread->getData('fid');
+                $forum = $forumModel->where("fid", $fid)->select()->fetch();
+                $thread->setData('forum', $forum);
             }
         }
-
+        $this->bbsCache->set($cache_key, $threads, 3600);
+        return $threads;
     }
 }

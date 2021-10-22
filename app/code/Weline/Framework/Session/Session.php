@@ -21,6 +21,38 @@ class Session
     }
 
     /**
+     * @DESC          # 设置session值
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/10/22 21:45
+     * 参数区：
+     * @param string $name
+     * @param string $value
+     * @return SessionInterface
+     */
+    function setData(string $name, string $value): SessionInterface
+    {
+        $this->session->set($name, $value);
+        return $this->session;
+    }
+
+    /**
+     * @DESC          # 获取session值
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/10/22 21:45
+     * 参数区：
+     * @param string $name
+     * @return string
+     */
+    function getData(string $name): string
+    {
+        return $this->session->get($name);
+    }
+
+    /**
      * @DESC         |方法描述
      *
      * 参数区：
@@ -65,7 +97,7 @@ class Session
         return $this;
     }
 
-    function isBackend():bool
+    function isBackend(): bool
     {
         return (bool)strstr($this->getType(), 'backend');
     }

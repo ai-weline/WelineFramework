@@ -83,6 +83,11 @@ abstract class AbstractModel extends DataObject
         $this->primary_key = $this->providePrimaryField() ?: $this->primary_key;
     }
 
+    public function __sleep()
+    {
+        return array('table','origin_table_name','suffix','primary_key','fields');
+    }
+
     /**
      * @DESC          # 处理表名 存在表名则不处理
      *
