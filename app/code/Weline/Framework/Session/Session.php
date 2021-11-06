@@ -32,18 +32,15 @@ class Session
             $type = 'frontend';
             $identity_path = Env::getInstance()->getConfig('admin');
             if (strstr($_SERVER['REQUEST_URI'], $identity_path)) {
-                session_set_cookie_params(array(
-                    'cookie_path' => $identity_path
-                ));
+                session_set_cookie_params(3600,"/$identity_path");
                 $type = 'backend';
             } elseif (strstr($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('api_admin'))) {
-                session_set_cookie_params(array(
-                    'cookie_path' => $identity_path
-                ));
+                $identity_path = Env::getInstance()->getConfig('api_admin');
+                session_set_cookie_params(3600,"/$identity_path");
                 $type = 'api';
             }
             $this->session = SessionManager::getInstance()->create();
-            $this->setType($type)->setData('path',);
+            $this->setType($type)->setData('path', $identity_path);
         }
     }
 

@@ -9,9 +9,9 @@
 
 namespace Aiweline\Bbs\Controller;
 
-use Weline\Framework\Controller\PcController;
+use Weline\Framework\App\Controller\FrontendController;
 
-class Index extends PcController
+class Index extends FrontendController
 {
 
     private \Aiweline\Bbs\Model\Forum $forum;

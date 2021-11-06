@@ -10,7 +10,9 @@ declare(strict_types=1);
 
 namespace Aiweline\Bbs\Controller\Thread;
 
-class Create extends \Weline\Framework\Controller\PcController
+use Weline\Framework\App\Controller\FrontendController;
+
+class Create extends FrontendController
 {
     function index(){
         $this->fetch();
