@@ -17,12 +17,6 @@ class BackendController extends PcController
 {
     private ?BackendSession $session = null;
 
-    function __init()
-    {
-        parent::__init();
-
-    }
-
     function getSession()
     {
         if (!$this->session) {
