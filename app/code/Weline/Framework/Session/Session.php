@@ -30,17 +30,20 @@ class Session
     {
         if (!isset($this->session)) {
             $type = 'frontend';
-            $admin_path = Env::getInstance()->getConfig('admin');
-            if (strstr($_SERVER['REQUEST_URI'], $admin_path)) {
+            $identity_path = Env::getInstance()->getConfig('admin');
+            if (strstr($_SERVER['REQUEST_URI'], $identity_path)) {
                 session_set_cookie_params(array(
-                    'cookie_path' => $admin_path
+                    'cookie_path' => $identity_path
                 ));
                 $type = 'backend';
             } elseif (strstr($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('api_admin'))) {
+                session_set_cookie_params(array(
+                    'cookie_path' => $identity_path
+                ));
                 $type = 'api';
             }
             $this->session = SessionManager::getInstance()->create();
-            $this->setType($type);
+            $this->setType($type)->setData('path',);
         }
     }
 

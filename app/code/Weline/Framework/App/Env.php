@@ -164,6 +164,8 @@ class Env
 
     private array $module_list = [];
 
+    private array $hasGetConfig;
+
     /**
      * @DESC         |私有化克隆函数
      *
@@ -231,6 +233,7 @@ class Env
      */
     public function getConfig(string $name = '', $default = null): mixed
     {
+        if (isset($this->hasGetConfig[$name])) return $this->hasGetConfig[$name];
         if ('' === $name) {
             return $this->config;
         }
@@ -249,6 +252,7 @@ class Env
      */
     public function setConfig(string $key, $value = null): bool
     {
+        $this->hasGetConfig[$key] = $value;
         $config = $this->getConfig();
         $config[$key] = $value;
 
