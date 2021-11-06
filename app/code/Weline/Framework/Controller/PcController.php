@@ -29,7 +29,6 @@ class PcController extends Core
         if (!isset($this->controllerCache)) {
             $this->controllerCache = ObjectManager::getInstance(ControllerCache::class)->create();
         }
-
         return $this->controllerCache;
     }
 
