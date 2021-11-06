@@ -26,9 +26,11 @@ class File extends AbstractSessionDriverHandle
             if (!is_dir($this->sessionPath)) {
                 mkdir($this->sessionPath, 0700);
             }
-            ini_set('session.save_handler', DriverInterface::driver_FILE);
-            ini_set('session.save_path', $this->sessionPath);
+            session_set_cookie_params(24 * 3600);
+            session_save_path($this->sessionPath);
             session_start();
+            p(session_id());
+            $_SESSION = array();
         }
     }
 

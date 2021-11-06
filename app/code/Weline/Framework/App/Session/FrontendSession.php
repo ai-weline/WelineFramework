@@ -17,6 +17,7 @@ class FrontendSession extends Session
 
     function __init()
     {
+        parent::__init();
         $this->setType('frontend');
     }
 }

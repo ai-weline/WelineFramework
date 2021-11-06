@@ -13,6 +13,9 @@ use Weline\Framework\Session\SessionInterface;
 
 abstract class AbstractSessionDriverHandle implements SessionInterface, DriverInterface
 {
+    private function __clone()
+    {
+    }
     public function __construct(array $config)
     {
         session_set_save_handler(

@@ -21,6 +21,7 @@ use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Debug\Printing;
 use Weline\Framework\Session\Session;
+use Weline\Framework\Ui\FormKey;
 use Weline\Framework\View\Cache\ViewCache;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Data\HtmlInterface;
@@ -93,6 +94,22 @@ class Template
         $this->template_dir = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
         $this->compile_dir = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
 
+    }
+
+    /**
+     * @DESC          # 获取form_key
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/10/22 22:24
+     * 参数区：
+     * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    function getFormKey():string
+    {
+        return ObjectManager::getInstance(FormKey::class)->getHtml();
     }
 
     function __wakeup()

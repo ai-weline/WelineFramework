@@ -18,6 +18,7 @@ class SessionManager
     private static SessionManager $instance;
 
     private array $config;
+    private ?SessionInterface $_session = null;
 
     private function __clone()
     {
@@ -37,10 +38,9 @@ class SessionManager
      */
     public static function getInstance(): SessionManager
     {
-        if (! isset(self::$instance)) {
+        if (!isset(self::$instance)) {
             self::$instance = new self();
         }
-
         return self::$instance;
     }
 
@@ -54,11 +54,14 @@ class SessionManager
      */
     public function create(string $driver = ''): SessionInterface
     {
-        if (empty($driver) && isset($this->config['default'])) {
-            $driver = $this->config['default'];
+        if (empty($this->_session)) {
+            if (empty($driver) && isset($this->config['default'])) {
+                $driver = $this->config['default'];
+            }
+            $driver_class = self::driver_NAMESPACE . ucfirst($driver);
+            $driver_config = $this->config['drivers'][$driver];
+            $this->_session = new $driver_class($driver_config);
         }
-        $driver_class = self::driver_NAMESPACE . ucfirst($driver);
-        $driver_config = $this->config['drivers'][$driver];
-        return new $driver_class($driver_config);
+        return $this->_session;
     }
 }

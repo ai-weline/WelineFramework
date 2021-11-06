@@ -13,11 +13,20 @@ class Session
 {
     const login_KEY = 'WL_USER';
 
-    private SessionInterface $session;
+    private ?SessionInterface $session=null;
 
     public function __construct()
     {
-        $this->session = SessionManager::getInstance()->create();
+        if (!isset($this->session)) {
+            $this->__init();
+        }
+    }
+
+    function __init()
+    {
+        if (!isset($this->session)) {
+            $this->session = SessionManager::getInstance()->create();
+        }
     }
 
     /**
@@ -81,7 +90,7 @@ class Session
         return $this->session->set(self::login_KEY, $user);
     }
 
-    public function loginOut()
+    public function loginOut(): bool
     {
         return $this->session->des();
     }

@@ -12,14 +12,8 @@ namespace Weline\Framework\System;
 
 class Text
 {
-    static function str_32($str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',$length = 32): string
+    static function rand_str(): string
     {
-        $rand = '';
-        $max = strlen($str) - 1;
-        mt_srand((double)microtime() * 1000000);
-        for ($i = 0; $i < $length; $i++) {
-            $rand .= $str[mt_rand(0, $max)];
-        }
-        return $rand;
+        return crypt(md5(microtime()),md5(microtime()));
     }
 }

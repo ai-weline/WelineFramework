@@ -9,14 +9,13 @@
 
 namespace Weline\Framework\App\Session;
 
-use Weline\Framework\Session\Session;
-
-class BackendSession extends Session
+class BackendSession extends \Weline\Framework\Session\Session
 {
     const login_KEY = 'WL_BACKEND';
 
     function __init()
     {
+        parent::__init();
         $this->setType('backend');
     }
 }

@@ -17,13 +17,16 @@ class FormKey
 {
     private Session $_session;
     private string $_key;
+    const key_name='form_key';
 
     function __construct(
         Session $session
     )
     {
         $this->_session = $session;
-        $this->setKey();
+        if (!isset($this->_key)) {
+            $this->setKey();
+        }
     }
 
     function __init()
@@ -33,10 +36,13 @@ class FormKey
         }
     }
 
-    function setKey()
+    function setKey(): static
     {
-        $this->_key = Text::str_32();
-        $this->_session->setData(self::class, $this->_key);
+        if(empty($this->getKey())){
+            $this->_key = Text::rand_str();
+            $this->_session->setData(self::key_name, $this->_key);
+        }
+        return $this;
     }
 
     function __sleep()
@@ -46,7 +52,7 @@ class FormKey
 
     function getKey(): string
     {
-        return $this->_session->getData(self::class);
+        return $this->_session->getData(self::key_name);
     }
 
     function getHtml(): string
