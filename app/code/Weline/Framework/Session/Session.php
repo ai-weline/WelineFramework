@@ -9,11 +9,14 @@
 
 namespace Weline\Framework\Session;
 
+use Weline\Framework\App\Env;
+use Weline\Framework\DataObject\DataObject;
+
 class Session
 {
     const login_KEY = 'WL_USER';
 
-    private ?SessionInterface $session=null;
+    private ?SessionInterface $session = null;
 
     public function __construct()
     {
@@ -22,10 +25,22 @@ class Session
         }
     }
 
+
     function __init()
     {
         if (!isset($this->session)) {
+            $type = 'frontend';
+            $admin_path = Env::getInstance()->getConfig('admin');
+            if (strstr($_SERVER['REQUEST_URI'], $admin_path)) {
+                session_set_cookie_params(array(
+                    'cookie_path' => $admin_path
+                ));
+                $type = 'backend';
+            } elseif (strstr($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('api_admin'))) {
+                $type = 'api';
+            }
             $this->session = SessionManager::getInstance()->create();
+            $this->setType($type);
         }
     }
 
@@ -108,6 +123,16 @@ class Session
 
     function isBackend(): bool
     {
-        return (bool)strstr($this->getType(), 'backend');
+        return $this->getType() === 'backend';
+    }
+
+    function isApi(): bool
+    {
+        return $this->getType() === 'api';
+    }
+
+    function isFrontend(): bool
+    {
+        return $this->getType() === 'frontend';
     }
 }
