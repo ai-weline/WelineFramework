@@ -12,9 +12,9 @@ namespace Weline\Framework\Database\Db\Ddl;
 
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
-use Weline\Framework\Database\Api\Linker\QueryInterface;
+use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\DbManager;
-use Weline\Framework\Database\LinkerFactory;
+use Weline\Framework\Database\ConnectionFactory;
 use Weline\Framework\Manager\ObjectManager;
 
 abstract class TableAbstract implements TableInterface
@@ -38,7 +38,7 @@ abstract class TableAbstract implements TableInterface
 
     protected string $additional = 'ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;';
 
-    protected LinkerFactory $linker;
+    protected ConnectionFactory $connection;
     protected QueryInterface $query;
 
     /**
@@ -53,11 +53,11 @@ abstract class TableAbstract implements TableInterface
      */
     function __init()
     {
-        if (!isset($this->linker)) {
-            $this->linker = ObjectManager::getInstance(DbManager::class . 'Factory');
+        if (!isset($this->connection)) {
+            $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
         }
         if (!isset($this->query)) {
-            $this->query = $this->linker->getQuery();
+            $this->query = $this->connection->getQuery();
         }
     }
 
@@ -79,8 +79,8 @@ abstract class TableAbstract implements TableInterface
         $this->init_vars();
         # 重新赋予新表的值
         if ($primary_key) $this->primary_key = $primary_key;
-        $this->table = '`' . $this->linker->getConfigProvider()->getDatabase() . '`.`' . $table . '`';
-        $this->new_table_name = $new_table_name ? '`' . $this->linker->getConfigProvider()->getDatabase() . '`.`' . $new_table_name . '`' : '';
+        $this->table = '`' . $this->connection->getConfigProvider()->getDatabase() . '`.`' . $table . '`';
+        $this->new_table_name = $new_table_name ? '`' . $this->connection->getConfigProvider()->getDatabase() . '`.`' . $new_table_name . '`' : '';
         $this->comment = $comment;
     }
 
@@ -107,11 +107,11 @@ abstract class TableAbstract implements TableInterface
      * @DateTime: 2021/8/31 20:34
      * 参数区：
      * @param string $sql
-     * @return \Weline\Framework\Database\Api\Linker\QueryInterface
+     * @return \Weline\Framework\Database\Api\Connection\QueryInterface
      */
-    public function query(string $sql): \Weline\Framework\Database\Api\Linker\QueryInterface
+    public function query(string $sql): \Weline\Framework\Database\Api\Connection\QueryInterface
     {
-        return $this->linker->query($sql);
+        return $this->connection->query($sql);
     }
 
     /**
@@ -125,7 +125,7 @@ abstract class TableAbstract implements TableInterface
      */
     public function getType(): string
     {
-        return $this->linker->getConfigProvider()->getDbType();
+        return $this->connection->getConfigProvider()->getDbType();
     }
 
     /**
@@ -133,7 +133,7 @@ abstract class TableAbstract implements TableInterface
      */
     public function getPrefix(): string
     {
-        return $this->linker->getConfigProvider()->getPrefix();
+        return $this->connection->getConfigProvider()->getPrefix();
     }
 
     /**
@@ -152,11 +152,11 @@ abstract class TableAbstract implements TableInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/31 20:43
      * 参数区：
-     * @return LinkerFactory
+     * @return ConnectionFactory
      */
-    function getLinker(): LinkerFactory
+    function getConnection(): ConnectionFactory
     {
-        return $this->linker;
+        return $this->connection;
     }
 
     /**

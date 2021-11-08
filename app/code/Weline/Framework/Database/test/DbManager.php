@@ -16,7 +16,7 @@ namespace Weline\Framework\Database\test;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Database\DbManager\ConfigProvider;
-use Weline\Framework\Database\LinkerFactory;
+use Weline\Framework\Database\ConnectionFactory;
 use Weline\Framework\Manager\ObjectManager;
 
 class DbManager extends \Weline\Framework\UnitTest\TestCore
@@ -24,9 +24,9 @@ class DbManager extends \Weline\Framework\UnitTest\TestCore
     function testCreate(){
         /**@var \Weline\Framework\Database\DbManager $dbManager*/
         $dbManager = ObjectManager::getInstance(\Weline\Framework\Database\DbManager::class);
-        /**@var LinkerFactory $linker*/
-        $linker = $dbManager->create();
-        p($linker->getQuery()->query('select * from weline')->fetch());
+        /**@var ConnectionFactory $connection*/
+        $connection = $dbManager->create();
+        p($connection->getQuery()->query('select * from weline')->fetch());
     }
 }
 /**

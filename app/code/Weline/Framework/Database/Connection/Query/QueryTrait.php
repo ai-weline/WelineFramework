@@ -8,13 +8,13 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Database\Linker\Query;
+namespace Weline\Framework\Database\Connection\Query;
 
 
 use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\Database\Exception\QueryException;
 use Weline\Framework\Database\Exception\SqlParserException;
-use Weline\Framework\Database\LinkerFactory;
+use Weline\Framework\Database\ConnectionFactory;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Cache\DbCache;
 use Weline\Framework\Database\Exception\DbException;
@@ -22,23 +22,23 @@ use Weline\Framework\Exception\Core;
 
 trait QueryTrait
 {
-    private LinkerFactory $linker;
+    private ConnectionFactory $connection;
     private CacheInterface $cache;
     private string $db_name;
 
     function __construct(
-        LinkerFactory $linker,
+        ConnectionFactory $connection,
         DbCache $cache
     )
     {
-        $this->linker = $linker;
-        $this->db_name = $linker->getConfigProvider()->getDatabase();
+        $this->connection = $connection;
+        $this->db_name = $connection->getConfigProvider()->getDatabase();
         $this->cache = $cache->create();
     }
 
     function __sleep()
     {
-        return array('cache', 'db_name', 'linker');
+        return array('cache', 'db_name', 'Connection');
     }
 
     function getTable($table_name): string
@@ -53,11 +53,11 @@ trait QueryTrait
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 21:10
      *
-     * @return LinkerFactory
+     * @return ConnectionFactory
      */
-    public function getLinker(): LinkerFactory
+    public function getConnection(): ConnectionFactory
     {
-        return $this->linker;
+        return $this->connection;
     }
 
     /**
@@ -67,11 +67,11 @@ trait QueryTrait
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 21:10
      *
-     * @param LinkerFactory $linker
+     * @param ConnectionFactory $connection
      */
-    public function setLinker(LinkerFactory $linker): void
+    public function setConnection(ConnectionFactory $connection): void
     {
-        $this->linker = $linker;
+        $this->connection = $connection;
     }
 
 
@@ -279,7 +279,7 @@ trait QueryTrait
                 break;
         };
         # 预置sql
-        $this->PDOStatement = $this->linker->getLink()->prepare($sql);
+        $this->PDOStatement = $this->connection->getLink()->prepare($sql);
         $this->sql = $sql;
     }
 

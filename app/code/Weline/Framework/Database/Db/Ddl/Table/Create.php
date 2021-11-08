@@ -12,7 +12,7 @@ namespace Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Api\Db\Ddl\Table\CreateInterface;
 use Weline\Framework\Database\Api\Db\TableInterface;
-use Weline\Framework\Database\Api\Linker\QueryInterface;
+use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Db\Ddl\TableAbstract;
 
 class Create extends TableAbstract implements CreateInterface
@@ -179,6 +179,6 @@ CREATE TABLE {$this->table}(
  {$this->constraints}
 ) {$comment} {$this->additional}
 createSQL;
-        return $this->linker->query($sql);
+        return $this->connection->query($sql);
     }
 }

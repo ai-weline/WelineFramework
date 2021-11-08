@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\Api\Db\Ddl;
 
-use Weline\Framework\Database\Api\Linker\QueryInterface;
-use Weline\Framework\Database\LinkerFactory;
+use Weline\Framework\Database\Api\Connection\QueryInterface;
+use Weline\Framework\Database\ConnectionFactory;
 
 interface TableInterface
 {
@@ -129,9 +129,9 @@ interface TableInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/5 17:23
      * 参数区：
-     * @return LinkerFactory
+     * @return ConnectionFactory
      */
-    function getLinker(): LinkerFactory;
+    function getConnection(): ConnectionFactory;
 
     /**
      * @DESC          # 查询

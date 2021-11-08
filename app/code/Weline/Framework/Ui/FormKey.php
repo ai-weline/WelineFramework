@@ -24,9 +24,6 @@ class FormKey
     )
     {
         $this->_session = $session;
-        if (!isset($this->_key)) {
-            $this->setKey();
-        }
     }
 
     function __init()

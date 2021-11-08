@@ -40,6 +40,7 @@ class Session
                 $type = 'api';
             }
             $this->session = SessionManager::getInstance()->create();
+            setcookie('SESSION_ID',session_id());
             $this->setType($type)->setData('path', $identity_path);
         }
     }

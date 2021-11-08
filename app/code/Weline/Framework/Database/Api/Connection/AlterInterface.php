@@ -8,7 +8,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Database\Api\Linker;
+namespace Weline\Framework\Database\Api\Connection;
 
 interface AlterInterface
 {

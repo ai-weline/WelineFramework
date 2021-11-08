@@ -8,7 +8,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Database\Linker\Alter;
+namespace Weline\Framework\Database\Connection\Alter;
 
 trait AlterTrait
 {

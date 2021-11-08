@@ -13,6 +13,8 @@ namespace Weline\Admin\Controller\Admin;
 class Login extends \Weline\Framework\App\Controller\BackendController
 {
     function post(){
-        p();
+        p($this->getSession()->getData('path'),true);
+        p($this->getSession()->getData('form_key'),true);
+        p($this->getRequest()->getParams());
     }
 }

@@ -11,8 +11,17 @@ namespace Weline\Framework\Session;
 
 interface SessionInterface
 {
-    public function open();
-
+    /**
+     * @DESC          # 设置数据
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/8 17:07
+     * 参数区：
+     * @param $name
+     * @param $value
+     * @return mixed
+     */
     public function set($name, $value);
 
     /**
@@ -25,9 +34,15 @@ interface SessionInterface
      */
     public function get($name): mixed;
 
-    public function del($name):bool;
-
-    public function des():bool;
-
-    public function gc(int $sessMaxLifeTime):bool;
+    /**
+     * @DESC          # 删除数据
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/8 17:03
+     * 参数区：
+     * @param $name
+     * @return bool
+     */
+    public function delete($name):bool;
 }

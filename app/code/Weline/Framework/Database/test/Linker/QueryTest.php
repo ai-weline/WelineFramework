@@ -8,9 +8,9 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Database\test\Linker;
+namespace Weline\Framework\Database\test\Connection;
 
-use Weline\Framework\Database\Linker;
+use Weline\Framework\Database\Connection;
 use Weline\Framework\Manager\ObjectManager;
 
 class QueryTest extends \Weline\Framework\UnitTest\TestCore
@@ -20,7 +20,7 @@ class QueryTest extends \Weline\Framework\UnitTest\TestCore
     {
         /**@var \Weline\Framework\Database\DbManager $dbManager */
         $dbManager = ObjectManager::getInstance(\Weline\Framework\Database\DbManager::class);
-        /**@var Linker\QueryInterface $query */
+        /**@var Connection\QueryInterface $query */
         $query = $dbManager->create()->getQuery();
         # 增
 //        pp($query->table('weline')

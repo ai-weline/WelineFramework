@@ -10,7 +10,7 @@
 namespace Weline\Framework\Database;
 
 use Weline\Framework\App\Exception;
-use Weline\Framework\Database\Api\Linker\QueryInterface;
+use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
@@ -55,7 +55,7 @@ abstract class AbstractModel extends DataObject
 
     protected string $table = '';
     protected string $origin_table_name = '';
-    private LinkerFactory $linker;
+    private ConnectionFactory $connection;
     public string $suffix = '';
     public string $primary_key = 'id';
     public array $fields = [];
@@ -75,8 +75,8 @@ abstract class AbstractModel extends DataObject
     public function __init()
     {
         # 类属性
-        $this->linker = ObjectManager::getInstance(DbManager::class . 'Factory');
-        $this->suffix = $this->linker->getConfigProvider()->getPrefix() ?: '';
+        $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
+        $this->suffix = $this->connection->getConfigProvider()->getPrefix() ?: '';
         # 模型属性
         $this->table = $this->provideTable() ?: $this->processTable();
         if (empty($this->origin_table_name)) $this->origin_table_name = $this->provideTable();
@@ -104,7 +104,7 @@ abstract class AbstractModel extends DataObject
             $class_file_name = array_pop($class_file_name_arr);
             $table_name = str_replace('Model', '', $class_file_name);
             $this->origin_table_name = $this->suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
-            $this->table = "`{$this->linker->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
+            $this->table = "`{$this->connection->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
         }
         return $this->table;
     }
@@ -156,9 +156,9 @@ abstract class AbstractModel extends DataObject
         }
         # 区分是否保持查询
         if ($keep_condition) {
-            return $this->linker->getQuery()->table($this->getOriginTableName())->identity($this->primary_key);
+            return $this->connection->getQuery()->table($this->getOriginTableName())->identity($this->primary_key);
         }
-        return $this->linker->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->primary_key);
+        return $this->connection->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->primary_key);
     }
 
     /**
@@ -168,11 +168,11 @@ abstract class AbstractModel extends DataObject
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/3 19:59
      * 参数区：
-     * @return LinkerFactory
+     * @return ConnectionFactory
      */
-    function getLink(): LinkerFactory
+    function getLink(): ConnectionFactory
     {
-        return $this->linker;
+        return $this->connection;
     }
 
     /**

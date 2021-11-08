@@ -8,14 +8,14 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Database\Linker;
+namespace Weline\Framework\Database\Connection;
 
 
 use PDO;
 use PDOStatement;
-use Weline\Framework\Database\Api\Linker\QueryInterface;
+use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Exception\DbException;
-use Weline\Framework\Database\Linker\Query\QueryTrait;
+use Weline\Framework\Database\Connection\Query\QueryTrait;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Manager\ObjectManager;
 use function PHPUnit\Framework\isInstanceOf;
@@ -211,7 +211,7 @@ abstract class Query implements QueryInterface
     {
         $this->sql = $sql;
         $this->fetch_type = __FUNCTION__;
-        $this->PDOStatement = $this->linker->getLink()->query($sql);
+        $this->PDOStatement = $this->connection->getLink()->query($sql);
         return $this;
     }
 
@@ -296,17 +296,17 @@ abstract class Query implements QueryInterface
 
     function beginTransaction(): void
     {
-        $this->linker->getLink()->beginTransaction();
+        $this->connection->getLink()->beginTransaction();
     }
 
     function rollBack(): void
     {
-        $this->linker->getLink()->rollBack();
+        $this->connection->getLink()->rollBack();
     }
 
     function commit(): void
     {
-        $this->linker->getLink()->commit();
+        $this->connection->getLink()->commit();
     }
 
     public function getLastSql(bool $format = true): string

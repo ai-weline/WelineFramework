@@ -8,10 +8,10 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Database\Linker;
+namespace Weline\Framework\Database\Connection;
 
-use Weline\Framework\Database\Api\Linker\AlterInterface;
-use Weline\Framework\Database\Linker\Alter\AlterTrait;
+use Weline\Framework\Database\Api\Connection\AlterInterface;
+use Weline\Framework\Database\Connection\Alter\AlterTrait;
 
 abstract class Alter implements AlterInterface
 {

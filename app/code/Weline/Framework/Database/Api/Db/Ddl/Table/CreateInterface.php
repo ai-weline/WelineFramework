@@ -9,8 +9,8 @@ namespace Weline\Framework\Database\Api\Db\Ddl\Table;
  */
 
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
-use Weline\Framework\Database\Api\Linker\QueryInterface;
-use Weline\Framework\Database\LinkerFactory;
+use Weline\Framework\Database\Api\Connection\QueryInterface;
+use Weline\Framework\Database\ConnectionFactory;
 
 interface CreateInterface extends TableInterface {
 
@@ -46,9 +46,9 @@ interface CreateInterface extends TableInterface {
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/5 17:23
      * 参数区：
-     * @return LinkerFactory
+     * @return ConnectionFactory
      */
-    function getLinker(): LinkerFactory;
+    function getConnection(): ConnectionFactory;
 
     /**
      * @DESC          # 添加字段
@@ -125,9 +125,9 @@ interface CreateInterface extends TableInterface {
      * @DateTime: 2021/9/5 17:33
      * 参数区：
      * @param string $sql
-     * @return \Weline\Framework\Database\Api\Linker\QueryInterface
+     * @return \Weline\Framework\Database\Api\Connection\QueryInterface
      */
-    public function query(string $sql): \Weline\Framework\Database\Api\Linker\QueryInterface;
+    public function query(string $sql): \Weline\Framework\Database\Api\Connection\QueryInterface;
 
     /**
      * @DESC          # 数据库类型

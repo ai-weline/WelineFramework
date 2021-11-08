@@ -13,6 +13,12 @@ namespace Weline\Framework\Database;
 
 abstract class Model extends AbstractModel implements ModelInterface
 {
+    function __init()
+    {
+        parent::__init();
+        $this->clear();
+    }
+
     function provideTable(): string
     {
         return '';

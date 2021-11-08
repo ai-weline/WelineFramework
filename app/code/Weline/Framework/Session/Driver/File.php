@@ -9,8 +9,11 @@
 
 namespace Weline\Framework\Session\Driver;
 
-class File extends AbstractSessionDriverHandle
+use Weline\Framework\Session\SessionInterface;
+
+class File implements SessionInterface
 {
+    private function clone(){}
     private string $sessionPath;
 
     /**
@@ -19,30 +22,18 @@ class File extends AbstractSessionDriverHandle
      */
     public function __construct(array $config)
     {
-        parent::__construct($config);
-        $this->sessionPath = BP . $config['path'] ?? BP . 'var/session/';
+        $this->sessionPath = isset($config['path']) ? BP . str_replace('/', DIRECTORY_SEPARATOR, $config['path']) : BP . 'var' . DIRECTORY_SEPARATOR . 'session' . DIRECTORY_SEPARATOR;
         # 会话启用 但是不存在时 新建会话
-        if (session_status() !== PHP_SESSION_NONE) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
             if (!is_dir($this->sessionPath)) {
                 mkdir($this->sessionPath, 0700);
             }
-            session_set_cookie_params(24 * 3600);
             session_save_path($this->sessionPath);
             session_start();
-            p(session_id());
             $_SESSION = array();
         }
     }
 
-    /**
-     * @DESC         |方法描述
-     *
-     * 参数区：
-     *
-     * @param $name
-     * @param $value
-     * @return bool
-     */
     public function set($name, $value): bool
     {
         $_SESSION[$name] = $value;
@@ -52,14 +43,6 @@ class File extends AbstractSessionDriverHandle
         return false;
     }
 
-    /**
-     * @DESC         |方法描述
-     *
-     * 参数区：
-     *
-     * @param $name
-     * @return mixed
-     */
     public function get($name): mixed
     {
         if (isset($_SESSION[$name])) {
@@ -68,41 +51,9 @@ class File extends AbstractSessionDriverHandle
         return false;
     }
 
-    /**
-     * @DESC         |方法描述
-     *
-     * 参数区：
-     *
-     * @param $name
-     * @return bool
-     */
-    public function del($name): bool
+    public function delete($name): bool
     {
         unset($_SESSION[$name]);
-        return true;
-    }
-
-    /**
-     * @DESC         |方法描述
-     *
-     * 参数区：
-     *
-     * @return bool
-     */
-    public function des(): bool
-    {
-        $_SESSION = [];
-        return session_destroy();
-    }
-
-    public function open(): bool
-    {
-        return true;
-    }
-
-    public function gc(int $sessMaxLifeTime): bool
-    {
-        ini_set('session.gc_maxlifetime', $sessMaxLifeTime);
         return true;
     }
 }

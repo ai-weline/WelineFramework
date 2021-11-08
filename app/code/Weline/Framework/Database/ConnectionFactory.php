@@ -16,22 +16,22 @@ namespace Weline\Framework\Database;
 
 use PDO;
 use PDOException;
-use Weline\Framework\Database\Api\Linker\AlterInterface;
-use Weline\Framework\Database\Api\Linker\QueryInterface;
+use Weline\Framework\Database\Api\Connection\AlterInterface;
+use Weline\Framework\Database\Api\Connection\QueryInterface;
 
 use Weline\Framework\Database\DbManager\ConfigProvider;
 use Weline\Framework\Database\Exception\LinkException;
 use Weline\Framework\Manager\ObjectManager;
 
-class LinkerFactory
+class ConnectionFactory
 {
-    protected ?PDO $linker = null;
+    protected ?PDO $connection = null;
     protected ConfigProvider $configProvider;
     protected ?QueryInterface $query = null;
     protected ?AlterInterface $alter = null;
 
     /**
-     * Linker 初始函数...
+     * Connection 初始函数...
      * @param ConfigProvider $configProvider
      * @throws LinkException
      */
@@ -89,8 +89,8 @@ class LinkerFactory
      */
     public function __init(): void
     {
-        /* 1、初始化linker连接*/
-        if (!$this->linker) {
+        /* 1、初始化Connection连接*/
+        if (!$this->connection) {
             $this->create();
         }
     }
@@ -112,8 +112,8 @@ class LinkerFactory
             throw new LinkException(__('驱动不存在：%1,可用驱动列表：%2，更多驱动配置请转到php.ini中开启。', [$db_type, implode(',', PDO::getAvailableDrivers())]));
         }
         try {
-            //初始化一个linker对象
-            $this->linker = new PDO($dsn, $this->configProvider->getUsername(), $this->configProvider->getPassword(), $this->configProvider->getOptions());
+            //初始化一个Connection对象
+            $this->connection = new PDO($dsn, $this->configProvider->getUsername(), $this->configProvider->getPassword(), $this->configProvider->getOptions());
         } catch (PDOException $e) {
             throw new LinkException($e->getMessage());
         }
@@ -133,7 +133,7 @@ class LinkerFactory
     public function getLink(): PDO
     {
         $this->__init();
-        return $this->linker;
+        return $this->connection;
     }
 
     /**
@@ -198,6 +198,6 @@ class LinkerFactory
     function getAdapter(string $driver_type='Query'): string
     {
         $driver_type = ucfirst($driver_type);
-        return "Weline\\Framework\\Database\\Linker\\{$driver_type}\\Adapter\\" . ucfirst($this->configProvider->getDbType());
+        return "Weline\\Framework\\Database\\Connection\\{$driver_type}\\Adapter\\" . ucfirst($this->configProvider->getDbType());
     }
 }

@@ -25,13 +25,13 @@ use Weline\Framework\Manager\ObjectManager;
  */
 class DbManager
 {
-    protected ?LinkerFactory $defaultLinkerFactory = null;
-    protected \WeakMap $linkers;
+    protected ?ConnectionFactory $defaultConnectionFactory = null;
+    protected \WeakMap $connections;
     protected ConfigProvider $configProvider;
 
     public function __construct(ConfigProvider $configProvider)
     {
-        $this->linkers = new \WeakMap();
+        $this->connections = new \WeakMap();
         $this->configProvider = $configProvider;
     }
 
@@ -71,39 +71,39 @@ class DbManager
      * 兼并新链接
      *
      * 参数区：
-     * @param string $linker_name 链接名称
+     * @param string $connection_name 链接名称
      * @param ConfigProvider|null $configProvider 链接资源配置
-     * @return LinkerFactory
+     * @return ConnectionFactory
      * @throws \ReflectionException
      * @throws LinkException|\Weline\Framework\App\Exception
      */
-    function create(string $linker_name = 'default', ConfigProvider $configProvider = null): LinkerFactory
+    function create(string $connection_name = 'default', ConfigProvider $configProvider = null): ConnectionFactory
     {
-        $linker = $this->getLinker($linker_name);
+        $connection = $this->getConnection($connection_name);
         // 如果不更新连接配置，且已经存在连接就直接读取
-        if (empty($configProvider) && $linker) {
-            return $linker;
+        if (empty($configProvider) && $connection) {
+            return $connection;
         }
         // 存在连接配置则
-        if ($configProvider && $linker) {
+        if ($configProvider && $connection) {
             // 如果更新连接配置，但是配置内容一致，且存在使用此配置存在的连接则直接返回
-            if ($linker->getConfigProvider()->getData() == $configProvider->getData()) {
-                return $linker;
+            if ($connection->getConfigProvider()->getData() == $configProvider->getData()) {
+                return $connection;
             } else {
-                $linker = ObjectManager::getInstance(LinkerFactory::class, [$configProvider]);
+                $connection = ObjectManager::getInstance(ConnectionFactory::class, [$configProvider]);
             }
         } else {
-            if ($configProvider && empty($linker)) {
-                $linker = ObjectManager::getInstance(LinkerFactory::class, [$configProvider]);
+            if ($configProvider && empty($connection)) {
+                $connection = ObjectManager::getInstance(ConnectionFactory::class, [$configProvider]);
             } else {
-                $linker = ObjectManager::getInstance(LinkerFactory::class);
+                $connection = ObjectManager::getInstance(ConnectionFactory::class);
             }
         }
-        $this->linkers->offsetSet($linker, $linker_name);
-        if('default'===$linker_name){
-            $this->defaultLinkerFactory = $linker;
+        $this->connections->offsetSet($connection, $connection_name);
+        if('default'===$connection_name){
+            $this->defaultConnectionFactory = $connection;
         }
-        return $linker;
+        return $connection;
     }
 
     /**
@@ -111,22 +111,22 @@ class DbManager
      *
      * 参数区：
      *
-     * @param string $linker_name
-     * @return LinkerFactory|null
+     * @param string $connection_name
+     * @return ConnectionFactory|null
      * @throws LinkException
      */
-    function getLinker(string $linker_name = 'default'): ?LinkerFactory
+    function getConnection(string $connection_name = 'default'): ?ConnectionFactory
     {
-        if ('default' === $linker_name) {
-            return $this->defaultLinkerFactory;
+        if ('default' === $connection_name) {
+            return $this->defaultConnectionFactory;
         }
-        /**@var LinkerFactory $linker */
-        foreach ($this->linkers->getIterator() as $linker => $linker_name_value) {
-            if ($linker_name === $linker_name_value) {
-                return $linker;
+        /**@var ConnectionFactory $connection */
+        foreach ($this->connections->getIterator() as $connection => $connection_name_value) {
+            if ($connection_name === $connection_name_value) {
+                return $connection;
             }
         }
-        throw new LinkException(__('链接异常：%1 链接不存在，或者尚未创建。',$linker_name));
+        throw new LinkException(__('链接异常：%1 链接不存在，或者尚未创建。',$connection_name));
     }
 
     /**

@@ -13,7 +13,7 @@ use Weline\Framework\Database\DbManager;
 
 class SqlFile
 {
-    private \Weline\Framework\Database\LinkerFactory $linker;
+    private \Weline\Framework\Database\ConnectionFactory $connection;
     private DbManager\ConfigProvider $configProvider;
 
     /**
@@ -25,8 +25,8 @@ class SqlFile
      */
     public function __construct(DbManager $dbManager)
     {
-        $this->linker             = $dbManager->create();
-        $this->configProvider = $this->linker->getConfigProvider();
+        $this->connection             = $dbManager->create();
+        $this->configProvider = $this->connection->getConfigProvider();
     }
 
     /**
@@ -66,11 +66,11 @@ class SqlFile
         if (is_array($sqls)) {
             foreach ($sqls as $sql) {
                 if (trim($sql) !== '') {
-                    $this->linker->query($sql);
+                    $this->connection->query($sql);
                 }
             }
         } else {
-            $this->linker->query((string)$sqls);
+            $this->connection->query((string)$sqls);
         }
 
         return true;
@@ -88,7 +88,7 @@ class SqlFile
      */
     protected function _sql_split($sql, $dbfile_table_pre)
     {
-        if ($this->linker->getLink()->query('select version()')->fetchColumn() > '4.1' && $db_charset = $this->configProvider->getCharset()) {
+        if ($this->connection->getLink()->query('select version()')->fetchColumn() > '4.1' && $db_charset = $this->configProvider->getCharset()) {
             $sql = preg_replace('/TYPE=(InnoDB|MyISAM|MEMORY)( DEFAULT CHARSET=[^; ]+)?/', 'ENGINE=\\1 DEFAULT CHARSET=' . $db_charset, $sql);
         }
         //如果有表前缀就替换现有的前缀
@@ -123,11 +123,11 @@ class SqlFile
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/10/7 13:18
      * 参数区：
-     * @return \Weline\Framework\Database\LinkerFactory
+     * @return \Weline\Framework\Database\ConnectionFactory
      */
     public function getLink()
     {
-        return $this->linker;
+        return $this->connection;
     }
 
     /**
@@ -137,12 +137,12 @@ class SqlFile
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/10/7 13:19
      * 参数区：
-     * @param \Weline\Framework\Database\LinkerFactory $linkerFactory
+     * @param \Weline\Framework\Database\ConnectionFactory $connectionFactory
      * @return $this
      */
-    public function setLink(\Weline\Framework\Database\LinkerFactory $linkerFactory)
+    public function setLink(\Weline\Framework\Database\ConnectionFactory $connectionFactory)
     {
-        $this->linker = $linkerFactory;
+        $this->connection = $connectionFactory;
         return $this;
     }
 }

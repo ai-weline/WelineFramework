@@ -11,11 +11,11 @@ declare(strict_types=1);
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
 
-namespace Weline\Framework\Database\Api\Linker;
+namespace Weline\Framework\Database\Api\Connection;
 
 
 use PDOStatement;
-use Weline\Framework\Database\Linker;
+use Weline\Framework\Database\Connection;
 use Weline\Framework\Database\AbstractModel;
 
 interface QueryInterface
