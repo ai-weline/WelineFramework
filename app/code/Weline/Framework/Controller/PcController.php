@@ -30,8 +30,9 @@ class PcController extends Core
         $this->isAllowed();
     }
 
-    function isAllowed():void
+    function isAllowed(): void
     {
+        # FIXME 存储需要验证的URL才合理 放入SESSION不合理
         if (!empty($form_key_paths_str = $this->getSession()->getData('form_key_paths')) && !empty($form_key = $this->getSession()->getData('form_key'))) {
             $form_key_paths = explode(',', $form_key_paths_str);
             if (in_array($this->getRequest()->getUrl(), $form_key_paths) && ($form_key !== $this->getRequest()->getParam('form_key'))) {

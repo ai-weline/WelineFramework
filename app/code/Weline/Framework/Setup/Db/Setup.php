@@ -158,6 +158,6 @@ class Setup extends DbManager
      */
     function query(string $sql): mixed
     {
-        return $this->getLinker()->query($sql)->fetch();
+        return $this->getConnection()->query($sql)->fetch();
     }
 }

@@ -49,6 +49,7 @@ class FormKey
             $this->setKey();
         }
         $this->_key_paths[] = $path;
+        # FIXME _key_paths 这个参数可以存储到缓存
         $this->_session->setData(self::form_key_paths, implode(',', $this->_key_paths));
         return $this->_session->getData(self::key_name);
     }

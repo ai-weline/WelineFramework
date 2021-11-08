@@ -10,9 +10,35 @@ declare(strict_types=1);
 
 namespace Weline\Admin\Controller\Admin;
 
+use Weline\Admin\Model\AdminUser;
+
 class Login extends \Weline\Framework\App\Controller\BackendController
 {
-    function post(){
+    protected AdminUser $adminUser;
 
+    function __construct(
+        AdminUser $adminUser
+    )
+    {
+        $this->adminUser = $adminUser;
+    }
+
+    function post()
+    {
+        # 验证 form 表单
+        if (empty($this->getSession()->getData('form_key'))) {
+            $this->noRouter();
+        }
+        $username = $this->_request->getParam('username');
+        $password = $this->_request->getParam('password');
+        /**@var AdminUser $adminUser*/
+        $adminUser = $this->adminUser->where('username', $username)
+            ->where('password', $password)->find()->fetch();
+        if($adminUser->getId()){
+            $this->_session->login($adminUser->getData());
+        }else{
+            $this->re;# TODO url跳转函数添加
+        }
+        $this->getSession()->login();
     }
 }

@@ -46,7 +46,7 @@ class Response implements ResponseInterface
      * @DateTime: 2021/9/7 23:06
      * 参数区：
      */
-    #[NoReturn] public function noRouter():void
+    public function noRouter():void
     {
         http_response_code(404);
         @header('http/2.0 404 not found');

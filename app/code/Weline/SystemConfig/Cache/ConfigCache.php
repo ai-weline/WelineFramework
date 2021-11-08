@@ -12,8 +12,8 @@ namespace Weline\SystemConfig\Cache;
 
 class ConfigCache extends \Weline\Framework\Cache\CacheFactory
 {
-function __construct(string $identity = 'system_config')
-{
-    parent::__construct($identity);
-}
+    function __construct(string $identity = 'system_config')
+    {
+        parent::__construct($identity);
+    }
 }
