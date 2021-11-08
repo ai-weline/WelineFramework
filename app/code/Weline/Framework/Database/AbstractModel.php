@@ -85,7 +85,7 @@ abstract class AbstractModel extends DataObject
 
     public function __sleep()
     {
-        return array('table','origin_table_name','suffix','primary_key','fields');
+        return array('table', 'origin_table_name', 'suffix', 'primary_key', 'fields');
     }
 
     /**
@@ -389,13 +389,18 @@ abstract class AbstractModel extends DataObject
             $this->setQueryData($query_data);
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
-                $this->fetch_before($this);
+                if(empty($query_data)){
+                    return $this->setFetchData([]);
+                }
+                $this->fetch_before();
                 $this->getQuery()->clearQuery();
                 if (is_array($query_data)) {
                     $this->setFetchData($query_data);
                 } elseif (is_object($query_data)) {
                     /**@var AbstractModel $query_data */
                     $this->setFetchData($query_data->getData());
+                } else {
+                    $this->setFetchData([]);
                 }
                 $this->fetch_after();
                 return $query_data;

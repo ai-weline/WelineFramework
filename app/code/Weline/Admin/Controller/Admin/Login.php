@@ -37,7 +37,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         if($adminUser->getId()){
             $this->_session->login($adminUser->getData());
         }else{
-            $this->re;# TODO url跳转函数添加
+            $this->_redirect;# TODO url跳转函数添加
         }
         $this->getSession()->login();
     }
