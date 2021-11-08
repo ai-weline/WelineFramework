@@ -142,4 +142,13 @@ class Session implements SessionInterface
     {
         return $this->session->destroy();
     }
+
+    function delete(string $name)
+    {
+        if (isset($_SESSION[$name])) {
+            unset($_SESSION[$name]);
+            return true;
+        }
+        return false;
+    }
 }

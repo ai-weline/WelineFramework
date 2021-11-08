@@ -19,4 +19,5 @@ interface SessionInterface
     function getOriginSession();
 
     function destroy();
+    function delete(string $name);
 }
