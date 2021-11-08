@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Session\Driver;
 
-class Redis extends AbstractSessionDriverHandle implements DriverInterface
+class Redis extends AbstractSessionDriverHandlerDriverHandle implements DriverInterface
 {
     public function __construct(array $config)
     {

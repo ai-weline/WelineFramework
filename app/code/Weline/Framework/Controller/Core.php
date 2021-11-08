@@ -13,26 +13,37 @@ use Weline\Framework\Http\Request;
 use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Debug\Printing;
+use Weline\Framework\Session\SessionInterface;
+use Weline\Framework\Session\Session;
 
 class Core implements Data\DataInterface
 {
     protected ObjectManager $_objectManager;
 
     protected Request $_request;
+    protected SessionInterface $_session;
 
     protected Printing $_debug;
     protected ?Url $_url = null;
 
     public function noRouter()
     {
-        return $this->getRequest()->getResponse()->noRouter();
+        $this->getRequest()->getResponse()->noRouter();
     }
 
 
     public function __init()
     {
-        $this->getRequest();
         $this->getObjectManager();
+        $this->getRequest();
+    }
+
+    function getSession(string $session_class_name = null): SessionInterface
+    {
+        if (!isset($this->_session)) {
+            $this->_session = $this->getObjectManager()->getInstance($session_class_name ?? Session::class);
+        }
+        return $this->_session;
     }
 
     /**

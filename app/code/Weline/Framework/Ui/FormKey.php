@@ -16,8 +16,11 @@ use Weline\Framework\System\Text;
 class FormKey
 {
     private Session $_session;
-    private string $_key;
-    const key_name='form_key';
+    private string $_key = '';
+    private array $_key_paths = [];
+
+    const key_name = 'form_key';
+    const form_key_paths = 'form_key_paths';
 
     function __construct(
         Session $session
@@ -26,16 +29,9 @@ class FormKey
         $this->_session = $session;
     }
 
-    function __init()
-    {
-        if (!isset($this->_key)) {
-            $this->setKey();
-        }
-    }
-
     function setKey(): static
     {
-        if(empty($this->getKey())){
+        if (empty($this->_key)) {
             $this->_key = Text::rand_str();
             $this->_session->setData(self::key_name, $this->_key);
         }
@@ -47,13 +43,18 @@ class FormKey
         return array();
     }
 
-    function getKey(): string
+    function getKey(string $path): string
     {
+        if (empty($this->_key)) {
+            $this->setKey();
+        }
+        $this->_key_paths[] = $path;
+        $this->_session->setData(self::form_key_paths, implode(',', $this->_key_paths));
         return $this->_session->getData(self::key_name);
     }
 
-    function getHtml(): string
+    function getHtml(string $path): string
     {
-        return '<input type="hidden" name="form_key" value="'.$this->getKey().'"/>';
+        return '<input type="hidden" name="form_key" value="' . $this->getKey($path) . '"/>';
     }
 }

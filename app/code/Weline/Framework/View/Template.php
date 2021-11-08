@@ -103,13 +103,11 @@ class Template
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/10/22 22:24
      * 参数区：
-     * @return mixed
-     * @throws Exception
-     * @throws \ReflectionException
+     * @return string
      */
-    function getFormKey():string
+    function getFormKey($url):string
     {
-        return ObjectManager::getInstance(FormKey::class)->getHtml();
+        return ObjectManager::getInstance(FormKey::class)->getHtml($url);
     }
 
     function __wakeup()

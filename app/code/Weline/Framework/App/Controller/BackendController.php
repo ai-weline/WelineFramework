@@ -12,16 +12,14 @@ namespace Weline\Framework\App\Controller;
 use Weline\Framework\App\Session\BackendSession;
 use Weline\Framework\Controller\PcController;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Session\Session;
 
 class BackendController extends PcController
 {
-    private ?BackendSession $session = null;
 
-    function getSession()
+    function __init()
     {
-        if (!$this->session) {
-            $this->session = ObjectManager::getInstance(BackendSession::class);
-        }
-        return $this->session;
+        parent::__init();
+        $this->getSession(BackendSession::class);
     }
 }

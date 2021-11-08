@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Session\Driver;
 
-class Mysql extends AbstractSessionDriverHandle implements DriverInterface
+class Mysql extends AbstractSessionDriverHandlerDriverHandle implements DriverInterface
 {
     public function set($name, $value)
     {

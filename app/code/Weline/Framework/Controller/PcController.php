@@ -24,6 +24,22 @@ class PcController extends Core
 
     private CacheInterface $controllerCache;
 
+    function __init()
+    {
+        parent::__init();
+        $this->isAllowed();
+    }
+
+    function isAllowed():void
+    {
+        if (!empty($form_key_paths_str = $this->getSession()->getData('form_key_paths')) && !empty($form_key = $this->getSession()->getData('form_key'))) {
+            $form_key_paths = explode(',', $form_key_paths_str);
+            if (in_array($this->getRequest()->getUrl(), $form_key_paths) && ($form_key !== $this->getRequest()->getParam('form_key'))) {
+                $this->noRouter();
+            }
+        }
+    }
+
     public function getControllerCache(): CacheInterface
     {
         if (!isset($this->controllerCache)) {

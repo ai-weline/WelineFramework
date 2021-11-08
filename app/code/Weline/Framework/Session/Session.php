@@ -10,13 +10,13 @@
 namespace Weline\Framework\Session;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\Session\Driver\SessionDriverHandlerInterface;
 
-class Session
+class Session implements SessionInterface
 {
     const login_KEY = 'WL_USER';
 
-    private ?SessionInterface $session = null;
+    private ?SessionDriverHandlerInterface $session = null;
 
     public function __construct()
     {
@@ -30,17 +30,18 @@ class Session
     {
         if (!isset($this->session)) {
             $type = 'frontend';
-            $identity_path = Env::getInstance()->getConfig('admin');
-            if (strstr($_SERVER['REQUEST_URI'], $identity_path)) {
-                session_set_cookie_params(3600,"/$identity_path");
+            $identity_path = '/';
+            if (strstr($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('admin'))) {
+                $identity_path .= Env::getInstance()->getConfig('admin');
                 $type = 'backend';
             } elseif (strstr($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('api_admin'))) {
-                $identity_path = Env::getInstance()->getConfig('api_admin');
-                session_set_cookie_params(3600,"/$identity_path");
+                $identity_path .= Env::getInstance()->getConfig('api_admin');
                 $type = 'api';
             }
+            if (session_status() !== PHP_SESSION_ACTIVE) {
+                session_set_cookie_params(3600, $identity_path);
+            }
             $this->session = SessionManager::getInstance()->create();
-            setcookie('SESSION_ID',session_id());
             $this->setType($type)->setData('path', $identity_path);
         }
     }
@@ -54,9 +55,9 @@ class Session
      * 参数区：
      * @param string $name
      * @param string $value
-     * @return SessionInterface
+     * @return SessionDriverHandlerInterface
      */
-    function setData(string $name, string $value): SessionInterface
+    function setData(string $name, string $value): SessionDriverHandlerInterface
     {
         $this->session->set($name, $value);
         return $this->session;
@@ -82,9 +83,9 @@ class Session
      *
      * 参数区：
      *
-     * @return SessionInterface
+     * @return SessionDriverHandlerInterface
      */
-    public function getSession(): SessionInterface
+    public function getOriginSession(): SessionDriverHandlerInterface
     {
         return $this->session;
     }
@@ -135,5 +136,10 @@ class Session
     function isFrontend(): bool
     {
         return $this->getType() === 'frontend';
+    }
+
+    function destroy()
+    {
+        return $this->session->destroy();
     }
 }

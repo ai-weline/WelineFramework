@@ -10,6 +10,7 @@
 namespace Weline\Framework\App\Controller;
 
 use Weline\Framework\App\Session\BackendApiSession;
+use Weline\Framework\App\Session\BackendSession;
 use Weline\Framework\Controller\AbstractRestController;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -19,16 +20,8 @@ class BackendRestController extends AbstractRestController
     function __init()
     {
         parent::__init();
-        $this->getSession();
+        $this->getSession(BackendApiSession::class);
     }
 
     private ?BackendApiSession $session = null;
-
-    function getSession()
-    {
-        if (!$this->session) {
-            $this->session = ObjectManager::getInstance(BackendApiSession::class);
-        }
-        return $this->session;
-    }
 }

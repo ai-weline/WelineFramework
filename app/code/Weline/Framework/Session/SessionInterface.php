@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /*
  * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
@@ -11,38 +12,11 @@ namespace Weline\Framework\Session;
 
 interface SessionInterface
 {
-    /**
-     * @DESC          # 设置数据
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/11/8 17:07
-     * 参数区：
-     * @param $name
-     * @param $value
-     * @return mixed
-     */
-    public function set($name, $value);
+    function getData(string $name);
 
-    /**
-     * @DESC         |方法描述
-     *
-     * 参数区：
-     *
-     * @param $name
-     * @return mixed
-     */
-    public function get($name): mixed;
+    function setData(string $name,string $value);
 
-    /**
-     * @DESC          # 删除数据
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/11/8 17:03
-     * 参数区：
-     * @param $name
-     * @return bool
-     */
-    public function delete($name):bool;
+    function getOriginSession();
+
+    function destroy();
 }

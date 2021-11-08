@@ -74,7 +74,9 @@ class Request extends Request\RequestAbstract implements RequestInterface
     final public static function getInstance(string $module_path): self
     {
         if (!isset(self::$instance)) {
-            self::$instance = (new self())->setModulePath($module_path);
+            $instance = (new self());
+            $instance->__init();
+            self::$instance = $instance->setModulePath($module_path);
         }
         return self::$instance;
     }

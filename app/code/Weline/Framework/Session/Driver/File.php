@@ -9,9 +9,7 @@
 
 namespace Weline\Framework\Session\Driver;
 
-use Weline\Framework\Session\SessionInterface;
-
-class File implements SessionInterface
+class File implements SessionDriverHandlerInterface
 {
     private function clone(){}
     private string $sessionPath;
@@ -29,9 +27,10 @@ class File implements SessionInterface
                 mkdir($this->sessionPath, 0700);
             }
             session_save_path($this->sessionPath);
-            session_start();
+            ini_set('session.save_handler', 'files');
             $_SESSION = array();
         }
+        session_start();
     }
 
     public function set($name, $value): bool
@@ -55,5 +54,10 @@ class File implements SessionInterface
     {
         unset($_SESSION[$name]);
         return true;
+    }
+    public function destroy(): bool
+    {
+        $_SESSION = [];
+        return session_destroy();
     }
 }

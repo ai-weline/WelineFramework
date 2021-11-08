@@ -10,6 +10,7 @@
 namespace Weline\Framework\Session;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\Session\Driver\SessionDriverHandlerInterface;
 
 class SessionManager
 {
@@ -18,7 +19,7 @@ class SessionManager
     private static SessionManager $instance;
 
     private array $config;
-    private ?SessionInterface $_session = null;
+    private ?SessionDriverHandlerInterface $_session = null;
 
     private function __clone()
     {
@@ -50,9 +51,9 @@ class SessionManager
      * 参数区：
      * @param string $driver
      * @param string $area
-     * @return SessionInterface
+     * @return SessionDriverHandlerInterface
      */
-    public function create(string $driver = ''): SessionInterface
+    public function create(string $driver = ''): SessionDriverHandlerInterface
     {
         if (empty($this->_session)) {
             if (empty($driver) && isset($this->config['default'])) {

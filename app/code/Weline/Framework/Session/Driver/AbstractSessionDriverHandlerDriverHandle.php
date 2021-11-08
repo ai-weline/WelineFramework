@@ -9,9 +9,8 @@
 
 namespace Weline\Framework\Session\Driver;
 
-use Weline\Framework\Session\SessionInterface;
 
-abstract class AbstractSessionDriverHandle implements SessionInterface, DriverInterface,\SessionHandlerInterface
+abstract class AbstractSessionDriverHandlerDriverHandle implements SessionDriverHandlerInterface,\SessionHandlerInterface
 {
     private function __clone()
     {

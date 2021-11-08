@@ -42,7 +42,7 @@ abstract class RequestAbstract
     /**
      * @var \Weline\Framework\Http\Response
      */
-    private \Weline\Framework\Http\Response $_response;
+    private ?\Weline\Framework\Http\Response $_response=null;
 
     public function __init()
     {
