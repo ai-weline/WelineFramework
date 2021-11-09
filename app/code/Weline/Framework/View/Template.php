@@ -180,9 +180,9 @@ class Template
      */
     public function fetch(string $fileName)
     {
-
-        $comFileName_cache_key = $fileName . '_comFileName';
-        $tplFile_cache_key = $fileName . '_tplFile';
+        # TODO 处理下第二次缓存的文件读取不到具体的模板编译文件问题
+        $comFileName_cache_key = $this->view_dir.$fileName . '_comFileName';
+        $tplFile_cache_key = $this->view_dir.$fileName . '_tplFile';
         $comFileName = '';
         $tplFile = '';
         if (!DEV) {

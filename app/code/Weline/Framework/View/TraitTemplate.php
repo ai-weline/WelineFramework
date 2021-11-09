@@ -80,7 +80,12 @@ trait TraitTemplate
             # 替换掉当前模块的视图目录
             $view_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
             $template_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
-            $compile_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
+
+            if(!DEV){
+                $compile_dir = str_replace(APP_PATH, Env::path_framework_generated_complicate.DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']).Data\DataInterface::dir.DIRECTORY_SEPARATOR. Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
+            }else{
+                $compile_dir = $module_lists[$pre_module_name]['base_path']. Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
+            }
             # 文件目录
             $file_dir = str_replace($pre_module_name . '::', '', $file_dir);
         }
@@ -181,8 +186,11 @@ trait TraitTemplate
 
                 break;
             case DataInterface::dir_type_TEMPLATE_COMPILE:
-                $path = $module_view_dir_path . DataInterface::view_TEMPLATE_COMPILE_DIR;
-
+                if(!DEV){
+                    $path = str_replace(APP_PATH,Env::path_framework_generated_complicate.DIRECTORY_SEPARATOR, $module_view_dir_path).DIRECTORY_SEPARATOR. DataInterface::view_TEMPLATE_DIR.DIRECTORY_SEPARATOR;
+                }else{
+                    $path = $module_view_dir_path . DataInterface::view_TEMPLATE_COMPILE_DIR;
+                }
                 break;
             case DataInterface::dir_type_STATICS:
                 $cache_key = 'getViewDir' . $module_view_dir_path . $type;

@@ -22,7 +22,16 @@ class Index extends BackendController
     public function index()
     {
         // TODO 需要新增后台静态文件特殊路径，否则会读取前台的session 导致默写调用session异常 产生大量的无用调用，影响性能
-        $this->assign('post_url',$this->getUrl('admin/login/post'));
+        $this->assign('post_url', $this->getUrl('admin/login/post'));
+        # 检测验证码
+        if ($this->getSession()->getData('need_backend_verification_code')) {
+            $this->assign('need_backend_verification_code', true);
+            $this->assign('backend_verification_code_url', $this->getUrl('/admin/login/verificationCode'));
+        }
+        # 错误信息
+        if ($msg = $this->getSession()->getData('backend_login_error')) {
+            $this->assign('error', $msg);
+        }
         if ($this->getSession()->isLogin()) {
             $this->fetch();
         } else {

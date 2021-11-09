@@ -55,8 +55,6 @@ class ObjectManager implements ManagerInterface
      * @param array $arguments
      * @param bool $shared
      * @return mixed|ObjectManager
-     * @throws Exception
-     * @throws \ReflectionException
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true): mixed
     {
@@ -70,23 +68,37 @@ class ObjectManager implements ManagerInterface
 
         // 缓存对象读取
         if (!CLI && $shared && !DEV && $cache_class_object = self::getCache()->get($class)) {
-            self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
+            $object = self::initClassInstance($class, $cache_class_object);
+            self::addInstance($class, $object);
             return self::$instances[$class];
         }
 
         // 类名规则处理
         $new_class = self::parserClass($class);
         $arguments = $arguments ?: self::getMethodParams($new_class);
-        $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
+        try {
+            $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
+        } catch (\ReflectionException $e) {
+            exit(__('无法注入的类：') . $e->getTraceAsString());
+        }
 
-        self::$instances[$class] = self::initClassInstance($class, $new_object);
-
+        $object = self::initClassInstance($class, $new_object);
+        self::addInstance($class, $object);
         // 缓存可缓存对象
         if (!DEV && in_array($class, self::unserializable_class)) {
             self::getCache()->set($class, self::$instances[$class]);
         };
 
         return self::$instances[$class];
+    }
+
+    static function getIs(){
+        return self::$instances;
+    }
+
+    private static function addInstance(string $class, object &$object)
+    {
+        self::$instances[$class] = $object;
     }
 
     /**
@@ -143,19 +155,19 @@ class ObjectManager implements ManagerInterface
      * @throws \ReflectionException
      * @throws Exception
      */
-    public static function make($class, array $params = [],string $method = '__construct'): mixed
+    public static function make($class, array $params = [], string $method = '__construct'): mixed
     {
         // 拦截器处理
         $new_class = self::parserClass($class);
         if ('__construct' === $method) {
             $instance = (new ReflectionClass($new_class));
-            $method_params=self::getMethodParams($instance, $method);
-            foreach ($method_params as $key=>$method_param) {
-                if(empty($method_param)){
+            $method_params = self::getMethodParams($instance, $method);
+            foreach ($method_params as $key => $method_param) {
+                if (empty($method_param)) {
                     unset($method_params[$key]);
                 }
             }
-            $method_params = array_merge($method_params,$params);
+            $method_params = array_merge($method_params, $params);
             $instance = $instance->newInstanceArgs($method_params);
             if (method_exists($instance, '__init')) {
                 $instance->__init();
@@ -238,7 +250,7 @@ class ObjectManager implements ManagerInterface
                         }
                     } else {
                         try {
-                            if($param->isDefaultValueAvailable()){
+                            if ($param->isDefaultValueAvailable()) {
                                 $paramArr[] = $param->getDefaultValue();
                             }
                         } catch (\ReflectionException $e) {

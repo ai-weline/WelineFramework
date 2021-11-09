@@ -79,19 +79,18 @@ class Core
                 }
             }
         }
-
         // 找不到则访问默认控制器
         if (self::url_path_split === $url) {
             $url = self::default_index_url;
         }
-        $url = trim($url, self::url_path_split);
-        // API
-        if ($api_result = $this->Api($url)) {
-            return $api_result;
-        }
+        $url = strtolower(trim($url, self::url_path_split));
         // PC
         if ($pc_result = $this->Pc($url)) {
             return $pc_result;
+        }
+        // API
+        if ($api_result = $this->Api($url)) {
+            return $api_result;
         }
         // 非开发模式（匹配不到任何路由将报错）
         if (!DEV) {
@@ -104,6 +103,7 @@ class Core
             }
             throw new Exception('未知的路由！');
         }
+        return '';
     }
 
     /**
@@ -118,7 +118,6 @@ class Core
      */
     public function Api(string $url)
     {
-        $url = strtolower($url);
         $is_api_admin = $this->request_area === \Weline\Framework\Controller\Data\DataInterface::type_api_BACKEND;
 
         if ($is_api_admin) {
@@ -164,7 +163,6 @@ class Core
      */
     public function Pc(string $url)
     {
-        $url = strtolower($url);
         $is_pc_admin = $this->request_area === \Weline\Framework\Controller\Data\DataInterface::type_pc_BACKEND;
         // 检测api路由区域
         if ($is_pc_admin) {

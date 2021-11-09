@@ -22,17 +22,13 @@ class AdminUser extends \Weline\Framework\Database\Model
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-        $setup->dropTable();
+        /*$setup->dropTable();
         $setup->createTable('管理员表')
-            ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'primary key', '用户ID')
+            ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
             ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
             ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
             ->addColumn('attempt_times', TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
-            ->create();
-    }
-
-    function getAttemptTimes(){
-        return $this->getData('attempt_times');
+            ->create();*/
     }
 
     /**
@@ -58,5 +54,33 @@ class AdminUser extends \Weline\Framework\Database\Model
     function providePrimaryField(): string
     {
         return 'user_id';
+    }
+
+    function getAttemptTimes()
+    {
+        return intval($this->getData('attempt_times'));
+    }
+
+    function addAttemptTimes(): static
+    {
+        $this->setData('attempt_times', intval($this->getData('attempt_times')) + 1);
+        return $this;
+    }
+
+    function resetAttemptTimes(): static
+    {
+        $this->setData('attempt_times', 0);
+        $this->save();
+        return $this;
+    }
+
+    function getUsername()
+    {
+        return $this->getData('username');
+    }
+
+    function getPassword()
+    {
+        return $this->getData('password');
     }
 }
