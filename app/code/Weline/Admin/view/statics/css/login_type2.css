@@ -2,6 +2,9 @@ body {
     background: #222D32;
     font-family: 'Roboto', sans-serif;
 }
+label{
+    width: 100%;
+}
 
 .login-box {
     margin-top: 75px;
@@ -126,7 +129,8 @@ label {
 .login-text {
     text-align: left;
     padding-left: 0px;
-    color: #A2A4A4;
+    /*color: #A2A4A4;*/
+    color: #dc3545;
 }
 
 .loginbttm {

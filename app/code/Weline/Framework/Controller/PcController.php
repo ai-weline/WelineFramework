@@ -28,6 +28,12 @@ class PcController extends Core
     {
         parent::__init();
         $this->isAllowed();
+        $this->assign($this->getRequest()->getParams());
+    }
+
+    function redirect(string $url)
+    {
+        $this->getRequest()->getResponse()->redirect($url);
     }
 
     function isAllowed(): void

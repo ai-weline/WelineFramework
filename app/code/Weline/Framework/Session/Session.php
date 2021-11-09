@@ -57,7 +57,7 @@ class Session implements SessionInterface
      * @param string $value
      * @return SessionDriverHandlerInterface
      */
-    function setData(string $name, string $value): SessionDriverHandlerInterface
+    function setData(string $name, string|int $value): SessionDriverHandlerInterface
     {
         $this->session->set($name, $value);
         return $this->session;

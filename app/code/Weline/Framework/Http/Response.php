@@ -53,4 +53,11 @@ class Response implements ResponseInterface
         @header('status: 404 not found');
         exit(include BP . '/404.html');
     }
+
+    public function redirect(string $url):void
+    {
+        http_response_code(404);
+        Header("Location:$url");
+        exit(0);
+    }
 }
