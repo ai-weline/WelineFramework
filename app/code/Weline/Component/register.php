@@ -13,5 +13,5 @@ Register::register(
     Register::MODULE,
     __DIR__,
     '1.0.0',
-    '<a href="bbs.aiweline.com">Admin模块</a>'
+    '<a href="bbs.aiweline.com">系统组件模块</a>'
 );
