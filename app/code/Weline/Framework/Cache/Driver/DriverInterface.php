@@ -16,4 +16,6 @@ interface DriverInterface
     const driver_REDIS = 'redis';
 
     public function __construct(string $identity, array $config);
+
+    function setIdentity(string $identity);
 }

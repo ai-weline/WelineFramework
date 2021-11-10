@@ -180,7 +180,6 @@ class Template
      */
     public function fetch(string $fileName)
     {
-        # TODO 处理下第二次缓存的文件读取不到具体的模板编译文件问题
         $comFileName_cache_key = $this->view_dir.$fileName . '_comFileName';
         $tplFile_cache_key = $this->view_dir.$fileName . '_tplFile';
         $comFileName = '';
@@ -189,13 +188,15 @@ class Template
             $comFileName = $comFileName = $this->viewCache->get($comFileName_cache_key);
             $tplFile = $this->viewCache->get($tplFile_cache_key);
         }
+        # 测试
+        file_put_contents(__DIR__.'/test.txt', $comFileName.PHP_EOL,FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
         if (!$comFileName || !$tplFile) {
             // 解析模板路由
             $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
             $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
-            $file_dir = null;
-            $file_name = null;
+            $file_dir = '';
+            $file_name = '';
 
             // 如果给的文件名字有路径
             if (count($file_name_dir_arr) > 1) {
@@ -243,9 +244,11 @@ class Template
                 $this->viewCache->set($tplFile_cache_key, $tplFile);
             };
         }
-
+        # 测试
+        file_put_contents(__DIR__.'/test.txt', $comFileName.PHP_EOL,FILE_APPEND);
         # 检测编译文件，如果不符合条件则重新进行文件编译
-        if (!DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+        if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+//            p();
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中

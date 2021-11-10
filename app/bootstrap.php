@@ -13,14 +13,17 @@ if ('cli' !== PHP_SAPI and !file_exists(dirname(__DIR__) . '/setup/install.lock'
     exit();
 }
 $start_time = microtime(true);
-// 运行模式
-defined('CLI') || define('CLI', PHP_SAPI === 'cli');
 // 项目根目录
 defined('BP') || define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
-// 静态文件路径
-defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // 应用 目录 (默认访问 web)
 defined('APP_PATH') || define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
+if(is_file(APP_PATH.'/config.php'))require APP_PATH.'/config.php';
+// 运行模式
+defined('CLI') || define('CLI', PHP_SAPI === 'cli');
+// 调试模式
+defined('DEBUG') || define('DEBUG', 0);
+// 静态文件路径
+defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // 主题 目录
 defined('APP_DESIGN_PATH') || define('APP_DESIGN_PATH', APP_PATH . 'design' . DIRECTORY_SEPARATOR);
 // 静态 目录
@@ -46,11 +49,11 @@ try {
      */
     \Weline\Framework\App::run();
 } catch (Exception $exception) {
-    if (DEV) {
+//    if (DEV) {
         echo '<pre>';
         echo '应用启动失败：' . $exception->getMessage().PHP_EOL;
         if(DEV)echo '错误信息：'.PHP_EOL . $exception->getTraceAsString().PHP_EOL;
         if(DEV)var_dump($exception->getTrace());
         exit(0);
-    }
+//    }
 }

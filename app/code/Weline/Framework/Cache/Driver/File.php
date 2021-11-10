@@ -21,13 +21,25 @@ class File implements CacheInterface, DriverInterface
      */
     private string $cachePath;
 
+    protected array $config;
+
+    private function __clone(){}
+
     public function __construct(string $identity, array $config)
     {
         if (! isset($config['path'])) {
             $config['path'] = 'var/cache/';
         }
         $config['path']  = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
-        $this->cachePath = BP . $config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
+        $this->config = $config;
+        $this->setIdentity($identity);
+    }
+
+    function setIdentity(string $identity)
+    {
+        $this->cachePath = BP . $this->config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
+        $this->__init();
+        return $this;
     }
 
     /**
@@ -105,9 +117,9 @@ class File implements CacheInterface, DriverInterface
         $key       = $this->buildKey($key);
         $cacheFile = $this->processCacheFile($this->cachePath . $key);
         // filemtime用来获取文件的修改时间
-        if (@filemtime($cacheFile) > time()) {
+        if (filemtime($cacheFile) > time()) {
             // file_get_contents用来获取文件内容，unserialize用来反序列化文件内容
-            return unserialize(@file_get_contents($cacheFile));
+            return unserialize(file_get_contents($cacheFile));
         }
 
         return false;

@@ -65,11 +65,9 @@ class ObjectManager implements ManagerInterface
         if (isset(self::$instances[$class])) {
             return self::$instances[$class];
         }
-
         // 缓存对象读取
         if (!CLI && $shared && !DEV && $cache_class_object = self::getCache()->get($class)) {
-            $object = self::initClassInstance($class, $cache_class_object);
-            self::addInstance($class, $object);
+            self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
             return self::$instances[$class];
         }
 
@@ -82,8 +80,7 @@ class ObjectManager implements ManagerInterface
             exit(__('无法注入的类：') . $e->getTraceAsString());
         }
 
-        $object = self::initClassInstance($class, $new_object);
-        self::addInstance($class, $object);
+        self::$instances[$class] = self::initClassInstance($class, $new_object);
         // 缓存可缓存对象
         if (!DEV && in_array($class, self::unserializable_class)) {
             self::getCache()->set($class, self::$instances[$class]);
@@ -94,11 +91,6 @@ class ObjectManager implements ManagerInterface
 
     static function getIs(){
         return self::$instances;
-    }
-
-    private static function addInstance(string $class, object &$object)
-    {
-        self::$instances[$class] = $object;
     }
 
     /**

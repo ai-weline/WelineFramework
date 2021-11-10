@@ -26,17 +26,30 @@ use Weline\Framework\Manager\ObjectManager;
 class DbManager
 {
     protected ?ConnectionFactory $defaultConnectionFactory = null;
-    protected \WeakMap $connections;
+//    protected \WeakMap $connections;
+    protected array $connections = [];
     protected ConfigProvider $configProvider;
 
     public function __construct(ConfigProvider $configProvider)
     {
-        $this->connections = new \WeakMap();
         $this->configProvider = $configProvider;
     }
 
-    function __init(){
+    function __init()
+    {
         $this->create();
+    }
+
+    /**
+     * @DESC         |休眠时执行函数： 保存配置信息，以及模型数据
+     *
+     * 参数区：
+     *
+     * @return string[]
+     */
+    public function __sleep()
+    {
+        return array('configProvider','connections');
     }
 
     /**
@@ -99,8 +112,9 @@ class DbManager
                 $connection = ObjectManager::getInstance(ConnectionFactory::class);
             }
         }
-        $this->connections->offsetSet($connection, $connection_name);
-        if('default'===$connection_name){
+        $this->connections[$connection_name] = $connection;
+//        $this->connections->offsetSet($connection, $connection_name);
+        if ('default' === $connection_name) {
             $this->defaultConnectionFactory = $connection;
         }
         return $connection;
@@ -121,24 +135,15 @@ class DbManager
             return $this->defaultConnectionFactory;
         }
         /**@var ConnectionFactory $connection */
-        foreach ($this->connections->getIterator() as $connection => $connection_name_value) {
+        /*foreach ($this->connections->getIterator() as $connection => $connection_name_value) {
             if ($connection_name === $connection_name_value) {
                 return $connection;
             }
+        }*/
+        try {
+            return $this->connections[$connection_name];
+        } catch (\Exception $exception) {
+            throw new LinkException(__('链接异常：%1 链接不存在，或者尚未创建。', $connection_name));
         }
-        throw new LinkException(__('链接异常：%1 链接不存在，或者尚未创建。',$connection_name));
     }
-
-    /**
-     * @DESC         |休眠时执行函数： 保存配置信息，以及模型数据
-     *
-     * 参数区：
-     *
-     * @return string[]
-     */
-    public function __sleep()
-    {
-        return array('configProvider');
-    }
-
 }

@@ -14,6 +14,7 @@ use Weline\Backend\Cache\BackendCache;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Exception\Core;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
@@ -39,6 +40,21 @@ class SystemConfig extends \Weline\Framework\Database\Model
         parent::__construct($data);
     }
 
+    function __init()
+    {
+        parent::__init();
+        if(!isset($this->cache)){
+            $this->cache = ObjectManager::getInstance(BackendCache::class);
+        }
+    }
+
+    function __sleep()
+    {
+        $parent_vars = parent::__sleep();
+        $parent_vars[]='cache';
+        return $parent_vars;
+    }
+
     function providePrimaryField(): string
     {
         return self::field_KEY;
@@ -58,7 +74,8 @@ class SystemConfig extends \Weline\Framework\Database\Model
      */
     function getConfig(string $key, string $module, string $area): mixed
     {
-        $cache_key = 'system_config_cache_' . $key . '_' . $area . '_' . $module;
+        $cache_key =  'system_config_cache_' . $area . '_' .$module . '_' . $key;
+
         if (!DEV && $cache_data = $this->cache->get($cache_key)) {
             return $cache_data;
         }

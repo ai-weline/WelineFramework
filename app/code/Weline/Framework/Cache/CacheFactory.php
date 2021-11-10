@@ -10,6 +10,7 @@
 namespace Weline\Framework\Cache;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\Cache\Driver\DriverInterface;
 
 class CacheFactory
 {
@@ -20,6 +21,8 @@ class CacheFactory
     private array $config;
 
     private string $identity;
+
+    private DriverInterface $driver;
 
     // FIXME 缓存清理后首次存储缓存set后 立即读取get 将返回false 待后期处理 先直接返回结果
 
@@ -38,11 +41,14 @@ class CacheFactory
      */
     public function create(string $driver = 'file'): CacheInterface
     {
+        if(isset($this->driver)){
+            return $this->driver->setIdentity($this->identity);
+        }
         if (empty($driver) && isset($this->config['default'])) {
             $driver = $this->config['default'];
         }
         $driver_class = self::driver_NAMESPACE . ucfirst($driver);
-
-        return new $driver_class($this->identity, $this->config['drivers'][$driver]);
+        $this->driver = new $driver_class($this->identity, $this->config['drivers'][$driver]);
+        return $this->driver;
     }
 }

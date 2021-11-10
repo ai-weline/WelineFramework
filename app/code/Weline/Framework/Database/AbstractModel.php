@@ -57,12 +57,19 @@ abstract class AbstractModel extends DataObject
     protected string $origin_table_name = '';
     private ConnectionFactory $connection;
     public string $suffix = '';
-    public string $primary_key = 'id';
+    public string $primary_key = '';
+    public string $primary_key_default = 'id';
     public array $fields = [];
 
     private bool $force_check_flag = false;
 
     private ?QueryInterface $bind_query = null;
+
+    function __construct(array $data = [])
+    {
+        parent::__construct($data);
+        if (!isset($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
+    }
 
     /**
      * @DESC         |初始化连接、缓存、表前缀 读取模型自身表名字等
@@ -75,17 +82,22 @@ abstract class AbstractModel extends DataObject
     public function __init()
     {
         # 类属性
-        $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
-        $this->suffix = $this->connection->getConfigProvider()->getPrefix() ?: '';
+        if (!isset($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
+        if (empty($this->suffix)) $this->suffix = $this->connection->getConfigProvider()->getPrefix() ?: '';
         # 模型属性
-        $this->table = $this->provideTable() ?: $this->processTable();
+        if (empty($this->table)) $this->table = $this->provideTable() ?: $this->processTable();
         if (empty($this->origin_table_name)) $this->origin_table_name = $this->provideTable();
-        $this->primary_key = $this->providePrimaryField() ?: $this->primary_key;
+        if (empty($this->primary_key)) $this->primary_key = $this->providePrimaryField() ?: $this->primary_key_default;
     }
 
     public function __sleep()
     {
         return array('table', 'origin_table_name', 'suffix', 'primary_key', 'fields');
+    }
+
+    function __wakeup()
+    {
+        $this->__init();
     }
 
     /**
@@ -389,7 +401,7 @@ abstract class AbstractModel extends DataObject
             $this->setQueryData($query_data);
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
-                if(empty($query_data)){
+                if (empty($query_data)) {
                     return $this->setFetchData([]);
                 }
                 $this->fetch_before();

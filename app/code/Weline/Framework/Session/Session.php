@@ -79,6 +79,21 @@ class Session implements SessionInterface
     }
 
     /**
+     * @DESC          # 获取session值
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/10/22 21:45
+     * 参数区：
+     * @param string $name
+     * @return string
+     */
+    function addData(string $name, string $value): string
+    {
+        return $this->session->set($name, $this->session->get($name) . $value);
+    }
+
+    /**
      * @DESC         |方法描述
      *
      * 参数区：

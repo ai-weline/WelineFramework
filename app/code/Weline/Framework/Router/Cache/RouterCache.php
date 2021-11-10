@@ -8,12 +8,11 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Backend\Cache;
+namespace Weline\Framework\Router\Cache;
 
-
-class BackendCache extends \Weline\Framework\Cache\CacheFactory
+class RouterCache extends \Weline\Framework\Cache\CacheFactory
 {
-    function __construct(string $identity = 'backend_cache')
+    function __construct(string $identity = 'router_cache')
     {
         parent::__construct($identity);
     }

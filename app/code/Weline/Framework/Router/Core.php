@@ -11,9 +11,12 @@ namespace Weline\Framework\Router;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Router\Cache\RouterCache;
 
 class Core
 {
@@ -33,6 +36,8 @@ class Core
 
     private bool $is_admin;
 
+    private CacheInterface $cache;
+
     /**
      * @DESC         |任何时候都会初始化
      *
@@ -44,6 +49,7 @@ class Core
     public function __init()
     {
         $this->request = ObjectManager::getInstance(Request::class);
+        $this->cache = ObjectManager::getInstance(RouterCache::class . 'Factory');
         $this->request_area = $this->request->getRequestArea();
         $this->area_router = $this->request->getAreaRouter();
         $this->_etc = Env::getInstance();
@@ -63,10 +69,11 @@ class Core
     {
         // 读取url
         $url = $this->request->getUrlPath();
+
         // 前后台路由处理
         if ($this->is_admin) {
             if ($this->area_router === $this->_etc->getConfig('admin', '')) {
-                $url = str_replace($this->area_router, 'admin', $url);
+                $url = str_replace($this->area_router, '', $url);
                 $url = trim($url, self::url_path_split);
                 if (!strstr($url, self::url_path_split)) {
                     $url .= self::default_index_url;
@@ -84,7 +91,6 @@ class Core
             $url = self::default_index_url;
         }
         $url = strtolower(trim($url, self::url_path_split));
-        // PC
         if ($pc_result = $this->Pc($url)) {
             return $pc_result;
         }
@@ -136,7 +142,7 @@ class Core
                 $dispatch = ObjectManager::getInstance($class->name);
                 $this->request->setRouter($router);
                 $method = $class->method ? $class->method : 'index';
-                if ((int)method_exists($dispatch, $method)) {
+                if (method_exists($dispatch, $method)) {
                     exit(call_user_func([$dispatch, $method]));
                 }
 
@@ -174,7 +180,6 @@ class Core
             $routers = include $router_filepath;
             if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . self::default_index_url])) {
                 $router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url];
-
                 $class = json_decode(json_encode($router['class']));
                 $this->request->setRouter($router);
                 // 检测注册方法

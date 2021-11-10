@@ -25,6 +25,16 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     private string $module_path;
 
+    final public static function getInstance(string $module_path): self
+    {
+        if (!isset(self::$instance)) {
+            $instance = (new self());
+            $instance->__init();
+            self::$instance = $instance->setModulePath($module_path);
+        }
+        return self::$instance;
+    }
+
     public function __init()
     {
         /**
@@ -69,16 +79,6 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     private function __clone()
     {
-    }
-
-    final public static function getInstance(string $module_path): self
-    {
-        if (!isset(self::$instance)) {
-            $instance = (new self());
-            $instance->__init();
-            self::$instance = $instance->setModulePath($module_path);
-        }
-        return self::$instance;
     }
 
     public function getHeader(string $key = null)

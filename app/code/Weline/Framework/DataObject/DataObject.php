@@ -71,6 +71,30 @@ class DataObject implements \ArrayAccess
     }
 
     /**
+     * @DESC          # 添加累计类型的数据
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/10 20:02
+     * 参数区：
+     * @param string $index
+     * @param $data
+     * @return DataObject
+     */
+    function addToIndex(string $index, $data): static
+    {
+        if ($index_data = $this->getData($index)) {
+            if (is_array($index_data)) {
+                $index_data[] = $index_data;
+                $this->setData($index, $index_data);
+            } else {
+                $this->setData($index, [$index_data, $data]);
+            }
+        }
+        return $this;
+    }
+
+    /**
      * @DESC         |设置数据
      *
      *  覆盖对象中的数据。

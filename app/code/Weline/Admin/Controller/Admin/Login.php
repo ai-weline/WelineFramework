@@ -13,6 +13,7 @@ namespace Weline\Admin\Controller\Admin;
 use Weline\Admin\Helper\Data;
 use Weline\Admin\Model\AdminUser;
 use Weline\Framework\App\Session\BackendSession;
+use Weline\Framework\Manager\MessageManager;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Session\SessionInterface;
 use Weline\Framework\System\Security\Encrypt;
@@ -20,21 +21,37 @@ use Weline\Framework\System\Security\Encrypt;
 class Login extends \Weline\Framework\App\Controller\BackendController
 {
     protected AdminUser $adminUser;
-    protected BackendSession|SessionInterface $session;
     private Data $helper;
+    private MessageManager $messageManager;
 
     function __construct(
-        AdminUser $adminUser,
-        Data      $helper
+        AdminUser      $adminUser,
+        MessageManager $messageManager,
+        Data           $helper
     )
     {
         $this->adminUser = $adminUser;
-        $this->session = $this->getSession();
         $this->helper = $helper;
+        $this->messageManager = $messageManager;
+    }
+
+    function index()
+    {
+        $this->assign('post_url', $this->getUrl('admin/login/post'));
+        # 检测验证码
+        if ($this->getSession()->getData('need_backend_verification_code')) {
+            $this->assign('need_backend_verification_code', true);
+            $this->assign('backend_verification_code_url', $this->getUrl('admin/login/verificationCode'));
+        }
+        $this->fetch('login_type2');
     }
 
     function post()
     {
+        # 已经登录直接进入后台
+        if ($this->_session->isLogin()) {
+            $this->redirect($this->getUrl('/'));
+        }
         if ($this->_request->isPost()) {
             # 验证 form 表单
             if (empty($this->getSession()->getData('form_key'))) {
@@ -42,35 +59,44 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             }
             $adminUsernameUser = $this->helper->getRequestAdminUser();
             if (!$adminUsernameUser->getId()) {
-                $this->redirect($this->getUrl('?error=' . __('账户不存在！')));
+                $this->messageManager->addError(__('账户不存在！'));
+                $this->redirect($this->getUrl());
             }
             if ($adminUsernameUser->getAttemptTimes() > 6) {
-                $this->redirect($this->getUrl('?error=' . __('你的账户因尝试多次登录，已被锁定！请联系其他管理员开通。')));
+                $this->messageManager->addError(__('你的账户因尝试多次登录，已被锁定！请联系其他管理员开通。'));
+                $this->redirect($this->getUrl());
             }
             # 自增尝试登录次数
             try {
                 $adminUsernameUser->addAttemptTimes()->save();
             } catch (\Exception $exception) {
-                $this->redirect($this->getUrl('?error=' . __('登录异常！')));
+                $this->messageManager->addError(__('登录异常！'));
+                $this->redirect($this->getUrl());
             }
             # 如果大于2次的尝试登录 验证客户提供的验证码
             if ($adminUsernameUser->getAttemptTimes() > 2) {
-                $this->session->setData('need_backend_verification_code', 1);
+                $this->_session->setData('need_backend_verification_code', 1);
+            }
+            # 验证验证码
+            if ($adminUsernameUser->getAttemptTimes() > 3 && ($this->_session->getData('backend_verification_code') !== $this->_request->getParam('code'))) {
+                $this->messageManager->addError(__('验证码错误！'));
+                $this->redirect($this->getUrl());
             }
             # 尝试登录
             $password = trim($this->_request->getParam('password'));
+//            p(password_hash($password, PASSWORD_DEFAULT),true);
+//            p($adminUsernameUser->getPassword(),true);
+//            p(password_verify($password, $adminUsernameUser->getPassword()));
             if (password_verify($password, $adminUsernameUser->getPassword())) {
                 $adminUsernameUser->unsetData('password');
                 $this->_session->login($adminUsernameUser->getData());
                 # 重置 尝试登录次数
                 $adminUsernameUser->resetAttemptTimes();
-                # 跳转首页
-                $this->redirect($this->getUrl());
             } else {
-                $msg = __('登录凭据错误！');
-                $this->getSession()->setData('backend_login_error', $msg);
-                $this->redirect($this->getUrl());
+                $this->messageManager->addError(__('登录凭据错误！'));
             }
+            # 跳转首页
+            $this->redirect($this->getUrl());
         } else {
             # get请求404
             $this->_request->getResponse()->noRouter();
@@ -111,7 +137,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $y = rand(5, 10);
             imagestring($image, $fontsize, $x, $y, (string)$fontcontent, $fontcolor);
         }
-        $this->session->setData('verification_code', $captcha_code);
+        $this->_session->setData('backend_verification_code', $captcha_code);
 
         # --6 增加干扰元素，设置雪花点
         for ($i = 0; $i < 200; $i++) {

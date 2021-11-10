@@ -68,7 +68,7 @@ class App
         // 调试模式
         define('PHP_CS', self::Env('php-cs'));
         //报告错误
-        DEV ? error_reporting(E_ALL) : error_reporting(0);
+        DEBUG ? error_reporting(E_ALL) : error_reporting(0);
         // 检查运行模式
         defined('CLI') || define('CLI', PHP_SAPI === 'cli');
 
