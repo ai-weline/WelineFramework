@@ -669,4 +669,17 @@ class DataObject implements \ArrayAccess
 
         return null;
     }
+
+    /**
+     * @DESC          # 默认打印输出
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/11 17:04
+     * 参数区：
+     * @return array|string|string[]
+     */
+    public function __toString(){
+        return $this->toString();
+    }
 }

@@ -9,9 +9,9 @@
 
 namespace Weline\Framework\UnitTest;
 
-use PHPUnit\Framework\TestCase;
-
+use \PHPUnit\Framework\TestCase;
+require __DIR__ . '/../../../../../index.php';
 class TestCore extends TestCase
 {
-    use Boot;
+//    use Boot;
 }

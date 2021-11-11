@@ -42,7 +42,7 @@ abstract class RequestAbstract
     /**
      * @var \Weline\Framework\Http\Response
      */
-    private ?\Weline\Framework\Http\Response $_response=null;
+    private ?\Weline\Framework\Http\Response $_response = null;
 
     public function __init()
     {
@@ -62,6 +62,7 @@ abstract class RequestAbstract
     public function setRouter(array $router)
     {
         $this->router = $router;
+        return $this;
     }
 
     /**
@@ -74,6 +75,18 @@ abstract class RequestAbstract
     public function getRouter(): array
     {
         return $this->router;
+    }
+
+    /**
+     * @DESC         |获取原始路由
+     *
+     * 参数区：
+     *
+     * @return array
+     */
+    public function getRouterData(string $key): string
+    {
+        return $this->router[$key];
     }
 
     /**
@@ -97,14 +110,14 @@ abstract class RequestAbstract
      */
     public function getRequestArea(): string
     {
-        $area =  match ($this->area_router) {
+        $area = match ($this->area_router) {
             Env::getInstance()->getConfig('admin', 'admin') => DataInterface::type_pc_BACKEND,
             Env::getInstance()->getConfig('api_admin', 'api_admin') => DataInterface::type_api_BACKEND,
             default => DataInterface::type_pc_FRONTEND,
         };
         /**@var EventsManager $eventManager */
         $eventManager = ObjectManager::getInstance(EventsManager::class);
-        $eventManager->dispatch('WelineFramework_Http::process_area',['area'=>$area,'path'=>$this->area_router]);
+        $eventManager->dispatch('WelineFramework_Http::process_area', ['area' => $area, 'path' => $this->area_router]);
         return $area;
     }
 
@@ -255,11 +268,12 @@ abstract class RequestAbstract
         $url_path = explode('?', $this->getUri());
         return array_shift($url_path);
     }
+
     public function getUrl(string $path = ''): string
     {
         $url = $this->getBaseUrl();
         if ($path) {
-            $url .=  '/'.$path;
+            $url .= '/' . $path;
         }
         return $url;
     }
@@ -267,7 +281,7 @@ abstract class RequestAbstract
     public function getBaseUrl(): string
     {
         $uri = $this->getUri();
-        $url_exp = explode('?', rtrim($uri,'/'));
+        $url_exp = explode('?', rtrim($uri, '/'));
 
         return $this->getBaseHost() . array_shift($url_exp);
     }
@@ -278,11 +292,12 @@ abstract class RequestAbstract
         $url_exp = explode('?', $uri);
         return $this->getBaseHost() . array_shift($url_exp);
     }
+
     public function getFirstUrlPath(): string
     {
         $uri = $this->getUri();
         $url_exp = explode('?', $uri);
-        return trim(array_shift($url_exp),'/');
+        return trim(array_shift($url_exp), '/');
     }
 
     public function getBaseHost(): string

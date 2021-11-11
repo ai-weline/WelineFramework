@@ -10,12 +10,13 @@
 namespace Aiweline\HelloWorld\Api\Rest\V1;
 
 use Weline\Framework\App\Controller\FrontendRestController;
+use Weline\Framework\DataObject\DataObject;
 
 class Index extends FrontendRestController
 {
     public function getIndex()
     {
-        return 'Hello Rest api!--》getIndex';
+        return __('Hello Rest api!--》getIndex');
     }
 
     public function postIndex()

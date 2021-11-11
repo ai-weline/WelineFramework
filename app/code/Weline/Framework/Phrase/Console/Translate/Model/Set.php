@@ -33,10 +33,11 @@ class Set implements CommandInterface
      */
     public function __construct(
         Printing $printing,
-        System $system
-    ) {
+        System   $system
+    )
+    {
         $this->printing = $printing;
-        $this->system   = $system;
+        $this->system = $system;
     }
 
     public function execute($args = [])
@@ -45,10 +46,11 @@ class Set implements CommandInterface
         $param = array_shift($args);
         switch ($param) {
             case 'online':
-                if (! DEV) {
-                    $this->printing->setup(__('生产环境：确认切换实时翻译模式么？Y/n'));
+                $input = 'y';
+                if ('prod' === Env::getInstance()->getConfig('deploy')) {
+                    $this->printing->setup(__('当前生产环境：确认切换实时翻译模式么？Y/n'));
+                    $input = $this->system->input();
                 }
-                $input = $this->system->input();
                 if (strtolower($input) === 'y') {
                     Env::getInstance()->setConfig('translate_mode', $param);
                 }
@@ -61,7 +63,6 @@ class Set implements CommandInterface
             default:
                 $this->printing->error(' ╮(๑•́ ₃•̀๑)╭  ：错误的翻译模式：' . $param);
                 $this->printing->note('(￢_￢) ->：允许的部署模式：default/online');
-
                 return;
         }
     }

@@ -18,11 +18,6 @@ use Weline\Framework\Xml\Parser;
 class Reader extends \Weline\Framework\Config\Xml\Reader
 {
     /**
-     * @var Parser
-     */
-    private Parser $parser;
-
-    /**
      * @var CacheInterface
      */
     private CacheInterface $pluginCache;
@@ -34,7 +29,6 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
         $path = 'plugin.xml'
     ) {
         parent::__construct($scanner, $parser, $path);
-        $this->parser      = $parser;
         $this->pluginCache = $pluginCache->create();
     }
 
@@ -49,7 +43,7 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
      */
     public function read():array
     {
-        if (! DEV && $plugin = $this->pluginCache->get('plugin')) {
+        if ($plugin = $this->pluginCache->get('plugin')) {
             return $plugin;
         }
         $configs = parent::read();
@@ -140,7 +134,7 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
             }
             $plugin_interceptors_list[$module_and_file] = $module_plugin_interceptors;
         }
-        $this->pluginCache->add('plugin', $plugin_interceptors_list);
+        $this->pluginCache->set('plugin', $plugin_interceptors_list);
 
         return $plugin_interceptors_list;
     }

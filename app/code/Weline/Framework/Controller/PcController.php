@@ -29,6 +29,7 @@ class PcController extends Core
         parent::__init();
         $this->isAllowed();
         $this->assign($this->getRequest()->getParams());
+        $this->controllerCache = $this->getControllerCache();
     }
 
     function redirect(string $url)
@@ -94,9 +95,8 @@ class PcController extends Core
     public function getTemplate(): Template
     {
         if (!isset($this->_template)) {
-            $this->_template = ObjectManager::getInstance(Template::class, ['controller' => $this], false);
+            $this->_template = Template::getInstance()->init();
         }
-
         return $this->_template;
     }
 
@@ -135,23 +135,25 @@ class PcController extends Core
      */
     protected function fetch(string $fileName = null)
     {
-        $fetch_file_name_cache_key = 'fetch_file_name_cache_key_' . $fileName;
+        if ($fileName && strpos($fileName, '::')) {
+            return $this->getTemplate()->fetch($fileName);
+        }
+
+        $fetch_file_name_cache_key = $this::class . '_fetch_file_name_cache_key_' . $fileName;
         $cache_file_name = $this->controllerCache->get($fetch_file_name_cache_key);
+
         if ($cache_file_name) {
             $fileName = $cache_file_name;
         } else {
+            $name = $this->_request->getRouterData('name');
+            $class_name = substr(strrpos($this->_request->getRouterData('name'), '\\'), strlen($name));
             if ($fileName === null) {
-                $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-                $fileNameArr = explode(\Weline\Framework\Controller\Data\DataInterface::dir, $parent_call_info['class']);
-                $fileName = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $parent_call_info['function'];
+                $fileName = $class_name . DIRECTORY_SEPARATOR . $this->_request->getRouterData('method');
             } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
-                $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1];
-                $fileNameArr = explode(\Weline\Framework\Controller\Data\DataInterface::dir, $parent_call_info['class']);
-                $fileName = trim(array_pop($fileNameArr), '\\') . DIRECTORY_SEPARATOR . $fileName;
+                $fileName = $class_name . DIRECTORY_SEPARATOR . $fileName;
             }
             $this->controllerCache->set($fetch_file_name_cache_key, $fileName);
         }
-
         return $this->getTemplate()->fetch($fileName);
     }
 

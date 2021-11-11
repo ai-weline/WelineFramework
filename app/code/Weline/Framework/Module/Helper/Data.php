@@ -34,7 +34,7 @@ class Data extends AbstractHelper
      * @throws \Weline\Framework\Console\ConsoleException
      * @throws \ReflectionException
      */
-    public function registerModuleRouter(array &$modules, string $name, string $router)
+    public function registerModuleRouter(array &$modules, string $path,string $name, string $router)
     {
         if (!$this->isDisabled($modules, $name)) {
             // 禁用则不进行注册
@@ -76,6 +76,7 @@ class Data extends AbstractHelper
                                 'module' => $name,
                                 'router' => $baseRouter . ($class_method ? '/' . $class_method : '') . '::' . $request_method,
                                 'class' => $apiClassName,
+                                'module_path' => $path,
                                 'method' => $method,
                                 'request_method' => $request_method,
                             ]);
@@ -110,6 +111,7 @@ class Data extends AbstractHelper
                                 'router' => $baseRouter . '/' . strtolower($method),
                                 'class' => $controllerClassName,
                                 'method' => $method,
+                                'module_path' => $path,
                                 'request_method' => $request_method,
                             ]);
                         }

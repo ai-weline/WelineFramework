@@ -51,7 +51,7 @@ trait TraitTemplate
 
     private function fetchClassObject(string $position)
     {
-        $is_backend = $this->session->isBackend();
+        $is_backend = $this->_request->isBackend();
         $cache_key = ($is_backend ? 'backend' : 'frontend') . "_{$position}_object";
         if (!DEV && $object = $this->viewCache->get($cache_key)) {
             return $object;
@@ -78,13 +78,13 @@ trait TraitTemplate
             if (!isset($module_lists[$pre_module_name])) throw new Exception(__('异常：你指定的模板文件所在的模块不存在！模块：%1，所使用的模板：%2', [$pre_module_name, $fileName]));
             $fileName = str_replace($pre_module_name . '::', '', $fileName);
             # 替换掉当前模块的视图目录
-            $view_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
+            $view_dir = BP.$module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
             $template_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
 
             if(!DEV){
                 $compile_dir = str_replace(APP_PATH, Env::path_framework_generated_complicate.DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']).Data\DataInterface::dir.DIRECTORY_SEPARATOR. Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
             }else{
-                $compile_dir = $module_lists[$pre_module_name]['base_path']. Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
+                $compile_dir = BP.$module_lists[$pre_module_name]['base_path']. Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
             }
             # 文件目录
             $file_dir = str_replace($pre_module_name . '::', '', $file_dir);
@@ -95,6 +95,7 @@ trait TraitTemplate
     function processModuleSourceFilePath(string $type, string $source): array
     {
         $t_f = $type . DIRECTORY_SEPARATOR . $source;
+
         $t_f_arr = [];
         # 如果存在向别的模块调用模板的情况
         if (strstr($source, "::")) {
@@ -132,16 +133,16 @@ trait TraitTemplate
         $data = '';
         switch ($type) {
             case DataInterface::dir_type_TEMPLATE:
-                if (!DEV && $t_f = $this->viewCache->get($cache_key)) {
+                if ($t_f = $this->viewCache->get($cache_key)) {
                     $data = $this->fetch($t_f);
                     break;
                 }
                 list($t_f) = $this->processModuleSourceFilePath($type, $source);
                 $data = $this->fetch($t_f);
-                if (!DEV) $this->viewCache->set($cache_key, $t_f);
+                $this->viewCache->set($cache_key, $t_f);
                 break;
             case DataInterface::dir_type_STATICS:
-                if (!DEV && $data = $this->viewCache->get($cache_key)) {
+                if ($data = $this->viewCache->get($cache_key)) {
                     break;
                 }
 
@@ -151,13 +152,13 @@ trait TraitTemplate
                 if ($module_name) {
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
-                        $module_view_dir_path = $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
+                        $module_view_dir_path = BP.$module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
                         $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
                         $t_f = str_replace($module_name . '::', '', $t_f);
                     }
                 }
                 $data = rtrim($this->getUrlPath($base_url_path), DataInterface::dir_type_STATICS) . DIRECTORY_SEPARATOR . $t_f;
-                if (!DEV) $this->viewCache->set($cache_key, $data);
+                $this->viewCache->set($cache_key, $data);
                 break;
             default:
         }
@@ -194,16 +195,16 @@ trait TraitTemplate
                 break;
             case DataInterface::dir_type_STATICS:
                 $cache_key = 'getViewDir' . $module_view_dir_path . $type;
-                if (!DEV && $cache_static_dir = $this->viewCache->get($cache_key)) {
+                if ($cache_static_dir = $this->viewCache->get($cache_key)) {
                     return $cache_static_dir;
                 }
                 $path = $module_view_dir_path . DataInterface::view_STATICS_DIR . DIRECTORY_SEPARATOR;
 
+                # 非开发环境
                 if (!DEV) {
                     $path = str_replace(APP_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $this->theme['path'] . DIRECTORY_SEPARATOR, $path);
-                    $this->viewCache->set($cache_key, $path);
                 }
-
+                $this->viewCache->set($cache_key, $path);
                 break;
             default:
                 $path = $module_view_dir_path;
@@ -242,7 +243,7 @@ trait TraitTemplate
      */
     protected function fetchFile(string $filename): mixed
     {
-        if (!DEV && $cache_filename = $this->viewCache->get($filename)) {
+        if ($cache_filename = $this->viewCache->get($filename)) {
             return $cache_filename;
         }
         /*---------观察者模式 检测文件是否被继承-----------*/
@@ -252,10 +253,7 @@ trait TraitTemplate
             ['object' => $this, 'data' => $fileData]
         );
         $event_filename = $fileData->getData('filename');
-        if (!DEV) {
-            $this->viewCache->set($filename, $event_filename);
-        }
-
+        $this->viewCache->set($filename, $event_filename);
         return $event_filename;
     }
 

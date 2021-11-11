@@ -18,11 +18,6 @@ use Weline\Framework\Xml\Parser;
 class Reader extends \Weline\Framework\Config\Xml\Reader
 {
     /**
-     * @var Parser
-     */
-    private Parser $parser;
-
-    /**
      * @var CacheInterface
      */
     private CacheInterface $eventCache;
@@ -34,7 +29,6 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
         $path = 'event.xml'
     ) {
         parent::__construct($scanner, $parser, $path);
-        $this->parser     = $parser;
         $this->eventCache = $eventCache->create();
     }
 
@@ -49,9 +43,9 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
      * @return mixed
      * @throws Core
      */
-    public function read(bool $cache = true):array
+    public function read():array
     {
-        if ($cache && $event = $this->eventCache->get('event')) {
+        if ($event = $this->eventCache->get('event')) {
             return $event;
         }
         $configs = parent::read();

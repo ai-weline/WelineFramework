@@ -17,6 +17,7 @@ class BackendApiSession extends Session
 
     function __init()
     {
+        parent::__init();
         $this->setType('backend_api');
     }
 }

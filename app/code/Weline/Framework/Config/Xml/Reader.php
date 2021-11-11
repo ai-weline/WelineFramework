@@ -25,7 +25,7 @@ class Reader extends ModuleFileReader
     /**
      * @var Parser
      */
-    private Parser $parser;
+    protected Parser $parser;
 
     public function __construct(
         Scanner $scanner,

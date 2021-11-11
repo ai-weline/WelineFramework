@@ -78,6 +78,7 @@ class Handle implements RegisterInterface
                 if ($path) {
                     $router = [
                         'module' => $routerParam['module'],
+                        'module_path' => $routerParam['module_path'],
                         'class' => [
                             'area' => $routerParam['area'],
                             'name' => $routerParam['class'],
@@ -110,6 +111,7 @@ class Handle implements RegisterInterface
                     }
                     $router = [
                         'module' => $routerParam['module'],
+                        'module_path' => $routerParam['module_path'],
                         'class' => [
                             'area' => $routerParam['area'],
                             'name' => $routerParam['class'],

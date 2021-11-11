@@ -26,6 +26,8 @@ class Core implements Data\DataInterface
     protected Printing $_debug;
     protected ?Url $_url = null;
 
+    private mixed $_module;
+
     public function noRouter()
     {
         $this->getRequest()->getResponse()->noRouter();
@@ -47,6 +49,36 @@ class Core implements Data\DataInterface
     }
 
     /**
+     * @DESC          # 设置模块名
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/11 15:55
+     * 参数区：
+     * @param mixed $module
+     * @return $this
+     */
+    function setModuleInfo(mixed $module): static
+    {
+        $this->_module = $module;
+        return $this;
+    }
+
+    /**
+     * @DESC          # 获取模块名
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/11 15:55
+     * 参数区：
+     * @return string
+     */
+    function getModule(): mixed
+    {
+        return $this->_module;
+    }
+
+    /**
      * @DESC          # 获取URL
      *
      * @AUTH  秋枫雁飞
@@ -58,7 +90,7 @@ class Core implements Data\DataInterface
      */
     function getUrl(string $path = ''): string
     {
-        $path = trim($path,'/');
+        $path = trim($path, '/');
         if (!isset($this->_url)) {
             $this->_url = $this->_objectManager::getInstance(Url::class);
         }
@@ -71,9 +103,7 @@ class Core implements Data\DataInterface
     public function getRequest(): Request
     {
         if (!isset($this->_request)) {
-            $ctl_class = explode('\\', get_class($this));
-            $module_path = array_shift($ctl_class) . '\\' . array_shift($ctl_class);
-            $this->_request = Request::getInstance($module_path);
+            $this->_request = ObjectManager::getInstance(Request::class);
         }
 
         return $this->_request;

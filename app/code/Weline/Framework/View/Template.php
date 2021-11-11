@@ -74,26 +74,39 @@ class Template
      */
     private CacheInterface $viewCache;
 
-    public function __construct(PcController $controller)
+    private static Template $instance;
+
+    private function __clone()
     {
-        $this->controller = $controller;
     }
 
-    public function __init()
+    private function __construct()
     {
-        if (!isset($this->session)) {
-            $this->session = ObjectManager::getInstance(Session::class, [], false);
+    }
+
+    final static function getInstance(): Template
+    {
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
         }
+        return self::$instance;
+    }
+
+    public function init()
+    {
+        $this->_request = ObjectManager::getInstance(Request::class);
+
+        $this->view_dir = BP.$this->_request->getRouterData('module_path').DataInterface::dir.DIRECTORY_SEPARATOR;
+        $this->vars['title'] = $this->_request->getModuleName();
+
         $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
-        $this->_request = $this->controller->getRequest();
-        $this->view_dir = $this->controller->getViewBaseDir();
         $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
         $this->viewCache = ObjectManager::getInstance(ViewCache::class)->create();
-        $this->vars['title'] = $this->_request->getModuleName();
+
         $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
         $this->template_dir = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
         $this->compile_dir = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
-
+        return $this;
     }
 
     /**
@@ -105,7 +118,7 @@ class Template
      * 参数区：
      * @return string
      */
-    function getFormKey($url):string
+    function getFormKey($url): string
     {
         return ObjectManager::getInstance(FormKey::class)->getHtml($url);
     }
@@ -180,16 +193,17 @@ class Template
      */
     public function fetch(string $fileName)
     {
-        $comFileName_cache_key = $this->view_dir.$fileName . '_comFileName';
-        $tplFile_cache_key = $this->view_dir.$fileName . '_tplFile';
+        $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName';
+        $tplFile_cache_key = $this->view_dir . $fileName . '_tplFile';
         $comFileName = '';
         $tplFile = '';
         if (!DEV) {
             $comFileName = $comFileName = $this->viewCache->get($comFileName_cache_key);
             $tplFile = $this->viewCache->get($tplFile_cache_key);
         }
+
         # 测试
-        file_put_contents(__DIR__.'/test.txt', $comFileName.PHP_EOL,FILE_APPEND);
+        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
         if (!$comFileName || !$tplFile) {
             // 解析模板路由
@@ -208,8 +222,10 @@ class Template
             }
             // 判断文件后缀
             $file_ext = substr(strrchr($fileName, '.'), 1);
+
             # 检测读取别的模块的模板文件
             list($fileName, $file_dir, $view_dir, $template_dir, $compile_dir) = $this->processFileSource($fileName, $file_dir);
+
             // 检测模板文件：如果文件名有后缀 则直接到view下面读取。没有说明是默认
             if ($file_ext) {
                 $tplFile = $view_dir . $fileName;
@@ -217,6 +233,7 @@ class Template
                 $tplFile = $template_dir . $fileName . self::file_ext;
             }
             $tplFile = $this->fetchFile($tplFile);
+
             if (!file_exists($tplFile)) {
                 if (DEV) {
                     throw new Exception(__('模板文件：%1 不存在！', $tplFile));
@@ -245,10 +262,9 @@ class Template
             };
         }
         # 测试
-        file_put_contents(__DIR__.'/test.txt', $comFileName.PHP_EOL,FILE_APPEND);
+        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         # 检测编译文件，如果不符合条件则重新进行文件编译
         if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
-//            p();
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中

@@ -157,10 +157,17 @@ class Handle implements HandleInterface, RegisterInterface
      * @throws \Weline\Framework\App\Exception
      * @throws \ReflectionException
      */
-    public function register($name, string $version = '', string $description = '')
+    public function register(mixed $data, string $version = '', string $description = '')
     {
+        if (!isset($data['base_path'])) {
+            throw new Exception(__('尚未设置基础路径！%1', 'base_path'));
+        }
+        if (!isset($data['module_name'])) {
+            throw new Exception(__('尚未设置模组名！%1', 'module_name'));
+        }
+        $name = $data['module_name'];
         // 模块路径
-        $module_path = APP_PATH . $this->helper->moduleNameToPath($this->modules, $name) . DIRECTORY_SEPARATOR;
+        $module_path = $data['base_path'];
         // 模型管理器
         /**@var ModelManager $modelManager */
         $modelManager = ObjectManager::getInstance(ModelManager::class);
@@ -185,7 +192,7 @@ class Handle implements HandleInterface, RegisterInterface
             }
         }
 
-        $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $name, 'module_version' => $version,'module_description'=>$description],'__construct' );
+        $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $name, 'module_version' => $version, 'module_description' => $description], '__construct');
         $setup_dir = $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
 
         // 已经存在模块则更新
@@ -210,8 +217,8 @@ class Handle implements HandleInterface, RegisterInterface
                         $this->printer->note("{$result}");
                     }
                 }
-                $this->modules[$name]['version'] = $version ? $version : '1.0.0';
-                $this->modules[$name]['description'] = $description ? $description : '';
+                $this->modules[$name]['version'] = $version ?: '1.0.0';
+                $this->modules[$name]['description'] = $description ?: '';
                 $this->modules[$name]['base_path'] = $module_path;
                 // 更新模块
                 $this->helper->updateModules($this->modules);
@@ -226,7 +233,7 @@ class Handle implements HandleInterface, RegisterInterface
                 return;
             }
             // 更新路由
-            $this->helper->registerModuleRouter($this->modules, $name, $router);
+            $this->helper->registerModuleRouter($this->modules, $module_path, $name, $router);
             // 更新模块
             $this->modules[$name]['base_path'] = $module_path;
             $this->helper->updateModules($this->modules);
@@ -270,7 +277,7 @@ class Handle implements HandleInterface, RegisterInterface
             $this->helper->updateModules($this->modules);
 
             // 更新路由
-            $this->helper->registerModuleRouter($this->modules, $name, $router);
+            $this->helper->registerModuleRouter($this->modules, $module_path, $name, $router);
         }
     }
 }

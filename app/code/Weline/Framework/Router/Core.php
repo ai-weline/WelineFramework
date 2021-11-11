@@ -38,6 +38,9 @@ class Core
 
     private CacheInterface $cache;
 
+    protected array $router;
+    protected string $_router_cache_key;
+
     /**
      * @DESC         |任何时候都会初始化
      *
@@ -67,30 +70,14 @@ class Core
      */
     public function start()
     {
-        // 读取url
-        $url = $this->request->getUrlPath();
+        # 获取URL
+        $url = $this->processUrl();
+        $this->_router_cache_key = $this->area_router . $url;
+        if ($router = $this->cache->get($this->_router_cache_key)) {
+            $this->router = $router;
+            return $this->route();
+        }
 
-        // 前后台路由处理
-        if ($this->is_admin) {
-            if ($this->area_router === $this->_etc->getConfig('admin', '')) {
-                $url = str_replace($this->area_router, '', $url);
-                $url = trim($url, self::url_path_split);
-                if (!strstr($url, self::url_path_split)) {
-                    $url .= self::default_index_url;
-                }
-            } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
-                $url = str_replace($this->area_router, 'admin', $url);
-                $url = trim($url, self::url_path_split);
-                if (!strstr($url, self::url_path_split)) {
-                    $url .= self::default_index_url;
-                }
-            }
-        }
-        // 找不到则访问默认控制器
-        if (self::url_path_split === $url) {
-            $url = self::default_index_url;
-        }
-        $url = strtolower(trim($url, self::url_path_split));
         if ($pc_result = $this->Pc($url)) {
             return $pc_result;
         }
@@ -104,12 +91,44 @@ class Core
         } else {
             // 开发模式(静态资源可访问app本地静态资源)
             $static = $this->StaticFile($url);
-            if ($static) {
-                return $static;
-            }
+            if ($static) return $static;
             throw new Exception('未知的路由！');
         }
         return '';
+    }
+
+    function processUrl()
+    {
+        // 读取url
+        $url = $this->request->getUrlPath();
+        $url_cache_key = 'url_cache_key_' . $url;
+        if (!DEV && $cached_url = $this->cache->get($url_cache_key)) {
+            $url = $cached_url;
+        } else {
+            // 前后台路由处理
+            if ($this->is_admin) {
+                if ($this->area_router === $this->_etc->getConfig('admin', '')) {
+                    $url = str_replace($this->area_router, '', $url);
+                    $url = trim($url, self::url_path_split);
+                    if (!strstr($url, self::url_path_split)) {
+                        $url .= self::default_index_url;
+                    }
+                } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
+                    $url = str_replace($this->area_router, '', $url);
+                    $url = trim($url, self::url_path_split);
+                    if (!strstr($url, self::url_path_split)) {
+                        $url .= self::default_index_url;
+                    }
+                }
+            }
+            // 找不到则访问默认控制器
+            if (self::url_path_split === $url) {
+                $url = self::default_index_url;
+            }
+            $url = strtolower(trim($url, self::url_path_split));
+            $this->cache->set($url_cache_key, $url);
+        }
+        return $url;
     }
 
     /**
@@ -132,28 +151,20 @@ class Core
             // 检测api路由
             $router_filepath = Env::path_FRONTEND_REST_API_ROUTER_FILE;
         }
-
         if (file_exists($router_filepath)) {
             $routers = include $router_filepath;
             $method = '::' . strtoupper($this->request->getMethod());
             if (isset($routers[$url . $method]) || isset($routers[$url . '/index' . $method])) {
-                $router = $routers[$url . $method] ?? $routers[$url . '/index' . $method];
-                $class = json_decode(json_encode($router['class']));
-                $dispatch = ObjectManager::getInstance($class->name);
-                $this->request->setRouter($router);
-                $method = $class->method ? $class->method : 'index';
-                if (method_exists($dispatch, $method)) {
-                    exit(call_user_func([$dispatch, $method]));
-                }
-
-                throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
+                $this->router = $routers[$url . $method] ?? $routers[$url . '/index' . $method];
+                # 缓存路由结果
+                $this->cache->set($this->_router_cache_key, $this->router);
+                return $this->route();
             }
         }
         // 如果是API后端请求，找不到路由就直接404
         if ($is_api_admin) {
             $this->request->getResponse()->noRouter();
         }
-
         return false;
     }
 
@@ -176,20 +187,19 @@ class Core
         } else {
             $router_filepath = Env::path_FRONTEND_PC_ROUTER_FILE;
         }
+        $url_class_method_cache_key = 'url_class_method_cache_key';
+        $class_method = $this->cache->get($url_class_method_cache_key);
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
             if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . self::default_index_url])) {
-                $router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url];
-                $class = json_decode(json_encode($router['class']));
-                $this->request->setRouter($router);
-                // 检测注册方法
-                $dispatch = ObjectManager::getInstance($class->name);
-                $method = $class->method ?: 'index';
-                if (method_exists($dispatch, $method)) {
-                    exit(call_user_func([$dispatch, $method], $this->request->getParams()));
-                }
-
-                throw new Exception(__("%1}: 控制器方法 %2 不存在!", [$class->name, $method]));
+                $this->router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url];
+                # 缓存路由结果
+                $this->cache->set($this->_router_cache_key, $this->router);
+//                list($dispatch, $method) = $this->getController($router);
+//                if (method_exists($dispatch, $method)) {
+//                    exit(call_user_func([$dispatch, $method], $this->request->getParams()));
+//                }
+                $this->route();
             }
         }
         // 如果是PC后端请求，找不到路由就直接404
@@ -212,6 +222,7 @@ class Core
      */
     public function StaticFile(string &$url): mixed
     {
+        header ("Cache-Control: max-age=3600");
         $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
 
         // 阻止读取其他文件
@@ -228,10 +239,46 @@ class Core
                 $mime_type = $fi->file($filename);
             }
             header('Content-Type:' . $mime_type);
-
             return readfile($filename);
         }
-
         return false;
+    }
+
+
+    function getController(array $router): array
+    {
+//        $controller_cache_key = 'controller_cache_key_' . implode(',', $router);
+//        $controller = $this->cache->get($controller_cache_key);
+//        if($controller){
+//
+//        }else{
+//            $class = json_decode(json_encode($router['class']));
+//            $this->request->setRouter($router);
+//            // 检测注册方法
+//            /**@var \Weline\Framework\Controller\Core $dispatch */
+//            $dispatch = ObjectManager::getInstance($class->name);
+//            $dispatch->setModuleInfo($router);
+//        }
+        $class = json_decode(json_encode($router['class']));
+        // 检测注册方法
+        /**@var \Weline\Framework\Controller\Core $dispatch */
+        $dispatch = ObjectManager::getInstance($class->name);
+        $dispatch->setModuleInfo($router);
+        $method = $class->method ?: 'index';
+        # 检测控制器方法
+        if (!method_exists($dispatch, $method)) {
+            throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
+        }
+        return [$dispatch, $method];
+    }
+
+    function route(): string
+    {
+        $this->request->setRouter($this->router);
+        list($dispatch, $method) = $this->getController($this->router);
+        if (method_exists($dispatch, $method)) {
+            exit(call_user_func([$dispatch, $method], $this->request->getParams()));
+        }
+        return '';
     }
 }

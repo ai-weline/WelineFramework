@@ -37,5 +37,5 @@ interface RegisterInterface
      * @param string|null $version
      * @param string $description
      */
-    public function register($data, string $version = '', string $description = '');
+    public function register(mixed $data, string $version = '', string $description = '');
 }

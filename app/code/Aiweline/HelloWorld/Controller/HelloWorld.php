@@ -13,7 +13,6 @@ use Aiweline\HelloWorld\Model\AiwelineHelloWorld;
 use Aiweline\HelloWorld\Model\PluginTestModel;
 use Weline\Framework\App\Cache;
 use Weline\Framework\App\Controller\FrontendController;
-use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\App\Session\FrontendSession;
 use Weline\Framework\DataObject\DataObject;
@@ -121,11 +120,9 @@ class HelloWorld extends FrontendController
      */
     public function session()
     {
-        $frontSession = $this->frontendSession;
-        p('是否登录:' . ($frontSession->isLogin() ? '是' : '否'), 1);
-        $session = $frontSession->getSession();
-        $session->set('test', 123);
-        p($session->get('test'));
+        p('是否登录:' . ($this->frontendSession->isLogin() ? '是' : '否'), 1);
+        $this->frontendSession->setData('test', 123);
+        p($this->frontendSession->getData('test'));
     }
 
     /**
