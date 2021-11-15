@@ -139,20 +139,11 @@ class PcController extends Core
         if ($fileName && strpos($fileName, '::')) {
             return $this->getTemplate()->fetch($fileName);
         }
-
-        $fetch_file_name_cache_key = $this::class . '_fetch_file_name_cache_key_' . $fileName;
-        $cache_file_name = $this->controllerCache->get($fetch_file_name_cache_key);
-
-        if (!DEV && $cache_file_name) {
-            $fileName = $cache_file_name;
-        } else {
-            $controller_class_name = $this->_request->getRouterData('class/controller_name');
-            if ($fileName === null) {
-                $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $this->_request->getRouterData('class/method');
-            } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
-                $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $fileName;
-            }
-            $this->controllerCache->set($fetch_file_name_cache_key, $fileName);
+        $controller_class_name = $this->_request->getRouterData('class/controller_name');
+        if ($fileName === null) {
+            $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $this->_request->getRouterData('class/method');
+        } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
+            $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $fileName;
         }
         return $this->getTemplate()->fetch($fileName);
     }
