@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menus xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.aiweline.com/menus urn:m:module:M_Backend::etc/xml_xsd/menu.xsd">
-    <add source="M_Admin::menu_manager" name="menu_manager" title="Menu Manager" action="admin/menus/listing" parent="M_Backend::dashboard"/>
+    <add source="Weline_Admin::menu_manager" name="menu_manager" title="Menu Manager" action="admin/menus/listing" parent="M_Backend::dashboard"/>
 </menus>

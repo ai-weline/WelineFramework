@@ -135,6 +135,7 @@ class PcController extends Core
      */
     protected function fetch(string $fileName = null)
     {
+        # 如果指定了模板就直接读取
         if ($fileName && strpos($fileName, '::')) {
             return $this->getTemplate()->fetch($fileName);
         }
@@ -142,15 +143,14 @@ class PcController extends Core
         $fetch_file_name_cache_key = $this::class . '_fetch_file_name_cache_key_' . $fileName;
         $cache_file_name = $this->controllerCache->get($fetch_file_name_cache_key);
 
-        if ($cache_file_name) {
+        if (!DEV && $cache_file_name) {
             $fileName = $cache_file_name;
         } else {
-            $name = $this->_request->getRouterData('name');
-            $class_name = substr(strrpos($this->_request->getRouterData('name'), '\\'), strlen($name));
+            $controller_class_name = $this->_request->getRouterData('class/controller_name');
             if ($fileName === null) {
-                $fileName = $class_name . DIRECTORY_SEPARATOR . $this->_request->getRouterData('method');
+                $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $this->_request->getRouterData('class/method');
             } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
-                $fileName = $class_name . DIRECTORY_SEPARATOR . $fileName;
+                $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $fileName;
             }
             $this->controllerCache->set($fetch_file_name_cache_key, $fileName);
         }
@@ -166,8 +166,7 @@ class PcController extends Core
      */
     public function getViewBaseDir(): string
     {
-        $class_name = get_class($this);
-        $cache_key = 'module_of_' . $class_name;
+        $cache_key = 'module_of_' . $this::class;
         // 设置缓存，以免每次都去反射解析控制器的模块基础目录
         if ($module_dir = $this->getControllerCache()->get($cache_key)) {
             return $module_dir;

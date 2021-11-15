@@ -14,10 +14,17 @@ interface SessionInterface
 {
     function getData(string $name);
 
-    function setData(string $name,string|int $value);
+    function setData(string $name, string|int $value);
+
+    function isLogin();
+
+    function login(mixed $user);
+
+    function logout();
 
     function getOriginSession();
 
     function destroy();
+
     function delete(string $name);
 }

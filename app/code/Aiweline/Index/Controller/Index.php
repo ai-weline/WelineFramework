@@ -32,11 +32,10 @@ class Index extends FrontendController
      *
      * @param int $a
      * @throws \Weline\Framework\App\Exception
-     * @return bool
      */
     public function index()
     {
-        return $this->fetch();
+        $this->fetch();
     }
 
     /**

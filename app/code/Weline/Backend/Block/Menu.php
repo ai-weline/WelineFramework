@@ -15,6 +15,6 @@ use Weline\Framework\View\Block;
 class Menu extends Block
 {
     function __init(){
-        $this->setTemplate($template);
+        $this->setTemplate('Weline_Backend::blocks/menu.phtml');
     }
 }

@@ -112,19 +112,19 @@ class Session implements SessionInterface
      *
      * @return mixed
      */
-    public function isLogin(): mixed
+    public function isLogin(): bool
     {
-        return $this->session->get(self::login_KEY);
+        return (bool)$this->session->get(self::login_KEY);
     }
 
-    public function login($user)
+    public function login(mixed $user)
     {
         return $this->session->set(self::login_KEY, $user);
     }
 
-    public function loginOut(): bool
+    public function logout(): bool
     {
-        return $this->session->des();
+        return $this->session->delete(self::login_KEY);
     }
 
     function getType(): string

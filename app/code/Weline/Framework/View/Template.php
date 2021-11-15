@@ -123,11 +123,6 @@ class Template
         return ObjectManager::getInstance(FormKey::class)->getHtml($url);
     }
 
-    function __wakeup()
-    {
-        $this->__init();
-    }
-
     /**
      * @DESC         |获取视图文件
      *

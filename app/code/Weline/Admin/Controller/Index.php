@@ -21,12 +21,7 @@ class Index extends BackendController
      */
     public function index()
     {
-        // TODO 需要新增后台静态文件特殊路径，否则会读取前台的session 导致默写调用session异常 产生大量的无用调用，影响性能
-        if ($this->getSession()->isLogin()) {
-            $this->fetch();
-        } else {
-            $this->fetch('login/login_type2');
-        }
+
     }
 
     public function test(): string

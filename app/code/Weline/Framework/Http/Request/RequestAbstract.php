@@ -12,12 +12,13 @@ namespace Weline\Framework\Http\Request;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\State;
 use Weline\Framework\Controller\Data\DataInterface;
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Cookie;
 use Weline\Framework\Http\Response;
 use Weline\Framework\Manager\ObjectManager;
 
-abstract class RequestAbstract
+abstract class RequestAbstract extends DataObject
 {
     const HEADER = 'header';
 
@@ -31,8 +32,6 @@ abstract class RequestAbstract
     ];
 
     private string $area_router = State::area_frontend;
-
-    private array $router;
 
     /**
      * @var RequestFilter
@@ -61,8 +60,7 @@ abstract class RequestAbstract
      */
     public function setRouter(array $router)
     {
-        $this->router = $router;
-        return $this;
+        return $this->setData('router',$router);
     }
 
     /**
@@ -74,7 +72,7 @@ abstract class RequestAbstract
      */
     public function getRouter(): array
     {
-        return $this->router;
+        return $this->getData('router');
     }
 
     /**
@@ -82,11 +80,11 @@ abstract class RequestAbstract
      *
      * 参数区：
      *
-     * @return array
+     * @return string|null
      */
-    public function getRouterData(string $key): string
+    public function getRouterData(string $key): mixed
     {
-        return $this->router[$key];
+        return $this->getData('router/'.$key);
     }
 
     /**
