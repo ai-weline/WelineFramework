@@ -96,7 +96,7 @@ class Template
     {
         $this->_request = ObjectManager::getInstance(Request::class);
 
-        $this->view_dir = BP.$this->_request->getRouterData('module_path').DataInterface::dir.DIRECTORY_SEPARATOR;
+        $this->view_dir = BP . $this->_request->getRouterData('module_path') . DataInterface::dir . DIRECTORY_SEPARATOR;
         $this->vars['title'] = $this->_request->getModuleName();
 
         $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
@@ -177,16 +177,8 @@ class Template
         return $this;
     }
 
-    /**
-     * @DESC         |调用模板显示
-     *
-     * 参数区：
-     *
-     * @param string $fileName
-     * @return bool|void
-     * @throws Core
-     */
-    public function fetch(string $fileName)
+
+    function getFetchFile(string $fileName): string
     {
         $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName';
         $tplFile_cache_key = $this->view_dir . $fileName . '_tplFile';
@@ -264,7 +256,21 @@ class Template
             $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中
         }
+        return $comFileName;
+    }
 
+    /**
+     * @DESC         |调用模板显示
+     *
+     * 参数区：
+     *
+     * @param string $fileName
+     * @return bool|void
+     * @throws Core
+     */
+    public function fetch(string $fileName)
+    {
+        $comFileName = $this->getFetchFile($fileName);
         //包含编译后的文件
         require $comFileName;
     }

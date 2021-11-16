@@ -52,8 +52,8 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
         foreach ($configs as $module_and_file => $config) {
             $module_plugin_interceptors = [];
             if (
-                ! isset($plugin_xml_data['config']['_attribute']['noNamespaceSchemaLocation']) &&
-                'urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd' !== $config['config']['_attribute']['noNamespaceSchemaLocation']
+                ! isset($config['config']['_attribute']['noNamespaceSchemaLocation']) &&
+                ('urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd' !== $config['config']['_attribute']['noNamespaceSchemaLocation'])
             ) {
                 throw new Core(__($module_and_file . '拦截器必须设置：noNamespaceSchemaLocation="urn:Weline_Framework::Plugin/etc/xsd/plugin.xsd"'));
             }

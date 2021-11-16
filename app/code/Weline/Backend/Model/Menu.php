@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Weline\Backend\Model;
 
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Http\Url;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
@@ -21,7 +22,20 @@ class Menu extends \Weline\Framework\Database\Model
     const fields_NAME = 'name';
     const fields_PID = 'pid';
     const fields_SOURCE = 'source';
+    const fields_PARENT_SOURCE = 'parent_source';
     const fields_ACTION = 'action';
+    const fields_MODULE = 'module';
+
+    private Url $url;
+
+    function __construct(
+        Url   $url,
+        array $data = []
+    )
+    {
+        parent::__construct($data);
+        $this->url = $url;
+    }
 
     /**
      * @inheritDoc
@@ -35,7 +49,9 @@ class Menu extends \Weline\Framework\Database\Model
             ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
             ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
             ->addColumn(self::fields_SOURCE, TableInterface::column_type_VARCHAR, 255, '', '资源')
+            ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
             ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
+            ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
             ->create();*/
     }
 
@@ -97,6 +113,16 @@ class Menu extends \Weline\Framework\Database\Model
         return parent::setData(self::fields_SOURCE, $source);
     }
 
+    public function getParentSource(): string
+    {
+        return parent::getData(self::fields_PARENT_SOURCE);
+    }
+
+    public function setParentSource(string $source): static
+    {
+        return parent::setData(self::fields_PARENT_SOURCE, $source);
+    }
+
     public function getAction(): string
     {
         return parent::getData(self::fields_ACTION);
@@ -105,5 +131,21 @@ class Menu extends \Weline\Framework\Database\Model
     public function setAction(string $url): static
     {
         return parent::setData(self::fields_ACTION, $url);
+    }
+
+    public function getModule(): string
+    {
+        return $this->getData(self::fields_MODULE);
+    }
+
+    public function setModule(string $module_name): static
+    {
+        return $this->setData(self::fields_MODULE, $module_name);
+    }
+
+    /*----------------------助手函数区-------------------------*/
+    function getUrl(): string
+    {
+        return $this->url->build($this->getAction());
     }
 }

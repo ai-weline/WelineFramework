@@ -14,7 +14,31 @@ use Weline\Framework\View\Block;
 
 class Menu extends Block
 {
-    function __init(){
+    private \Weline\Backend\Model\Menu $menu;
+
+    function __construct(
+        \Weline\Backend\Model\Menu $menu,
+        array                      $data = []
+    )
+    {
+        parent::__construct($data);
+        $this->menu = $menu;
+    }
+
+    /*function __init(){
         $this->setTemplate('Weline_Backend::blocks/menu.phtml');
+    }*/
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/16 23:22
+     * 参数区：
+     * @return \Weline\Backend\Model\Menu []
+     */
+    function getMenus(): array
+    {
+        return $this->menu->select()->fetch();
     }
 }

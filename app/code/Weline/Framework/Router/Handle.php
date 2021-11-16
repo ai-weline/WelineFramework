@@ -63,7 +63,7 @@ class Handle implements RegisterInterface
      */
     public function register($routerParam, string $version = '', string $description = '')
     {
-        $controller = explode('\\', $routerParam['class']);
+        $controller = explode('Controller', $routerParam['class']);
         $controller = array_pop($controller);
         switch ($routerParam['type']) {
             case DataInterface::type_API:

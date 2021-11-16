@@ -12,8 +12,6 @@ namespace Weline\Framework\View;
 
 interface BlockInterface
 {
-    function __construct(string $template = null, array $data = []);
-
     function setTemplate(string $template);
 
     function render();

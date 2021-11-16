@@ -16,6 +16,11 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class AdminUser extends \Weline\Framework\Database\Model
 {
+    
+    const fields_ID = 'user_id';
+    const fields_attempt_times = 'attempt_times';
+    const fields_username = 'username';
+    const fields_password = 'password';
 
     /**
      * @inheritDoc
@@ -27,7 +32,7 @@ class AdminUser extends \Weline\Framework\Database\Model
             ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
             ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
             ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
-            ->addColumn('attempt_times', TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
+            ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
             ->create();*/
     }
 
@@ -58,18 +63,18 @@ class AdminUser extends \Weline\Framework\Database\Model
 
     function getAttemptTimes()
     {
-        return intval($this->getData('attempt_times'));
+        return intval($this->getData(self::fields_attempt_times));
     }
 
     function addAttemptTimes(): static
     {
-        $this->setData('attempt_times', intval($this->getData('attempt_times')) + 1);
+        $this->setData(self::fields_attempt_times, intval($this->getData(self::fields_attempt_times)) + 1);
         return $this;
     }
 
     function resetAttemptTimes(): static
     {
-        $this->setData('attempt_times', 0);
+        $this->setData(self::fields_attempt_times, 0);
         $this->save();
         return $this;
     }

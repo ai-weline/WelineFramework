@@ -6,7 +6,7 @@
     <xs:element name="menus">
         <xs:annotation>
             <xs:documentation>
-                Menu declaration.
+                系统菜单
             </xs:documentation>
         </xs:annotation>
         <xs:complexType>

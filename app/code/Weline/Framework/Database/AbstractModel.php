@@ -10,7 +10,9 @@
 namespace Weline\Framework\Database;
 
 use Weline\Framework\App\Exception;
+use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
+use Weline\Framework\Database\Cache\DbModelCache;
 use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
@@ -23,12 +25,12 @@ use Weline\Framework\Manager\ObjectManager;
  * @method QueryInterface table(string $table_name)
  * @method QueryInterface alias(string $table_alias_name)
  * @method QueryInterface update(array $data, string $condition_field = 'id')
- * @method QueryInterface fields(string $fields)
+ * @method QueryInterface _fields(string $_fields)
  * @method QueryInterface join(string $table, string $condition, string $type = 'left')
  * @method QueryInterface where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND')
  * @method QueryInterface limit(int $size, int $offset = 0)
  * @method QueryInterface page(int $page = 1, int $pageSize = 20)
- * @method QueryInterface order(string $fields, string $sort = 'ASC')
+ * @method QueryInterface order(string $_fields, string $sort = 'ASC')
  * @method QueryInterface find()
  * @method QueryInterface select()
  * @method QueryInterface insert(array $data)
@@ -56,16 +58,21 @@ abstract class AbstractModel extends DataObject
     protected string $table = '';
     protected string $origin_table_name = '';
     private ConnectionFactory $connection;
-    public string $suffix = '';
-    public string $primary_key = '';
-    public string $primary_key_default = 'id';
-    public array $fields = [];
+    public string $_suffix = '';
+    public string $_primary_key = '';
+    public string $_primary_key_default = 'id';
+    public array $_fields = [];
+    private array $_model_fields = [];
 
     private bool $force_check_flag = false;
 
-    private ?QueryInterface $bind_query = null;
+    private ?QueryInterface $_bind_query = null;
+    private ?QueryInterface $current_query = null;
+    private ?CacheInterface $_cache = null;
 
-    function __construct(array $data = [])
+    function __construct(
+        array $data = []
+    )
     {
         parent::__construct($data);
         if (!isset($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
@@ -81,18 +88,19 @@ abstract class AbstractModel extends DataObject
      */
     public function __init()
     {
+        if (!isset($this->_cache)) $this->_cache = ObjectManager::getInstance(DbModelCache::class . 'Factory');
         # 类属性
         if (!isset($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
-        if (empty($this->suffix)) $this->suffix = $this->connection->getConfigProvider()->getPrefix() ?: '';
+        if (empty($this->_suffix)) $this->_suffix = $this->connection->getConfigProvider()->getPrefix() ?: '';
         # 模型属性
         if (empty($this->table)) $this->table = $this->provideTable() ?: $this->processTable();
         if (empty($this->origin_table_name)) $this->origin_table_name = $this->provideTable();
-        if (empty($this->primary_key)) $this->primary_key = $this->providePrimaryField() ?: $this->primary_key_default;
+        if (empty($this->_primary_key)) $this->_primary_key = $this->providePrimaryField() ?: $this->_primary_key_default;
     }
 
     public function __sleep()
     {
-        return array('table', 'origin_table_name', 'suffix', 'primary_key', 'fields');
+        return array('table', 'origin_table_name', '_suffix', '_primary_key', '_fields');
     }
 
     function __wakeup()
@@ -115,7 +123,7 @@ abstract class AbstractModel extends DataObject
             $class_file_name_arr = explode('\\', $this::class);
             $class_file_name = array_pop($class_file_name_arr);
             $table_name = str_replace('Model', '', $class_file_name);
-            $this->origin_table_name = $this->suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
+            $this->origin_table_name = $this->_suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
             $this->table = "`{$this->connection->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
         }
         return $this->table;
@@ -163,14 +171,14 @@ abstract class AbstractModel extends DataObject
     public function getQuery(bool $keep_condition = false): QueryInterface
     {
         # 如果绑定了查询
-        if ($this->bind_query) {
-            return $this->bind_query;
+        if ($this->_bind_query) {
+            return $this->_bind_query;
         }
         # 区分是否保持查询
         if ($keep_condition) {
-            return $this->connection->getQuery()->table($this->getOriginTableName())->identity($this->primary_key);
+            return $this->connection->getQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
         }
-        return $this->connection->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->primary_key);
+        return $this->connection->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
     }
 
     /**
@@ -182,7 +190,7 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      * @return ConnectionFactory
      */
-    function getLink(): ConnectionFactory
+    function getConnection(): ConnectionFactory
     {
         return $this->connection;
     }
@@ -209,7 +217,7 @@ abstract class AbstractModel extends DataObject
         // load之前事件
         $this->getEvenManager()->dispatch($this->getOriginTableName() . '_model_load_before', ['model' => $this]);
         if (is_null($value)) {
-            $data = $this->getQuery()->where($this->primary_key, $field_or_pk_value)->find()->fetch();
+            $data = $this->getQuery()->where($this->_primary_key, $field_or_pk_value)->find()->fetch();
         } else {
             $data = $this->getQuery()->where($field_or_pk_value, $value)->find()->fetch();
         }
@@ -252,45 +260,46 @@ abstract class AbstractModel extends DataObject
      */
     public function save(array $data = [], string $sequence = null): bool
     {
-        $old_id = $this->getId();
-        // 保存前
-        $this->save_before();
-        /**
-         * 重载TP6 模型save方法 并加入事件机制
-         */
-        // save之前事件
-        $this->getEvenManager()->dispatch($this->processTable() . '_model_save_before', ['model' => $this]);
         if ($data) {
             $this->setData($data);
         }
+        // 保存前
+        $this->save_before();
+        // save之前事件
+        $this->getEvenManager()->dispatch($this->processTable() . '_model_save_before', ['model' => $this]);
         $this->getQuery()->beginTransaction();
         $save_result = false;
         try {
-            // 保存前才检查 是否已经存在
-            if (!$this->force_check_flag && $old_id && $old_id == $this->getId()) {
-                $save_result = $this->getQuery()->where($this->primary_key, $old_id)->update($this->getData())->fetch();
-            } else {
+            if ($this->getId()) {
+                # 是否强制检查
                 if ($this->force_check_flag) {
-                    if ($data = $this->getQuery()->where($this->primary_key, $old_id)->find()->fetch()) {
-                        # 数据相同则不更新
-                        if ($data != $this->getData()) {
-                            $save_result = $this->getQuery()->where($this->primary_key, $old_id)->update($this->getData())->fetch();
+                    if ($data = $this->getQuery()->where($this->_primary_key, $this->getId())->find()->fetch()) {
+                        # 数据库中数据存在则更新
+                        if (isset($data[$this->_primary_key]) && $data[$this->_primary_key]) {
+                            $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
+                        } else {
+                            $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
+                            $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                            $this->setData($this->_primary_key, $save_result);
                         }
                     } else {
-                        $save_result = $this->getQuery()->insert($this->getData())->fetch();
+                        $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
                         $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
-                        $this->setData($this->primary_key, $save_result);
+                        $this->setData($this->_primary_key, $save_result);
                     }
                 } else {
-                    $save_result = $this->getQuery()->insert($this->getData())->fetch();
-                    $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
-                    $this->setData($this->primary_key, $save_result);
+                    $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
                 }
+            } else {
+                $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
+                $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                $this->setData($this->_primary_key, $save_result);
             }
+
             $this->getQuery()->commit();
         } catch (\Exception $exception) {
             $this->getQuery()->rollBack();
-            throw new ModelException(__('模型保存数据出错：%1 预编译SQL: %2 执行SQL: %3 ', [$exception->getMessage(), $this->getQuery()->getPrepareSql(), $this->getQuery()->getLastSql()]));
+            throw new ModelException(__('模型保存数据出错：%1 ', $exception->getMessage()) . __('预编译SQL: %1', $this->getQuery()->getPrepareSql()) . __('执行SQL: %1', $this->getQuery()->getLastSql()));
         }
 
         // save之后事件
@@ -358,7 +367,7 @@ abstract class AbstractModel extends DataObject
         $this->delete_before();
         // load之前事件
         $this->getEvenManager()->dispatch($this->processTable() . '_model_delete_before', ['model' => $this]);
-        $this->getQuery()->where($this->primary_key, $this->getId())->delete()->fetch();
+        $this->getQuery()->where($this->_primary_key, $this->getId())->delete()->fetch();
         $this->clearData();
         // load之之后事件
         $this->getEvenManager()->dispatch($this->processTable() . '_model_delete_after', ['model' => $this]);
@@ -373,6 +382,12 @@ abstract class AbstractModel extends DataObject
 
     function delete_after()
     {
+    }
+
+    function clearData()
+    {
+        $this->clearDataObject();
+        return $this;
     }
 
     /**
@@ -415,6 +430,7 @@ abstract class AbstractModel extends DataObject
                     $this->setFetchData([]);
                 }
                 $this->fetch_after();
+                # 清除当前查询
                 return $query_data;
             }
             $query_methods = [
@@ -498,7 +514,7 @@ abstract class AbstractModel extends DataObject
      */
     function getId()
     {
-        return $this->getData($this->primary_key);
+        return $this->getData($this->_primary_key);
     }
 
     /**
@@ -511,7 +527,7 @@ abstract class AbstractModel extends DataObject
      */
     function setId($primary_id): AbstractModel
     {
-        return $this->setData($this->primary_key, $primary_id);
+        return $this->setData($this->_primary_key, $primary_id);
     }
 
     function getCreateTime()
@@ -534,11 +550,55 @@ abstract class AbstractModel extends DataObject
         return $this->setData(self::fields_CREATE_TIME, $update_time);
     }
 
+    function getModelFields()
+    {
+        if ($_model_fields = $this->_model_fields) {
+            return $_model_fields;
+        }
+        $module__fields_cache_key = $this::class . '_module__fields_cache_key';
+        if (!DEV && $_model_fields = $this->_cache->get($module__fields_cache_key)) {
+            return $_model_fields;
+        }
+        $objClass = new \ReflectionClass($this::class);
+        $arrConst = $objClass->getConstants();
+        $_fields = [];
+        foreach ($arrConst as $key => $val) {
+            if (str_starts_with($key, 'fields')) {
+                $_fields[] = $val;
+            }
+        }
+        $this->_model_fields = $_fields;
+        $this->_cache->set($module__fields_cache_key, $_fields);
+        return $_fields;
+    }
+
+    /**
+     * @DESC          # 返回模型数据
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/16 17:09
+     * 参数区：
+     * @return array
+     */
+    function getModelData(): array
+    {
+        $data = [];
+        foreach ($this->getModelFields() as $key => $val) {
+            $field_data = $this->getData($val);
+            if (($val === self::fields_CREATE_TIME || $val === self::fields_UPDATE_TIME) && empty($field_data)) {
+                $field_data = date('Y-m-d H:i:s');
+            }
+            $data[$val] = $field_data;
+        }
+        return $data;
+    }
+
     /**----------链接查询--------------*/
 
     function bindQuery(QueryInterface $query): static
     {
-        $this->bind_query = $query;
+        $this->_bind_query = $query;
         return $this;
     }
 

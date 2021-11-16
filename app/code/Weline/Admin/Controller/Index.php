@@ -21,7 +21,7 @@ class Index extends BackendController
      */
     public function index()
     {
-
+        $this->fetch();
     }
 
     public function test(): string

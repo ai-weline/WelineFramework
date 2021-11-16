@@ -15,7 +15,6 @@ use Weline\Framework\App\Exception;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\Session\Session;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Data\HtmlInterface;
 
@@ -78,13 +77,13 @@ trait TraitTemplate
             if (!isset($module_lists[$pre_module_name])) throw new Exception(__('异常：你指定的模板文件所在的模块不存在！模块：%1，所使用的模板：%2', [$pre_module_name, $fileName]));
             $fileName = str_replace($pre_module_name . '::', '', $fileName);
             # 替换掉当前模块的视图目录
-            $view_dir = BP.$module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
+            $view_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
             $template_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
 
-            if(!DEV){
-                $compile_dir = str_replace(APP_PATH, Env::path_framework_generated_complicate.DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']).Data\DataInterface::dir.DIRECTORY_SEPARATOR. Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
-            }else{
-                $compile_dir = BP.$module_lists[$pre_module_name]['base_path']. Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
+            if (!DEV) {
+                $compile_dir = str_replace(APP_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']) . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
+            } else {
+                $compile_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
             }
             # 文件目录
             $file_dir = str_replace($pre_module_name . '::', '', $file_dir);
@@ -114,6 +113,44 @@ trait TraitTemplate
         return [$t_f, array_shift($t_f_arr)];
     }
 
+    public function fetchTemplateTagSourceFile(string $type, string $source){
+        $source = trim($source);
+        $cache_key = $type . '_' . $source;
+        $data = '';
+        switch ($type) {
+            case DataInterface::dir_type_TEMPLATE:
+                if ($t_f = $this->viewCache->get($cache_key)) {
+                    $data = $this->fetch($t_f);
+                    break;
+                }
+                list($t_f) = $this->processModuleSourceFilePath($type, $source);
+                $data = $this->fetch($t_f);
+                $this->viewCache->set($cache_key, $t_f);
+                break;
+            case DataInterface::dir_type_STATICS:
+                if ($data = $this->viewCache->get($cache_key)) {
+                    break;
+                }
+
+                list($t_f, $module_name) = $this->processModuleSourceFilePath($type, $source);
+                $base_url_path = rtrim($this->statics_dir, DataInterface::dir_type_STATICS);
+                # 第三方模组
+                if ($module_name) {
+                    $modules = Env::getInstance()->getModuleList();
+                    if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
+                        $module_view_dir_path = BP . $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
+                        $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
+                        $t_f = str_replace($module_name . '::', '', $t_f);
+                    }
+                }
+                $data = rtrim($this->getUrlPath($base_url_path), DataInterface::dir_type_STATICS) . DIRECTORY_SEPARATOR . $t_f;
+                $this->viewCache->set($cache_key, $data);
+                break;
+            default:
+        }
+//        if($data)$data = str_replace('\\', '', $data);
+        return $data;
+    }
     /**
      * @DESC          # 读取模板标签资源
      *
@@ -152,7 +189,7 @@ trait TraitTemplate
                 if ($module_name) {
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
-                        $module_view_dir_path = BP.$module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
+                        $module_view_dir_path = BP . $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
                         $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
                         $t_f = str_replace($module_name . '::', '', $t_f);
                     }
@@ -164,6 +201,11 @@ trait TraitTemplate
         }
 //        if($data)$data = str_replace('\\', '', $data);
         return $data;
+    }
+
+    public function fetchTemplateBlockSource(string $source)
+    {
+        return $this->fetchTemplateTagSource('templates', $source);
     }
 
     /**
@@ -187,9 +229,9 @@ trait TraitTemplate
 
                 break;
             case DataInterface::dir_type_TEMPLATE_COMPILE:
-                if(!DEV){
-                    $path = str_replace(APP_PATH,Env::path_framework_generated_complicate.DIRECTORY_SEPARATOR, $module_view_dir_path).DIRECTORY_SEPARATOR. DataInterface::view_TEMPLATE_DIR.DIRECTORY_SEPARATOR;
-                }else{
+                if (!DEV) {
+                    $path = str_replace(APP_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_view_dir_path) . DIRECTORY_SEPARATOR . DataInterface::view_TEMPLATE_DIR . DIRECTORY_SEPARATOR;
+                } else {
                     $path = $module_view_dir_path . DataInterface::view_TEMPLATE_COMPILE_DIR;
                 }
                 break;
