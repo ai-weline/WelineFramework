@@ -1,8 +1,6 @@
 
 # WelineFramework
 
-！！！ 近期样本环境由于部署在小服务器提供商的服务器上，数据丢失了！
-
 #### 介绍
 
 微蓝WelineFramework框架！
