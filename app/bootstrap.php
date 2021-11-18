@@ -51,7 +51,7 @@ try {
 } catch (Exception $exception) {
 //    if (DEV) {
         echo '<pre>';
-        echo '应用启动失败：' . $exception->getMessage().PHP_EOL;
+        echo '应用启动失败：<b style="color: red">' . $exception->getMessage().'</b>'.PHP_EOL;
         if(DEV)echo '错误信息：'.PHP_EOL . $exception->getTraceAsString().PHP_EOL;
         if(DEV)var_dump($exception->getTrace());
         exit(0);
