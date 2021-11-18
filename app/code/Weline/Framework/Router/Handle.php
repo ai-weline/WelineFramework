@@ -65,6 +65,7 @@ class Handle implements RegisterInterface
     {
         $controller = explode('Controller', $routerParam['class']);
         $controller = array_pop($controller);
+        $controller = str_replace('\\', '/', $controller);
         switch ($routerParam['type']) {
             case DataInterface::type_API:
                 $path = '';

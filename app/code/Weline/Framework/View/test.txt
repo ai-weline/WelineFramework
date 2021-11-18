@@ -21048,3 +21048,19 @@ E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\public\com_header.
 E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\blocks\com_menu.phtml
 
 E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\public\com_footer.phtml
+
+E:\WelineFramework\app\code\Aiweline\Index\view\tpl\\Index\com_index.phtml
+
+E:\WelineFramework\app\code\Aiweline\Index\view\tpl\\Index\com_index.phtml
+
+E:\WelineFramework\app\code\Aiweline\HelloWorld\view\tpl\\HelloWorld\com_demo.phtml
+
+E:\WelineFramework\app\code\Aiweline\HelloWorld\view\tpl\templates\public\com_header.phtml
+
+E:\WelineFramework\app\code\Aiweline\HelloWorld\view\tpl\templates\public\com_footer.phtml
+
+E:\WelineFramework\app\code\Aiweline\Index\view\tpl\\Index\com_index.phtml
+
+E:\WelineFramework\app\code\Aiweline\Index\view\tpl\\Index\com_index.phtml
+
+E:\WelineFramework\app\code\Aiweline\Index\view\tpl\\Index\com_index.phtml

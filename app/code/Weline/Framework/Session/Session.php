@@ -28,7 +28,7 @@ class Session implements SessionInterface
 
     function __init()
     {
-        if (!isset($this->session)) {
+        if (isset($_SERVER['REQUEST_URI']) && !isset($this->session)) {
             $type = 'frontend';
             $identity_path = '/';
             if (strstr($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('admin'))) {

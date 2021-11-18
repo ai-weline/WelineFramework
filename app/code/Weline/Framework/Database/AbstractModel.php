@@ -306,6 +306,7 @@ abstract class AbstractModel extends DataObject
         $this->getEvenManager()->dispatch($this->processTable() . '_model_save_after', ['model' => $this]);
         // 保存后
         $this->save_after();
+        $this->clearData();
         return $save_result;
     }
 
@@ -386,6 +387,7 @@ abstract class AbstractModel extends DataObject
 
     function clearData()
     {
+        $this->clearQuery();
         $this->clearDataObject();
         return $this;
     }
@@ -417,6 +419,7 @@ abstract class AbstractModel extends DataObject
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
                 if (empty($query_data)) {
+                    $this->clearQuery();
                     return $this->setFetchData([]);
                 }
                 $this->fetch_before();
@@ -430,6 +433,7 @@ abstract class AbstractModel extends DataObject
                     $this->setFetchData([]);
                 }
                 $this->fetch_after();
+                $this->clearQuery();
                 # 清除当前查询
                 return $query_data;
             }

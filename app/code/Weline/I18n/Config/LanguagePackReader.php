@@ -42,7 +42,7 @@ class LanguagePackReader
                 $lang_register_file = BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . $register;
                 if (is_file($lang_register_file)) {
                     // 初始化搜索结果
-                    $this->scanner->init();
+                    $this->scanner->__init();
                     $lang_module_files = $this->scanner->scanDirTree(dirname($lang_register_file));
                     foreach ($lang_module_files as $module_files) {
                         if (is_array($module_files)) {

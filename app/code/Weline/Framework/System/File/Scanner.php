@@ -121,9 +121,9 @@ class Scanner extends Scan
                         if (is_file($app_need_file_or_dir)) {
                             $modules[$module] = $app_need_file_or_dir;
                         } else {
-                            $this->init();
+                            $this->__init();
                             $modules[$module] = $this->scanDirTree($app_need_file_or_dir, 3);
-                            $this->init();
+                            $this->__init();
                         }
                     }
                 }
@@ -138,9 +138,9 @@ class Scanner extends Scan
                             } else if (is_file($vendor_app_need_file_or_dir)) {
                                 $modules[$module] = $vendor_app_need_file_or_dir;
                             } else {
-                                $this->init();
+                                $this->__init();
                                 $modules[$module] = $this->scanDirTree($vendor_app_need_file_or_dir, 3);
-                                $this->init();
+                                $this->__init();
                             }
                             /*try {
                                 if(is_file($vendor_app_module_path . $file_or_dir)){

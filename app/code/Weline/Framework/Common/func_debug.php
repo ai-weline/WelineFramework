@@ -23,10 +23,12 @@
  */
 function p($data = null, bool $pass = false, int $trace_deep = 1): void
 {
+
     // 执行时间
     $exe_time = microtime(true) - START_TIME;
     $isCli = (PHP_SAPI === 'cli');
-
+    $echo_pre = ($isCli ? PHP_EOL : '<pre>');
+    echo $echo_pre;
     $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $trace_deep);
     $parent_call_info = array_reverse($parent_call_info);
     foreach ($parent_call_info as $key => $item) {
@@ -77,8 +79,7 @@ function p($data = null, bool $pass = false, int $trace_deep = 1): void
             die;
         }
     }
-    $echo_pre = ($isCli ? PHP_EOL : '<pre>');
-    echo $echo_pre;
+
     var_dump($data);
     echo $isCli ? PHP_EOL : '</div><br><div>调试时间：<br>--' . ($exe_time * 1000) . '(ms/毫秒)<br>--' . $exe_time . '(s/秒)<br></div></div></pre>';
     if (!$pass) {

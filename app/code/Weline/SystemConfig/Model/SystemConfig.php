@@ -145,11 +145,17 @@ class SystemConfig extends \Weline\Framework\Database\Model
      */
     function install(ModelSetup $setup, Context $context): void
     {
-        $setup->createTable('系统配置表')
-            ->addColumn(self::field_KEY, TableInterface::column_type_VARCHAR, 120, 'primary key', '键')
-            ->addColumn(self::field_VALUE, TableInterface::column_type_TEXT, 0, '', '值')
-            ->addColumn(self::field_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')
-            ->addColumn(self::field_AREA, TableInterface::column_type_VARCHAR, 120, "NOT NULL DEFAULT 'frontend'", '区域：backend/frontend')
-            ->create();
+        if(!$setup->tableExist()){
+            $setup->getPrinting()->printing('安装',$setup->getTable());
+            $setup->createTable('系统配置表')
+                ->addColumn(self::field_KEY, TableInterface::column_type_VARCHAR, 120, 'primary key', '键')
+                ->addColumn(self::field_VALUE, TableInterface::column_type_TEXT, 0, '', '值')
+                ->addColumn(self::field_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')
+                ->addColumn(self::field_AREA, TableInterface::column_type_VARCHAR, 120, "NOT NULL DEFAULT 'frontend'", '区域：backend/frontend')
+                ->create();
+        }else{
+            $setup->getPrinting()->printing('已存在，跳过',$setup->getTable());
+        }
+
     }
 }

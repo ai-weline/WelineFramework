@@ -36,6 +36,8 @@ class ModelManager
 
     function update(string $module_name, Context $context, string $type)
     {
+        if (DEV) $this->printing->error($module_name . '：模型更新！', '开发');
+
         if (!in_array($type, ['setup', 'upgrade', 'install'])) {
             throw new Exception(__('$type允许的值不在：%1 中', "'setup','upgrade','install'"));
         }

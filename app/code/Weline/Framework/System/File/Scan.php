@@ -22,9 +22,10 @@ class Scan
      *
      * 参数区：
      */
-    public function init()
+    public function __init()
     {
         $this->dirs = [];
+        $this->keepLevel = 0;
     }
 
     /**
@@ -43,6 +44,7 @@ class Scan
      */
     public function scanDirTree(string $dirPath, int $level = 0): array
     {
+        $dirPath = rtrim($dirPath,DIRECTORY_SEPARATOR);
         $this->keepLevel += 1;
         if (is_dir($dirPath) && $file_handler = opendir($dirPath)) {
             while (false !== ($file = readdir($file_handler))) {
@@ -72,7 +74,7 @@ class Scan
                         $file->setDirname($pathInfo['dirname']);
                         $file->setExtension($pathInfo['extension'] ?? '');
                         $file->setOrigin($filename);
-                        $file->setNamespace(str_replace(DIRECTORY_SEPARATOR, '\\', dirname($relateFilename)));
+                        $file->setNamespace(str_replace('/', '\\', dirname($relateFilename)));
                         $file->setRelate($relateFilename);
                         $file->setSize(filesize($filename));
                         $file->setType(filetype($filename));
@@ -100,7 +102,7 @@ class Scan
      */
     public function scanDir(string $dirPath): array
     {
-        if (! is_dir(trim($dirPath,DIRECTORY_SEPARATOR))) {
+        if (! is_dir(rtrim($dirPath,DIRECTORY_SEPARATOR))) {
             return [];
         }
         if ($this->dirs = (scandir($dirPath)) ? scandir($dirPath) : []) {

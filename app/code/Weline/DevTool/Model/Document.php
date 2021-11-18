@@ -52,14 +52,18 @@ class Document extends \Weline\Framework\Database\Model
      */
     function install(ModelSetup $setup, Context $context): void
     {
-        $setup->getPrinting()->setup('安装数据表...');
-        $setup->createTable('开发文章')
-            ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment ', 'ID')
-            ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 120, 'not null', '标题')
-            ->addColumn(self::fields_AUTHOR_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '作者ID')
-            ->addColumn(self::fields_TAG_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '标签ID')
-            ->addColumn(self::fields_CONTEND, TableInterface::column_type_TEXT, 0, 'not null', '内容')
-            ->create();
+        $setup->getPrinting()->setup('安装数据表...',$setup->getTable());
+        if(!$setup->tableExist()){
+            $setup->createTable('开发文章')
+                ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment ', 'ID')
+                ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 120, 'not null', '标题')
+                ->addColumn(self::fields_AUTHOR_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '作者ID')
+                ->addColumn(self::fields_TAG_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '标签ID')
+                ->addColumn(self::fields_CONTEND, TableInterface::column_type_TEXT, 0, 'not null', '内容')
+                ->create();
+        }else{
+            $setup->getPrinting()->setup('跳过安装数据表...',$setup->getTable());
+        }
     }
 
     function provideTable(): string

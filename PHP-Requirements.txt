@@ -1,6 +1,9 @@
 [方法]
 exec
 putenv
+symlink
+proc_open
 [拓展]
 ext-exif
 ext-fileinfo
+ext-xsl

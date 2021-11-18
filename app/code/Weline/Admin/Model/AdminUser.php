@@ -49,11 +49,14 @@ class AdminUser extends \Weline\Framework\Database\Model
      */
     function install(ModelSetup $setup, Context $context): void
     {
-        $setup->createTable('管理员表')
-            ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'primary key', '用户ID')
-            ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
-            ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
-            ->create();
+        if(!$setup->tableExist()){
+            $setup->createTable('管理员表')
+                ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
+                ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
+                ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
+                ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
+                ->create();
+        }
     }
 
     function providePrimaryField(): string

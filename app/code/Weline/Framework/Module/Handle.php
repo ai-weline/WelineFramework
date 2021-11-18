@@ -166,6 +166,7 @@ class Handle implements HandleInterface, RegisterInterface
             throw new Exception(__('尚未设置模组名！%1', 'module_name'));
         }
         $name = $data['module_name'];
+        if (DEV) $this->printer->error($name . '：处理...', '开发');
         // 模块路径
         $module_path = $data['base_path'];
         // 模型管理器
@@ -193,15 +194,19 @@ class Handle implements HandleInterface, RegisterInterface
         }
 
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $name, 'module_version' => $version, 'module_description' => $description], '__construct');
-        $setup_dir = $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
-
+        $setup_dir = BP . $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
+        if (DEV) $this->printer->error($setup_dir . '：升级目录...', '开发');
         // 已经存在模块则更新
         if ($this->helper->isInstalled($this->modules, $name)) {
+            if ($this->helper->isDisabled($this->modules, $name)) {
+                echo $this->printer->warning(str_pad($name, 45) . __('已禁用！'));
+                return;
+            }
             // 是否更新模块：是则加载模块下的Setup模块下的文件进行更新
             $old_version = $this->modules[$name]['version'];
             if ($this->helper->isUpgrade($this->modules, $name, $version)) {
-                $this->printer->note("扩展{$name}升级中...");
-                $this->printer->setup(__('升级') . $old_version . __('到') . $version);
+                $this->printer->note(__("扩展 %1 升级中...", $name));
+                $this->printer->setup(__('升级 %1 到 %2', [$old_version, $version]));
 
                 # 升级模块的模型
                 $modelManager->update($name, $this->setup_context, 'upgrade');
@@ -225,19 +230,17 @@ class Handle implements HandleInterface, RegisterInterface
             }
 
             # 升级模块的模型
+            if (DEV) $this->printer->error($name . '：模型升级...', '开发');
             if (DEV) $modelManager->update($name, $this->setup_context, 'setup');
-
-            if ($this->helper->isDisabled($this->modules, $name)) {
-                echo $this->printer->warning(str_pad($name, 45) . '已禁用！');
-
-                return;
-            }
+            if (DEV) $this->printer->error($name . '：模型升级完成...', '开发');
             // 更新路由
+            if (DEV) $this->printer->error($name . '：更新路由...', '开发');
             $this->helper->registerModuleRouter($this->modules, $module_path, $name, $router);
+            if (DEV) $this->printer->error($name . '：更新路由完成...', '开发');
             // 更新模块
             $this->modules[$name]['base_path'] = $module_path;
             $this->helper->updateModules($this->modules);
-            echo $this->printer->success(str_pad($name, 45) . '已更新！');
+            echo $this->printer->success(str_pad($name, 45) . __('已更新！'));
         } else {
             $this->printer->note("扩展{$name}安装中...");
             # 模型安装install
@@ -264,7 +267,7 @@ class Handle implements HandleInterface, RegisterInterface
                         $setup = ObjectManager::getInstance($file_namespace);
                         $setup->setup($this->setup_data, $this->setup_context);
                     }
-                    $this->printer->success(str_pad($name, 45) . '已安装！');
+                    $this->printer->success(str_pad($name, 45) . __('已安装！'));
                 }
             } catch (Exception $exception) {
                 throw $exception;

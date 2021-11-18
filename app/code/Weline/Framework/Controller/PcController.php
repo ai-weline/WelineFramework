@@ -141,10 +141,11 @@ class PcController extends Core
         }
         $controller_class_name = $this->_request->getRouterData('class/controller_name');
         if ($fileName === null) {
-            $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $this->_request->getRouterData('class/method');
+            $fileName = $controller_class_name . '/' . $this->_request->getRouterData('class/method');
         } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
             $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $fileName;
         }
+
         return $this->getTemplate()->fetch($fileName);
     }
 

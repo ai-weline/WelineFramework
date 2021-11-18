@@ -37,15 +37,16 @@ class Upgrade extends CommandAbstract
     private Data $data;
 
     public function __construct(
-        Printing $printer,
+        Printing   $printer,
         AppScanner $scanner,
-        Data $data,
-        System $system
-    ) {
+        Data       $data,
+        System     $system
+    )
+    {
         $this->printer = $printer;
-        $this->system  = $system;
+        $this->system = $system;
         $this->scanner = $scanner;
-        $this->data    = $data;
+        $this->data = $data;
     }
 
     /**
@@ -65,7 +66,7 @@ class Upgrade extends CommandAbstract
     {
         $i = 1;
         // 删除路由文件
-        $this->printer->warning($i.'、路由更新...', '系统');
+        $this->printer->warning($i . '、路由更新...', '系统');
         $this->printer->warning('清除文件：');
         foreach (Env::router_files_PATH as $path) {
             $this->printer->warning($path);
@@ -76,32 +77,33 @@ class Upgrade extends CommandAbstract
                 }
             }
         }
-        $i +=1;
-        $this->printer->warning($i.'、generated生成目录代码code清理...', '系统');
+        $i += 1;
+        $this->printer->warning($i . '、generated生成目录代码code清理...', '系统');
         $this->system->exec('rm -rf ' . Env::path_framework_generated_code);
-        // 扫描代码
-        $registers = $this->scanner->scanAppModules();
-        $i +=1;
-        $this->printer->note($i.'、事件清理...');
+
+        $i += 1;
+        $this->printer->note($i . '、事件清理...');
         /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Event\Console\Event\Cache\Clear::class);
         $cacheManagerConsole->execute();
-        $i +=1;
-        $this->printer->note($i.'、插件编译...');
+        $i += 1;
+        $this->printer->note($i . '、插件编译...');
         /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Plugin\Console\Plugin\Di\Compile::class);
         $cacheManagerConsole->execute();
-        $i +=1;
-        $this->printer->note($i.'、module模块更新...');
+        $i += 1;
+        $this->printer->note($i . '、module模块更新...');
         // 注册模块
         $all_modules = [];
-
+        // 扫描代码
+        $registers = $this->scanner->scanAppModules();
         foreach ($registers as $vendor => $modules) {
             foreach ($modules as $name => $register) {
                 $all_modules[$vendor . '_' . $name] = $register;
                 if (is_file(APP_PATH . $register)) {
                     require APP_PATH . $register;
                 }
+                # TODO linux中未注册后台路由问题
                 if (is_file(BP . 'vendor' . DIRECTORY_SEPARATOR . $register)) {
                     require BP . 'vendor' . DIRECTORY_SEPARATOR . $register;
                 }
@@ -128,11 +130,11 @@ class Upgrade extends CommandAbstract
         $this->printer->note('模块更新完毕！');
 
         // 清理其他
-        /**@var EventsManager $eventsManager*/
+        /**@var EventsManager $eventsManager */
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
         $eventsManager->dispatch('Framework_Console::module_upgrade');
-        $i +=1;
-        $this->printer->note($i.'、清理缓存...');
+        $i += 1;
+        $this->printer->note($i . '、清理缓存...');
         /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
         $cacheManagerConsole->execute();

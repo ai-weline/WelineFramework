@@ -72,7 +72,7 @@ class Core
     {
         # 获取URL
         $url = $this->processUrl();
-        $this->_router_cache_key = $this->area_router . $url;
+        $this->_router_cache_key = $this->area_router . $this->request->getUrlPath();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
             return $this->route();
@@ -125,7 +125,7 @@ class Core
             if (self::url_path_split === $url) {
                 $url = self::default_index_url;
             }
-            $url = strtolower(trim($url, self::url_path_split));
+            $url = trim($url, self::url_path_split);
             $this->cache->set($url_cache_key, $url);
         }
         return $url;
@@ -143,6 +143,7 @@ class Core
      */
     public function Api(string $url)
     {
+        $url = strtolower($url);
         $is_api_admin = $this->request_area === \Weline\Framework\Controller\Data\DataInterface::type_api_BACKEND;
 
         if ($is_api_admin) {
@@ -157,6 +158,7 @@ class Core
             if (isset($routers[$url . $method]) || isset($routers[$url . '/index' . $method])) {
                 $this->router = $routers[$url . $method] ?? $routers[$url . '/index' . $method];
                 # 缓存路由结果
+                $this->router['type'] = 'api';
                 $this->cache->set($this->_router_cache_key, $this->router);
                 return $this->route();
             }
@@ -180,6 +182,7 @@ class Core
      */
     public function Pc(string $url)
     {
+        $url = strtolower($url);
         $is_pc_admin = $this->request_area === \Weline\Framework\Controller\Data\DataInterface::type_pc_BACKEND;
         // 检测api路由区域
         if ($is_pc_admin) {
@@ -194,6 +197,7 @@ class Core
             if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . self::default_index_url])) {
                 $this->router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url];
                 # 缓存路由结果
+                $this->router['type'] = 'pc';
                 $this->cache->set($this->_router_cache_key, $this->router);
 //                list($dispatch, $method) = $this->getController($router);
 //                if (method_exists($dispatch, $method)) {
@@ -224,7 +228,6 @@ class Core
     {
         header ("Cache-Control: max-age=3600");
         $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
-
         // 阻止读取其他文件
         if (is_bool(strpos($filename, \Weline\Framework\View\Data\DataInterface::dir))) {
             $this->request->getResponse()->noRouter();

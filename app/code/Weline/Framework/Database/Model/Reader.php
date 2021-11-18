@@ -60,7 +60,9 @@ class Reader extends \Weline\Framework\System\ModuleFileReader
                         foreach ($models as $model_path => $model_files) {
                             /**@var File $model_file */
                             foreach ($model_files as $key => $model_file) {
-                                $model = new \ReflectionClass($model_file->getNamespace() . '\\' . $model_file->getFilename());
+                                $model_class = $model_file->getNamespace() . '\\' . $model_file->getFilename();
+                                $model_class = str_replace('\\\\', '\\', $model_class);
+                                $model = new \ReflectionClass($model_class);
                                 if (!$model->getParentClass() || ($model->getParentClass()->getName() !== \Weline\Framework\Database\Model::class)) {
                                     unset($model_files[$key]);
                                 }

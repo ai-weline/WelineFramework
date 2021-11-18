@@ -10,6 +10,7 @@
 namespace Weline\Framework\Module\Helper;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\App\Scanner;
 use Weline\Framework\System\File\Io\File;
 use Weline\Framework\Helper\AbstractHelper;
@@ -34,26 +35,28 @@ class Data extends AbstractHelper
      * @throws \Weline\Framework\Console\ConsoleException
      * @throws \ReflectionException
      */
-    public function registerModuleRouter(array &$modules, string $path,string $name, string $router)
+    public function registerModuleRouter(array &$modules, string $path, string $name, string $router)
     {
         if (!$this->isDisabled($modules, $name)) {
             // 禁用则不进行注册
-            $appScanner = new Scanner();
+            /**@var Scanner $appScanner */
+            $appScanner = ObjectManager::getInstance(Scanner::class);
             // 扫描模块
-            $moduleDir = $appScanner->scanDirTree(APP_PATH . $this->moduleNameToPath($modules, $name), 12);
-
-            $routerRegister = new Register();
+            $appScanner->__init();
+            $moduleDir = $appScanner->scanDirTree(BP . $path);
+            /**@var Register $routerRegister */
+            $routerRegister = ObjectManager::getInstance(Register::class);
             /** @var $Files \Weline\Framework\System\File\Data\File[] */
             foreach ($moduleDir as $dir => $Files) {
                 // Api路由
-                if (strstr($dir, Handle::api_DIR)) {
+                if (!is_bool(strpos($dir, Handle::api_DIR))) {
                     foreach ($Files as $apiFile) {
                         $apiDirArray = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
                         $baseRouter = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
                         $baseRouter = $router . ($baseRouter ?? '');
                         $baseRouter = trim($baseRouter, '/');
                         $apiClassName = $apiFile->getNamespace() . '\\' . $apiFile->getFilename();
-
+                        $apiClassName = str_replace("\\\\", "\\", $apiClassName);
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
                         $ctl_data = $this->parserController($apiClassName);
@@ -83,16 +86,20 @@ class Data extends AbstractHelper
                         }
                     }
                 } // PC路由
-                elseif (strstr($dir, Handle::pc_DIR)) {
+                elseif (!is_bool(strpos($dir, Handle::pc_DIR))) {
                     foreach ($Files as $controllerFile) {
                         $controllerDirArray = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
                         $baseRouter = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
                         $baseRouter = $router . ($baseRouter ?? '');
                         $baseRouter = trim($baseRouter, '/');
                         $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
+                        $controllerClassName = str_replace("\\\\", "\\", $controllerClassName);
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
                         $ctl_data = $this->parserController($controllerClassName);
+                        if(empty($ctl_data)){
+                            continue;
+                        }
                         $ctl_methods = $ctl_data['methods'];
                         $ctl_area = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {

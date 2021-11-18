@@ -91,8 +91,8 @@ class HelloWorld extends FrontendController
 
     public function model()
     {
-        p('链接名：' . $this->aiwelineHelloWorld->getLink()->getConfigProvider()->getConnectionName(), 1);
-        p('链接类型：' . $this->aiwelineHelloWorld->getLink()->getConfigProvider()->getDbType(), 1);
+        p('链接名：' . $this->aiwelineHelloWorld->getConnection()->getConfigProvider()->getConnectionName(), 1);
+        p('链接类型：' . $this->aiwelineHelloWorld->getConnection()->getConfigProvider()->getDbType(), 1);
         $data = $this->aiwelineHelloWorld->query("select * from {$this->aiwelineHelloWorld->getTable()}")->fetch();
         p($data,1);
         p($this->aiwelineHelloWorld->insert([

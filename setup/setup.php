@@ -15,6 +15,7 @@ define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR);
 // 开发模式
 define('DEV', true);
+defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // CLI 环境
 define('CLI', false);
 // 应用 配置 目录 (默认访问 etc)
@@ -26,7 +27,7 @@ try {
     exit('自动加载异常：' . $exception->getMessage());
 }
 // 助手函数
-require BP . '/app/etc/functions.php';
+//require BP . '/app/etc/functions.php';
 
 /**
  * php bin/m system:install ^

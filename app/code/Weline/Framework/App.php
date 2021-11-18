@@ -61,7 +61,10 @@ class App
         // 导入核心通用组件
         require __DIR__ . '/Common/loader.php';
         // 助手函数
-        require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
+        $handle_functions = BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
+        if(is_file($handle_functions)){
+            require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
+        }
         /**------------环境配置----------------*/
         // 调试模式
         define('DEV', 'dev' === self::Env('deploy'));

@@ -113,7 +113,8 @@ trait TraitTemplate
         return [$t_f, array_shift($t_f_arr)];
     }
 
-    public function fetchTemplateTagSourceFile(string $type, string $source){
+    public function fetchTemplateTagSourceFile(string $type, string $source)
+    {
         $source = trim($source);
         $cache_key = $type . '_' . $source;
         $data = '';
@@ -151,6 +152,7 @@ trait TraitTemplate
 //        if($data)$data = str_replace('\\', '', $data);
         return $data;
     }
+
     /**
      * @DESC          # 读取模板标签资源
      *
@@ -199,13 +201,8 @@ trait TraitTemplate
                 break;
             default:
         }
-//        if($data)$data = str_replace('\\', '', $data);
+        if ($data) $data = str_replace('//', '/', $data);
         return $data;
-    }
-
-    public function fetchTemplateBlockSource(string $source)
-    {
-        return $this->fetchTemplateTagSource('templates', $source);
     }
 
     /**

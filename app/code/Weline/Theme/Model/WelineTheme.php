@@ -24,19 +24,19 @@ class WelineTheme extends Model
 {
     const cache_TIME = 604800;
 
-    const filed_ID = 'id';
+    const fields_ID = 'id';
 
-    const filed_NAME = 'name';
+    const fields_NAME = 'name';
 
-    const filed_PATH = 'path';
+    const fields_PATH = 'path';
 
-    const filed_PARENT_ID = 'parent_id';
+    const fields_PARENT_ID = 'parent_id';
 
-    const filed_IS_ACTIVE = 'is_active';
+    const fields_IS_ACTIVE = 'is_active';
 
-    const filed_CREATE_TIME = 'create_time';
+    const fields_CREATE_TIME = 'create_time';
 
-    protected string $pk = self::filed_ID;
+    protected string $pk = self::fields_ID;
 
 //    protected $table = Install::table_THEME; # 如果需要设置特殊表名 需要加前缀
 
@@ -74,7 +74,7 @@ class WelineTheme extends Model
         if ($theme = $this->themeCache->get('theme')) {
             return $this->setData($theme);
         }
-        $this->load(self::filed_IS_ACTIVE, 1);
+        $this->load(self::fields_IS_ACTIVE, 1);
 
         if ($this->getId()) {
             $this->themeCache->set('theme', $this->getData(), static::cache_TIME);
@@ -85,70 +85,70 @@ class WelineTheme extends Model
 
     public function getName()
     {
-        return $this->getData(self::filed_NAME);
+        return $this->getData(self::fields_NAME);
     }
 
     public function setName($value): static
     {
-        $this->setData(self::filed_NAME, $value);
+        $this->setData(self::fields_NAME, $value);
 
         return $this;
     }
 
     public function getPath(): string
     {
-        return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
+        return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::fields_PATH)) . DIRECTORY_SEPARATOR;
     }
 
     public function getOriginPath(): string
     {
-        return $this->getData(self::filed_PATH);
+        return $this->getData(self::fields_PATH);
     }
 
     public function getRelatePath(): string
     {
-        return str_replace(BP, '', Env::path_THEME_DESIGN_DIR) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::filed_PATH)) . DIRECTORY_SEPARATOR;
+        return str_replace(BP, '', Env::path_THEME_DESIGN_DIR) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::fields_PATH)) . DIRECTORY_SEPARATOR;
     }
 
     public function setPath($value): static
     {
-        $this->setData(self::filed_PATH, $value);
+        $this->setData(self::fields_PATH, $value);
 
         return $this;
     }
 
     public function getParentId()
     {
-        return $this->getData(self::filed_PARENT_ID);
+        return $this->getData(self::fields_PARENT_ID);
     }
 
     public function setParentId($value): static
     {
-        $this->setData(self::filed_PARENT_ID, $value);
+        $this->setData(self::fields_PARENT_ID, $value);
 
         return $this;
     }
 
     public function isActive()
     {
-        return $this->getData(self::filed_IS_ACTIVE);
+        return $this->getData(self::fields_IS_ACTIVE);
     }
 
     public function setIsActive(bool $value): static
     {
-        $this->setData(self::filed_IS_ACTIVE, $value);
+        $this->setData(self::fields_IS_ACTIVE, $value);
 
         return $this;
     }
 
     public function getCreateTime()
     {
-        return $this->getData(self::filed_CREATE_TIME);
+        return $this->getData(self::fields_CREATE_TIME);
     }
 
     public function setCreateTime($time): static
     {
-        $this->setData(self::filed_CREATE_TIME, $time);
+        $this->setData(self::fields_CREATE_TIME, $time);
 
         return $this;
     }
@@ -165,9 +165,9 @@ class WelineTheme extends Model
         if ($this->isActive() && $this->getId()) {
             #$this->query('UPDATE ' . $this->getTable() . ' SET `is_active`=0 WHERE id != ' . $this->getId())->fetch();
             $this->getQuery()
-                ->where(self::filed_IS_ACTIVE, 1)
-                ->where(self::filed_ID, $this->getId(), '!=')
-                ->update(self::filed_IS_ACTIVE, 0)
+                ->where(self::fields_IS_ACTIVE, 1)
+                ->where(self::fields_ID, $this->getId(), '!=')
+                ->update(self::fields_IS_ACTIVE, 0)
                 ->fetch();
         }
     }

@@ -84,13 +84,13 @@ class Installer implements RegisterInterface
                     ->save();
             } else {
                 // 新安装
+                $this->welineTheme->clearQuery();
                 $this->welineTheme
                     ->setName($data['name'])
                     ->setIsActive(1)
                     ->setPath($theme_path)
                     ->save();
             }
-
             $this->printing->success($data['name'] . __(" 主题{$action_string}完成!"));
         } catch (\Exception $exception) {
             $this->printing->error($data['name'] . __(" 主题{$action_string}异常!"));
