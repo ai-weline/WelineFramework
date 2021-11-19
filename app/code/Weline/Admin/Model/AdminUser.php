@@ -20,6 +20,7 @@ class AdminUser extends \Weline\Framework\Database\Model
 
     const fields_ID = 'user_id';
     const fields_attempt_times = 'attempt_times';
+    const fields_attempt_ip = 'attempt_ip';
     const fields_username = 'username';
     const fields_password = 'password';
 
@@ -35,9 +36,9 @@ class AdminUser extends \Weline\Framework\Database\Model
             ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
             ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
             ->create();*/
-        $setup->getPrinting()->setup('开始更改表');
+        /*$setup->getPrinting()->setup('开始更改表');
         $setup->alterTable()->addColumn('attempt_ip', 'attempt_times',Table::column_type_VARCHAR, 12, '', '尝试登录的IP')
-            ->alter();
+            ->alter();*/
     }
 
     /**
@@ -77,6 +78,16 @@ class AdminUser extends \Weline\Framework\Database\Model
     {
         $this->setData(self::fields_attempt_times, intval($this->getData(self::fields_attempt_times)) + 1);
         return $this;
+    }
+
+    function getAttemptIp()
+    {
+        return $this->getData(self::fields_attempt_ip);
+    }
+
+    function setAttemptIp($ip)
+    {
+        return $this->setData(self::fields_attempt_ip, $ip);
     }
 
     function resetAttemptTimes(): static
