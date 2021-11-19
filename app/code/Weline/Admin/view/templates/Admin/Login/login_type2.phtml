@@ -47,12 +47,12 @@
                                 @template(Weline_Component::message.phtml)
                             </div>
                             <?php
-                            /**@var \Weline\Framework\Manager\MessageManager $messageManager */
-                            $messageManager = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Manager\MessageManager::class);
+                            /**@var \Weline\Framework\Session\Session $session */
+                            $session = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Session\Session::class);
                             ?>
                             <div class="col-lg-6 login-btm login-button">
                                 <button type="submit"
-                                        class="btn btn-outline-primary <?php if ($messageManager->hasErrorMessage()) echo 'disable' ?>"><?= __('登 录') ?></button>
+                                        class="btn btn-outline-primary <?php if ($session->getData('backend_disable_login')) echo 'disable' ?>"><?= __('登 录') ?></button>
                             </div>
                         </div>
                     </form>
