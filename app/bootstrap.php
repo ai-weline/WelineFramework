@@ -17,7 +17,7 @@ $start_time = microtime(true);
 defined('BP') || define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 应用 目录 (默认访问 web)
 defined('APP_PATH') || define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
-if(is_file(APP_PATH.'/config.php'))require APP_PATH.'/config.php';
+if (is_file(APP_PATH . '/config.php')) require APP_PATH . '/config.php';
 // 运行模式
 defined('CLI') || define('CLI', PHP_SAPI === 'cli');
 // 调试模式
@@ -49,11 +49,15 @@ try {
      */
     \Weline\Framework\App::run();
 } catch (Exception $exception) {
-//    if (DEV) {
+    if (DEV) {
         echo '<pre>';
-        echo '应用启动失败：<b style="color: red">' . $exception->getMessage().'</b>'.PHP_EOL;
-        if(DEV)echo '错误信息：'.PHP_EOL . $exception->getTraceAsString().PHP_EOL;
-        if(DEV)var_dump($exception->getTrace());
+        echo '应用启动失败：<b style="color: red">' . $exception->getMessage() . '</b>' . PHP_EOL;
+        echo '错误信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
+        var_dump($exception->getTrace());
         exit(0);
-//    }
+    } else {
+        echo '<pre>';
+        echo '<b style="color: red">系统异常，请联系网站管理员进行修复！</b>';
+        exit(0);
+    }
 }

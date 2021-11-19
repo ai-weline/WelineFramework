@@ -306,7 +306,6 @@ abstract class AbstractModel extends DataObject
         $this->getEvenManager()->dispatch($this->processTable() . '_model_save_after', ['model' => $this]);
         // 保存后
         $this->save_after();
-        $this->clearData();
         return $save_result;
     }
 

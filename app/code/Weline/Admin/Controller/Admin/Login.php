@@ -84,10 +84,10 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             }
             # 尝试登录
             $password = trim($this->_request->getParam('password'));
-//            p(password_hash($password, PASSWORD_DEFAULT),true);
-//            p($adminUsernameUser->getPassword(),true);
-//            p(password_verify($password, $adminUsernameUser->getPassword()));
-            if (password_verify($password, $adminUsernameUser->getPassword())) {
+//            p(password_hash($password, PASSWORD_DEFAULT));
+            p($adminUsernameUser->getId(),true);
+            p(password_verify($password, $adminUsernameUser->getPassword()));
+            if ($adminUsernameUser->getPassword()&&password_verify($password, $adminUsernameUser->getPassword())) {
                 $adminUsernameUser->unsetData('password');
                 $this->_session->login($adminUsernameUser->getData());
                 # 重置 尝试登录次数
