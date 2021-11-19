@@ -14,7 +14,7 @@ interface SessionInterface
 {
     function getData(string $name);
 
-    function setData(string $name, string|int $value);
+    function setData(string $name, mixed $value);
 
     function isLogin();
 

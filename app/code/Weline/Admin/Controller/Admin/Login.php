@@ -64,7 +64,10 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             }
             if ($adminUsernameUser->getAttemptTimes() > 6) {
                 $this->messageManager->addError(__('你的账户因尝试多次登录，已被锁定！请联系其他管理员开通。'));
+                $this->_session->setData('backend_disable_login', '1');
                 $this->redirect($this->getUrl());
+            } else {
+                $this->_session->setData('backend_disable_login', '0');
             }
             # 自增尝试登录次数
             try {
@@ -85,9 +88,9 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             # 尝试登录
             $password = trim($this->_request->getParam('password'));
 //            p(password_hash($password, PASSWORD_DEFAULT));
-            p($adminUsernameUser->getId(),true);
-            p(password_verify($password, $adminUsernameUser->getPassword()));
-            if ($adminUsernameUser->getPassword()&&password_verify($password, $adminUsernameUser->getPassword())) {
+//            p($adminUsernameUser->getId(),true);
+//            p(password_verify($password, $adminUsernameUser->getPassword()));
+            if ($adminUsernameUser->getPassword() && password_verify($password, $adminUsernameUser->getPassword())) {
                 $adminUsernameUser->unsetData('password');
                 $this->_session->login($adminUsernameUser->getData());
                 # 重置 尝试登录次数

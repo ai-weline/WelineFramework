@@ -136,3 +136,7 @@ label {
 .loginbttm {
     padding: 0px;
 }
+.disable{
+    background-color: gray;
+    pointer-events: none;
+}
