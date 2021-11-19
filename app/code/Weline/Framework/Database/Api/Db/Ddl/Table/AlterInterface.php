@@ -74,7 +74,7 @@ interface AlterInterface extends TableInterface
      * @param string $comment 字段注释
      * @return AlterInterface
      */
-    public function addColumn(string $field_name, string $type, ?int $length, string $options, string $comment): AlterInterface;
+    public function addColumn(string $field_name,string $after_column, string $type, ?int $length, string $options, string $comment): AlterInterface;
 
     /**
      * @DESC          # 添加索引

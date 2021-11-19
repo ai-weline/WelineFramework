@@ -11,12 +11,13 @@ declare(strict_types=1);
 namespace Weline\Admin\Model;
 
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class AdminUser extends \Weline\Framework\Database\Model
 {
-    
+
     const fields_ID = 'user_id';
     const fields_attempt_times = 'attempt_times';
     const fields_username = 'username';
@@ -34,6 +35,9 @@ class AdminUser extends \Weline\Framework\Database\Model
             ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
             ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
             ->create();*/
+        $setup->getPrinting()->setup('开始更改表');
+        $setup->alterTable()->addColumn('attempt_ip', 'attempt_times',Table::column_type_VARCHAR, 12, '', '尝试登录的IP')
+            ->alter();
     }
 
     /**
@@ -49,7 +53,7 @@ class AdminUser extends \Weline\Framework\Database\Model
      */
     function install(ModelSetup $setup, Context $context): void
     {
-        if(!$setup->tableExist()){
+        if (!$setup->tableExist()) {
             $setup->createTable('管理员表')
                 ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
                 ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')

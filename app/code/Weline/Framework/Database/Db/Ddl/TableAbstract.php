@@ -79,7 +79,7 @@ abstract class TableAbstract implements TableInterface
         $this->init_vars();
         # 重新赋予新表的值
         if ($primary_key) $this->primary_key = $primary_key;
-        $this->table = '`' . $this->connection->getConfigProvider()->getDatabase() . '`.`' . $table . '`';
+        $this->table = $table;
         $this->new_table_name = $new_table_name ? '`' . $this->connection->getConfigProvider()->getDatabase() . '`.`' . $new_table_name . '`' : '';
         $this->comment = $comment;
     }

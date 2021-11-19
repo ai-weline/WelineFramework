@@ -38,10 +38,10 @@ class Alter extends TableAbstract implements AlterInterface
      * @param string $comment 字段注释
      * @return AlterInterface
      */
-    public function addColumn(string $field_name, string $type, ?int $length, string $options, string $comment): AlterInterface
+    public function addColumn(string $field_name,string $after_column, string $type, ?int $length, string $options, string $comment): AlterInterface
     {
         $type_length = $length ? "{$type}({$length})" : $type;
-        $this->fields[] = "`{$field_name}` {$type_length} {$options} COMMENT '{$comment}'," . PHP_EOL;
+        $this->fields[] = "ADD COLUMN `{$field_name}` {$type_length} {$options} COMMENT '{$comment}' AFTER `{$after_column}`";
 
         return $this;
     }
@@ -161,7 +161,7 @@ class Alter extends TableAbstract implements AlterInterface
                 try {
                     $this->query->query("ALTER TABLE {$this->table} COMMENT='{$this->comment}'")->fetch();
                 } catch (\Exception $exception) {
-                    throw new DbException(__('更新表注释错误：%1', $exception->getMessage()));
+                    exit(__('更新表注释错误：%1', $exception->getMessage()));
                 }
 
             }
@@ -225,8 +225,8 @@ class Alter extends TableAbstract implements AlterInterface
                     $sql = "ALTER TABLE {$this->table} {$field_action} {$type_length} {$options} COMMENT '{$comment}' {$field_sort}";
                     try {
                         $this->query($sql)->fetch();
-                    } catch (\Exception) {
-
+                    } catch (\Exception $exception) {
+                        exit($exception->getMessage() . __('数据库SQL:%1', $sql));
                     }
 
                 }
@@ -234,22 +234,32 @@ class Alter extends TableAbstract implements AlterInterface
                 if (isset($this->delete_fields[$table_field['Field']])) {
                     try {
                         $this->query->query("ALTER TABLE {$this->table} DROP {$table_field['Field']}")->fetch();
-                    } catch (\Exception) {
-
+                    } catch (\Exception $exception) {
+                        exit($exception->getMessage() . __('数据库SQL:%1', $sql));
                     }
 
+                }
+                # --如果存在要新增的字段
+                if ($this->fields) {
+                    $fields = join(',', $this->fields);
+                    $sql = "ALTER TABLE {$this->table} $fields";
+                    try {
+                        $this->query->query($sql)->fetch();
+                    } catch (\Exception $exception) {
+                        exit($exception->getMessage() . __('数据库SQL:%1', $sql));
+                    }
                 }
             }
             # 是否修改表名
             if ($this->new_table_name) {
                 try {
                     $this->query->query("ALTER TABLE {$this->table} RENAME TO {$this->new_table_name}")->fetch();
-                } catch (\Exception) {
-
+                } catch (\Exception $exception) {
+                    exit($exception->getMessage() . __('数据库SQL:%1', $sql));
                 }
             }
-        } catch (\Exception) {
-            return false;
+        } catch (\Exception $exception) {
+            exit($exception->getMessage());
         }
 
         return true;

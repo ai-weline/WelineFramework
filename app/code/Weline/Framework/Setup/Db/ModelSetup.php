@@ -86,7 +86,7 @@ class ModelSetup extends DbManager
      */
     public function alterTable(string $comment = '', string $new_table_name = ''): Alter
     {
-        return $this->ddl_table->alterTable()->forTable($this->model->getTable(), $this->model->primary_key, $comment, $new_table_name);
+        return $this->ddl_table->alterTable()->forTable($this->model->getTable(), $this->model->_primary_key, $comment, $new_table_name);
     }
 
     /**
