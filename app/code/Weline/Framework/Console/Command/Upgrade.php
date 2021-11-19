@@ -130,7 +130,9 @@ class Upgrade extends CommandAbstract
         $scanner = ObjectManager::getInstance(Scan::class);
 
         // 扫描核心命令
+        $scanner->__init();
         $core   = $scanner->scanDirTree(Env::vendor_path);
+        $scanner->__init();
         $custom = $scanner->scanDirTree(APP_PATH);
 
         // 合并

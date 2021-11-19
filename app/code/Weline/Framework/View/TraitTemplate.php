@@ -15,6 +15,7 @@ use Weline\Framework\App\Exception;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\System\Security\Encrypt;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Data\HtmlInterface;
 
@@ -202,6 +203,11 @@ trait TraitTemplate
             default:
         }
         if ($data) $data = str_replace('//', '/', $data);
+        # 是否静态文件添加
+        if ($type === 'statics' && Env::getInstance()->getConfig('static_file_rand_version')) {
+            $version = random_int(10000, 100000);
+            $data .= '?v=' . $version;
+        }
         return $data;
     }
 
