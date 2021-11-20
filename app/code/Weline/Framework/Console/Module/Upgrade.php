@@ -128,16 +128,17 @@ class Upgrade extends CommandAbstract
         $this->data->updateModules($module_list);
 
         $this->printer->note('模块更新完毕！');
+        $i += 1;
 
         // 清理其他
-        /**@var EventsManager $eventsManager */
-        $eventsManager = ObjectManager::getInstance(EventsManager::class);
-        $eventsManager->dispatch('Framework_Console::module_upgrade');
-        $i += 1;
         $this->printer->note($i . '、清理缓存...');
         /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
         $cacheManagerConsole->execute();
+
+        /**@var EventsManager $eventsManager */
+        $eventsManager = ObjectManager::getInstance(EventsManager::class);
+        $eventsManager->dispatch('Framework_Console::module_upgrade');
     }
 
     /**

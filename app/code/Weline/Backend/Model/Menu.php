@@ -42,6 +42,7 @@ class Menu extends \Weline\Framework\Database\Model
      */
     function setup(ModelSetup $setup, Context $context): void
     {
+//        p($setup->getTable());
         /*$setup->dropTable();
         $setup->getPrinting()->setup('安装数据表...' . self::table);
         $setup->createTable('后端菜单表')

@@ -12,6 +12,7 @@ namespace Weline\Admin\Model;
 
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
@@ -41,6 +42,12 @@ class AdminUser extends \Weline\Framework\Database\Model
         /* $setup->getPrinting()->setup('开始更改表');
         $setup->alterTable()->addColumn('login_ip', 'password',Table::column_type_VARCHAR, 12, '', '登录IP')
             ->alter();*/
+        $setup->alterTable()->alterColumn('login_ip', 'login_ip','sess_id',Table::column_type_VARCHAR, 16, '', '登录IP')
+            ->alter();
+        # 初始化一个账户
+//        /**@var AdminUser $adminUser */
+//        $adminUser = ObjectManager::getInstance(AdminUser::class);
+//        $adminUser->setUsername('admin')->setPassword('admin')->save();
     }
 
     /**
@@ -61,11 +68,10 @@ class AdminUser extends \Weline\Framework\Database\Model
                 ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
                 ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
                 ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
-                ->addColumn('login_ip', TableInterface::column_type_VARCHAR, 12, '', '登录IP')
+                ->addColumn('login_ip', TableInterface::column_type_VARCHAR, 16, '', '登录IP')
                 ->addColumn('sess_id', TableInterface::column_type_VARCHAR, 32, '', '管理员Session ID')
                 ->addColumn('attempt_times', TableInterface::column_type_INTEGER, 0, '', '尝试登录次数')
                 ->addColumn('attempt_ip', TableInterface::column_type_INTEGER, 0, '', '尝试登录IP')
-                ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
                 ->create();
         }
     }
@@ -108,9 +114,19 @@ class AdminUser extends \Weline\Framework\Database\Model
         return $this->getData('username');
     }
 
+    function setUsername(string $username)
+    {
+        return $this->setData('username', $username);
+    }
+
     function getPassword()
     {
         return $this->getData('password');
+    }
+
+    function setPassword(string $password)
+    {
+        return $this->setData('password', password_hash($password, PASSWORD_DEFAULT));
     }
 
 

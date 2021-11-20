@@ -33,6 +33,7 @@ class Commands
         foreach ($this->data->getCommands() as $needCommand) {
             try {
                 exec('php ' . BP . $needCommand, $result);
+                $tmp[$needCommand]=implode(',', $result);
                 $value = str_pad('✔', 10, ' ', STR_PAD_BOTH);
             } catch (Exception $e) {
                 $hasErr = true;

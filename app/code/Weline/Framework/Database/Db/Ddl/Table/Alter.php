@@ -38,7 +38,7 @@ class Alter extends TableAbstract implements AlterInterface
      * @param string $comment 字段注释
      * @return AlterInterface
      */
-    public function addColumn(string $field_name,string $after_column, string $type, ?int $length, string $options, string $comment): AlterInterface
+    public function addColumn(string $field_name, string $after_column, string $type, ?int $length, string $options, string $comment): AlterInterface
     {
         $type_length = $length ? "{$type}({$length})" : $type;
         $this->fields[] = "ADD COLUMN `{$field_name}` {$type_length} {$options} COMMENT '{$comment}' AFTER `{$after_column}`";
@@ -160,7 +160,7 @@ class Alter extends TableAbstract implements AlterInterface
                 try {
                     $this->query->query("ALTER TABLE {$this->table} COMMENT='{$this->comment}'")->fetch();
                 } catch (\Exception $exception) {
-                    exit(__('更新表注释错误：%1', $exception->getMessage()));
+                    exit(__('更新表注释错误：%1', $exception->getMessage()) . PHP_EOL);
                 }
 
             }
@@ -172,7 +172,7 @@ class Alter extends TableAbstract implements AlterInterface
                     if ($table_field['Field'] !== $alter_field['field_name']) {
                         $field_action = "CHANGE `{$table_field['Field']}` `{$alter_field['field_name']}`";
                     } else {
-                        $field_action = "MODIFY {$table_field['Field']}";
+                        $field_action = "MODIFY COLUMN `{$table_field['Field']}`";
                     }
                     # --与数据库中的字段类型 比较
                     $type_length = $table_field['Type'];
@@ -191,7 +191,7 @@ class Alter extends TableAbstract implements AlterInterface
                     } else {
                         # --是否允许空
                         if ('YES' === $table_field['Null']) {
-                            $options .= ' IS NULL ';
+                            $options .= ' NULL ';
                         } else {
                             $options .= ' NOT NULL ';
                         }
@@ -224,16 +224,17 @@ class Alter extends TableAbstract implements AlterInterface
                     try {
                         $this->query($sql)->fetch();
                     } catch (\Exception $exception) {
-                        exit($exception->getMessage() . __('数据库SQL:%1', $sql));
+                        exit($exception->getMessage(). PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                     }
 
                 }
                 # --如果存在删除数组中则删除字段
                 if (isset($this->delete_fields[$table_field['Field']])) {
+                    $sql = "ALTER TABLE {$this->table} DROP {$table_field['Field']}";
                     try {
-                        $this->query->query("ALTER TABLE {$this->table} DROP {$table_field['Field']}")->fetch();
+                        $this->query->query($sql)->fetch();
                     } catch (\Exception $exception) {
-                        exit($exception->getMessage() . __('数据库SQL:%1', $sql));
+                        exit($exception->getMessage(). PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                     }
                 }
             }
@@ -244,7 +245,7 @@ class Alter extends TableAbstract implements AlterInterface
                 try {
                     $this->query->query($sql);
                 } catch (\Exception $exception) {
-                    exit($exception->getMessage() . __('数据库SQL:%1', $sql));
+                    exit($exception->getMessage(). PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                 }
             }
             # 是否修改表名
@@ -253,7 +254,7 @@ class Alter extends TableAbstract implements AlterInterface
                 try {
                     $this->query->query($sql)->fetch();
                 } catch (\Exception $exception) {
-                    exit($exception->getMessage() . __('数据库SQL:%1', $sql));
+                    exit($exception->getMessage(). PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                 }
             }
 

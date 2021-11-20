@@ -38,7 +38,7 @@ class ModelSetup extends DbManager
      */
     function __construct(
         ConfigProvider $configProvider,
-        Printing $printing,
+        Printing       $printing,
         DdlFactory     $ddl_table
     )
     {
@@ -62,6 +62,7 @@ class ModelSetup extends DbManager
         $this->model = $model;
         return $this;
     }
+
     /**
      * @DESC         | 创建表
      *
@@ -112,10 +113,13 @@ class ModelSetup extends DbManager
      * @throws Exception
      * @throws \ReflectionException|\Weline\Framework\Database\Exception\LinkException
      */
-    public function tableExist(): bool
+    public function tableExist(string $table_name=''): bool
     {
+        if(empty($table_name)){
+            $table_name = $this->model->getTable();
+        }
         try {
-            $this->query("DESC {$this->model->getTable()}");
+            $this->query("DESC {$table_name}");
             return true;
         } catch (\PDOException $exception) {
             return false;
@@ -132,8 +136,11 @@ class ModelSetup extends DbManager
      */
     public function getTable(string $name = ''): string
     {
-        if (!strstr($name, $this->getTablePrefix())) {
+        if (!empty($name) && !strstr($name, $this->getTablePrefix())) {
             $name = $this->getTablePrefix() . $name;
+        }
+        if (empty($name)) {
+            $name = $this->model->getTable();
         }
         return $name;
     }
@@ -145,10 +152,13 @@ class ModelSetup extends DbManager
      *
      * @return bool
      */
-    public function dropTable(): bool
+    public function dropTable(string $table_name=''): bool
     {
+        if(empty($table_name)){
+            $table_name = $this->model->getTable();
+        }
         try {
-            $this->query('DROP TABLE ' . $this->model->getTable());
+            $this->query('DROP TABLE ' . $table_name);
             return true;
         } catch (\Exception $exception) {
             return false;

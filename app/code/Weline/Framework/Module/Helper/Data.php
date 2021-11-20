@@ -60,6 +60,9 @@ class Data extends AbstractHelper
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
                         $ctl_data = $this->parserController($apiClassName);
+                        if(empty($ctl_data)){
+                            continue;
+                        }
                         $ctl_methods = $ctl_data['methods'];
                         $ctl_area = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {
