@@ -129,6 +129,12 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         }
     }
 
+    function logout()
+    {
+        $this->getSession()->logout();
+        $this->redirect($this->getUrl('admin/login'));
+    }
+
     /**
      * @DESC          # 获取验证码
      *
