@@ -68,7 +68,6 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             }
             if ($adminUsernameUser->getAttemptTimes() > 6) {
                 $adminUsernameUser->setAttemptIp($this->_request->clientIP())->save();
-                $this->messageManager->addError(__('你的账户因尝试多次登录，已被锁定！请联系其他管理员开通。'));
                 $this->_session->setData('backend_disable_login', true);
                 if ($adminUsernameUser->getAttemptTimes() > 60) {
                     # FIXME 将IP封死，为了不占用服务器资源，将封锁过程提前到框架入口处，此处只作为拉入黑名单处理【设置为Security框架函数处理】

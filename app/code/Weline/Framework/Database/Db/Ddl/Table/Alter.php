@@ -42,7 +42,6 @@ class Alter extends TableAbstract implements AlterInterface
     {
         $type_length = $length ? "{$type}({$length})" : $type;
         $this->fields[] = "ADD COLUMN `{$field_name}` {$type_length} {$options} COMMENT '{$comment}' AFTER `{$after_column}`";
-
         return $this;
     }
 
@@ -166,7 +165,6 @@ class Alter extends TableAbstract implements AlterInterface
 
             }
             $table_fields = $this->getTableColumns();
-
             # 字段编辑
             foreach ($table_fields as $table_field) {
                 # --如果存在修改数组中则修改 暂不删除字段，以免修改字段异常，先修改后删除
@@ -237,27 +235,28 @@ class Alter extends TableAbstract implements AlterInterface
                     } catch (\Exception $exception) {
                         exit($exception->getMessage() . __('数据库SQL:%1', $sql));
                     }
-
-                }
-                # --如果存在要新增的字段
-                if ($this->fields) {
-                    $fields = join(',', $this->fields);
-                    $sql = "ALTER TABLE {$this->table} $fields";
-                    try {
-                        $this->query->query($sql)->fetch();
-                    } catch (\Exception $exception) {
-                        exit($exception->getMessage() . __('数据库SQL:%1', $sql));
-                    }
                 }
             }
-            # 是否修改表名
-            if ($this->new_table_name) {
+            # --如果存在要新增的字段
+            if ($this->fields) {
+                $fields = join(',', $this->fields);
+                $sql = "ALTER TABLE {$this->table} $fields";
                 try {
-                    $this->query->query("ALTER TABLE {$this->table} RENAME TO {$this->new_table_name}")->fetch();
+                    $this->query->query($sql);
                 } catch (\Exception $exception) {
                     exit($exception->getMessage() . __('数据库SQL:%1', $sql));
                 }
             }
+            # 是否修改表名
+            if ($this->new_table_name) {
+                $sql = "ALTER TABLE {$this->table} RENAME TO {$this->new_table_name}";
+                try {
+                    $this->query->query($sql)->fetch();
+                } catch (\Exception $exception) {
+                    exit($exception->getMessage() . __('数据库SQL:%1', $sql));
+                }
+            }
+
         } catch (\Exception $exception) {
             exit($exception->getMessage());
         }

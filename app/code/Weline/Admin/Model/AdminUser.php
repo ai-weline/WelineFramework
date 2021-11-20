@@ -23,6 +23,7 @@ class AdminUser extends \Weline\Framework\Database\Model
     const fields_attempt_ip = 'attempt_ip';
     const fields_username = 'username';
     const fields_password = 'password';
+    const fields_sess_id = 'sess_id';
 
     /**
      * @inheritDoc
@@ -36,9 +37,9 @@ class AdminUser extends \Weline\Framework\Database\Model
             ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
             ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
             ->create();*/
-        /*$setup->getPrinting()->setup('开始更改表');
-        $setup->alterTable()->addColumn('attempt_ip', 'attempt_times',Table::column_type_VARCHAR, 12, '', '尝试登录的IP')
-            ->alter();*/
+       /* $setup->getPrinting()->setup('开始更改表');
+        $setup->alterTable()->addColumn('sess_id', 'password',Table::column_type_VARCHAR, 32, '', '管理员Session ID')
+            ->alter()*/;
     }
 
     /**
