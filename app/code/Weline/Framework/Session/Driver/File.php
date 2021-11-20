@@ -11,7 +11,10 @@ namespace Weline\Framework\Session\Driver;
 
 class File implements SessionDriverHandlerInterface
 {
-    private function clone(){}
+    private function clone()
+    {
+    }
+
     private string $sessionPath;
 
     /**
@@ -55,9 +58,15 @@ class File implements SessionDriverHandlerInterface
         unset($_SESSION[$name]);
         return true;
     }
+
     public function destroy(): bool
     {
         $_SESSION = [];
         return session_destroy();
+    }
+
+    public function getSessionId():string
+    {
+        return session_id();
     }
 }

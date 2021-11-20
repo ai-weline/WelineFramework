@@ -47,4 +47,15 @@ interface SessionDriverHandlerInterface extends DriverInterface
     public function delete($name):bool;
 
     public function destroy();
+
+    /**
+     * @DESC          # 获取Session ID
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/20 13:52
+     * 参数区：
+     * @return mixed
+     */
+    public function getSessionId():string;
 }

@@ -38,6 +38,10 @@ class Login extends \Weline\Framework\App\Controller\BackendController
 
     function index()
     {
+        if ($this->_session->isLogin()) {
+            $this->redirect($this->getUrl('/'));
+        }
+//        $this->getSession()->delete('backend_disable_login');
         $this->assign('post_url', $this->getUrl('admin/login/post'));
         # 检测验证码
         if ($this->getSession()->getData('need_backend_verification_code')) {
@@ -53,6 +57,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     function post()
     {
         # 已经登录直接进入后台
+//        $this->_session->logout();
         if ($this->_session->isLogin()) {
             $this->redirect($this->getUrl('/'));
         }
@@ -67,11 +72,11 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                 $this->redirect($this->getUrl());
             }
             if ($adminUsernameUser->getAttemptTimes() > 6) {
-                $adminUsernameUser->setAttemptIp($this->_request->clientIP())->save();
+                $adminUsernameUser->setSessionId($this->getSession()->getSessionId())->setAttemptIp($this->_request->clientIP())->save();
                 $this->_session->setData('backend_disable_login', true);
                 if ($adminUsernameUser->getAttemptTimes() > 60) {
                     # FIXME 将IP封死，为了不占用服务器资源，将封锁过程提前到框架入口处，此处只作为拉入黑名单处理【设置为Security框架函数处理】
-                    $this->_request->getResponse()->noRouter();
+                    $this->noRouter();
                 }
                 $this->redirect($this->getUrl());
             } else {
@@ -81,6 +86,9 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             try {
                 $adminUsernameUser->addAttemptTimes()->save();
             } catch (\Exception $exception) {
+                $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
+                    ->setAttemptIp($this->_request->clientIP())
+                    ->save();
                 $this->messageManager->addError(__('登录异常！'));
                 $this->redirect($this->getUrl());
             }
@@ -91,6 +99,9 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             # 验证验证码
             if ($adminUsernameUser->getAttemptTimes() > 3 && ($this->_session->getData('backend_verification_code') !== $this->_request->getParam('code'))) {
                 $this->messageManager->addError(__('验证码错误！'));
+                $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
+                    ->setAttemptIp($this->_request->clientIP())
+                    ->save();
                 $this->redirect($this->getUrl());
             }
             # 尝试登录
@@ -99,11 +110,15 @@ class Login extends \Weline\Framework\App\Controller\BackendController
 //            p($adminUsernameUser->getId(),true);
 //            p(password_verify($password, $adminUsernameUser->getPassword()));
             if ($adminUsernameUser->getPassword() && password_verify($password, $adminUsernameUser->getPassword())) {
-                $adminUsernameUser->unsetData('password');
                 $this->_session->login($adminUsernameUser->getData());
+                $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
+                    ->setLoginIp($this->_request->clientIP());
                 # 重置 尝试登录次数
-                $adminUsernameUser->resetAttemptTimes();
+                $adminUsernameUser->resetAttemptTimes()->save();
             } else {
+                $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
+                    ->setAttemptIp($this->_request->clientIP())
+                    ->save();
                 $this->messageManager->addError(__('登录凭据错误！'));
             }
             # 跳转首页

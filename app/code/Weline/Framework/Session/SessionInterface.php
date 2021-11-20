@@ -20,6 +20,8 @@ interface SessionInterface
 
     function login(mixed $user);
 
+    function getLoginUser();
+
     function logout();
 
     function getOriginSession();

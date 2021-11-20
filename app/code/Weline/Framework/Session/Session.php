@@ -105,6 +105,11 @@ class Session implements SessionInterface
         return $this->session;
     }
 
+    function getSessionId(): string
+    {
+        return $this->session->getSessionId();
+    }
+
     /**
      * @DESC         |方法描述
      *
@@ -120,6 +125,11 @@ class Session implements SessionInterface
     public function login(mixed $user)
     {
         return $this->session->set(self::login_KEY, $user);
+    }
+
+    public function getLoginUser()
+    {
+        return $this->session->get(self::login_KEY);
     }
 
     public function logout(): bool

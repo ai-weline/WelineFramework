@@ -19,10 +19,11 @@ class AdminUser extends \Weline\Framework\Database\Model
 {
 
     const fields_ID = 'user_id';
-    const fields_attempt_times = 'attempt_times';
-    const fields_attempt_ip = 'attempt_ip';
     const fields_username = 'username';
     const fields_password = 'password';
+    const fields_login_ip = 'login_ip';
+    const fields_attempt_ip = 'attempt_ip';
+    const fields_attempt_times = 'attempt_times';
     const fields_sess_id = 'sess_id';
 
     /**
@@ -37,9 +38,9 @@ class AdminUser extends \Weline\Framework\Database\Model
             ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
             ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
             ->create();*/
-       /* $setup->getPrinting()->setup('开始更改表');
-        $setup->alterTable()->addColumn('sess_id', 'password',Table::column_type_VARCHAR, 32, '', '管理员Session ID')
-            ->alter()*/;
+        /* $setup->getPrinting()->setup('开始更改表');
+        $setup->alterTable()->addColumn('login_ip', 'password',Table::column_type_VARCHAR, 12, '', '登录IP')
+            ->alter();*/
     }
 
     /**
@@ -60,6 +61,10 @@ class AdminUser extends \Weline\Framework\Database\Model
                 ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
                 ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
                 ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
+                ->addColumn('login_ip', TableInterface::column_type_VARCHAR, 12, '', '登录IP')
+                ->addColumn('sess_id', TableInterface::column_type_VARCHAR, 32, '', '管理员Session ID')
+                ->addColumn('attempt_times', TableInterface::column_type_INTEGER, 0, '', '尝试登录次数')
+                ->addColumn('attempt_ip', TableInterface::column_type_INTEGER, 0, '', '尝试登录IP')
                 ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
                 ->create();
         }
@@ -106,5 +111,26 @@ class AdminUser extends \Weline\Framework\Database\Model
     function getPassword()
     {
         return $this->getData('password');
+    }
+
+
+    function getSessionId()
+    {
+        return $this->getData(self::fields_sess_id);
+    }
+
+    function setSessionId(string $sess_id): AdminUser
+    {
+        return $this->setData(self::fields_sess_id, $sess_id);
+    }
+
+    function getLoginIp()
+    {
+        return $this->getData(self::fields_login_ip);
+    }
+
+    function setLoginIp(string $ip): AdminUser
+    {
+        return $this->setData(self::fields_login_ip, $ip);
     }
 }
