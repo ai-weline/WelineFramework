@@ -190,7 +190,7 @@ class Template
         }
 
         # 测试
-        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
+//        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
         if (!$comFileName || !$tplFile) {
             // 解析模板路由
@@ -249,7 +249,7 @@ class Template
             };
         }
         # 测试
-        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
+//        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         # 检测编译文件，如果不符合条件则重新进行文件编译
         if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译

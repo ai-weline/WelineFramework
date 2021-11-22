@@ -15,7 +15,7 @@ class Index extends BackendController
 {
     public function index()
     {
-        $this->fetch();
+        $this->fetch('Weline_Admin::/theme/material/dashboard');
     }
 
     public function test(): string
