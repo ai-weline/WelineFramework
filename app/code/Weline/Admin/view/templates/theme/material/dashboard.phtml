@@ -4,15 +4,14 @@
  */
 ?>
 @template(Weline_Backend::public/header.phtml)
-<link rel="stylesheet" href="@static(Weline_Admin::templates/theme/material/statics/css/iot-theme-bundle.min.css)">
-<link rel="stylesheet" href="@static(Weline_Admin::templates/theme/material/statics/css/material.css)">
-<!--<script src="@static(Weline_Admin::templates/theme/material/statics/js/bootstrap.bundle.min.js)"></script>-->
-<!--<script src="@static(Weline_Admin::templates/theme/material/statics/js/iot-functions.min.js)"></script>-->
-<!--<script src="@static(Weline_Admin::templates/theme/material/statics/js/iot-timer.min.js)"></script>-->
-<!--<script src="@static(Weline_Admin::templates/theme/material/statics/js/svg4everybody.min.js)"></script>-->
-<script src="@static(Weline_Admin::templates/theme/material/statics/require.config.js)"></script>
+<link rel="stylesheet" href="@static(Weline_Admin::theme/material/css/iot-theme-bundle.min.css)">
+<link rel="stylesheet" href="@static(Weline_Admin::theme/material/css/material.css)">
+<script src="@static(Weline_Admin::theme/material/require.config.js)"></script>
 </head>
 <body>
+<div class="header-wapper">
+    <div>Menu</div>
+</div>
 @template(Weline_Backend::blocks/menu.phtml)
 <script>
     require(['jquery','iotTimer'],function ($,iotTimer){

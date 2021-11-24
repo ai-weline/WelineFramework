@@ -8,9 +8,9 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Resource;
+namespace Weline\Theme\Console\Resource;
 
 interface CompilerInterface
 {
-    public function compiler(string $less_file, string $out_file);
+    public function compile(string $source_file=null, string $out_file=null);
 }

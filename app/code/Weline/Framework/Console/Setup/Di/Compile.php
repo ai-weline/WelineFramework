@@ -9,6 +9,8 @@
 
 namespace Weline\Framework\Console\Setup\Di;
 
+use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\App\Scanner as AppScanner;
 
 class Compile extends \Weline\Framework\Console\CommandAbstract
@@ -33,6 +35,11 @@ class Compile extends \Weline\Framework\Console\CommandAbstract
                 }
             }
         }
+        # 分配编译事件
+        /**@var EventsManager $evenManager*/
+        $evenManager = ObjectManager::getInstance(EventsManager::class);
+        $evenManager->dispatch('Framework_Console::compile');
+
     }
 
     /**

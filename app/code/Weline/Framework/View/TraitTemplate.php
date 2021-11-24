@@ -79,7 +79,7 @@ trait TraitTemplate
             $fileName = str_replace($pre_module_name . '::', '', $fileName);
             # 替换掉当前模块的视图目录
             $view_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
-            $template_dir = BP .$module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
+            $template_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
 
             if (!DEV) {
                 $compile_dir = str_replace(APP_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']) . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
@@ -95,7 +95,6 @@ trait TraitTemplate
     function processModuleSourceFilePath(string $type, string $source): array
     {
         $t_f = $type . DIRECTORY_SEPARATOR . $source;
-
         $t_f_arr = [];
         # 如果存在向别的模块调用模板的情况
         if (strstr($source, "::")) {
@@ -150,7 +149,10 @@ trait TraitTemplate
                 break;
             default:
         }
-//        if($data)$data = str_replace('\\', '', $data);
+        if ($data) {
+            $data = str_replace('\\', '/', $data);
+            $data = str_replace('//', '/', $data);
+        }
         return $data;
     }
 

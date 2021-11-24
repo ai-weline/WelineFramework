@@ -122,7 +122,7 @@ class Scanner extends Scan
                             $modules[$module] = $app_need_file_or_dir;
                         } else {
                             $this->__init();
-                            $modules[$module] = $this->scanDirTree($app_need_file_or_dir, 3);
+                            $modules[$module] = $this->scanDirTree($app_need_file_or_dir);
                             $this->__init();
                         }
                     }
@@ -139,7 +139,7 @@ class Scanner extends Scan
                                 $modules[$module] = $vendor_app_need_file_or_dir;
                             } else {
                                 $this->__init();
-                                $modules[$module] = $this->scanDirTree($vendor_app_need_file_or_dir, 3);
+                                $modules[$module] = $this->scanDirTree($vendor_app_need_file_or_dir);
                                 $this->__init();
                             }
                             /*try {

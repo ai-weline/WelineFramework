@@ -44,6 +44,6 @@ class Reader
             return $this->theme->getActiveTheme();
         }
 
-        return $this->theme->load(WelineTheme::filed_IS_ACTIVE);
+        return $this->theme->load(WelineTheme::fields_IS_ACTIVE);
     }
 }

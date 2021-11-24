@@ -8,9 +8,9 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Resource\Compiler;
+namespace Weline\Theme\Console\Resource\Compiler;
 
-use Weline\Framework\Resource\CompilerInterface;
+use Weline\Theme\Console\Resource\CompilerInterface;
 
 class Less implements CompilerInterface
 {
@@ -21,7 +21,7 @@ class Less implements CompilerInterface
         $this->less = new \lessc();
     }
 
-    function compiler(string $less_file, string $out_file)
+    function compile(string $less_file=null, string $out_file=null)
     {
         return $this->less->checkedCompile($less_file, $out_file);
     }
