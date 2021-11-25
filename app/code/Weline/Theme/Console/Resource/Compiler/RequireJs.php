@@ -10,14 +10,14 @@ declare(strict_types=1);
 
 namespace Weline\Theme\Console\Resource\Compiler;
 
-class RequireJs extends Statics
+use Weline\Theme\Console\Resource\Compiler\RequireJs\Compiler;
+
+class RequireJs extends Compiler
 {
     public function compile(string $source_file = null, string $out_file = null)
     {
         # require.config.js处理
         $this->reader->setFile('require.config.js');
-        $data = parent::compile();
-        p($data);
-
+        parent::compile();
     }
 }

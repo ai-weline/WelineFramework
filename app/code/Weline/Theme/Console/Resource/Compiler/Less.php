@@ -18,11 +18,14 @@ class Less implements CompilerInterface
 
     function __init()
     {
-        $this->less = new \lessc();
+        $this->less = new \Less_Parser();
     }
 
     function compile(string $less_file=null, string $out_file=null)
     {
-        return $this->less->checkedCompile($less_file, $out_file);
+        if($less_file){
+            $this->less->parserFile($less_file, $out_file);
+        }
+        return true;
     }
 }

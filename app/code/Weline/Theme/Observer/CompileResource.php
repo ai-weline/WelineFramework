@@ -21,8 +21,8 @@ class CompileResource implements \Weline\Framework\Event\ObserverInterface
      */
     public function execute(Event $event)
     {
-        /**@var Compiler\Statics $statics*/
-        $statics = ObjectManager::getInstance(Compiler\Statics::class);
-        $statics->compile();
+        /**@var Compiler $statics*/
+        $statics = ObjectManager::getInstance(Compiler::class);
+        $statics->execute();
     }
 }

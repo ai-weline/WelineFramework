@@ -8,11 +8,12 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Theme\Console\Resource\Compiler\Statics;
+namespace Weline\Theme\Config;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\System\File\Data\File;
 
-class Reader extends \Weline\Framework\Module\File\Reader
+class StaticsReader extends \Weline\Framework\Module\File\Reader
 {
     private string $file;
 
@@ -36,17 +37,17 @@ class Reader extends \Weline\Framework\Module\File\Reader
             foreach ($data as $vendor => $module_data) {
                 foreach ($module_data as $name => $dir_data) {
                     foreach ($dir_data as $dir => $dir_files) {
-                        /**@var File $dir_file*/
+                        /**@var File $dir_file */
                         foreach ($dir_files as $dir_file) {
                             if ($this->file === $dir_file->getBaseName()) {
                                 $area = 'frontend';
-                                if(is_int(strpos($dir_file->getNamespace(), 'backend'))){
+                                if (is_int(strpos($dir_file->getNamespace(), 'backend'))) {
                                     $area = 'backend';
                                 }
                                 $need_data[] = [
                                     'module' => $vendor . '_' . $name,
                                     'dir' => $dir,
-                                    'area'=>$area,
+                                    'area' => $area,
                                     'file' => $dir_file->getRelate(),
                                     'origin' => $dir_file->getOrigin(),
                                 ];

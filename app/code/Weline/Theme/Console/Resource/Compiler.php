@@ -34,20 +34,20 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
         $source_type = '';
         array_shift($args);
         foreach ($args as $arg) {
-            if (!in_array($arg, $this->getTypes())) {
+            if (!in_array($arg, array_keys($this->getTypes()))) {
                 $this->printing->error(__('不存在的编译资源类型：%1，支持的资源类型：%2', [$arg, $this->getTypes(true)]));
             }
         }
         if (empty($source_type)) {
-            foreach ($this->getTypes() as $type) {
-                $type = ucfirst($type);
+            foreach ($this->getTypes() as $key=>$type) {
+                $key= ucfirst($key);
                 /**@var CompilerInterface $compiler */
-                $compiler = ObjectManager::getInstance("\Weline\Theme\Console\Resource\Compiler\{$type}");
+                $compiler = ObjectManager::getInstance("\Weline\Theme\Console\Resource\Compiler\\$key");
                 $compiler->compile();
             }
         } else {
             /**@var CompilerInterface $compiler */
-            $compiler = ObjectManager::getInstance("\Weline\Theme\Console\Resource\Compiler\{$source_type}");
+            $compiler = ObjectManager::getInstance("\Weline\Theme\Console\Resource\Compiler\\$source_type");
             $compiler->compile();
         }
     }
@@ -56,7 +56,7 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
     {
         $data = [
             'less' => __('编译less静态资源！'),
-            'statics' => __('静态文件：require.config.js编译文件！'),
+            'requireJs' => __('静态文件：require.config.js编译文件！'),
         ];
         if ($to_string) {
             $data = implode(',', $data);
