@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace Weline\Theme\Console\Resource\Compiler\RequireJs;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Theme\Console\Resource\CompilerInterface;
 use Weline\Framework\View\Template;
@@ -19,7 +21,6 @@ class Compiler implements CompilerInterface
 {
 
     protected \Weline\Theme\Console\Resource\Compiler\RequireJs\Reader $reader;
-    protected Template $template;
 
     function __construct(
         \Weline\Theme\Console\Resource\Compiler\RequireJs\Reader $reader
@@ -28,37 +29,28 @@ class Compiler implements CompilerInterface
         $this->reader = $reader;
     }
 
-    private function getTemplate()
+    protected ?EventsManager $eventsManager = null;
+
+    function getEventManager(): EventsManager
     {
-        if (!isset($this->template, $_)) {
-            /**@var Template $template */
-            $this->template = Template::getInstance()->init();
+        if (!isset($this->eventsManager, $_)) {
+            $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
         }
-        return $this->template;
+        return $this->eventsManager;
     }
 
     public function compile(string $source_file = null, string $out_file = null)
     {
         $config_resources = $this->reader->parserRequireConfigs();
-        foreach ($config_resources as $config_resource) {
-            p($config_resource);
+        foreach ($config_resources as $area => $config_resource) {
+            $this->getEventManager()->dispatch('Weline_Theme::compiler',
+                ['data' => new DataObject(
+                    ['area' => $area,
+                        'type' => 'require.configs.js',
+                        'resources' => $config_resource
+                    ])
+                ]);
         }
-        return ;
-    }
-    function addData(string $area,string $param_name, string $param_value): array
-    {
-        if (isset($this->config_resources[$area][$param_name], $_)) {
-            if (is_array($this->config_resources[$area][$param_name])) {
-                $this->config_resources[$area][$param_name][] = $param_value;
-            }
-        } else {
-            $this->config_resources[$area][$param_name] = $param_value;
-        }
-        return $this->config_resources;
     }
 
-    function fetchFile(string $source)
-    {
-        return $this->getTemplate()->fetchTemplateTagSourceFile('statics', $source);
-    }
 }

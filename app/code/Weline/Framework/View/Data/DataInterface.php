@@ -15,6 +15,8 @@ class DataInterface
 
     const view_STATICS_DIR = 'statics';
 
+    const view_BASE = 'base';
+
     const view_TEMPLATE_DIR = 'templates';
 
     const view_TEMPLATE_COMPILE_DIR = 'tpl';
@@ -22,6 +24,8 @@ class DataInterface
     const dir_type_TEMPLATE = 'templates';
 
     const dir_type_STATICS = 'statics';
+
+    const dir_type_BASE = 'base';
 
     const dir_type_TEMPLATE_COMPILE = 'tpl';
 }

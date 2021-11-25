@@ -33,6 +33,11 @@ class Event extends \Weline\Framework\DataObject\DataObject
         $this->setData($data);
     }
 
+    function getEvenData()
+    {
+        return $this->getData('data');
+    }
+
     private string $name;
 
     /**

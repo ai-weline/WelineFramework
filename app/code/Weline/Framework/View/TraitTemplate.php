@@ -183,6 +183,15 @@ trait TraitTemplate
                 $data = $this->fetch($t_f);
                 $this->viewCache->set($cache_key, $t_f);
                 break;
+            case DataInterface::dir_type_BASE:
+                if ($t_f = $this->viewCache->get($cache_key)) {
+                    $data = $this->fetch($t_f);
+                    break;
+                }
+                list($t_f) = $this->processModuleSourceFilePath($type, $source);
+                $data = $this->fetch($t_f);
+                $this->viewCache->set($cache_key, $t_f);
+                break;
             case DataInterface::dir_type_STATICS:
                 if ($data = $this->viewCache->get($cache_key)) {
                     break;
@@ -204,7 +213,10 @@ trait TraitTemplate
                 break;
             default:
         }
-        if ($data) $data = str_replace('//', '/', $data);
+        if ($data) {
+            $data = str_replace('\\', '/', $data);
+            $data = str_replace('//', '/', $data);
+        };
         # 是否静态文件添加
         if ($type === 'statics' && Env::getInstance()->getConfig('static_file_rand_version')) {
             $version = random_int(10000, 100000);
