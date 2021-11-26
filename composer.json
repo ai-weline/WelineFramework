@@ -26,7 +26,8 @@
     "symfony/polyfill-intl-icu": "^1.23",
     "jdorn/sql-formatter": "^1.2",
     "ext-gd": "*",
-    "wikimedia/less.php": "^3.1"
+    "wikimedia/less.php": "^3.1",
+    "mrclay/jsmin-php": "^2.4"
   },
   "autoload": {
     "psr-4": {

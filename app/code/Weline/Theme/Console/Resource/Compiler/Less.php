@@ -21,7 +21,7 @@ class Less implements CompilerInterface
         $this->less = new \Less_Parser();
     }
 
-    function compile(string $less_file=null, string $out_file=null)
+    function compile(string $less_file=null, string $out_file=null): bool
     {
         if($less_file){
             $this->less->parserFile($less_file, $out_file);

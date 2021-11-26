@@ -13,6 +13,7 @@ use Weline\Framework\App\Env;
 use Weline\Framework\App\System;
 use Weline\Framework\Console\CommandAbstract;
 use Weline\Framework\Console\Deploy\Upgrade;
+use Weline\Framework\Console\Setup\Di\Compile;
 use Weline\Framework\System\File\App\Scanner as AppScanner;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Data\DataInterface;
@@ -38,6 +39,8 @@ class Set extends CommandAbstract
             case 'prod':
                 $this->printer->note('正在清除模组模板编译文件...');
                 $this->cleanTplComDir();
+                $this->printer->note('编译静态资源...');
+                ObjectManager::getInstance(Compile::class)->execute();
                 $this->printer->note('正在清除pub目录下生成的静态文件...');
                 $this->cleanThemeDir();
                 $this->printer->note('正在执行静态资源部署...');

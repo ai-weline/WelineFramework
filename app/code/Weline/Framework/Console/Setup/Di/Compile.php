@@ -24,8 +24,7 @@ class Compile extends \Weline\Framework\Console\CommandAbstract
         $scanner = new AppScanner();
         $apps = $scanner->scanAppModules();
 
-        $this->printer->note('DI:插件更新...');
-        // TODO 扫描插件
+        $this->printer->note('DI:依赖更新...');
         $all_plugins = [];
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {

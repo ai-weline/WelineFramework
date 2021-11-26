@@ -92,6 +92,7 @@ class Core
             // 开发模式(静态资源可访问app本地静态资源)
             $static = $this->StaticFile($url);
             if ($static) return $static;
+            http_response_code(404);
             throw new Exception('未知的路由！');
         }
         return '';
@@ -226,8 +227,9 @@ class Core
      */
     public function StaticFile(string &$url): mixed
     {
-        header ("Cache-Control: max-age=3600");
+        header("Cache-Control: max-age=3600");
         $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
+        $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
         // 阻止读取其他文件
         if (is_bool(strpos($filename, \Weline\Framework\View\Data\DataInterface::dir))) {
             $this->request->getResponse()->noRouter();

@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Observer;
 
+use JSMin\JSMin;
 use Weline\Framework\Event\Event;
 use Weline\Framework\View\Template;
 
@@ -30,19 +31,14 @@ class Compiler implements \Weline\Framework\Event\ObserverInterface
             $type = $eventData->getType();
             switch ($type):
                 case self::require_js_type:
-                    $path = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR.'statics'. DIRECTORY_SEPARATOR . self::require_js_file;
+                    $path = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'statics' . DIRECTORY_SEPARATOR . self::require_js_file;
                     if (!is_dir(dirname($path))) {
                         mkdir($path, 755);
                     }
                     if (!is_file($path)) {
                         touch($path);
                     }
-                    file_put_contents($path, sprintf(<<<CONFIG_CONTEND
-requirejs.config(
-    //要在IE中及时获得正确的错误触发器，请强制进行定义/填充导出检查。
-    %s
-);
-CONFIG_CONTEND, json_encode($eventData->getResources())));
+                    file_put_contents($path, JSMin::minify($eventData->getResources()));
                     break;
                 default;
             endswitch;

@@ -18,6 +18,7 @@ use Weline\Framework\View\Template;
 class Reader extends \Weline\Theme\Config\StaticsReader
 {
     private string $file;
+    private array $config_resources=[];
 
     function __init()
     {
@@ -36,161 +37,27 @@ class Reader extends \Weline\Theme\Config\StaticsReader
     {
         # require js 配置
         $require_configs = $this->getFileList();
-        $module_list = Env::getInstance()->getModuleList();
         foreach ($require_configs as $require_config_key => $require_config_js) {
             $area = $require_config_js['area'];
-            $require_file = fopen($require_config_js['origin'], 'r');
-            # 删除注释
-            $require_file_content = '';
-            while (!feof($require_file)) {
-                $line = fgets($require_file);
-                if (!is_int(strpos($line, '//'))) {
-                    $require_file_content .= $line;
-                }
+            if(!isset($this->config_resources[$area])){
+                $this->config_resources[$area]='';
             }
-//            if(1===$require_config_key)p($require_file_content);
-            $config_params_str = substr($require_file_content, strpos($require_file_content, 'config('));
-            $start = strpos($config_params_str, 'config(') + 7;
-            $end = strpos($config_params_str, ")");
-            $config_params_str = substr($config_params_str, $start, $end - $start);
-            $config_params_str = trim($config_params_str);
-            $config_params_str = trim($config_params_str, '{');
-            $config_params_str = rtrim($config_params_str, '}');
-            $config_params_str_arr = explode(',', $config_params_str);
-
-            $multi_data_key = [];
-            $has_spoke = false;
-            foreach ($config_params_str_arr as $config_param_str) {
-                $config_param_str = trim($config_param_str);
-                list($param_name, $param_value) = $this->explodeGule($config_param_str);
-                if ($param_name && is_int(strpos($param_value, ':'))) {
-                    $multi_data_key[] = $param_name;
-                    continue;
+            $content = file_get_contents($require_config_js['origin']);
+            # 替换模块的路径
+                foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
+                    $related_file_path = str_replace(trim($module_info['path'],DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'view', '/', $require_config_js['dir']);
+                    $related_file_path = str_replace('//', '/', $related_file_path);
+                    $related_file_path = str_replace('//', '/', $related_file_path);
+                    $file_path = $this->fetchFile($module_name.'::'.$related_file_path);
+                    $file_path = str_replace('//', '/', $file_path);
+                    $file_path = str_replace('//', '/', $file_path);
+                    $content =str_replace($module_name, $file_path, $content);
                 }
-                if (is_int(strpos($config_param_str, '{'))) {
-                    $has_spoke = true;
-                    continue;
-                }
-                if ($has_spoke && is_int(strpos($config_param_str, '}'))) {
-                    $has_spoke = false;
-                    continue;
-                }
-                if (!$has_spoke && $param_name && $param_value) {
-                    $param_name = trim($param_name);
-                    $param_name = trim($param_name, '\'');
-                    $param_value = trim($param_value);
-                    $param_value = trim($param_value, '\'');
-                    $this->addConfigData($area, $param_name, $param_value);
-                }
-            }
-            foreach ($multi_data_key as $param_name) {
-                $start = strpos($require_file_content, $param_name . ':') + strlen($param_name) + 1;
-                $after_param_str = trim(substr($require_file_content, $start));
-                if (is_int(strpos($after_param_str, '{'))) {
-                    $start = strpos($after_param_str, '{') + 1;
-                    $end = strpos($after_param_str, '}');
-                    $param_json_str = substr($after_param_str, $start, $end - $start);
-                    $param_json_arr = explode(',', $param_json_str);
-                    foreach ($param_json_arr as $key => $item) {
-                        $item = trim($item);
-                        list($key_name, $key_value) = $this->explodeGule($item);
-                        if ($key_name && $key_value) {
-                            $key_value = trim($key_value);
-                            if (is_int(strpos($key_value, '['))) {
-                                $key_value = trim($key_value, '[');
-                                $key_value = trim($key_value, ']');
-                                $key_value = trim($key_value);
-                                $key_value = trim($key_value, "'");
-                                $key_value_arr = explode('/', $key_value);
-                                $module = array_shift($key_value_arr);
-                                if (strstr($key_value, 'http')) {
-                                    $this->config_resources[$area][$param_name][$key_name][] = $key_value;
-                                } elseif (in_array($module, array_keys($module_list))) {
-                                    $this->config_resources[$area][$param_name][$key_name][] = $this->fetchFile($module . '::' . implode('/', $key_value_arr));
-                                } else {
-                                    $this->config_resources[$area][$param_name][$key_name][] = $this->fetchFile($require_config_js['module'] . '::' . $key_value);
-                                }
-                            } else {
-                                $key_value = trim($key_value, "'");
-                                $key_value_arr = explode('/', $key_value);
-                                $module = array_shift($key_value_arr);
-                                if (in_array($module, array_keys($module_list))) {
-                                    $fetch_value = $this->fetchFile($module . '::' . implode('/', $key_value_arr));
-                                    if (isset($this->config_resources[$area][$param_name][$key_name], $_) && $k_data = $this->config_resources[$area][$param_name][$key_name]) {
-                                        if (is_array($k_data)) {
-                                            $this->config_resources[$area][$param_name][$key_name][] = $fetch_value;
-                                        } else {
-                                            $this->config_resources[$area][$param_name][$key_name][] = $k_data;
-                                            $this->config_resources[$area][$param_name][$key_name][] = $fetch_value;
-                                        }
-                                    } else {
-                                        $this->config_resources[$area][$param_name][$key_name] = $fetch_value;
-                                    }
-                                } else {
-                                    $fetch_value = $this->fetchFile($require_config_js['module'] . '::' . $key_value);
-                                    if (isset($this->config_resources[$area][$param_name][$key_name], $_) && $k_data = $this->config_resources[$area][$param_name][$key_name]) {
-                                        if (strstr($key_value, 'http')) {
-                                            $this->config_resources[$area][$param_name][$key_name][] = $key_value;
-                                        }else if (is_array($k_data)) {
-                                            $this->config_resources[$area][$param_name][$key_name][] = $fetch_value;
-                                        } else {
-                                            $this->config_resources[$area][$param_name][$key_name][] = $k_data;
-                                            $this->config_resources[$area][$param_name][$key_name][] = $fetch_value;
-                                        }
-                                    } else {
-                                        $this->config_resources[$area][$param_name][$key_name] = $fetch_value;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (is_int(strpos($after_param_str, '['))) {
-                    $start = strpos($after_param_str, '[') + 1;
-                    $end = strpos($after_param_str, ']');
-                    $param_json_str = substr($after_param_str, $start, $end - $start);
-                    $param_json_arr = explode(',', $param_json_str);
-//                    p($param_json_str);
-                    foreach ($param_json_arr as $key => $item) {
-                        $item = trim($item);
-                        list($key_name, $key_value) = $this->explodeGule($item);
-                        if ($key_name && $key_value) {
-                            $key_value = trim($key_value);
-                            if (is_int(strpos($key_value, '['))) {
-                                $key_value = trim($key_value, '[');
-                                $key_value = trim($key_value, ']');
-                                $key_value = trim($key_value);
-                                $key_value = trim($key_value, "'");
-                                $key_value_arr = explode('/', $key_value);
-                                $module = array_shift($key_value_arr);
-                                if (strstr($key_value, 'http')) {
-                                    $this->config_resources[$area][$param_name][$key_name][] = $key_value;
-                                }elseif (in_array($module, array_keys($module_list))) {
-                                    $this->config_resources[$area][$param_name][$key_name][] = $this->fetchFile($module . '::' . implode('/', $key_value_arr));
-                                } else {
-                                    $this->config_resources[$area][$param_name][$key_name][] = $this->fetchFile($require_config_js['module'] . '::' . $key_value);
-                                }
-                            } else {
-                                $key_value = trim($key_value, "'");
-                                $key_value_arr = explode('/', $key_value);
-                                $module = array_shift($key_value_arr);
-                                if (strstr($key_value, 'http')) {
-                                    $this->config_resources[$area][$param_name][$key_name] = $key_value;
-                                }elseif (in_array($module, array_keys($module_list))) {
-                                    $this->config_resources[$area][$key] = $this->fetchFile($module . '::' . implode('/', $key_value_arr));
-                                } else {
-                                    $this->config_resources[$area][$key] = $this->fetchFile($require_config_js['module'] . '::' . $key_value);
-                                }
-                            }
-                        }
-                    }
-                }
-
-            }
+            $this->config_resources[$area] .= $content;
         }
-        p($this->config_resources);
         return $this->config_resources;
     }
+
 
     function explodeGule(string $str, string $flag = ':')
     {

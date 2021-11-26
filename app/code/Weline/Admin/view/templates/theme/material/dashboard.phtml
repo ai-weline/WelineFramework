@@ -4,9 +4,8 @@
  */
 ?>
 @template(Weline_Backend::public/header.phtml)
-<link rel="stylesheet" href="@static(Weline_Admin::theme/material/css/iot-theme-bundle.min.css)">
-<link rel="stylesheet" href="@static(Weline_Admin::theme/material/css/material.css)">
-<script src="@static(Weline_Admin::theme/material/require.config.js)"></script>
+<link rel="stylesheet" href="@static(Weline_Admin::backend/theme/material/css/iot-theme-bundle.min.css)">
+<link rel="stylesheet" href="@static(Weline_Admin::backend/theme/material/css/material.css)">
 </head>
 <body>
 <div class="header-wapper">
@@ -14,8 +13,7 @@
 </div>
 @template(Weline_Backend::blocks/menu.phtml)
 <script>
-    require(['jquery','iotTimer'],function ($,iotTimer){
-        alert(iotTimer)
+    require(['jquery','bootstrapBundle'],function ($,bootstrapBundle){
         alert($(window).width())
     })
 </script>

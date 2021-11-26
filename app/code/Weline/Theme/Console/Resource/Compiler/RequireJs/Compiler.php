@@ -43,13 +43,7 @@ class Compiler implements CompilerInterface
     {
         $config_resources = $this->reader->parserRequireConfigs();
         foreach ($config_resources as $area => $config_resource) {
-            $this->getEventManager()->dispatch('Weline_Theme::compiler',
-                ['data' => new DataObject(
-                    ['area' => $area,
-                        'type' => 'require.configs.js',
-                        'resources' => $config_resource
-                    ])
-                ]);
+            $this->getEventManager()->dispatch('Weline_Theme::compiler', ['data' => new DataObject(['area' => $area, 'type' => 'require.configs.js', 'resources' => $config_resource])]);
         }
     }
 

@@ -16,21 +16,20 @@
     <link rel="Shortcut Icon" href="@static(Weline_Backend::img/favicon.png)">
     <link rel="Bookmark" href="@static(Weline_Backend::img/favicon.png)">
     <!--css-->
-    <link rel="stylesheet" href="@static(Weline_Backend::lib/bootstrap-4.6.0-dist/css/bootstrap.min.css)">
-    <link rel="stylesheet" href="@static(Weline_Backend::lib/font-awesome-4.7.0/css/font-awesome.min.css)">
+    <link rel="stylesheet" href="@static(Weline_Backend::backend/lib/bootstrap-4.6.0-dist/css/bootstrap.min.css)">
+    <link rel="stylesheet" href="@static(Weline_Backend::backend/lib/font-awesome-4.7.0/css/font-awesome.min.css)">
     <!--加载requirejs-->
     <?php if (DEV) : ?>
-        <script src="@static(Weline_Backend::lib/requirejs/2.3.6/requirejs.js)"></script>
+        <script src="@static(Weline_Backend::backend/lib/requirejs/2.3.6/requirejs.js)"></script>
     <?php
     else:
     ?>
-        <script src="@static(Weline_Backend::lib/requirejs/2.3.6/requirejs.min.js)"></script>
+        <script src="@static(Weline_Backend::backend/lib/requirejs/2.3.6/requirejs.min.js)"></script>
     <?php
     endif;
     ?>
     <!--加载require常用js模块-->
     <script src="@static(Weline_Backend::base/require.configs.js)"></script>
-    <!--    <script src="@static/lib/vue/vue2.6.11.js"></script>-->
     <?php
     echo $this->getHeader()->getHtml();
     ?>
