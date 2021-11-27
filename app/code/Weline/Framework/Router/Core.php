@@ -51,13 +51,17 @@ class Core
      */
     public function __init()
     {
-        $this->request = ObjectManager::getInstance(Request::class);
-        $this->cache = ObjectManager::getInstance(RouterCache::class . 'Factory');
-        $this->request_area = $this->request->getRequestArea();
-        $this->area_router = $this->request->getAreaRouter();
-        $this->_etc = Env::getInstance();
-        $area_tower = strtolower($this->request_area);
-        $this->is_admin = (bool)strstr($area_tower, \Weline\Framework\Router\DataInterface::area_BACKEND);
+        if (empty($this->request)) $this->request = ObjectManager::getInstance(Request::class);
+        if (empty($this->cache)) $this->cache = ObjectManager::getInstance(RouterCache::class . 'Factory');
+        if (empty($this->request_area)) $this->request_area = $this->request->getRequestArea();
+        if (empty($this->area_router)) $this->area_router = $this->request->getAreaRouter();
+        if (empty($this->_etc)) $this->_etc = Env::getInstance();
+        if (empty($this->is_admin)) $this->is_admin = (bool)strstr(strtolower($this->request_area), \Weline\Framework\Router\DataInterface::area_BACKEND);
+    }
+
+    function __sleep()
+    {
+        return array('cache');
     }
 
     /**
@@ -86,12 +90,12 @@ class Core
             return $api_result;
         }
         // 非开发模式（匹配不到任何路由将报错）
-        if (!DEV) {
+        if (PROD) {
             $this->request->getResponse()->noRouter();
         } else {
             // 开发模式(静态资源可访问app本地静态资源)
             $static = $this->StaticFile($url);
-            if ($static) return $static;
+            if ($static) exit($static);
             http_response_code(404);
             throw new Exception('未知的路由！');
         }
@@ -103,7 +107,7 @@ class Core
         // 读取url
         $url = $this->request->getUrlPath();
         $url_cache_key = 'url_cache_key_' . $url;
-        if (!DEV && $cached_url = $this->cache->get($url_cache_key)) {
+        if (PROD && $cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
         } else {
             // 前后台路由处理
@@ -200,7 +204,7 @@ class Core
                 # 缓存路由结果
                 $this->router['type'] = 'pc';
                 $this->cache->set($this->_router_cache_key, $this->router);
-//                list($dispatch, $method) = $this->getController($router);
+//                list($dispatch, $method) = $this->getController($this->router);
 //                if (method_exists($dispatch, $method)) {
 //                    exit(call_user_func([$dispatch, $method], $this->request->getParams()));
 //                }
@@ -225,7 +229,7 @@ class Core
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function StaticFile(string &$url): mixed
+    public function StaticFile(string &$url)
     {
         header("Cache-Control: max-age=3600");
         $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
@@ -252,38 +256,34 @@ class Core
 
     function getController(array $router): array
     {
-//        $controller_cache_key = 'controller_cache_key_' . implode(',', $router);
-//        $controller = $this->cache->get($controller_cache_key);
-//        if($controller){
-//
-//        }else{
-//            $class = json_decode(json_encode($router['class']));
-//            $this->request->setRouter($router);
-//            // 检测注册方法
-//            /**@var \Weline\Framework\Controller\Core $dispatch */
-//            $dispatch = ObjectManager::getInstance($class->name);
-//            $dispatch->setModuleInfo($router);
-//        }
-        $class = json_decode(json_encode($router['class']));
-        // 检测注册方法
-        /**@var \Weline\Framework\Controller\Core $dispatch */
-        $dispatch = ObjectManager::getInstance($class->name);
-        $dispatch->setModuleInfo($router);
-        $method = $class->method ?: 'index';
-        # 检测控制器方法
-        if (!method_exists($dispatch, $method)) {
-            throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
+        $controller_cache_controller_key = 'controller_cache_key_' . implode('_', $router['class']).'_controller';
+        $controller_cache_method_key = 'controller_cache_key_' . implode('_', $router['class']).'_method';
+        $dispatch = $this->cache->get($controller_cache_controller_key);
+        $dispatch_method = $this->cache->get($controller_cache_method_key);
+        if ($dispatch&&$dispatch_method) {
+            return [$dispatch,$dispatch_method];
+        } else {
+            $class = json_decode(json_encode($router['class']));
+
+            // 检测注册方法
+            /**@var \Weline\Framework\Controller\Core $dispatch */
+            $dispatch = ObjectManager::getInstance($class->name);
+            $dispatch->setModuleInfo($router);
+            $method = $class->method ?: 'index';
+            # 检测控制器方法
+            if (!method_exists($dispatch, $method)) {
+                throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
+            }
+            $this->cache->set($controller_cache_method_key, $method);
+            $this->cache->set($controller_cache_controller_key, $dispatch);
+            return [$dispatch, $method];
         }
-        return [$dispatch, $method];
     }
 
-    function route(): string
+    function route(): mixed
     {
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
-        if (method_exists($dispatch, $method)) {
-            exit(call_user_func([$dispatch, $method], $this->request->getParams()));
-        }
-        return '';
+        exit(call_user_func([$dispatch, $method], $this->request->getParams()));
     }
 }

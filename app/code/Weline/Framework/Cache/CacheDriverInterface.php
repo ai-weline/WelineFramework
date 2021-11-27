@@ -7,14 +7,10 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Cache\Driver;
+namespace Weline\Framework\Cache;
 
-interface DriverInterface
+interface CacheDriverInterface
 {
-    const driver_FILE = 'file';
-
-    const driver_REDIS = 'redis';
-
     public function __construct(string $identity, array $config);
 
     function setIdentity(string $identity);

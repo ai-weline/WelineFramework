@@ -9,10 +9,11 @@
 
 namespace Weline\Framework;
 
+use SebastianBergmann\CodeCoverage\StaticAnalysis\CacheWarmer;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\App\Helper;
-use Weline\Framework\Exception\Core;
+use Weline\Framework\Cache\CacheFactory;
 use Weline\Framework\Manager\ObjectManager;
 
 class App
@@ -62,12 +63,13 @@ class App
         require __DIR__ . '/Common/loader.php';
         // 助手函数
         $handle_functions = BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
-        if(is_file($handle_functions)){
+        if (is_file($handle_functions)) {
             require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
         }
         /**------------环境配置----------------*/
         // 调试模式
         define('DEV', 'dev' === self::Env('deploy'));
+        define('PROD', 'prod' === self::Env('deploy'));
         // 调试模式
         define('PHP_CS', self::Env('php-cs'));
         //报告错误
@@ -118,6 +120,7 @@ class App
         self::init();
         if (!CLI) {
             try {
+//                return (new CacheFactory())->create()->flush();
                 return ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
             } catch (\ReflectionException | App\Exception $e) {
                 throw new Exception(__('系统错误：%1', $e->getMessage()));

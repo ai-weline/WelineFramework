@@ -14,6 +14,7 @@ use ReflectionClass;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Manager\Cache\ObjectCache;
+use Weline\Framework\Manager\Cache\ObjectCacheFactory;
 use Weline\Framework\View\Template;
 
 class ObjectManager implements ManagerInterface
@@ -22,9 +23,9 @@ class ObjectManager implements ManagerInterface
         \PDO::class,
         \WeakMap::class
     ];
-    private static CacheInterface $cache;
+    private static ?CacheInterface $cache = null;
 
-    private static ObjectManager $instance;
+    private static ?ObjectManager $instance = null;
 
     private static array $instances;
 
@@ -34,10 +35,9 @@ class ObjectManager implements ManagerInterface
 
     private static function getCache(): CacheInterface
     {
-        if (!isset(self::$cache)) {
+        if (empty(self::$cache)) {
             self::$cache = (new ObjectCache())->create();
         }
-
         return self::$cache;
     }
 
@@ -60,14 +60,18 @@ class ObjectManager implements ManagerInterface
     {
 
         if (empty($class)) {
-            return self::$instance ?? new self();
+            return self::$instance ?: new self();
         }
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+
         if (isset(self::$instances[$class])) {
             self::$instances[$class] = self::initClassInstance($class, self::$instances[$class]);
             return self::$instances[$class];
         }
         // 缓存对象读取
-        if (!CLI && $shared && !DEV && $cache_class_object = self::getCache()->get($class)) {
+        if (!CLI && $shared && PROD && $cache_class_object = self::getCache()->get($class)) {
             self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
             return self::$instances[$class];
         }
@@ -78,12 +82,13 @@ class ObjectManager implements ManagerInterface
         try {
             $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
         } catch (\ReflectionException $e) {
-            exit(__('无法注入的类：') . $e->getTraceAsString());
+            throw $e;
         }
         $new_object = self::initClassInstance($class, $new_object);
-        self::addInstance($class,$new_object );
+
+        self::addInstance($class, $new_object);
         // 缓存可缓存对象
-        if (!DEV && in_array($class, self::unserializable_class)) {
+        if (PROD && in_array($class, self::unserializable_class)) {
             self::getCache()->set($class, self::$instances[$class]);
         };
 
@@ -95,7 +100,8 @@ class ObjectManager implements ManagerInterface
         self::$instances[$class] = $object;
     }
 
-    static function _getInstance($class){
+    static function _getInstance($class)
+    {
         return self::$instances[$class];
     }
 
@@ -204,9 +210,6 @@ class ObjectManager implements ManagerInterface
             try {
                 $class = new ReflectionClass($className);
             } catch (\ReflectionException $e) {
-                if (CLI or DEV) {
-                    echo('无法实例化该类：' . $className . '，错误：' . $e->getMessage());
-                }
                 throw new Exception(__('无法实例化该类：%1，错误：%2', [$className, $e->getMessage()]), $e);
             }
         }

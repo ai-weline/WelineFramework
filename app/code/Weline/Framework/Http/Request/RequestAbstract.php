@@ -300,7 +300,7 @@ abstract class RequestAbstract extends DataObject
 
     public function getBaseHost(): string
     {
-        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . ($this->getServer('SERVER_PORT') !== '80' ?: '');
+        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . ($this->getServer('SERVER_PORT') !== '80' ?':'.$this->getServer('SERVER_PORT'): '');
     }
 
     /**

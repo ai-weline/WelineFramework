@@ -27,7 +27,8 @@
     "jdorn/sql-formatter": "^1.2",
     "ext-gd": "*",
     "wikimedia/less.php": "^3.1",
-    "mrclay/jsmin-php": "^2.4"
+    "mrclay/jsmin-php": "^2.4",
+    "ext-memcached": "*"
   },
   "autoload": {
     "psr-4": {

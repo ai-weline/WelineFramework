@@ -53,14 +53,14 @@ trait TraitTemplate
     {
         $is_backend = $this->_request->isBackend();
         $cache_key = ($is_backend ? 'backend' : 'frontend') . "_{$position}_object";
-        if (!DEV && $object = $this->viewCache->get($cache_key)) {
+        if (PROD && $object = $this->viewCache->get($cache_key)) {
             return $object;
         }
         $this->eventsManager->dispatch("Framework_View::{$position}", ['is_backend' => $is_backend, 'class' => '']);
         $class = $this->eventsManager->getEventData("Framework_View::{$position}")->getData('class');
         if (empty($class) || !class_exists($class)) return '';
         $object = ObjectManager::getInstance($class);
-        if (!DEV) $this->viewCache->set($cache_key, $object);
+        if (PROD) $this->viewCache->set($cache_key, $object);
         return $object;
     }
 
@@ -81,7 +81,7 @@ trait TraitTemplate
             $view_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
             $template_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
 
-            if (!DEV) {
+            if (PROD) {
                 $compile_dir = str_replace(APP_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']) . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
             } else {
                 $compile_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
@@ -246,7 +246,7 @@ trait TraitTemplate
 
                 break;
             case DataInterface::dir_type_TEMPLATE_COMPILE:
-                if (!DEV) {
+                if (PROD) {
                     $path = str_replace(APP_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_view_dir_path) . DIRECTORY_SEPARATOR . DataInterface::view_TEMPLATE_DIR . DIRECTORY_SEPARATOR;
                 } else {
                     $path = $module_view_dir_path . DataInterface::view_TEMPLATE_COMPILE_DIR;
@@ -260,7 +260,7 @@ trait TraitTemplate
                 $path = $module_view_dir_path . DataInterface::view_STATICS_DIR . DIRECTORY_SEPARATOR;
 
                 # 非开发环境
-                if (!DEV) {
+                if (PROD) {
                     $path = str_replace(APP_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $this->theme['path'] . DIRECTORY_SEPARATOR, $path);
                 }
                 $this->viewCache->set($cache_key, $path);

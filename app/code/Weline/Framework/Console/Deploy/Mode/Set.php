@@ -35,6 +35,10 @@ class Set extends CommandAbstract
     {
         array_shift($args);
         $param = array_shift($args);
+        $this->printer->note('清理缓存...');
+        /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
+        $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
+        $cacheManagerConsole->execute();
         switch ($param) {
             case 'prod':
                 $this->printer->note('正在清除模组模板编译文件...');
@@ -64,10 +68,6 @@ class Set extends CommandAbstract
         } else {
             $this->printer->error('╮(๑•́ ₃•̀๑)╭ 部署模式设置错误：' . $param);
         }
-        $this->printer->note('清理缓存...');
-        /**@var $cacheManagerConsole \Weline\Framework\Cache\Console\Cache\Clear */
-        $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Cache\Console\Cache\Clear::class);
-        $cacheManagerConsole->execute();
     }
 
     public function getTip(): string

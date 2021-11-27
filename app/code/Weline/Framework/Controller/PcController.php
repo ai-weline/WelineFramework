@@ -133,7 +133,7 @@ class PcController extends Core
      * @param string|null $fileName
      * @return void
      */
-    protected function fetch(string $fileName = null)
+    protected function fetch(string $fileName = null):mixed
     {
         # 如果指定了模板就直接读取
         if ($fileName && strpos($fileName, '::')) {
@@ -145,7 +145,6 @@ class PcController extends Core
         } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
             $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $fileName;
         }
-
         return $this->getTemplate()->fetch($fileName);
     }
 

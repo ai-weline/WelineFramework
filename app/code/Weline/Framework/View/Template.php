@@ -184,7 +184,7 @@ class Template
         $tplFile_cache_key = $this->view_dir . $fileName . '_tplFile';
         $comFileName = '';
         $tplFile = '';
-        if (!DEV) {
+        if (PROD) {
             $comFileName = $comFileName = $this->viewCache->get($comFileName_cache_key);
             $tplFile = $this->viewCache->get($tplFile_cache_key);
         }
@@ -243,7 +243,7 @@ class Template
             }
             $comFileName = $this->fetchFile($comFileName);
             # 非开发模式则缓存
-            if (!DEV) {
+            if (PROD) {
                 $this->viewCache->set($comFileName_cache_key, $comFileName);
                 $this->viewCache->set($tplFile_cache_key, $tplFile);
             };
@@ -271,6 +271,7 @@ class Template
     public function fetch(string $fileName)
     {
         $comFileName = $this->getFetchFile($fileName);
+        # 是否显示模板路径
         //包含编译后的文件
         require $comFileName;
     }

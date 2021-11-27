@@ -134,6 +134,7 @@ class HelloWorld extends FrontendController
     {
         $cache = ObjectManager::getInstance(Cache::class)->cache();
         $cache->set('111', 8888);
+        p('缓存引擎：'.$cache::class,true);
         p($cache->get('111'));
     }
 

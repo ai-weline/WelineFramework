@@ -9,9 +9,10 @@
 
 namespace Weline\Framework\Cache\Driver;
 
+use Weline\Framework\Cache\CacheDriverInterface;
 use Weline\Framework\Cache\CacheInterface;
 
-class File implements CacheInterface, DriverInterface
+class File implements CacheInterface, CacheDriverInterface
 {
     private int $status;
 
@@ -35,7 +36,7 @@ class File implements CacheInterface, DriverInterface
         $this->setIdentity($identity);
     }
 
-    function setIdentity(string $identity)
+    function setIdentity(string $identity): static
     {
         $this->cachePath = BP . $this->config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
         $this->__init();
@@ -179,6 +180,8 @@ class File implements CacheInterface, DriverInterface
         // serialize用来序列化缓存内容
         $value = serialize($value);
 
+        # 错误阻止并发送报告
+
         // file_put_contents用来将序列化之后的内容写入文件，LOCK_EX表示写入时会对文件加锁
         $this->processCacheFile($cacheFile);
         if (@file_put_contents($cacheFile, $value, LOCK_EX) !== false) {
@@ -285,7 +288,7 @@ class File implements CacheInterface, DriverInterface
      * 参数区：
      * @return mixed
      */
-    public function flush():mixed
+    public function flush():bool
     {
         // 打开cache文件所在目录
         if ($dir = @dir($this->cachePath)) {
@@ -295,7 +298,6 @@ class File implements CacheInterface, DriverInterface
                     unlink($this->cachePath . $file);
                 }
             }
-
             // 关闭目录
             $dir->close();
         }

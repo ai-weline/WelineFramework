@@ -82,7 +82,7 @@ interface CacheInterface
      * @param int $duration
      * @return mixed
      */
-    public function set($key, $value, int $duration = 0): mixed;
+    public function set($key, $value, int $duration = 1800): mixed;
 
     /**
      * @DESC         |在缓存中存储多个项目。每个项包含一个由键标识的值。
@@ -93,7 +93,7 @@ interface CacheInterface
      * @param int $duration
      * @return mixed
      */
-    public function setMulti($items, int $duration = 0): mixed;
+    public function setMulti($items, int $duration = 1800): mixed;
 
     /**
      * @DESC         |如果缓存不包含该键，则将由键标识的值存储到缓存中。
@@ -106,7 +106,7 @@ interface CacheInterface
      * @param int $duration
      * @return mixed
      */
-    public function add($key, $value, int $duration = 0): mixed;
+    public function add($key, $value, int $duration = 1800): mixed;
 
     /**
      * @DESC         |在缓存中存储多个项目。每个项包含一个由键标识的值。
@@ -118,7 +118,7 @@ interface CacheInterface
      * @param int $duration
      * @return mixed
      */
-    public function addMulti($items, int $duration = 0): mixed;
+    public function addMulti($items, int $duration = 1800): mixed;
 
     /**
      * @DESC         |从缓存中删除具有指定键的值
@@ -137,7 +137,7 @@ interface CacheInterface
      *
      * @return mixed
      */
-    public function flush(): mixed;
+    public function flush(): bool;
 
     /**
      * @DESC          # 从缓存中删除所有键的值。（清理缓存）
