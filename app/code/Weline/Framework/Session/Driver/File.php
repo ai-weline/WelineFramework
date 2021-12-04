@@ -32,6 +32,9 @@ class File implements SessionDriverHandlerInterface
             session_save_path($this->sessionPath);
             ini_set('session.save_handler', 'files');
             $_SESSION = array();
+            if($session_id = $_COOKIE['SESSIONID']){
+                session_id($session_id);
+            }
         }
         session_start();
     }
