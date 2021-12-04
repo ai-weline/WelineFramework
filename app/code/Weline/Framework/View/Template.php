@@ -250,6 +250,8 @@ class Template
         }
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
+        if (is_int(strpos($comFileName, '\\'))) str_replace('\\', DIRECTORY_SEPARATOR, $comFileName);
+        if (is_int(strpos($comFileName, '//'))) str_replace('/', DIRECTORY_SEPARATOR, $comFileName);
         # 检测编译文件，如果不符合条件则重新进行文件编译
         if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译

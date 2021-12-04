@@ -49,11 +49,16 @@ class Upgrade extends CommandAbstract
                 if (IS_WIN) {
                     $module_view_dir .= DataInterface::dir_type_STATICS . DIRECTORY_SEPARATOR;
                 }
+                # FIXME 兼容composer下模块的静态文件
                 $origin_view_dir = APP_PATH . $module_view_static_dir;
                 if (is_dir($origin_view_dir)) {
                     // 主题配置
                     $theme        = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
+
                     $pub_view_dir = PUB . 'static' . DIRECTORY_SEPARATOR . $theme['path'] . DIRECTORY_SEPARATOR . $module_view_dir;
+                    if(is_int(strpos($pub_view_dir, '\\'))){
+                        $pub_view_dir = str_replace('\\', DIRECTORY_SEPARATOR, $pub_view_dir);
+                    }
                     if (! is_dir($pub_view_dir)) {
                         mkdir($pub_view_dir, 0775, true);
                     }

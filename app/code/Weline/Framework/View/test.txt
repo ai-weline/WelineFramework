@@ -1,0 +1,4 @@
+E:\WelineFramework\app\code\Weline\Admin\view\tpl\theme\material\com_dashboard.phtml
+E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\public\com_header.phtml
+E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\blocks\com_menu.phtml
+E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\public\com_footer.phtml
