@@ -61,7 +61,7 @@ class Core
 
     function __sleep()
     {
-        return array('cache');
+        return array('cache','_etc');
     }
 
     /**

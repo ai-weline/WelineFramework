@@ -47,8 +47,12 @@ abstract class RequestAbstract extends DataObject
     {
         $url_arr = explode('/', trim($this->getModuleUrlPath(), '/'));
         $this->area_router = array_shift($url_arr);
-        $this->_filter = RequestFilter::getInstance();
-        $this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
+        if(empty($this->_filter))$this->_filter = RequestFilter::getInstance();
+        if(empty($this->_response))$this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
+    }
+
+    function __sleep(){
+        return array('_filter','_response');
     }
 
     /**

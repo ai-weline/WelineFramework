@@ -27,10 +27,36 @@ class ObjectManager implements ManagerInterface
 
     private static ?ObjectManager $instance = null;
 
-    private static array $instances;
+    private static array $instances=[];
 
     private function __clone()
     {
+    }
+
+    static function __init(){
+        if(empty(self::$instance)){
+            self::$instance = self::getCache()->get('instance')?:null;
+            if(empty(self::$instance)){
+                $instance = new self();
+                self::$instance =$instance;
+            }
+        }
+        if(empty(self::$instance)){
+            self::$instances = self::getCache()->get('instances')?:array();
+            if(self::$instances){
+                p();
+            }
+        }
+
+    }
+
+    function __sleep(){
+        self::getCache()->set('instance', self::$instance);
+        self::getCache()->set('instances', self::$instances);
+    }
+
+    function __wakeup(){
+        self::__init();
     }
 
     private static function getCache(): CacheInterface
@@ -60,12 +86,14 @@ class ObjectManager implements ManagerInterface
     {
 
         if (empty($class)) {
-            return self::$instance ?: new self();
+            $instance = new self();
+            $instance::__init();
+            return self::$instance ?:$instance;
         }
         if (empty(self::$instance)) {
-            self::$instance = new self();
+            $instance = new self();
+            $instance::__init();
         }
-
         if (isset(self::$instances[$class])) {
             self::$instances[$class] = self::initClassInstance($class, self::$instances[$class]);
             return self::$instances[$class];

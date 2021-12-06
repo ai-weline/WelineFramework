@@ -120,7 +120,7 @@ class App
         self::init();
         if (!CLI) {
             try {
-//                return (new CacheFactory())->create()->flush();
+//                (new CacheFactory())->create()->flush();
                 return ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
             } catch (\ReflectionException | App\Exception $e) {
                 throw new Exception(__('系统错误：%1', $e->getMessage()));
