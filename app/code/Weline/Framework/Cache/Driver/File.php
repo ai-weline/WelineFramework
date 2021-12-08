@@ -301,6 +301,7 @@ class File implements CacheInterface, CacheDriverInterface
             // 关闭目录
             $dir->close();
         }
+        return true;
     }
 
     /**
