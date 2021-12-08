@@ -52,7 +52,7 @@ abstract class RequestAbstract extends DataObject
     }
 
     function __sleep(){
-        return array('_filter','_response');
+        return array('_filter');
     }
 
     /**

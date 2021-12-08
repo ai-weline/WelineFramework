@@ -261,6 +261,7 @@ class Core
         $dispatch = $this->cache->get($controller_cache_controller_key);
         $dispatch_method = $this->cache->get($controller_cache_method_key);
         if ($dispatch&&$dispatch_method) {
+            $dispatch = ObjectManager::getInstance($dispatch::class);
             return [$dispatch,$dispatch_method];
         } else {
             $class = json_decode(json_encode($router['class']));

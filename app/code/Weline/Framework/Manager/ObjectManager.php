@@ -13,6 +13,7 @@ use MongoDB\BSON\Serializable;
 use ReflectionClass;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\Cache\ObjectCache;
 use Weline\Framework\Manager\Cache\ObjectCacheFactory;
 use Weline\Framework\View\Template;
@@ -33,31 +34,6 @@ class ObjectManager implements ManagerInterface
     {
     }
 
-    static function __init(){
-        if(empty(self::$instance)){
-            self::$instance = self::getCache()->get('instance')?:null;
-            if(empty(self::$instance)){
-                $instance = new self();
-                self::$instance =$instance;
-            }
-        }
-        if(empty(self::$instance)){
-            self::$instances = self::getCache()->get('instances')?:array();
-            if(self::$instances){
-                p();
-            }
-        }
-
-    }
-
-    function __sleep(){
-        self::getCache()->set('instance', self::$instance);
-        self::getCache()->set('instances', self::$instances);
-    }
-
-    function __wakeup(){
-        self::__init();
-    }
 
     private static function getCache(): CacheInterface
     {
@@ -86,13 +62,10 @@ class ObjectManager implements ManagerInterface
     {
 
         if (empty($class)) {
-            $instance = new self();
-            $instance::__init();
-            return self::$instance ?:$instance;
+            return self::$instance =new self();
         }
         if (empty(self::$instance)) {
-            $instance = new self();
-            $instance::__init();
+            self::$instance =new self();
         }
         if (isset(self::$instances[$class])) {
             self::$instances[$class] = self::initClassInstance($class, self::$instances[$class]);
@@ -116,7 +89,7 @@ class ObjectManager implements ManagerInterface
 
         self::addInstance($class, $new_object);
         // 缓存可缓存对象
-        if (PROD && in_array($class, self::unserializable_class)) {
+        if (PROD && !in_array($class, self::unserializable_class)) {
             self::getCache()->set($class, self::$instances[$class]);
         };
 

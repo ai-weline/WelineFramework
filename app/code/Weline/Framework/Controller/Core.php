@@ -105,7 +105,6 @@ class Core implements Data\DataInterface
         if (!isset($this->_request)) {
             $this->_request = ObjectManager::getInstance(Request::class);
         }
-
         return $this->_request;
     }
 

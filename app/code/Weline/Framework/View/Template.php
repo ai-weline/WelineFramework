@@ -188,7 +188,6 @@ class Template
             $comFileName = $comFileName = $this->viewCache->get($comFileName_cache_key);
             $tplFile = $this->viewCache->get($tplFile_cache_key);
         }
-
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
@@ -222,10 +221,7 @@ class Template
             $tplFile = $this->fetchFile($tplFile);
 
             if (!file_exists($tplFile)) {
-                if (DEV) {
-                    throw new Exception(__('模板文件：%1 不存在！', $tplFile));
-                }
-                return false;
+                throw new Exception(__('获取操作：%1，模板文件：%2 不存在！源文件：%3', [$fileName, $tplFile, $tplFile]));
             }
 
             // 检测目录是否存在,不存在则建立
@@ -276,6 +272,7 @@ class Template
         # 是否显示模板路径
         //包含编译后的文件
         require $comFileName;
+
     }
 
     /**
