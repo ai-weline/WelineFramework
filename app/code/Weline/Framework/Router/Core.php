@@ -261,7 +261,6 @@ class Core
         $dispatch = $this->cache->get($controller_cache_controller_key);
         $dispatch_method = $this->cache->get($controller_cache_method_key);
         if ($dispatch&&$dispatch_method) {
-            $dispatch = ObjectManager::getInstance($dispatch::class);
             return [$dispatch,$dispatch_method];
         } else {
             $class = json_decode(json_encode($router['class']));
@@ -276,8 +275,8 @@ class Core
                 throw new Exception("{$class->name}: 控制器方法 {$method} 不存在!");
             }
             $this->cache->set($controller_cache_method_key, $method);
-            $this->cache->set($controller_cache_controller_key, $dispatch);
-            return [$dispatch, $method];
+            $this->cache->set($controller_cache_controller_key, $class->name);
+            return [$class->name, $method];
         }
     }
 
@@ -285,6 +284,7 @@ class Core
     {
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
+        $dispatch = ObjectManager::getInstance($dispatch);
         exit(call_user_func([$dispatch, $method], $this->request->getParams()));
     }
 }
