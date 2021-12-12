@@ -38,7 +38,7 @@ class Parser
             foreach ($args as $key => $arg) {
                 $words = str_replace('%' . (is_integer($key) ? $key + 1 : $key), $arg, $words);
             }
-        } else {
+        } elseif($words) {
             $words = str_replace('%1', $args, $words);
         }
 
