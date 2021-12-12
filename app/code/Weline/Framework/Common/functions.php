@@ -25,52 +25,59 @@
  * @param $endDelimiter
  * @return array
  */
-function getStringBetweenContents(string $str, string $startDelimiter, string $endDelimiter): array
-{
-    $contents = [];
-    $startDelimiterLength = strlen($startDelimiter);
-    $endDelimiterLength = strlen($endDelimiter);
-    $startFrom = $contentStart = $contentEnd = 0;
-    while (false !== ($contentStart = strpos($str, $startDelimiter, $startFrom))) {
-        $contentStart += $startDelimiterLength;
-        $contentEnd = strpos($str, $endDelimiter, $contentStart);
-        if (false === $contentEnd) {
-            break;
+if(!function_exists('getStringBetweenContents')){
+    function getStringBetweenContents(string $str, string $startDelimiter, string $endDelimiter): array
+    {
+        $contents = [];
+        $startDelimiterLength = strlen($startDelimiter);
+        $endDelimiterLength = strlen($endDelimiter);
+        $startFrom = $contentStart = $contentEnd = 0;
+        while (false !== ($contentStart = strpos($str, $startDelimiter, $startFrom))) {
+            $contentStart += $startDelimiterLength;
+            $contentEnd = strpos($str, $endDelimiter, $contentStart);
+            if (false === $contentEnd) {
+                break;
+            }
+            $contents[] = substr($str, $contentStart, $contentEnd - $contentStart);
+            $startFrom = $contentEnd + $endDelimiterLength;
         }
-        $contents[] = substr($str, $contentStart, $contentEnd - $contentStart);
-        $startFrom = $contentEnd + $endDelimiterLength;
+
+        return $contents;
     }
-
-    return $contents;
+}
+if(!function_exists('__')){
+    /**
+     * @DESC          # 翻译
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/16 22:48
+     * 参数区：
+     * @param string $words
+     * @param array|string|null $args
+     * @return string
+     */
+    function __(string $words, array|string $args = null): string
+    {
+        return \Weline\Framework\Phrase\Parser::parse($words, $args);
+    }
+}
+if(!function_exists('m_split_by_capital')){
+    /**
+     * @DESC          | 以大写字母分割字符串
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/16 21:13
+     * 参数区：
+     * @param string $str
+     * @return array|bool
+     */
+    function m_split_by_capital(string $str): array|bool
+    {
+        return preg_split('/(?=[A-Z])/', $str);
+    }
 }
 
-/**
- * @DESC          # 翻译
- *
- * @AUTH  秋枫雁飞
- * @EMAIL aiweline@qq.com
- * @DateTime: 2021/8/16 22:48
- * 参数区：
- * @param string $words
- * @param array|string|null $args
- * @return string
- */
-function __(string $words, array|string $args = null): string
-{
-    return \Weline\Framework\Phrase\Parser::parse($words, $args);
-}
 
-/**
- * @DESC          | 以大写字母分割字符串
- *
- * @AUTH  秋枫雁飞
- * @EMAIL aiweline@qq.com
- * @DateTime: 2021/8/16 21:13
- * 参数区：
- * @param string $str
- * @return array|bool
- */
-function m_split_by_capital(string $str): array|bool
-{
-    return preg_split('/(?=[A-Z])/', $str);
-}
+
