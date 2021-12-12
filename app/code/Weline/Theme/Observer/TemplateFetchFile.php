@@ -75,6 +75,7 @@ class TemplateFetchFile implements ObserverInterface
         if (!is_file($theme_file_path)) {
             $theme_file_path = $module_file_path;
         }
+        $theme_file_path = str_replace('\\', DIRECTORY_SEPARATOR,  $theme_file_path );
         // TODO 处理非开发模式 静态文件的读取位置 包含了代码绝对路径问题 应该读取主题中的绝对路径 并返回静态文件的URL
 
         $fileData->setData('filename', $theme_file_path);
