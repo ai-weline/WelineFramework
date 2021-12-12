@@ -129,8 +129,8 @@ RewriteCond %{THE_REQUEST} \s/pub/ [NC,OR]
 ############################################
 ## 重写所有请求到index.php入口文件
 
-#    RewriteRule .* index.php [L]
-    RewriteRule ^(.*)$ /index.php?/$1 [L]
+    RewriteRule .* index.php [L]
+#    RewriteRule ^(.*)$ /index.php?/$1 [L]
 
 </IfModule>
 
