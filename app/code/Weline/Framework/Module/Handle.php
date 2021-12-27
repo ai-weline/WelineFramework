@@ -195,7 +195,7 @@ class Handle implements HandleInterface, RegisterInterface
 
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $name, 'module_version' => $version, 'module_description' => $description], '__construct');
         $setup_dir = BP . $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
-        if (DEV) $this->printer->error($setup_dir . '：升级目录...', '开发');
+        if (is_dir($setup_dir) && DEV) $this->printer->setup($setup_dir . '：升级目录...', '开发');
         // 已经存在模块则更新
         if ($this->helper->isInstalled($this->modules, $name)) {
             if ($this->helper->isDisabled($this->modules, $name)) {
@@ -230,13 +230,13 @@ class Handle implements HandleInterface, RegisterInterface
             }
 
             # 升级模块的模型
-            if (DEV) $this->printer->error($name . '：模型升级...', '开发');
+            if (DEV) $this->printer->setup($name . '：模型升级...', '开发');
             if (DEV) $modelManager->update($name, $this->setup_context, 'setup');
-            if (DEV) $this->printer->error($name . '：模型升级完成...', '开发');
+            if (DEV) $this->printer->setup($name . '：模型升级完成...', '开发');
             // 更新路由
-            if (DEV) $this->printer->error($name . '：更新路由...', '开发');
+            if (DEV) $this->printer->setup($name . '：更新路由...', '开发');
             $this->helper->registerModuleRouter($this->modules, $module_path, $name, $router);
-            if (DEV) $this->printer->error($name . '：更新路由完成...', '开发');
+            if (DEV) $this->printer->setup($name . '：更新路由完成...', '开发');
             // 更新模块
             $this->modules[$name]['base_path'] = $module_path;
             $this->helper->updateModules($this->modules);
