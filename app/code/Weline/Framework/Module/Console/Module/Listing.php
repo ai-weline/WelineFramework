@@ -19,7 +19,8 @@ class Listing implements \Weline\Framework\Console\CommandInterface
 
     function __construct(
         Printing $printing
-    ){
+    )
+    {
 
         $this->printing = $printing;
     }
@@ -29,7 +30,12 @@ class Listing implements \Weline\Framework\Console\CommandInterface
      */
     public function execute($args = [])
     {
-        foreach (Env::getInstance()->getModuleList() as $name=>$module) {
+        foreach (Env::getInstance()->getModuleList() as $name => $module) {
+            if ($module['status']) {
+                $name = str_pad($name, 25) . $this->printing->colorize('# ', 'Red') . $this->printing->colorize('开启', 'Green');
+            } else {
+                $name = str_pad($name, 25) . $this->printing->colorize('# ', 'Red') . $this->printing->colorize('禁用', 'Yellow');
+            }
             $this->printing->note($name);
         }
     }

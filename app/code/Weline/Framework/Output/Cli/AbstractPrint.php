@@ -232,7 +232,7 @@ COMMAND_LIST;
      * @param string $status
      * @return string
      */
-    public function colorize($text, $status): string
+    public function colorize($text, $status='Blue'): string
     {
         switch ($status) {
             case self::SUCCESS:
