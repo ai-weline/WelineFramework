@@ -68,7 +68,6 @@ class EventsManager
      * @param string $eventName
      * @param array $data
      * @return $this
-     * @throws \Weline\Framework\Exception\Core
      */
     public function dispatch(string $eventName, array $data = []): static
     {
