@@ -13,6 +13,8 @@ use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Controller\Cache\ControllerCache;
+use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Data\DataInterface;
@@ -22,6 +24,7 @@ use ReflectionObject;
 class PcController extends Core
 {
     private Template $_template;
+    private EventsManager $_eventManager;
 
     private CacheInterface $controllerCache;
 
@@ -30,7 +33,8 @@ class PcController extends Core
         parent::__init();
         $this->isAllowed();
         $this->assign($this->getRequest()->getParams());
-        $this->controllerCache = $this->getControllerCache();
+        if (empty($this->controllerCache)) $this->controllerCache = $this->getControllerCache();
+        if (empty($this->_eventManager)) $this->_eventManager = ObjectManager::getInstance(EventsManager::class);
     }
 
     function redirect(string $url)
@@ -134,7 +138,7 @@ class PcController extends Core
      * @param string|null $fileName
      * @return void
      */
-    protected function fetch(string $fileName = null):mixed
+    protected function fetch(string $fileName = null): mixed
     {
         # 如果指定了模板就直接读取
         if ($fileName && strpos($fileName, '::')) {
@@ -147,6 +151,10 @@ class PcController extends Core
             $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $fileName;
         }
         return $this->getTemplate()->fetch($fileName);
+//        # TODO 用事件解耦
+//        $data = new DataObject(['object' => $this, 'filename' => $fileName, 'result' => '']);
+//        $this->_eventManager->dispatch('WelineFramework::fetch_template', ['data' => $data]);
+//        return $data->getData('result');
     }
 
     /**

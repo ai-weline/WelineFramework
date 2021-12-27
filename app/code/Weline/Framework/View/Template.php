@@ -19,6 +19,7 @@ use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Module\ModuleInterface;
 use Weline\Framework\Output\Debug\Printing;
 use Weline\Framework\Session\Session;
 use Weline\Framework\Ui\FormKey;
