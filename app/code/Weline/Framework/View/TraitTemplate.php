@@ -172,44 +172,33 @@ trait TraitTemplate
     {
         $source = trim($source);
         $cache_key = $type . '_' . $source;
-        $data = '';
+        if ($data = $this->viewCache->get($cache_key)) return $data;
         switch ($type) {
             case DataInterface::dir_type_TEMPLATE:
-                if ($t_f = $this->viewCache->get($cache_key)) {
-                    $data = $this->fetch($t_f);
-                    break;
-                }
                 list($t_f) = $this->processModuleSourceFilePath($type, $source);
                 $data = $this->fetch($t_f);
-                $this->viewCache->set($cache_key, $t_f);
                 break;
             case DataInterface::dir_type_BASE:
-                if ($t_f = $this->viewCache->get($cache_key)) {
-                    $data = $this->fetch($t_f);
-                    break;
-                }
                 list($t_f) = $this->processModuleSourceFilePath($type, $source);
                 $data = $this->fetch($t_f);
-                $this->viewCache->set($cache_key, $t_f);
                 break;
             case DataInterface::dir_type_STATICS:
-                if ($data = $this->viewCache->get($cache_key)) {
-                    break;
-                }
-
                 list($t_f, $module_name) = $this->processModuleSourceFilePath($type, $source);
                 $base_url_path = rtrim($this->statics_dir, DataInterface::dir_type_STATICS);
                 # 第三方模组
                 if ($module_name) {
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
-                        $module_view_dir_path = BP . $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
+                        $module_view_dir_path = BP . str_replace('/', DIRECTORY_SEPARATOR, $module['base_path']) . DataInterface::dir . DIRECTORY_SEPARATOR;
                         $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
                         $t_f = str_replace($module_name . '::', '', $t_f);
+                    }else{
+                        throw new Exception(__('资源不存在：%1，模组：%2',[$source,$module_name]));
                     }
                 }
+//                p($base_url_path);
+//                p($this->getUrlPath($base_url_path));
                 $data = rtrim($this->getUrlPath($base_url_path), DataInterface::dir_type_STATICS) . DIRECTORY_SEPARATOR . $t_f;
-                $this->viewCache->set($cache_key, $data);
                 break;
             default:
         }
@@ -222,6 +211,7 @@ trait TraitTemplate
             $version = random_int(10000, 100000);
             $data .= '?v=' . $version;
         }
+        $this->viewCache->set($cache_key, $data);
         return $data;
     }
 

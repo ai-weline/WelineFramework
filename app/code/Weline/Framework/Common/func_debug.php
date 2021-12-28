@@ -21,7 +21,7 @@ if(!function_exists('p')){
      * @param bool $pass
      * @param int $trace_deep
      */
-    function p($data = null, bool $pass = false, int $trace_deep = 1): void
+    function p($data = null,  $pass = false, int $trace_deep = 1): void
     {
 
         // 执行时间

@@ -17,7 +17,7 @@ class TemplateTest extends TestCore
     public function testGetFile()
     {
         /**@var Template $template*/
-        $template = ObjectManager::getInstance(Template::class);
-        p($template->getFile('1.txt'));
+        $template = Template::getInstance();
+        p($template->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("Aiweline_Index::/css/index.css")));
     }
 }

@@ -89,6 +89,7 @@ class Template
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
+            self::$instance->init();
         }
         return self::$instance;
     }
