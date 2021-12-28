@@ -175,7 +175,7 @@ class Handle implements HandleInterface, RegisterInterface
         // 检测文件完整
         $router = '';
         foreach (DataInterface::files as $filename) {
-            $filepath = $module_path . $filename;
+            $filepath = BP.$module_path . $filename;
             if (is_file($filepath)) {
                 if ($filename === DataInterface::file_etc_Env) {
                     $env = (array)require $filepath;
@@ -188,11 +188,13 @@ class Handle implements HandleInterface, RegisterInterface
                             $this->printer->warning('设置路由别名请到：模块目录下的etc/env.php,修改return ["router"=>"' . $name . '"];', '提示');
                         }
                     }
-                    $router = $env['router'];
+                    $router = strtolower($env['router']);// TODO 定义路由区分大小写
                 }
             }
         }
-
+//        if($name === 'Aiweline_WebsiteMonitoring'){
+//            p($router);
+//        }
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $name, 'module_version' => $version, 'module_description' => $description], '__construct');
         $setup_dir = BP . $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
         if (is_dir($setup_dir) && DEV) $this->printer->setup($setup_dir . '：升级目录...', '开发');

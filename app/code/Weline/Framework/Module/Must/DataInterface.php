@@ -13,7 +13,7 @@ interface DataInterface
 {
     const file_Register = 'register.php';
 
-    const file_etc_Env = 'etc/env.php';
+    const file_etc_Env = 'etc'.DIRECTORY_SEPARATOR.'env.php';
 
     const dir_Etc = 'etc';
 
