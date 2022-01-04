@@ -55,50 +55,7 @@ class App
      */
     public static function init()
     {
-        // 执行时间
-        define('START_TIME', microtime(true));
-        // 系统是否WIN
-        define('IS_WIN', strtolower(substr(PHP_OS, 0, 3)) === 'win');
-        // 导入核心通用组件
-        require __DIR__ . '/Common/loader.php';
-        // 助手函数
-        $handle_functions = BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
-        if (is_file($handle_functions)) {
-            require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
-        }
-        /**------------环境配置----------------*/
-        // 调试模式
-        define('DEV', 'dev' === self::Env('deploy'));
-        define('PROD', 'prod' === self::Env('deploy'));
-        // 调试模式
-        define('PHP_CS', self::Env('php-cs'));
-        //报告错误
-        DEBUG ? error_reporting(E_ALL) : error_reporting(0);
-        // 检查运行模式
-        defined('CLI') || define('CLI', PHP_SAPI === 'cli');
 
-        // 错误报告
-        if (DEV || CLI) {
-            ini_set('error_reporting', E_ALL);
-            register_shutdown_function(function () {
-                $_error = error_get_last();
-                if ($_error && in_array($_error['type'], [1, 4, 16, 64, 256, 4096, E_ALL], true)) {
-                    if (CLI) {
-                        echo __('致命错误：') . PHP_EOL;
-                        echo __('文件：') . $_error['file'] . PHP_EOL;
-                        echo __('行数：') . $_error['line'] . PHP_EOL;
-                        echo __('消息：') . $_error['message'] . PHP_EOL;
-                    } else {
-                        echo '<b style="color: red">致命错误：</b></br>';
-                        echo '<pre>';
-                        echo __('文件：') . $_error['file'] . '</br>';
-                        echo __('行数：') . $_error['line'] . '</br>';
-                        echo __('消息：') . $_error['message'] . '</br>';
-                        echo '</pre>';
-                    }
-                }
-            });
-        }
 //        else{
 //            ini_set('error_reporting', 0);
 //        }
@@ -120,7 +77,6 @@ class App
         self::init();
         if (!CLI) {
             try {
-//                (new CacheFactory())->create()->flush();
                 return ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
             } catch (\ReflectionException | App\Exception $e) {
                 throw new Exception(__('系统错误：%1', $e->getMessage()));

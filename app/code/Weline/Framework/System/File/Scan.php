@@ -44,14 +44,15 @@ class Scan
      */
     public function scanDirTree(string $dirPath, int $level = 0): array
     {
-        $dirPath = rtrim($dirPath,DIRECTORY_SEPARATOR);
+        $dirPath = rtrim($dirPath, DIRECTORY_SEPARATOR);
         $this->keepLevel += 1;
         if (is_dir($dirPath) && $file_handler = opendir($dirPath)) {
             while (false !== ($file = readdir($file_handler))) {
                 // 排除"."".."
                 if ($file !== '.' && $file !== '..') {
-                    $filename       = $dirPath . DIRECTORY_SEPARATOR . $file;
+                    $filename = $dirPath . DIRECTORY_SEPARATOR . $file;
                     $relateFilename = str_replace(APP_PATH, '', $filename);
+                    if (is_int(strpos($filename, VENDOR_PATH))) $relateFilename = str_replace(VENDOR_PATH, '', $filename);
                     if (IS_WIN) {
                         $relateFilename = str_replace('/', DIRECTORY_SEPARATOR, $relateFilename);
                     }
@@ -67,7 +68,7 @@ class Scan
                         }
                     } else {
                         // 文件
-                        $file     = new File();
+                        $file = new File();
                         $pathInfo = pathinfo($filename);
                         $file->setBasename($pathInfo['basename']);
                         $file->setFilename($pathInfo['filename']);
@@ -102,7 +103,7 @@ class Scan
      */
     public function scanDir(string $dirPath): array
     {
-        if (! is_dir(rtrim($dirPath,DIRECTORY_SEPARATOR))) {
+        if (!is_dir(rtrim($dirPath, DIRECTORY_SEPARATOR))) {
             return [];
         }
         if ($this->dirs = (scandir($dirPath)) ? scandir($dirPath) : []) {

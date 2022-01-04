@@ -103,7 +103,6 @@ class Upgrade extends CommandAbstract
                 if (is_file(APP_PATH . $register)) {
                     require APP_PATH . $register;
                 }
-                # TODO linux中未注册后台路由问题
                 if (is_file(BP . 'vendor' . DIRECTORY_SEPARATOR . $register)) {
                     require BP . 'vendor' . DIRECTORY_SEPARATOR . $register;
                 }

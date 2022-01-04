@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Console;
 
+use Weline\Framework\App;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;

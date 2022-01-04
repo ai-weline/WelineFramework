@@ -363,4 +363,10 @@ class Template
         return $this->_request->getUrl($path);
     }
 
+
+    public function getAdminUrl(string $path): string
+    {
+        return $this->_request->getUrl(Env::getInstance()->getConfig('admin') . '/' . $path);
+    }
+
 }

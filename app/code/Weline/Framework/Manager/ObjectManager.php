@@ -28,7 +28,7 @@ class ObjectManager implements ManagerInterface
 
     private static ?ObjectManager $instance = null;
 
-    private static array $instances=[];
+    private static array $instances = [];
 
     private function __clone()
     {
@@ -62,10 +62,10 @@ class ObjectManager implements ManagerInterface
     {
 
         if (empty($class)) {
-            return self::$instance =new self();
+            return self::$instance = new self();
         }
         if (empty(self::$instance)) {
-            self::$instance =new self();
+            self::$instance = new self();
         }
         if (isset(self::$instances[$class])) {
             self::$instances[$class] = self::initClassInstance($class, self::$instances[$class]);
@@ -89,7 +89,7 @@ class ObjectManager implements ManagerInterface
 
         self::addInstance($class, $new_object);
         // 缓存可缓存对象
-        if (PROD && !in_array($class, self::unserializable_class)) {
+        if (!CLI && PROD && !in_array($class, self::unserializable_class)) {
             self::getCache()->set($class, self::$instances[$class]);
         };
 

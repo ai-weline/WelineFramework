@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Register;
 
+use Weline\Framework\App;
 use Weline\Framework\Console\ConsoleException;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
@@ -16,6 +17,7 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Register implements RegisterDataInterface
 {
+
     /**
      * @DESC         |注册
      *
@@ -41,19 +43,31 @@ class Register implements RegisterDataInterface
             // 模块安装
             case self::MODULE:
                 $appPathArray = explode(DIRECTORY_SEPARATOR, $param);
-                $module       = array_pop($appPathArray);
-                $vendor       = array_pop($appPathArray);
-                $code         = array_pop($appPathArray);
-                $app          = array_pop($appPathArray);
-                $moduleName   = $vendor . '_' . $module;
-
-                $module_path = $app . DIRECTORY_SEPARATOR . $code . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
+                $module = array_pop($appPathArray);
+                $vendor = array_pop($appPathArray);
+                $code = array_pop($appPathArray);
+                $app = array_pop($appPathArray);
+                # 处理composer安装的模块名
+                $module_rename = '';
+                if (strstr($module, '-')) {
+                    $module_arr = explode('-', $module);
+                    foreach ($module_arr as $item) {
+                        $module_rename .= ucfirst($item);
+                    }
+                }
+                $moduleName = ucfirst($vendor) . '_' . ucfirst($module_rename ?: $module);
+                # 处理composer安装的模块
+                $app .= DIRECTORY_SEPARATOR;
+                if (strstr($param, VENDOR_PATH)) {
+                    $app = '';
+                }
+                $module_path = $app . $code . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
                 $moduleRegisterFile = $module_path . self::register_file;
-                if (! is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
+                if (!is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
                     throw new ConsoleException("{$moduleName}注册文件{$moduleRegisterFile}不存在！");
                 }
                 // 安装数据
-                $install_params = [$type,['base_path'=>$module_path, 'module_name'=>$moduleName], $version, $description];
+                $install_params = [$type, ['base_path' => $module_path, 'module_name' => $moduleName], $version, $description];
 
                 break;
             // 路由注册

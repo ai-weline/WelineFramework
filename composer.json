@@ -28,14 +28,16 @@
     "ext-gd": "*",
     "wikimedia/less.php": "^3.1",
     "mrclay/jsmin-php": "^2.4",
-    "ext-memcached": "*"
+    "ext-memcached": "*",
+    "aiweline/website-monitoring": "dev-master"
   },
   "autoload": {
     "psr-4": {
       "Weline\\": "app/code/Weline",
       "": [
         "app/code/",
-        "generated/code/"
+        "generated/code/",
+        "vendor/"
       ]
     }
   },

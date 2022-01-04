@@ -192,11 +192,9 @@ class Handle implements HandleInterface, RegisterInterface
                 }
             }
         }
-//        if($name === 'Aiweline_WebsiteMonitoring'){
-//            p($router);
-//        }
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $name, 'module_version' => $version, 'module_description' => $description], '__construct');
         $setup_dir = BP . $module_path . \Weline\Framework\Setup\Data\DataInterface::dir;
+
         if (is_dir($setup_dir) && DEV) $this->printer->setup($setup_dir . '：升级目录...', '开发');
         // 已经存在模块则更新
         if ($this->helper->isInstalled($this->modules, $name)) {
@@ -253,34 +251,27 @@ class Handle implements HandleInterface, RegisterInterface
                 'version' => $version ? $version : '1.0.0',
                 'router' => $router,
                 'description' => $description ? $description : '',
-                'path' => $this->helper->moduleNameToPath($this->modules, $name),
                 'base_path' => $module_path,
             ];
             $this->modules[$name] = $moduleData;
 
-            try {
-                // 安装模块：加载模块下的Setup模块下的安装文件进行安装
-                foreach (\Weline\Framework\Setup\Data\DataInterface::install_FILES as $install_FILE) {
-                    $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $install_FILE . '.php';
-                    if (file_exists($setup_file)) {
-                        // 获取命名空间
-                        $setup_file_arr = explode(APP_PATH, $setup_file);
-                        $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
-                        $setup = ObjectManager::getInstance($file_namespace);
-                        $setup->setup($this->setup_data, $this->setup_context);
-                    }
-                    $this->printer->success(str_pad($name, 45) . __('已安装！'));
+            // 安装模块：加载模块下的Setup模块下的安装文件进行安装
+            foreach (\Weline\Framework\Setup\Data\DataInterface::install_FILES as $install_FILE) {
+                $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $install_FILE . '.php';
+                if (file_exists($setup_file)) {
+                    // 获取命名空间
+                    $setup_file_arr = explode(APP_PATH, $setup_file);
+                    $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
+                    $setup = ObjectManager::getInstance($file_namespace);
+                    $setup->setup($this->setup_data, $this->setup_context);
                 }
-            } catch (Exception $exception) {
-                throw $exception;
+                $this->printer->success(str_pad($name, 45) . __('已安装！'));
             }
 
             # 执行模型setup
             if (DEV) $modelManager->update($name, $this->setup_context, 'setup');
-
             // 更新模块
             $this->helper->updateModules($this->modules);
-
             // 更新路由
             $this->helper->registerModuleRouter($this->modules, $module_path, $name, $router);
         }

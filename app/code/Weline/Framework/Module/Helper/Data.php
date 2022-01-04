@@ -23,6 +23,21 @@ class Data extends AbstractHelper
 {
     private array $parent_class_arr = [];
 
+    function getClassNamespace(\Weline\Framework\System\File\Data\File $controllerFile){
+        $namespace_arr = explode('\\', $controllerFile->getNamespace());
+        foreach ($namespace_arr as &$item) {
+            if(is_int(strpos($item, '-'))){
+                $item = explode('-', $item);
+                foreach ($item as &$i) {
+                    $i = ucfirst($i);
+                }
+                $item = implode('', $item);
+            }
+            $item = ucfirst($item);
+        }
+        return implode('\\', $namespace_arr);
+    }
+
     /**
      * @DESC         |注册模块路由
      *
@@ -43,19 +58,21 @@ class Data extends AbstractHelper
             $appScanner = ObjectManager::getInstance(Scanner::class);
             // 扫描模块
             $appScanner->__init();
+
             $moduleDir = $appScanner->scanDirTree(BP . $path);
             /**@var Register $routerRegister */
             $routerRegister = ObjectManager::getInstance(Register::class);
             /** @var $Files \Weline\Framework\System\File\Data\File[] */
+
             foreach ($moduleDir as $dir => $Files) {
                 // Api路由
                 if (!is_bool(strpos($dir, Handle::api_DIR))) {
                     foreach ($Files as $apiFile) {
                         $apiDirArray = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
                         $baseRouter = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
-                        $baseRouter = $router . ($baseRouter ?? '');
+                        $baseRouter = $router . ($baseRouter ?: '');
                         $baseRouter = trim($baseRouter, '/');
-                        $apiClassName = $apiFile->getNamespace() . '\\' . $apiFile->getFilename();
+                        $apiClassName = $this->getClassNamespace($apiFile) . '\\' . $apiFile->getFilename();
                         $apiClassName = str_replace("\\\\", "\\", $apiClassName);
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
@@ -65,6 +82,7 @@ class Data extends AbstractHelper
                         }
                         $ctl_methods = $ctl_data['methods'];
                         $ctl_area = $ctl_data['area'];
+
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
@@ -91,11 +109,13 @@ class Data extends AbstractHelper
                 } // PC路由
                 elseif (!is_bool(strpos($dir, Handle::pc_DIR))) {
                     foreach ($Files as $controllerFile) {
+
                         $controllerDirArray = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
                         $baseRouter = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
                         $baseRouter = $router . ($baseRouter ?? '');
                         $baseRouter = trim($baseRouter, '/');
-                        $controllerClassName = $controllerFile->getNamespace() . '\\' . $controllerFile->getFilename();
+
+                        $controllerClassName = $this->getClassNamespace($controllerFile) . '\\' . $controllerFile->getFilename();
                         $controllerClassName = str_replace("\\\\", "\\", $controllerClassName);
                         // 删除父类方法：注册控制器方法
                         $this->parent_class_arr = [];// 清空父类信息
@@ -105,6 +125,7 @@ class Data extends AbstractHelper
                         }
                         $ctl_methods = $ctl_data['methods'];
                         $ctl_area = $ctl_data['area'];
+
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
