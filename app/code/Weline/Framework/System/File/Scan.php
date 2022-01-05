@@ -51,7 +51,7 @@ class Scan
                 // 排除"."".."
                 if ($file !== '.' && $file !== '..') {
                     $filename = $dirPath . DIRECTORY_SEPARATOR . $file;
-                    $relateFilename = str_replace(APP_PATH, '', $filename);
+                    $relateFilename = str_replace(APP_CODE_PATH, '', $filename);
                     if (is_int(strpos($filename, VENDOR_PATH))) $relateFilename = str_replace(VENDOR_PATH, '', $filename);
                     if (IS_WIN) {
                         $relateFilename = str_replace('/', DIRECTORY_SEPARATOR, $relateFilename);

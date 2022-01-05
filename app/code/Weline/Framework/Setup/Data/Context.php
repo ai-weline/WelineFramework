@@ -41,7 +41,7 @@ class Context
 
     public function getModulePath(): string
     {
-        return isset($this->modules[$this->module_name]) ? APP_PATH . $this->modules[$this->module_name]['path'] : APP_PATH . str_replace('_', DIRECTORY_SEPARATOR, $this->module_name);
+        return isset($this->modules[$this->module_name]) ? APP_CODE_PATH . $this->modules[$this->module_name]['path'] : APP_CODE_PATH . str_replace('_', DIRECTORY_SEPARATOR, $this->module_name);
     }
 
     /**

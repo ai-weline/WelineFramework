@@ -14,7 +14,7 @@ use Weline\Framework\System\File\Io\File;
 
 class Env
 {
-    const app_path = '';
+    const APP_CODE_PATH = '';
     const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
 
     const framework_name = 'Weline';
@@ -44,7 +44,7 @@ class Env
     const path_LANGUAGE_PACK = BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR;
 
     const register_FILE_PATHS = [
-        'app_code' => APP_PATH,
+        'app_code' => APP_CODE_PATH,
         'vendor_code' => self::path_VENDOR_CODE,
         'theme_design' => self::path_CODE_DESIGN,
         'language_pack' => self::path_LANGUAGE_PACK,

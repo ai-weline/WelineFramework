@@ -100,7 +100,7 @@ class Scanner extends Scan
      */
     public function scanVendorModules($vendor)
     {
-//        $app_modules = $this->scanDir(APP_PATH . $vendor);
+//        $app_modules = $this->scanDir(APP_CODE_PATH . $vendor);
 //        $core_modules = $this->scanDir(Env::path_VENDOR_CODE . $vendor);
 //        $theme_modules = $this->scanDir(Env::path_CODE_DESIGN. $vendor);
 //        $modules = array_merge($core_modules, $app_modules);
@@ -114,7 +114,7 @@ class Scanner extends Scan
         foreach ($modules as $key => $module) {
             unset($modules[$key]);
 //            // app下的代码
-//            if (file_exists(APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
+//            if (file_exists(APP_CODE_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
 //                $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
 //            }
 //            // app下的代码优先度更高 这里

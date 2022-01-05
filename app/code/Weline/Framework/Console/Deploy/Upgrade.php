@@ -50,7 +50,7 @@ class Upgrade extends CommandAbstract
                     $module_view_dir .= DataInterface::dir_type_STATICS . DIRECTORY_SEPARATOR;
                 }
                 # FIXME 兼容composer下模块的静态文件
-                $origin_view_dir = APP_PATH . $module_view_static_dir;
+                $origin_view_dir = APP_CODE_PATH . $module_view_static_dir;
                 if (is_dir($origin_view_dir)) {
                     // 主题配置
                     $theme        = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);

@@ -102,7 +102,7 @@ class Handle implements HandleInterface, RegisterInterface
      */
     public function remove(string $module_name)
     {
-        $app_path = APP_PATH;
+        $APP_CODE_PATH = APP_CODE_PATH;
 
         $this->printer->note(__('1、正在执行卸载脚本...'));
         $remove_script = $this->setup_helper->getSetupClass($module_name, \Weline\Framework\Setup\Data\DataInterface::type_REMOVE);
@@ -117,15 +117,15 @@ class Handle implements HandleInterface, RegisterInterface
             $this->printer->warning('模块卸载脚本不存在，已跳过卸载脚本！', '卸载');
         }
         $this->printer->note('2、备份应用程序...');
-        if (is_dir($app_path . $this->modules[$module_name]['path'] . DIRECTORY_SEPARATOR)) {
-            $back_path = $app_path . $this->modules[$module_name]['path'] . DIRECTORY_SEPARATOR;
+        if (is_dir($APP_CODE_PATH . $this->modules[$module_name]['path'] . DIRECTORY_SEPARATOR)) {
+            $back_path = $APP_CODE_PATH . $this->modules[$module_name]['path'] . DIRECTORY_SEPARATOR;
         } elseif (is_dir($back_path = BP . 'vendor/' . $this->modules[$module_name]['path'] . DIRECTORY_SEPARATOR)) {
             $back_path = BP . 'vendor/' . $this->modules[$module_name]['path'] . DIRECTORY_SEPARATOR;
         } else {
             $this->printer->error("模块{$module_name}:不存在！", 'ERROR');
         }
         $module_path = $this->helper->getModulePath($module_name);
-        $zip = $this->compress->compression("{$module_path}", APP_PATH . $module_name, APP_PATH);
+        $zip = $this->compress->compression("{$module_path}", APP_CODE_PATH . $module_name, APP_CODE_PATH);
         // TODO 完成模块卸载 兼容 win 和 linux
 
         $this->printer->note($zip);
@@ -215,7 +215,7 @@ class Handle implements HandleInterface, RegisterInterface
                     $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $upgrade_FILE . '.php';
                     if (file_exists($setup_file)) {
                         // 获取命名空间
-                        $setup_file_arr = explode(APP_PATH, $setup_file);
+                        $setup_file_arr = explode(APP_CODE_PATH, $setup_file);
                         $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
                         $setup = ObjectManager::getInstance($file_namespace);
                         $result = $setup->setup($this->setup_data, $this->setup_context);
@@ -260,20 +260,20 @@ class Handle implements HandleInterface, RegisterInterface
                 $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $install_FILE . '.php';
                 if (file_exists($setup_file)) {
                     // 获取命名空间
-                    $setup_file_arr = explode(APP_PATH, $setup_file);
+                    $setup_file_arr = explode(APP_CODE_PATH, $setup_file);
                     $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
                     $setup = ObjectManager::getInstance($file_namespace);
                     $setup->setup($this->setup_data, $this->setup_context);
                 }
-                $this->printer->success(str_pad($name, 45) . __('已安装！'));
             }
 
             # 执行模型setup
             if (DEV) $modelManager->update($name, $this->setup_context, 'setup');
             // 更新模块
-            $this->helper->updateModules($this->modules);
+            $this->helper->updateModules($this->modules);// TODO 模块安装不到文件中
             // 更新路由
             $this->helper->registerModuleRouter($this->modules, $module_path, $name, $router);
+            $this->printer->success(str_pad($name, 45) . __('已安装！'));
         }
     }
 }

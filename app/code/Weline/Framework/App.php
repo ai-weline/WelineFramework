@@ -55,10 +55,8 @@ class App
      */
     public static function init()
     {
-
-//        else{
-//            ini_set('error_reporting', 0);
-//        }
+        // 通用加载
+        \Weline\Framework\Common\Loader::load();
     }
 
     /**

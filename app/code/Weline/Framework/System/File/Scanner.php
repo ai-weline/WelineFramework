@@ -53,7 +53,7 @@ class Scanner extends Scan
      */
     public function scanAppVendors()
     {
-        $apps = $this->scanDir(APP_PATH);
+        $apps = $this->scanDir(APP_CODE_PATH);
         $vendors = $this->scanDir(BP . 'vendor');
 
         return array_merge($vendors, $apps);
@@ -73,12 +73,12 @@ class Scanner extends Scan
      */
     public function scanVendorModules($vendor)
     {
-        $app_modules = $this->scanDir(APP_PATH . $vendor);
+        $app_modules = $this->scanDir(APP_CODE_PATH . $vendor);
         $core_modules = $this->scanDir(BP . 'vendor/' . $vendor);
         $modules = array_merge($core_modules, $app_modules);
         foreach ($modules as $key => $module) {
             unset($modules[$key]);
-            if (file_exists(APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
+            if (file_exists(APP_CODE_PATH . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
                 $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
             }
             // app下的代码优先度更高
@@ -108,12 +108,12 @@ class Scanner extends Scan
         $vendors = $this->scanAppVendors();
         $vendors_modules = [];
         foreach ($vendors as $vendor) {
-            $app_modules = $this->scanDir(APP_PATH . $vendor . DIRECTORY_SEPARATOR);
+            $app_modules = $this->scanDir(APP_CODE_PATH . $vendor . DIRECTORY_SEPARATOR);
             $core_modules = $this->scanDir(BP . 'vendor' . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR);
             $modules = array_merge($core_modules, $app_modules);
             foreach ($modules as $key => $module) {
                 // app下的代码优先度更高
-                $app_module_path = APP_PATH . $vendor . DIRECTORY_SEPARATOR . $module;
+                $app_module_path = APP_CODE_PATH . $vendor . DIRECTORY_SEPARATOR . $module;
                 unset($modules[$key]);
                 $app_need_file_or_dir = $app_module_path. DIRECTORY_SEPARATOR . $file_or_dir;
                 if (is_dir($app_module_path)) {

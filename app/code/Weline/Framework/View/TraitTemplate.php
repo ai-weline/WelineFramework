@@ -82,7 +82,7 @@ trait TraitTemplate
             $template_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
 
             if (PROD) {
-                $compile_dir = str_replace(APP_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']) . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
+                $compile_dir = str_replace(APP_CODE_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']) . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
             } else {
                 $compile_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
             }
@@ -237,7 +237,7 @@ trait TraitTemplate
                 break;
             case DataInterface::dir_type_TEMPLATE_COMPILE:
                 if (PROD) {
-                    $path = str_replace(APP_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_view_dir_path) . DIRECTORY_SEPARATOR . DataInterface::view_TEMPLATE_DIR . DIRECTORY_SEPARATOR;
+                    $path = str_replace(APP_CODE_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_view_dir_path) . DIRECTORY_SEPARATOR . DataInterface::view_TEMPLATE_DIR . DIRECTORY_SEPARATOR;
                 } else {
                     $path = $module_view_dir_path . DataInterface::view_TEMPLATE_COMPILE_DIR;
                 }
@@ -251,7 +251,7 @@ trait TraitTemplate
 
                 # 非开发环境
                 if (PROD) {
-                    $path = str_replace(APP_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $this->theme['path'] . DIRECTORY_SEPARATOR, $path);
+                    $path = str_replace(APP_CODE_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $this->theme['path'] . DIRECTORY_SEPARATOR, $path);
                 }
                 $this->viewCache->set($cache_key, $path);
                 break;
@@ -278,7 +278,7 @@ trait TraitTemplate
      */
     private function getUrlPath(string $real_path): string
     {
-        $explode_str = DEV ? APP_PATH : PUB;
+        $explode_str = DEV ? APP_CODE_PATH : PUB;
         return rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace($explode_str, '', $real_path)), '/');
     }
 

@@ -100,8 +100,8 @@ class Upgrade extends CommandAbstract
         foreach ($registers as $vendor => $modules) {
             foreach ($modules as $name => $register) {
                 $all_modules[$vendor . '_' . $name] = $register;
-                if (is_file(APP_PATH . $register)) {
-                    require APP_PATH . $register;
+                if (is_file(APP_CODE_PATH . $register)) {
+                    require APP_CODE_PATH . $register;
                 }
                 if (is_file(BP . 'vendor' . DIRECTORY_SEPARATOR . $register)) {
                     require BP . 'vendor' . DIRECTORY_SEPARATOR . $register;

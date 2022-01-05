@@ -12,14 +12,14 @@ require 'check.php';
 // 项目根目录
 define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 应用目录
-define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR);
+define('APP_CODE_PATH', BP . 'app' . DIRECTORY_SEPARATOR);
 // 开发模式
 define('DEV', true);
 defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 // CLI 环境
 define('CLI', false);
 // 应用 配置 目录 (默认访问 etc)
-define('APP_ETC_PATH', APP_PATH . 'etc' . DIRECTORY_SEPARATOR);
+define('APP_ETC_PATH', APP_CODE_PATH . 'etc' . DIRECTORY_SEPARATOR);
 // 自动加载
 try {
     require BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';

@@ -45,9 +45,9 @@ class SqlFile
         }
         $sql    = file_get_contents($db_filepath);
         if ($this->_sql_execute($sql)) {
-            return ['status' => true, 'file' => str_replace(APP_PATH, '', $db_filepath), 'info' => '导入数据库失败'];
+            return ['status' => true, 'file' => str_replace(APP_CODE_PATH, '', $db_filepath), 'info' => '导入数据库失败'];
         }
-        return ['status' => true, 'file' => str_replace(APP_PATH, '', $db_filepath), 'info' => '导入数据库成功'];
+        return ['status' => true, 'file' => str_replace(APP_CODE_PATH, '', $db_filepath), 'info' => '导入数据库成功'];
     }
 
     /**

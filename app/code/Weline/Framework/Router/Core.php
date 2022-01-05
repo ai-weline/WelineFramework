@@ -232,7 +232,7 @@ class Core
     public function StaticFile(string &$url)
     {
         header("Cache-Control: max-age=3600");
-        $filename = APP_PATH . trim($url, DIRECTORY_SEPARATOR);
+        $filename = APP_CODE_PATH . trim($url, DIRECTORY_SEPARATOR);
         $filename = str_replace('/', DIRECTORY_SEPARATOR, $filename);
         // 阻止读取其他文件
         if (is_bool(strpos($filename, \Weline\Framework\View\Data\DataInterface::dir))) {

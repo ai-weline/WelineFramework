@@ -89,7 +89,7 @@ class Set extends CommandAbstract
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {
                 $this->printer->note($vendor . '_' . $name . '...');
-                $module_view_tpl_com_dir = APP_PATH . $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::view_TEMPLATE_COMPILE_DIR . DIRECTORY_SEPARATOR;
+                $module_view_tpl_com_dir = APP_CODE_PATH . $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::view_TEMPLATE_COMPILE_DIR . DIRECTORY_SEPARATOR;
                 if (is_dir($module_view_tpl_com_dir)) {
                     $this->system->exec("rm -rf $module_view_tpl_com_dir");
                 }

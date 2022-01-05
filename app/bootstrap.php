@@ -6,53 +6,77 @@
  * 网址：aiweline.com
  * 论坛：https://bbs.aiweline.com
  */
-
-// 检查安装
-if ('cli' !== PHP_SAPI and !file_exists(dirname(__DIR__) . '/setup/install.lock')) {
-    require dirname(__DIR__) . '/setup/index.php';
-    exit();
-}
-$start_time = microtime(true);
+// ############################# 系统配置 #####################
+// 执行时间
+define('START_TIME', microtime(true));
 // 项目根目录
 defined('BP') || define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
-// 应用 目录 (默认访问 web)
-defined('APP_PATH') || define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
-defined('VENDOR_PATH') || define('VENDOR_PATH', BP . 'vendor' . DIRECTORY_SEPARATOR);
-if (is_file(APP_PATH . '/config.php')) require APP_PATH . '/config.php';
 // 运行模式
 defined('CLI') || define('CLI', PHP_SAPI === 'cli');
-// 调试模式
-defined('DEBUG') || define('DEBUG', 0);
+// 检查安装
+if (!CLI and !file_exists(BP . 'setup/install.lock')) {
+    require BP . 'setup/index.php';
+    exit();
+}
+// 系统是否WIN
+define('IS_WIN', strtolower(substr(PHP_OS, 0, 3)) === 'win');
 // 静态文件路径
 defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
+
+// ############################# Composer代理配置 #####################
+// 第三方代码目录
+defined('VENDOR_PATH') || define('VENDOR_PATH', BP . 'vendor' . DIRECTORY_SEPARATOR);
+// 检测Composer自动加载代理
+try {
+    $autoloader = VENDOR_PATH . 'autoload.php';
+    if (is_file($autoloader)) {
+        require $autoloader;
+    } else {
+        exit('Composer自动加载异常!尝试执行：php composer.phar install');
+    }
+} catch (Exception $exception) {
+    exit('自动加载异常：' . $exception->getMessage());
+}
+// ############################# 应用相关配置 #####################
+// 应用 目录 (默认访问 web)
+defined('APP_PATH') || define('APP_PATH', BP . 'app' . DIRECTORY_SEPARATOR);
+defined('APP_CODE_PATH') || define('APP_CODE_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
+// 应用配置文件
+if (is_file(APP_CODE_PATH . 'config.php')) require APP_CODE_PATH . 'config.php';
 // 主题 目录
-defined('APP_DESIGN_PATH') || define('APP_DESIGN_PATH', APP_PATH . 'design' . DIRECTORY_SEPARATOR);
+defined('APP_DESIGN_PATH') || define('APP_DESIGN_PATH', APP_CODE_PATH . 'design' . DIRECTORY_SEPARATOR);
 // 静态 目录
 defined('APP_STATIC_PATH') || define('APP_STATIC_PATH', PUB . 'static' . DIRECTORY_SEPARATOR);
 // 应用 配置 目录 (默认访问 etc)
 defined('APP_ETC_PATH') || define('APP_ETC_PATH', BP . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
-// 执行时间
-define('START_TIME', microtime(true));
-// 系统是否WIN
-define('IS_WIN', strtolower(substr(PHP_OS, 0, 3)) === 'win');
-// 导入核心通用组件
-require __DIR__ . '/code/Weline/Framework/Common/loader.php';
+
+// 调试模式
+defined('DEBUG') || define('DEBUG', 0);
+
+
+// ############################# 环境配置 #####################
+// 环境
+$config = [];
+$env_filename = __DIR__ . '/etc/env.php';
+if (is_file($env_filename)) {
+    $config = require $env_filename;
+}
 // 助手函数
 $handle_functions = BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
 if (is_file($handle_functions)) {
     require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
 }
-/**------------环境配置----------------*/
-$config = require __DIR__ . '/etc/env.php';
+
 // 调试模式
 define('DEV', 'dev' === $config['deploy']);
 define('PROD', 'prod' === $config['deploy']);
+//defined('DEV') || define('DEV', false);
+//defined('PROD') || define('PROD', false);
 // 调试模式
 define('PHP_CS', $config['php-cs']);
+//defined('PHP_CS') || define('PHP_CS', false);
 //报告错误
 DEBUG ? error_reporting(E_ALL) : error_reporting(0);
-// 检查运行模式
-defined('CLI') || define('CLI', PHP_SAPI === 'cli');
 
 // 错误报告
 if (DEV || CLI) {
@@ -76,18 +100,8 @@ if (DEV || CLI) {
         }
     });
 }
-// 检测自动加载
-try {
-    $autoloader = BP . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-    if (is_file($autoloader)) {
-        require $autoloader;
-    } else {
-        exit('Composer自动加载异常!尝试执行：php composer.phar install');
-    }
-} catch (Exception $exception) {
-    exit('自动加载异常：' . $exception->getMessage());
-}
 
+// ############################# 初始化应用... #####################
 // 尝试加载应用
 try {
     /**

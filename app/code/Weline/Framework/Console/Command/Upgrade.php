@@ -133,7 +133,7 @@ class Upgrade extends CommandAbstract
         $scanner->__init();
         $core   = $scanner->scanDirTree(Env::vendor_path);
         $scanner->__init();
-        $custom = $scanner->scanDirTree(APP_PATH);
+        $custom = $scanner->scanDirTree(APP_CODE_PATH);
 
         // 合并
         $command_dir_files = array_merge($core, $custom);

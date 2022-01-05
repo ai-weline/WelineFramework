@@ -28,9 +28,9 @@ class Compile extends \Weline\Framework\Console\CommandAbstract
         $all_plugins = [];
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {
-                if (is_file(APP_PATH . $register)) {
+                if (is_file(APP_CODE_PATH . $register)) {
                     $all_modules[$vendor . '_' . $name] = $register;
-                    require APP_PATH . $register;
+                    require APP_CODE_PATH . $register;
                 }
             }
         }

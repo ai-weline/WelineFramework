@@ -65,7 +65,7 @@ class Etc
     {
         $etcFiles                  = $this->scanner->getEtcFile($moduleName);
         $realModuleNameEtcPath     = $this->data->getModulePath($moduleName) . DIRECTORY_SEPARATOR . DirectoryInterface::etc;
-        $relativeModuleNameEtcPath = str_replace(APP_PATH, '', $realModuleNameEtcPath);
+        $relativeModuleNameEtcPath = str_replace(APP_CODE_PATH, '', $realModuleNameEtcPath);
         p($relativeModuleNameEtcPath);
         if (isset($etcFiles[Env::framework_name . '\Admin\etc\adminhtml'])) {
             foreach ($etcFiles[Env::framework_name . '\Admin\etc\adminhtml'] as $etcFile) {

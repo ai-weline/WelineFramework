@@ -188,7 +188,7 @@ class Data extends AbstractHelper
      */
     public function getModulePath(string $name): string
     {
-        return APP_PATH . str_replace('_', DIRECTORY_SEPARATOR, $name);
+        return APP_CODE_PATH . str_replace('_', DIRECTORY_SEPARATOR, $name);
     }
 
     /**
