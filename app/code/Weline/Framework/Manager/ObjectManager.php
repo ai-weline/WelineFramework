@@ -70,10 +70,10 @@ class ObjectManager implements ManagerInterface
             return self::$instances[$class];
         }
         // 缓存对象读取
-        if (!CLI && $shared && PROD && $cache_class_object = self::getCache()->get($class)) {
-            self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
-            return self::$instances[$class];
-        }
+//        if (!CLI && $shared && PROD && $cache_class_object = self::getCache()->get($class)) {
+//            self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
+//            return self::$instances[$class];
+//        }
         // 类名规则处理
         $new_class = self::parserClass($class);
         $arguments = $arguments ?: self::getMethodParams($new_class);
@@ -82,9 +82,9 @@ class ObjectManager implements ManagerInterface
 
         self::addInstance($class, $new_object);
         // 缓存可缓存对象
-        if (!CLI && PROD && !in_array($class, self::unserializable_class)) {
-            self::getCache()->set($class, self::$instances[$class]);
-        };
+//        if (!CLI && PROD && !in_array($class, self::unserializable_class)) {
+//            self::getCache()->set($class, self::$instances[$class]);
+//        };
 
         return self::_getInstance($class);
     }
