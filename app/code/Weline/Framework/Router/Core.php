@@ -51,7 +51,7 @@ class Core
      */
     public function __init()
     {
-        if (empty($this->request)) $this->request = ObjectManager::getInstance(Request::class);
+        $this->request = ObjectManager::getInstance(Request::class);
         if (empty($this->cache)) $this->cache = ObjectManager::getInstance(RouterCache::class . 'Factory');
         if (empty($this->request_area)) $this->request_area = $this->request->getRequestArea();
         if (empty($this->area_router)) $this->area_router = $this->request->getAreaRouter();
@@ -59,10 +59,6 @@ class Core
         if (empty($this->is_admin)) $this->is_admin = (bool)strstr(strtolower($this->request_area), \Weline\Framework\Router\DataInterface::area_BACKEND);
     }
 
-    function __sleep()
-    {
-        return array('cache','_etc');
-    }
 
     /**
      * @DESC         |路由处理
@@ -204,10 +200,6 @@ class Core
                 # 缓存路由结果
                 $this->router['type'] = 'pc';
                 $this->cache->set($this->_router_cache_key, $this->router);
-//                list($dispatch, $method) = $this->getController($this->router);
-//                if (method_exists($dispatch, $method)) {
-//                    exit(call_user_func([$dispatch, $method], $this->request->getParams()));
-//                }
                 $this->route();
             }
         }
@@ -229,7 +221,7 @@ class Core
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function StaticFile(string &$url)
+    public function StaticFile(string &$url): mixed
     {
         header("Cache-Control: max-age=3600");
         $filename = APP_CODE_PATH . trim($url, DIRECTORY_SEPARATOR);
@@ -256,12 +248,12 @@ class Core
 
     function getController(array $router): array
     {
-        $controller_cache_controller_key = 'controller_cache_key_' . implode('_', $router['class']).'_controller';
-        $controller_cache_method_key = 'controller_cache_key_' . implode('_', $router['class']).'_method';
+        $controller_cache_controller_key = 'controller_cache_key_' . implode('_', $router['class']) . '_controller';
+        $controller_cache_method_key = 'controller_cache_key_' . implode('_', $router['class']) . '_method';
         $dispatch = $this->cache->get($controller_cache_controller_key);
         $dispatch_method = $this->cache->get($controller_cache_method_key);
-        if ($dispatch&&$dispatch_method) {
-            return [$dispatch,$dispatch_method];
+        if ($dispatch && $dispatch_method) {
+            return [$dispatch, $dispatch_method];
         } else {
             $class = json_decode(json_encode($router['class']));
 

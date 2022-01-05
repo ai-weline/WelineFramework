@@ -23,62 +23,12 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     private string $module_name = '';
 
-    private string $module_path;
-
-    final public static function getInstance(string $module_path): self
-    {
-        if (!isset(self::$instance)) {
-            $instance = (new self());
-            $instance->__init();
-            self::$instance = $instance->setModulePath($module_path);
-        }
-        return self::$instance;
-    }
-
-    public function __init()
-    {
-        /**
-         * 重载方法
-         */
-        parent::__init();
-        $this->module_path = '';
-        $this->module_name = str_replace('\\', '_', $this->module_path);
-    }
-
-    /**
-     * 设置
-     * @param string $module_name
-     * @return Request
-     */
-    public function setModuleName($module_name): Request
-    {
-        $this->module_name = $module_name;
-
-        return $this;
-    }
-
     /**
      * @return string
      */
     public function getModulePath(): string
     {
-        return $this->module_path;
-    }
-
-    /**
-     * 设置
-     * @param string $module_path
-     * @return Request
-     */
-    public function setModulePath(string $module_path): Request
-    {
-        $this->module_path = $module_path;
-
-        return $this;
-    }
-
-    private function __clone()
-    {
+        return $this->getRouterData('module_path');
     }
 
     public function getHeader(string $key = null)

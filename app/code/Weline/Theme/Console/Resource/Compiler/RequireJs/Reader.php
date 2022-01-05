@@ -45,7 +45,7 @@ class Reader extends \Weline\Theme\Config\StaticsReader
             $content = file_get_contents($require_config_js['origin']);
             # 替换模块的路径
                 foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
-                    $related_file_path = str_replace(trim($module_info['path'],DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'view', '/', $require_config_js['dir']);
+                    $related_file_path = str_replace(trim($module_info['base_path'],DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'view', '/', $require_config_js['dir']);
                     $related_file_path = str_replace('//', '/', $related_file_path);
                     $related_file_path = str_replace('//', '/', $related_file_path);
                     $file_path = $this->fetchFile($module_name.'::'.$related_file_path);

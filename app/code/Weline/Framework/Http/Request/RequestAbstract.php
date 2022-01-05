@@ -47,12 +47,8 @@ abstract class RequestAbstract extends DataObject
     {
         $url_arr = explode('/', trim($this->getModuleUrlPath(), '/'));
         $this->area_router = array_shift($url_arr);
-        if(empty($this->_filter))$this->_filter = RequestFilter::getInstance();
-        if(empty($this->_response))$this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
-    }
-
-    function __sleep(){
-        return array('_filter');
+        if (empty($this->_filter)) $this->_filter = RequestFilter::getInstance();
+        if (empty($this->_response)) $this->_response = $this->getResponse();
     }
 
     /**
@@ -64,7 +60,7 @@ abstract class RequestAbstract extends DataObject
      */
     public function setRouter(array $router)
     {
-        return $this->setData('router',$router);
+        return $this->setData('router', $router);
     }
 
     /**
@@ -88,7 +84,7 @@ abstract class RequestAbstract extends DataObject
      */
     public function getRouterData(string $key): mixed
     {
-        return $this->getData('router/'.$key);
+        return $this->getData('router/' . $key);
     }
 
     /**
@@ -304,7 +300,7 @@ abstract class RequestAbstract extends DataObject
 
     public function getBaseHost(): string
     {
-        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . ($this->getServer('SERVER_PORT') !== '80' ?':'.$this->getServer('SERVER_PORT'): '');
+        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . ($this->getServer('SERVER_PORT') !== '80' ? ':' . $this->getServer('SERVER_PORT') : '');
     }
 
     /**
@@ -318,6 +314,6 @@ abstract class RequestAbstract extends DataObject
      */
     public function getResponse(): Response
     {
-        return $this->_response;
+        return $this->_response = ObjectManager::getInstance(\Weline\Framework\Http\Response::class);
     }
 }

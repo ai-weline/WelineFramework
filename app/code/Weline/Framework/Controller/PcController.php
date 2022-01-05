@@ -32,7 +32,7 @@ class PcController extends Core
     {
         parent::__init();
         $this->isAllowed();
-        $this->assign($this->getRequest()->getParams());
+        $this->assign($this->_request->getParams());
         if (empty($this->controllerCache)) $this->controllerCache = $this->getControllerCache();
         if (empty($this->_eventManager)) $this->_eventManager = ObjectManager::getInstance(EventsManager::class);
     }
@@ -151,10 +151,6 @@ class PcController extends Core
             $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $fileName;
         }
         return $this->getTemplate()->fetch($fileName);
-//        # TODO 用事件解耦
-//        $data = new DataObject(['object' => $this, 'filename' => $fileName, 'result' => '']);
-//        $this->_eventManager->dispatch('WelineFramework::fetch_template', ['data' => $data]);
-//        return $data->getData('result');
     }
 
     /**

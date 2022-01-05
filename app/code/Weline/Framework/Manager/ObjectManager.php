@@ -56,11 +56,10 @@ class ObjectManager implements ManagerInterface
      * @param string $class
      * @param array $arguments
      * @param bool $shared
-     * @return mixed|ObjectManager
+     * @return mixed
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true): mixed
     {
-
         if (empty($class)) {
             return self::$instance = new self();
         }
@@ -68,7 +67,6 @@ class ObjectManager implements ManagerInterface
             self::$instance = new self();
         }
         if (isset(self::$instances[$class])) {
-            self::$instances[$class] = self::initClassInstance($class, self::$instances[$class]);
             return self::$instances[$class];
         }
         // 缓存对象读取
@@ -76,15 +74,10 @@ class ObjectManager implements ManagerInterface
             self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
             return self::$instances[$class];
         }
-
         // 类名规则处理
         $new_class = self::parserClass($class);
         $arguments = $arguments ?: self::getMethodParams($new_class);
-        try {
-            $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
-        } catch (\ReflectionException $e) {
-            throw $e;
-        }
+        $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
         $new_object = self::initClassInstance($class, $new_object);
 
         self::addInstance($class, $new_object);
@@ -94,6 +87,23 @@ class ObjectManager implements ManagerInterface
         };
 
         return self::_getInstance($class);
+    }
+
+    /**
+     * @DESC          # 设置实例
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/1/5 22:49
+     * 参数区：
+     * @param string $class
+     * @param object $object
+     * @return mixed
+     */
+    public static function setInstance(string $class, object &$object): mixed
+    {
+        self::$instances[$class] = $object;
+        return true;
     }
 
     static function addInstance($class, &$object)

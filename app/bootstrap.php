@@ -109,7 +109,7 @@ try {
      */
     \Weline\Framework\App::run();
 } catch (Exception $exception) {
-    if (DEV) {
+    if (DEBUG || DEV) {
         echo '<pre>';
         echo '应用启动失败：<b style="color: red">' . $exception->getMessage() . '</b>' . PHP_EOL;
         echo '错误信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;

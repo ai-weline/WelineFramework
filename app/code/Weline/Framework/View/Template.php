@@ -97,7 +97,6 @@ class Template
     public function init()
     {
         $this->_request = ObjectManager::getInstance(Request::class);
-
         $this->view_dir = BP . $this->_request->getRouterData('module_path') . DataInterface::dir . DIRECTORY_SEPARATOR;
         $this->vars['title'] = $this->_request->getModuleName();
 
@@ -187,13 +186,13 @@ class Template
         $comFileName = '';
         $tplFile = '';
         if (PROD) {
-            $comFileName = $comFileName = $this->viewCache->get($comFileName_cache_key);
+            $comFileName = $this->viewCache->get($comFileName_cache_key);
             $tplFile = $this->viewCache->get($tplFile_cache_key);
         }
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
-        if (!$comFileName || !$tplFile) {
+        if (empty($comFileName) || empty($tplFile)) {
             // 解析模板路由
             $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
             $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
@@ -221,6 +220,7 @@ class Template
                 $tplFile = $template_dir . $fileName . self::file_ext;
             }
             $tplFile = $this->fetchFile($tplFile);
+
 
             if (!file_exists($tplFile)) {
                 throw new Exception(__('获取操作：%1，模板文件：%2 不存在！源文件：%3', [$fileName, $tplFile, $tplFile]));

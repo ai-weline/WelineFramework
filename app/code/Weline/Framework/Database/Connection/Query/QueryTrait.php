@@ -19,27 +19,34 @@ use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Cache\DbCache;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Exception\Core;
+use Weline\Framework\Manager\ObjectManager;
 
 trait QueryTrait
 {
-    private ConnectionFactory $connection;
-    private CacheInterface $cache;
-    private string $db_name;
+    public ConnectionFactory $connection;
+    public CacheInterface $cache;
+    public string $db_name = 'default';
 
-    function __construct(
-        ConnectionFactory $connection,
-        DbCache $cache
-    )
-    {
-        $this->connection = $connection;
-        $this->db_name = $connection->getConfigProvider()->getDatabase();
-        $this->cache = $cache->create();
+//    function __construct(
+//        ConnectionFactory $connection,
+//        DbCache           $cache
+//    )
+//    {
+//        $this->connection = $connection;
+//        $this->db_name = $connection->getConfigProvider()->getDatabase();
+//        $this->cache = $cache->create();
+//    }
+    function __init(){
+        $this->connection = ObjectManager::getInstance(ConnectionFactory::class);
+        $this->db_name = $this->connection->getConfigProvider()->getDatabase();
+        $this->cache = ObjectManager::getInstance(DbCache::class)->create();
     }
 
     function __sleep()
     {
-        return array('cache', 'db_name', 'Connection');
+        return array('db_name','connection');
     }
+
 
     function getTable($table_name): string
     {
@@ -186,7 +193,7 @@ trait QueryTrait
         foreach ($this->order as $field => $dir) {
             $order .= "$field $dir,";
         }
-        $order = rtrim($order,',');
+        $order = rtrim($order, ',');
         if ($order) $order = 'ORDER BY ' . $order;
 
         # 匹配sql
