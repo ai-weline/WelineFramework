@@ -22,6 +22,7 @@ class AdminUser extends \Weline\Framework\Database\Model
     const fields_ID = 'user_id';
     const fields_username = 'username';
     const fields_password = 'password';
+    const fields_avatar = 'avatar';
     const fields_login_ip = 'login_ip';
     const fields_attempt_ip = 'attempt_ip';
     const fields_attempt_times = 'attempt_times';
@@ -39,9 +40,11 @@ class AdminUser extends \Weline\Framework\Database\Model
             ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
             ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
             ->create();*/
-        /* $setup->getPrinting()->setup('开始更改表');
-        $setup->alterTable()->addColumn('login_ip', 'password',Table::column_type_VARCHAR, 12, '', '登录IP')
-            ->alter();*/
+//         $setup->getPrinting()->setup('开始更改表');
+//        $setup->alterTable()
+////            ->addColumn('login_ip', 'password',Table::column_type_VARCHAR, 12, '', '登录IP')
+//            ->addColumn('avatar', 'password',Table::column_type_VARCHAR, 255, '', '头像')
+//            ->alter();
 //        $setup->alterTable()->alterColumn('login_ip', 'login_ip','sess_id',Table::column_type_VARCHAR, 16, '', '登录IP')
 //            ->alter();
         # 初始化一个账户
@@ -117,6 +120,16 @@ class AdminUser extends \Weline\Framework\Database\Model
     function setUsername(string $username)
     {
         return $this->setData('username', $username);
+    }
+
+    function getAvatar()
+    {
+        return $this->getData('avatar');
+    }
+
+    function setAvatar(string $avatar)
+    {
+        return $this->setData('avatar', $avatar);
     }
 
     function getPassword()

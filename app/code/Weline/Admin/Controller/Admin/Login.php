@@ -114,7 +114,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
 //            p($adminUsernameUser->getId(),true);
 //            p(password_verify($password, $adminUsernameUser->getPassword()));
         if ($adminUsernameUser->getPassword() && password_verify($password, $adminUsernameUser->getPassword())) {
-            $this->_session->login($adminUsernameUser->getData());
+            $this->_session->login($adminUsernameUser);
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
                 ->setLoginIp($this->_request->clientIP());
             # 重置 尝试登录次数

@@ -94,6 +94,11 @@ class Template
         return self::$instance;
     }
 
+    function getBlock(string $class)
+    {
+        return ObjectManager::getInstance($class);
+    }
+
     public function init()
     {
         $this->_request = ObjectManager::getInstance(Request::class);
@@ -297,10 +302,12 @@ class Template
         foreach ($replaces as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);
         }
+        # FIXME 自定义模板标签
         $pattern = [
             '/\<\!--\s*\$([a-zA-Z]*)\s*--\>/',
             '/\@\{(.*)\}/',
             '/\@include (.*)/',
+            '/\@block\((.*)\)/',
             '/\@template\((.*)\)/',
             '/\@static\((.*)\)/',
             '/\@view\((.*)\)/',
@@ -308,14 +315,16 @@ class Template
             /*'/\@if\((.*)\)\{(.*)\}/',
             '/\@foreach\((.*)\)\:(.*)foreach\;/m',//TODO 完成foreach多行模式兼容*/
         ];
+        # TODO 完成BLOCK标签
         $replacement = [
             '<?php echo $this->vars["${1}"]; ?>',
             '<?php ${1} ?>',
             '<?php include(trim("${1}")); ?>',
+            '<?php echo $this->getBlock(trim("${1}"));//打印Block块对象 ?>',
             '<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件 ?>',
             '<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件 ?>',
             '<?php $this->fetch(trim("${1}")); ?>',
-            '<?php p(isset($this->getData("${1}"))??${1}); ?>',
+            '<?php p(isset($this->getData("${1}"))?:${1}); ?>',
             /*'<?php if(${1})echo addslashes("${2}"); ?>',
             "<?php
             \$func_data = \"\${1}\";

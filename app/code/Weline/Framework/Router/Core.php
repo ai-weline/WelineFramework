@@ -102,6 +102,7 @@ class Core
     {
         // 读取url
         $url = $this->request->getUrlPath();
+
         $url_cache_key = 'url_cache_key_' . $url;
         if (PROD && $cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;

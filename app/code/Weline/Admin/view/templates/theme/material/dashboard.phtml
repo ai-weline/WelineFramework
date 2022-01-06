@@ -9,12 +9,13 @@
 </head>
 <body>
 <div class="header-wapper">
+    @block(Weline\Admin\Block\Menu\Avatar)
     <div>Menu</div>
 </div>
 @template(Weline_Backend::blocks/menu.phtml)
 <script>
     require(['jquery','bootstrapBundle'],function ($,bootstrapBundle){
-        alert($(window).width())
+
     })
 </script>
 </body>

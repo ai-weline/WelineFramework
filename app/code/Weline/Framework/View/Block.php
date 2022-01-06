@@ -20,6 +20,7 @@ class  Block extends DataObject implements BlockInterface
 {
     protected ?CacheInterface $_cache = null;
     protected ?Template $engine = null;
+    protected $_template='';
 
     function __construct(array $data = [])
     {
@@ -28,8 +29,11 @@ class  Block extends DataObject implements BlockInterface
         if (empty($this->engine)) $this->engine = Template::getInstance()->init();
     }
 
-    function setTemplate(string $template)
+    function setTemplate(string $template='')
     {
+        if(empty($template)&&isset($this->_template)){
+            $template = $this->_template;
+        }
         if (is_bool(strpos($template, '::'))) {
             throw new Exception(__('模板文件设置错误：%1,正确示例：Weline_System::demo.phtml'));
         }
@@ -42,7 +46,11 @@ class  Block extends DataObject implements BlockInterface
 
     function getTemplate(): string
     {
-        return $this->getData('template');
+        $template = $this->getData('template');
+        if(empty($template)&&isset($this->_template)){
+            $template = $this->_template;
+        }
+        return $template;
     }
 
     function getTemplateEngine(): ?Template
@@ -59,5 +67,6 @@ class  Block extends DataObject implements BlockInterface
     {
         $block = $this;
         require $this->render();
+        return '';
     }
 }
