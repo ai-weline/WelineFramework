@@ -1,5 +1,7 @@
 .idea
-vendor
+vendor/
+app/code/Aiweline/Bbs/
+app/code/Aiweline/NewsSource/
 pub/static/
 var/cache/
 var/log/
@@ -8,3 +10,4 @@ generated
 .user.ini
 .phpunit.result.cache
 .php_cs.cache
+composer.lock
