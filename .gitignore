@@ -1,7 +1,9 @@
 .idea
 vendor/
+app/etc/
 app/code/Aiweline/Bbs/
 app/code/Aiweline/NewsSource/
+setup/install.lock
 pub/static/
 var/cache/
 var/log/
