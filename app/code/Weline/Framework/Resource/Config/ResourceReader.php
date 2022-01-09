@@ -8,26 +8,27 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Theme\Config;
+namespace Weline\Framework\Resource\Config;
 
-use Weline\Framework\App\Env;
 use Weline\Framework\System\File\Data\File;
 
-class StaticsReader extends \Weline\Framework\Module\File\Reader
+abstract class ResourceReader extends \Weline\Framework\Module\File\Reader implements ResourceReaderInterface
 {
-    private string $file;
+    public string $file;
+    public string $path;
+    public string $source_type;
 
-    function __init()
-    {
-        parent::__init();
-        $this->path = 'view';
-        $this->file = 'require.config.js';
-    }
-
-    function setFile(string $file)
+    function __construct(string $path, string $file, $source_type, array $data = [])
     {
         $this->file = $file;
-        return $this;
+        $this->path = $path;
+        $this->source_type = $source_type;
+        parent::__construct($path, $data);
+    }
+
+    function getSourceType(): string
+    {
+        return $this->source_type;
     }
 
     function getFileList(\Closure $callback = null): array

@@ -8,28 +8,23 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Theme\Console\Resource\Compiler\RequireJs;
+namespace Weline\Framework\Resource;
 
-use Weline\Framework\App\Env;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Theme\Console\Resource\CompilerInterface;
-use Weline\Framework\View\Template;
+use Weline\Framework\Resource\Config\ResourceReaderInterface;
 
 class Compiler implements CompilerInterface
 {
-
-    protected \Weline\Theme\Console\Resource\Compiler\RequireJs\Reader $reader;
-
-    function __construct(
-        \Weline\Theme\Console\Resource\Compiler\RequireJs\Reader $reader
-    )
-    {
-        $this->reader = $reader;
-    }
-
     protected ?EventsManager $eventsManager = null;
+
+    protected ?ResourceReaderInterface $reader;
+
+    function __construct(ResourceReaderInterface $resourceReader)
+    {
+        $this->reader = $resourceReader;
+    }
 
     function getEventManager(): EventsManager
     {
@@ -41,9 +36,9 @@ class Compiler implements CompilerInterface
 
     public function compile(string $source_file = null, string $out_file = null)
     {
-        $config_resources = $this->reader->parserRequireConfigs();
+        $config_resources = $this->reader->getResourceFiles();
         foreach ($config_resources as $area => $config_resource) {
-            $this->getEventManager()->dispatch('Weline_Theme::compiler', ['data' => new DataObject(['area' => $area, 'type' => 'require.configs.js', 'resources' => $config_resource])]);
+            $this->getEventManager()->dispatch('Framework_Resource::compiler', ['data' => new DataObject(['area' => $area, 'type' => $this->reader->getSourceType(), 'resources' => $config_resource])]);
         }
     }
 

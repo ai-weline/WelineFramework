@@ -162,6 +162,9 @@ class Handle implements HandleInterface, RegisterInterface
         if (!isset($data['base_path'])) {
             throw new Exception(__('尚未设置基础路径！%1', 'base_path'));
         }
+        if (!isset($data['dir_path'])) {
+            throw new Exception(__('尚未设置模组目录！%1', 'dir_path'));
+        }
         if (!isset($data['module_name'])) {
             throw new Exception(__('尚未设置模组名！%1', 'module_name'));
         }
@@ -169,6 +172,7 @@ class Handle implements HandleInterface, RegisterInterface
         if (DEV) $this->printer->error($name . '：处理...', '开发');
         // 模块路径
         $module_path = $data['base_path'];
+        $module_dir_path = $data['dir_path'];
         // 模型管理器
         /**@var ModelManager $modelManager */
         $modelManager = ObjectManager::getInstance(ModelManager::class);
@@ -225,6 +229,7 @@ class Handle implements HandleInterface, RegisterInterface
                 $this->modules[$name]['version'] = $version ?: '1.0.0';
                 $this->modules[$name]['description'] = $description ?: '';
                 $this->modules[$name]['base_path'] = $module_path;
+                $this->modules[$name]['path'] = $module_dir_path;
                 // 更新模块
                 $this->helper->updateModules($this->modules);
             }
@@ -239,6 +244,7 @@ class Handle implements HandleInterface, RegisterInterface
             if (DEV) $this->printer->setup($name . '：更新路由完成...', '开发');
             // 更新模块
             $this->modules[$name]['base_path'] = $module_path;
+            $this->modules[$name]['path'] = $module_dir_path;
             $this->helper->updateModules($this->modules);
             echo $this->printer->success(str_pad($name, 45) . __('已更新！'));
         } else {
@@ -252,6 +258,7 @@ class Handle implements HandleInterface, RegisterInterface
                 'router' => $router,
                 'description' => $description ? $description : '',
                 'base_path' => $module_path,
+                'path' => $module_dir_path,
             ];
             $this->modules[$name] = $moduleData;
 

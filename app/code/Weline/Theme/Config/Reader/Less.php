@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 /*
  * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
@@ -8,32 +7,26 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Theme\Console\Resource\Compiler\RequireJs;
+namespace Weline\Theme\Config\Reader;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\App\Exception;
-use Weline\Framework\System\File\Data\File;
+use Weline\Framework\Resource\Config\ResourceReader;
 use Weline\Framework\View\Template;
 
-class Reader extends \Weline\Theme\Config\StaticsReader
+class Less extends ResourceReader
 {
-    private string $file;
     private array $config_resources=[];
 
-    function __init()
+    public function __construct(string $path='view', string $file='less', $source_type='less', array $data = [])
     {
-        parent::__init();
-        $this->path = 'view';
-        $this->file = 'require.config.js';
+        parent::__construct($path, $file, $source_type, $data);
     }
 
-    function setFile(string $file)
+    public function getTheme()
     {
-        $this->file = $file;
-        return $this;
+        return Env::getInstance()->getConfig('theme');
     }
-
-    function parserRequireConfigs()
+    function getResourceFiles():array
     {
         # require js 配置
         $require_configs = $this->getFileList();
@@ -44,15 +37,15 @@ class Reader extends \Weline\Theme\Config\StaticsReader
             }
             $content = file_get_contents($require_config_js['origin']);
             # 替换模块的路径
-                foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
-                    $related_file_path = str_replace(trim($module_info['base_path'],DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'view', '/', $require_config_js['dir']);
-                    $related_file_path = str_replace('//', '/', $related_file_path);
-                    $related_file_path = str_replace('//', '/', $related_file_path);
-                    $file_path = $this->fetchFile($module_name.'::'.$related_file_path);
-                    $file_path = str_replace('//', '/', $file_path);
-                    $file_path = str_replace('//', '/', $file_path);
-                    $content =str_replace($module_name, $file_path, $content);
-                }
+            foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
+                $related_file_path = str_replace(trim($module_info['base_path'],DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'view', '/', $require_config_js['dir']);
+                $related_file_path = str_replace('//', '/', $related_file_path);
+                $related_file_path = str_replace('//', '/', $related_file_path);
+                $file_path = $this->fetchFile($module_name.'::'.$related_file_path);
+                $file_path = str_replace('//', '/', $file_path);
+                $file_path = str_replace('//', '/', $file_path);
+                $content =str_replace($module_name, $file_path, $content);
+            }
             $this->config_resources[$area] .= $content;
         }
         return $this->config_resources;

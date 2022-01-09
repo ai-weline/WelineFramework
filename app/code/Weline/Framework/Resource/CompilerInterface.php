@@ -8,11 +8,9 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Theme\Console\Resource\Compiler;
+namespace Weline\Framework\Resource;
 
-use Weline\Framework\Resource\Compiler;
-
-class RequireJs extends Compiler
+interface CompilerInterface
 {
-
+    public function compile(string $source_file=null, string $out_file=null);
 }

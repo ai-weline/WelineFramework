@@ -66,8 +66,16 @@ class Register implements RegisterDataInterface
                 if (!is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
                     throw new ConsoleException("{$moduleName}注册文件{$moduleRegisterFile}不存在！");
                 }
+                $module_dir_path = '';
+                if (strstr($param, APP_CODE_PATH)) {
+                    $module_dir_path = str_replace(APP_CODE_PATH, '', $param);
+                }
+                if (empty($module_dir_path) && strstr($param, VENDOR_PATH)) {
+                    $module_dir_path = str_replace(VENDOR_PATH, '', $param);
+                }
+
                 // 安装数据
-                $install_params = [$type, ['base_path' => $module_path, 'module_name' => $moduleName], $version, $description];
+                $install_params = [$type, ['dir_path' => $module_dir_path, 'base_path' => $module_path, 'module_name' => $moduleName], $version, $description];
 
                 break;
             // 路由注册

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace Weline\Theme\Console\Resource\Compiler;
 
-use Weline\Theme\Console\Resource\CompilerInterface;
+use Weline\Framework\Resource\CompilerInterface;
 
 class Less implements CompilerInterface
 {

@@ -8,9 +8,9 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Theme\Console\Resource;
+namespace Weline\Framework\Resource\Config;
 
-interface CompilerInterface
+interface ResourceReaderInterface
 {
-    public function compile(string $source_file=null, string $out_file=null);
+    function getResourceFiles();
 }

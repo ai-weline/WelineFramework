@@ -4,7 +4,8 @@ requirejs.config({
     paths: {
         jquery: [
             // CDN 加载jquery 如果是全球站点可考虑配置
-            "http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min",
+            "https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min",
+            "https://code.bdstatic.com/npm/jquery@3.5.1/dist/jquery.min",
             //如果CDN位置失败，请从此位置加载jquery
             'Weline_Backend/lib/jquery/3.6.0/jquery.min'
         ]

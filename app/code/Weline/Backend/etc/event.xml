@@ -5,7 +5,7 @@
     <event name="Framework_Console::module_upgrade">
         <observer name="Weline_Backend::menu_upgrade" instance="Weline\Backend\Observer\UpgradeMenu" disabled="false" shared="true"/>
     </event>
-    <event name="Weline_Theme::compiler">
+    <event name="Framework_Resource::compiler">
         <observer name="Weline_Backend::compiler" instance="Weline\Backend\Observer\Compiler" disabled="false" shared="true"/>
     </event>
     <event name="Framework_View::header">

@@ -18,7 +18,7 @@ class Compiler implements \Weline\Framework\Event\ObserverInterface
 {
     const area = 'backend';
     const require_js_file = 'base' . DIRECTORY_SEPARATOR . 'require.configs.js';
-    const require_js_type = 'require.configs.js';
+    const require_js_type = 'require.config.js';
 
     /**
      * @inheritDoc
@@ -31,9 +31,9 @@ class Compiler implements \Weline\Framework\Event\ObserverInterface
             $type = $eventData->getType();
             switch ($type):
                 case self::require_js_type:
-                    $path = __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'statics' . DIRECTORY_SEPARATOR . self::require_js_file;
+                    $path = dirname(__DIR__)  . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'statics' . DIRECTORY_SEPARATOR . self::require_js_file;
                     if (!is_dir(dirname($path))) {
-                        mkdir($path, 755);
+                        mkdir($path, 755,true);
                     }
                     if (!is_file($path)) {
                         touch($path);

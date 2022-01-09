@@ -302,7 +302,6 @@ class Template
         foreach ($replaces as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);
         }
-        # FIXME 自定义模板标签
         $pattern = [
             '/\<\!--\s*\$([a-zA-Z]*)\s*--\>/',
             '/\@\{(.*)\}/',
@@ -315,7 +314,6 @@ class Template
             /*'/\@if\((.*)\)\{(.*)\}/',
             '/\@foreach\((.*)\)\:(.*)foreach\;/m',//TODO 完成foreach多行模式兼容*/
         ];
-        # TODO 完成BLOCK标签
         $replacement = [
             '<?php echo $this->vars["${1}"]; ?>',
             '<?php ${1} ?>',
