@@ -48,7 +48,7 @@ defined('APP_DESIGN_PATH') || define('APP_DESIGN_PATH', APP_CODE_PATH . 'design'
 // 静态 目录
 defined('APP_STATIC_PATH') || define('APP_STATIC_PATH', PUB . 'static' . DIRECTORY_SEPARATOR);
 // 应用 配置 目录 (默认访问 etc)
-defined('APP_ETC_PATH') || define('APP_ETC_PATH', BP . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
+defined('APP_ETC_PATH') || define('APP_ETC_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR);
 
 // 调试模式
 defined('DEBUG') || define('DEBUG', 0);

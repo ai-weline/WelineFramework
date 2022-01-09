@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Console\Module;
+namespace Weline\Framework\Module\Console\Module;
 
 use Weline\Framework\App\System;
 use Weline\Framework\App\Env;
@@ -99,7 +99,6 @@ class Upgrade extends CommandAbstract
         $registers = $this->scanner->scanAppModules();
         foreach ($registers as $vendor => $modules) {
             foreach ($modules as $name => $register) {
-                $all_modules[$vendor . '_' . $name] = $register;
                 if (is_file(APP_CODE_PATH . $register)) {
                     require APP_CODE_PATH . $register;
                 }
@@ -116,16 +115,6 @@ class Upgrade extends CommandAbstract
                 }
             }
         }
-        // 更新模块
-        $module_list = Env::getInstance()->getModuleList(true);
-        if (empty($module_list)) {
-            $this->printer->error('请先更新模块:bin/m module:upgrade');
-            exit();
-        }
-        $module_list = array_intersect_key($module_list, $all_modules);
-
-        $this->data->updateModules($module_list);
-
         $this->printer->note('模块更新完毕！');
         $i += 1;
 

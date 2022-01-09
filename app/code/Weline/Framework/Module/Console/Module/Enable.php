@@ -7,14 +7,14 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Console\Module;
+namespace Weline\Framework\Module\Console\Module;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\Console\CommandAbstract;
+use Weline\Framework\Console\Command;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Module\Helper\Data;
 
-class Disable extends CommandAbstract
+class Enable extends Command
 {
     public function execute($args = [])
     {
@@ -27,8 +27,8 @@ class Disable extends CommandAbstract
         if (! empty($args)) {
             foreach ($args as $module) {
                 if (isset($module_list[$module])) {
-                    $module_list[$module]['status'] = 0;
-                    $this->printer->printing('已禁用！', $this->printer->colorize($module, $this->printer::ERROR), $this->printer::ERROR);
+                    $module_list[$module]['status'] = 1;
+                    $this->printer->printing('已启用！', $this->printer->colorize($module, $this->printer::SUCCESS), $this->printer::ERROR);
                     $this->printer->printList([$module => $module_list[$module]], '=>');
                 } else {
                     $this->printer->error('不存在的模块:' . $module);
@@ -41,12 +41,12 @@ class Disable extends CommandAbstract
             $upgrade = ObjectManager::getInstance(Upgrade::class);
             $upgrade->execute();
         } else {
-            $this->printer->printList([$command => ['禁用提示：' => $this->printer->colorize('请输入要禁用的模块', $this->printer::ERROR)]]);
+            $this->printer->printList([$command => ['启用提示：' => $this->printer->colorize('请输入要启用的模块', $this->printer::ERROR)]]);
         }
     }
 
     public function getTip(): string
     {
-        return '禁用模块';
+        return '模块启用';
     }
 }

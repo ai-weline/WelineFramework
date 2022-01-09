@@ -22,6 +22,10 @@ use Weline\Framework\Register\Router\Data\DataInterface;
 class Data extends AbstractHelper
 {
     private array $parent_class_arr = [];
+    private File $file;
+    function __init(){
+        $this->file = ObjectManager::getInstance(File::class);
+    }
 
     function getClassNamespace(\Weline\Framework\System\File\Data\File $controllerFile){
         $namespace_arr = explode('\\', $controllerFile->getNamespace());
@@ -82,7 +86,6 @@ class Data extends AbstractHelper
                         }
                         $ctl_methods = $ctl_data['methods'];
                         $ctl_area = $ctl_data['area'];
-
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
@@ -94,7 +97,7 @@ class Data extends AbstractHelper
                                 $request_method = RequestInterface::GET;
                             }
                             // 路由注册+
-                            $routerRegister::register(Register::ROUTER, [
+                            Register::register(Register::ROUTER, [
                                 'type' => DataInterface::type_API,
                                 'area' => $ctl_area,
                                 'module' => $name,
@@ -135,7 +138,7 @@ class Data extends AbstractHelper
                                 $request_method = RequestInterface::GET;
                             }
 
-                            $routerRegister::register(Register::ROUTER, [
+                            Register::register(Register::ROUTER, [
                                 'type' => DataInterface::type_PC,
                                 'area' => $ctl_area,
                                 'module' => $name,
@@ -313,11 +316,10 @@ class Data extends AbstractHelper
      */
     public function updateModules(array &$modules)
     {
-        $file = new File();
-        $file->open(Env::path_MODULES_FILE, $file::mode_w_add);
+        $this->file->open(Env::path_MODULES_FILE, $this->file::mode_w_add);
         $text = '<?php return ' . var_export($modules, true) . ';';
-        $file->write($text);
-        $file->close();
+        $this->file->write($text);
+        $this->file->close();
     }
 
     /**
@@ -330,10 +332,9 @@ class Data extends AbstractHelper
      */
     public function updateRouters(array &$routers)
     {
-        $file = new File();
-        $file->open(Env::path_MODULES_FILE, $file::mode_w_add);
+        $this->file->open(Env::path_MODULES_FILE, $this->file::mode_w_add);
         $text = '<?php return ' . var_export($routers, true) . ';';
-        $file->write($text);
-        $file->close();
+        $this->file->write($text);
+        $this->file->close();
     }
 }

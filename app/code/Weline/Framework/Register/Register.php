@@ -96,7 +96,7 @@ class Register implements RegisterDataInterface
             ->setData('register_arguments', $install_params);
         /**@var EventsManager $eventsManager */
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
-        $eventsManager->dispatch('Framework_Register::register_installer', ['data' => $installerPathData]);
+        $eventsManager->dispatch('Framework_return Register::register_installer', ['data' => $installerPathData]);
         $installer_class = $installerPathData->getData('installer');
 
         try {
@@ -105,7 +105,7 @@ class Register implements RegisterDataInterface
             if ($installer instanceof RegisterInterface) {
                 $register_arguments = $installerPathData->getData('register_arguments');
                 unset($register_arguments[0]);// 去除type类型标志 因为后续的register继承自
-                $installer->register(...$register_arguments);
+                return $installer->register(...$register_arguments);
             } else {
                 throw new ConsoleException($installer_class . __('安装器必须继承：') . RegisterInterface::class);
             }

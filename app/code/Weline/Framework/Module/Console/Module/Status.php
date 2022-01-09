@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Console\Module;
+namespace Weline\Framework\Module\Console\Module;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Console\CommandAbstract;
