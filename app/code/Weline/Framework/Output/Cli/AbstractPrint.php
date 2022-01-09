@@ -195,7 +195,7 @@ COMMAND_LIST;
     {
         $doc_tmp = '';
         foreach ($data as $key => $datum) {
-            if (strstr($key, $flag)) {
+            if (is_int(strpos($key, $flag))) {
                 $key = explode($flag, $key);
                 $key = str_pad($key[0], $pad_length / 1.5) . 'module # ' . (str_replace('\\', '_', $key[1]));
             }

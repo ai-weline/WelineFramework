@@ -71,7 +71,7 @@ trait TraitTemplate
         $view_dir = $this->view_dir;
         $template_dir = $this->template_dir;
         $compile_dir = $this->compile_dir;
-        if (strstr($fileName, '::')) {
+        if (is_int(strpos($fileName, '::'))) {
             $pre_module_name = substr($fileName, 0, strpos($fileName, '::'));
             # 到模块配置中获取模块的模板文件路径
             $module_lists = Env::getInstance()->getModuleList();
@@ -97,7 +97,7 @@ trait TraitTemplate
         $t_f = $type . DIRECTORY_SEPARATOR . $source;
         $t_f_arr = [];
         # 如果存在向别的模块调用模板的情况
-        if (strstr($source, "::")) {
+        if (is_int(strpos($source, "::"))) {
             $t_f_arr = explode("::", $source);
             if (count($t_f_arr) > 1) {
                 if (strpos($t_f_arr[1], $type)) {

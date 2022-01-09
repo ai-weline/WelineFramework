@@ -136,7 +136,7 @@ class ModelSetup extends DbManager
      */
     public function getTable(string $name = ''): string
     {
-        if (!empty($name) && !strstr($name, $this->getTablePrefix())) {
+        if (!empty($name) && !is_int(strpos($name, $this->getTablePrefix()))) {
             $name = $this->getTablePrefix() . $name;
         }
         if (empty($name)) {

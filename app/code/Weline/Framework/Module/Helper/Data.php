@@ -210,7 +210,7 @@ class Data extends AbstractHelper
             $reflect = new \ReflectionClass($class);
             $controller_methods = [];
             foreach ($reflect->getMethods() as $method) {
-                if (strstr($method->getName(), '__')) {
+                if (is_int(strpos($method->getName(), '__'))) {
                     continue;
                 }
                 $controller_methods[] = $method->getName();
@@ -219,14 +219,14 @@ class Data extends AbstractHelper
             if ($parent_class = $reflect->getParentClass()) {
                 $controller_class = [];
                 foreach (explode('\\', $parent_class->getName()) as $item) {
-                    if (strstr($item, 'Controller')) {
+                    if (is_int(strpos($item, 'Controller'))) {
                         $controller_class[] = $item;
                     }
                 }
                 $this->parent_class_arr = array_merge($this->parent_class_arr, $controller_class);
                 $parent_methods = [];
                 foreach ($parent_class->getMethods() as $method) {
-                    if (strstr($method->getName(), '__')) {
+                    if (is_int(strpos($method->getName(), '__'))) {
                         continue;
                     }
                     $parent_methods[] = $method->getName();

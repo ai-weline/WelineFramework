@@ -176,7 +176,7 @@ class Alter extends TableAbstract implements AlterInterface
                     }
                     # --与数据库中的字段类型 比较
                     $type_length = $table_field['Type'];
-                    if (empty(strstr($table_field['Type'], $alter_field['type_length']))) {
+                    if (!is_int(strpos($table_field['Type'], $alter_field['type_length']))) {
                         $type_length = $alter_field['type_length'];
                     }
                     # --与数据库中的字段评论 比较

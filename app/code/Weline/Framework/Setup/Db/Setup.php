@@ -116,7 +116,7 @@ class Setup extends DbManager
      */
     public function getTable(string $name = ''): string
     {
-        if (!strstr($name, $this->getTablePrefix())) {
+        if (is_int(strpos($name, $this->getTablePrefix()))) {
             $name = $this->getTablePrefix() . $name;
         }
         return $name;
@@ -132,7 +132,7 @@ class Setup extends DbManager
      */
     public function dropTable(string $tableName): bool
     {
-        if (!strstr($tableName, $this->getTablePrefix())) {
+        if (!is_int(strpos($tableName, $this->getTablePrefix()))) {
             $tableName = $this->getTable($tableName);
         }
         try {

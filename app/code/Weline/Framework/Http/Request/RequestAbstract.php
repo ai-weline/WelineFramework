@@ -142,7 +142,7 @@ abstract class RequestAbstract extends DataObject
      */
     public function isBackend(): bool
     {
-        return (bool)strstr($this->getRequestArea(), \Weline\Framework\Router\DataInterface::area_BACKEND);
+        return is_int(strpos($this->getRequestArea(), \Weline\Framework\Router\DataInterface::area_BACKEND));
     }
 
     /**

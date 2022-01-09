@@ -28,8 +28,8 @@ class System
         if (IS_WIN) {
             // 删除
             if (
-                (strstr($linux_command, 'rm')||strstr($linux_command, 'cp')) &&
-                (strstr($linux_command, '-rf') || strstr($linux_command, '-fr'))
+                (is_int(strpos($linux_command, 'rm')) || is_int(strpos($linux_command, 'cp'))) &&
+                (is_int(strpos($linux_command, '-rf')) || is_int(strpos($linux_command, '-fr')))
             ) {
                 $linux_command = str_replace('rm', 'rd', $linux_command);
                 $linux_command = str_replace('-rf', '-r', $linux_command);
@@ -46,7 +46,7 @@ class System
             foreach ($linux_to_win as $key => $item) {
                 $linux_command = str_replace($key, $item, $linux_command);
             }
-            if(strstr($linux_command, 'xcopy')){
+            if (is_int(strpos($linux_command, 'xcopy'))) {
                 $linux_command = str_replace('/S/Q', '/S/Q/Y', $linux_command);
             }
 
@@ -55,10 +55,10 @@ class System
             return $linux_command;
         }
         # 检测函数是否解禁
-        if(!function_exists('exec'))throw new Exception(__(' exec() 函数需要解禁: 请到 php.ini 中找到 disable_function 删除 exec '));
+        if (!function_exists('exec')) throw new Exception(__(' exec() 函数需要解禁: 请到 php.ini 中找到 disable_function 删除 exec '));
 
         exec($linux_command, $output, $return_var);
-        
+
         return [$output, $return_var];
     }
 
@@ -68,7 +68,7 @@ class System
         if (IS_WIN) {
             $input = fread(STDIN, 1024);
         } else {
-            $fp    = fopen('/dev/stdin', 'r');
+            $fp = fopen('/dev/stdin', 'r');
             $input = fgets($fp, 1024);
             fclose($fp);
         }
@@ -81,8 +81,8 @@ class System
      *
      * 参数区：
      *
-     * @throws \ReflectionException
      * @return Directory
+     * @throws \ReflectionException
      */
     public function getDirectoryObject(): Directory
     {

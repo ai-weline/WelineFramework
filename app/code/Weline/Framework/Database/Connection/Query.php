@@ -178,7 +178,7 @@ abstract class Query implements QueryInterface
 
     function order(string $field, string $sort = 'DESC'): QueryInterface
     {
-        if (!strstr($field, '`')) {
+        if (!is_int(strpos($field, '`'))) {
             $field = "`{$field}`";
         }
         $this->order[$field] = $sort;

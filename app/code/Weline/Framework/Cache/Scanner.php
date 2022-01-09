@@ -69,7 +69,7 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
         $framework_caches = [];
         /** @var $dir_file File[] */
         foreach ($dir_files as $dir => $dir_file) {
-            if (is_string($dir) && strstr($dir, self::dir)) {
+            if (is_string($dir) && is_int(strpos($dir, self::dir))) {
                 if (IS_WIN) {
                     $dir = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $dir);
                 }

@@ -140,7 +140,7 @@ class Upgrade extends CommandAbstract
 
         /** @var $command_files File[] */
         foreach ($command_dir_files as $dir => $command_files) {
-            if (is_string($dir) && strstr($dir, self::dir)) {
+            if (is_string($dir) && is_int(strpos($dir, self::dir))) {
                 if (IS_WIN) {
                     $dir = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $dir);
                 }

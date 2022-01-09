@@ -63,7 +63,7 @@ class Install extends \Weline\Framework\Console\CommandAbstract
         $args_config = [];
         foreach ($args as $arg) {
             // 数据库配置
-            if (strstr($arg, '--db-')) {
+            if (is_int(strpos($arg, '--db-'))) {
                 $kv_arr = explode('=', str_replace('--db-', '', $arg));
                 if (count($kv_arr) !== 2) {
                     $this->printer->error('错误的参数格式：' . $arg);

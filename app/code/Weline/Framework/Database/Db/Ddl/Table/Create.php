@@ -122,13 +122,13 @@ class Create extends TableAbstract implements CreateInterface
             $fields_str .= $field;
         }
         $fields_str = trim($fields_str, ',');
-        if (!strstr($fields_str, '`create_time`')) {
+        if (!is_int(strpos($fields_str, '`create_time`'))) {
             $fields_str .= ',' . PHP_EOL;
             $create_time_comment_words = __('创建时间');
             $fields_str .= "`create_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '{$create_time_comment_words}'," . PHP_EOL;
         }
-        if (!strstr($fields_str, '`update_time`')) {
-            if (strstr($fields_str, ',' . PHP_EOL)) {
+        if (!is_int(strpos($fields_str, '`update_time`'))) {
+            if (is_int(strpos($fields_str, ',' . PHP_EOL))) {
                 $fields_str = rtrim($fields_str, ',' . PHP_EOL);
             }
             $fields_str = rtrim($fields_str, ',');
@@ -136,7 +136,7 @@ class Create extends TableAbstract implements CreateInterface
             $update_time_comment_words = __('更新时间');
             $fields_str .= "`update_time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '{$update_time_comment_words}'," . PHP_EOL;
         }
-        if (strstr($fields_str, ',' . PHP_EOL)) {
+        if (is_int(strpos($fields_str, ',' . PHP_EOL))) {
             $fields_str = rtrim($fields_str, ',' . PHP_EOL);
         }
         // 索引

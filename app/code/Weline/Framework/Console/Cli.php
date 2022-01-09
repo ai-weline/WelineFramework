@@ -72,7 +72,7 @@ class Cli extends CliAbstract
             $keys = array_keys($command);
             foreach ($keys as $command_key) {
                 // 匹配参考
-                if (strstr($command_key, $arg0)) {
+                if (is_int(strpos($command_key, $arg0))) {
                     $matchCommand[$group][] = [$command_key => $command[$command_key]];
                 }
                 $command_key_arr = explode(':', $command_key);

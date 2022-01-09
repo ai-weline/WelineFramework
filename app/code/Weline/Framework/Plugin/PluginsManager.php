@@ -200,18 +200,18 @@ class PluginsManager
                 foreach ($plugin_methods as $type_class_method => $type_class_method_plugin_methods) {
                     foreach ($type_class_method_plugin_methods as $type_class_method_plugin_method) {
                         // 前置
-                        if (strstr($type_class_method_plugin_method, $before_name)) {
+                        if (is_int(strpos($type_class_method_plugin_method, $before_name))) {
                             $plugins_info[$before_name][] = [
                                 'instance' => $plugin_class,
                                 'method'   => $type_class_method_plugin_method,
                             ];
-                        } elseif (strstr($type_class_method_plugin_method, $around_name)) {
+                        } elseif (is_int(strpos($type_class_method_plugin_method, $around_name))) {
                             // 环绕
                             $plugins_info[$around_name][] = [
                                 'instance' => $plugin_class,
                                 'method'   => $type_class_method_plugin_method,
                             ];
-                        } elseif (strstr($type_class_method_plugin_method, $after_name)) {
+                        } elseif (is_int(strpos($type_class_method_plugin_method, $after_name))) {
                             $plugins_info[$after_name][] = [
                                 'instance' => $plugin_class,
                                 'method'   => $type_class_method_plugin_method,
@@ -236,13 +236,13 @@ class PluginsManager
                             // 全部数据
                             $method_plugins_methods[$listen_method]['all'][] = $plugin_class_method_data;
 
-                            if (strstr($plugin_method, $before_name)) {
+                            if (is_int(strpos($plugin_method, $before_name))) {
                                 // 前置
                                 $method_plugins_methods[$listen_method][$before_name][] = $plugin_class_method_data;
-                            } elseif (strstr($plugin_method, $around_name)) {
+                            } elseif (is_int(strpos($plugin_method, $around_name))) {
                                 // 环绕
                                 $method_plugins_methods[$listen_method][$around_name][] = $plugin_class_method_data;
-                            } elseif (strstr($plugin_method, $after_name)) {
+                            } elseif (is_int(strpos($plugin_method, $after_name))) {
                                 // 后置
                                 $method_plugins_methods[$listen_method][$after_name][] = $plugin_class_method_data;
                             }

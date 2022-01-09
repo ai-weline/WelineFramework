@@ -49,7 +49,7 @@ class Register implements RegisterDataInterface
                 $app = array_pop($appPathArray);
                 # 处理composer安装的模块名
                 $module_rename = '';
-                if (strstr($module, '-')) {
+                if (is_int(strpos($module, '-'))) {
                     $module_arr = explode('-', $module);
                     foreach ($module_arr as $item) {
                         $module_rename .= ucfirst($item);
@@ -58,7 +58,7 @@ class Register implements RegisterDataInterface
                 $moduleName = ucfirst($vendor) . '_' . ucfirst($module_rename ?: $module);
                 # 处理composer安装的模块
                 $app .= DIRECTORY_SEPARATOR;
-                if (strstr($param, VENDOR_PATH)) {
+                if (is_int(strpos($param, VENDOR_PATH))) {
                     $app = '';
                 }
                 $module_path = $app . $code . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
@@ -67,10 +67,10 @@ class Register implements RegisterDataInterface
                     throw new ConsoleException("{$moduleName}注册文件{$moduleRegisterFile}不存在！");
                 }
                 $module_dir_path = '';
-                if (strstr($param, APP_CODE_PATH)) {
+                if (is_int(strpos($param, APP_CODE_PATH))) {
                     $module_dir_path = str_replace(APP_CODE_PATH, '', $param);
                 }
-                if (empty($module_dir_path) && strstr($param, VENDOR_PATH)) {
+                if (empty($module_dir_path) && is_int(strpos($param, VENDOR_PATH))) {
                     $module_dir_path = str_replace(VENDOR_PATH, '', $param);
                 }
 
