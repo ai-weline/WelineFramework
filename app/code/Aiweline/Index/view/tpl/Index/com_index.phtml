@@ -49,11 +49,12 @@
         <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('api_admin', 'api_admin'); ?>/rest/V1/index"
            target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>
         <a href="hello/rest/v1/index/index" target="_blank" onclick="openWindow(this.href,'前台api')">前台api</a>
-        <a href="/index/moduleTemplateFetch" target="_blank" onclick="openWindow(this.href,'调用其他Module模板文件')">调用其他Module模板文件</a>
         <a href="/upload" target="_blank" onclick="openWindow(this.href,'演示传输文件')">上传</a>
+        <a href="/index/moduleTemplateFetch" target="_blank" onclick="openWindow(this.href,'调用其他Module模板文件')">调用其他Module模板文件</a>
+        <a href="/index/getComposerVendorModuleTemplate" target="_blank" onclick="openWindow(this.href,'调用其他Module模板文件')">调用composer安装的第三方Module模板文件</a>
     </div>
     <div class="debug">
-        <a href="/bbs/" target="_blank" onclick="openWindow(this.href,'bbs')">bbs</a>
+        <a href="<?php echo $this->getAdminUrl('/websitemonitoring/index/index')?>" target="_blank" onclick="openWindow(this.href,'测试Composer加载的模组控制器')">测试Composer加载的模组控制器</a>
     </div>
 </div>
 </body>

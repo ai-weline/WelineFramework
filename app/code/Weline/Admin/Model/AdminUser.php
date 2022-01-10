@@ -33,21 +33,23 @@ class AdminUser extends \Weline\Framework\Database\Model
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-        /*$setup->dropTable();
-        $setup->createTable('管理员表')
-            ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
-            ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
-            ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
-            ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
-            ->create();*/
+//        $setup->dropTable();
+//        $setup->createTable('管理员表')
+//            ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
+//            ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
+//            ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
+//            ->addColumn('sess_id', TableInterface::column_type_VARCHAR, 128, '', 'Session ID')
+//            ->addColumn('attempt_ip', TableInterface::column_type_VARCHAR, 18, '', '尝试IP')
+//            ->addColumn(self::fields_attempt_times, TableInterface::column_type_SMALLINT, 1, '', '尝试登录次数')
+//            ->create();
 //         $setup->getPrinting()->setup('开始更改表');
 //        $setup->alterTable()
-////            ->addColumn('login_ip', 'password',Table::column_type_VARCHAR, 12, '', '登录IP')
+//            ->addColumn('login_ip', 'password',Table::column_type_VARCHAR, 12, '', '登录IP')
 //            ->addColumn('avatar', 'password',Table::column_type_VARCHAR, 255, '', '头像')
 //            ->alter();
 //        $setup->alterTable()->alterColumn('login_ip', 'login_ip','sess_id',Table::column_type_VARCHAR, 16, '', '登录IP')
 //            ->alter();
-        # 初始化一个账户
+//        # 初始化一个账户
 //        /**@var AdminUser $adminUser */
 //        $adminUser = ObjectManager::getInstance(AdminUser::class);
 //        $adminUser->setUsername('admin')->setPassword('admin')->save();
@@ -68,13 +70,14 @@ class AdminUser extends \Weline\Framework\Database\Model
     {
         if (!$setup->tableExist()) {
             $setup->createTable('管理员表')
-                ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
-                ->addColumn('username', TableInterface::column_type_VARCHAR, 60, '', '用户名')
-                ->addColumn('password', TableInterface::column_type_VARCHAR, 255, '', '密码')
-                ->addColumn('login_ip', TableInterface::column_type_VARCHAR, 16, '', '登录IP')
-                ->addColumn('sess_id', TableInterface::column_type_VARCHAR, 32, '', '管理员Session ID')
-                ->addColumn('attempt_times', TableInterface::column_type_INTEGER, 0, '', '尝试登录次数')
-                ->addColumn('attempt_ip', TableInterface::column_type_INTEGER, 0, '', '尝试登录IP')
+                ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
+                ->addColumn(self::fields_username, TableInterface::column_type_VARCHAR, 60, '', '用户名')
+                ->addColumn(self::fields_password, TableInterface::column_type_VARCHAR, 255, '', '密码')
+                ->addColumn(self::fields_avatar, TableInterface::column_type_VARCHAR, 255, '', '头像')
+                ->addColumn(self::fields_login_ip, TableInterface::column_type_VARCHAR, 16, '', '登录IP')
+                ->addColumn(self::fields_sess_id, TableInterface::column_type_VARCHAR, 32, '', '管理员Session ID')
+                ->addColumn(self::fields_attempt_times, TableInterface::column_type_INTEGER, 0, '', '尝试登录次数')
+                ->addColumn(self::fields_attempt_ip, TableInterface::column_type_INTEGER, 0, '', '尝试登录IP')
                 ->create();
         }
     }
