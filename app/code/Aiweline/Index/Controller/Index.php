@@ -48,6 +48,19 @@ class Index extends FrontendController
      * @return bool|void
      */
     function moduleTemplateFetch(){
-        return $this->fetch('Aiweline_Bbs::templates/Index/index.phtml');
+        return $this->fetch('Aiweline_HelloWorld::templates/HelloWorld/demo.phtml');
+    }
+
+    /**
+     * @DESC          # 测试调用其他模块的模板文件
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/12 12:19
+     * 参数区：
+     * @return bool|void
+     */
+    function getComposerVendorModuleTemplate(){
+        return $this->fetch('Aiweline_WebsiteMonitoring::templates/Index/index.phtml');
     }
 }
