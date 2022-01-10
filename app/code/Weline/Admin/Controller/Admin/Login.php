@@ -51,7 +51,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         if ($this->getSession()->getData('backend_disable_login')) {
             $this->messageManager->addError(__('你的账户因尝试多次登录，已被锁定！请联系其他管理员开通。'));
         }
-        $this->fetch('login_type2');
+        $this->fetch();
     }
 
     function post()

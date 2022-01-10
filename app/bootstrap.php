@@ -8,7 +8,7 @@
  */
 // ############################# 系统配置 #####################
 // 执行时间
-define('START_TIME', microtime(true));
+defined('START_TIME') || define('START_TIME', microtime(true));
 // 项目根目录
 defined('BP') || define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 // 运行模式
@@ -19,7 +19,7 @@ if (!CLI and !file_exists(BP . 'setup/install.lock')) {
     exit();
 }
 // 系统是否WIN
-define('IS_WIN', strtolower(substr(PHP_OS, 0, 3)) === 'win');
+defined('IS_WIN') || define('IS_WIN', strtolower(substr(PHP_OS, 0, 3)) === 'win');
 // 静态文件路径
 defined('PUB') || define('PUB', BP . 'pub' . DIRECTORY_SEPARATOR);
 
@@ -68,12 +68,12 @@ if (is_file($handle_functions)) {
 }
 
 // 调试模式
-define('DEV', 'dev' === $config['deploy']);
-define('PROD', 'prod' === $config['deploy']);
+defined('DEV') || define('DEV', 'dev' === $config['deploy']);
+defined('PROD') || define('PROD', 'prod' === $config['deploy']);
 //defined('DEV') || define('DEV', false);
 //defined('PROD') || define('PROD', false);
 // 调试模式
-define('PHP_CS', $config['php-cs']);
+defined('PHP_CS') || define('PHP_CS', $config['php-cs']);
 //defined('PHP_CS') || define('PHP_CS', false);
 //报告错误
 DEBUG ? error_reporting(E_ALL) : error_reporting(0);

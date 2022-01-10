@@ -42,18 +42,20 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
         }
         $this->printing->note(__('开始编译器工作。'));
         if (empty($source_types)) {
-            foreach ($this->getTypes() as $key=>$type) {
-                $this->printing->warning($key.':'.$type.__('编译中...'));
-                $key= ucfirst($key);
+            foreach ($this->getTypes() as $key => $type) {
+                $this->printing->warning($key . ':' . $type . __('编译中...'));
+                $key = ucfirst($key);
                 /**@var CompilerInterface $compiler */
-                $compiler = ObjectManager::getInstance("\Weline\Theme\Console\Resource\Compiler\\$key",[ObjectManager::getInstance("Weline\Theme\Config\Reader\\$key")]);
+                $compiler = ObjectManager::getInstance("\Weline\Theme\Console\Resource\Compiler\\$key")
+                    ->setReader(ObjectManager::getInstance("Weline\Theme\Config\Reader\\$key"));
                 $compiler->compile();
             }
         } else {
             foreach ($source_types as $source_type) {
-                $this->printing->warning($source_type.__('编译中...'));
+                $this->printing->warning($source_type . __('编译中...'));
                 /**@var CompilerInterface $compiler */
-                $compiler = ObjectManager::getInstance("\Weline\Theme\Console\Resource\Compiler\\$source_type",[ObjectManager::getInstance("Weline\Theme\Config\Reader\\$source_type")]);
+                $compiler = ObjectManager::getInstance("\Weline\Theme\Console\Resource\Compiler\\$source_type")
+                    ->setReader(ObjectManager::getInstance("Weline\Theme\Config\Reader\\$source_type"));
                 $compiler->compile();
             }
         }

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Resource\Compiler;
+namespace Weline\Theme\Console\Resource\Compiler;
 
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;

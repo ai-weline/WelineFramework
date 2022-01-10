@@ -28,7 +28,6 @@
     "ext-gd": "*",
     "wikimedia/less.php": "^3.1",
     "mrclay/jsmin-php": "^2.4",
-    "ext-memcached": "*",
     "aiweline/website-monitoring": "dev-master"
   },
   "autoload": {

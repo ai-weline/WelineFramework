@@ -8,4 +8,4 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 # 开启DEBUG模式
-define('DEBUG', 1);
+defined('DEBUG') || define('DEBUG', 1);

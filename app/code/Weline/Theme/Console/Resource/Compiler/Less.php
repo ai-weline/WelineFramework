@@ -11,8 +11,9 @@ declare(strict_types=1);
 namespace Weline\Theme\Console\Resource\Compiler;
 
 use Weline\Framework\Resource\CompilerInterface;
+use Weline\Theme\Console\Resource\Compiler;
 
-class Less implements CompilerInterface
+class Less extends Compiler implements CompilerInterface
 {
     protected $less;
 

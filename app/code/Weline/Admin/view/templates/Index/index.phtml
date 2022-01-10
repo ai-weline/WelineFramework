@@ -4,8 +4,20 @@
  */
 ?>
 @template(Weline_Backend::public/header.phtml)
+<link rel="stylesheet" href="@static(Weline_Admin::backend/theme/material/css/iot-theme-bundle.min.css)">
+<link rel="stylesheet" href="@static(Weline_Admin::backend/theme/material/css/material.css)">
 </head>
 <body>
+<div class="header-wapper">
+    @block(Weline\Admin\Block\Menu\Avatar)
+    <div>Menu</div>
+</div>
 @template(Weline_Backend::blocks/menu.phtml)
+<a href="<?=$this->getUrl('admin/login/logout')?>">退出登录</a>
+<script>
+    require(['jquery','bootstrapBundle'],function ($,bootstrapBundle){
+
+    })
+</script>
 </body>
 @template(Weline_Backend::public/footer.phtml)

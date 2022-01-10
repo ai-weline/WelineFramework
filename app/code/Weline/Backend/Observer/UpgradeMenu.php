@@ -36,6 +36,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
     public function execute(Event $event)
     {
         $modules_xml_menus = $this->menuReader->read();
+        p();
         foreach ($modules_xml_menus as $module => $menus) {
             foreach ($menus['data'] as $menu) {
                 # 清空查询条件

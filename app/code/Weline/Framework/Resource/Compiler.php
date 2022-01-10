@@ -21,7 +21,7 @@ class Compiler implements CompilerInterface
 
     protected ?ResourceReaderInterface $reader;
 
-    function __construct(ResourceReaderInterface $resourceReader)
+    function setReader(ResourceReaderInterface $resourceReader)
     {
         $this->reader = $resourceReader;
     }
