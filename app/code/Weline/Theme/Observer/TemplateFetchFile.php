@@ -30,21 +30,14 @@ class TemplateFetchFile implements ObserverInterface
     private WelineTheme $welineTheme;
 
     /**
-     * @var CacheInterface
-     */
-    private CacheInterface $themeCache;
-
-    /**
      * TemplateFetchBefore 初始函数...
      * @param WelineTheme $welineTheme
      * @param CacheInterface $themeCache
      */
     public function __construct(
-        WelineTheme $welineTheme,
-        ThemeCache $themeCache
+        WelineTheme $welineTheme
     ) {
         $this->welineTheme = $welineTheme;
-        $this->themeCache  = $themeCache->create();
     }
 
     public function execute(Event $event)
@@ -59,6 +52,7 @@ class TemplateFetchFile implements ObserverInterface
         $fileData = $event->getData('data');
 
         $module_file_path = $fileData->getData('filename');
+
         # 开始分析主题路径
         try {
             $theme = $this->welineTheme->getActiveTheme();

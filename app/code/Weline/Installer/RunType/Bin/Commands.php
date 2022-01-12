@@ -11,6 +11,8 @@ namespace Weline\Installer\RunType\Bin;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\App\System;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Cli\Printing;
 use Weline\Installer\Helper\Data;
 
@@ -32,7 +34,8 @@ class Commands
         $tmp    = [];
         foreach ($this->data->getCommands() as $needCommand) {
             try {
-                exec('php ' . BP . $needCommand, $result);
+                $command = 'php '.BP.$needCommand;
+                \exec($command,$result,$return);
                 $tmp[$needCommand]=implode(',', $result);
                 $value = str_pad('✔', 10, ' ', STR_PAD_BOTH);
             } catch (Exception $e) {

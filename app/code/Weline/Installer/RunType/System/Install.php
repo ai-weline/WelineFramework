@@ -45,7 +45,6 @@ class Install
         $break      = false;
         $wait_times = 1;
         while (! $break) {
-            sleep(1);
             $db_conf = Env::getInstance()->reload()->getDbConfig();
             if ($db_conf) {
                 $break = true;
@@ -56,6 +55,6 @@ class Install
             }
         }
 
-        return ['data' => '', 'hasErr' => false, 'msg' => '-------  系统安装...  -------'];
+        return ['data' => [], 'hasErr' => false, 'msg' => '-------  系统安装...  -------'];
     }
 }

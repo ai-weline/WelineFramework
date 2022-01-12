@@ -21,9 +21,10 @@ class Compiler implements CompilerInterface
 
     protected ?ResourceReaderInterface $reader;
 
-    function setReader(ResourceReaderInterface $resourceReader)
+    function setReader(ResourceReaderInterface $resourceReader): static
     {
         $this->reader = $resourceReader;
+        return $this;
     }
 
     function getEventManager(): EventsManager

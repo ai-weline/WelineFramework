@@ -7,4 +7,5 @@
  * 论坛：https://bbs.aiweline.com
  */
 // 加载启动器
+
 require dirname(__DIR__) . '/app/bootstrap.php';

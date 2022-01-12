@@ -9,9 +9,8 @@
 
 use Weline\Installer\Runner;
 
-require 'setup.php';
+require 'bootstrap.php';
 $runner = new Runner();
-
 switch ($_GET['action']) {
     case 'env':
         $data = $runner->checkEnv();

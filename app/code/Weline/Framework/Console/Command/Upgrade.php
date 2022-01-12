@@ -33,11 +33,12 @@ class Upgrade extends CommandAbstract
 
     public function __construct(
         Printing $printer,
-        Command $command,
-        System $system
-    ) {
+        Command  $command,
+        System   $system
+    )
+    {
         $this->printer = $printer;
-        $this->system  = $system;
+        $this->system = $system;
         $this->command = $command;
     }
 
@@ -69,9 +70,9 @@ class Upgrade extends CommandAbstract
      * 参数区：
      *
      * @param array $args
-     * @throws \Weline\Framework\App\Exception
-     * @throws \ReflectionException
      * @return mixed|void
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
     public function execute($args = [])
     {
@@ -120,8 +121,8 @@ class Upgrade extends CommandAbstract
      *
      * 参数区：
      *
-     * @throws \ReflectionException
      * @return array
+     * @throws \ReflectionException
      */
     private function getDirFileCommand(): array
     {
@@ -131,7 +132,7 @@ class Upgrade extends CommandAbstract
 
         // 扫描核心命令
         $scanner->__init();
-        $core   = $scanner->scanDirTree(Env::vendor_path);
+        $core = $scanner->scanDirTree(Env::vendor_path);
         $scanner->__init();
         $custom = $scanner->scanDirTree(APP_CODE_PATH);
 
@@ -145,20 +146,20 @@ class Upgrade extends CommandAbstract
                     $dir = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $dir);
                 }
                 $dir_command_array = explode(self::dir, $dir);
-                $command_dir       = trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR);
-                $module_dir_arr    = explode(DIRECTORY_SEPARATOR, trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR));
-                $vendor            = array_shift($module_dir_arr);
-                $module            = implode('\\', $module_dir_arr);
-                $module_name       = $vendor . '\\' . $module;
+                $command_dir = trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR);
+                $module_dir_arr = explode(DIRECTORY_SEPARATOR, trim(array_pop($dir_command_array), DIRECTORY_SEPARATOR));
+                $vendor = array_shift($module_dir_arr);
+                $module = implode('\\', $module_dir_arr);
+                $module_name = $vendor . '\\' . $module;
                 if ($command_dir) {
                     foreach ($command_files as $file) {
-                        $command_dir_file     = $file->getNamespace() . '\\' . $file->getFilename();
+                        $command_dir_file = $file->getNamespace() . '\\' . $file->getFilename();
                         $command_dir_file_arr = explode(self::dir, $command_dir_file);
-                        $command_dir_file     = trim(array_pop($command_dir_file_arr), DIRECTORY_SEPARATOR);
-                        $command              = str_replace('\\', ':', strtolower($command_dir_file));
-                        $command              = trim($command, ':');
+                        $command_dir_file = trim(array_pop($command_dir_file_arr), DIRECTORY_SEPARATOR);
+                        $command = str_replace('\\', ':', strtolower($command_dir_file));
+                        $command = trim($command, ':');
                         if ($command) {
-                            $command_tip        = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
+                            $command_tip = str_replace(DIRECTORY_SEPARATOR, ':', strtolower($command_dir)) . '#' . $module_name;
                             $command_class_path = $this->command->getCommandPath($module_name, $command);
                             // 排除非框架系统命令类
                             if (class_exists($command_class_path)) {
@@ -167,7 +168,7 @@ class Upgrade extends CommandAbstract
                                     if ($command_class instanceof CommandInterface) {
                                         $commands[$command_tip][$command] = $command_class->getTip();
                                     } else {
-                                        if(DEV)$this->printer->warning(__('命令类：%1 必须继承：%2', [$command_class_path, CommandInterface::class]));
+                                        if (DEV && CLI) $this->printer->warning(__('命令类：%1 必须继承：%2', [$command_class_path, CommandInterface::class]));
                                     }
                                 } catch (\Exception $exception) {
                                     // 异常的类不加入命令

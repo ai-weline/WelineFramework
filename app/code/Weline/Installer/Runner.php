@@ -52,7 +52,6 @@ class Runner
     {
         /**@var $commands Commands */
         $commands = ObjectManager::getInstance(Commands::class);
-
         return $commands->run();
     }
 

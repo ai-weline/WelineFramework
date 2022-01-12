@@ -275,6 +275,15 @@ abstract class RequestAbstract extends DataObject
         }
         return $url;
     }
+    public function getAdminUrl(string $path = ''): string
+    {
+        $path = Env::getInstance()->getConfig('admin') . '/' . $path;
+        $url = $this->getBaseUrl();
+        if ($path) {
+            $url .= '/' . $path;
+        }
+        return $url;
+    }
 
     public function getBaseUrl(): string
     {

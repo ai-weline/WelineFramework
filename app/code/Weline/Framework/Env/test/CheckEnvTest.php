@@ -13,7 +13,7 @@ use Weline\Framework\Env\CheckEnv;
 use PHPUnit\Framework\TestCase;
 use Weline\Framework\Manager\ObjectManager;
 
-require __DIR__ . '/../../../../setup/setup.php';
+require __DIR__ . '/../../../../setup/bootstrap.php';
 class CheckEnvTest extends TestCase
 {
     public function testSetNeed()

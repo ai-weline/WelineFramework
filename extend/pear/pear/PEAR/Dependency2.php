@@ -23,7 +23,7 @@ require_once 'PEAR/Validate.php';
  *
  * This class handles both version 1.0 and 2.0 dependencies
  * WARNING: *any* changes to this class must be duplicated in the
- * test_PEAR_Dependency2 class found in tests/PEAR_Dependency2/setup.php.inc,
+ * test_PEAR_Dependency2 class found in tests/PEAR_Dependency2/bootstrap.php.inc,
  * or unit tests will not actually validate the changes
  * @category   pear
  * @package    PEAR

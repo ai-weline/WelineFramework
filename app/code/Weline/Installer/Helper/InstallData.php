@@ -19,10 +19,11 @@ class InstallData
                 'modules'   => ['PDO', 'exif', 'fileinfo', 'xsl'],
             ],
             'commands' => [
-                'bin/m module:upgrade'
+                'bin'.DIRECTORY_SEPARATOR.'m command:upgrade',
+                'bin'.DIRECTORY_SEPARATOR.'m module:upgrade',
             ]
         ];
 
-        return $data[$key] ?? $data;
+        return $data[$key] ?: $data;
     }
 }

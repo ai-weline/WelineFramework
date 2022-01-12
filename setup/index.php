@@ -9,7 +9,7 @@
  * 时间：20:42
  * 描述：此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  */
-require 'setup.php';
+require 'bootstrap.php';
 ?>
 <!doctype html>
 <html>
