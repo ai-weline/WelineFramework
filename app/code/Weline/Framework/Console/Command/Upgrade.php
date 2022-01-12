@@ -89,7 +89,6 @@ class Upgrade extends CommandAbstract
         $text = '<?php return ' . var_export($commands, true) . ';';
         $file->write($text);
         $file->close();
-
         $this->printer->printList($commands);
         $this->printer->success(__('所有命令已更新！'));
     }

@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Console\System;
+namespace Weline\Framework\System\Console\System;
 
 use Weline\Framework\App\System;
 use Weline\Framework\Database\Setup\DataInterface;

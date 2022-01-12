@@ -32,9 +32,9 @@ class Listing implements \Weline\Framework\Console\CommandInterface
     {
         foreach (Env::getInstance()->getModuleList() as $name => $module) {
             if ($module['status']) {
-                $name = str_pad($name, 25) . $this->printing->colorize('# ', 'Red') . $this->printing->colorize('开启', 'Green');
+                $name = str_pad($name, 45) . $this->printing->colorize('# ', 'Red') . $this->printing->colorize('开启', 'Green');
             } else {
-                $name = str_pad($name, 25) . $this->printing->colorize('# ', 'Red') . $this->printing->colorize('禁用', 'Yellow');
+                $name = str_pad($name, 45) . $this->printing->colorize('# ', 'Red') . $this->printing->colorize('禁用', 'Yellow');
             }
             $this->printing->note($name);
         }

@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Console\System\Install;
+namespace Weline\Framework\System\Console\System\Install;
 
 use Weline\Framework\Console\CommandAbstract;
 

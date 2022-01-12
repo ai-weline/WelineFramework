@@ -7,7 +7,7 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Console\Setup\Di;
+namespace Weline\Framework\Setup\Console\Setup\Di;
 
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;

@@ -33,13 +33,15 @@ try {
     /**
      * 初始化应用...
      */
-    \Weline\Framework\App::run();
+    \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\App::class)::run();
 } catch (Exception $exception) {
     if (DEBUG || DEV) {
         echo '<pre>';
         echo '应用启动失败：<b style="color: red">' . $exception->getMessage() . '</b>' . PHP_EOL;
         echo '错误信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
         var_dump($exception->getTrace());
+        echo 'DEBUG信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
+        var_dump(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT,100));
         exit(0);
     } else {
         echo '<pre>';
@@ -47,3 +49,4 @@ try {
         exit(0);
     }
 }
+p(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT,100));
