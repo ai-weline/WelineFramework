@@ -26,9 +26,9 @@ class TemplateTest extends TestCore
        $this->template = ObjectManager::getInstance(Template::class,[$indexController]);
     }
 
-    public function testFetchTemplateTagSource()
+    public function testfetchTagSource()
     {
-//        p($this->template->fetchTemplateTagSource('statics', '/1.png'));
-        p($this->template->fetchTemplateTagSource('statics', 'Aiweline_Bbs::/1.png'));
+//        p($this->template->fetchTagSource('statics', '/1.png'));
+        p($this->template->fetchTagSource('statics', 'Aiweline_Bbs::/1.png'));
     }
 }

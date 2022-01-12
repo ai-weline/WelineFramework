@@ -245,7 +245,7 @@ class Template
                 $comFileName = $baseComFileDir . 'com_' . $file_name . self::file_ext;
             }
             $comFileName = $this->fetchFile($comFileName);
-            # 非开发模式则缓存
+            # 生产模式缓存
             if (PROD) {
                 $this->viewCache->set($comFileName_cache_key, $comFileName);
                 $this->viewCache->set($tplFile_cache_key, $tplFile);
@@ -319,8 +319,8 @@ class Template
             '<?php ${1} ?>',
             '<?php include(trim("${1}")); ?>',
             '<?php echo $this->getBlock(trim("${1}"));//打印Block块对象 ?>',
-            '<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件 ?>',
-            '<?php echo $this->fetchTemplateTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件 ?>',
+            '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件 ?>',
+            '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件 ?>',
             '<?php $this->fetch(trim("${1}")); ?>',
             '<?php p(isset($this->getData("${1}"))?:${1}); ?>',
             /*'<?php if(${1})echo addslashes("${2}"); ?>',

@@ -14,6 +14,7 @@ use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Exception\Core;
+use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\Security\Encrypt;
 use Weline\Framework\View\Data\DataInterface;
@@ -113,7 +114,7 @@ trait TraitTemplate
         return [$t_f, array_shift($t_f_arr)];
     }
 
-    public function fetchTemplateTagSourceFile(string $type, string $source)
+    public function fetchTagSourceFile(string $type, string $source)
     {
         $source = trim($source);
         $cache_key = $type . '_' . $source;
@@ -132,7 +133,6 @@ trait TraitTemplate
                 if ($data = $this->viewCache->get($cache_key)) {
                     break;
                 }
-
                 list($t_f, $module_name) = $this->processModuleSourceFilePath($type, $source);
                 $base_url_path = rtrim($this->statics_dir, DataInterface::dir_type_STATICS);
                 # 第三方模组
@@ -168,7 +168,7 @@ trait TraitTemplate
      * @return bool|string|void
      * @throws Core
      */
-    public function fetchTemplateTagSource(string $type, string $source)
+    public function fetchTagSource(string $type, string $source)
     {
         $source = trim($source);
         $cache_key = $type . '_' . $source;
@@ -189,15 +189,13 @@ trait TraitTemplate
                 if ($module_name) {
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
-                        $module_view_dir_path = BP . str_replace('/', DIRECTORY_SEPARATOR, $module['base_path']) . DataInterface::dir . DIRECTORY_SEPARATOR;
+                        $module_view_dir_path = BP . $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
                         $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
                         $t_f = str_replace($module_name . '::', '', $t_f);
-                    }else{
-                        throw new Exception(__('资源不存在：%1，模组：%2',[$source,$module_name]));
+                    } else {
+                        throw new Exception(__('资源不存在：%1，模组：%2', [$source, $module_name]));
                     }
                 }
-//                p($base_url_path);
-//                p($this->getUrlPath($base_url_path));
                 $data = rtrim($this->getUrlPath($base_url_path), DataInterface::dir_type_STATICS) . DIRECTORY_SEPARATOR . $t_f;
                 break;
             default:
@@ -252,6 +250,7 @@ trait TraitTemplate
                 # 非开发环境
                 if (PROD) {
                     $path = str_replace(APP_CODE_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $this->theme['path'] . DIRECTORY_SEPARATOR, $path);
+                    $path = str_replace(VENDOR_PATH, PUB . 'static' . DIRECTORY_SEPARATOR . $this->theme['path'] . DIRECTORY_SEPARATOR, $path);
                 }
                 $this->viewCache->set($cache_key, $path);
                 break;
@@ -278,8 +277,18 @@ trait TraitTemplate
      */
     private function getUrlPath(string $real_path): string
     {
-        $explode_str = DEV ? APP_CODE_PATH : PUB;
-        return rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace($explode_str, '', $real_path)), '/');
+        $url_path = '';
+        if (DEV) {
+            if (is_int(strpos($real_path, APP_CODE_PATH))) {
+                $url_path = rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace(APP_CODE_PATH, '', $real_path)), '/');
+            } else if (is_int(strpos($real_path, VENDOR_PATH))) {
+                $url_path = rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace(VENDOR_PATH, '', $real_path)), '/');
+            }
+        }else{
+            # 检测模块位置
+            $url_path = rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace(PUB, '', $real_path)), '/');
+        }
+        return $url_path;
     }
 
     /**

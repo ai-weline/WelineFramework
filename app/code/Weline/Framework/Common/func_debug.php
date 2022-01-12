@@ -60,7 +60,7 @@ if(!function_exists('p')){
                 }
                 if (!$subIsObject) {
                     var_dump(get_class($data));
-                    echo $isCli ? PHP_EOL : '<br>';
+                    echo $isCli ? PHP_EOL : '<br><pre>';
                     var_dump($data->toArray());
                     echo $isCli ? PHP_EOL : '</div><br><div>调试时间：<br>--' . ($exe_time * 1000) . '(ms/毫秒)<br>--' . $exe_time . '(s/秒)<br></div></div></pre>';
                     echo $isCli ? PHP_EOL : '</div></pre>';
@@ -69,9 +69,9 @@ if(!function_exists('p')){
                     }
                 }
             }
+            echo $isCli ? PHP_EOL : '<br><pre>';
             var_dump($data);
             var_dump(get_class($data));
-            echo $isCli ? PHP_EOL : '<br>';
             var_dump(get_class_methods($data));
             echo $isCli ? PHP_EOL : '</div><br><div>调试时间：<br>--' . ($exe_time * 1000) . '(ms/毫秒)<br>--' . $exe_time . '(s/秒)<br></div></div></pre>';
             echo $isCli ? PHP_EOL : '</div></div></pre>';

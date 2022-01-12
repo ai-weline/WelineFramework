@@ -75,7 +75,7 @@ class RequireJs extends ResourceReader
 
     function fetchFile(string $source)
     {
-        return $this->getTemplate()->fetchTemplateTagSourceFile('statics', $source);
+        return $this->getTemplate()->fetchTagSourceFile('statics', $source);
     }
 
     function addConfigData(string $area, string $param_name, string $param_value): array

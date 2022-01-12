@@ -1,4 +1,5 @@
-E:\WelineFramework\app\code\Weline\Admin\view\tpl\theme\material\com_dashboard.phtml
-E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\public\com_header.phtml
-E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\blocks\com_menu.phtml
-E:\WelineFramework\app\code\Weline\Backend\view\tpl\templates\public\com_footer.phtml
+E:\WelineFramework\AppProduct\app\code\Aiweline\Index\view\statics\
+进入【非】开发环境
+APP_CODE_PATH
+替换结果：/Aiweline/Index/view/statics
+替换结果：/Aiweline/Index/view/statics

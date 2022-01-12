@@ -121,10 +121,10 @@ class App
 
         // 调试模式
         if (!defined('DEV')) {
-            define('DEV', isset($config['deploy']) ? isset($config['deploy']) === 'dev' : false);
+            define('DEV', isset($config['deploy']) ? $config['deploy'] === 'dev' : false);
         };
         if (!defined('PROD')) {
-            define('PROD', isset($config['deploy']) ? isset($config['deploy']) === 'prod' : false);
+            define('PROD', isset($config['deploy']) ? $config['deploy'] === 'prod' : false);
         };
         // 代码美化模式
         if (!defined('PHP_CS')) {
@@ -152,6 +152,7 @@ class App
                         echo __('消息：') . $_error['message'] . '</br>';
                         echo '</pre>';
                     }
+                    debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 100);
                 }
             });
         }
