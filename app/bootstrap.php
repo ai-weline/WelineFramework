@@ -49,4 +49,3 @@ try {
         exit(0);
     }
 }
-p(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT,100));
