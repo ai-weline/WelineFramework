@@ -263,6 +263,7 @@ abstract class AbstractModel extends DataObject
         if ($data) {
             $this->setData($data);
         }
+
         // 保存前
         $this->save_before();
         // save之前事件
@@ -289,6 +290,8 @@ abstract class AbstractModel extends DataObject
                     }
                 } else {
                     $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
+                    $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                    $this->setData($this->_primary_key, $save_result);
                 }
             } else {
                 $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
@@ -566,9 +569,14 @@ abstract class AbstractModel extends DataObject
         $arrConst = $objClass->getConstants();
         $_fields = [];
         foreach ($arrConst as $key => $val) {
-            if (str_starts_with($key, 'fields')) {
+            if ($key !== 'fields_ID' && str_starts_with($key, 'fields')) {
                 $_fields[] = $val;
             }
+        }
+        $_fields[] = $this->_primary_key;
+        $provide_model_fields = 'provideModelFields';
+        if (method_exists($this, $provide_model_fields)) {
+            $_fields = array_merge($_fields, $this->$provide_model_fields());
         }
         $this->_model_fields = $_fields;
         $this->_cache->set($module__fields_cache_key, $_fields);

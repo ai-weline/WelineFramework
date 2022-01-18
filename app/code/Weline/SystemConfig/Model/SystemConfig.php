@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Weline\SystemConfig\Model;
 
 use Weline\Backend\Cache\BackendCache;
+use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Exception\Core;
@@ -20,10 +21,10 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class SystemConfig extends \Weline\Framework\Database\Model
 {
-    const field_KEY = 'key';
-    const field_VALUE = 'v';
-    const field_MODULE = 'module';
-    const field_AREA = 'area';
+    const fields_KEY = 'key';
+    const fields_VALUE = 'v';
+    const fields_MODULE = 'module';
+    const fields_AREA = 'area';
 
     const area_BACKEND = 'backend';
     const area_FRONTEND = 'frontend';
@@ -57,7 +58,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
 
     function providePrimaryField(): string
     {
-        return self::field_KEY;
+        return self::fields_KEY;
     }
 
     /**
@@ -74,7 +75,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
      */
     function getConfig(string $key, string $module, string $area): mixed
     {
-        $cache_key =  'system_config_cache_' . $area . '_' .$module . '_' . $key;
+        $cache_key = 'system_config_cache_' . $key . '_' . $area . '_' . $module;
 
         if (PROD && $cache_data = $this->cache->get($cache_key)) {
             return $cache_data;
@@ -114,7 +115,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
             $this->cache->set($cache_key, $value,);
             return true;
         } catch (\ReflectionException | Core $e) {
-            return false;
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -148,10 +149,10 @@ class SystemConfig extends \Weline\Framework\Database\Model
         if(!$setup->tableExist()){
             $setup->getPrinting()->printing('安装',$setup->getTable());
             $setup->createTable('系统配置表')
-                ->addColumn(self::field_KEY, TableInterface::column_type_VARCHAR, 120, 'primary key', '键')
-                ->addColumn(self::field_VALUE, TableInterface::column_type_TEXT, 0, '', '值')
-                ->addColumn(self::field_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')
-                ->addColumn(self::field_AREA, TableInterface::column_type_VARCHAR, 120, "NOT NULL DEFAULT 'frontend'", '区域：backend/frontend')
+                ->addColumn(self::fields_KEY, TableInterface::column_type_VARCHAR, 120, 'primary key', '键')
+                ->addColumn(self::fields_VALUE, TableInterface::column_type_TEXT, 0, '', '值')
+                ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')
+                ->addColumn(self::fields_AREA, TableInterface::column_type_VARCHAR, 120, "NOT NULL DEFAULT 'frontend'", '区域：backend/frontend')
                 ->create();
         }else{
             $setup->getPrinting()->printing('已存在，跳过',$setup->getTable());
