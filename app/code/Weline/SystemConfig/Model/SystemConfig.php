@@ -110,7 +110,6 @@ class SystemConfig extends \Weline\Framework\Database\Model
             $this->setData(['key' => $key, 'area' => $area, 'module' => $module, 'v' => $value])
                 ->forceCheck()
                 ->save();
-            p();
             # 设置配置缓存
             $this->cache->set($cache_key, $value,);
             return true;
