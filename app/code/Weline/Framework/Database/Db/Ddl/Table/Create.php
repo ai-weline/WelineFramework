@@ -179,6 +179,11 @@ CREATE TABLE {$this->table}(
  {$this->constraints}
 ) {$comment} {$this->additional}
 createSQL;
-        return $this->connection->query($sql);
+        try {
+            $result = $this->connection->query($sql);
+        } catch (\Exception $exception) {
+            throw new Exception(__('创建表失败，SQL：%1 ERROR：%2', [$sql, $exception->getMessage()]));
+        }
+        return $result;
     }
 }
