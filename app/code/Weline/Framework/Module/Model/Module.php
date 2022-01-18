@@ -20,6 +20,7 @@ class Module extends DataObject
     private string $router;
     private string $description;
     private string $base_path;
+    private string $namespace_path;
     private string $path;
 
     const name = 'name';
@@ -28,6 +29,7 @@ class Module extends DataObject
     const router = 'router';
     const description = 'description';
     const base_path = 'base_path';
+    const namespace_path = 'namespace_path';
     const path = 'path';
 
     /**
@@ -117,6 +119,25 @@ class Module extends DataObject
     {
         $this->setData(self::base_path, $base_path);
         $this->base_path = $base_path;
+        return $this;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getNamespacePath(): string
+    {
+        return $this->namespace_path;
+    }
+
+    /**
+     * @param string $namespace_path
+     */
+    public function setNamespacePath(string $namespace_path): static
+    {
+        $this->setData(self::namespace_path, $namespace_path);
+        $this->namespace_path = $namespace_path;
         return $this;
     }
 

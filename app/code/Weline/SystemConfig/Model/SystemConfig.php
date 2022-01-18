@@ -106,7 +106,6 @@ class SystemConfig extends \Weline\Framework\Database\Model
     function setConfig(string $key, string $value, string $module, string $area): bool
     {
         $cache_key = 'system_config_cache_' . $key . '_' . $area . '_' . $module;
-        p($cache_key);
         try {
             $this->setData(['key' => $key, 'area' => $area, 'module' => $module, 'v' => $value])
                 ->forceCheck()

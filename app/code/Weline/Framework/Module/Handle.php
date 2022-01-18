@@ -172,6 +172,7 @@ class Handle implements HandleInterface, RegisterInterface
         $module = new Module();
         $module->setStatus(true);
         $module->setName($data['module_name']);
+        $module->setNamespacePath(str_replace('_', '\\', $data['module_name']));
         $module->setBasePath($data['base_path']);
         $module->setPath($data['dir_path']);
         $module->setVersion($version ?: '1.0.0');
@@ -203,7 +204,8 @@ class Handle implements HandleInterface, RegisterInterface
             }
         }
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $module->getName(), 'module_version' => $version, 'module_description' => $description], '__construct');
-        $setup_dir = BP . $module->getPath() . \Weline\Framework\Setup\Data\DataInterface::dir;
+        $setup_dir = BP . $module->getBasePath() . \Weline\Framework\Setup\Data\DataInterface::dir;
+        $setup_namespace = $module->getNamespacePath() .'\\'. ucfirst(\Weline\Framework\Setup\Data\DataInterface::dir).'\\';
 
         if (is_dir($setup_dir) && DEV) $this->printer->setup($setup_dir . '：升级目录...', '开发');
         // 已经存在模块则更新
@@ -223,10 +225,7 @@ class Handle implements HandleInterface, RegisterInterface
                     foreach (\Weline\Framework\Setup\Data\DataInterface::upgrade_FILES as $upgrade_FILE) {
                         $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $upgrade_FILE . '.php';
                         if (file_exists($setup_file)) {
-                            // 获取命名空间
-                            $setup_file_arr = explode(APP_CODE_PATH, $setup_file);
-                            $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
-                            $setup = ObjectManager::getInstance($file_namespace);
+                            $setup = ObjectManager::getInstance($setup_namespace.$upgrade_FILE);
                             $result = $setup->setup($this->setup_data, $this->setup_context);
                             $this->printer->note("{$result}");
                         }
@@ -258,10 +257,7 @@ class Handle implements HandleInterface, RegisterInterface
             foreach (\Weline\Framework\Setup\Data\DataInterface::install_FILES as $install_FILE) {
                 $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $install_FILE . '.php';
                 if (file_exists($setup_file)) {
-                    // 获取命名空间
-                    $setup_file_arr = explode(APP_CODE_PATH, $setup_file);
-                    $file_namespace = rtrim(str_replace(DIRECTORY_SEPARATOR, '\\', array_pop($setup_file_arr)), '.php');
-                    $setup = ObjectManager::getInstance($file_namespace);
+                    $setup = ObjectManager::getInstance($setup_namespace.$install_FILE);
                     $setup->setup($this->setup_data, $this->setup_context);
                 }
             }
