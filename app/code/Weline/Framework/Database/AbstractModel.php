@@ -280,22 +280,22 @@ abstract class AbstractModel extends DataObject
                             $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
                         } else {
                             $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
-                            $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                            if(is_array($save_result))$save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                             $this->setData($this->_primary_key, $save_result);
                         }
                     } else {
                         $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
-                        $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                        if(is_array($save_result))$save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                         $this->setData($this->_primary_key, $save_result);
                     }
                 } else {
                     $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
-                    $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                    if(is_array($save_result))$save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                     $this->setData($this->_primary_key, $save_result);
                 }
             } else {
                 $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
-                $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                if(is_array($save_result))$save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                 $this->setData($this->_primary_key, $save_result);
             }
 

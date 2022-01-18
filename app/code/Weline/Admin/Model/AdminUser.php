@@ -35,10 +35,6 @@ class AdminUser extends \Weline\Framework\Database\Model
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-        # 设置默认数据
-        /**@var Config $config*/
-        $config = ObjectManager::getInstance(Config::class);
-        $config->setConfig('admin_default_avatar', Template::getInstance()->fetchTagSourceFile('static', 'Weline_Admin::statics/backend/img/logo.png'), 'Weline_Admin');
 //        $setup->dropTable();
 //        $setup->createTable('管理员表')
 //            ->addColumn('user_id', TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')

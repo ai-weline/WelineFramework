@@ -13,6 +13,7 @@ namespace Weline\Admin\Block\Menu;
 use Weline\Admin\Model\AdminUser;
 use Weline\Backend\Model\Config;
 use Weline\Framework\App\Session\BackendSession;
+use Weline\Framework\View\Template;
 
 class Avatar extends \Weline\Framework\View\Block
 {
@@ -37,7 +38,7 @@ class Avatar extends \Weline\Framework\View\Block
             $avatar = $user->getAvatar();
         }
         if(empty($avatar)){
-            $avatar = $this->config->getConfig('admin_default_avatar', 'Aiweline_Admin');
+            $avatar = Template::getInstance()->fetchTagSourceFile('statics', $this->config->getConfig('admin_default_avatar', 'Aiweline_Admin'));
         }
         return $avatar;
     }
