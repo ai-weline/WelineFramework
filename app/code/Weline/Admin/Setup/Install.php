@@ -31,6 +31,7 @@ class Install implements \Weline\Framework\Setup\InstallInterface
     {
         # 设置默认数据
         /**@var Config $config*/
+        p();
         $config = ObjectManager::getInstance(Config::class);
         $config->setConfig('admin_default_avatar', Template::getInstance()->fetchTagSourceFile('static', 'Weline_Admin::statics/backend/img/logo.png'), 'Weline_Admin');
     }
