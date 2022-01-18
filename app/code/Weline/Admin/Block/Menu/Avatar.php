@@ -16,7 +16,7 @@ use Weline\Framework\App\Session\BackendSession;
 
 class Avatar extends \Weline\Framework\View\Block
 {
-    protected $_template = 'Weline_Admin::templates/theme/material/menu/avatar.phtml';
+    protected $_template = 'Weline_Admin::templates/menu/avatar.phtml';
     private $config;
     private $session;
 

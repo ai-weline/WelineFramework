@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Module;
 
+use Composer\Composer;
 use Weline\Framework\Database\Model\ModelManager;
 use Weline\Framework\Module\Model\Module;
 use Weline\Framework\Register\RegisterInterface;
@@ -101,43 +102,42 @@ class Handle implements HandleInterface, RegisterInterface
      * @param string $module->getName()
      * @throws \Weline\Framework\App\Exception
      */
-    public function remove(Module $module)
+    public function remove($module)
     {
         $APP_CODE_PATH = APP_CODE_PATH;
 
         $this->printer->note(__('1、正在执行卸载脚本...'));
-        $remove_script = $this->setup_helper->getSetupClass($module->getName(), \Weline\Framework\Setup\Data\DataInterface::type_REMOVE);
+        $remove_script = $this->setup_helper->getSetupClass($module, \Weline\Framework\Setup\Data\DataInterface::type_REMOVE);
         if ($remove_script) {
             $remove_object = ObjectManager::getInstance($remove_script);
 
-            $version = $this->modules[$module->getName()]['version'] ?? '1.0.0';
-            $setup_context = new \Weline\Framework\Setup\Data\Context($module->getName(), $version);
+            $version = $this->modules[$module]['version'] ?? '1.0.0';
+            $setup_context = new \Weline\Framework\Setup\Data\Context($module, $version);
 
             $this->printer->note($remove_object->setup($this->setup_data, $setup_context));
         } else {
             $this->printer->warning('模块卸载脚本不存在，已跳过卸载脚本！', '卸载');
         }
         $this->printer->note('2、备份应用程序...');
-        if (is_dir($APP_CODE_PATH . $this->modules[$module->getName()]['path'] . DIRECTORY_SEPARATOR)) {
-            $back_path = $APP_CODE_PATH . $this->modules[$module->getName()]['path'] . DIRECTORY_SEPARATOR;
-        } elseif (is_dir($back_path = BP . 'vendor/' . $this->modules[$module->getName()]['path'] . DIRECTORY_SEPARATOR)) {
-            $back_path = BP . 'vendor/' . $this->modules[$module->getName()]['path'] . DIRECTORY_SEPARATOR;
-        } else {
-            $this->printer->error("模块{$module->getName()}:不存在！", 'ERROR');
+        $module_path = BP . $this->modules[$module]['base_path'] . DIRECTORY_SEPARATOR;
+        if (!is_dir($module_path)) {
+            $this->printer->error("模块{$module}:不存在！", 'ERROR');
+            return ;
         }
-        $zip = $this->compress->compression("{$module->getPath()}", APP_CODE_PATH . $module->getName(), APP_CODE_PATH);
+
+        $zip = $this->compress->compression("{$module_path}", APP_CODE_PATH . $module, APP_CODE_PATH);
         // TODO 完成模块卸载 兼容 win 和 linux
 
         $this->printer->note($zip);
         $this->printer->note('3、卸载应用代码...');
 
-        $this->printer->note($back_path);
-        $this->system->exec("rm $back_path -rf");
-        $back_path = dirname($back_path);
+        $this->printer->note($module_path);
+        $this->system->exec("rm $module_path -rf");
+        $back_path = dirname($module_path);
         if ($this->system->getDirectoryObject()->is_empty(dirname($back_path))) {
             $this->system->exec("rm $back_path -rf");
         }
-        $this->printer->success($module->getName() . __('模块已卸载完成！'));
+        $this->printer->success($module . __('模块已卸载完成！'));
     }
 
     /**
