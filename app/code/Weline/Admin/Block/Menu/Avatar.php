@@ -38,7 +38,7 @@ class Avatar extends \Weline\Framework\View\Block
             $avatar = $user->getAvatar();
         }
         if(empty($avatar)){
-            $avatar = Template::getInstance()->fetchTagSourceFile('statics', $this->config->getConfig('admin_default_avatar', 'Aiweline_Admin'));
+            $avatar = Template::getInstance()->fetchTagSourceFile('statics', $this->config->getConfig('admin_default_avatar', 'Weline_Admin'));
         }
         return $avatar;
     }
