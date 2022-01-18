@@ -234,7 +234,7 @@ class Core
         if (is_file($filename)) {
             $filename_arr = explode('.', $filename);
             $file_ext = end($filename_arr);
-            if ($file_ext === 'css' || $file_ext === 'less' || $file_ext === 'sass') {
+            if ($file_ext === 'css') {
                 $mime_type = 'text/css';
             } else {
                 $fi = new \finfo(FILEINFO_MIME_TYPE);

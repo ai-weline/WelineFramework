@@ -172,7 +172,7 @@ trait TraitTemplate
     {
         $source = trim($source);
         $cache_key = $type . '_' . $source;
-        if ($data = $this->viewCache->get($cache_key)) return $data;
+        if (PROD && $data = $this->viewCache->get($cache_key)) return $data;
         switch ($type) {
             case DataInterface::dir_type_TEMPLATE:
                 list($t_f) = $this->processModuleSourceFilePath($type, $source);
@@ -284,7 +284,7 @@ trait TraitTemplate
             } else if (is_int(strpos($real_path, VENDOR_PATH))) {
                 $url_path = rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace(VENDOR_PATH, '', $real_path)), '/');
             }
-        }else{
+        } else {
             # 检测模块位置
             $url_path = rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace(PUB, '', $real_path)), '/');
         }

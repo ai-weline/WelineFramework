@@ -17,7 +17,7 @@ use Weline\Framework\View\Template;
 
 class Avatar extends \Weline\Framework\View\Block
 {
-    protected $_template = 'Weline_Admin::templates/menu/avatar.phtml';
+    protected $_template = 'Weline_Admin::templates/header/avatar.phtml';
     private $config;
     private $session;
 
