@@ -16,6 +16,7 @@ use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\ModelInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Printing;
+use Weline\Framework\Register\Register;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 use Weline\Framework\System\File\Data\File;

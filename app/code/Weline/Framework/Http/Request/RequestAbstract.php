@@ -269,7 +269,11 @@ abstract class RequestAbstract extends DataObject
 
     public function getUrl(string $path = ''): string
     {
-        return $this->getBaseHost().'/' . $path;
+        $url = $this->getBaseUrl();
+        if ($path) {
+            $url .= '/' . $path;
+        }
+        return $url;
     }
     public function getAdminUrl(string $path = ''): string
     {

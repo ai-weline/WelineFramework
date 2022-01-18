@@ -49,10 +49,10 @@ class AdminUser extends \Weline\Framework\Database\Model
 //            ->alter();
 //        $setup->alterTable()->alterColumn('login_ip', 'login_ip','sess_id',Table::column_type_VARCHAR, 16, '', '登录IP')
 //            ->alter();
-//        # 初始化一个账户
-//        /**@var AdminUser $adminUser */
-//        $adminUser = ObjectManager::getInstance(AdminUser::class);
-//        $adminUser->setUsername('admin')->setPassword('admin')->save();
+        # 初始化一个账户
+        /**@var AdminUser $adminUser */
+        $adminUser = ObjectManager::getInstance(AdminUser::class);
+        $adminUser->setUsername('admin')->setPassword('admin')->save();
     }
 
     /**
