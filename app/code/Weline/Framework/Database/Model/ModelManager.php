@@ -34,48 +34,28 @@ class ModelManager
         $this->printing = $printing;
     }
 
+
     function update(string $module_name, Context $context, string $type)
     {
-        if (DEV) $this->printing->error($module_name . '：模型更新！', '开发');
-
         if (!in_array($type, ['setup', 'upgrade', 'install'])) {
             throw new Exception(__('$type允许的值不在：%1 中', "'setup','upgrade','install'"));
         }
-        $modules = Env::getInstance()->getModuleList();
         foreach ($this->moduleReader->read() as $vendor => $vendor_modules) {
-            # FIXME 内存开销大，以后优化
-            foreach ($vendor_modules as $module => $models) {
-                $module_module_name = $vendor . '_' . $module;
+            foreach ($vendor_modules as $module => $model_files_data) {
+                $module_module_name = Register::moduleName($vendor,$module);
                 # 检测模型模组是否与传入模型相同
-                if ($module_module_name == $module_name) {
-                    if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
-                        /**@var ModelSetup $modelSetup */
-                        $modelSetup = ObjectManager::getInstance(ModelSetup::class);
-                        foreach ($models as $model_path => $model_files) {
-                            /**@var File $model_file */
-                            foreach ($model_files as $model_file) {
-                                /**@var ModelInterface|AbstractModel $model */
-                                $model = ObjectManager::getInstance($model_file->getNamespace() . '\\' . $model_file->getFilename());
-                                $modelSetup->putModel($model);
-                                # 执行模型升级
-                                $model->$type($modelSetup, $context);
-                            }
+                if ($module_module_name === $module_name) {
+                    /**@var ModelSetup $modelSetup */
+                    $modelSetup = ObjectManager::getInstance(ModelSetup::class);
+                    foreach ($model_files_data as $model_path => $model_files) {
+                        /**@var File $model_file */
+                        foreach ($model_files as $model_file) {
+                            /**@var ModelInterface|AbstractModel $model */
+                            $model = ObjectManager::getInstance($model_file->getNamespace() . '\\' . $model_file->getFilename());
+                            $modelSetup->putModel($model);
+                            # 执行模型升级
+                            $model->$type($modelSetup, $context);
                         }
-                    } elseif ('install' === $type) {
-                        /**@var ModelSetup $modelSetup */
-                        $modelSetup = ObjectManager::getInstance(ModelSetup::class);
-                        foreach ($models as $model_path => $model_files) {
-                            /**@var File $model_file */
-                            foreach ($model_files as $model_file) {
-                                /**@var ModelInterface|AbstractModel $model */
-                                $model = ObjectManager::getInstance($model_file->getNamespace() . '\\' . $model_file->getFilename());
-                                $modelSetup->putModel($model);
-                                # 执行模型升级
-                                $model->$type($modelSetup, $context);
-                            }
-                        }
-                    } else {
-                        $this->printing->note(__('请安装 %1 后重试 %2 ！', [$module_name, $type]));
                     }
                 }
             }

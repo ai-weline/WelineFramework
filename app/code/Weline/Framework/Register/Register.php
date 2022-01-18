@@ -48,14 +48,7 @@ class Register implements RegisterDataInterface
                 $code = array_pop($appPathArray);
                 $app = array_pop($appPathArray);
                 # 处理composer安装的模块名
-                $module_rename = '';
-                if (is_int(strpos($module, '-'))) {
-                    $module_arr = explode('-', $module);
-                    foreach ($module_arr as $item) {
-                        $module_rename .= ucfirst($item);
-                    }
-                }
-                $moduleName = ucfirst($vendor) . '_' . ucfirst($module_rename ?: $module);
+                $moduleName = self::moduleName($vendor,$module);
                 # 处理composer安装的模块
                 $app .= DIRECTORY_SEPARATOR;
                 if (is_int(strpos($param, VENDOR_PATH))) {
@@ -112,5 +105,18 @@ class Register implements RegisterDataInterface
         } catch (ConsoleException $exception) {
             throw $exception;
         }
+    }
+
+/*TODO 待搬迁至模组模块*/
+    static function moduleName(string $vendor, string $module_name): string
+    {
+        $module_rename = '';
+        if (is_int(strpos($module_name, '-'))) {
+            $module_arr = explode('-', $module_name);
+            foreach ($module_arr as $item) {
+                $module_rename .= ucfirst($item);
+            }
+        }
+        return ucfirst($vendor) . '_' . ucfirst($module_rename ?: $module_name);
     }
 }
