@@ -1,7 +1,6 @@
 <?php
 /**@var \Weline\Admin\Block\Menu\Avatar $avatar */
 $avatar = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\Menu\Avatar::class);
-p($avatar->getAvatar());
 ?>
 <div class="avatar">
     <img src="<?= $avatar->getAvatar() ?>" alt="头像">
