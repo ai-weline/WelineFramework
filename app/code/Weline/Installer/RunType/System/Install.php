@@ -41,20 +41,11 @@ class Install
 
     public function run(): array
     {
-        // 阻塞等待配置文件写入
-        $break      = false;
-        $wait_times = 1;
-        while (! $break) {
-            $db_conf = Env::getInstance()->reload()->getDbConfig();
-            if ($db_conf) {
-                $break = true;
-            }
-            $wait_times += 1;
-            if ($wait_times === 10) {
-                throw  new Exception('请先安装数据库配置！');
-            }
+        $db_conf = Env::getInstance()->reload()->getDbConfig();
+        if ($db_conf) {
+            return ['data' => [], 'hasErr' => false, 'msg' => '-------  系统安装...  -------'];
+        } else {
+            throw  new Exception('请先安装数据库配置！');
         }
-
-        return ['data' => [], 'hasErr' => false, 'msg' => '-------  系统安装...  -------'];
     }
 }
