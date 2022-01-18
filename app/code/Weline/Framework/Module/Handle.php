@@ -247,7 +247,7 @@ class Handle implements HandleInterface, RegisterInterface
             }
         } else {
             $this->printer->setup("扩展{$module->getName()}安装中...");
-            $this->printer->setup("模型安装install...");
+            $this->printer->note("模型安装install...");
             # 模型安装install
             $modelManager->update($module->getName(), $this->setup_context, 'install');
             // 全新安装
