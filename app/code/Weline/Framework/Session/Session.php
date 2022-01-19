@@ -158,6 +158,11 @@ class Session implements SessionInterface
         return $this->getType() === 'api';
     }
 
+    function isApiBackend(): bool
+    {
+        return $this->getType() === 'api_backend';
+    }
+
     function isFrontend(): bool
     {
         return $this->getType() === 'frontend';
