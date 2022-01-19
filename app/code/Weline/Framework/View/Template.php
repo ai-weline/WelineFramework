@@ -376,4 +376,9 @@ class Template
         return $this->_request->getAdminUrl($path);
     }
 
+    function getRequest(): Request
+    {
+        return ObjectManager::getInstance(Request::class);
+    }
+
 }

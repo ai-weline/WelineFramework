@@ -263,7 +263,6 @@ abstract class AbstractModel extends DataObject
         if ($data) {
             $this->setData($data);
         }
-
         // 保存前
         $this->save_before();
         // save之前事件
@@ -280,22 +279,20 @@ abstract class AbstractModel extends DataObject
                             $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
                         } else {
                             $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
-                            if(is_array($save_result))$save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                            $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                             $this->setData($this->_primary_key, $save_result);
                         }
                     } else {
                         $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
-                        if(is_array($save_result))$save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                        $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                         $this->setData($this->_primary_key, $save_result);
                     }
                 } else {
                     $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
-                    if(is_array($save_result))$save_result = array_shift($save_result)['LAST_INSERT_ID()'];
-                    $this->setData($this->_primary_key, $save_result);
                 }
             } else {
                 $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
-                if(is_array($save_result))$save_result = array_shift($save_result)['LAST_INSERT_ID()'];
+                $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                 $this->setData($this->_primary_key, $save_result);
             }
 
@@ -437,7 +434,7 @@ abstract class AbstractModel extends DataObject
                 $this->fetch_after();
                 $this->clearQuery();
                 # 清除当前查询
-                return $this->getData(self::fetch_data);
+                return $query_data;
             }
             $query_methods = [
                 'getPrepareSql',
@@ -476,7 +473,7 @@ abstract class AbstractModel extends DataObject
     }
 
     /**
-     * @DESC          # 设置取得的珊瑚橘
+     * @DESC          # 设置取得的数据
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
@@ -487,6 +484,19 @@ abstract class AbstractModel extends DataObject
     function setFetchData(array $value): self
     {
         return $this->setData(self::fetch_data, $value);
+    }
+
+    /**
+     * @DESC          # 获取查询数据
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/22 19:32
+     * 参数区：
+     */
+    function getFetchData(): mixed
+    {
+        return $this->getData(self::fetch_data);
     }
 
     function setData($key, $value = null): static
@@ -574,10 +584,6 @@ abstract class AbstractModel extends DataObject
             }
         }
         $_fields[] = $this->_primary_key;
-        $provide_model_fields = 'provideModelFields';
-        if (method_exists($this, $provide_model_fields)) {
-            $_fields = array_merge($_fields, $this->$provide_model_fields());
-        }
         $this->_model_fields = $_fields;
         $this->_cache->set($module__fields_cache_key, $_fields);
         return $_fields;
