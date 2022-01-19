@@ -269,18 +269,32 @@ abstract class RequestAbstract extends DataObject
 
     public function getUrl(string $path = ''): string
     {
-        $url = $this->getBaseUrl();
         if ($path) {
-            $url .= '/' . $path;
+            $url = $this->getBaseHost() . '/' . $path;
+        } else {
+            $url = $this->getBaseUrl();
         }
         return $url;
     }
+
     public function getAdminUrl(string $path = ''): string
     {
-        $path = Env::getInstance()->getConfig('admin') . '/' . $path;
-        $url = $this->getBaseUrl();
+        $base_path = Env::getInstance()->getConfig('admin');
         if ($path) {
-            $url .= '/' . $path;
+            $url = $this->getBaseHost() . '/' . $base_path . '/' . $path;
+        } else {
+            $url = $this->getBaseUrl();
+        }
+        return $url;
+    }
+
+    public function getApiBackendUrl(string $path = ''): string
+    {
+        $base_path = Env::getInstance()->getConfig('api_admin');
+        if ($path) {
+            $url = $this->getBaseHost() . '/' . $base_path . '/' . $path;
+        } else {
+            $url = $this->getBaseUrl();
         }
         return $url;
     }
