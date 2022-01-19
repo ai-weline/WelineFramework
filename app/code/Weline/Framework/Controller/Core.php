@@ -92,7 +92,7 @@ class Core implements Data\DataInterface
     {
         $path = trim($path, '/');
         if (!isset($this->_url)) {
-            $this->_url = $this->_objectManager::getInstance(Url::class);
+            $this->_url = ObjectManager::getInstance(Url::class);
         }
         return $this->_url->build($path);
     }
