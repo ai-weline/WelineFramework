@@ -32,7 +32,7 @@ class Url implements UrlInterface
      */
     function build(string $path): string
     {
-        $pre = $this->request->getBaseHost();
+        $pre = $this->request->getBaseHost().'/';
         if ($this->session->isBackend()) {
             $pre .= '/'.Env::getInstance()->getConfig('admin') . '/';
         }
