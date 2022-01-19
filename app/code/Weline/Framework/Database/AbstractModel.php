@@ -437,7 +437,7 @@ abstract class AbstractModel extends DataObject
                 $this->fetch_after();
                 $this->clearQuery();
                 # 清除当前查询
-                return $query_data;
+                return $this->getData(self::fetch_data);
             }
             $query_methods = [
                 'getPrepareSql',
