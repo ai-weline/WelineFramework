@@ -6,7 +6,7 @@
  * 网址：aiweline.com
  * 论坛：https://bbs.aiweline.com
  */
-if(!function_exists('p')){
+if (!function_exists('p')) {
     /**
      * @DESC         |打印调试
      *
@@ -21,7 +21,7 @@ if(!function_exists('p')){
      * @param bool $pass
      * @param int $trace_deep
      */
-    function p($data = null,  $pass = false, int $trace_deep = 1): void
+    function p($data = null, $pass = false, int $trace_deep = 1): void
     {
 
         // 执行时间
@@ -63,7 +63,14 @@ if(!function_exists('p')){
                     echo $isCli ? PHP_EOL : '<br><pre>';
                     var_dump($data->toArray());
                     echo $isCli ? PHP_EOL : '</div><br><div>调试时间：<br>--' . ($exe_time * 1000) . '(ms/毫秒)<br>--' . $exe_time . '(s/秒)<br></div></div></pre>';
-                    echo $isCli ? PHP_EOL : '</div></pre>';
+                    echo $isCli ? PHP_EOL : '</div>';
+                    echo $isCli ? PHP_EOL : '</div>';
+                    if (DEV) {
+                        echo $isCli ? PHP_EOL : '<b>源数据：</b>';
+                        echo $isCli ? PHP_EOL : '<br>';
+                        var_dump($data);
+                        echo $isCli ? PHP_EOL : '</pre>';
+                    }
                     if (!$pass) {
                         die;
                     }
@@ -87,7 +94,7 @@ if(!function_exists('p')){
         }
     }
 }
-if(!function_exists('pp')){
+if (!function_exists('pp')) {
     /**
      * 打印并跳过
      * @param $data
@@ -97,7 +104,7 @@ if(!function_exists('pp')){
         p($data, 1);
     }
 }
-if(!function_exists('d')){
+if (!function_exists('d')) {
     /**
      * @DESC         |打印调试
      *

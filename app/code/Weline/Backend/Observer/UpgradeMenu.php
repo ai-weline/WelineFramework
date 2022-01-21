@@ -46,7 +46,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 unset($menu['parent'], $_);
                 # 1 存在父资源 检查父资源的 ID
                 if (isset($menu[Menu::fields_PARENT_SOURCE]) && $parent = $menu[Menu::fields_PARENT_SOURCE]) {
-                    $parent = $this->menu->where(Menu::fields_SOURCE, $parent)->find()->fetch();
+                    $parent = $this->menu->where(Menu::fields_SOURCE, $parent)->find();
                     if ($pid = $parent->getId()) {
                         $menu[Menu::fields_PID] = $pid;
                     }
@@ -54,7 +54,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 # 先查询一遍
                 /**@var Menu $menuModel */
                 $this->menu->clearQuery();
-                $menuModel = $this->menu->where(Menu::fields_NAME, $menu[Menu::fields_NAME])->find()->fetch();
+                $menuModel = $this->menu->where(Menu::fields_NAME, $menu[Menu::fields_NAME])->find();
                 $menuModel->forceCheck();
                 # 保存时检测查询数据，存在则更新
                 if($menuModel->getId())$menu[Menu::fields_ID] = $menuModel->getId();

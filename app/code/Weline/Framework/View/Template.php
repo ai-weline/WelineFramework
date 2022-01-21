@@ -365,8 +365,17 @@ class Template
         return preg_replace($pattern, $replacement, $content);
     }
 
-    public function getUrl(string $path): string
+    public function getUrl(string $path, array|bool $params = []): string
     {
+        if (empty($params)) {
+            return $this->_request->getUrl($path);
+        }
+        if (is_array($params)) {
+            return $this->_request->getUrl($path) . '?' . http_build_query($params);
+        }
+        if (is_bool($params) && $params) {
+            return $this->_request->getUrl($path) . '?' . http_build_query($this->_request->getGet());
+        }
         return $this->_request->getUrl($path);
     }
 

@@ -54,9 +54,15 @@ class Response implements ResponseInterface
         exit(include BP . '/404.html');
     }
 
+    public function responseHttpCode($code=200):void
+    {
+        http_response_code($code);
+        exit();
+    }
+
     public function redirect(string $url):void
     {
-        http_response_code(404);
+        http_response_code(200);
         Header("Location:$url");
         exit(0);
     }

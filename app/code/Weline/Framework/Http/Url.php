@@ -26,16 +26,22 @@ class Url implements UrlInterface
         $this->session = $session;
         $this->request = $request;
     }
-
     /**
      * @inheritDoc
      */
-    function build(string $path): string
+    function build(string $path, array $params = []): string
     {
         $pre = $this->request->getBaseHost().'/';
         if ($this->session->isBackend()) {
             $pre .= '/'.Env::getInstance()->getConfig('admin') . '/';
         }
-        return $pre . $path;
+        $path = $pre . $path;
+        if (empty($params)) {
+            return $path;
+        }
+        if (is_array($params)) {
+            return $path . '?' . http_build_query($params);
+        }
+        return $path;
     }
 }

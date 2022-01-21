@@ -37,9 +37,19 @@ class PcController extends Core
         if (empty($this->_eventManager)) $this->_eventManager = ObjectManager::getInstance(EventsManager::class);
     }
 
-    function redirect(string $url)
+    /**
+     * @param string|int $url url或者http状态码
+     * @return void
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    function redirect(string|int $url)
     {
-        $this->getRequest()->getResponse()->redirect($url);
+        if(is_string($url)){
+            $this->getRequest()->getResponse()->redirect($url);
+        }elseif($url=404){
+            $this->getRequest()->getResponse()->responseHttpCode($url);
+        }
     }
 
     function isAllowed(): void

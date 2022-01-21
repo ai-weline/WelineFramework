@@ -50,7 +50,12 @@ use Weline\Framework\Manager\ObjectManager;
  */
 abstract class AbstractModel extends DataObject
 {
-    const fetch_data = 'fetch_data';
+    /**
+     * 对象属性
+     *
+     * @var array
+     */
+    protected array $_data = [];
     const fields_ID = 'id';
     const fields_CREATE_TIME = 'create_time';
     const fields_UPDATE_TIME = 'update_time';
@@ -69,6 +74,8 @@ abstract class AbstractModel extends DataObject
     private ?QueryInterface $_bind_query = null;
     private ?QueryInterface $current_query = null;
     private ?CacheInterface $_cache = null;
+    private array $_fetch_data;
+    private mixed $_query_data;
 
     function __construct(
         array $data = []
@@ -415,12 +422,11 @@ abstract class AbstractModel extends DataObject
             }
             $query_data = $this->getQuery(true)->$method(... $args);
             $this->setQueryData($query_data);
+            if (in_array($method, ['select', 'find'])) {
+                return $this->__call('fetch', []);
+            }
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
-                if (empty($query_data)) {
-                    $this->clearQuery();
-                    return $this->setFetchData([]);
-                }
                 $this->fetch_before();
                 $this->getQuery()->clearQuery();
                 if (is_array($query_data)) {
@@ -443,7 +449,6 @@ abstract class AbstractModel extends DataObject
             if (in_array($method, $query_methods)) {
                 return $query_data;
             }
-
             return $this;
         }
         /**
@@ -454,12 +459,13 @@ abstract class AbstractModel extends DataObject
 
     protected function setQueryData($query_data)
     {
-        return $this->setData('query_data', $query_data);
+        $this->_query_data = $query_data;
+        return $this;
     }
 
     function getQueryData()
     {
-        return $this->getData('query_data');
+        return $this->_query_data;
     }
 
     function fetch_before()
@@ -483,7 +489,8 @@ abstract class AbstractModel extends DataObject
      */
     function setFetchData(array $value): self
     {
-        return $this->setData(self::fetch_data, $value);
+        $this->_fetch_data = $value;
+        return $this;
     }
 
     /**
@@ -496,7 +503,7 @@ abstract class AbstractModel extends DataObject
      */
     function getFetchData(): mixed
     {
-        return $this->getData(self::fetch_data);
+        return $this->_fetch_data;
     }
 
     function setData($key, $value = null): static
@@ -624,6 +631,7 @@ abstract class AbstractModel extends DataObject
         if (is_string($model)) {
             $model = ObjectManager::getInstance($model);
         }
-        return $model->bindQuery($this->getQuery()->join($model->getTable() . ' ' . $alias, $condition, $type));
+        return $this->bindQuery($this->getQuery()->join($model->getTable() . ' ' . $alias, $condition, $type));
     }
 }
+

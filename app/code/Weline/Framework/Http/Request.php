@@ -77,6 +77,32 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $params;
     }
 
+    function getPost(string $key = '')
+    {
+        $data = $_POST;
+        if ($key) {
+            if (isset($data[$key]) && $data = $data[$key]) {
+                return $data;
+            } else {
+                return null;
+            }
+        }
+        return $data;
+    }
+
+    function getGet(string $key = '')
+    {
+        $data = $_GET;
+        if ($key) {
+            if (isset($data[$key]) && $data = $data[$key]) {
+                return $data;
+            } else {
+                return null;
+            }
+        }
+        return $data;
+    }
+
     public function isPost(): bool
     {
         return $this->getMethod() === self::POST;
@@ -100,6 +126,11 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getContentType(): string
     {
         return $this->getServer('CONTENT_TYPE');
+    }
+
+    public function getReferer(): string
+    {
+        return $this->getServer('HTTP_REFERER');
     }
 
     public function getAuth(string $auth_type = 'bearer')
@@ -148,5 +179,21 @@ class Request extends Request\RequestAbstract implements RequestInterface
             }
         }
         return $realip;
+    }
+
+    public function getUrl(string $path = '', array|bool $params = []): string
+    {
+        if ($path) {
+            $url = $this->getBaseHost() . '/' . $path;
+        } else {
+            $url = $this->getBaseUrl();
+        }
+        if (empty($params)) return $url;
+        if (is_array($params)) {
+            $url .= '?' . http_build_query($params);
+        } else if (is_bool($params)) {
+            $url .= '?' . http_build_query($this->getGet());
+        }
+        return $url;
     }
 }
