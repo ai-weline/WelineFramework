@@ -110,9 +110,6 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         }
         # 尝试登录
         $password = trim($this->_request->getParam('password'));
-//            p(password_hash($password, PASSWORD_DEFAULT));
-//            p($adminUsernameUser->getId(),true);
-//            p(password_verify($password, $adminUsernameUser->getPassword()));
         if ($adminUsernameUser->getPassword() && password_verify($password, $adminUsernameUser->getPassword())) {
             $this->_session->login($adminUsernameUser);
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())

@@ -35,10 +35,9 @@ class Menu extends Block
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/16 23:22
      * 参数区：
-     * @return \Weline\Backend\Model\Menu []
      */
-    function getMenus(): array
+    function getMenus()
     {
-        return $this->menu->select()->fetch();
+        return $this->menu->select();
     }
 }

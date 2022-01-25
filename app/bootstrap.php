@@ -28,6 +28,7 @@ try {
 } catch (Exception $exception) {
     exit('自动加载异常：' . $exception->getMessage());
 }
+
 // 尝试加载应用
 try {
     /**
@@ -35,17 +36,20 @@ try {
      */
     \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\App::class)::run();
 } catch (Exception $exception) {
-    if (DEBUG || DEV) {
+    if (DEV) {
         echo '<pre>';
         echo '应用启动失败：<b style="color: red">' . $exception->getMessage() . '</b>' . PHP_EOL;
         echo '错误信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
         var_dump($exception->getTrace());
-        echo 'DEBUG信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
-        var_dump(debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT,100));
-        exit(0);
+        if (DEBUG) {
+            echo 'DEBUG信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
+            echo '<pre>';
+            var_dump(debug_backtrace());
+        }
     } else {
         echo '<pre>';
         echo '<b style="color: red">系统异常，请联系网站管理员进行修复！</b>';
         exit(0);
     }
 }
+//php bin/m system:install --db-type=mysql --db-hostname=127.0.0.1 --db-database=tongji --db-username=tongji --db-password=tongji

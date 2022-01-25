@@ -1,3 +1,9 @@
+@template(Weline_Backend::public/header.phtml)
 <div class="header-wapper">
-    @block(Weline\Admin\Block\Menu\Avatar)
+    <div class="menu">
+        @template(Weline_Backend::blocks/menu.phtml)
+    </div>
+    <div class="user">
+        @block(Weline\Admin\Block\Menu\Avatar)
+    </div>
 </div>

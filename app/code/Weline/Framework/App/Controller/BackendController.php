@@ -54,6 +54,7 @@ class BackendController extends PcController
                     $no_login_redirect_url = $noLoginRedirectUrl->getData('no_login_redirect_url');
                     $this->cache->set($no_login_redirect_url, $no_login_redirect_url);
                 }
+
                 if ($no_login_redirect_url) {
                     $this->redirect($no_login_redirect_url);
                 }

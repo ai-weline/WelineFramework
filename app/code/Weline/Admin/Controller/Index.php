@@ -15,7 +15,7 @@ class Index extends BackendController
 {
     public function index()
     {
-        $this->fetch('Weline_Admin::Index/index');
+        $this->fetch();
     }
 
     public function test(): string

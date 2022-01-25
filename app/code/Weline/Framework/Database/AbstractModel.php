@@ -25,12 +25,12 @@ use Weline\Framework\Manager\ObjectManager;
  * @method QueryInterface table(string $table_name)
  * @method QueryInterface alias(string $table_alias_name)
  * @method QueryInterface update(array $data, string $condition_field = 'id')
- * @method QueryInterface _fields(string $_fields)
+ * @method QueryInterface fields(string $fields)
  * @method QueryInterface join(string $table, string $condition, string $type = 'left')
  * @method QueryInterface where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND')
  * @method QueryInterface limit(int $size, int $offset = 0)
  * @method QueryInterface page(int $page = 1, int $pageSize = 20)
- * @method QueryInterface order(string $_fields, string $sort = 'ASC')
+ * @method QueryInterface order(string $fields, string $sort = 'ASC')
  * @method QueryInterface find()
  * @method QueryInterface select()
  * @method QueryInterface insert(array $data)
@@ -136,6 +136,14 @@ abstract class AbstractModel extends DataObject
         return $this->table;
     }
 
+    function getData(string $key = '', $index = null): mixed
+    {
+        if (empty($key)) {
+            return $this->_data;
+        }
+        return parent::getData($key, $index);
+    }
+
     /**
      * @DESC          # 读取表名
      *
@@ -179,13 +187,24 @@ abstract class AbstractModel extends DataObject
     {
         # 如果绑定了查询
         if ($this->_bind_query) {
+            if (!$keep_condition) {
+                $this->_bind_query->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
+            } else {
+                $this->_bind_query->table($this->getOriginTableName())->identity($this->_primary_key);
+            }
             return $this->_bind_query;
         }
-        # 区分是否保持查询
-        if ($keep_condition) {
-            return $this->connection->getQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
+        if ($this->current_query) {
+            if (!$keep_condition) {
+                $this->current_query->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
+            } else {
+                $this->current_query->table($this->getOriginTableName())->identity($this->_primary_key);
+            }
+            return $this->current_query;
         }
-        return $this->connection->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
+        # 区分是否保持查询
+        $this->current_query = $this->connection->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
+        return $this->current_query;
     }
 
     /**
@@ -631,7 +650,6 @@ abstract class AbstractModel extends DataObject
         if (is_string($model)) {
             $model = ObjectManager::getInstance($model);
         }
-        return $this->bindQuery($this->getQuery()->join($model->getTable() . ' ' . $alias, $condition, $type));
+        return $this->bindQuery($this->getQuery(true)->join($model->getTable() . ' `' . $alias . '`', $condition, $type));
     }
 }
-

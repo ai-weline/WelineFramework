@@ -80,7 +80,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
         if (PROD && $cache_data = $this->cache->get($cache_key)) {
             return $cache_data;
         }
-        $config_value = $this->where([['key', $key], ['area', $area], ['module', $module]])->find()->fetch();
+        $config_value = $this->where([['key', $key], ['area', $area], ['module', $module]])->find();
         $result = null;
         if (isset($config_value['v'])) {
             $result = $config_value['v'];
