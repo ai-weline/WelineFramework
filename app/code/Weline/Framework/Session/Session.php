@@ -10,12 +10,16 @@
 namespace Weline\Framework\Session;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Session\Driver\SessionDriverHandlerInterface;
 
 class Session implements SessionInterface
 {
     const login_KEY = 'WL_USER';
-    const login_IS_OBJ = 'is_object';
+    const login_KEY_ID = 'WL_USER_ID';
+
+    private ?AbstractModel $user = null;
 
     private ?SessionDriverHandlerInterface $session = null;
 
@@ -123,22 +127,28 @@ class Session implements SessionInterface
         return (bool)$this->session->get(self::login_KEY);
     }
 
-    public function login(mixed $user)
+    public function login(string $user, int $user_id): static
     {
-        if (is_object($user)) {
-            $this->session->set(self::login_IS_OBJ, true);
-            $user = serialize($user);
-        }
-        return $this->session->set(self::login_KEY, $user);
+        $this->session->set(self::login_KEY, $user);
+        $this->session->set(self::login_KEY_ID, $user);
+        return $this;
     }
 
-    public function getLoginUser()
+    public function getLoginUser(string $model):?AbstractModel
     {
-        $user = $this->session->get(self::login_KEY);
-        if ($this->session->get(self::login_IS_OBJ)) {
-            $user = unserialize($user);
-        }
-        return $user;
+        if ($this->user) return $this->user;
+        $this->user = ObjectManager::getInstance($model)->load($this->session->get(self::login_KEY_ID));
+        return $this->user;
+    }
+
+    public function getLoginUsername()
+    {
+        return $this->session->get(self::login_KEY);
+    }
+
+    public function getLoginUserID()
+    {
+        return $this->session->get(self::login_KEY_ID);
     }
 
     public function logout(): bool

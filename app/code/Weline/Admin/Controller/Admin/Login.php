@@ -12,6 +12,7 @@ namespace Weline\Admin\Controller\Admin;
 
 use Weline\Admin\Helper\Data;
 use Weline\Admin\Model\AdminUser;
+use Weline\Admin\Session\AdminSession;
 use Weline\Framework\App\Session\BackendSession;
 use Weline\Framework\Manager\MessageManager;
 use Weline\Framework\Manager\ObjectManager;
@@ -111,7 +112,8 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         # 尝试登录
         $password = trim($this->_request->getParam('password'));
         if ($adminUsernameUser->getPassword() && password_verify($password, $adminUsernameUser->getPassword())) {
-            $this->_session->login($adminUsernameUser);
+            # SESSION登录用户
+            $this->getSession()->login($adminUsernameUser->getUsername(),$adminUsernameUser->getId());
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
                 ->setLoginIp($this->_request->clientIP());
             # 重置 尝试登录次数

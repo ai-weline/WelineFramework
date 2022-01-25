@@ -30,13 +30,12 @@ class File implements SessionDriverHandlerInterface
                 mkdir($this->sessionPath, 0700);
             }
             session_save_path($this->sessionPath);
+//            session_set_cookie_params(3600, '/', '127.0.0.1', false, TRUE);
             ini_set('session.save_handler', 'files');
-            $_SESSION = array();
-            if($session_id = isset($_COOKIE['SESSION_ID'])){
-                session_id($session_id);
-            }
+            ini_set('session.auto_start', '0');
+            # 检查session id
+            session_start();
         }
-        session_start();
     }
 
     public function set($name, $value): bool
@@ -68,7 +67,7 @@ class File implements SessionDriverHandlerInterface
         return session_destroy();
     }
 
-    public function getSessionId():string
+    public function getSessionId(): string
     {
         return session_id();
     }

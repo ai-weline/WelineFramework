@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Session;
 
+use Weline\Framework\Database\AbstractModel;
+
 interface SessionInterface
 {
     function getData(string $name);
@@ -18,9 +20,13 @@ interface SessionInterface
 
     function isLogin();
 
-    function login(mixed $user);
+    function login(string $user, int $user_id);
 
-    function getLoginUser();
+    function getLoginUser(string $model): ?AbstractModel;
+
+    function getLoginUsername();
+
+    function getLoginUserID();
 
     function logout();
 

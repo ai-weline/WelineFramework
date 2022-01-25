@@ -13,6 +13,7 @@ namespace Weline\Admin\Block\Menu;
 use Weline\Admin\Model\AdminUser;
 use Weline\Backend\Model\Config;
 use Weline\Framework\App\Session\BackendSession;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Template;
 
 class Avatar extends \Weline\Framework\View\Block
@@ -32,7 +33,7 @@ class Avatar extends \Weline\Framework\View\Block
     function getAvatar()
     {
         /**@var AdminUser $user*/
-        $user = $this->session->getLoginUser();
+        $user_id = $this->session->getLoginUserID();
         $avatar = '';
         if($user){
             $avatar = $user->getAvatar();
