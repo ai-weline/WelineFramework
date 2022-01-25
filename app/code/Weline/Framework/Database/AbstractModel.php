@@ -102,7 +102,18 @@ abstract class AbstractModel extends DataObject
         # 模型属性
         if (empty($this->table)) $this->table = $this->provideTable() ?: $this->processTable();
         if (empty($this->origin_table_name)) $this->origin_table_name = $this->provideTable();
-        if (empty($this->_primary_key)) $this->_primary_key = $this->providePrimaryField() ?: $this->_primary_key_default;
+        if (empty($this->_primary_key)) {
+            if ($this::fields_ID !== $this->_primary_key_default) {
+                $this->_primary_key = $this::fields_ID;
+            } else {
+                $this->_primary_key = $this->providePrimaryField();
+            }
+        };
+    }
+
+    function getIdField(): string
+    {
+        return $this->_primary_key;
     }
 
     public function __sleep()
@@ -645,11 +656,17 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    function joinModel(AbstractModel|string $model, string $alias, $condition, $type = 'LEFT'): AbstractModel
+    function joinModel(AbstractModel|string $model, string $alias = '', $condition = '', $type = 'LEFT'): AbstractModel
     {
         if (is_string($model)) {
+            /**@var Model $model */
             $model = ObjectManager::getInstance($model);
         }
-        return $this->bindQuery($this->getQuery(true)->join($model->getTable() . ' `' . $alias . '`', $condition, $type));
+        # 自动设置条件
+        if (empty($condition)) {
+            $condition = $this->getTable() . ".`{$this->getIdField()}`={$model->getTable()}.`{$model->getIdField()}`";
+        }
+
+        return $this->bindQuery($this->getQuery(true)->join($model->getTable() . ($alias ? ' `' . $alias . '`' : ''), $condition, $type));
     }
 }

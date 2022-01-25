@@ -26,6 +26,6 @@ abstract class Model extends AbstractModel implements ModelInterface
 
     function providePrimaryField(): string
     {
-        return 'id';
+        return $this->_primary_key_default;
     }
 }
