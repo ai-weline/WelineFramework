@@ -664,7 +664,7 @@ abstract class AbstractModel extends DataObject
         }
         # 自动设置条件
         if (empty($condition)) {
-            $condition = $this->getTable() . ".`{$this->getIdField()}`={$model->getTable()}.`{$model->getIdField()}`";
+            $condition =   "main_table.`{$model->getIdField()}`={$model->getTable()}.`{$model->getIdField()}`";
         }
 
         return $this->bindQuery($this->getQuery(true)->join($model->getTable() . ($alias ? ' `' . $alias . '`' : ''), $condition, $type));
