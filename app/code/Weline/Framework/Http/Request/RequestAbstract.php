@@ -108,10 +108,19 @@ abstract class RequestAbstract extends DataObject
      */
     public function getRequestArea(): string
     {
-        $area = match ($this->area_router) {
-            Env::getInstance()->getConfig('admin', 'admin') => DataInterface::type_pc_BACKEND,
-            Env::getInstance()->getConfig('api_admin', 'api_admin') => DataInterface::type_api_BACKEND,
-            default => DataInterface::type_pc_FRONTEND,
+        switch ($this->area_router) {
+            case Env::getInstance()->getConfig('admin', 'admin') :
+                $area = DataInterface::type_pc_BACKEND;
+                $this->setBackend();
+                break;
+            case Env::getInstance()->getConfig('api_admin', 'api_admin') :
+                $area = DataInterface::type_api_BACKEND;
+                $this->setBackend();
+                $this->setApiBackend();
+                break;
+            default :
+                $area = DataInterface::type_pc_FRONTEND;
+                break;
         };
         /**@var EventsManager $eventManager */
         $eventManager = ObjectManager::getInstance(EventsManager::class);
@@ -140,9 +149,34 @@ abstract class RequestAbstract extends DataObject
      * 参数区：
      * @return bool
      */
+    public function setBackend(): static
+    {
+       return $this->setData('backend', true);
+    }
+
+    /**
+     * @DESC          # 是否后端请求
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/14 23:20
+     * 参数区：
+     * @return bool
+     */
     public function isBackend(): bool
     {
-        return is_int(strpos($this->getRequestArea(), \Weline\Framework\Router\DataInterface::area_BACKEND));
+        return $this->getData('backend')?:false;
+    }
+
+
+    public function setApiBackend(): static
+    {
+        return $this->setData('api_backend', true);
+    }
+
+    public function isApiBackend(): bool
+    {
+        return $this->getData('api_backend')?:false;
     }
 
     /**
@@ -267,33 +301,10 @@ abstract class RequestAbstract extends DataObject
         return array_shift($url_path);
     }
 
-    public function getAdminUrl(string $path = ''): string
-    {
-        $base_path = Env::getInstance()->getConfig('admin');
-        if ($path) {
-            $url = $this->getBaseHost() . '/' . $base_path . '/' . $path;
-        } else {
-            $url = $this->getBaseUrl();
-        }
-        return $url;
-    }
-
-    public function getApiBackendUrl(string $path = ''): string
-    {
-        $base_path = Env::getInstance()->getConfig('api_admin');
-        if ($path) {
-            $url = $this->getBaseHost() . '/' . $base_path . '/' . $path;
-        } else {
-            $url = $this->getBaseUrl();
-        }
-        return $url;
-    }
-
     public function getBaseUrl(): string
     {
         $uri = $this->getUri();
         $url_exp = explode('?', rtrim($uri, '/'));
-
         return $this->getBaseHost() . array_shift($url_exp);
     }
 

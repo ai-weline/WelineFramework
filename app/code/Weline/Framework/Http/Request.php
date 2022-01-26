@@ -15,6 +15,7 @@ use Weline\Framework\Manager\ObjectManager;
 class Request extends Request\RequestAbstract implements RequestInterface
 {
     private static Request $instance;
+    private ?Url $url=null;
 
     /**
      * @var RequestFilter
@@ -183,11 +184,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getUrl(string $path = '', array|bool $params = []): string
     {
-        if ($path) {
-            $url = $this->getBaseHost() . '/' . $path;
-        } else {
-            $url = $this->getBaseUrl();
-        }
+        $url = $this->getUrlBuilder()->build($path);
         if (empty($params)) return $url;
         if (is_array($params)) {
             $url .= '?' . http_build_query($params);
@@ -195,5 +192,12 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $url .= '?' . http_build_query($this->getGet());
         }
         return $url;
+    }
+
+    function getUrlBuilder():Url
+    {
+        if ($this->url) return $this->url;
+        $this->url = ObjectManager::getInstance(Url::class);
+        return $this->url;
     }
 }

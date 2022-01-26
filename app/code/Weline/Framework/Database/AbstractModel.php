@@ -452,7 +452,7 @@ abstract class AbstractModel extends DataObject
             }
             $query_data = $this->getQuery(true)->$method(... $args);
             $this->setQueryData($query_data);
-            if (in_array($method, ['select', 'find'])) {
+            if (in_array($method, ['select', 'find','insert'])) {
                 return $this->__call('fetch', []);
             }
             # 拦截fetch返回的数据注入模型
@@ -656,15 +656,26 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    function joinModel(AbstractModel|string $model, string $alias = '', $condition = '', $type = 'LEFT'): AbstractModel
+    function joinModel(AbstractModel|string $model, string $alias = '', $condition = '', $type = 'LEFT',string $fields='*'): AbstractModel
     {
         if (is_string($model)) {
             /**@var Model $model */
             $model = ObjectManager::getInstance($model);
         }
         # 自动设置条件
+        $model_table = $model->getTable();
         if (empty($condition)) {
-            $condition =   "main_table.`{$model->getIdField()}`={$model->getTable()}.`{$model->getIdField()}`";
+            $condition =   "main_table.`{$model->getIdField()}`={$model_table}.`{$model->getIdField()}`";
+        }
+        if($fields==='*'){
+            $model_fields = '';
+            foreach ($model->getModelFields() as $modelField) {
+                $model_fields = $model_table.'.'.$modelField.',';
+            }
+            $model_fields = rtrim($model_fields,',');
+            $this->getQuery(true)->fields($model_fields);
+        }else{
+            $this->getQuery(true)->fields($fields);
         }
 
         return $this->bindQuery($this->getQuery(true)->join($model->getTable() . ($alias ? ' `' . $alias . '`' : ''), $condition, $type));

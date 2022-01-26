@@ -12,7 +12,6 @@ namespace Weline\Framework\Http;
 // TODO 完善返回
 
 
-use JetBrains\PhpStorm\NoReturn;
 
 class Response implements ResponseInterface
 {

@@ -41,7 +41,7 @@ class Session implements SessionInterface
                 $type = 'backend';
             } elseif (is_int(strpos($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('api_admin')))) {
                 $identity_path .= Env::getInstance()->getConfig('api_admin');
-                $type = 'api';
+                $type = 'api_backend';
             }
             if (session_status() !== PHP_SESSION_ACTIVE) {
                 session_set_cookie_params(3600, $identity_path);

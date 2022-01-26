@@ -367,22 +367,17 @@ class Template
 
     public function getUrl(string $path, array|bool $params = []): string
     {
+        $path_url = $this->_request->getUrl($path);
         if (empty($params)) {
-            return $this->_request->getUrl($path);
+            return $path_url;
         }
         if (is_array($params)) {
-            return $this->_request->getUrl($path) . '?' . http_build_query($params);
+            return $path_url . '?' . http_build_query($params);
         }
         if (is_bool($params) && $params) {
-            return $this->_request->getUrl($path) . '?' . http_build_query($this->_request->getGet());
+            return $path_url . '?' . http_build_query($this->_request->getGet());
         }
-        return $this->_request->getUrl($path);
-    }
-
-
-    public function getAdminUrl(string $path): string
-    {
-        return $this->_request->getAdminUrl($path);
+        return $path_url;
     }
 
     function getRequest(): Request

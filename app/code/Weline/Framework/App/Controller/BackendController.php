@@ -14,6 +14,7 @@ use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Controller\PcController;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Session\Session;
 
@@ -31,7 +32,7 @@ class BackendController extends PcController
     function isAllowed(): void
     {
         parent::isAllowed();
-        # 验证除了登录页面以外的所有地址需要登录
+        # 验证除了登录页面以外的所有地址需要登录 FIXME 处理无限跳转问题
         if (!$this->_session->isLogin()) {
             $whitelist_url_cache_key = 'whitelist_url_cache_key';
             $whitelist_url = $this->cache->get($whitelist_url_cache_key);
@@ -52,9 +53,8 @@ class BackendController extends PcController
                     $noLoginRedirectUrl = new DataObject(['no_login_redirect_url' => []]);
                     $evenManager->dispatch('Framework_Router::backend_no_login_redirect_url', ['data' => $noLoginRedirectUrl]);
                     $no_login_redirect_url = $noLoginRedirectUrl->getData('no_login_redirect_url');
-                    $this->cache->set($no_login_redirect_url, $no_login_redirect_url);
+                    $this->cache->set($no_login_url_cache_key, $no_login_redirect_url);
                 }
-
                 if ($no_login_redirect_url) {
                     $this->redirect($no_login_redirect_url);
                 }

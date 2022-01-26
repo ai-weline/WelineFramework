@@ -15,27 +15,30 @@ use Weline\Framework\Session\Session;
 
 class Url implements UrlInterface
 {
-    protected Session $session;
     protected Request $request;
 
     function __construct(
-        Session $session,
         Request $request
     )
     {
-        $this->session = $session;
         $this->request = $request;
     }
+
     /**
      * @inheritDoc
      */
-    function build(string $path, array $params = []): string
+    function build(string $path='', array $params = []): string
     {
-        $pre = $this->request->getBaseHost().'/';
-        if ($this->session->isBackend()) {
-            $pre .= '/'.Env::getInstance()->getConfig('admin') . '/';
+        if(empty($path)){
+            return $this->get_url();
         }
-        $path = $pre . $path;
+        $pre = $this->request->getBaseHost() . '/';
+        if ($this->request->isBackend()) {
+            $pre .= Env::getInstance()->getConfig('admin') . '/';
+        } elseif ($this->request->isApiBackend()) {
+            $pre .= Env::getInstance()->getConfig('api_admin') . '/';
+        }
+        $path = rtrim($pre . $path,'/');
         if (empty($params)) {
             return $path;
         }
@@ -43,5 +46,13 @@ class Url implements UrlInterface
             return $path . '?' . http_build_query($params);
         }
         return $path;
+    }
+
+    function get_url() {
+        $sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
+        $php_self = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
+        $path_info = $_SERVER['PATH_INFO'] ?? '';
+        $relate_url = $_SERVER['REQUEST_URI'] ?? $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
+        return $sys_protocal.($_SERVER['HTTP_HOST'] ?? '').$relate_url;
     }
 }
