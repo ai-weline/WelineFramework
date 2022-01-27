@@ -191,6 +191,21 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
+    function total(string $field = '*'): int
+    {
+        $this->limit(1, 0);
+        $this->fetch_type = 'find';
+        $this->fields = "count({$field})";
+        $this->prepareSql('find');
+        $result = $this->fetch();
+        if (isset($result[$this->fields])) {
+            $result = $result[$this->fields];
+        } else {
+            $result = 0;
+        }
+        return $result;
+    }
+
     function select(): QueryInterface
     {
         $this->fetch_type = __FUNCTION__;
@@ -235,6 +250,9 @@ abstract class Query implements QueryInterface
         switch ($this->fetch_type) {
             case 'find':
                 $result = array_shift($data);
+                if($model_class&&empty($result)){
+                    $result = ObjectManager::make($model_class, ['data' => []], '__construct');
+                }
                 break;
             case 'insert':
                 $result = $this->clearQuery()->query('SELECT LAST_INSERT_ID();')->fetch();
@@ -249,6 +267,7 @@ abstract class Query implements QueryInterface
                 break;
         }
         $this->fetch_type = '';
+        $this->clearQuery();
         return $result;
     }
 

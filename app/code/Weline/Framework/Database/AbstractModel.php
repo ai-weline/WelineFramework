@@ -76,8 +76,8 @@ abstract class AbstractModel extends DataObject
     private ?QueryInterface $_bind_query = null;
     private ?QueryInterface $current_query = null;
     private ?CacheInterface $_cache = null;
-    private array $_fetch_data;
-    private mixed $_query_data;
+    private array $_fetch_data=[];
+    private mixed $_query_data=null;
 
     function __construct(
         array $data = []
