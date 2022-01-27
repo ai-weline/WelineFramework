@@ -481,13 +481,13 @@ abstract class AbstractModel extends DataObject
 
             $query_data = $query->$method(... $args);
             $this->setQueryData($query_data);
-            if (in_array($method, ['select', 'find', 'insert'])) {
-                $result = $this->__call('fetch', []);
-                $this->setFetchData($result);
-                $this->setData($result);
-                $this->clearQuery();
-                return $result;
-            }
+//            if (in_array($method, ['select', 'find', 'insert'])) {
+//                $result = $this->__call('fetch', []);
+//                $this->setFetchData($result);
+//                $this->setData($result);
+//                $this->clearQuery();
+//                return $result;
+//            }
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
                 $this->fetch_before();
