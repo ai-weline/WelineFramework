@@ -237,6 +237,24 @@ abstract class AbstractModel extends DataObject
     }
 
     /**
+     * @DESC         |获取数据库基类
+     *
+     * 参数区：
+     *
+     * @param QueryInterface $query
+     * @return AbstractModel
+     */
+    public function setQuery(QueryInterface $query): static
+    {
+        # 如果绑定了查询
+        if ($this->_bind_query) {
+            $this->_bind_query = $query;
+        }elseif($this->current_query){
+            $this->current_query = $query;
+        }
+        return $this;
+    }
+    /**
      * @DESC          # 获取链接
      *
      * @AUTH  秋枫雁飞
@@ -471,6 +489,17 @@ abstract class AbstractModel extends DataObject
             if ($method == 'total') {
                 return $query->$method(... $args);
             }
+            # 注入选择的模型字段
+            if ($method == 'fields') {
+                $fields = explode(',',...$args);
+                foreach ($fields as &$field) {
+                    if(is_int(strpos($field,'.'))){
+                        $fields_array = explode('.',$field);
+                        $field = array_pop($fields_array);
+                    }
+                }
+                $this->bindModelFields($fields);
+            }
             # 非链式操作的Fetch
             $is_fetch = false;
             # 拦截fetch操作 注入返回的模型
@@ -483,8 +512,10 @@ abstract class AbstractModel extends DataObject
             $this->setQueryData($query_data);
 //            if (in_array($method, ['select', 'find', 'insert'])) {
 //                $result = $this->__call('fetch', []);
-//                $this->setFetchData($result);
-//                $this->setData($result);
+//                if(is_array($result)){
+//                    $this->setFetchData($result);
+//                    $this->setData($result);
+//                }
 //                $this->clearQuery();
 //                return $result;
 //            }
@@ -663,6 +694,11 @@ abstract class AbstractModel extends DataObject
 
     function bindModelFields(array $fields): static
     {
+        foreach ($fields as $key=>$bind_field) {
+            if(in_array($bind_field,$this->_model_fields)){
+                unset($fields[$key]);
+            }
+        }
         $this->_model_fields = array_merge($fields, $this->_model_fields);
         return $this;
     }
@@ -699,9 +735,11 @@ abstract class AbstractModel extends DataObject
 
     function joinModel(AbstractModel|string $model, string $alias = '', $condition = '', $type = 'LEFT', string $fields = '*'): AbstractModel
     {
+        $query = $this->getQuery(true);
         if (is_string($model)) {
             /**@var Model $model */
             $model = ObjectManager::getInstance($model);
+            $model->setQuery($query);
         }
         # 自动设置条件
         $model_table = $model->getTable();
@@ -719,6 +757,6 @@ abstract class AbstractModel extends DataObject
             $this->bindModelFields(explode(',', $fields));
         }
         $this->_joins[] = [$model_table . ($alias ? ' `' . $alias . '`' : ''), $condition, $type];
-        return $this->bindQuery($this->getQuery(true));
+        return $this->bindQuery($query);
     }
 }
