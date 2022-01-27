@@ -199,7 +199,7 @@ abstract class AbstractModel extends DataObject
         if (empty($table)) {
             return $this->processTable();
         }
-        return $this->getConnection()->getConfigProvider()->getPrefix() . '_' . $table;
+        return $this->getConnection()->getConfigProvider()->getPrefix() . $table;
     }
 
     /**
