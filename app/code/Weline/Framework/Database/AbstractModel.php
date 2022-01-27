@@ -132,6 +132,7 @@ abstract class AbstractModel extends DataObject
         $this->__init();
     }
 
+
     /**
      * @DESC          # 处理表名 存在表名则不处理
      *
@@ -156,23 +157,24 @@ abstract class AbstractModel extends DataObject
     function getData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
-            if($this->_data)return $this->_data;
+            if ($this->_data) return $this->_data;
             return $this->getFetchData();
         }
         return parent::getData($key, $index);
     }
+
     function getOriginData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
             $data = [];
-            if(is_int(array_key_first($this->_data))&&($this->_data[0] instanceof DataObject)){
+            if (is_int(array_key_first($this->_data)) && ($this->_data[0] instanceof DataObject)) {
                 foreach ($this->_data as $datum) {
                     $data[] = $datum->getData();
                 }
                 return $data;
             }
-            if(empty($data)){
-                if(is_int(array_key_first($this->getFetchData()))&&($this->getFetchData()[0] instanceof DataObject))
+            if (empty($data)) {
+                if (is_int(array_key_first($this->getFetchData())) && ($this->getFetchData()[0] instanceof DataObject))
                     foreach ($this->getFetchData() as $datum) {
                         $data[] = $datum->getData();
                     }
@@ -189,11 +191,15 @@ abstract class AbstractModel extends DataObject
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/3 20:14
      * 参数区：
+     * @param string $table
      * @return string
      */
-    function getTable(): string
+    function getTable(string $table = ''): string
     {
-        return $this->processTable();
+        if (empty($table)) {
+            return $this->processTable();
+        }
+        return $this->getConnection()->getConfigProvider()->getPrefix() . '_' . $table;
     }
 
     /**
@@ -259,11 +265,12 @@ abstract class AbstractModel extends DataObject
         # 如果绑定了查询
         if ($this->_bind_query) {
             $this->_bind_query = $query;
-        }elseif($this->current_query){
+        } elseif ($this->current_query) {
             $this->current_query = $query;
         }
         return $this;
     }
+
     /**
      * @DESC          # 获取链接
      *
@@ -501,10 +508,10 @@ abstract class AbstractModel extends DataObject
             }
             # 注入选择的模型字段
             if ($method == 'fields') {
-                $fields = explode(',',...$args);
+                $fields = explode(',', ...$args);
                 foreach ($fields as &$field) {
-                    if(is_int(strpos($field,'.'))){
-                        $fields_array = explode('.',$field);
+                    if (is_int(strpos($field, '.'))) {
+                        $fields_array = explode('.', $field);
                         $field = array_pop($fields_array);
                     }
                 }
@@ -704,8 +711,8 @@ abstract class AbstractModel extends DataObject
 
     function bindModelFields(array $fields): static
     {
-        foreach ($fields as $key=>$bind_field) {
-            if(in_array($bind_field,$this->_model_fields)){
+        foreach ($fields as $key => $bind_field) {
+            if (in_array($bind_field, $this->_model_fields)) {
                 unset($fields[$key]);
             }
         }
