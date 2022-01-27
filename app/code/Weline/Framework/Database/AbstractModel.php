@@ -156,17 +156,27 @@ abstract class AbstractModel extends DataObject
     function getData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
-            return $this->_data;
+            if($this->_data)return $this->_data;
+            return $this->getFetchData();
         }
         return parent::getData($key, $index);
     }
     function getOriginData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
+            $data = [];
             if(is_int(array_key_first($this->_data))&&($this->_data[0] instanceof DataObject)){
-                foreach ($this->_data as &$datum) {
-                    $datum = $datum->getData();
+                foreach ($this->_data as $datum) {
+                    $data[] = $datum->getData();
                 }
+                return $data;
+            }
+            if(empty($data)){
+                if(is_int(array_key_first($this->getFetchData()))&&($this->getFetchData()[0] instanceof DataObject))
+                    foreach ($this->getFetchData() as $datum) {
+                        $data[] = $datum->getData();
+                    }
+                return $data;
             }
         }
         return parent::getData($key, $index);
