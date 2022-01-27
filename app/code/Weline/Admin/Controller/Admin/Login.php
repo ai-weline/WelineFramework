@@ -40,7 +40,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     function index()
     {
         if ($this->_session->isLogin()) {
-            $this->redirect($this->getUrl('/'));
+            $this->redirect($this->getUrl('index/index'));
         }
 //        $this->getSession()->delete('backend_disable_login');
         $this->assign('post_url', $this->getUrl('admin/login/post'));
@@ -125,7 +125,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $this->messageManager->addError(__('登录凭据错误！'));
         }
         # 跳转首页
-        $this->redirect($this->getUrl());
+        $this->redirect($this->getUrl('/'));
 
     }
 

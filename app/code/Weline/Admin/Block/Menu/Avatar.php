@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Weline\Admin\Block\Menu;
 
 use Weline\Admin\Model\AdminUser;
+use Weline\Admin\Session\AdminSession;
 use Weline\Backend\Model\Config;
 use Weline\Framework\App\Session\BackendSession;
 use Weline\Framework\Manager\ObjectManager;
@@ -18,22 +19,21 @@ use Weline\Framework\View\Template;
 
 class Avatar extends \Weline\Framework\View\Block
 {
-    protected $_template = 'Weline_Admin::templates/header/avatar.phtml';
-    private $config;
-    private $session;
+    protected  $_template = 'Weline_Admin::templates/header/avatar.phtml';
+    private Config $config;
+    private AdminSession $session;
 
-    function __construct(Config $config, BackendSession $session)
+    function __construct(Config $config, AdminSession $session)
     {
         $this->config = $config;
         $this->session = $session;
-        # FIXME 切换后台主题
         parent::__construct();
     }
 
     function getAvatar()
     {
         /**@var AdminUser $user*/
-        $user_id = $this->session->getLoginUserID();
+        $user = $this->session->getLoginUser();
         $avatar = '';
         if($user){
             $avatar = $user->getAvatar();

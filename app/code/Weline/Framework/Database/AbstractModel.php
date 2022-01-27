@@ -32,6 +32,7 @@ use Weline\Framework\Manager\ObjectManager;
  * @method QueryInterface page(int $page = 1, int $pageSize = 20)
  * @method QueryInterface order(string $fields, string $sort = 'ASC')
  * @method QueryInterface find()
+ * @method QueryInterface total()
  * @method QueryInterface select()
  * @method QueryInterface insert(array $data)
  * @method QueryInterface query(string $sql)
@@ -67,6 +68,7 @@ abstract class AbstractModel extends DataObject
     public string $_primary_key = '';
     public string $_primary_key_default = 'id';
     public array $_fields = [];
+    public array $_joins = [];
     private array $_model_fields = [];
 
     private bool $force_check_flag = false;
@@ -109,6 +111,10 @@ abstract class AbstractModel extends DataObject
                 $this->_primary_key = $this->providePrimaryField();
             }
         };
+        # 字段解析
+        if (empty($this->_fields)) {
+            $this->getModelFields();
+        }
     }
 
     function getIdField(): string
@@ -151,6 +157,17 @@ abstract class AbstractModel extends DataObject
     {
         if (empty($key)) {
             return $this->_data;
+        }
+        return parent::getData($key, $index);
+    }
+    function getOriginData(string $key = '', $index = null): mixed
+    {
+        if (empty($key)) {
+            if(is_int(array_key_first($this->_data))&&($this->_data[0] instanceof DataObject)){
+                foreach ($this->_data as &$datum) {
+                    $datum = $datum->getData();
+                }
+            }
         }
         return parent::getData($key, $index);
     }
@@ -203,6 +220,7 @@ abstract class AbstractModel extends DataObject
             } else {
                 $this->_bind_query->table($this->getOriginTableName())->identity($this->_primary_key);
             }
+            $this->_bind_query->joins = $this->_joins;
             return $this->_bind_query;
         }
         if ($this->current_query) {
@@ -263,6 +281,7 @@ abstract class AbstractModel extends DataObject
         $this->getEvenManager()->dispatch($this->getOriginTableName() . '_model_load_after', ['model' => $this]);
         // 加载之后
         $this->load_after();
+        $this->clearQuery();
         return $this;
     }
 
@@ -443,6 +462,15 @@ abstract class AbstractModel extends DataObject
     {
         // 模型查询
         if (in_array($method, get_class_methods(QueryInterface::class))) {
+            # 某些函数是不需要保持查询的
+            if ($method == 'insert') {
+                $query = $this->getQuery();
+            } else {
+                $query = $this->getQuery(true);
+            }
+            if ($method == 'total') {
+                return $query->$method(... $args);
+            }
             # 非链式操作的Fetch
             $is_fetch = false;
             # 拦截fetch操作 注入返回的模型
@@ -450,10 +478,15 @@ abstract class AbstractModel extends DataObject
                 $args[] = $this::class;
                 $is_fetch = true;
             }
-            $query_data = $this->getQuery(true)->$method(... $args);
+
+            $query_data = $query->$method(... $args);
             $this->setQueryData($query_data);
-            if (in_array($method, ['select', 'find','insert'])) {
-                return $this->__call('fetch', []);
+            if (in_array($method, ['select', 'find', 'insert'])) {
+                $result = $this->__call('fetch', []);
+                $this->setFetchData($result);
+                $this->setData($result);
+                $this->clearQuery();
+                return $result;
             }
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
@@ -464,8 +497,10 @@ abstract class AbstractModel extends DataObject
                 } elseif (is_object($query_data)) {
                     /**@var AbstractModel $query_data */
                     $this->setFetchData($query_data->getData());
+                    $this->setData($query_data->getData());
                 } else {
                     $this->setFetchData([]);
+                    $this->setData([]);
                 }
                 $this->fetch_after();
                 $this->clearQuery();
@@ -626,6 +661,12 @@ abstract class AbstractModel extends DataObject
         return $_fields;
     }
 
+    function bindModelFields(array $fields): static
+    {
+        $this->_model_fields = array_merge($fields, $this->_model_fields);
+        return $this;
+    }
+
     /**
      * @DESC          # 返回模型数据
      *
@@ -656,7 +697,7 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    function joinModel(AbstractModel|string $model, string $alias = '', $condition = '', $type = 'LEFT',string $fields='*'): AbstractModel
+    function joinModel(AbstractModel|string $model, string $alias = '', $condition = '', $type = 'LEFT', string $fields = '*'): AbstractModel
     {
         if (is_string($model)) {
             /**@var Model $model */
@@ -665,19 +706,19 @@ abstract class AbstractModel extends DataObject
         # 自动设置条件
         $model_table = $model->getTable();
         if (empty($condition)) {
-            $condition =   "main_table.`{$model->getIdField()}`={$model_table}.`{$model->getIdField()}`";
+            $condition = "`main_table`.`{$model->getIdField()}`={$model_table}.`{$model->getIdField()}`";
         }
-        if($fields==='*'){
+        if ($fields === '*') {
             $model_fields = '';
             foreach ($model->getModelFields() as $modelField) {
-                $model_fields = $model_table.'.'.$modelField.',';
+                $model_fields .= $modelField . ',';
             }
-            $model_fields = rtrim($model_fields,',');
-            $this->getQuery(true)->fields($model_fields);
-        }else{
-            $this->getQuery(true)->fields($fields);
+            $model_fields = rtrim($model_fields, ',');
+            $this->bindModelFields(explode(',', $model_fields));
+        } else {
+            $this->bindModelFields(explode(',', $fields));
         }
-
-        return $this->bindQuery($this->getQuery(true)->join($model->getTable() . ($alias ? ' `' . $alias . '`' : ''), $condition, $type));
+        $this->_joins[] = [$model_table . ($alias ? ' `' . $alias . '`' : ''), $condition, $type];
+        return $this->bindQuery($this->getQuery(true));
     }
 }

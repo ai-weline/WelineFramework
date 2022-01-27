@@ -16,32 +16,30 @@ use PDOStatement;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Connection\Query\QueryTrait;
-use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Manager\ObjectManager;
-use function PHPUnit\Framework\isInstanceOf;
 
 abstract class Query implements QueryInterface
 {
     use QueryTrait;
 
-    private string $identity_field = 'id';
-    private string $table = '';
-    private string $table_alias = 'main_table';
-    private array $insert = array();
-    private array $joins = array();
-    private string $fields = '*';
-    private array $single_updates = array();
-    private array $updates = array();
-    private array $wheres = array();
-    private array $bound_values = array();
-    private string $limit = '';
-    private array $order = array();
+    public string $identity_field = 'id';
+    public string $table = '';
+    public string $table_alias = 'main_table';
+    public array $insert = array();
+    public array $joins = array();
+    public string $fields = '*';
+    public array $single_updates = array();
+    public array $updates = array();
+    public array $wheres = array();
+    public $bound_values = array();
+    public string $limit = '';
+    public array $order = array();
 
-    private ?PDOStatement $PDOStatement = null;
-    private string $sql = '';
-    private string $additional_sql = '';
+    public ?PDOStatement $PDOStatement = null;
+    public string $sql = '';
+    public string $additional_sql = '';
 
-    private string $fetch_type = '';
+    public string $fetch_type = '';
 
 
     function identity(string $field): QueryInterface

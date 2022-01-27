@@ -15,7 +15,7 @@ use Weline\Framework\Manager\ObjectManager;
 class Request extends Request\RequestAbstract implements RequestInterface
 {
     private static Request $instance;
-    private ?Url $url=null;
+    private ?Url $url = null;
 
     /**
      * @var RequestFilter
@@ -184,6 +184,9 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getUrl(string $path = '', array|bool $params = []): string
     {
+        if (empty($path)) {
+            return $this->getCurrentUrl();
+        }
         $url = $this->getUrlBuilder()->build($path);
         if (empty($params)) return $url;
         if (is_array($params)) {
@@ -194,7 +197,16 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $url;
     }
 
-    function getUrlBuilder():Url
+    function getCurrentUrl()
+    {
+        $sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
+        $php_self = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
+        $path_info = $_SERVER['PATH_INFO'] ?? '';
+        $relate_url = $_SERVER['REQUEST_URI'] ?? $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
+        return $sys_protocal . ($_SERVER['HTTP_HOST'] ?? '') . $relate_url;
+    }
+
+    function getUrlBuilder(): Url
     {
         if ($this->url) return $this->url;
         $this->url = ObjectManager::getInstance(Url::class);

@@ -379,6 +379,24 @@ class Template
         }
         return $path_url;
     }
+    function getAdminUrl(string $path, array|bool $params = []): string
+    {
+        if (empty($path)) {
+            return $this->_request->getCurrentUrl();
+        }
+        $pre = $this->_request->getBaseHost() . '/';
+        if ($this->_request->isBackend()) {
+            $pre .= Env::getInstance()->getConfig('admin') . '/';
+        }
+        $path = rtrim($pre . $path,'/');
+        if (empty($params)) {
+            return $path;
+        }
+        if (is_array($params)) {
+            return $path . '?' . http_build_query($params);
+        }
+        return $path;
+    }
 
     function getRequest(): Request
     {

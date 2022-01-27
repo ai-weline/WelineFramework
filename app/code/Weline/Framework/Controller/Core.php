@@ -90,7 +90,6 @@ class Core implements Data\DataInterface
      */
     function getUrl(string $path = ''): string
     {
-        $path = trim($path, '/');
         if (!isset($this->_url)) {
             $this->_url = ObjectManager::getInstance(Url::class);
         }

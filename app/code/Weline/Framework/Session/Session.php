@@ -130,7 +130,7 @@ class Session implements SessionInterface
     public function login(string $user, int $user_id): static
     {
         $this->session->set(self::login_KEY, $user);
-        $this->session->set(self::login_KEY_ID, $user);
+        $this->session->set(self::login_KEY_ID, $user_id);
         return $this;
     }
 
