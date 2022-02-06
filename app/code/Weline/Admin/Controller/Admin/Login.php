@@ -113,7 +113,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         $password = trim($this->_request->getParam('password'));
         if ($adminUsernameUser->getPassword() && password_verify($password, $adminUsernameUser->getPassword())) {
             # SESSION登录用户
-            $this->getSession()->login($adminUsernameUser->getUsername(),$adminUsernameUser->getId());
+            $this->getSession()->login($adminUsernameUser->getUsername(),(int)$adminUsernameUser->getId());
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
                 ->setLoginIp($this->_request->clientIP());
             # 重置 尝试登录次数
