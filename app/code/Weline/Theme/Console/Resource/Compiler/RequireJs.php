@@ -10,9 +10,13 @@ declare(strict_types=1);
 
 namespace Weline\Theme\Console\Resource\Compiler;
 
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Resource\Compiler;
 
 class RequireJs extends Compiler
 {
-
+    function __init()
+    {
+        $this->setReader(ObjectManager::getInstance(\Weline\Theme\Config\Reader\RequireJs::class));
+    }
 }

@@ -38,6 +38,6 @@ class Menu extends Block
      */
     function getMenus()
     {
-        return $this->menu->select();
+        return $this->menu->select()->fetch();
     }
 }

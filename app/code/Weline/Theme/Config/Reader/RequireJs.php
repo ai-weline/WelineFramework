@@ -50,17 +50,6 @@ class RequireJs extends ResourceReader
         return $this->config_resources;
     }
 
-
-    function explodeGule(string $str, string $flag = ':')
-    {
-        if (is_int(strpos($str, $flag))) {
-            $position = strpos($str, $flag);
-            return [substr($str, 0, $position), substr($str, $position + 1, strlen($str))];
-        } else {
-            return false;
-        }
-    }
-
     protected Template $template;
 
     private function getTemplate()
@@ -75,17 +64,5 @@ class RequireJs extends ResourceReader
     function fetchFile(string $source)
     {
         return $this->getTemplate()->fetchTagSourceFile('statics', $source);
-    }
-
-    function addConfigData(string $area, string $param_name, string $param_value): array
-    {
-        if (isset($this->config_resources[$area][$param_name], $_)) {
-            if (is_array($this->config_resources[$area][$param_name])) {
-                $this->config_resources[$area][$param_name][] = $param_value;
-            }
-        } else {
-            $this->config_resources[$area][$param_name] = $param_value;
-        }
-        return $this->config_resources;
     }
 }

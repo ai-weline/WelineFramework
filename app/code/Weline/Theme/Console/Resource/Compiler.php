@@ -37,6 +37,7 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
         foreach ($args as $arg) {
             if (!in_array($arg, array_keys($this->getTypes()))) {
                 $this->printing->error(__('不存在的编译资源类型：%1，支持的资源类型：%2', [$arg, $this->getTypes(true)]));
+                exit();
             }
             $source_types[] = $arg;
         }
@@ -46,16 +47,14 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
                 $this->printing->warning($key . ':' . $type . __('编译中...'));
                 $key = ucfirst($key);
                 /**@var CompilerInterface $compiler */
-                $compiler = ObjectManager::getInstance("Weline\Theme\Console\Resource\Compiler\\$key")
-                    ->setReader(ObjectManager::getInstance("Weline\Theme\Config\Reader\\$key"));
+                $compiler = ObjectManager::getInstance("Weline\Theme\Console\Resource\Compiler\\$key");
                 $compiler->compile();
             }
         } else {
             foreach ($source_types as $source_type) {
                 $this->printing->warning($source_type . __('编译中...'));
                 /**@var CompilerInterface $compiler */
-                $compiler = ObjectManager::getInstance("Weline\Theme\Console\Resource\Compiler\\$source_type")
-                    ->setReader(ObjectManager::getInstance("Weline\Theme\Config\Reader\\$source_type"));
+                $compiler = ObjectManager::getInstance("Weline\Theme\Console\Resource\Compiler\\$source_type");
                 $compiler->compile();
             }
         }
@@ -67,7 +66,7 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
     function getTypes(bool $to_string = false)
     {
         $data = [
-//            'less' => __('编译less静态资源！'),
+            'less' => __('编译less静态资源！'),
             'requireJs' => __('静态文件：require.config.js编译文件！'),
         ];
         if ($to_string) {

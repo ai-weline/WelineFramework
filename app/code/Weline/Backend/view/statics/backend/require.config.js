@@ -8,6 +8,9 @@ requirejs.config({
             "https://code.bdstatic.com/npm/jquery@3.5.1/dist/jquery.min",
             //如果CDN位置失败，请从此位置加载jquery
             'Weline_Backend/lib/jquery/3.6.0/jquery.min'
+        ],
+        vue: [
+            'Weline_Backend/lib/vue/vue2.6.11.js'
         ]
     }
 });

@@ -33,14 +33,14 @@ abstract class ResourceReader extends \Weline\Framework\Module\File\Reader imple
 
     function getFileList(\Closure $callback = null): array
     {
-        $callback = function ($data) {
+        if (empty($callback)) $callback = function ($data) {
             $need_data = [];
             foreach ($data as $vendor => $module_data) {
                 foreach ($module_data as $name => $dir_data) {
                     foreach ($dir_data as $dir => $dir_files) {
                         /**@var File $dir_file */
                         foreach ($dir_files as $dir_file) {
-                            if ($this->file === $dir_file->getBaseName()) {
+                            if ($this->file === $dir_file->getBaseName() || empty($this->file)) {
                                 $area = 'frontend';
                                 if (is_int(strpos($dir_file->getNamespace(), 'backend'))) {
                                     $area = 'backend';

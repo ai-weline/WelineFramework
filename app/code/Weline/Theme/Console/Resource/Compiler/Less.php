@@ -10,23 +10,18 @@ declare(strict_types=1);
 
 namespace Weline\Theme\Console\Resource\Compiler;
 
-use Weline\Framework\Resource\CompilerInterface;
-use Weline\Theme\Console\Resource\Compiler;
+use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Resource\Compiler;
 
-class Less extends Compiler implements CompilerInterface
+class Less extends Compiler
 {
-    protected $less;
-
     function __init()
     {
-        $this->less = new \Less_Parser();
+        $this->setReader(ObjectManager::getInstance(\Weline\Theme\Config\Reader\Less::class));
     }
 
-    function compile(string $less_file=null, string $out_file=null): bool
+    public function compile(string $source_file = null, string $out_file = null)
     {
-        if($less_file){
-            $this->less->parserFile($less_file, $out_file);
-        }
-        return true;
+        p('等待编译开发...');
     }
 }
