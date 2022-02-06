@@ -36,6 +36,7 @@ class BackendWhitelistUrl implements \Weline\Framework\Event\ObserverInterface
         $data->setData('whitelist_url',array_merge($whitelist,[
             $this->url->build('admin/login/post'),
             $this->url->build('admin/login/verificationCode'),
+            $this->url->build('admin/login/verificationcode'),
             $this->url->build('admin/login/index'),
             $this->url->build('admin/login'),
         ]));

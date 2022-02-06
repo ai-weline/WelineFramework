@@ -151,7 +151,7 @@ abstract class RequestAbstract extends DataObject
      */
     public function setBackend(): static
     {
-       return $this->setData('backend', true);
+        return $this->setData('backend', true);
     }
 
     /**
@@ -165,7 +165,7 @@ abstract class RequestAbstract extends DataObject
      */
     public function isBackend(): bool
     {
-        return $this->getData('backend')?:false;
+        return $this->getData('backend') ?: false;
     }
 
 
@@ -176,7 +176,7 @@ abstract class RequestAbstract extends DataObject
 
     public function isApiBackend(): bool
     {
-        return $this->getData('api_backend')?:false;
+        return $this->getData('api_backend') ?: false;
     }
 
     /**
@@ -324,7 +324,8 @@ abstract class RequestAbstract extends DataObject
 
     public function getBaseHost(): string
     {
-        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . ($this->getServer('SERVER_PORT') !== '80' ? ':' . $this->getServer('SERVER_PORT') : '');
+        $port = $this->getServer('SERVER_PORT');
+        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . (($port !== '80' && $port !== '443') ? ':' . $port : '');
     }
 
     /**
