@@ -41,7 +41,7 @@ class Alter extends TableAbstract implements AlterInterface
     public function addColumn(string $field_name, string $after_column, string $type, ?int $length, string $options, string $comment): AlterInterface
     {
         $type_length = $length ? "{$type}({$length})" : $type;
-        $this->fields[] = "ADD COLUMN `{$field_name}` {$type_length} {$options} " . (empty($after_column) ? '' : "AFTER `{$after_column}`")." COMMENT '{$comment}'";
+        $this->fields[] = "ADD COLUMN `{$field_name}` {$type_length} {$options} COMMENT '{$comment}' " . (empty($after_column) ? 'FIRST' : "AFTER `{$after_column}`");
         return $this;
     }
 
