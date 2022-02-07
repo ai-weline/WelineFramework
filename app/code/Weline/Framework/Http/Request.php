@@ -15,7 +15,6 @@ use Weline\Framework\Manager\ObjectManager;
 class Request extends Request\RequestAbstract implements RequestInterface
 {
     private static Request $instance;
-    private ?Url $url = null;
 
     /**
      * @var RequestFilter
@@ -23,6 +22,12 @@ class Request extends Request\RequestAbstract implements RequestInterface
     protected RequestFilter $_filter;
 
     private string $module_name = '';
+
+    function __init()
+    {
+        parent::__init();
+        $this->setData($this->getParams());
+    }
 
     /**
      * @return string
@@ -184,10 +189,11 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getUrl(string $path = '', array|bool $params = []): string
     {
-        if (empty($path)) {
-            return $this->getCurrentUrl();
+        if ($path) {
+            $url = $this->getBaseHost() . '/' . $path;
+        } else {
+            $url = $this->getBaseUrl();
         }
-        $url = $this->getUrlBuilder()->build($path);
         if (empty($params)) return $url;
         if (is_array($params)) {
             $url .= '?' . http_build_query($params);
@@ -195,21 +201,5 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $url .= '?' . http_build_query($this->getGet());
         }
         return $url;
-    }
-
-    function getCurrentUrl()
-    {
-        $sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
-        $php_self = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
-        $path_info = $_SERVER['PATH_INFO'] ?? '';
-        $relate_url = $_SERVER['REQUEST_URI'] ?? $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
-        return $sys_protocal . ($_SERVER['HTTP_HOST'] ?? '') . $relate_url;
-    }
-
-    function getUrlBuilder(): Url
-    {
-        if ($this->url) return $this->url;
-        $this->url = ObjectManager::getInstance(Url::class);
-        return $this->url;
     }
 }
