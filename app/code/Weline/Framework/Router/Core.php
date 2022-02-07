@@ -46,8 +46,6 @@ class Core
      *
      * 参数区：
      *
-     * @throws Exception
-     * @throws \ReflectionException
      */
     public function __init()
     {

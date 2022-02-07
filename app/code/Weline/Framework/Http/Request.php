@@ -48,6 +48,9 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getParam(string $key)
     {
+        if ($result = $this->getData($key)) {
+            return $result;
+        }
         parse_str($this->getServer('QUERY_STRING'), $params);
         array_shift($params);
         $params = array_merge($params, $_POST);
@@ -76,7 +79,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getBodyParams()
     {
         $params = file_get_contents('php://input');
-        if ($this->getContentType() === self::CONTENT_TYPE['json']) {
+        if (is_int(strpos($this->getContentType(), self::CONTENT_TYPE['json']))) {
             $params = json_decode($params, true);
         }
 
