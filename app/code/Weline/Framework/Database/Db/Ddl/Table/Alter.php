@@ -190,7 +190,7 @@ class Alter extends TableAbstract implements AlterInterface
                         $options = $alter_options;
                     } else {
                         # --是否允许空
-                        if ('YES' === $table_field['Null']) {
+                        if ('' === $options || ('YES' === $table_field['Null'])) {
                             $options .= ' NULL ';
                         } else {
                             $options .= ' NOT NULL ';
@@ -224,7 +224,7 @@ class Alter extends TableAbstract implements AlterInterface
                     try {
                         $this->query($sql)->fetch();
                     } catch (\Exception $exception) {
-                        exit($exception->getMessage(). PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
+                        exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                     }
 
                 }
@@ -234,7 +234,7 @@ class Alter extends TableAbstract implements AlterInterface
                     try {
                         $this->query->query($sql)->fetch();
                     } catch (\Exception $exception) {
-                        exit($exception->getMessage(). PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
+                        exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                     }
                 }
             }
@@ -245,7 +245,7 @@ class Alter extends TableAbstract implements AlterInterface
                 try {
                     $this->query->query($sql);
                 } catch (\Exception $exception) {
-                    exit($exception->getMessage(). PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
+                    exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                 }
             }
             # 是否修改表名
@@ -254,7 +254,7 @@ class Alter extends TableAbstract implements AlterInterface
                 try {
                     $this->query->query($sql)->fetch();
                 } catch (\Exception $exception) {
-                    exit($exception->getMessage(). PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
+                    exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                 }
             }
 
