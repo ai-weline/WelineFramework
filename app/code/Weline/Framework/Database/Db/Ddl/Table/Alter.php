@@ -167,6 +167,15 @@ class Alter extends TableAbstract implements AlterInterface
             $table_fields = $this->getTableColumns();
             # 字段编辑
             foreach ($table_fields as $table_field) {
+                # --如果存在删除数组中则先删除字段
+                if (isset($this->delete_fields[$table_field['Field']])) {
+                    $sql = "ALTER TABLE {$this->table} DROP COLUMN {$table_field['Field']}";
+                    try {
+                        $this->query->query($sql)->fetch();
+                    } catch (\Exception $exception) {
+                        exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
+                    }
+                }
                 # --如果存在修改数组中则修改 暂不删除字段，以免修改字段异常，先修改后删除
                 if (isset($this->alter_fields[$table_field['Field']]) && $alter_field = $this->alter_fields[$table_field['Field']]) {
                     if ($table_field['Field'] !== $alter_field['field_name']) {
@@ -227,15 +236,6 @@ class Alter extends TableAbstract implements AlterInterface
                         exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                     }
 
-                }
-                # --如果存在删除数组中则删除字段
-                if (isset($this->delete_fields[$table_field['Field']])) {
-                    $sql = "ALTER TABLE {$this->table} DROP {$table_field['Field']}";
-                    try {
-                        $this->query->query($sql)->fetch();
-                    } catch (\Exception $exception) {
-                        exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
-                    }
                 }
             }
             # --如果存在要新增的字段
