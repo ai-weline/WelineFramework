@@ -151,9 +151,19 @@ class Alter extends TableAbstract implements AlterInterface
     {
         # --如果存在删除数组中则先删除字段
         foreach ($this->delete_fields as $delete_field) {
-            $sql = "ALTER TABLE {$this->table} DROP COLUMN {$delete_field}";
+            $sql = "ALTER TABLE {$this->table} DROP `{$delete_field}`";
             try {
                 $this->query->query($sql)->fetch();
+            } catch (\Exception $exception) {
+                exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
+            }
+        }
+        # --如果存在要新增的字段
+        if ($this->fields) {
+            $fields = join(',', $this->fields);
+            $sql = "ALTER TABLE {$this->table} $fields";
+            try {
+                $this->query->query($sql);
             } catch (\Exception $exception) {
                 exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
             }
@@ -199,7 +209,7 @@ class Alter extends TableAbstract implements AlterInterface
                         $options = $alter_options;
                     } else {
                         # --是否允许空
-                        if ('' === $options || ('YES' === $table_field['Null'])) {
+                        if ('YES' === $table_field['Null']) {
                             $options .= ' NULL ';
                         } else {
                             $options .= ' NOT NULL ';
@@ -238,16 +248,7 @@ class Alter extends TableAbstract implements AlterInterface
 
                 }
             }
-            # --如果存在要新增的字段
-            if ($this->fields) {
-                $fields = join(',', $this->fields);
-                $sql = "ALTER TABLE {$this->table} $fields";
-                try {
-                    $this->query->query($sql);
-                } catch (\Exception $exception) {
-                    exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
-                }
-            }
+
             # 是否修改表名
             if ($this->new_table_name) {
                 $sql = "ALTER TABLE {$this->table} RENAME TO {$this->new_table_name}";
