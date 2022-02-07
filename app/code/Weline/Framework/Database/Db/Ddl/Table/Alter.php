@@ -41,7 +41,7 @@ class Alter extends TableAbstract implements AlterInterface
     public function addColumn(string $field_name, string $after_column, string $type, ?int $length, string $options, string $comment): AlterInterface
     {
         $type_length = $length ? "{$type}({$length})" : $type;
-        $this->fields[] = "ADD COLUMN `{$field_name}` {$type_length} {$options} COMMENT '{$comment}' AFTER `{$after_column}`";
+        $this->fields[] = "ADD COLUMN `{$field_name}` {$type_length} {$options} " . (empty($after_column) ? '' : "AFTER `{$after_column}`")." COMMENT '{$comment}'";
         return $this;
     }
 
@@ -149,6 +149,15 @@ class Alter extends TableAbstract implements AlterInterface
 
     public function alter(): bool
     {
+        # --如果存在删除数组中则先删除字段
+        foreach ($this->delete_fields as $delete_field) {
+            $sql = "ALTER TABLE {$this->table} DROP COLUMN {$delete_field}";
+            try {
+                $this->query->query($sql)->fetch();
+            } catch (\Exception $exception) {
+                exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
+            }
+        }
         try {
             # 检测更新表注释
             $ddl = $this->getCreateTableSql();
@@ -167,15 +176,6 @@ class Alter extends TableAbstract implements AlterInterface
             $table_fields = $this->getTableColumns();
             # 字段编辑
             foreach ($table_fields as $table_field) {
-                # --如果存在删除数组中则先删除字段
-                if (isset($this->delete_fields[$table_field['Field']])) {
-                    $sql = "ALTER TABLE {$this->table} DROP COLUMN {$table_field['Field']}";
-                    try {
-                        $this->query->query($sql)->fetch();
-                    } catch (\Exception $exception) {
-                        exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
-                    }
-                }
                 # --如果存在修改数组中则修改 暂不删除字段，以免修改字段异常，先修改后删除
                 if (isset($this->alter_fields[$table_field['Field']]) && $alter_field = $this->alter_fields[$table_field['Field']]) {
                     if ($table_field['Field'] !== $alter_field['field_name']) {
