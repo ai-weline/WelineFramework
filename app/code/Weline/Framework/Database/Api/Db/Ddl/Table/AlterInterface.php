@@ -145,4 +145,15 @@ interface AlterInterface extends TableInterface
      * @return AlterInterface
      */
     function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): AlterInterface;
+
+    /**
+     * @DESC          # 添加alter函数进行表更改
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/7 11:55
+     * 参数区：
+     * @return bool
+     */
+    function alter():bool;
 }
