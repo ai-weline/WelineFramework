@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Http;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Http\Request\RequestFilter;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -26,7 +27,9 @@ class Request extends Request\RequestAbstract implements RequestInterface
     function __init()
     {
         parent::__init();
-        $this->setData(array_merge($this->getParams(),$this->getBodyParams()));
+        if (is_array($this->getBodyParams())) {
+            $this->setData(array_merge($this->getParams(), $this->getBodyParams()));
+        }
     }
 
     /**
@@ -61,14 +64,14 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getParams()
     {
-        if($params = $this->getData('params')){
+        if ($params = $this->getData('params')) {
             return $params;
         }
         parse_str($this->getServer('QUERY_STRING'), $params);
         array_shift($params);
         $params = array_merge($params, $_POST);
         $params = array_merge($params, $_GET);
-        $this->setData('params',$params);
+        $this->setData('params', $params);
         return $params;
     }
 
@@ -80,14 +83,14 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getBodyParams()
     {
-        if($params = $this->getData('body_params')){
+        if ($params = $this->getData('body_params')) {
             return $params;
         }
         $params = file_get_contents('php://input');
         if (is_int(strpos($this->getContentType(), self::CONTENT_TYPE['json']))) {
             $params = json_decode($params, true);
         }
-        $this->setData('body_params',$params);
+        $this->setData('body_params', $params);
         return $params;
     }
 
@@ -199,6 +202,38 @@ class Request extends Request\RequestAbstract implements RequestInterface
     {
         if ($path) {
             $url = $this->getBaseHost() . '/' . $path;
+        } else {
+            $url = $this->getBaseUrl();
+        }
+        if (empty($params)) return $url;
+        if (is_array($params)) {
+            $url .= '?' . http_build_query($params);
+        } else if (is_bool($params)) {
+            $url .= '?' . http_build_query($this->getGet());
+        }
+        return $url;
+    }
+
+    public function getAdminUrl(string $path = '', array|bool $params = []): string
+    {
+        if ($path) {
+            $url = $this->getBaseHost() . '/' .Env::getInstance()->getConfig('admin'). '/'. $path;
+        } else {
+            $url = $this->getBaseUrl();
+        }
+        if (empty($params)) return $url;
+        if (is_array($params)) {
+            $url .= '?' . http_build_query($params);
+        } else if (is_bool($params)) {
+            $url .= '?' . http_build_query($this->getGet());
+        }
+        return $url;
+    }
+
+    public function getApiAdminUrl(string $path = '', array|bool $params = []): string
+    {
+        if ($path) {
+            $url = $this->getBaseHost() . '/' .Env::getInstance()->getConfig('api_admin'). '/'. $path;
         } else {
             $url = $this->getBaseUrl();
         }

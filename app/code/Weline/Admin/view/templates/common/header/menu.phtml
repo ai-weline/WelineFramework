@@ -1,0 +1,69 @@
+<?php
+/**@var \Weline\Framework\View\Template $this */
+?>
+<link rel="stylesheet" href="@static(Weline_Admin::backend/lib/bootstrap-5.1.3-examples/navbars/navbar.css)">
+<style>
+    .header-wapper {
+
+    }
+
+    .header-wapper > ul {
+
+    }
+
+    .header-wapper ul li {
+        /*float: left;*/
+    }
+</style>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark" aria-label="Third navbar example">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#"><?=$this->getData('logo_title')?></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample03" aria-controls="navbarsExample03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExample03">
+            <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+                <?php
+                /**@var \Weline\Backend\Block\Menu $menuBlock */
+                $menuBlock = $this->getBlock(\Weline\Backend\Block\Menu::class);
+                $menus = $menuBlock->getMenus();
+                foreach ($menus as $menu) {
+                    $menu_url = $this->_request->getAdminUrl($menu->getAction());
+                    ?>
+                    <li class="nav-item">
+                        <a class="nav-link <?php if ($this->_request->getBaseUri() === $menu_url) {
+                            echo 'active';
+                        } ?>" href="<?= $menu_url; ?>" aria-current="page">
+                            <?= $menu->getName(); ?>
+                        </a>
+                    </li>
+                    <?php
+                }
+                ?>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Link</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled">Disabled</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
+                    <ul class="dropdown-menu" aria-labelledby="dropdown03">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                        <li><a class="dropdown-item" href="#">Another action</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <form>
+                <input class="form-control" type="text" placeholder="Search" aria-label="Search">
+            </form>
+        </div>
+    </div>
+</nav>
+
+<script src="@static(Weline_Admin::backend/lib/bootstrap-5.1.3-dist/js/bootstrap.bundle.min.js)"></script>

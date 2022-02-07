@@ -1,27 +1,9 @@
+<?php
+/**@var \Weline\Framework\View\Template $this */
+?>
 @template(Weline_Admin::header.phtml)
 <link rel="stylesheet" href="@static(Weline_Admin::css/index.css)">
 </head>
-<?php
-/**
- * @var $this \Weline\Framework\View\Template
- */
-?>
-<div class="header-wapper">
-    <ul>
-        <?php
-        /**@var \Weline\Backend\Block\Menu $menuBlock */
-        $menuBlock = $this->getBlock(\Weline\Backend\Block\Menu::class);
-        $menus = $menuBlock->getMenus();
-        foreach ($menus as $menu) {
-            ?>
-            <li>
-                <a href="<?= $menu->getAction(); ?>">
-                    <?= $menu->getName(); ?>
-                </a>
-            </li>
-            <?php
-        }
-        ?>
-    </ul>
-</div>
+<!--Header-->
+@template(Weline_Admin::common/header.phtml)
 @template(Weline_Admin::footer.phtml)
