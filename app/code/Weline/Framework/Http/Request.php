@@ -26,7 +26,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
     function __init()
     {
         parent::__init();
-        $this->setData($this->getParams());
+        $this->setData(array_merge($this->getParams(),$this->getBodyParams()));
     }
 
     /**
@@ -61,28 +61,33 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getParams()
     {
+        if($params = $this->getData('params')){
+            return $params;
+        }
         parse_str($this->getServer('QUERY_STRING'), $params);
         array_shift($params);
         $params = array_merge($params, $_POST);
         $params = array_merge($params, $_GET);
-
+        $this->setData('params',$params);
         return $params;
     }
 
     public function getBodyParam($key)
     {
         $params = $this->getBodyParams();
-
         return $params[$key] ?? null;
     }
 
     public function getBodyParams()
     {
+        if($params = $this->getData('body_params')){
+            return $params;
+        }
         $params = file_get_contents('php://input');
         if (is_int(strpos($this->getContentType(), self::CONTENT_TYPE['json']))) {
             $params = json_decode($params, true);
         }
-
+        $this->setData('body_params',$params);
         return $params;
     }
 
