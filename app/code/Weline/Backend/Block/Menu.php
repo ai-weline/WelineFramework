@@ -29,16 +29,30 @@ class Menu extends Block
         $this->setTemplate('Weline_Backend::blocks/menu.phtml');
     }*/
     /**
-     * @DESC          # 方法描述
+     * @DESC          # 读取菜单
      *
      * @AUTH  秋枫雁飞
      * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/11/16 23:22
+     * @DateTime: 2022/2/9 0:31
+     * 参数区：
+     * @return mixed
+     */
+    public function getMenus(): mixed
+    {
+        return $this->menu->joinModel($this->menu, 't','t.pid=main_table.id','RIGHT')->select()->fetch();
+    }
+
+    /**
+     * @DESC          # 获取菜单树
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/9 0:38
      * 参数区：
      */
-    function getMenus()
-    {
-        p($this->menu->joinModel($this->menu, 't','t.pid=main_table.id')->select()->fetchOrigin());
-        return $this->menu->joinModel($this->menu, 't','t.pid=main_table.id')->select()->fetch();
+    function getMenuTree(){
+        // TODO 返回树形菜单
+        $data = $this->menu->joinModel($this->menu, 't','t.pid=main_table.id','RIGHT')->select()->fetchOrigin();
+        p($data);
     }
 }
