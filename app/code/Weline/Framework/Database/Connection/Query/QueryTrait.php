@@ -175,7 +175,7 @@ trait QueryTrait
                     default:
                         $param = ':' . trim($where[0], '`');
                         # 是sql的字段不添加字段引号(没有值则是sql)
-                        if (empty($where[2])) {
+                        if (null===$where[2]) {
                             $wheres .= '(' . $where[0] . ') ' . $logic;
                         } else {
                             $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
