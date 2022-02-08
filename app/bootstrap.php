@@ -28,6 +28,7 @@ try {
 } catch (Exception $exception) {
     exit('自动加载异常：' . $exception->getMessage());
 }
+// 加载通用函数
 
 // 尝试加载应用
 try {

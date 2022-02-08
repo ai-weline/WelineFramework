@@ -78,6 +78,7 @@ class ObjectManager implements ManagerInterface
         $new_class = self::parserClass($class);
         $arguments = $arguments ?: self::getMethodParams($new_class);
         $refClass = (new \ReflectionClass($new_class));
+//        p($refClass->getAttributes());
         $new_object = $refClass->newInstanceArgs($arguments);
         /*$classAttrs = $refClass->getAttributes();
         foreach ($classAttrs as $key => $classAttr) {

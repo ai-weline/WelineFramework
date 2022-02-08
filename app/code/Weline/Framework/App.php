@@ -114,21 +114,21 @@ class App
             $config = require $env_filename;
         }
         // 助手函数
-        $handle_functions = BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
+        $handle_functions = APP_ETC_PATH . 'functions.php';
         if (is_file($handle_functions)) {
-            require BP . 'app' . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'functions.php';
+            require $handle_functions;
         }
 
         // 调试模式
         if (!defined('DEV')) {
-            define('DEV', isset($config['deploy']) ? $config['deploy'] === 'dev' : false);
+            define('DEV', isset($config['deploy']) && $config['deploy'] === 'dev');
         };
         if (!defined('PROD')) {
-            define('PROD', isset($config['deploy']) ? $config['deploy'] === 'prod' : false);
+            define('PROD', isset($config['deploy']) && $config['deploy'] === 'prod');
         };
         // 代码美化模式
         if (!defined('PHP_CS')) {
-            define('PHP_CS', isset($config['php-cs']) ? $config['php-cs'] : false);
+            define('PHP_CS', $config['php-cs'] ?? false);
         };
         //报告错误
         DEBUG ? error_reporting(E_ALL) : error_reporting(0);
