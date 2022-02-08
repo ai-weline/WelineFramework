@@ -198,50 +198,47 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $realip;
     }
 
-    public function getUrl(string $path = '', array|bool $params = []): string
+    public function getUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
         if ($path) {
             $url = $this->getBaseHost() . '/' . $path;
         } else {
             $url = $this->getBaseUrl();
         }
-        if (empty($params)) return $url;
-        if (is_array($params)) {
+        if ($merge_params) {
+            $url .= '?' . http_build_query(array_merge($params, $this->getGet()));
+        } elseif ($params) {
             $url .= '?' . http_build_query($params);
-        } else if (is_bool($params)) {
-            $url .= '?' . http_build_query($this->getGet());
         }
         return $url;
     }
 
-    public function getAdminUrl(string $path = '', array|bool $params = []): string
+    public function getAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
         if ($path) {
             $url = $this->getBaseHost() . '/' .Env::getInstance()->getConfig('admin'). '/'. $path;
         } else {
             $url = $this->getBaseUrl();
         }
-        if (empty($params)) return $url;
-        if (is_array($params)) {
+        if ($merge_params) {
+            $url .= '?' . http_build_query(array_merge($params, $this->getGet()));
+        } elseif ($params) {
             $url .= '?' . http_build_query($params);
-        } else if (is_bool($params)) {
-            $url .= '?' . http_build_query($this->getGet());
         }
         return $url;
     }
 
-    public function getApiAdminUrl(string $path = '', array|bool $params = []): string
+    public function getApiAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
         if ($path) {
             $url = $this->getBaseHost() . '/' .Env::getInstance()->getConfig('api_admin'). '/'. $path;
         } else {
             $url = $this->getBaseUrl();
         }
-        if (empty($params)) return $url;
-        if (is_array($params)) {
+        if ($merge_params) {
+            $url .= '?' . http_build_query(array_merge($params, $this->getGet()));
+        } elseif ($params) {
             $url .= '?' . http_build_query($params);
-        } else if (is_bool($params)) {
-            $url .= '?' . http_build_query($this->getGet());
         }
         return $url;
     }
