@@ -206,7 +206,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $url = $this->getBaseUrl();
         }
         if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($params, $this->getGet()));
+            $url .= '?' . http_build_query(array_merge($this->getGet(),$params));
         } elseif ($params) {
             $url .= '?' . http_build_query($params);
         }
@@ -221,7 +221,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $url = $this->getBaseUrl();
         }
         if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($params, $this->getGet()));
+            $url .= '?' . http_build_query(array_merge($this->getGet(),$params));
         } elseif ($params) {
             $url .= '?' . http_build_query($params);
         }
@@ -236,7 +236,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $url = $this->getBaseUrl();
         }
         if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($params, $this->getGet()));
+            $url .= '?' . http_build_query(array_merge($this->getGet(),$params));
         } elseif ($params) {
             $url .= '?' . http_build_query($params);
         }
