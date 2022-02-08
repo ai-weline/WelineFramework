@@ -20,6 +20,7 @@ class Menu extends \Weline\Framework\Database\Model
     const table = 'm_backend_menu';
 
     const fields_NAME = 'name';
+    const fields_TITLE = 'title';
     const fields_PID = 'pid';
     const fields_SOURCE = 'source';
     const fields_PARENT_SOURCE = 'parent_source';
@@ -42,18 +43,18 @@ class Menu extends \Weline\Framework\Database\Model
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-//        p($setup->getTable());
-        /*$setup->dropTable();
+        $setup->dropTable();
         $setup->getPrinting()->setup('安装数据表...' . self::table);
         $setup->createTable('后端菜单表')
             ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
             ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
+            ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单标题')
             ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
             ->addColumn(self::fields_SOURCE, TableInterface::column_type_VARCHAR, 255, '', '资源')
             ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
             ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
             ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
-            ->create();*/
+            ->create();
     }
 
     /**
@@ -74,6 +75,7 @@ class Menu extends \Weline\Framework\Database\Model
             $setup->createTable('后端菜单表')
                 ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
                 ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
+                ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单标题')
                 ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
                 ->addColumn(self::fields_SOURCE, TableInterface::column_type_VARCHAR, 255, '', '资源')
                 ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')

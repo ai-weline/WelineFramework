@@ -1,9 +1,11 @@
 <?php
 /**@var \Weline\Framework\View\Template $this */
 ?>
-@template(Weline_Admin::header.phtml)
+@template(Weline_Admin::common/header.phtml)
 <link rel="stylesheet" href="@static(Weline_Admin::css/index.css)">
 </head>
 <!--Header-->
-@template(Weline_Admin::common/header.phtml)
-@template(Weline_Admin::footer.phtml)
+<div class="header-wapper">
+    @template(Weline_Admin::common/header/menu.phtml)
+</div>
+@template(Weline_Admin::common/footer.phtml)
