@@ -58,6 +58,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 $menuModel->forceCheck();
                 # 保存时检测查询数据，存在则更新
                 if($menuModel->getId())$menu[Menu::fields_ID] = $menuModel->getId();
+                $menuModel->clearQuery();
                 $result = $menuModel->setData($menu)->save();
                 # 2 检查自身是否被别的模块作为父分类
                 if ($this_menu_id = $menuModel->getId()&&$is_others_parent = $menuModel->getQuery()->where(Menu::fields_PARENT_SOURCE, $menu[Menu::fields_SOURCE])->select()->fetch()) {
