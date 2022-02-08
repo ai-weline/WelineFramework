@@ -567,6 +567,7 @@ abstract class AbstractModel extends DataObject
             if (in_array($method, $query_methods)) {
                 return $query_data;
             }
+            $this->setQuery($query_data);
             return $this;
         }
         /**
