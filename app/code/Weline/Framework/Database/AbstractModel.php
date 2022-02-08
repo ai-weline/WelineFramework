@@ -76,8 +76,8 @@ abstract class AbstractModel extends DataObject
     private ?QueryInterface $_bind_query = null;
     private ?QueryInterface $current_query = null;
     private ?CacheInterface $_cache = null;
-    private array $_fetch_data=[];
-    private mixed $_query_data=null;
+    private array $_fetch_data = [];
+    private mixed $_query_data = null;
 
     function __construct(
         array $data = []
@@ -154,6 +154,69 @@ abstract class AbstractModel extends DataObject
         return $this->table;
     }
 
+    /**
+     * 归档数据
+     * @param string $period
+     * @param string $field
+     * @return $this
+     */
+    public function period(string $period, string $field = 'main_table.create_time'): static
+    {
+        switch ($period) {
+            case 'all':
+                break;
+            case 'today':
+                #今天
+                $this->where("to_days({$field})=to_days(now())");
+                break;
+            case 'yesterday':
+                #昨天
+                $this->where("TO_DAYS(NOW()) - TO_DAYS({$field}) <= 1");
+                break;
+            case 'current_week':
+                #查询当前这周的数据
+                $this->where("YEARWEEK(date_format({$field},'%Y-%m-%d')) = YEARWEEK(now())");
+                break;
+            case 'near_week':
+                #近7天
+                $this->where("DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date({$field})");
+                break;
+            case 'last_week':
+                #查询上周的数据
+                $this->where("YEARWEEK(date_format(submittime,'%Y-%m-%d')) =YEARWEEK(now())-1");
+                break;
+            case 'near_month':
+                #近30天
+                $this->where("DATE_SUB(CURDATE(), INTERVAL 30 DAY) <=date({$field})");
+                break;
+            case 'current_month':
+                # 本月
+                $this->where("DATE_FORMAT({$field},'%Y%m') =DATE_FORMAT(CURDATE(),'%Y%m')");
+                break;
+            case 'last_month':
+                #上一月
+                $this->where("PERIOD_DIFF(date_format( now(),'%Y%m'),date_format({$field},'%Y%m')) =1");
+                break;
+            case 'quarter':
+                #查询本季度数据
+                $this->where("QUARTER({$field})=QUARTER(now())");
+                break;
+            case 'last_quarter':
+                #查询上季度数据
+                $this->where("QUARTER({$field})=QUARTER(DATE_SUB(now(),interval 1 QUARTER))");
+                break;
+            case 'current_year':
+                #查询本年数据
+                $this->where("YEAR({$field})=YEAR(NOW())");
+                break;
+            case 'last_year':
+                #查询上年数据
+                $this->where("year({$field})=year(date_sub(now(),interval 1 year))");
+                break;
+        }
+        return $this;
+    }
+
     function getData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
@@ -227,7 +290,7 @@ abstract class AbstractModel extends DataObject
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function getQuery(bool $keep_condition = false): QueryInterface
+    public function getQuery(bool $keep_condition = true): QueryInterface
     {
         # 如果绑定了查询
         if ($this->_bind_query) {
@@ -498,10 +561,12 @@ abstract class AbstractModel extends DataObject
         // 模型查询
         if (in_array($method, get_class_methods(QueryInterface::class))) {
             # 某些函数是不需要保持查询的
-            if ($method == 'insert') {
+            if ($method == 'clearQuery') {
+                $query = $this->getQuery(false);
+            } else if ($method == 'insert') {
                 $query = $this->getQuery();
             } else {
-                $query = $this->getQuery(true);
+                $query = $this->getQuery();
             }
             if ($method == 'total') {
                 return $query->$method(... $args);
@@ -544,7 +609,6 @@ abstract class AbstractModel extends DataObject
             # 拦截fetch返回的数据注入模型
             if ($is_fetch) {
                 $this->fetch_before();
-                $this->getQuery()->clearQuery();
                 if (is_array($query_data)) {
                     $this->setFetchData($query_data);
                 } elseif (is_object($query_data)) {
