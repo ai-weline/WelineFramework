@@ -54,27 +54,56 @@ class MenuReader extends Reader
             }
             foreach ($config['menus'] as $menu) {
                 if (isset($menu['add'])) {
-                    $this->checkElementAttribute(
-                        $menu['add'],
-                        'name',
-                        __('菜单配置错诶：add元素缺少name属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
-                    );
-                    $this->checkElementAttribute(
-                        $menu['add'],
-                        'source',
-                        __('菜单配置错诶：add元素缺少source属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
-                    );
-                    $this->checkElementAttribute(
-                        $menu['add'],
-                        'title',
-                        __('菜单配置错诶：add元素缺少title属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
-                    );
-                    $this->checkElementAttribute(
-                        $menu['add'],
-                        'action',
-                        __('菜单配置错诶：add元素缺少action属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
-                    );
-                    if ($menu['add']['_attribute']) $module_menus[$module]['data'][] = $menu['add']['_attribute'];
+                    if(is_array($menu['add'])){
+                        foreach ($menu['add'] as $menu_data) {
+                            if (isset($menu_data['_attribute'])) {
+                                $this->checkElementAttribute(
+                                    $menu_data,
+                                    'name',
+                                    __('菜单配置错诶：add元素缺少name属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                                );
+                                $this->checkElementAttribute(
+                                    $menu_data,
+                                    'source',
+                                    __('菜单配置错诶：add元素缺少source属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                                );
+                                $this->checkElementAttribute(
+                                    $menu_data,
+                                    'title',
+                                    __('菜单配置错诶：add元素缺少title属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                                );
+                                $this->checkElementAttribute(
+                                    $menu_data,
+                                    'action',
+                                    __('菜单配置错诶：add元素缺少action属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                                );
+                                $module_menus[$module]['data'][] = $menu_data['_attribute'];
+                            }
+                        }
+                    }else{
+                        $this->checkElementAttribute(
+                            $menu['add'],
+                            'name',
+                            __('菜单配置错诶：add元素缺少name属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                        );
+                        $this->checkElementAttribute(
+                            $menu['add'],
+                            'source',
+                            __('菜单配置错诶：add元素缺少source属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                        );
+                        $this->checkElementAttribute(
+                            $menu['add'],
+                            'title',
+                            __('菜单配置错诶：add元素缺少title属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                        );
+                        $this->checkElementAttribute(
+                            $menu['add'],
+                            'action',
+                            __('菜单配置错诶：add元素缺少action属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                        );
+                        if ($menu['add']['_attribute']) $module_menus[$module]['data'][] = $menu['add']['_attribute'];
+                    }
+
                 }
             }
         }

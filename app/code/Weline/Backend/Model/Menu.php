@@ -43,7 +43,7 @@ class Menu extends \Weline\Framework\Database\Model
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-        $setup->dropTable();
+        /*$setup->dropTable();
         $setup->getPrinting()->setup('安装数据表...' . self::table);
         $setup->createTable('后端菜单表')
             ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
@@ -54,7 +54,7 @@ class Menu extends \Weline\Framework\Database\Model
             ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
             ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
             ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
-            ->create();
+            ->create();*/
     }
 
     /**

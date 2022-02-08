@@ -2,5 +2,5 @@
 <menus xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
        xs:noNamespaceSchemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd"
        xs:schemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd">
-    <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>
+    <add source="Weline_Backend::dashboard" name="dashboard" title="面板" action="/"/>
 </menus>
