@@ -533,6 +533,10 @@ abstract class AbstractModel extends DataObject
             }
 
             $query_data = $query->$method(... $args);
+            if ('fetchOrigin' === $method) {
+                return $query_data;
+            }
+
             $this->setQueryData($query_data);
 //            if (in_array($method, ['select', 'find', 'insert'])) {
 //                $result = $this->__call('fetch', []);
