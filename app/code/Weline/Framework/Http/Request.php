@@ -205,12 +205,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         } else {
             $url = $this->getBaseUrl();
         }
-        if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($this->getGet(), $params));
-        } elseif ($params) {
-            $url .= '?' . http_build_query($params);
-        }
-        return $url;
+        return $this->extractedUrl($params, $merge_params, $url);
     }
 
     public function getAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
@@ -220,12 +215,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         } else {
             $url = $this->getBaseUrl();
         }
-        if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($this->getGet(), $params));
-        } elseif ($params) {
-            $url .= '?' . http_build_query($params);
-        }
-        return $url;
+        return $this->extractedUrl($params, $merge_params, $url);
     }
 
     public function getApiAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
@@ -235,11 +225,32 @@ class Request extends Request\RequestAbstract implements RequestInterface
         } else {
             $url = $this->getBaseUrl();
         }
-        if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($this->getGet(), $params));
-        } elseif ($params) {
-            $url .= '?' . http_build_query($params);
+        return $this->extractedUrl($params, $merge_params, $url);
+    }
+
+    /**
+     * @DESC          # 提取Url
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/8 23:27
+     * 参数区：
+     * @param array $params
+     * @param bool $merge_params
+     * @param string $url
+     * @return string
+     */
+    public function extractedUrl(array $params, bool $merge_params, string $url): string
+    {
+        if ($params) {
+            if ($merge_params) {
+                $url .= '?' . http_build_query(array_merge($this->getGet(), $params));
+            } else {
+                $url .= '?' . http_build_query($params);
+            }
+        } else {
+            $url .= $this->getGet() ? '?' . http_build_query($this->getGet()) : '';
         }
         return $url;
-    }
+}
 }
