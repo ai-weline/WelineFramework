@@ -274,6 +274,17 @@ interface QueryInterface
     function fetch(string $model_class = ''): mixed;
 
     /**
+     * @DESC          | 查询原始最终的结果
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/8/16 21:09
+     *
+     * @return array
+     */
+    function fetchOrigin(): array;
+
+    /**
      * @DESC          # 清理特定条件
      *
      * @AUTH  秋枫雁飞

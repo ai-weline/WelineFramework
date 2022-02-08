@@ -38,6 +38,7 @@ class Menu extends Block
      */
     function getMenus()
     {
-        return $this->menu->select()->fetch();
+        p($this->menu->joinModel($this->menu, 't','t.pid=main_table.id')->select()->fetch());
+        return $this->menu->joinModel($this->menu, 't','t.pid=main_table.id')->select()->fetch();
     }
 }

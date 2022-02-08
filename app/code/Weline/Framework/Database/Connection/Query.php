@@ -271,6 +271,13 @@ abstract class Query implements QueryInterface
         $this->clearQuery();
         return $result;
     }
+    function fetchOrigin(): array
+    {
+        $this->PDOStatement->execute($this->bound_values);
+        $origin_data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
+        $this->clearQuery();
+        return $origin_data;
+    }
 
 
     function clear(string $type = ''): QueryInterface
