@@ -77,7 +77,23 @@ class ObjectManager implements ManagerInterface
         // 类名规则处理
         $new_class = self::parserClass($class);
         $arguments = $arguments ?: self::getMethodParams($new_class);
-        $new_object = (new ReflectionClass($new_class))->newInstanceArgs($arguments);
+        $refClass = (new \ReflectionClass($new_class));
+        $new_object = $refClass->newInstanceArgs($arguments);
+        /*$classAttrs = $refClass->getAttributes();
+        foreach ($classAttrs as $key => $classAttr) {
+            $value = $classAttr->getName();
+            if ($value === $scanAnno) {
+                $refProperties =  $refClass->getProperties();
+                $obj = $refClass->newInstance();
+                foreach ($refProperties as $key => $refProperty) {
+                    $refProperty = $refClass->getProperty($refProperty->getName());
+                    $propertyAttrs = $refProperty->getAttributes();
+                    $value = $propertyAttrs[0]->getArguments();
+                    $refProperty->setValue($obj, $value[0]);
+                    $container[$class] = $obj;
+                }
+            }
+        }*/
         $new_object = self::initClassInstance($class, $new_object);
 
         self::addInstance($class, $new_object);

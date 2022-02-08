@@ -333,6 +333,11 @@ abstract class Query implements QueryInterface
      * @param string $field
      * @return $this
      */
+    #[period(
+        'all',
+        'today',
+        'yesterday',
+    )]
     public function period(string $period, string $field = 'main_table.create_time'): static
     {
         switch ($period) {
