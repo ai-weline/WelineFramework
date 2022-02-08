@@ -23,6 +23,18 @@ use Weline\Framework\Manager\ObjectManager;
 
 trait QueryTrait
 {
+    public array $conditions = [
+        '>',
+        '<',
+        '>=',
+        '!=',
+        '=<',
+        '<>',
+        'like',
+        'in',
+        'find_in_set',
+        '=',
+    ];
     public ConnectionFactory $connection;
     public CacheInterface $cache;
     public string $db_name = 'default';
@@ -36,7 +48,8 @@ trait QueryTrait
 //        $this->db_name = $connection->getConfigProvider()->getDatabase();
 //        $this->cache = $cache->create();
 //    }
-    function __init(){
+    function __init()
+    {
         $this->connection = ObjectManager::getInstance(ConnectionFactory::class);
         $this->db_name = $this->connection->getConfigProvider()->getDatabase();
         $this->cache = ObjectManager::getInstance(DbCache::class)->create();
@@ -44,7 +57,7 @@ trait QueryTrait
 
     function __sleep()
     {
-        return array('db_name','connection');
+        return array('db_name', 'connection');
     }
 
 
@@ -117,24 +130,11 @@ trait QueryTrait
      */
     private function checkConditionString(array $where_array): string
     {
-        $conditions = [
-            '>',
-            '<',
-            '>=',
-            '!=',
-            '=<',
-            '<>',
-            'like',
-            'in',
-            'find_in_set',
-            '=',
-        ];
-        if (in_array($where_array[1], $conditions)) {
+        if (in_array($where_array[1], $this->conditions)) {
             return $where_array[1];
         } else {
-            $this->exceptionHandle(__('当前错误的条件操作符：%1 ,当前的条件数组：%2, 允许的条件符：%3', [$where_array[1], '["' . implode('","', $where_array) . '"]', '["' . implode('","', $conditions) . '"]']));
+            $this->exceptionHandle(__('当前错误的条件操作符：%1 ,当前的条件数组：%2, 允许的条件符：%3', [$where_array[1], '["' . implode('","', $where_array) . '"]', '["' . implode('","', $this->conditions) . '"]']));
         }
-        return '';
     }
 
     /**
@@ -174,15 +174,20 @@ trait QueryTrait
                     # 默认where逻辑连接符为AND
                     default:
                         $param = ':' . trim($where[0], '`');
-                        $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
-                        # 处理带别名的参数键
-                        $param = str_replace('.', '__', $param) . $key;
-                        $this->bound_values[$param] = (string)$where[2];
-                        $where[2] = match (strtolower($where[1])) {
-                            'in', 'find_in_set' => '(' . $param . ')',
-                            default => $param,
-                        };
-                        $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
+                        # 是sql的字段不添加字段引号(没有值则是sql)
+                        if (empty($where[2])) {
+                            $wheres .= '(' . $where[0] . ') ' . $logic;
+                        } else {
+                            $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
+                            # 处理带别名的参数键
+                            $param = str_replace('.', '__', $param) . $key;
+                            $this->bound_values[$param] = (string)$where[2];
+                            $where[2] = match (strtolower($where[1])) {
+                                'in', 'find_in_set' => '(' . $param . ')',
+                                default => $param,
+                            };
+                            $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
+                        }
                 }
 
             }
@@ -328,6 +333,10 @@ trait QueryTrait
      */
     protected function exceptionHandle($words)
     {
+        if (DEV && DEBUG) {
+            echo '<pre>';
+            var_dump(debug_backtrace());
+        }
         throw new DbException($words);
     }
 }
