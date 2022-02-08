@@ -59,7 +59,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         $params = array_merge($params, $_POST);
         $params = array_merge($params, $_GET);
 
-        return $params[$key] ?: $default;
+        return $params[$key] ?? $default;
     }
 
     public function getParams()
@@ -78,7 +78,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getBodyParam($key, mixed $default = null)
     {
         $params = $this->getBodyParams();
-        return $params[$key] ?: $default;
+        return $params[$key] ?? $default;
     }
 
     public function getBodyParams()
