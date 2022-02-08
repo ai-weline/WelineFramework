@@ -365,19 +365,9 @@ class Template
         return preg_replace($pattern, $replacement, $content);
     }
 
-    public function getUrl(string $path, array|bool $params = []): string
+    public function getUrl(string $path, array $params = [], bool $merge_query = true): string
     {
-        $path_url = $this->_request->getUrl($path);
-        if (empty($params)) {
-            return $path_url;
-        }
-        if (is_array($params)) {
-            return $path_url . '?' . http_build_query($params);
-        }
-        if (is_bool($params) && $params) {
-            return $path_url . '?' . http_build_query($this->_request->getGet());
-        }
-        return $path_url;
+        return $this->_request->getUrl($path,$params,$merge_query);
     }
     function getAdminUrl(string $path, array|bool $params = []): string
     {
