@@ -514,6 +514,11 @@ abstract class AbstractModel extends DataObject
                         $fields_array = explode('.', $field);
                         $field = array_pop($fields_array);
                     }
+                    # 别名
+                    if (is_int(strpos($field, 'as'))) {
+                        $fields_array = explode('as', $field);
+                        $field = array_pop($fields_array);
+                    }
                 }
                 $this->bindModelFields($fields);
             }
