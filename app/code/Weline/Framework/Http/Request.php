@@ -49,7 +49,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $this->getServer('HTTP_' . strtoupper($key));
     }
 
-    public function getParam(string $key)
+    public function getParam(string $key, mixed $default = null)
     {
         if ($result = $this->getData($key)) {
             return $result;
@@ -59,7 +59,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         $params = array_merge($params, $_POST);
         $params = array_merge($params, $_GET);
 
-        return $params[$key] ?? null;
+        return $params[$key] ?: $default;
     }
 
     public function getParams()
@@ -75,10 +75,10 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $params;
     }
 
-    public function getBodyParam($key)
+    public function getBodyParam($key, mixed $default = null)
     {
         $params = $this->getBodyParams();
-        return $params[$key] ?? null;
+        return $params[$key] ?: $default;
     }
 
     public function getBodyParams()
@@ -206,7 +206,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $url = $this->getBaseUrl();
         }
         if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($this->getGet(),$params));
+            $url .= '?' . http_build_query(array_merge($this->getGet(), $params));
         } elseif ($params) {
             $url .= '?' . http_build_query($params);
         }
@@ -216,12 +216,12 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
         if ($path) {
-            $url = $this->getBaseHost() . '/' .Env::getInstance()->getConfig('admin'). '/'. $path;
+            $url = $this->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . '/' . $path;
         } else {
             $url = $this->getBaseUrl();
         }
         if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($this->getGet(),$params));
+            $url .= '?' . http_build_query(array_merge($this->getGet(), $params));
         } elseif ($params) {
             $url .= '?' . http_build_query($params);
         }
@@ -231,12 +231,12 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getApiAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
         if ($path) {
-            $url = $this->getBaseHost() . '/' .Env::getInstance()->getConfig('api_admin'). '/'. $path;
+            $url = $this->getBaseHost() . '/' . Env::getInstance()->getConfig('api_admin') . '/' . $path;
         } else {
             $url = $this->getBaseUrl();
         }
         if ($merge_params) {
-            $url .= '?' . http_build_query(array_merge($this->getGet(),$params));
+            $url .= '?' . http_build_query(array_merge($this->getGet(), $params));
         } elseif ($params) {
             $url .= '?' . http_build_query($params);
         }
