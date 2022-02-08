@@ -251,7 +251,7 @@ abstract class Query implements QueryInterface
         switch ($this->fetch_type) {
             case 'find':
                 $result = array_shift($data);
-                if($model_class&&empty($result)){
+                if ($model_class && empty($result)) {
                     $result = ObjectManager::make($model_class, ['data' => []], '__construct');
                 }
                 break;
@@ -329,15 +329,10 @@ abstract class Query implements QueryInterface
 
     /**
      * 归档数据
-     * @param string $period
+     * @param string $period ['all'=>'全部','today'=>'今天','yesterday'=>'昨天','current_week'=>'这周','near_week'=>'最近一周','last_week'=>'上周','near_month'=>'近三十天','current_month'=>'本月','last_month'=>'上一月','quarter'=>'本季度','last_quarter'=>'上个季度','current_year'=>'今年','last_year'=>'上一年']
      * @param string $field
      * @return $this
      */
-    #[period(
-        'all',
-        'today',
-        'yesterday',
-    )]
     public function period(string $period, string $field = 'main_table.create_time'): static
     {
         switch ($period) {
