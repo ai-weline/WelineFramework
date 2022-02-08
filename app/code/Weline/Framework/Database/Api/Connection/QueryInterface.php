@@ -17,6 +17,7 @@ namespace Weline\Framework\Database\Api\Connection;
 use PDOStatement;
 use Weline\Framework\Database\Connection;
 use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Database\Connection\Query;
 
 interface QueryInterface
 {
@@ -61,6 +62,7 @@ interface QueryInterface
         self::attr_SQL => '',
         self::attr_ADDITIONAL_SQL => '',
     ];
+
     /**
      * @DESC          # 设置主键
      *
@@ -134,7 +136,7 @@ interface QueryInterface
      * @param string $type
      * @return QueryInterface
      */
-    function join(string $table, string $condition, string $type='left'): QueryInterface;
+    function join(string $table, string $condition, string $type = 'left'): QueryInterface;
 
     /**
      * @DESC          | 条件查询
@@ -181,7 +183,7 @@ interface QueryInterface
      * @param int $pageSize
      * @return QueryInterface
      */
-    function page(int $page=1, int $pageSize=20): QueryInterface;
+    function page(int $page = 1, int $pageSize = 20): QueryInterface;
 
     /**
      * @DESC          # 方法描述
@@ -269,7 +271,7 @@ interface QueryInterface
      * @param string $model_class
      * @return mixed
      */
-    function fetch(string $model_class=''): mixed;
+    function fetch(string $model_class = ''): mixed;
 
     /**
      * @DESC          # 清理特定条件
@@ -282,6 +284,7 @@ interface QueryInterface
      * @return QueryInterface
      */
     function clear(string $type = ''): QueryInterface;
+
     /**
      * @DESC          # 清理特定条件
      *
@@ -339,6 +342,14 @@ interface QueryInterface
     function commit(): void;
 
     /**
+     * 归档数据
+     * @param string $period
+     * @param string $field
+     * @return $this
+     */
+    public function period(string $period, string $field = 'main_table.create_time'): static;
+
+    /**
      * @DESC          # 读取最终的sql
      *
      * @AUTH  秋枫雁飞
@@ -348,7 +359,7 @@ interface QueryInterface
      * @param bool $format
      * @return string
      */
-    function getLastSql(bool $format = true):string;
+    function getLastSql(bool $format = true): string;
 
     /**
      * @DESC          # 读取预编译sql
@@ -360,5 +371,5 @@ interface QueryInterface
      * @param bool $format
      * @return string
      */
-    function getPrepareSql(bool $format = true):string;
+    function getPrepareSql(bool $format = true): string;
 }
