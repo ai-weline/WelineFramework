@@ -347,27 +347,27 @@ abstract class Query implements QueryInterface
                 break;
             case 'today':
                 #今天
-                $this->where("to_days({$field})=to_days(now())");
+                $this->where("TO_DAYS({$field})=TO_DAYS(NOW())");
                 break;
             case 'yesterday':
                 #昨天
-                $this->where("TO_DAYS(NOW()) - TO_DAYS({$field}) <= 1");
+                $this->where("DATE({$field}) = DATE(CURDATE()-1)");
                 break;
             case 'current_week':
                 #查询当前这周的数据
-                $this->where("YEARWEEK(date_format({$field},'%Y-%m-%d')) = YEARWEEK(now())");
+                $this->where("YEARWEEK(DATE_FORMAT({$field},'%Y-%m-%d')) = YEARWEEK(NOW())");
                 break;
             case 'near_week':
                 #近7天
-                $this->where("DATE_SUB(CURDATE(), INTERVAL 7 DAY) <=date({$field})");
+                $this->where("DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE({$field})");
                 break;
             case 'last_week':
                 #查询上周的数据
-                $this->where("YEARWEEK(date_format(submittime,'%Y-%m-%d')) =YEARWEEK(now())-1");
+                $this->where("YEARWEEK(DATE_FORMAT({$field},'%Y-%m-%d')) =YEARWEEK(NOW())-1");
                 break;
             case 'near_month':
                 #近30天
-                $this->where("DATE_SUB(CURDATE(), INTERVAL 30 DAY) <=date({$field})");
+                $this->where("DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE({$field})");
                 break;
             case 'current_month':
                 # 本月
@@ -375,15 +375,15 @@ abstract class Query implements QueryInterface
                 break;
             case 'last_month':
                 #上一月
-                $this->where("PERIOD_DIFF(date_format( now(),'%Y%m'),date_format({$field},'%Y%m')) =1");
+                $this->where("PERIOD_DIFF(DATE_FORMAT( NOW(),'%Y%m'),DATE_FORMAT({$field},'%Y%m')) =1");
                 break;
             case 'quarter':
                 #查询本季度数据
-                $this->where("QUARTER({$field})=QUARTER(now())");
+                $this->where("QUARTER({$field})=QUARTER(NOW())");
                 break;
             case 'last_quarter':
                 #查询上季度数据
-                $this->where("QUARTER({$field})=QUARTER(DATE_SUB(now(),interval 1 QUARTER))");
+                $this->where("QUARTER({$field})=QUARTER(DATE_SUB(NOW(),INTERVAL 1 QUARTER))");
                 break;
             case 'current_year':
                 #查询本年数据
@@ -391,7 +391,7 @@ abstract class Query implements QueryInterface
                 break;
             case 'last_year':
                 #查询上年数据
-                $this->where("year({$field})=year(date_sub(now(),interval 1 year))");
+                $this->where("YEAR({$field})=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR))");
                 break;
         }
         return $this;
