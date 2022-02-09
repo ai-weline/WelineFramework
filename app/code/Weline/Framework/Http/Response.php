@@ -46,18 +46,18 @@ class Response implements ResponseInterface
 
     function setData(mixed $data): static
     {
+        /**@var DataObject $dataObject */
+        $dataObject = ObjectManager::getInstance(DataObject::class);
+        $dataObject->setData($data);
         if (str_contains($this->getRequest()->getContentType(), 'application/json')) {
-            echo json_encode($data);
+            header('Content-type: application/json');
+            echo $dataObject->toJson();
         }
-        if (str_contains($this->getRequest()->getContentType(), 'application/xml')) {
-            /**@var DataObject $dataObject */
-            $dataObject = ObjectManager::getInstance(DataObject::class);
-            $dataObject->setData($data);
+        if (str_contains($this->getRequest()->getContentType(), 'text/xml')) {
+            header('Content-type: text/xml');
             echo $dataObject->toXml();
-        } else if (is_string($data)) {
-            echo $data;
-        } else {
-            echo var_export($data, 1);
+        }else {
+            echo $dataObject->toString();
         }
         return $this;
     }

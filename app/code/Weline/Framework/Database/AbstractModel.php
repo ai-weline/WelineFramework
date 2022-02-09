@@ -552,6 +552,7 @@ abstract class AbstractModel extends DataObject
                 $this->fetch_before();
                 if (is_array($query_data)) {
                     $this->setFetchData($query_data);
+                    $this->setData($query_data);
                 } elseif (is_object($query_data)) {
                     /**@var AbstractModel $query_data */
                     $this->setFetchData($query_data->getData());
