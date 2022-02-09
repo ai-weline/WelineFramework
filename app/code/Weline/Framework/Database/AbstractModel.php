@@ -42,6 +42,7 @@ use Weline\Framework\Manager\ObjectManager;
  *
  * @method QueryInterface fetch()
  * @method QueryInterface reset()
+ * @method QueryInterface period(string $period, string $field = 'main_table.create_time'): static
  * @method QueryInterface beginTransaction()
  * @method QueryInterface rollBack()
  * @method QueryInterface commit()
