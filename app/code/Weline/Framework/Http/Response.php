@@ -12,6 +12,7 @@ namespace Weline\Framework\Http;
 // TODO 完善返回
 
 
+use Weline\Framework\Manager\ObjectManager;
 
 class Response implements ResponseInterface
 {
@@ -37,6 +38,22 @@ class Response implements ResponseInterface
         return $this;
     }
 
+    function getRequest(): Request
+    {
+        return ObjectManager::getInstance(Request::class);
+    }
+
+    function setData(mixed $data)
+    {
+        if (str_contains($this->getRequest()->getContentType(), 'application/json')) {
+            echo json_encode($data);
+        } else if (is_string($data)) {
+            echo $data;
+        } else {
+            echo var_export($data, 1);
+        }
+    }
+
     /**
      * @DESC          # 无路由
      *
@@ -45,7 +62,7 @@ class Response implements ResponseInterface
      * @DateTime: 2021/9/7 23:06
      * 参数区：
      */
-    public function noRouter():void
+    public function noRouter(): void
     {
         http_response_code(404);
         @header('http/2.0 404 not found');
@@ -53,13 +70,13 @@ class Response implements ResponseInterface
         exit(include BP . '/404.html');
     }
 
-    public function responseHttpCode($code=200):void
+    public function responseHttpCode($code = 200): void
     {
         http_response_code($code);
         exit();
     }
 
-    public function redirect(string $url):void
+    public function redirect(string $url): void
     {
         http_response_code(200);
         Header("Location:$url");
