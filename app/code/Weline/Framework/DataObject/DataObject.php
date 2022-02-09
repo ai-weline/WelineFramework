@@ -464,7 +464,6 @@ class DataObject implements \ArrayAccess
     public function toString(string $format = ''): array|string
     {
         if (empty($format)) {
-            p($this->getData(),true);
             $result = implode(', ', $this->getData());
         } else {
             preg_match_all('/{{([a-z0-9_]+)}}/is', $format, $matches);
