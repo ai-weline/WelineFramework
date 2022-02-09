@@ -44,7 +44,7 @@ class Response implements ResponseInterface
         return ObjectManager::getInstance(Request::class);
     }
 
-    function setData(mixed $data)
+    function setData(mixed $data): static
     {
         if (str_contains($this->getRequest()->getContentType(), 'application/json')) {
             echo json_encode($data);
@@ -59,6 +59,7 @@ class Response implements ResponseInterface
         } else {
             echo var_export($data, 1);
         }
+        return $this;
     }
 
     /**
