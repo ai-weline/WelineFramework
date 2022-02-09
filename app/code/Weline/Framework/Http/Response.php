@@ -12,6 +12,7 @@ namespace Weline\Framework\Http;
 // TODO 完善返回
 
 
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Manager\ObjectManager;
 
 class Response implements ResponseInterface
@@ -47,6 +48,12 @@ class Response implements ResponseInterface
     {
         if (str_contains($this->getRequest()->getContentType(), 'application/json')) {
             echo json_encode($data);
+        }
+        if (str_contains($this->getRequest()->getContentType(), 'application/xml')) {
+            /**@var DataObject $dataObject */
+            $dataObject = ObjectManager::getInstance(DataObject::class);
+            $dataObject->setData($data);
+            echo $dataObject->toXml();
         } else if (is_string($data)) {
             echo $data;
         } else {
