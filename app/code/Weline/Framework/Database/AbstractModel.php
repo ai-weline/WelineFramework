@@ -361,7 +361,6 @@ abstract class AbstractModel extends DataObject
         // save之前事件
         $this->getEvenManager()->dispatch($this->processTable() . '_model_save_before', ['model' => $this]);
         $this->getQuery()->beginTransaction();
-        $save_result = false;
         try {
             if ($this->getId()) {
                 # 是否强制检查
