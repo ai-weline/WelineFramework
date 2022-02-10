@@ -13,6 +13,7 @@ use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Cache\DbModelCache;
+use Weline\Framework\Database\Connection\Query;
 use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
@@ -42,7 +43,6 @@ use Weline\Framework\Manager\ObjectManager;
  *
  * @method QueryInterface fetch()
  * @method QueryInterface reset()
- * @method QueryInterface period(string $period, string $field = 'main_table.create_time'): static
  * @method QueryInterface beginTransaction()
  * @method QueryInterface rollBack()
  * @method QueryInterface commit()
@@ -98,6 +98,7 @@ abstract class AbstractModel extends DataObject
      */
     public function __init()
     {
+        # 重置查询
         if (!isset($this->_cache)) $this->_cache = ObjectManager::getInstance(DbModelCache::class . 'Factory');
         # 类属性
         if (!isset($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
@@ -476,8 +477,11 @@ abstract class AbstractModel extends DataObject
     {
     }
 
-    function clearData()
+    function clearData(): static
     {
+        $this->_fields=[];
+        $this->_joins=[];
+        $this->_bind_query=null;
         $this->clearQuery();
         $this->clearDataObject();
         return $this;
@@ -534,11 +538,11 @@ abstract class AbstractModel extends DataObject
             }
 
             $query_data = $query->$method(... $args);
+            $this->setQueryData($query_data);
             if ('fetchOrigin' === $method) {
                 return $query_data;
             }
-
-            $this->setQueryData($query_data);
+            # 直接fetch
 //            if (in_array($method, ['select', 'find', 'insert'])) {
 //                $result = $this->__call('fetch', []);
 //                if(is_array($result)){
@@ -581,6 +585,70 @@ abstract class AbstractModel extends DataObject
          * 重载方法
          */
         return parent::__call($method, $args);
+    }
+    /**
+     * 归档数据
+     * @param string $period ['all'=>'全部','today'=>'今天','yesterday'=>'昨天','current_week'=>'这周','near_week'=>'最近一周','last_week'=>'上周','near_month'=>'近三十天','current_month'=>'本月','last_month'=>'上一月','quarter'=>'本季度','last_quarter'=>'上个季度','current_year'=>'今年','last_year'=>'上一年']
+     * @param string $field
+     * @return $this
+     */
+    public function period(string $period, string $field = 'main_table.create_time'): static
+    {
+        switch ($period) {
+            case 'all':
+                break;
+            case 'today':
+                #今天
+                $this->where("TO_DAYS({$field})=TO_DAYS(NOW())");
+                break;
+            case 'yesterday':
+                #昨天
+                $this->where("DATE({$field}) = DATE(CURDATE()-1)");
+                break;
+            case 'current_week':
+                #查询当前这周的数据
+                $this->where("YEARWEEK(DATE_FORMAT({$field},'%Y-%m-%d')) = YEARWEEK(NOW())");
+                break;
+            case 'near_week':
+                #近7天
+                $this->where("DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= DATE({$field})");
+                break;
+            case 'last_week':
+                #查询上周的数据
+                $this->where("YEARWEEK(DATE_FORMAT({$field},'%Y-%m-%d')) =YEARWEEK(NOW())-1");
+                break;
+            case 'near_month':
+                #近30天
+                $this->where("DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= DATE({$field})");
+                break;
+            case 'current_month':
+                # 本月
+                $this->where("DATE_FORMAT({$field},'%Y%m') =DATE_FORMAT(CURDATE(),'%Y%m')");
+                break;
+            case 'last_month':
+                #上一月
+                $this->where("PERIOD_DIFF(DATE_FORMAT( NOW(),'%Y%m'),DATE_FORMAT({$field},'%Y%m')) =1");
+                break;
+            case 'quarter':
+                #查询本季度数据
+                $this->where("QUARTER({$field})=QUARTER(NOW())");
+                break;
+            case 'last_quarter':
+                #查询上季度数据
+                $this->where("QUARTER({$field})=QUARTER(DATE_SUB(NOW(),INTERVAL 1 QUARTER))");
+                break;
+            case 'current_year':
+                #查询本年数据
+                $this->where("YEAR({$field})=YEAR(NOW())");
+                break;
+            case 'last_year':
+                #查询上年数据
+                $this->where("YEAR({$field})=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR))");
+                break;
+            default:
+
+        }
+        return $this;
     }
 
     protected function setQueryData($query_data)
