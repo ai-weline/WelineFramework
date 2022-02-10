@@ -174,14 +174,6 @@ trait TraitTemplate
         $cache_key = $type . '_' . $source;
         if (PROD && $data = $this->viewCache->get($cache_key)) return $data;
         switch ($type) {
-            case DataInterface::dir_type_TEMPLATE:
-                list($t_f) = $this->processModuleSourceFilePath($type, $source);
-                $data = $this->fetch($t_f);
-                break;
-            case DataInterface::dir_type_BASE:
-                list($t_f) = $this->processModuleSourceFilePath($type, $source);
-                $data = $this->fetch($t_f);
-                break;
             case DataInterface::dir_type_STATICS:
                 list($t_f, $module_name) = $this->processModuleSourceFilePath($type, $source);
                 $base_url_path = rtrim($this->statics_dir, DataInterface::dir_type_STATICS);
@@ -198,15 +190,19 @@ trait TraitTemplate
                 }
                 $data = rtrim($this->getUrlPath($base_url_path), DataInterface::dir_type_STATICS) . DIRECTORY_SEPARATOR . $t_f;
                 break;
+            case DataInterface::dir_type_BASE:
+            case DataInterface::dir_type_TEMPLATE:
             default:
+                list($t_f) = $this->processModuleSourceFilePath($type, $source);
+                $data = $this->fetch($t_f);
+                break;
         }
-        if ($data) {
-            $data = str_replace('\\', '/', $data);
-            $data = str_replace('//', '/', $data);
-        };
+
         # 是否静态文件添加
         if ($type === 'statics' && Env::getInstance()->getConfig('static_file_rand_version')) {
             $version = random_int(10000, 100000);
+            $data = str_replace('\\', '/', $data);
+            $data = str_replace('//', '/', $data);
             $data .= '?v=' . $version;
         }
         $this->viewCache->set($cache_key, $data);

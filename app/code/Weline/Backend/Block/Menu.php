@@ -39,7 +39,7 @@ class Menu extends Block
      */
     public function getMenus(): mixed
     {
-        return $this->menu->joinModel($this->menu, 't','t.pid=main_table.id','RIGHT')->select()->fetch();
+        return $this->menu->select()->fetch();
     }
 
     /**

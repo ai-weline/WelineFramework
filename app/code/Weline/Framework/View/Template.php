@@ -279,7 +279,7 @@ class Template
         # 是否显示模板路径
         //包含编译后的文件
         require $comFileName;
-
+        return file_get_contents($comFileName);
     }
 
     /**
@@ -289,6 +289,7 @@ class Template
      *
      * @param $content
      * @return string|string[]|null
+     * @throws Core
      */
     private function tmp_replace($content): array|string|null
     {
@@ -302,7 +303,7 @@ class Template
         foreach ($replaces as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);
         }
-        $pattern = [
+        $patterns = [
             '/\<\!--\s*\$([a-zA-Z]*)\s*--\>/',
             '/\@\{(.*)\}/',
             '/\@include (.*)/',
@@ -362,13 +363,33 @@ class Template
 //        foreach($data as $loop_k_v[0]=>$loop_k_v[1]){
 //            echo $loop_str;
 //        }
-        return preg_replace($pattern, $replacement, $content);
+        # 开发环境实时PHP代码输出资源
+//        if (DEV) {
+//            return preg_replace($patterns, $replacement, $content);
+//        }
+        # 非开发环境编译到缓存文件
+        return preg_replace_callback($patterns, function ($back) {
+            $back[0] = str_replace($back[1], '', $back[0]);
+//            switch (strtolower($back[0])){
+//                case '@template()':
+//                    p($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
+//            }
+            return match (strtolower($back[0])) {
+                '@static()' => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1])),
+                '@block()' => $this->getBlock(trim($back[1])),
+                '@template()' => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])),
+                '@include()' => file_get_contents(trim($back[1])),
+                '@view()' => $this->fetch(trim($back[1])),
+                '@p()' => "<?php p($back[1])?>",
+            };
+        }, $content);
     }
 
     public function getUrl(string $path, array $params = [], bool $merge_query = true): string
     {
-        return $this->_request->getUrl($path,$params,$merge_query);
+        return $this->_request->getUrl($path, $params, $merge_query);
     }
+
     function getAdminUrl(string $path, array|bool $params = []): string
     {
         if (empty($path)) {
@@ -378,7 +399,7 @@ class Template
         if ($this->_request->isBackend()) {
             $pre .= Env::getInstance()->getConfig('admin') . '/';
         }
-        $path = rtrim($pre . $path,'/');
+        $path = rtrim($pre . $path, '/');
         if (empty($params)) {
             return $path;
         }
