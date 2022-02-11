@@ -28,14 +28,16 @@ class Create extends TableAbstract implements CreateInterface
     {
         # 数字字段
         if ($type === TableInterface::column_type_INTEGER) {
-            if ($length <= 2) {
-                $type = 'smallint';
-            }
-            if (2 < $length and $length <= 11) {
+            if (is_int($length)) {
+                if ($length <= 2) {
+                    $type = 'smallint';
+                } else if (2 < $length and $length <= 11) {
+                    $type = 'int';
+                } elseif (11 < $length) {
+                    $type = 'bigint';
+                }
+            } else {
                 $type = 'int';
-            }
-            if (11 < $length) {
-                $type = 'bigint';
             }
         }
         $type_length = $length ? "{$type}({$length})" : $type;
@@ -182,7 +184,7 @@ createSQL;
         try {
             $result = $this->connection->query($sql);
         } catch (\Exception $exception) {
-            throw new Exception(__('创建表失败，'.PHP_EOL.PHP_EOL.'SQL：%1 '.PHP_EOL.PHP_EOL.'ERROR：%2',[$sql,$exception->getMessage()]));
+            throw new Exception(__('创建表失败，' . PHP_EOL . PHP_EOL . 'SQL：%1 ' . PHP_EOL . PHP_EOL . 'ERROR：%2', [$sql, $exception->getMessage()]));
         }
         return $result;
     }
