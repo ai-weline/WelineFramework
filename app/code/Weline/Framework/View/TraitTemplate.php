@@ -194,7 +194,7 @@ trait TraitTemplate
             case DataInterface::dir_type_TEMPLATE:
             default:
                 list($t_f) = $this->processModuleSourceFilePath($type, $source);
-                $data = $this->fetch($t_f);
+                $data = $this->getFetchFile($t_f);
                 break;
         }
 

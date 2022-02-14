@@ -20,7 +20,7 @@ class  Block extends DataObject implements BlockInterface
 {
     protected ?CacheInterface $_cache = null;
     protected ?Template $engine = null;
-    protected $_template='';
+    protected string $_template = '';
 
     function __construct(array $data = [])
     {
@@ -29,9 +29,9 @@ class  Block extends DataObject implements BlockInterface
         if (empty($this->engine)) $this->engine = Template::getInstance()->init();
     }
 
-    function setTemplate(string $template='')
+    function setTemplate(string $template = '')
     {
-        if(empty($template)&&isset($this->_template)){
+        if (empty($template) && isset($this->_template)) {
             $template = $this->_template;
         }
         if (is_bool(strpos($template, '::'))) {
@@ -47,7 +47,7 @@ class  Block extends DataObject implements BlockInterface
     function getTemplate(): string
     {
         $template = $this->getData('template');
-        if(empty($template)&&isset($this->_template)){
+        if (empty($template) && isset($this->_template)) {
             $template = $this->_template;
         }
         return $template;
@@ -60,13 +60,12 @@ class  Block extends DataObject implements BlockInterface
 
     function render()
     {
-        return $this->engine->getFetchFile($this->getTemplate());
+        $block = $this;
+        return $this->engine->fetchHtml($this->getTemplate());
     }
 
     function __toString()
     {
-        $block = $this;
-        require $this->render();
-        return '';
+        return $this->render();
     }
 }

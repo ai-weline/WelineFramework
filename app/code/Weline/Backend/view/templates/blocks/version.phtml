@@ -11,5 +11,5 @@ declare(strict_types=1);
  $block = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\Version::class);
  ?>
  <div class="version">
- <p><?=$block->getVersion()?></p>
+ <p><?php echo $block->getVersion()?></p>
  </div>

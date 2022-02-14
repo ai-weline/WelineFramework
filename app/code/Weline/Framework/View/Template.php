@@ -183,6 +183,22 @@ class Template
         return $this;
     }
 
+    /**
+     * @DESC          # 设置数据
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/14 19:55
+     * 参数区：
+     * @param array $data 变量数组
+     * @return $this
+     */
+    function setData(array $data): static
+    {
+        $this->vars = array_merge($this->vars, $data);
+        return $this;
+    }
+
 
     function getFetchFile(string $fileName): string
     {
@@ -269,17 +285,43 @@ class Template
      *
      * 参数区：
      *
-     * @param string $fileName
+     * @param string $fileName 获取的模板名
+     * @param array $dictionary 参数绑定
      * @return bool|void
-     * @throws Core
+     * @throws \Exception
      */
-    public function fetch(string $fileName)
+    public function fetch(string $fileName, array $dictionary=[])
     {
         $comFileName = $this->getFetchFile($fileName);
-        # 是否显示模板路径
-        //包含编译后的文件
+        /** Get output buffer. */
+        # FIXME 是否显示模板路径
         require $comFileName;
-        return file_get_contents($comFileName);
+    }
+    /**
+     * @DESC         |调用模板显示
+     *
+     * 参数区：
+     *
+     * @param string $fileName 获取的模板名
+     * @param array $dictionary 参数绑定
+     * @return bool|void
+     * @throws \Exception
+     */
+    public function fetchHtml(string $fileName, array $dictionary=[])
+    {
+        $comFileName = $this->getFetchFile($fileName);
+        ob_start();
+        try {
+            extract($dictionary, EXTR_SKIP);
+            $this->setData($dictionary);
+            include $comFileName;
+        } catch (\Exception $exception) {
+            ob_end_clean();
+            throw $exception;
+        }
+        /** Get output buffer. */
+        # FIXME 是否显示模板路径
+        return ob_get_clean();
     }
 
     /**
@@ -322,7 +364,7 @@ class Template
             '<?php echo $this->getBlock(trim("${1}"));//打印Block块对象 ?>',
             '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件 ?>',
             '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件 ?>',
-            '<?php $this->fetch(trim("${1}")); ?>',
+            '<?php echo $this->fetch(trim("${1}")); ?>',
             '<?php p(isset($this->getData("${1}"))?:${1}); ?>',
             /*'<?php if(${1})echo addslashes("${2}"); ?>',
             "<?php
@@ -370,14 +412,18 @@ class Template
         # 非开发环境编译到缓存文件
         return preg_replace_callback($patterns, function ($back) {
             $back[0] = str_replace($back[1], '', $back[0]);
-//            switch (strtolower($back[0])){
+//            switch (strtolower($back[0])) {
 //                case '@template()':
-//                    p($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
+////                    p($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
+//                    break;
+//                case '@block()':
+//                    p($this->getBlock(trim($back[1]))->render(), 1);
 //            }
+
             return match (strtolower($back[0])) {
                 '@static()' => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1])),
-                '@block()' => $this->getBlock(trim($back[1])),
-                '@template()' => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])),
+                '@block()' => $this->getBlock(trim($back[1]))->__toString(),
+                '@template()' => file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1]))),
                 '@include()' => file_get_contents(trim($back[1])),
                 '@view()' => $this->fetch(trim($back[1])),
                 '@p()' => "<?php p($back[1])?>",
