@@ -31,9 +31,9 @@ class Create extends TableAbstract implements CreateInterface
             if (is_int($length)) {
                 if ($length <= 2) {
                     $type = 'smallint';
-                } else if (2 < $length and $length <= 11) {
+                } else if (2 < $length && $length <= 11) {
                     $type = 'int';
-                } elseif (11 < $length) {
+                } else {
                     $type = 'bigint';
                 }
             } else {

@@ -192,17 +192,15 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function total(string $field = '*'): int
+    function total(string $field = '*',string $alias='total'): int
     {
         $this->limit(1, 0);
         $this->fetch_type = 'find';
-        $this->fields = "count({$field})";
+        $this->fields = "count(`{$field}`) as `{$alias}`";
         $this->prepareSql('find');
         $result = $this->fetch();
-        if (isset($result[$this->fields])) {
-            $result = $result[$this->fields];
-        } else {
-            $result = 0;
+        if (isset($result[$alias])) {
+            $result = $result[$alias];
         }
         return $result;
     }
@@ -393,6 +391,8 @@ abstract class Query implements QueryInterface
                 #查询上年数据
                 $this->where("YEAR({$field})=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR))");
                 break;
+            default:
+
         }
         return $this;
     }
