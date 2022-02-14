@@ -1,8 +1,8 @@
 /*
-Template Name: Upzet -  Admin & Dashboard Template
+Template Name: Weline -  Admin & WelineFramework
 Author: Themesdesign
 Version: 1.0.0
-更多精品模板：http://www.bootstrapmb.com
+更多支持：https://www.aiweline.com
 File: Main Js File
 */
 
