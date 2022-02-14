@@ -96,11 +96,17 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     function getPost(string $key = '', mixed $default = [])
     {
+        if(''===$key){
+            return $_POST;
+        }
         return $_POST[$key] ?? $default;
     }
 
     function getGet(string $key = '', mixed $default = [])
     {
+        if(''===$key){
+            return $_GET;
+        }
         return $_GET[$key] ?? $default;
     }
 
