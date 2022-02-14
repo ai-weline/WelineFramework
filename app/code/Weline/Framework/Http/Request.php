@@ -94,30 +94,14 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $params;
     }
 
-    function getPost(string $key = '')
+    function getPost(string $key = '', mixed $default = null)
     {
-        $data = $_POST;
-        if ($key) {
-            if (isset($data[$key]) && $data = $data[$key]) {
-                return $data;
-            } else {
-                return null;
-            }
-        }
-        return $data;
+        return $_POST[$key] ?? $default;
     }
 
-    function getGet(string $key = '')
+    function getGet(string $key = '', mixed $default = null)
     {
-        $data = $_GET;
-        if ($key) {
-            if (isset($data[$key]) && $data = $data[$key]) {
-                return $data;
-            } else {
-                return null;
-            }
-        }
-        return $data;
+        return $_GET[$key] ?? $default;
     }
 
     public function isPost(): bool
@@ -252,5 +236,5 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $url .= $this->getGet() ? '?' . http_build_query($this->getGet()) : '';
         }
         return $url;
-}
+    }
 }
