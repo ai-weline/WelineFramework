@@ -164,6 +164,16 @@ class PcController extends Core
     }
 
     /**
+     * 返回JSON
+     * @param string $data
+     * @return string
+     */
+    protected function fetchJson(array $data): string
+    {
+        return json_encode($data);
+    }
+
+    /**
      * @DESC         |按照类型获取view目录
      *
      * 参数区：
