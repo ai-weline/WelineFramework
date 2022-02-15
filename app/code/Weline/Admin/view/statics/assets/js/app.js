@@ -176,9 +176,19 @@ File: Main Js File
 
     function initSettings() {
         if (window.sessionStorage) {
-            var alreadyVisited = sessionStorage.getItem("is_visited");
+            let alreadyVisited = sessionStorage.getItem("is_visited");
+            // FIXME 解决加载闪屏问题
+            // let checkedVisited = "dark-mode-switch"
+            // $('input[class="theme-choice"]:checked').each(function () {
+            //     checkedVisited = $(this).attr('id');
+            // });
+            // if (checkedVisited === alreadyVisited) {
+            //     $(".right-bar input:checkbox").prop('checked', false);
+            //     $("#" + alreadyVisited).prop('checked', true);
+            //     return '';
+            // }
             if (!alreadyVisited) {
-                sessionStorage.setItem("is_visited", "light-mode-switch");
+                sessionStorage.setItem("is_visited", "dark-mode-switch");
             } else {
                 $(".right-bar input:checkbox").prop('checked', false);
                 $("#" + alreadyVisited).prop('checked', true);
@@ -216,21 +226,21 @@ File: Main Js File
 // }
     function updateThemeSetting(id) {
         let idDom = $('#' + id);
-        if ($("#light-mode-switch").prop("checked") == true && id === "light-mode-switch") {
+        if ($("#light-mode-switch").prop("checked") === true && id === "light-mode-switch") {
             $("html").removeAttr("dir");
             $("#dark-mode-switch").prop("checked", false);
             $("#rtl-mode-switch").prop("checked", false);
             $("#bootstrap-style").attr('href', idDom.attr('data-bsStyle'));
             $("#app-style").attr('href', idDom.attr('data-appStyle'));
             sessionStorage.setItem("is_visited", "light-mode-switch");
-        } else if ($("#dark-mode-switch").prop("checked") == true && id === "dark-mode-switch") {
+        } else if ($("#dark-mode-switch").prop("checked") === true && id === "dark-mode-switch") {
             $("html").removeAttr("dir");
             $("#light-mode-switch").prop("checked", false);
             $("#rtl-mode-switch").prop("checked", false);
             $("#bootstrap-style").attr('href', idDom.attr('data-bsStyle'));
             $("#app-style").attr('href', idDom.attr('data-appStyle'));
             sessionStorage.setItem("is_visited", "dark-mode-switch");
-        } else if ($("#rtl-mode-switch").prop("checked") == true && id === "rtl-mode-switch") {
+        } else if ($("#rtl-mode-switch").prop("checked") === true && id === "rtl-mode-switch") {
             $("#light-mode-switch").prop("checked", false);
             $("#dark-mode-switch").prop("checked", false);
             $("#bootstrap-style").attr('href', idDom.attr('data-bsStyle'));
@@ -252,6 +262,7 @@ File: Main Js File
         initComponents();
         initPreloader()
         initSettings();
+
         Waves.init();
     }
 
