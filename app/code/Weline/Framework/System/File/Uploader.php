@@ -14,13 +14,15 @@ use Weline\Framework\App\Env;
 
 class Uploader
 {
-    private $base_uploader_dir;
+    private string $base_uploader_dir;
 
     function __construct(string $basepath, $module_name)
     {
         $this->base_uploader_dir = rtrim($basepath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR.$module_name.DIRECTORY_SEPARATOR;
         $this->initFiles();
     }
+
+
 
     /**
      * @DESC          # 处理文件
@@ -31,7 +33,7 @@ class Uploader
      * 参数区：
      * @return array
      */
-    function initFiles()
+    function initFiles(): array
     {
         $result = [];
         if (isset($_FILES['file']['tmp_name'])) {
@@ -55,16 +57,31 @@ class Uploader
      * @param string $filepath 存储位置
      * @return string
      */
-    function saveFile(string $file_tmp_name, string $filepath)
+    function saveFile(string $file_tmp_name, string $filepath): string
     {
-        $filename = $_FILES['file']['name'];
-        $filetmp = $_FILES['file']['tmp_name'];
-        $dir_name = __DIR__ . DIRECTORY_SEPARATOR;
-        $file_path = $dir_name . $filename;
-        if (!is_dir(__DIR__ . DIRECTORY_SEPARATOR)) {
-            mkdir($dir_name);
+        $dir  = dirname($filepath);
+        if (!is_dir( $dir )) {
+            mkdir( $dir ,765,true);
         }
-        move_uploaded_file($filetmp, $file_path);
-        return str_replace($this->base_uploader_dir, '', $file_path);
+        move_uploaded_file($file_tmp_name, $filepath);
+        return str_replace(BP, '', $filepath);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseUploaderDir(): string
+    {
+        return $this->base_uploader_dir;
+    }
+
+    /**
+     * @param string $base_uploader_dir
+     * @return Uploader
+     */
+    public function setBaseUploaderDir(string $base_uploader_dir): Uploader
+    {
+        $this->base_uploader_dir = $base_uploader_dir;
+        return $this;
     }
 }
