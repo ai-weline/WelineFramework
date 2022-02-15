@@ -51,8 +51,8 @@ class Uploader
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/10/12 13:10
      * 参数区：
-     * @param string $file_tmp_name
-     * @param string $filepath
+     * @param string $file_tmp_name 文件tmp名
+     * @param string $filepath 存储位置
      * @return string
      */
     function saveFile(string $file_tmp_name, string $filepath)
@@ -65,6 +65,6 @@ class Uploader
             mkdir($dir_name);
         }
         move_uploaded_file($filetmp, $file_path);
-        return str_replace($this>$this->base_uploader_dir, '', $file_path);
+        return str_replace($this->base_uploader_dir, '', $file_path);
     }
 }
