@@ -10,18 +10,14 @@ declare(strict_types=1);
 
 namespace Weline\Framework\System\File;
 
+use JetBrains\PhpStorm\Pure;
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 
 class Uploader
 {
-    private string $base_uploader_dir;
-
-    function __construct(string $basepath, $module_name)
-    {
-        $this->base_uploader_dir = rtrim($basepath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR.$module_name.DIRECTORY_SEPARATOR;
-        $this->initFiles();
-    }
-
+    private string $base_uploader_dir = PUB . 'media' . DIRECTORY_SEPARATOR . 'uploader' . DIRECTORY_SEPARATOR;
+    private string $module_name = '';
 
 
     /**
@@ -31,16 +27,23 @@ class Uploader
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/10/12 13:10
      * 参数区：
+     * @param string $module_name 需要设置上传的目录位置
      * @return array
      */
-    function initFiles(): array
+    function saveFiles(string $module_name = '', string $move_to_dir = ''): array
     {
+        if ($move_to_dir) {
+            $this->setBaseUploaderDir($move_to_dir);
+        }
+        if ($module_name) {
+            $this->setModuleName($module_name);
+        }
         $result = [];
         if (isset($_FILES['file']['tmp_name'])) {
-            $result[] = $this->saveFile($_FILES['file']['tmp_name'], $this->base_uploader_dir . $_FILES['file']['name']);
+            $result[] = $this->saveFile($_FILES['file']['tmp_name'], $this->getBaseUploaderDir() . $_FILES['file']['name']);
         } else {
             foreach ($_FILES as $FILE) {
-                $result[] = $this->saveFile($FILE['file']['tmp_name'], $this->base_uploader_dir . $FILE['file']['name']);
+                $result[] = $this->saveFile($FILE['file']['tmp_name'], $this->getBaseUploaderDir() . $FILE['file']['name']);
             }
         }
         return $result;
@@ -53,26 +56,31 @@ class Uploader
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/10/12 13:10
      * 参数区：
-     * @param string $file_tmp_name 文件tmp名
-     * @param string $filepath 存储位置
+     * @param string $file_tmp 文件tmp名
+     * @param string $filename 存储位置
      * @return string
+     * @throws Exception
      */
-    function saveFile(string $file_tmp_name, string $filepath): string
+    function saveFile(string $file_tmp, string $filename): string
     {
-        $dir  = dirname($filepath);
-        if (!is_dir( $dir )) {
-            mkdir( $dir ,765,true);
+        $dir = dirname($filename);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+            chmod($dir, 0777);
         }
-        move_uploaded_file($file_tmp_name, $filepath);
-        return str_replace(BP, '', $filepath);
+        if (move_uploaded_file($file_tmp, $filename)) {
+            return str_replace(BP, '', $filename);
+        } else {
+            throw new Exception(__('文件上传失败:%1 ', $filename));
+        }
     }
 
     /**
      * @return string
      */
-    public function getBaseUploaderDir(): string
+    #[Pure] public function getBaseUploaderDir(): string
     {
-        return $this->base_uploader_dir;
+        return rtrim($this->base_uploader_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->getModuleName() . DIRECTORY_SEPARATOR;
     }
 
     /**
@@ -81,7 +89,24 @@ class Uploader
      */
     public function setBaseUploaderDir(string $base_uploader_dir): Uploader
     {
-        $this->base_uploader_dir = $base_uploader_dir;
+        $this->base_uploader_dir = rtrim($base_uploader_dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getModuleName(): string
+    {
+        return $this->module_name;
+    }
+
+    /**
+     * @param string $module_name 模块名
+     */
+    public function setModuleName(string $module_name): Uploader
+    {
+        $this->module_name = $module_name;
         return $this;
     }
 }
