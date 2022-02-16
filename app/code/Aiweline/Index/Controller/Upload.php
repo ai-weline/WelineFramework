@@ -15,6 +15,6 @@ use Weline\Framework\App\Controller\FrontendController;
 class Upload extends FrontendController
 {
     function index(){
-        $this->fetch();
+        return $this->fetch();
     }
 }

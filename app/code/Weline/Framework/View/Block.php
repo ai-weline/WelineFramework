@@ -16,7 +16,7 @@ use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Cache\ViewCache;
 
-class  Block extends DataObject implements BlockInterface
+class  Block extends Template  implements BlockInterface
 {
     protected ?CacheInterface $_cache = null;
     protected ?Template $engine = null;
@@ -58,9 +58,11 @@ class  Block extends DataObject implements BlockInterface
         return $this->engine;
     }
 
+    /**
+     * @throws \Exception
+     */
     function render()
     {
-        $block = $this;
         return $this->engine->fetchHtml($this->getTemplate());
     }
 

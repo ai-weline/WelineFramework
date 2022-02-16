@@ -9,13 +9,15 @@
 
 namespace Weline\Admin\Controller;
 
+use Weline\Admin\Model\System\SystemNotification;
 use Weline\Framework\App\Controller\BackendController;
+use Weline\Framework\Manager\ObjectManager;
 
 class Index extends BaseController
 {
     public function index()
     {
-        $this->fetch();
+        return $this->fetch();
     }
 
     public function test(): string

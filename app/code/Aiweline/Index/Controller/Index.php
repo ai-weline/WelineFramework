@@ -35,7 +35,7 @@ class Index extends FrontendController
      */
     public function index()
     {
-       $this->fetch();
+       return $this->fetch();
     }
 
     /**

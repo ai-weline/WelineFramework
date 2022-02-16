@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Router;
 
+use JetBrains\PhpStorm\NoReturn;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
@@ -271,11 +272,12 @@ class Core
         }
     }
 
-    function route(): mixed
+    #[NoReturn] function route()
     {
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);
-        exit(call_user_func([$dispatch, $method], $this->request->getParams()));
+        exit($dispatch->$method());
+//        exit(call_user_func([$dispatch, $method], $this->request->getParams()));
     }
 }

@@ -112,7 +112,7 @@ class HelloWorld extends FrontendController
         }
         $data = $this->aiwelineHelloWorld->query("select * from {$this->aiwelineHelloWorld->getTable()}")->find()->fetch();
         $this->assign('data', $data->getData());
-        $this->fetch();
+        return $this->fetch();
     }
 
     /**

@@ -26,8 +26,9 @@ use Weline\Framework\Ui\FormKey;
 use Weline\Framework\View\Cache\ViewCache;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Data\HtmlInterface;
+use Weline\SystemConfig\Model\SystemConfig;
 
-class Template
+class Template extends DataObject
 {
     use TraitTemplate;
 
@@ -78,10 +79,6 @@ class Template
     private static Template $instance;
 
     private function __clone()
-    {
-    }
-
-    private function __construct()
     {
     }
 
@@ -136,7 +133,7 @@ class Template
      *
      * @param $filepath
      * @return string
-     * @throws Core
+     * @throws \Exception
      */
     public function getViewFile($filepath): string
     {
@@ -150,57 +147,26 @@ class Template
     }
 
     /**
-     * @DESC         |方法描述
-     *
-     * 参数区：
-     *
-     * @param string|null $key
-     * @return mixed|null
-     */
-    public function getData(string $key = null): mixed
-    {
-        if ($key === null) {
-            return $this->vars;
-        }
-
-        return isset($this->vars[$key]) ? $this->vars[$key] : null;
-    }
-
-
-    /**
      * @DESC         |模板中变量分配调用的方法
      *
      * 参数区：
      *
-     * @param string $tpl_var
+     * @param string|array $key 键值
      * @param null $value
      * @return Template
      */
-    public function assign(string $tpl_var, mixed $value = null): static
+    public function assign(string|array $key, mixed $value = null): static
     {
-        $this->vars[$tpl_var] = $value;
-
+        $this->setData($key, $value);
         return $this;
     }
 
     /**
-     * @DESC          # 设置数据
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2022/2/14 19:55
-     * 参数区：
-     * @param array $data 变量数组
-     * @return $this
+     * @param string $fileName 文件名
+     * @throws Core
+     * @throws Exception
      */
-    function setData(array $data): static
-    {
-        $this->vars = array_merge($this->vars, $data);
-        return $this;
-    }
-
-
-    function getFetchFile(string $fileName): string
+    function convertFetchFileName(string $fileName): array
     {
         $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName';
         $tplFile_cache_key = $this->view_dir . $fileName . '_tplFile';
@@ -240,8 +206,8 @@ class Template
             } else {
                 $tplFile = $template_dir . $fileName . self::file_ext;
             }
-            $tplFile = $this->fetchFile($tplFile);
 
+            $tplFile = $this->fetchFile($tplFile);
 
             if (!file_exists($tplFile)) {
                 throw new Exception(__('获取操作：%1，模板文件：%2 不存在！源文件：%3', [$fileName, $tplFile, $tplFile]));
@@ -261,7 +227,7 @@ class Template
                 $comFileName = $baseComFileDir . 'com_' . $file_name . self::file_ext;
             }
             $comFileName = $this->fetchFile($comFileName);
-            # 生产模式缓存
+            # 生产模式缓存: 根据管道设置缓存
             if (PROD) {
                 $this->viewCache->set($comFileName_cache_key, $comFileName);
                 $this->viewCache->set($tplFile_cache_key, $tplFile);
@@ -271,10 +237,17 @@ class Template
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         if (is_int(strpos($comFileName, '\\'))) str_replace('\\', DIRECTORY_SEPARATOR, $comFileName);
         if (is_int(strpos($comFileName, '//'))) str_replace('/', DIRECTORY_SEPARATOR, $comFileName);
+        return [$comFileName, $tplFile];
+    }
+
+
+    function getFetchFile(string $fileName, string $module_name = ''): string
+    {
+        list($comFileName, $tplFile) = $this->convertFetchFileName($fileName);
         # 检测编译文件，如果不符合条件则重新进行文件编译
-        if (DEV || !file_exists($comFileName) || filemtime($comFileName) < filemtime($tplFile)) {
+        if (DEV || !file_exists($comFileName) || (filemtime($comFileName) < filemtime($tplFile))) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
-            $repContent = $this->tmp_replace(file_get_contents($tplFile));//得到模板文件 并替换占位符 并得到替换后的文件
+            $repContent = $this->tmp_replace(file_get_contents($tplFile), $fileName);//得到模板文件 并替换占位符 并得到替换后的文件
             file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中
         }
         return $comFileName;
@@ -290,13 +263,12 @@ class Template
      * @return bool|void
      * @throws \Exception
      */
-    public function fetch(string $fileName, array $dictionary=[])
+    public function fetch(string $fileName, array $dictionary = [])
     {
-        $comFileName = $this->getFetchFile($fileName);
         /** Get output buffer. */
-        # FIXME 是否显示模板路径
-        require $comFileName;
+        return $this->fetchHtml($fileName);
     }
+
     /**
      * @DESC         |调用模板显示
      *
@@ -307,7 +279,7 @@ class Template
      * @return bool|void
      * @throws \Exception
      */
-    public function fetchHtml(string $fileName, array $dictionary=[])
+    public function fetchHtml(string $fileName, array $dictionary = [])
     {
         $comFileName = $this->getFetchFile($fileName);
         ob_start();
@@ -329,11 +301,12 @@ class Template
      *
      * 参数区：
      *
-     * @param $content
+     * @param string $content 文本
+     * @param string $fileName 模板文件
      * @return string|string[]|null
      * @throws Core
      */
-    private function tmp_replace($content): array|string|null
+    private function tmp_replace(string $content, string $fileName): array|string|null
     {
         $static_url_path = $this->getUrlPath($this->statics_dir);
         $replaces = [
@@ -354,80 +327,76 @@ class Template
             '/\@static\((.*)\)/',
             '/\@view\((.*)\)/',
             '/\@p\((.+)\)/',
-            /*'/\@if\((.*)\)\{(.*)\}/',
-            '/\@foreach\((.*)\)\:(.*)foreach\;/m',//TODO 完成foreach多行模式兼容*/
+            '/\@controller\((.+)\)/',
         ];
-        $replacement = [
-            '<?php echo $this->vars["${1}"]; ?>',
-            '<?php ${1} ?>',
-            '<?php include(trim("${1}")); ?>',
-            '<?php echo $this->getBlock(trim("${1}"));//打印Block块对象 ?>',
-            '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件 ?>',
-            '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件 ?>',
-            '<?php echo $this->fetch(trim("${1}")); ?>',
-            '<?php p(isset($this->getData("${1}"))?:${1}); ?>',
-            /*'<?php if(${1})echo addslashes("${2}"); ?>',
-            "<?php
-            \$func_data = \"\${1}\";
-            \$func_data_arr = explode(\" as \",\$func_data);
-            if(count(\$func_data_arr)!=2) throw new \Weline\Framework\App\Exception('foreach模板语法使用错误！提示：forum as v,k,{渲染元素} 示例用法：@foreach(forum as v,k,<li>键{k}:值{v}</li>)');
-            \$foreach_data = \$this->getData(trim(array_shift(\$func_data_arr)));
-            \$_k_v_loop_arr = explode('=>',trim(array_shift(\$func_data_arr)));
-            if(count(\$_k_v_loop_arr)!=2)throw new \Weline\Framework\App\Exception('foreach模板语法使用错误！提示：v,k 示例用法：@foreach(forum as v,k,<li>键{k}:值{v}</li>)');
-            \$foreach_loop_str = '\${2}';
-            \$k_name = '$'.trim(\$_k_v_loop_arr[0]);
-            \$v_name = '$'.trim(\$_k_v_loop_arr[1]);
-            if(is_array(\$foreach_data))
-            {
-                foreach (\$foreach_data as \$k_name => \$v_name){
-                    \$foreach_loop_str_tmp = \$foreach_loop_str;
-                    foreach(array_unique(getStringBetweenContents(\$foreach_loop_str_tmp,'{','}')) as \$t_k_t=>\$t_v_t){  
-                        \$t_v_t_arr = explode('.',\$t_v_t);
-                        \$t_v_t_key = isset(\$t_v_t_arr[1])?trim(\$t_v_t_arr[1]):false;
-                        if(\$t_v_t_key){
-                            \$foreach_loop_str_tmp = str_replace('{'.\$t_v_t.'}',\$v_name[\$t_v_t_key],\$foreach_loop_str);
-                        }else{
-                            throw new \Weline\Framework\App\Exception('foreach模板语法使用错误！提示：v,k 示例用法：@foreach(forum as v,k,<li>键{k}:值{v}</li>)');
-                        }   
-                    }
-                }
-                echo \$foreach_loop_str_tmp;
-            }
-            ?>",*/
-        ];
-        //        $foreach_str_arr = explode(',',$foreach_str);
-
-//        if(count($foreach_str_arr) != 3) throw new Exception('foreach模板语法使用错误！示例用法：@foreach(data,<li>键{$k}:值{$v}</li>,$k:$v)');
-//        $data = $this->getData($foreach_str_arr[0]);
-//        $loop_str= $foreach_str_arr[1];
-//        $loop_k_v= explode(':',$foreach_str_arr[3]);
-//        if(count($loop_k_v) != 2) throw new Exception('foreach模板语法使用错误！请使用 $k:$v 形式作为第三个参数，示例用法：@foreach(data,<li>键{$k}:值{$v}</li>,$k:$v)');
-//        foreach($data as $loop_k_v[0]=>$loop_k_v[1]){
-//            echo $loop_str;
-//        }
         # 开发环境实时PHP代码输出资源
 //        if (DEV) {
-//            return preg_replace($patterns, $replacement, $content);
+//            $dev_replacement = [
+        /*                '<?php echo $this->vars["${1}"]; ?>',*/
+        /*                '<?php ${1} ?>',*/
+        /*                '<?php include(trim("${1}")); ?>',*/
+        /*                '<?php echo $this->getBlock(trim("${1}"));//打印Block块对象 ?>',*/
+        /*                '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件 ?>',*/
+        /*                '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件 ?>',*/
+        /*                '<?php echo $this->fetch(trim("${1}")); ?>',*/
+        /*                '<?php p(isset($this->getData("${1}"))?:${1}); ?>',*/
+//            ];
+//            return preg_replace($patterns, $dev_replacement, $content);
 //        }
-        # 非开发环境编译到缓存文件
-        return preg_replace_callback($patterns, function ($back) {
+        return preg_replace_callback($patterns, function ($back) use ($fileName) {
             $back[0] = str_replace($back[1], '', $back[0]);
-//            switch (strtolower($back[0])) {
-//                case '@template()':
-////                    p($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
-//                    break;
-//                case '@block()':
-//                    p($this->getBlock(trim($back[1]))->render(), 1);
-//            }
+            $re_content = '';
+            switch (strtolower($back[0])) {
+                case '@controller()':
+                    # FIXME 尚未想好的代码分支
+                    $cache_key = $this->viewCache->buildKey($fileName);
+                    # 控制解析
+                    $pipe_str = explode(',', trim($back[1]));
+                    foreach ($pipe_str as $pipe) {
+                        $pip = explode(':', $pipe);
+                        if (2 === count($pip)) {
+                            switch ($pip[0]) {
+                                case 'cache':
+                                    if (!is_numeric($pip[1])) throw new Exception(__('缓存值类型设置错误：%1 应当设置为整数，单位（毫秒） 设置文件：%2 正确设置示例：cache:60'));
+                                    if (!$this->viewCache->get($cache_key)) {
+                                        list($comFile, $tplFile) = $this->convertFetchFileName($fileName);
+                                        $re_content .= "<?php \$cache_key=\$this->viewCache->buildKey('{$fileName}');if(\$this->viewCache->get(\$cache_key)){echo \$this->viewCache->get(\$cache_key);}else{echo {file_get_contents($comFile)}}?>";
+                                        $this->viewCache->set($cache_key, $re_content . file_get_contents($comFile), $pip[1]);
+                                    }
+                                case 'ifconfig':
+                                default;
+                            }
+                        }
+                    }
 
-            return match (strtolower($back[0])) {
-                '@static()' => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1])),
-                '@block()' => $this->getBlock(trim($back[1]))->__toString(),
-                '@template()' => file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1]))),
-                '@include()' => file_get_contents(trim($back[1])),
-                '@view()' => $this->fetch(trim($back[1])),
-                '@p()' => "<?php p($back[1])?>",
-            };
+//                    $re_content = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
+                    break;
+                case '@static()':
+                    $re_content = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
+                    break;
+
+                case '@block()':
+                    $re_content = $this->getBlock(trim($back[1]))->__toString();
+                    break;
+
+                case '@template()':
+                    $re_content = file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
+                    break;
+
+                case '@include()':
+                    $re_content = file_get_contents(trim($back[1]));
+                    break;
+
+                case '@view()':
+                    $re_content = $this->fetch(trim($back[1]));
+                    break;
+
+                case '@p()':
+                    $re_content = "<?php p($back[1])?>";
+                    break;
+
+            }
+            return $re_content;
         }, $content);
     }
 
@@ -461,3 +430,4 @@ class Template
     }
 
 }
+
