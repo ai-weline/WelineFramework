@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Model;
 
+use Weline\Backend\Cache\BackendCache;
+use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Http\Url;
 use Weline\Framework\Setup\Data\Context;
@@ -27,15 +29,19 @@ class Menu extends \Weline\Framework\Database\Model
     const fields_ACTION = 'action';
     const fields_MODULE = 'module';
 
+    private CacheInterface $backendCache;
+
     private Url $url;
 
     function __construct(
         Url   $url,
+        BackendCache $backendCache,
         array $data = []
     )
     {
         parent::__construct($data);
         $this->url = $url;
+        $this->backendCache = $backendCache->create();
     }
 
     /**
@@ -158,5 +164,42 @@ class Menu extends \Weline\Framework\Database\Model
     function getUrl(): string
     {
         return $this->url->build($this->getAction());
+    }
+
+    /**
+     * @DESC          # 获取菜单树
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/9 0:38
+     * 参数区：
+     */
+    function getMenuTree(): mixed
+    {
+        $cache_key = 'backend_menu_cache';
+        if($data = $this->backendCache->get( $cache_key )){
+            p($data );
+            return $data;
+        }
+        $top_menus = $this->where($this::fields_PID.' is null')->select()->fetch();
+        foreach ($top_menus as &$top_menu) {
+            $top_menu = $this->getSubMenu($top_menu);
+        }
+        $this->backendCache->set($cache_key, $top_menus);
+        return $top_menus;
+    }
+
+    function getSubMenus(\Weline\Backend\Model\Menu $menu){
+        if($sub_menus = $this->clearData()->where($this::fields_PID,$menu->getId())->select()->fetch()){
+            foreach ($sub_menus as $sub_menu) {
+                $has_sub_menu = $this->clearData()->where($this::fields_PID,$sub_menu->getID())->find()->fetch();
+                if($has_sub_menu->getId()){
+                    return $this->getSubMenus($sub_menu);
+                }
+            }
+            return $menu->setSubMenu($sub_menus);
+        }else{
+            return $menu->setSubMenu([]);
+        }
     }
 }

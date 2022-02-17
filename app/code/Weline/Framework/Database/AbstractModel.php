@@ -57,7 +57,6 @@ abstract class AbstractModel extends DataObject
      *
      * @var array
      */
-    protected array $_data = [];
     const fields_ID = 'id';
     const fields_CREATE_TIME = 'create_time';
     const fields_UPDATE_TIME = 'update_time';

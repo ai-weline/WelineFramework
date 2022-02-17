@@ -19,16 +19,13 @@ use Weline\Framework\Xml\Parser;
 
 class MenuReader extends Reader
 {
-    private CacheInterface $backendCache;
 
     function __construct(
-        BackendCache $backendCache,
-        Scanner      $scanner,
-        Parser       $parser,
-                     $path = 'backend/menu.xml')
+        Scanner $scanner,
+        Parser  $parser,
+                $path = 'backend/menu.xml')
     {
         parent::__construct($scanner, $parser, $path);
-        $this->backendCache = $backendCache->create();
     }
 
     function read(): array
@@ -54,7 +51,7 @@ class MenuReader extends Reader
             }
             foreach ($config['menus'] as $menu) {
                 if (isset($menu['add'])) {
-                    if(is_array($menu['add'])){
+                    if (is_int(array_key_first($menu['add']))) {
                         foreach ($menu['add'] as $menu_data) {
                             if (isset($menu_data['_attribute'])) {
                                 $this->checkElementAttribute(
@@ -80,7 +77,7 @@ class MenuReader extends Reader
                                 $module_menus[$module]['data'][] = $menu_data['_attribute'];
                             }
                         }
-                    }else{
+                    } else {
                         $this->checkElementAttribute(
                             $menu['add'],
                             'name',

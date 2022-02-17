@@ -40,10 +40,9 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
             foreach ($menus['data'] as $menu) {
                 # 清空查询条件
                 $this->menu->clearData();
-
                 $menu[Menu::fields_MODULE] = $module;
-                $menu[Menu::fields_PARENT_SOURCE] = isset($menu['parent']) ? $menu['parent'] : '';
-                unset($menu['parent'], $_);
+                $menu[Menu::fields_PARENT_SOURCE] = $menu['parent'] ?? '';
+                unset($menu['parent']);
                 # 1 存在父资源 检查父资源的 ID
                 if (isset($menu[Menu::fields_PARENT_SOURCE]) && $parent = $menu[Menu::fields_PARENT_SOURCE]) {
                     $parent = $this->menu->where(Menu::fields_SOURCE, $parent)->find()->fetch();
@@ -53,15 +52,15 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 }
                 # 先查询一遍
                 /**@var Menu $menuModel */
-                $this->menu->clearQuery();
+                $this->menu->clearData();
                 $menuModel = $this->menu->where(Menu::fields_NAME, $menu[Menu::fields_NAME])->find()->fetch();
-                $menuModel->forceCheck();
                 # 保存时检测查询数据，存在则更新
                 if($menuModel->getId())$menu[Menu::fields_ID] = $menuModel->getId();
-                $menuModel->clearQuery();
-                $result = $menuModel->setData($menu)->save();
+                $menuModel->clearData();
+                $result = $menuModel->setData($menu)->forceCheck(true)->save();
                 # 2 检查自身是否被别的模块作为父分类
-                if ($this_menu_id = $menuModel->getId()&&$is_others_parent = $menuModel->getQuery()->where(Menu::fields_PARENT_SOURCE, $menu[Menu::fields_SOURCE])->select()->fetch()) {
+                $menuModel->clearData();
+                if ($this_menu_id = $menuModel->getId()&&$is_others_parent = $menuModel->where(Menu::fields_PARENT_SOURCE, $menu[Menu::fields_SOURCE])->select()->fetch()) {
                     foreach ($is_others_parent as $other_menu) {
                         if (empty($other_menu['pid'])) {
                             $other_menu['pid'] = $this_menu_id;
