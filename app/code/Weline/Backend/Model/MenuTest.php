@@ -19,9 +19,9 @@ class MenuTest extends TestCore
     {
         /**@var Menu $menu */
         $menu = ObjectManager::getInstance(Menu::class);
-        foreach ($menu->getMenuTree() as $item) {
-            p($item->getData());
-        }
+//        foreach ($menu->getMenuTree() as $item) {
+//            p($item->getData());
+//        }
         p($menu->getMenuTree());
     }
 }

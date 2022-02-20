@@ -28,15 +28,16 @@ class Menu extends \Weline\Framework\Database\Model
     const fields_PARENT_SOURCE = 'parent_source';
     const fields_ACTION = 'action';
     const fields_MODULE = 'module';
+    const fields_ICON = 'icon';
 
     private CacheInterface $backendCache;
 
     private Url $url;
 
     function __construct(
-        Url   $url,
+        Url          $url,
         BackendCache $backendCache,
-        array $data = []
+        array        $data = []
     )
     {
         parent::__construct($data);
@@ -60,6 +61,7 @@ class Menu extends \Weline\Framework\Database\Model
             ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
             ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
             ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
+            ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
             ->create();*/
     }
 
@@ -88,6 +90,7 @@ class Menu extends \Weline\Framework\Database\Model
                 ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
                 ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
                 ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
+                ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
                 ->create();
         } else {
             $setup->getPrinting()->warning('数据表存在，跳过安装数据表...' . self::table);
@@ -110,7 +113,7 @@ class Menu extends \Weline\Framework\Database\Model
         return parent::setData(self::fields_NAME, $name);
     }
 
-    public function getPid(): string
+    public function getPid()
     {
         return parent::getData(self::fields_PID);
     }
@@ -150,6 +153,16 @@ class Menu extends \Weline\Framework\Database\Model
         return parent::setData(self::fields_ACTION, $url);
     }
 
+    public function getIcon(): string
+    {
+        return parent::getData(self::fields_ICON);
+    }
+
+    public function setIcon(string $css_icon_class): static
+    {
+        return parent::setData(self::fields_ICON, $css_icon_class);
+    }
+
     public function getModule(): string
     {
         return $this->getData(self::fields_MODULE);
@@ -177,29 +190,44 @@ class Menu extends \Weline\Framework\Database\Model
     function getMenuTree(): mixed
     {
         $cache_key = 'backend_menu_cache';
-        if($data = $this->backendCache->get( $cache_key )){
-            p($data );
+        if (PROD && $data = $this->backendCache->get($cache_key)) {
             return $data;
         }
-        $top_menus = $this->where($this::fields_PID.' is null')->select()->fetch();
+        $top_menus = $this->where($this::fields_PID . ' is null')->select()->fetch();
         foreach ($top_menus as &$top_menu) {
-            $top_menu = $this->getSubMenu($top_menu);
+            $top_menu = $this->getSubMenus($top_menu);
         }
-        $this->backendCache->set($cache_key, $top_menus);
-        return $top_menus;
+        $this->backendCache->set($cache_key, $top_menus, 10);
+        return $top_menus ?? [];
     }
 
-    function getSubMenus(\Weline\Backend\Model\Menu $menu){
-        if($sub_menus = $this->clearData()->where($this::fields_PID,$menu->getId())->select()->fetch()){
-            foreach ($sub_menus as $sub_menu) {
-                $has_sub_menu = $this->clearData()->where($this::fields_PID,$sub_menu->getID())->find()->fetch();
-                if($has_sub_menu->getId()){
-                    return $this->getSubMenus($sub_menu);
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH  秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/20 23:18
+     * 参数区：
+     * @return \Weline\Backend\Model\Menu[]
+     */
+    function getSubMenu(): array
+    {
+        return $this->getData('sub_menu') ?? [];
+    }
+
+    function getSubMenus(\Weline\Backend\Model\Menu &$menu): Menu
+    {
+        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getId())->select()->fetch()) {
+            foreach ($sub_menus as &$sub_menu) {
+                $has_sub_menu = $this->clearData()->where($this::fields_PID, $sub_menu->getID())->find()->fetch();
+                if ($has_sub_menu->getId()) {
+                    $sub_menu =  $this->getSubMenus($sub_menu);
                 }
             }
-            return $menu->setSubMenu($sub_menus);
-        }else{
-            return $menu->setSubMenu([]);
+            $menu = $menu->setData('sub_menu',$sub_menus);
+        } else {
+            $menu = $menu->setData('sub_menu',[]);
         }
+        return $menu;
     }
 }

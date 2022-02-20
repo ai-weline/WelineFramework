@@ -123,15 +123,15 @@ abstract class AbstractModel extends DataObject
         return $this->_primary_key;
     }
 
-    public function __sleep()
-    {
-        return array('table', 'origin_table_name', '_suffix', '_primary_key', '_fields');
-    }
-
-    function __wakeup()
-    {
-        $this->__init();
-    }
+//    public function __sleep()
+//    {
+//        return array('table', 'origin_table_name', '_suffix', '_primary_key', '_fields');
+//    }
+//
+//    function __wakeup()
+//    {
+//        $this->__init();
+//    }
 
 
     /**
