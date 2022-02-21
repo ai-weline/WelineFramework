@@ -2,6 +2,6 @@
 <menus xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
        xs:noNamespaceSchemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd"
        xs:schemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd">
-<!--    <add source="Weline_Admin::menu_listing" name="menu_listing" title="菜单列表" action="admin/menus/listing"
-         parent="Weline_Admin::menu_manager"/>-->
+    <add source="Weline_Admin::system_menus" name="system_menus" title="菜单配置" action="admin/menus/listing"
+         parent="Weline_Backend::system_menu" order="1" icon=""/>
 </menus>

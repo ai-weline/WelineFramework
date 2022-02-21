@@ -29,6 +29,7 @@ class Menu extends \Weline\Framework\Database\Model
     const fields_ACTION = 'action';
     const fields_MODULE = 'module';
     const fields_ICON = 'icon';
+    const fields_ORDER = 'order';
 
     private CacheInterface $backendCache;
 
@@ -50,10 +51,10 @@ class Menu extends \Weline\Framework\Database\Model
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-        /*$setup->dropTable();
+        $setup->dropTable();
         $setup->getPrinting()->setup('安装数据表...' . self::table);
         $setup->createTable('后端菜单表')
-            ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
+            ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', 'ID')
             ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
             ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单标题')
             ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
@@ -62,7 +63,8 @@ class Menu extends \Weline\Framework\Database\Model
             ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
             ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
             ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
-            ->create();*/
+            ->addColumn(self::fields_ORDER, TableInterface::column_type_INTEGER, null, 'not null', '排序')
+            ->create();
     }
 
     /**
@@ -82,7 +84,7 @@ class Menu extends \Weline\Framework\Database\Model
         $setup->getPrinting()->setup('安装数据表...' . self::table);
         if (!$setup->tableExist()) {
             $setup->createTable('后端菜单表')
-                ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
+                ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', 'ID')
                 ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
                 ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单标题')
                 ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
@@ -91,6 +93,7 @@ class Menu extends \Weline\Framework\Database\Model
                 ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
                 ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
                 ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
+                ->addColumn(self::fields_ORDER, TableInterface::column_type_INTEGER, null, 'not null', '排序')
                 ->create();
         } else {
             $setup->getPrinting()->warning('数据表存在，跳过安装数据表...' . self::table);
@@ -193,7 +196,7 @@ class Menu extends \Weline\Framework\Database\Model
         if (PROD && $data = $this->backendCache->get($cache_key)) {
             return $data;
         }
-        $top_menus = $this->where($this::fields_PID . ' is null')->select()->fetch();
+        $top_menus = $this->where($this::fields_PID . ' is null')->order('order','ASC')->select()->fetch();
         foreach ($top_menus as &$top_menu) {
             $top_menu = $this->getSubMenus($top_menu);
         }
@@ -217,7 +220,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     function getSubMenus(\Weline\Backend\Model\Menu &$menu): Menu
     {
-        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getId())->select()->fetch()) {
+        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getId())->order('order','ASC')->select()->fetch()) {
             foreach ($sub_menus as &$sub_menu) {
                 $has_sub_menu = $this->clearData()->where($this::fields_PID, $sub_menu->getID())->find()->fetch();
                 if ($has_sub_menu->getId()) {

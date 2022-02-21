@@ -33,6 +33,7 @@ class MenuReader extends Reader
         $configs = parent::read();
         // 菜单提取
         $module_menus = [];
+        $has_orders = [];
         foreach ($configs as $module_and_file => $config) {
             $m_a_f_arr = explode('::', $module_and_file);
             $module = array_shift($m_a_f_arr);
@@ -57,28 +58,36 @@ class MenuReader extends Reader
                                 $this->checkElementAttribute(
                                     $menu_data,
                                     'name',
-                                    __('菜单配置错诶：add元素缺少name属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline"/>', $module_and_file)
+                                    __('菜单配置错诶：add元素缺少name属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"  icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                                 );
                                 $this->checkElementAttribute(
                                     $menu_data,
                                     'source',
-                                    __('菜单配置错诶：add元素缺少source属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline"/>', $module_and_file)
+                                    __('菜单配置错诶：add元素缺少source属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"  icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                                 );
                                 $this->checkElementAttribute(
                                     $menu_data,
                                     'title',
-                                    __('菜单配置错诶：add元素缺少title属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline"/>', $module_and_file)
+                                    __('菜单配置错诶：add元素缺少title属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"  icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                                 );
                                 $this->checkElementAttribute(
                                     $menu_data,
                                     'action',
-                                    __('菜单配置错诶：add元素缺少action属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline"/>', $module_and_file)
+                                    __('菜单配置错诶：add元素缺少action属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"  icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                                 );
                                 $this->checkElementAttribute(
                                     $menu_data,
-                                    'icon',
-                                    __('菜单配置错诶：add元素缺少icon属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline"/>', $module_and_file)
+                                    'order',
+                                    __('菜单配置错诶：add元素缺少icon属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                                 );
+                                if (!isset($menu['add']['_attribute']['icon'])) {
+                                    $menu['add']['_attribute']['icon'] = '';
+                                }
+                                /*$menu['add']['_attribute']['order'] = $menu['add']['_attribute']['order']??0;
+                                if (in_array($menu_data['_attribute']['order'], $has_orders)) {
+                                    throw new \Exception(__('菜单排序值 %1 重复,请重新设置order排序值.错误所在文件：%2', [$menu['add']['_attribute']['order'], $module_menu_file]));
+                                }
+                                $has_orders[] = $menu_data['_attribute']['order'];*/
                                 $module_menus[$module]['data'][] = $menu_data['_attribute'];
                             }
                         }
@@ -86,32 +95,48 @@ class MenuReader extends Reader
                         $this->checkElementAttribute(
                             $menu['add'],
                             'name',
-                            __('菜单配置错诶：add元素缺少name属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                            __('菜单配置错诶：add元素缺少name属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                         );
                         $this->checkElementAttribute(
                             $menu['add'],
                             'source',
-                            __('菜单配置错诶：add元素缺少source属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                            __('菜单配置错诶：add元素缺少source属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                         );
                         $this->checkElementAttribute(
                             $menu['add'],
                             'title',
-                            __('菜单配置错诶：add元素缺少title属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                            __('菜单配置错诶：add元素缺少title属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                         );
                         $this->checkElementAttribute(
                             $menu['add'],
                             'action',
-                            __('菜单配置错诶：add元素缺少action属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/"/>', $module_and_file)
+                            __('菜单配置错诶：add元素缺少action属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                         );
                         $this->checkElementAttribute(
                             $menu['add'],
-                            'icon',
-                            __('菜单配置错诶：add元素缺少icon属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline"/>', $module_and_file)
+                            'order',
+                            __('菜单配置错诶：add元素缺少order属性,文件：%1 配置示例： <add source="Weline_Backend::dashboard" name="Dashboard" title="Dashboard" action="/" icon="mdi-home-variant-outline" order="999"/>', $module_and_file)
                         );
+                        if (!isset($menu['add']['_attribute']['icon'])) {
+                            $menu['add']['_attribute']['icon'] = '';
+                        }
+                        /*$menu['add']['_attribute']['order'] = $menu['add']['_attribute']['order']??0;
+                        if (in_array($menu['add']['_attribute']['order'], $has_orders)) {
+                            throw new \Exception(__('菜单排序值 %1 重复,请重新设置order排序值.错误所在文件：%2', [$menu['add']['_attribute']['order'], $module_menu_file]));
+                        }
+                        $has_orders[] = $menu['add']['_attribute']['order'];*/
                         if ($menu['add']['_attribute']) $module_menus[$module]['data'][] = $menu['add']['_attribute'];
                     }
 
                 }
+            }
+        }
+        foreach ($module_menus as &$module_menu) {
+            $data = $module_menu['data'];
+            if ($data) {
+                $orders = array_column($data, 'order');
+                array_multisort($orders, SORT_ASC, $data);
+                $module_menu['data'] = $data;
             }
         }
         return $module_menus;
