@@ -50,7 +50,7 @@ class AdminUser extends \Weline\Framework\Database\Model
 //        # 初始化一个账户
 //        /**@var AdminUser $adminUser */
 //        $adminUser = ObjectManager::getInstance(AdminUser::class);
-//        $adminUser->setUsername('admin')->setPassword('admin')->save();
+//        $adminUser->setUsername('Admin')->setPassword('admin')->save();
     }
 
     /**
@@ -77,6 +77,11 @@ class AdminUser extends \Weline\Framework\Database\Model
                 ->addColumn(self::fields_attempt_times, TableInterface::column_type_INTEGER, 0, '', '尝试登录次数')
                 ->addColumn(self::fields_attempt_ip, TableInterface::column_type_VARCHAR, 16, '', '尝试登录IP')
                 ->create();
+
+            # 初始化一个账户
+            /**@var AdminUser $adminUser */
+            $adminUser = ObjectManager::getInstance(AdminUser::class);
+            $adminUser->setUsername('Admin')->setPassword('admin')->save();
         }
     }
 

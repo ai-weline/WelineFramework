@@ -51,7 +51,7 @@ class Menu extends \Weline\Framework\Database\Model
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-        $setup->dropTable();
+        /*$setup->dropTable();
         $setup->getPrinting()->setup('安装数据表...' . self::table);
         $setup->createTable('后端菜单表')
             ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', 'ID')
@@ -64,7 +64,7 @@ class Menu extends \Weline\Framework\Database\Model
             ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
             ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
             ->addColumn(self::fields_ORDER, TableInterface::column_type_INTEGER, null, 'not null', '排序')
-            ->create();
+            ->create();*/
     }
 
     /**
