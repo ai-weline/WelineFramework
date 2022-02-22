@@ -8,5 +8,5 @@
  */
 
 return [
-    'router' => '',
+    'router' => 'admin',
 ];

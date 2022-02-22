@@ -2,6 +2,23 @@
 <menus xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
        xs:noNamespaceSchemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd"
        xs:schemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd">
-    <add source="Weline_Admin::system_menus" name="system_menus" title="菜单配置" action="admin/menus/listing"
-         parent="Weline_Backend::system_menu" order="1" icon=""/>
+    <!--面板-->
+    <add source="Weline_Admin::system_dashboard" name="system_dashboard" title="面板" action="admin"
+         parent="Weline_Backend::system_menu" icon="mdi mdi-desktop-mac-dashboard" order="1"/>
+    <!--菜单管理-->
+    <add source="Weline_Admin::system_menu_manager" name="system_menu_manager" title="菜单管理" action="admin/menus"
+         parent="Weline_Backend::system_menu" icon="ri-menu-line" order="100"/>
+    <!--内容管理-->
+    <add source="Weline_Admin::system_cms" name="system_cms" title="内容管理" action="admin/cms"
+         parent="Weline_Backend::system_menu" icon="ri-edit-box-line" order="200"/>
+
+    <!--事件管理-->
+    <add source="Weline_Admin::system_events" name="system_events" title="事件管理" action="admin/events"
+         parent="Weline_Backend::system_configuration" icon="ri-spy-fill" order="10100"/>
+    <!--插件管理-->
+    <add source="Weline_Admin::system_plugins" name="system_plugins" title="插件管理" action="admin/plugins"
+         parent="Weline_Backend::system_configuration" icon="ri-plug-2-line" order="10200"/>
+    <!--模组管理-->
+    <add source="Weline_Admin::system_modules" name="system_modules" title="模组管理" action="admin/modules"
+         parent="Weline_Backend::system_configuration" icon="ri-sound-module-line" order="10300"/>
 </menus>

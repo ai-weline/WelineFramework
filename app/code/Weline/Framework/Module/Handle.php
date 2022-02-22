@@ -190,7 +190,7 @@ class Handle implements HandleInterface, RegisterInterface
             if (is_file($filepath)) {
                 if ($filename === DataInterface::file_etc_Env) {
                     $env = (array)require $filepath;
-                    if (!isset($env['router'])) {
+                    if (!isset($env['router'])||empty($env['router'])) {
                         // 如果文件不存在则读取模块名字作为router
                         $env['router'] = strtolower($module->getName());
                         if (DEV) {

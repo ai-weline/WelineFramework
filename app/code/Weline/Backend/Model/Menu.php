@@ -178,7 +178,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getOrder(): int
     {
-        return parent::getData(self::fields_ORDER);
+        return intval(parent::getData(self::fields_ORDER));
     }
 
     public function setOrder(int $order): static

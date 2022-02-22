@@ -8,7 +8,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Admin\Controller\Admin;
+namespace Weline\Admin\Controller;
 
 use Weline\Admin\Helper\Data;
 use Weline\Admin\Model\AdminUser;
@@ -60,7 +60,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         # 已经登录直接进入后台
 //        $this->_session->logout();
         if ($this->_session->isLogin()) {
-            $this->redirect($this->getUrl('/'));
+            $this->redirect($this->getUrl('admin'));
         }
         if (!$this->_request->isPost()) {
             # get请求404
@@ -125,7 +125,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $this->messageManager->addError(__('登录凭据错误！'));
         }
         # 跳转首页
-        $this->redirect($this->getUrl('/'));
+        $this->redirect($this->getUrl('admin'));
 
     }
 

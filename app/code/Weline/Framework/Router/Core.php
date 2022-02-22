@@ -23,7 +23,7 @@ class Core
 {
     const dir_static = 'static';
 
-    const default_index_url = 'index/index';
+    const default_index_url = '/index/index';
 
     const url_path_split = '/';
 
@@ -70,7 +70,8 @@ class Core
     public function start()
     {
         # 获取URL
-        $url = $this->processUrl();
+        $url                     = $this->processUrl();
+
         $this->_router_cache_key = $this->area_router . $this->request->getUrlPath();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
@@ -100,7 +101,7 @@ class Core
     function processUrl()
     {
         // 读取url
-        $url = $this->request->getUrlPath();
+        $url           = $this->request->getUrlPath();
         $url_cache_key = 'url_cache_key_' . $url;
         if ($cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
@@ -110,9 +111,15 @@ class Core
                 if ($this->area_router === $this->_etc->getConfig('admin', '')) {
                     $url = str_replace($this->area_router, '', $url);
                     $url = trim($url, self::url_path_split);
+                    if (!is_int(strpos($url, self::url_path_split))) {
+                        $url .= self::default_index_url;
+                    }
                 } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
                     $url = str_replace($this->area_router, '', $url);
                     $url = trim($url, self::url_path_split);
+                     if (!is_int(strpos($url, self::url_path_split))) {
+                         $url .= self::default_index_url;
+                     }
                 }
             }
             // 找不到则访问默认控制器
@@ -131,13 +138,14 @@ class Core
      * 参数区：
      *
      * @param string $url
+     *
      * @return false|void
      * @throws Exception
      * @throws \ReflectionException
      */
     public function Api(string $url)
     {
-        $url = strtolower($url);
+        $url          = strtolower($url);
         $is_api_admin = $this->request_area === \Weline\Framework\Controller\Data\DataInterface::type_api_BACKEND;
 
         if ($is_api_admin) {
@@ -148,7 +156,7 @@ class Core
         }
         if (file_exists($router_filepath)) {
             $routers = include $router_filepath;
-            $method = '::' . strtoupper($this->request->getMethod());
+            $method  = '::' . strtoupper($this->request->getMethod());
             if (isset($routers[$url . $method]) || isset($routers[$url . '/index' . $method])) {
                 $this->router = $routers[$url . $method] ?? $routers[$url . '/index' . $method];
                 # 缓存路由结果
@@ -170,13 +178,14 @@ class Core
      * 参数区：
      *
      * @param string $url
+     *
      * @return false|void
      * @throws Exception
      * @throws \ReflectionException
      */
     public function Pc(string $url)
     {
-        $url = strtolower($url);
+        $url         = strtolower($url);
         $is_pc_admin = $this->request_area === \Weline\Framework\Controller\Data\DataInterface::type_pc_BACKEND;
         // 检测api路由区域
         if ($is_pc_admin) {
@@ -185,11 +194,16 @@ class Core
             $router_filepath = Env::path_FRONTEND_PC_ROUTER_FILE;
         }
         $url_class_method_cache_key = 'url_class_method_cache_key';
-        $class_method = $this->cache->get($url_class_method_cache_key);
+        $class_method               = $this->cache->get($url_class_method_cache_key);
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
-            if (isset($routers[$url]) || isset($routers[$url . '/index']) || isset($routers[$url . self::default_index_url])) {
-                $this->router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url];
+            if (
+                isset($routers[$url]) ||
+                isset($routers[$url . '/index']) ||
+                isset($routers[$url . self::default_index_url]) ||
+                isset($routers[($url ? $url . self::default_index_url : ltrim(self::default_index_url, '/'))])
+            ) {
+                $this->router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url] ?? $routers[($url ? $url . self::default_index_url : ltrim(self::default_index_url, '/'))];
                 # 缓存路由结果
                 $this->router['type'] = 'pc';
                 $this->cache->set($this->_router_cache_key, $this->router);
@@ -210,6 +224,7 @@ class Core
      * 参数区：
      *
      * @param string $url
+     *
      * @return mixed
      * @throws Exception
      * @throws \ReflectionException
@@ -225,11 +240,11 @@ class Core
         }
         if (is_file($filename)) {
             $filename_arr = explode('.', $filename);
-            $file_ext = end($filename_arr);
+            $file_ext     = end($filename_arr);
             if ($file_ext === 'css') {
                 $mime_type = 'text/css';
             } else {
-                $fi = new \finfo(FILEINFO_MIME_TYPE);
+                $fi        = new \finfo(FILEINFO_MIME_TYPE);
                 $mime_type = $fi->file($filename);
             }
             header('Content-Type:' . $mime_type);
@@ -242,9 +257,9 @@ class Core
     function getController(array $router): array
     {
         $controller_cache_controller_key = 'controller_cache_key_' . implode('_', $router['class']) . '_controller';
-        $controller_cache_method_key = 'controller_cache_key_' . implode('_', $router['class']) . '_method';
-        $dispatch = $this->cache->get($controller_cache_controller_key);
-        $dispatch_method = $this->cache->get($controller_cache_method_key);
+        $controller_cache_method_key     = 'controller_cache_key_' . implode('_', $router['class']) . '_method';
+        $dispatch                        = $this->cache->get($controller_cache_controller_key);
+        $dispatch_method                 = $this->cache->get($controller_cache_method_key);
         if ($dispatch && $dispatch_method) {
             return [$dispatch, $dispatch_method];
         } else {

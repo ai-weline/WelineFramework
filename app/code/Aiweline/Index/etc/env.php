@@ -7,4 +7,4 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-return ['router' => ''];
+return ['router' => 'index'];
