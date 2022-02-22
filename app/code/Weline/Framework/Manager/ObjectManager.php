@@ -54,8 +54,9 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param string $class
-     * @param array $arguments
-     * @param bool $shared
+     * @param array  $arguments
+     * @param bool   $shared
+     *
      * @return mixed
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true, bool $cache = false): mixed
@@ -77,9 +78,9 @@ class ObjectManager implements ManagerInterface
         // 类名规则处理
         $new_class = self::parserClass($class);
         $arguments = $arguments ?: self::getMethodParams($new_class);
-        if($new_class=='Aiweline\Bbs\Controller\Index'){
-            p($arguments);
-        }
+//        if ($new_class == 'Aiweline\Bbs\Controller\Index') {
+//            p($arguments);
+//        }
         $refClass = (new \ReflectionClass($new_class));
 //        p($refClass->getAttributes());
         $new_object = $refClass->newInstanceArgs($arguments);
@@ -112,12 +113,14 @@ class ObjectManager implements ManagerInterface
     /**
      * @DESC          # 设置实例
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2022/1/5 22:49
      * 参数区：
+     *
      * @param string $class
      * @param object $object
+     *
      * @return mixed
      */
     public static function setInstance(string $class, object &$object): mixed
@@ -143,13 +146,15 @@ class ObjectManager implements ManagerInterface
 
     /**
      * 解析类名
+     *
      * @param string $class
+     *
      * @return string
      */
     public static function parserClass(string $class): string
     {
         // 拦截器处理
-        $new_class = $class;
+        $new_class   = $class;
         $interceptor = $class . '\\Interceptor';
 
         if (class_exists($interceptor)) {
@@ -165,8 +170,10 @@ class ObjectManager implements ManagerInterface
 
     /**
      * 初始化类实例
+     *
      * @param string $class
-     * @param $new_object
+     * @param        $new_object
+     *
      * @return mixed
      */
     private static function initClassInstance(string $class, $new_object): mixed
@@ -188,9 +195,10 @@ class ObjectManager implements ManagerInterface
 
     /**
      * @Desc         | 创建实例并运行
-     * @param $class
+     * @param        $class
      * @param string $method
-     * @param array $params
+     * @param array  $params
+     *
      * @return mixed
      * @throws \ReflectionException
      * @throws Exception
@@ -200,7 +208,7 @@ class ObjectManager implements ManagerInterface
         // 拦截器处理
         $new_class = self::parserClass($class);
         if ('__construct' === $method) {
-            $instance = (new ReflectionClass($new_class));
+            $instance      = (new ReflectionClass($new_class));
             $method_params = self::getMethodParams($instance, $method);
             foreach ($method_params as $key => $method_param) {
                 if (empty($method_param)) {
@@ -208,7 +216,7 @@ class ObjectManager implements ManagerInterface
                 }
             }
             $method_params = array_merge($method_params, $params);
-            $instance = $instance->newInstanceArgs($method_params);
+            $instance      = $instance->newInstanceArgs($method_params);
             if (method_exists($instance, '__init')) {
                 $instance->__init();
             }
@@ -225,8 +233,9 @@ class ObjectManager implements ManagerInterface
 
     /**
      * @Desc         | 获取方法参数,插件实现
-     * @param $className
+     * @param        $className
      * @param string $methodsName
+     *
      * @return array
      * @throws Exception
      */
@@ -235,7 +244,7 @@ class ObjectManager implements ManagerInterface
         // 通过反射获得该类
         if (is_object($instance_or_class)) {
             $className = $instance_or_class::class;
-            $class = $instance_or_class;
+            $class     = $instance_or_class;
         } else {
             $className = $instance_or_class;
             try {
@@ -262,9 +271,9 @@ class ObjectManager implements ManagerInterface
             if (count($params) > 0) {
                 // 判断参数类型
                 foreach ($params as $key => $param) {
-                    if($instance_or_class=='Aiweline\Bbs\Controller\Index'){
-                        p(class_exists($param->getType()->getName()));
-                    }
+//                    if($instance_or_class=='Aiweline\Bbs\Controller\Index'){
+//                        p($param->getType()->getName());
+//                    }
                     if ($param->getType() && class_exists($param->getType()->getName())) {
                         // 获得参数类型名称
                         $paramTypeName = $param->getType()->getName();
@@ -312,6 +321,7 @@ class ObjectManager implements ManagerInterface
      * 参数区：
      *
      * @param $class
+     *
      * @return ReflectionClass
      * @throws \ReflectionException
      */
