@@ -23,7 +23,7 @@ class Core
 {
     const dir_static = 'static';
 
-    const default_index_url = '/index/index';
+    const default_index_url = 'index/index';
 
     const url_path_split = '/';
 
@@ -101,9 +101,8 @@ class Core
     {
         // 读取url
         $url = $this->request->getUrlPath();
-
         $url_cache_key = 'url_cache_key_' . $url;
-        if (PROD && $cached_url = $this->cache->get($url_cache_key)) {
+        if ($cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
         } else {
             // 前后台路由处理
@@ -111,15 +110,9 @@ class Core
                 if ($this->area_router === $this->_etc->getConfig('admin', '')) {
                     $url = str_replace($this->area_router, '', $url);
                     $url = trim($url, self::url_path_split);
-                    if (!is_int(strpos($url, self::url_path_split))) {
-                        $url .= self::default_index_url;
-                    }
                 } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
                     $url = str_replace($this->area_router, '', $url);
                     $url = trim($url, self::url_path_split);
-                    if (!is_int(strpos($url, self::url_path_split))) {
-                        $url .= self::default_index_url;
-                    }
                 }
             }
             // 找不到则访问默认控制器
@@ -277,6 +270,7 @@ class Core
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);
+//        return $dispatch->$method();
         exit($dispatch->$method());
 //        exit(call_user_func([$dispatch, $method], $this->request->getParams()));
     }

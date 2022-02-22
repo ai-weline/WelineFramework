@@ -21,15 +21,15 @@ class Menu extends \Weline\Framework\Database\Model
 {
     const table = 'm_backend_menu';
 
-    const fields_NAME = 'name';
-    const fields_TITLE = 'title';
-    const fields_PID = 'pid';
-    const fields_SOURCE = 'source';
+    const fields_NAME          = 'name';
+    const fields_TITLE         = 'title';
+    const fields_PID           = 'pid';
+    const fields_SOURCE        = 'source';
     const fields_PARENT_SOURCE = 'parent_source';
-    const fields_ACTION = 'action';
-    const fields_MODULE = 'module';
-    const fields_ICON = 'icon';
-    const fields_ORDER = 'order';
+    const fields_ACTION        = 'action';
+    const fields_MODULE        = 'module';
+    const fields_ICON          = 'icon';
+    const fields_ORDER         = 'order';
 
     private CacheInterface $backendCache;
 
@@ -42,7 +42,7 @@ class Menu extends \Weline\Framework\Database\Model
     )
     {
         parent::__construct($data);
-        $this->url = $url;
+        $this->url          = $url;
         $this->backendCache = $backendCache->create();
     }
 
@@ -84,17 +84,17 @@ class Menu extends \Weline\Framework\Database\Model
         $setup->getPrinting()->setup('安装数据表...' . self::table);
         if (!$setup->tableExist()) {
             $setup->createTable('后端菜单表')
-                ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', 'ID')
-                ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
-                ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单标题')
-                ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
-                ->addColumn(self::fields_SOURCE, TableInterface::column_type_VARCHAR, 255, '', '资源')
-                ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
-                ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
-                ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
-                ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
-                ->addColumn(self::fields_ORDER, TableInterface::column_type_INTEGER, null, 'not null', '排序')
-                ->create();
+                  ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', 'ID')
+                  ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
+                  ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单标题')
+                  ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
+                  ->addColumn(self::fields_SOURCE, TableInterface::column_type_VARCHAR, 255, '', '资源')
+                  ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
+                  ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
+                  ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
+                  ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
+                  ->addColumn(self::fields_ORDER, TableInterface::column_type_INTEGER, null, 'not null', '排序')
+                  ->create();
         } else {
             $setup->getPrinting()->warning('数据表存在，跳过安装数据表...' . self::table);
         }
@@ -166,6 +166,26 @@ class Menu extends \Weline\Framework\Database\Model
         return parent::setData(self::fields_ICON, $css_icon_class);
     }
 
+    public function getTitle(): string
+    {
+        return parent::getData(self::fields_TITLE);
+    }
+
+    public function setTitle(string $title): static
+    {
+        return parent::setData(self::fields_ICON, $title);
+    }
+
+    public function getOrder(): int
+    {
+        return parent::getData(self::fields_ORDER);
+    }
+
+    public function setOrder(int $order): static
+    {
+        return parent::setData(self::fields_ORDER, $order);
+    }
+
     public function getModule(): string
     {
         return $this->getData(self::fields_MODULE);
@@ -185,7 +205,7 @@ class Menu extends \Weline\Framework\Database\Model
     /**
      * @DESC          # 获取菜单树
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2022/2/9 0:38
      * 参数区：
@@ -196,7 +216,7 @@ class Menu extends \Weline\Framework\Database\Model
         if (PROD && $data = $this->backendCache->get($cache_key)) {
             return $data;
         }
-        $top_menus = $this->where($this::fields_PID . ' is null')->order('order','ASC')->select()->fetch();
+        $top_menus = $this->where($this::fields_PID . ' is null')->order('order', 'ASC')->select()->fetch();
         foreach ($top_menus as &$top_menu) {
             $top_menu = $this->getSubMenus($top_menu);
         }
@@ -207,7 +227,7 @@ class Menu extends \Weline\Framework\Database\Model
     /**
      * @DESC          # 方法描述
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2022/2/20 23:18
      * 参数区：
@@ -220,16 +240,16 @@ class Menu extends \Weline\Framework\Database\Model
 
     function getSubMenus(\Weline\Backend\Model\Menu &$menu): Menu
     {
-        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getId())->order('order','ASC')->select()->fetch()) {
+        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getId())->order('order', 'ASC')->select()->fetch()) {
             foreach ($sub_menus as &$sub_menu) {
                 $has_sub_menu = $this->clearData()->where($this::fields_PID, $sub_menu->getID())->find()->fetch();
                 if ($has_sub_menu->getId()) {
-                    $sub_menu =  $this->getSubMenus($sub_menu);
+                    $sub_menu = $this->getSubMenus($sub_menu);
                 }
             }
-            $menu = $menu->setData('sub_menu',$sub_menus);
+            $menu = $menu->setData('sub_menu', $sub_menus);
         } else {
-            $menu = $menu->setData('sub_menu',[]);
+            $menu = $menu->setData('sub_menu', []);
         }
         return $menu;
     }

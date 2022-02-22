@@ -98,24 +98,24 @@ class Template extends DataObject
 
     public function init()
     {
-        $this->_request = ObjectManager::getInstance(Request::class);
-        $this->view_dir = BP . $this->_request->getRouterData('module_path') . DataInterface::dir . DIRECTORY_SEPARATOR;
+        $this->_request      = ObjectManager::getInstance(Request::class);
+        $this->view_dir      = BP . $this->_request->getRouterData('module_path') . DataInterface::dir . DIRECTORY_SEPARATOR;
         $this->vars['title'] = $this->_request->getModuleName();
 
-        $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
+        $this->theme         = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
         $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
-        $this->viewCache = ObjectManager::getInstance(ViewCache::class)->create();
+        $this->viewCache     = ObjectManager::getInstance(ViewCache::class)->create();
 
-        $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
+        $this->statics_dir  = $this->getViewDir(DataInterface::view_STATICS_DIR);
         $this->template_dir = $this->getViewDir(DataInterface::view_TEMPLATE_DIR);
-        $this->compile_dir = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
+        $this->compile_dir  = $this->getViewDir(DataInterface::view_TEMPLATE_COMPILE_DIR);
         return $this;
     }
 
     /**
      * @DESC          # 获取form_key
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/10/22 22:24
      * 参数区：
@@ -132,6 +132,7 @@ class Template extends DataObject
      * 参数区：
      *
      * @param $filepath
+     *
      * @return string
      * @throws \Exception
      */
@@ -152,7 +153,8 @@ class Template extends DataObject
      * 参数区：
      *
      * @param string|array $key 键值
-     * @param null $value
+     * @param null         $value
+     *
      * @return Template
      */
     public function assign(string|array $key, mixed $value = null): static
@@ -163,33 +165,34 @@ class Template extends DataObject
 
     /**
      * @param string $fileName 文件名
+     *
      * @throws Core
      * @throws Exception
      */
     function convertFetchFileName(string $fileName): array
     {
         $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName';
-        $tplFile_cache_key = $this->view_dir . $fileName . '_tplFile';
-        $comFileName = '';
-        $tplFile = '';
+        $tplFile_cache_key     = $this->view_dir . $fileName . '_tplFile';
+        $comFileName           = '';
+        $tplFile               = '';
         if (PROD) {
             $comFileName = $this->viewCache->get($comFileName_cache_key);
-            $tplFile = $this->viewCache->get($tplFile_cache_key);
+            $tplFile     = $this->viewCache->get($tplFile_cache_key);
         }
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
         if (empty($comFileName) || empty($tplFile)) {
             // 解析模板路由
-            $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+            $fileName          = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
             $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
-            $file_dir = '';
-            $file_name = '';
+            $file_dir          = '';
+            $file_name         = '';
 
             // 如果给的文件名字有路径
             if (count($file_name_dir_arr) > 1) {
                 $file_name = array_pop($file_name_dir_arr);
-                $file_dir = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
+                $file_dir  = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
                 if ($file_dir) {
                     $file_dir .= DIRECTORY_SEPARATOR;
                 }
@@ -248,7 +251,7 @@ class Template extends DataObject
         if (DEV || !file_exists($comFileName) || (filemtime($comFileName) < filemtime($tplFile))) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $repContent = $this->tmp_replace(file_get_contents($tplFile), $fileName);//得到模板文件 并替换占位符 并得到替换后的文件
-            file_put_contents($comFileName, $repContent);//将替换后的文件写入定义的缓存文件中
+            file_put_contents($comFileName, $repContent);                            //将替换后的文件写入定义的缓存文件中
         }
         return $comFileName;
     }
@@ -258,8 +261,9 @@ class Template extends DataObject
      *
      * 参数区：
      *
-     * @param string $fileName 获取的模板名
-     * @param array $dictionary 参数绑定
+     * @param string $fileName   获取的模板名
+     * @param array  $dictionary 参数绑定
+     *
      * @return bool|void
      * @throws \Exception
      */
@@ -274,8 +278,9 @@ class Template extends DataObject
      *
      * 参数区：
      *
-     * @param string $fileName 获取的模板名
-     * @param array $dictionary 参数绑定
+     * @param string $fileName   获取的模板名
+     * @param array  $dictionary 参数绑定
+     *
      * @return bool|void
      * @throws \Exception
      */
@@ -301,19 +306,20 @@ class Template extends DataObject
      *
      * 参数区：
      *
-     * @param string $content 文本
+     * @param string $content  文本
      * @param string $fileName 模板文件
+     *
      * @return string|string[]|null
      * @throws Core
      */
     private function tmp_replace(string $content, string $fileName): array|string|null
     {
         $static_url_path = $this->getUrlPath($this->statics_dir);
-        $replaces = [
+        $replaces        = [
             '__static__' => $static_url_path,
             '__STATIC__' => $static_url_path,
-            '<php>' => '<?php ',
-            '</php>' => '?>',
+            '<php>'      => '<?php ',
+            '</php>'     => '?>',
         ];
         foreach ($replaces as $tag => $replace) {
             $content = str_replace($tag, $replace, $content);
@@ -344,7 +350,7 @@ class Template extends DataObject
 //            return preg_replace($patterns, $dev_replacement, $content);
 //        }
         return preg_replace_callback($patterns, function ($back) use ($fileName) {
-            $back[0] = str_replace($back[1], '', $back[0]);
+            $back[0]    = str_replace($back[1], '', $back[0]);
             $re_content = '';
             switch (strtolower($back[0])) {
                 case '@controller()':
@@ -397,7 +403,7 @@ class Template extends DataObject
 
             }
             return $re_content;
-        }, $content);
+        },                           $content);
     }
 
     public function getUrl(string $path, array $params = [], bool $merge_query = true): string
