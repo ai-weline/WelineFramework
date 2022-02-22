@@ -12,10 +12,15 @@ use Weline\Framework\App\Exception;
 require 'check.php';
 
 //// 项目根目录
-define("BP", dirname(__DIR__) . DIRECTORY_SEPARATOR);
+if(!defined('BP')){
+    define("BP", dirname(__DIR__) . DIRECTORY_SEPARATOR);
+}
 const DEV = true;
 // 第三方代码目录
-define('VENDOR_PATH', BP . 'vendor' . DIRECTORY_SEPARATOR);
+if (!defined('VENDOR_PATH')) {
+    define('VENDOR_PATH', BP . 'vendor' . DIRECTORY_SEPARATOR);
+}
+
 // 检测Composer自动加载代理
 try {
     $autoloader = VENDOR_PATH . 'autoload.php';
