@@ -77,6 +77,9 @@ class ObjectManager implements ManagerInterface
         // 类名规则处理
         $new_class = self::parserClass($class);
         $arguments = $arguments ?: self::getMethodParams($new_class);
+        if($new_class=='Aiweline\Bbs\Controller\Index'){
+            p($arguments);
+        }
         $refClass = (new \ReflectionClass($new_class));
 //        p($refClass->getAttributes());
         $new_object = $refClass->newInstanceArgs($arguments);
@@ -242,7 +245,6 @@ class ObjectManager implements ManagerInterface
             }
         }
         $paramArr = []; // 记录参数，和参数类型（例如：class,string等）
-
         // 判断该类是否有函数
         if ($class->hasMethod($methodsName)) {
             // 获得构造函数
@@ -255,11 +257,14 @@ class ObjectManager implements ManagerInterface
                 throw new Exception(__('无法获得对象方法：%1，错误：%2', [$methodsName, $e->getMessage()]), $e);
             }
             // 判断构造函数是否有参数
+            // TODO 完成自动注入在 PHP 8.1环境下的问题
             $params = $construct->getParameters();
-
             if (count($params) > 0) {
                 // 判断参数类型
                 foreach ($params as $key => $param) {
+                    if($instance_or_class=='Aiweline\Bbs\Controller\Index'){
+                        p(class_exists($param->getType()->getName()));
+                    }
                     if ($param->getType() && class_exists($param->getType()->getName())) {
                         // 获得参数类型名称
                         $paramTypeName = $param->getType()->getName();
