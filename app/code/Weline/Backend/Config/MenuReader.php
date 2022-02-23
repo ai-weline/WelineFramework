@@ -33,11 +33,11 @@ class MenuReader extends Reader
         $configs = parent::read();
         // 菜单提取
         $module_menus = [];
-        $has_orders = [];
+        $has_orders   = [];
         foreach ($configs as $module_and_file => $config) {
-            $m_a_f_arr = explode('::', $module_and_file);
-            $module = array_shift($m_a_f_arr);
-            $module_menu_file = array_pop($m_a_f_arr);
+            $m_a_f_arr                     = explode('::', $module_and_file);
+            $module                        = array_shift($m_a_f_arr);
+            $module_menu_file              = array_pop($m_a_f_arr);
             $module_menus[$module]['file'] = $module_menu_file;
             $module_menus[$module]['data'] = [];
             if (
@@ -88,7 +88,8 @@ class MenuReader extends Reader
                                     throw new \Exception(__('菜单排序值 %1 重复,请重新设置order排序值.错误所在文件：%2', [$menu['add']['_attribute']['order'], $module_menu_file]));
                                 }
                                 $has_orders[] = $menu_data['_attribute']['order'];*/
-                                $module_menus[$module]['data'][] = $menu_data['_attribute'];
+                                $menu_data['_attribute']['is_system'] = 1;
+                                $module_menus[$module]['data'][]      = $menu_data['_attribute'];
                             }
                         }
                     } else {
@@ -125,6 +126,7 @@ class MenuReader extends Reader
                             throw new \Exception(__('菜单排序值 %1 重复,请重新设置order排序值.错误所在文件：%2', [$menu['add']['_attribute']['order'], $module_menu_file]));
                         }
                         $has_orders[] = $menu['add']['_attribute']['order'];*/
+                        $menu['add']['_attribute']['is_system'] = 1;
                         if ($menu['add']['_attribute']) $module_menus[$module]['data'][] = $menu['add']['_attribute'];
                     }
 

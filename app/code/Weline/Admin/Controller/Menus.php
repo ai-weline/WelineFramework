@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Weline\Admin\Controller;
 
 use Weline\Backend\Model\Menu;
+use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;
 
 class Menus extends BaseController
@@ -30,9 +31,17 @@ class Menus extends BaseController
     function postDelete()
     {
         try {
-            ObjectManager::getInstance(Menu::class)->load($this->_request->getPost('id'))->delete();
-        }catch (\Exception $exception){
-
+            if ($id = $this->_request->getPost('id', 0)) {
+                /**@var Menu $menu */
+                $menu = ObjectManager::getInstance(Menu::class)->load($id);
+                if ($menu->isSystem()) throw new Exception(__('系统菜单无法删除！'));
+                $menu->delete();
+                return $this->fetchJson(['code' => 200, 'msg' => __('删除成功！'), 'data' => []]);
+            } else {
+                return $this->fetchJson(['code' => 403, 'msg' => __('关键参数ID不存在！'), 'data' => []]);
+            }
+        } catch (\Exception $exception) {
+            return $this->fetchJson(['code' => 403, 'msg' => $exception->getMessage(), 'data' => []]);
         }
     }
 }

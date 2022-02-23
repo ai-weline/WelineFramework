@@ -147,7 +147,7 @@ File: Sweetalert Js File
                 title: '<i>HTML</i> <u>example</u>',
                 icon: 'info',
                 html: 'You can use <b>bold text</b>, ' +
-                '<a href="//秋枫雁飞(aiweline).in/">links</a> ' +
+                '<a href="https://www.aiweline.com">links</a> ' +
                 'and other HTML tags',
                 showCloseButton: true,
                 showCancelButton: true,
@@ -264,6 +264,7 @@ File: Sweetalert Js File
                 }
             }]).catch(swal.noop)
         });
+
 
 
     },

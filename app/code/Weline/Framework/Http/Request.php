@@ -94,7 +94,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $params;
     }
 
-    function getPost(string $key = '', mixed $default = [])
+    function getPost(string $key = '', mixed $default = null)
     {
         if ('' === $key) {
             return $_POST;
@@ -102,7 +102,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $_POST[$key] ?? $default;
     }
 
-    function getGet(string $key = '', mixed $default = [])
+    function getGet(string $key = '', mixed $default = null)
     {
         if ('' === $key) {
             return $_GET;
