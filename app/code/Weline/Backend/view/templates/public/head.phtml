@@ -1,3 +1,6 @@
+<?php
+/**@var \Weline\Framework\View\Template $this */
+?>
 <meta charset="UTF-8">
 <title><?php echo $this->getData('title'); ?></title>
 <meta content="<?php echo $this->getData('description'); ?>" name="description"/>
@@ -6,11 +9,11 @@
 <link rel="Bookmark" href="@static(Weline_Backend::img/favicon.png)">
 <!--加载requirejs-->
 <?php if (DEV) : ?>
-<!--    <script src="@static(Weline_Backend::backend/lib/requirejs/2.3.6/requirejs.js)"></script>-->
+    <!--    <script src="@static(Weline_Backend::backend/lib/requirejs/2.3.6/requirejs.js)"></script>-->
 <?php
 else:
     ?>
-<!--    <script src="@static(Weline_Backend::backend/lib/requirejs/2.3.6/requirejs.min.js)"></script>-->
+    <!--    <script src="@static(Weline_Backend::backend/lib/requirejs/2.3.6/requirejs.min.js)"></script>-->
 <?php
 endif;
 ?>
@@ -20,4 +23,14 @@ endif;
 <?php
 echo $this->getHeader()->getHtml();
 ?>
+<script>
+    var SITE_DATA = {
+        host: '<?=$this->_request->getBaseHost()?>',
+        base_host: '<?=$this->_request->isBackend() ? $this->_request->getAdminUrl('/') : $this->_request->getBaseHost()?>',
+        base_router: '<?=$this->_request->getRouterData('router')?>',
+        buildUrl: function (path) {
+            return this.base_host + '/' + this.base_router + '/' + path;
+        },
+    };
+</script>
 

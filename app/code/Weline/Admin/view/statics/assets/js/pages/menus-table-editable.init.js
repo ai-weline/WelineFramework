@@ -10,9 +10,9 @@ $(function () {
     let table_edit = $('.table-edits tr');
     table_edit.editable({
         /*选择数据*/
-       /* dropdowns: {
-            source: ['Weline_Backend::system_menu', 'Weline_Backend::system_configuration']
-          },*/
+        /* dropdowns: {
+             source: ['Weline_Backend::system_menu', 'Weline_Backend::system_configuration']
+           },*/
         edit: function (values) {
             $(".edit i", this)
                 .removeClass('fa-pencil-alt')
@@ -43,11 +43,25 @@ $(function () {
         }
     });
     /*删除*/
-    table_edit.on('click',function (e){
+    table_edit.on('click', function (e) {
         let target = $(e.target)
-        if('delete'===target.attr('data-action')){
+        if ('delete' === target.attr('data-action')) {
             let id = target.attr('data-id');
-
+            $.ajax(
+                {
+                    url: SITE_DATA.buildUrl('/menus/delete'),
+                    type: 'post',
+                    data: {
+                        id: id
+                    },
+                    success: function (res) {
+                        console.log(res)
+                    },
+                    error: function (res) {
+                        console.log(res)
+                    }
+                }
+            )
         }
     });
 });

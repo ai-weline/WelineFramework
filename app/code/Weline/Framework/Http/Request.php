@@ -96,7 +96,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     function getPost(string $key = '', mixed $default = [])
     {
-        if(''===$key){
+        if ('' === $key) {
             return $_POST;
         }
         return $_POST[$key] ?? $default;
@@ -104,7 +104,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     function getGet(string $key = '', mixed $default = [])
     {
-        if(''===$key){
+        if ('' === $key) {
             return $_GET;
         }
         return $_GET[$key] ?? $default;
@@ -201,7 +201,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
         if ($path) {
-            $url = $this->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . '/' . $path;
+            $url = $this->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . $path);
         } else {
             $url = $this->getBaseUrl();
         }
@@ -221,13 +221,15 @@ class Request extends Request\RequestAbstract implements RequestInterface
     /**
      * @DESC          # 提取Url
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2022/2/8 23:27
      * 参数区：
-     * @param array $params
-     * @param bool $merge_params
+     *
+     * @param array  $params
+     * @param bool   $merge_params
      * @param string $url
+     *
      * @return string
      */
     public function extractedUrl(array $params, bool $merge_params, string $url): string

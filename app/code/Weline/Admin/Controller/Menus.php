@@ -28,6 +28,6 @@ class Menus extends BaseController
     }
 
     function postDelete(){
-
+        p($this->_request->isPost());
     }
 }

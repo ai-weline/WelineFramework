@@ -30,7 +30,7 @@ class Handle implements RegisterInterface
 
     private Data $helper;
 
-    private array  $modules;
+    private array $modules;
 
     /**
      * @var Printing
@@ -39,8 +39,8 @@ class Handle implements RegisterInterface
 
     public function __construct()
     {
-        $this->helper = new Data();
-        $this->modules = Env::getInstance()->getModuleList();
+        $this->helper   = new Data();
+        $this->modules  = Env::getInstance()->getModuleList();
         $this->printing = new Printing();
     }
 
@@ -54,9 +54,10 @@ class Handle implements RegisterInterface
      *
      * 参数区：
      *
-     * @param array $routerParam
+     * @param array  $routerParam
      * @param string $version
      * @param string $description
+     *
      * @return array|mixed
      * @throws \Weline\Framework\App\Exception
      * @throws ConsoleException
@@ -65,29 +66,30 @@ class Handle implements RegisterInterface
     {
         $controller = explode('Controller', $routerParam['class']);
         $controller = array_pop($controller);
-        $controller = ltrim(str_replace('\\', '/', $controller),'/');
+        $controller = ltrim(str_replace('\\', '/', $controller), '/');
         switch ($routerParam['type']) {
             case DataInterface::type_API:
                 $path = '';
                 if (in_array(DataInterfaceAlias::type_api_REST_FRONTEND, $routerParam['area'], true)) {
-                    $path = self::path_fronted_API;
+                    $path                = self::path_fronted_API;
                     $routerParam['area'] = DataInterfaceAlias::type_api_REST_FRONTEND;
                 } elseif (in_array(DataInterfaceAlias::type_api_BACKEND, $routerParam['area'], true)) {
-                    $path = self::path_backend_API;
+                    $path                = self::path_backend_API;
                     $routerParam['area'] = DataInterfaceAlias::type_api_BACKEND;
                 } else {
                     $routerParam['area'] = self::path_fronted_API;
                 }
                 if ($path) {
                     $router = [
-                        'module' => $routerParam['module'],
+                        'module'      => $routerParam['module'],
                         'module_path' => $routerParam['module_path'],
-                        'class' => [
-                            'area' => $routerParam['area'],
-                            'name' => $routerParam['class'],
+                        'router'      => $routerParam['base_router'],
+                        'class'       => [
+                            'area'            => $routerParam['area'],
+                            'name'            => $routerParam['class'],
                             'controller_name' => $controller,
-                            'method' => $routerParam['method'],
-                            'request_method' => $routerParam['request_method'],
+                            'method'          => $routerParam['method'],
+                            'request_method'  => $routerParam['request_method'],
                         ],
                     ];
                     // 如果模块已安装
@@ -102,10 +104,10 @@ class Handle implements RegisterInterface
             case DataInterface::type_PC:
                 $path = '';
                 if (in_array(DataInterfaceAlias::type_pc_FRONTEND, $routerParam['area'], true)) {
-                    $path = self::path_frontend_PC;
+                    $path                = self::path_frontend_PC;
                     $routerParam['area'] = DataInterfaceAlias::type_pc_FRONTEND;
                 } elseif (in_array(DataInterfaceAlias::type_pc_BACKEND, $routerParam['area'], true)) {
-                    $path = self::path_backend_PC;
+                    $path                = self::path_backend_PC;
                     $routerParam['area'] = DataInterfaceAlias::type_pc_BACKEND;
                 }
                 if ($path) {
@@ -113,15 +115,16 @@ class Handle implements RegisterInterface
                     if (is_file($path)) {
                         $routers = require $path;
                     }
-                    $router = [
-                        'module' => $routerParam['module'],
+                    $router                          = [
+                        'module'      => $routerParam['module'],
                         'module_path' => $routerParam['module_path'],
-                        'class' => [
-                            'area' => $routerParam['area'],
-                            'name' => $routerParam['class'],
-                            'method' => $routerParam['method'],
+                        'router'      => $routerParam['base_router'],
+                        'class'       => [
+                            'area'            => $routerParam['area'],
+                            'name'            => $routerParam['class'],
+                            'method'          => $routerParam['method'],
                             'controller_name' => $controller,
-                            'request_method' => $routerParam['request_method'],
+                            'request_method'  => $routerParam['request_method'],
                         ],
                     ];
                     $routers[$routerParam['router']] = $router;
