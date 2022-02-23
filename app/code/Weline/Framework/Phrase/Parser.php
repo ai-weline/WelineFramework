@@ -20,12 +20,14 @@ class Parser
     /**
      * @DESC         # 翻译解析函数
      * DEV环境下解析字词并收集到generated/language/words.php
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 22:50
      * 参数区：
-     * @param string|array $words
+     *
+     * @param string|array          $words
      * @param int|array|string|null $args
+     *
      * @return mixed|string|string[]
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
@@ -38,7 +40,7 @@ class Parser
             foreach ($args as $key => $arg) {
                 $words = str_replace('%' . (is_integer($key) ? $key + 1 : $key), $arg, $words);
             }
-        } elseif($words&&$args) {
+        } elseif ($words && $args) {
             $words = str_replace('%1', $args, $words);
         }
 
@@ -51,6 +53,7 @@ class Parser
      * 参数区：
      *
      * @param string $words
+     *
      * @return mixed|string
      * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Exception\Core
@@ -58,20 +61,31 @@ class Parser
      */
     protected static function processWords(string $words)
     {
+        self::getI18nWords();
+        // 如果有就替换
+        if (isset(self::$words[$words])) {
+            $words = self::$words[$words];
+        }
+
+        return $words;
+    }
+
+    static function getI18nWords()
+    {
         // 仅加载一次翻译到对象self::$words
         if (empty(self::$words)) {
             // 先访问缓存
             /**@var \Weline\Framework\Cache\CacheInterface $phraseCache */
-            $phraseCache = ObjectManager::getInstance(\Weline\Framework\Phrase\Cache\PhraseCache::class . 'Factory');
+            $phraseCache    = ObjectManager::getInstance(\Weline\Framework\Phrase\Cache\PhraseCache::class . 'Factory');
             $translate_mode = Env::getInstance()->getConfig('translate_mode');
 
             # 事件分配
             /**@var \Weline\Framework\Event\EventsManager $eventsManager */
             $eventsManager = ObjectManager::getInstance(\Weline\Framework\Event\EventsManager::class);
-            $file_data = new DataObject(['file_path' => Env::path_TRANSLATE_DEFAULT_FILE]);
+            $file_data     = new DataObject(['file_path' => Env::path_TRANSLATE_DEFAULT_FILE]);
             $eventsManager->dispatch('Framework_phrase::get_words_file', ['file_data' => $file_data]);
             $words_file = $file_data->getData('file_path');
-            $cache_key = $words_file;
+            $cache_key  = $words_file;
 
             # 非实时翻译
             if (!CLI && $translate_mode !== 'online' && $phrase_words = $phraseCache->get($cache_key)) {
@@ -88,11 +102,6 @@ class Parser
                 }
             }
         }
-        // 如果有就替换
-        if (isset(self::$words[$words])) {
-            $words = self::$words[$words];
-        }
-
-        return $words;
+        return self::$words;
     }
 }
