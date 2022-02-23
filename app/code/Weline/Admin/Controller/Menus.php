@@ -26,4 +26,8 @@ class Menus extends BaseController
         $this->assign('menus', $menus);
         return $this->fetch();
     }
+
+    function postDelete(){
+
+    }
 }

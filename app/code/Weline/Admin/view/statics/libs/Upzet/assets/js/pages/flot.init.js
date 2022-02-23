@@ -1,7 +1,7 @@
 /*
 Template Name: Weline - Responsive Bootstrap 4 Admin Dashboard
-Author: Themesdesign
-Website: https://themesdesign.in/
+Author: 秋枫雁飞(aiweline)
+Website: https://秋枫雁飞(aiweline).in/
 File: Flot Chart
 */
 

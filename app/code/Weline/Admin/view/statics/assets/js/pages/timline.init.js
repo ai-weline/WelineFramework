@@ -1,8 +1,8 @@
 /*
 Template Name: Weline - Responsive Bootstrap 4 Admin Dashboard
-Author: Themesdesign
+Author: 秋枫雁飞(aiweline)
 Version: 1.0.0
-Website: https://themesdesign.in/
+Website: https://秋枫雁飞(aiweline).in/
 File: Timeline Init Js File
 */
 

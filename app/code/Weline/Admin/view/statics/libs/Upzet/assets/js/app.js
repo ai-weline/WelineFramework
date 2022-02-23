@@ -1,6 +1,6 @@
 /*
 Template Name: Weline -  Admin & WelineFramework
-Author: Themesdesign
+Author: 秋枫雁飞(aiweline)
 Version: 1.0.0
 更多支持：https://www.aiweline.com
 File: Main Js File

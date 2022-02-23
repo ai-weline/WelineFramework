@@ -13,6 +13,8 @@
     @template(Weline_Admin::common/head.phtml)
     <!-- jvectormap -->
     <link href="@static(Weline_Admin::assets/libs/jqvmap/jqvmap.min.css)" rel="stylesheet"/>
+    <!-- jquery.mCustomScrollbar 插件 -->
+    <link href="@static(Weline_Admin::/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.css)" rel="stylesheet"/>
     <title><?= __('Weline Admin 管理面板') ?></title>
 </head>
 
@@ -66,7 +68,7 @@
 
                                 <h4 class="card-title"><?= __('菜单编辑器') ?></h4>
 
-                                <div class="table-responsive">
+                                <div class="table-responsive mCustomScrollbar" data-mcs-axis="yx" data-mcs-theme='light' style="height: 800px">
                                     <table class="table table-editable table-nowrap align-middle table-edits">
                                         <thead>
                                         <tr>
@@ -99,9 +101,14 @@
                                                 <td data-field='module'><?= $menu->getModule() ?></td>
                                                 <td data-field='icon'><i class='<?= $menu->getIcon() ?>'></i>&nbsp;&nbsp;&nbsp;&nbsp;<span><?= $menu->getIcon() ?></span></td>
                                                 <td data-field='order'><?= $menu->getOrder() ?></td>
+                                                <td data-field='order'><?= $menu->getCreateTime() ?></td>
+                                                <td data-field='order'><?= $menu->getUpdateTime() ?></td>
                                                 <td style='width: 100px'>
                                                     <a class='btn btn-outline-secondary btn-sm edit' title='<?= __('编辑') ?>'>
                                                         <i class='fas fa-pencil-alt'></i>
+                                                    </a>
+                                                    <a class='btn btn-outline-secondary btn-sm delete' title='<?= __('删除') ?>'>
+                                                        <i class='mdi mdi-delete' data-action="delete"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -110,23 +117,22 @@
                                         ?>
                                         </tbody>
                                     </table>
-                                    <nav aria-label='...'>
-                                        <ul class='pagination pagination-lg'>
-                                            <li class='page-item disabled'>
-                                                <a class='page-link' href='#' tabindex='-1'>Previous</a>
-                                            </li>
-                                            <li class='page-item'><a class='page-link' href='#'>1</a></li>
-                                            <li class='page-item'><a class='page-link' href='#'>2</a></li>
-                                            <li class='page-item'><a class='page-link' href='#'>3</a></li>
-                                            <li class='page-item'>
-                                                <a class='page-link' href='#'>Next</a>
-                                            </li>
-                                        </ul>
-                                    </nav>
                                 </div>
-
                             </div>
                         </div>
+                        <nav aria-label='...'>
+                            <ul class='pagination pagination-lg'>
+                                <li class='page-item disabled'>
+                                    <a class='page-link' href='#' tabindex='-1'>Previous</a>
+                                </li>
+                                <li class='page-item'><a class='page-link' href='#'>1</a></li>
+                                <li class='page-item'><a class='page-link' href='#'>2</a></li>
+                                <li class='page-item'><a class='page-link' href='#'>3</a></li>
+                                <li class='page-item'>
+                                    <a class='page-link' href='#'>Next</a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div> <!-- end col -->
                 </div> <!-- end row -->
 
@@ -144,7 +150,7 @@
                     <div class="col-sm-6">
                         <div class="text-sm-end d-none d-sm-block">
                             Crafted with <i class="mdi mdi-heart text-danger"></i> By <a
-                                    href="https://www.aiweline.com/">bootstrapmb</a>
+                                    href="https://www.aiweline.com/">秋枫雁飞(aiweline)</a>
                         </div>
                     </div>
                 </div>
@@ -161,7 +167,8 @@
 
 <!-- Table Editable plugin -->
 <script src="@static(Weline_Admin::assets/libs/table-edits/build/table-edits.min.js)"></script>
-<script src="@static(Weline_Admin::assets/js/pages/table-editable.init.js)"></script>
+<script src="@static(Weline_Admin::assets/js/pages/menus-table-editable.init.js)"></script>
+<script src='@static(Weline_Admin::/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js)'></script>
 @template(Weline_Admin::common/footer.phtml)
 </body>
 </html>

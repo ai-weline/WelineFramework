@@ -70,7 +70,7 @@ class Core
     public function start()
     {
         # 获取URL
-        $url                     = $this->processUrl();
+        $url = $this->processUrl();
 
         $this->_router_cache_key = $this->area_router . $this->request->getUrlPath();
         if ($router = $this->cache->get($this->_router_cache_key)) {
@@ -117,9 +117,9 @@ class Core
                 } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
                     $url = str_replace($this->area_router, '', $url);
                     $url = trim($url, self::url_path_split);
-                     if (!is_int(strpos($url, self::url_path_split))) {
-                         $url .= self::default_index_url;
-                     }
+                    if (!is_int(strpos($url, self::url_path_split))) {
+                        $url .= self::default_index_url;
+                    }
                 }
             }
             // 找不到则访问默认控制器
@@ -282,6 +282,12 @@ class Core
 
     #[NoReturn] function route()
     {
+        # 方法体方法和请求方法不匹配时 禁止访问
+        if ('' !== $this->router['class']['request_method']) {
+            if ($this->router['class']['request_method'] !== $this->request->getMethod()) {
+                $this->request->getResponse()->noRouter();
+            }
+        }
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);

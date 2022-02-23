@@ -1,7 +1,7 @@
 /*
 Template Name: Weline -  Admin & WelineFramework
-Author: Themesdesign
-Contact: themesdesign.in@gmail.com
+Author: 秋枫雁飞(aiweline)
+Contact: 秋枫雁飞(aiweline) 1714255949@qq.com
 File: Sweetalert Js File
 */
 
@@ -147,7 +147,7 @@ File: Sweetalert Js File
                 title: '<i>HTML</i> <u>example</u>',
                 icon: 'info',
                 html: 'You can use <b>bold text</b>, ' +
-                '<a href="//themesdesign.in/">links</a> ' +
+                '<a href="//秋枫雁飞(aiweline).in/">links</a> ' +
                 'and other HTML tags',
                 showCloseButton: true,
                 showCancelButton: true,
