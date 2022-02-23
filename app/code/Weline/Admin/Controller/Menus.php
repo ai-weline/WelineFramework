@@ -27,7 +27,12 @@ class Menus extends BaseController
         return $this->fetch();
     }
 
-    function postDelete(){
-        p($this->_request->isPost());
+    function postDelete()
+    {
+        try {
+            ObjectManager::getInstance(Menu::class)->load($this->_request->getPost('id'))->delete();
+        }catch (\Exception $exception){
+
+        }
     }
 }

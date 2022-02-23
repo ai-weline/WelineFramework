@@ -129,7 +129,7 @@ class Core
             $url = trim($url, self::url_path_split);
             $this->cache->set($url_cache_key, $url);
         }
-        return $url;
+        return str_replace('//', '/', $url);
     }
 
     /**

@@ -28,7 +28,7 @@ echo $this->getHeader()->getHtml();
         host: '<?=$this->_request->getBaseHost()?>',
         base_host: '<?=$this->_request->isBackend() ? $this->_request->getAdminUrl('/') : $this->_request->getBaseHost()?>',
         base_router: '<?=$this->_request->getRouterData('router')?>',
-        buildUrl: function (path) {
+        buildUrl: (path) => {
             return this.base_host + '/' + this.base_router + '/' + path;
         },
     };
