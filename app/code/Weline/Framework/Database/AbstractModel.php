@@ -18,6 +18,7 @@ use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Exception\Core;
+use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 
 /**
@@ -28,7 +29,8 @@ use Weline\Framework\Manager\ObjectManager;
  * @method QueryInterface update(array $data, string $condition_field = 'id')
  * @method QueryInterface fields(string $fields)
  * @method QueryInterface join(string $table, string $condition, string $type = 'left')
- * @method QueryInterface where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND')
+ * @method QueryInterface where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic)
+ *         = 'AND')
  * @method QueryInterface limit(int $size, int $offset = 0)
  * @method QueryInterface page(int $page = 1, int $pageSize = 20)
  * @method QueryInterface order(string $fields, string $sort = 'ASC')
@@ -57,7 +59,7 @@ abstract class AbstractModel extends DataObject
      *
      * @var array
      */
-    const fields_ID = 'id';
+    const fields_ID          = 'id';
     const fields_CREATE_TIME = 'create_time';
     const fields_UPDATE_TIME = 'update_time';
 
@@ -78,6 +80,7 @@ abstract class AbstractModel extends DataObject
     private ?CacheInterface $_cache = null;
     private array $_fetch_data = [];
     private mixed $_query_data = null;
+    public array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
 
     function __construct(
         array $data = []
@@ -137,7 +140,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 处理表名 存在表名则不处理
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/26 20:32
      * 参数区：
@@ -146,11 +149,11 @@ abstract class AbstractModel extends DataObject
     protected function processTable(): string
     {
         if (!$this->table) {
-            $class_file_name_arr = explode('\\', $this::class);
-            $class_file_name = array_pop($class_file_name_arr);
-            $table_name = str_replace('Model', '', $class_file_name);
+            $class_file_name_arr     = explode('\\', $this::class);
+            $class_file_name         = array_pop($class_file_name_arr);
+            $table_name              = str_replace('Model', '', $class_file_name);
             $this->origin_table_name = $this->_suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
-            $this->table = "`{$this->connection->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
+            $this->table             = "`{$this->connection->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
         }
         return $this->table;
     }
@@ -188,11 +191,13 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 读取表名
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/3 20:14
      * 参数区：
+     *
      * @param string $table
+     *
      * @return string
      */
     function getTable(string $table = ''): string
@@ -206,7 +211,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 读取原始表名
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/3 20:14
      * 参数区：
@@ -224,6 +229,7 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      *
      * @param bool $keep_condition
+     *
      * @return QueryInterface
      * @throws Exception
      * @throws \ReflectionException
@@ -259,6 +265,7 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      *
      * @param QueryInterface $query
+     *
      * @return AbstractModel
      */
     public function setQuery(QueryInterface $query): static
@@ -275,7 +282,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 获取链接
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/3 19:59
      * 参数区：
@@ -294,7 +301,8 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      *
      * @param int|string $field_or_pk_value 字段或者主键的值
-     * @param null $value 字段的值，只读取主键就不填
+     * @param null       $value             字段的值，只读取主键就不填
+     *
      * @return mixed
      * @throws \ReflectionException
      * @throws \Weline\Framework\Exception\Core
@@ -344,8 +352,9 @@ abstract class AbstractModel extends DataObject
      *
      * 参数区：
      *
-     * @param array $data
+     * @param array       $data
      * @param string|null $sequence
+     *
      * @return bool
      * @throws \Weline\Framework\Exception\Core
      * @throws \ReflectionException
@@ -411,11 +420,13 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 【强制检测】 true:强制查询数据库，检测数据是否存在 不存在则插入记录 false:检测当前模型是否存在主键，存在则更新，不存在则插入
      *                # 【原因】 如果主键非ID自增键时，因为主键就是数据，无法检测，只能先查询后操作，遇到此类情况时使用此函数
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 22:49
      * 参数区：
+     *
      * @param bool $force_check_flag
+     *
      * @return AbstractModel
      */
     function forceCheck(bool $force_check_flag = true): AbstractModel
@@ -427,7 +438,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 获取事件管理器
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/30 21:12
      * 参数区：
@@ -443,7 +454,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 删除 模型中 对应主键值的条目
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/30 21:08
      * 参数区：
@@ -477,9 +488,9 @@ abstract class AbstractModel extends DataObject
 
     function clearData(): static
     {
-        $this->_fields=[];
-        $this->_joins=[];
-        $this->_bind_query=null;
+        $this->_fields     = [];
+        $this->_joins      = [];
+        $this->_bind_query = null;
         $this->clearQuery();
         $this->clearDataObject();
         return $this;
@@ -492,6 +503,7 @@ abstract class AbstractModel extends DataObject
      *
      * @param $method
      * @param $args
+     *
      * @return array|bool|mixed|string|AbstractModel|null
      * @throws \Weline\Framework\Exception\Core
      * @throws \ReflectionException
@@ -503,8 +515,6 @@ abstract class AbstractModel extends DataObject
             # 某些函数是不需要保持查询的
             if ($method == 'clearQuery') {
                 $query = $this->getQuery(false);
-            } else if ($method == 'insert') {
-                $query = $this->getQuery();
             } else {
                 $query = $this->getQuery();
             }
@@ -517,12 +527,12 @@ abstract class AbstractModel extends DataObject
                 foreach ($fields as &$field) {
                     if (is_int(strpos($field, '.'))) {
                         $fields_array = explode('.', $field);
-                        $field = array_pop($fields_array);
+                        $field        = array_pop($fields_array);
                     }
                     # 别名
                     if (is_int(strpos($field, 'as'))) {
                         $fields_array = explode('as', $field);
-                        $field = array_pop($fields_array);
+                        $field        = array_pop($fields_array);
                     }
                 }
                 $this->bindModelFields($fields);
@@ -531,7 +541,7 @@ abstract class AbstractModel extends DataObject
             $is_fetch = false;
             # 拦截fetch操作 注入返回的模型
             if ('fetch' === $method) {
-                $args[] = $this::class;
+                $args[]   = $this::class;
                 $is_fetch = true;
             }
 
@@ -584,10 +594,13 @@ abstract class AbstractModel extends DataObject
          */
         return parent::__call($method, $args);
     }
+
     /**
      * 归档数据
+     *
      * @param string $period ['all'=>'全部','today'=>'今天','yesterday'=>'昨天','current_week'=>'这周','near_week'=>'最近一周','last_week'=>'上周','near_month'=>'近三十天','current_month'=>'本月','last_month'=>'上一月','quarter'=>'本季度','last_quarter'=>'上个季度','current_year'=>'今年','last_year'=>'上一年']
      * @param string $field
+     *
      * @return $this
      */
     public function period(string $period, string $field = 'main_table.create_time'): static
@@ -673,10 +686,11 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 设置取得的数据
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/22 19:32
      * 参数区：
+     *
      * @param AbstractModel[] $value
      */
     function setFetchData(array $value): self
@@ -688,7 +702,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 获取查询数据
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/22 19:32
      * 参数区：
@@ -722,7 +736,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 读取模型的主键字段值
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/26 21:54
      * 参数区：
@@ -735,7 +749,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 设置模型的主键字段值
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/26 21:54
      * 参数区：
@@ -776,13 +790,13 @@ abstract class AbstractModel extends DataObject
         }
         $objClass = new \ReflectionClass($this::class);
         $arrConst = $objClass->getConstants();
-        $_fields = [];
+        $_fields  = [];
         foreach ($arrConst as $key => $val) {
             if ($key !== 'fields_ID' && str_starts_with($key, 'fields')) {
                 $_fields[] = $val;
             }
         }
-        $_fields[] = $this->_primary_key;
+        $_fields[]           = $this->_primary_key;
         $this->_model_fields = $_fields;
         $this->_cache->set($module__fields_cache_key, $_fields);
         return $_fields;
@@ -802,7 +816,7 @@ abstract class AbstractModel extends DataObject
     /**
      * @DESC          # 返回模型数据
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/16 17:09
      * 参数区：
@@ -819,6 +833,88 @@ abstract class AbstractModel extends DataObject
             $data[$val] = $field_data;
         }
         return $data;
+    }
+
+    function pagination(int $page = 1, int $pageSize = 20, array $params = []): AbstractModel|static
+    {
+        $this->setQuery($this->getQuery()->pagination($page, $pageSize, $params));
+        $this->pagination = $this->getQuery()->pagination;
+        return $this;
+    }
+
+    function getPagination(string $url_path = ''): array
+    {
+        $this->pagination['path'] = $url_path;
+        # 上一页
+        if (($this->pagination['page'] - 1) > 0) {
+            $this->pagination['prePage'] = $this->pagination['page'] - 1;
+        } else {
+            $this->pagination['prePage'] = 0;
+        }
+        # 下一页
+        if ($this->pagination['page'] < $this->pagination['lastPage']) {
+            $this->pagination['nextPage'] = $this->pagination['page'] + 1;
+        } else {
+            $this->pagination['nextPage'] = $this->pagination['lastPage'];
+        }
+        $hasPrePage                      = intval($this->pagination['prePage']) !== 0;
+        $this->pagination['hasPrePage']  = $hasPrePage;
+        $hasNextPage                     = (intval($this->pagination['page']) < intval($this->pagination['lastPage']));
+        $this->pagination['hasNextPage'] = $hasNextPage;
+        /**@var Request $request */
+        $request        = ObjectManager::getInstance(Request::class);
+        $this->pagination['lang'] = $request->getHeader('WELINE-USER-LANG');
+
+        # 页码缓存
+        $cache_key = md5(json_encode($this->pagination));
+        if ($data = $this->_cache->get($cache_key)) {
+            $this->pagination = $data;
+            return $data;
+        }
+        $currentUrl     = $request->getAdminUrl($url_path);
+        $currentUrlPath = substr($currentUrl, 0, strpos($currentUrl, '?'));
+
+        $prePageName = __('上一页');
+
+        $prePageClassStatus = $hasPrePage ? '' : 'disabled';
+        $prePageUrl         = $hasPrePage ? "{$currentUrlPath}?page={$this->pagination['prePage']}&pageSize={$this->pagination['pageSize']}" : '#';
+
+        $page_list_html = '';
+        for ($i = 1; $i <= intval($this->pagination['lastPage']); $i++) {
+            $pageActiveStatus = ($this->pagination['page'] === $i) ? 'active' : '';
+            $pageUrl          = "{$currentUrlPath}?page={$i}&pageSize={$this->pagination['pageSize']}";
+            $page_list_html   .= <<<PAGELISTHTML
+<li class='page-item {$pageActiveStatus}'><a
+                    class='page-link'
+                    href='{$pageUrl}'>{$i}</a>
+            </li>
+PAGELISTHTML;
+
+        }
+
+        $nextPageName = __('下一页');
+
+        $nextPageClassStatus      = $hasNextPage ? '' : 'disabled';
+        $nextPageUrl              = $hasNextPage ? "{$currentUrlPath}?page={$this->pagination['nextPage']}&pageSize={$this->pagination['pageSize']}" : '#';
+        $this->pagination['html'] = <<<PAGINATION
+<nav aria-label='...'>
+                            <ul class='pagination pagination-lg'>
+                                <li class='page-item {$prePageClassStatus}'>
+                                    <a class='page-link'
+                                       href='{$prePageUrl}'
+                                       tabindex='-1'>{$prePageName}</a>
+                                </li>
+                                {$page_list_html}
+                                <li class='page-item {$nextPageClassStatus}'>
+                                    <a class='page-link'
+                                       href='{$nextPageUrl}'>{$nextPageName}</a>
+                                </li>
+                            </ul>
+                        </nav>
+PAGINATION;
+        # 页码缓存
+        $this->_cache->set($cache_key, $this->pagination);
+        return $this->pagination;
     }
 
     /**----------链接查询--------------*/

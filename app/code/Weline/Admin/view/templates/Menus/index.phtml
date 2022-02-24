@@ -72,8 +72,8 @@
 
                                 <!--<div class="table-responsive mCustomScrollbar" data-mcs-axis="yx" data-mcs-theme='dark'
                                      style="height: 800px">-->
-                                    <div class='table-responsive mCustomScrollbar' data-mcs-axis='x'
-                                         data-mcs-theme='dark'>
+                                <div class='table-responsive mCustomScrollbar' data-mcs-axis='x'
+                                     data-mcs-theme='dark'>
                                     <table class="table table-editable table-nowrap align-middle table-edits">
                                         <thead>
                                         <tr>
@@ -116,10 +116,12 @@
                                                        title='<?= __('编辑') ?>'>
                                                         <i class='fas fa-pencil-alt'></i>
                                                     </a>
-                                                    <a class='btn btn-outline-secondary btn-sm <?= $menu->isSystem() ? '' : 'menu-delete' ?>' data-id="<?= $menu->getId() ?>"
+                                                    <a class='btn btn-outline-secondary btn-sm <?= $menu->isSystem() ? '' : 'menu-delete' ?>'
+                                                       data-id="<?= $menu->getId() ?>"
                                                        title='<?= $menu->isSystem() ? __('系统菜单无法删除！') : __('删除') ?>'>
                                                         <i class='mdi <?= $menu->isSystem() ? 'mdi-delete-off' : 'mdi-delete' ?> '
-                                                           style="<?= $menu->isSystem() ? 'color:red' : '' ?>"  data-id="<?= $menu->getId() ?>"></i>
+                                                           style="<?= $menu->isSystem() ? 'color:red' : '' ?>"
+                                                           data-id="<?= $menu->getId() ?>"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -131,19 +133,11 @@
                                 </div>
                             </div>
                         </div>
-                        <nav aria-label='...'>
-                            <ul class='pagination pagination-lg'>
-                                <li class='page-item disabled'>
-                                    <a class='page-link' href='#' tabindex='-1'>Previous</a>
-                                </li>
-                                <li class='page-item'><a class='page-link' href='#'>1</a></li>
-                                <li class='page-item'><a class='page-link' href='#'>2</a></li>
-                                <li class='page-item'><a class='page-link' href='#'>3</a></li>
-                                <li class='page-item'>
-                                    <a class='page-link' href='#'>Next</a>
-                                </li>
-                            </ul>
-                        </nav>
+                        <?php
+                        $pagination = $this->getData('pagination');
+                        echo $pagination['html'];
+                        ?>
+
                     </div> <!-- end col -->
                 </div> <!-- end row -->
             </div> <!-- container-fluid -->

@@ -86,7 +86,6 @@ class Parser
             $eventsManager->dispatch('Framework_phrase::get_words_file', ['file_data' => $file_data]);
             $words_file = $file_data->getData('file_path');
             $cache_key  = $words_file;
-
             # 非实时翻译
             if (!CLI && $translate_mode !== 'online' && $phrase_words = $phraseCache->get($cache_key)) {
                 self::$words = $phrase_words;

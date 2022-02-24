@@ -20,11 +20,14 @@ class Menus extends BaseController
     function index()
     {
         /**@var Menu $menu */
-        $menu  = ObjectManager::getInstance(Menu::class);
-        $menus = $menu->page($this->_request->getGet('page', 1), $this->_request->getGet('pageSize', 10))
-                      ->select()
-                      ->fetch();
-        $this->assign('menus', $menus);
+        $menu = ObjectManager::getInstance(Menu::class);
+        $menu->pagination(
+            intval($this->_request->getParam('page', 1)),
+            intval($this->_request->getParam('pageSize', 2)),
+            $this->_request->getParams()
+        )->select();
+        $this->assign('menus', $menu->fetch());
+        $this->assign('pagination', $menu->getPagination());
         return $this->fetch();
     }
 

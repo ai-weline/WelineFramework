@@ -291,8 +291,9 @@ class Core
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);
+
 //        return $dispatch->$method();
-        exit($dispatch->$method());
-//        exit(call_user_func([$dispatch, $method], $this->request->getParams()));
+//        exit($dispatch->$method());
+        exit(call_user_func([$dispatch, $method], $this->request->getParams()));
     }
 }

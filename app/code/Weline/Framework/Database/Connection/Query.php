@@ -42,6 +42,8 @@ abstract class Query implements QueryInterface
 
     public string $fetch_type = '';
 
+    public array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
+
 
     function identity(string $field): QueryInterface
     {
@@ -66,9 +68,9 @@ abstract class Query implements QueryInterface
         foreach ($this->insert[0] as $field => $value) {
             $fields .= "`$field`,";
         }
-        $fields = rtrim($fields, ',') . ')';
-        $origin_fields = $this->fields;
-        $this->fields = $fields;
+        $fields           = rtrim($fields, ',') . ')';
+        $origin_fields    = $this->fields;
+        $this->fields     = $fields;
         $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         $this->fields = $origin_fields;
@@ -171,8 +173,29 @@ abstract class Query implements QueryInterface
         if (1 < $page) {
             $offset = $pageSize * ($page - 1) + 1;
         }
-        $this->limit = " LIMIT $offset,$pageSize";
+        $this->limit              = " LIMIT $offset,$pageSize";
+        $this->pagination['page'] = $page;
         return $this;
+    }
+
+    function pagination(int $page = 1, int $pageSize = 20, array $params = []): QueryInterface
+    {
+        $this->pagination['page']     = $page;
+        $this->pagination['pageSize'] = $pageSize;
+        if ($params) {
+            $this->pagination = array_merge($this->pagination, $params);
+        }
+        $this->page(intval($this->pagination['page']), $pageSize);
+        $query = clone $this;
+        $total                         = $this->total();
+        $this->pagination['totalSize'] = $total;
+        $lastPage                      = intval($total / $pageSize);
+        if ($total % $pageSize) {
+            $lastPage += 1;
+        }
+        $this->pagination['lastPage'] = $lastPage;
+        $query->pagination = $this->pagination;
+        return $query;
     }
 
     function order(string $field, string $sort = 'DESC'): QueryInterface
@@ -192,11 +215,11 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function total(string $field = '*',string $alias='total'): int
+    function total(string $field = '*', string $alias = 'total'): int
     {
         $this->limit(1, 0);
         $this->fetch_type = 'find';
-        $this->fields = "count(`{$field}`) as `{$alias}`";
+        $this->fields     = "count({$field}) as `{$alias}`";
         $this->prepareSql('find');
         $result = $this->fetch();
         if (isset($result[$alias])) {
@@ -221,8 +244,8 @@ abstract class Query implements QueryInterface
 
     function query(string $sql): QueryInterface
     {
-        $this->sql = $sql;
-        $this->fetch_type = __FUNCTION__;
+        $this->sql          = $sql;
+        $this->fetch_type   = __FUNCTION__;
         $this->PDOStatement = $this->connection->getLink()->query($sql);
         return $this;
     }
@@ -238,7 +261,7 @@ abstract class Query implements QueryInterface
         $result = $this->PDOStatement->execute($this->bound_values);
 
         $origin_data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
-        $data = [];
+        $data        = [];
         if ($model_class) {
             foreach ($origin_data as $origin_datum) {
                 $data[] = ObjectManager::make($model_class, ['data' => $origin_datum], '__construct');
@@ -269,6 +292,7 @@ abstract class Query implements QueryInterface
         $this->clearQuery();
         return $result;
     }
+
     function fetchOrigin(): array
     {
         $this->PDOStatement->execute($this->bound_values);
@@ -334,8 +358,10 @@ abstract class Query implements QueryInterface
 
     /**
      * 归档数据
+     *
      * @param string $period ['all'=>'全部','today'=>'今天','yesterday'=>'昨天','current_week'=>'这周','near_week'=>'最近一周','last_week'=>'上周','near_month'=>'近三十天','current_month'=>'本月','last_month'=>'上一月','quarter'=>'本季度','last_quarter'=>'上个季度','current_year'=>'今年','last_year'=>'上一年']
      * @param string $field
+     *
      * @return $this
      */
     public function period(string $period, string $field = 'main_table.create_time'): static
@@ -401,7 +427,7 @@ abstract class Query implements QueryInterface
     {
         foreach ($this->bound_values as $where_key => $wheres_value) {
             $wheres_value = "'{$wheres_value}'";
-            $this->sql = str_replace($where_key, $wheres_value, $this->sql);
+            $this->sql    = str_replace($where_key, $wheres_value, $this->sql);
         }
         if ($format) {
             return \SqlFormatter::format($this->sql);
