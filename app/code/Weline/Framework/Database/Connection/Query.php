@@ -225,7 +225,7 @@ abstract class Query implements QueryInterface
         if (isset($result[$alias])) {
             $result = $result[$alias];
         }
-        return $result;
+        return intval($result);
     }
 
     function select(): QueryInterface
