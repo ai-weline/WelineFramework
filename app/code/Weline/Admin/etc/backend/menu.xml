@@ -6,19 +6,19 @@
     <add source="Weline_Admin::system_dashboard" name="system_dashboard" title="面板" action="admin"
          parent="Weline_Backend::system_menu" icon="mdi mdi-desktop-mac-dashboard" order="1"/>
     <!--菜单管理-->
-    <add source="Weline_Admin::system_menu_manager" name="system_menu_manager" title="菜单管理" action="admin/menus"
+    <add source="Weline_Admin::system_menu_manager" name="system_menu_manager" title="菜单管理" action="admin/system/menus"
          parent="Weline_Backend::system_menu" icon="ri-menu-line" order="100"/>
     <!--内容管理-->
-    <add source="Weline_Admin::system_cms" name="system_cms" title="内容管理" action="admin/cms"
+    <add source="Weline_Admin::system_cms" name="system_cms" title="内容管理" action="admin/system/cms"
          parent="Weline_Backend::system_menu" icon="ri-edit-box-line" order="200"/>
 
     <!--事件管理-->
-    <add source="Weline_Admin::system_events" name="system_events" title="事件管理" action="admin/events"
+    <add source="Weline_Admin::system_events" name="system_events" title="事件管理" action="admin/system/events"
          parent="Weline_Backend::system_configuration" icon="ri-spy-fill" order="10100"/>
     <!--插件管理-->
-    <add source="Weline_Admin::system_plugins" name="system_plugins" title="插件管理" action="admin/plugins"
+    <add source="Weline_Admin::system_plugins" name="system_plugins" title="插件管理" action="admin/system/plugins"
          parent="Weline_Backend::system_configuration" icon="ri-plug-2-line" order="10200"/>
     <!--模组管理-->
-    <add source="Weline_Admin::system_modules" name="system_modules" title="模组管理" action="admin/modules"
+    <add source="Weline_Admin::system_modules" name="system_modules" title="模组管理" action="admin/system/modules"
          parent="Weline_Backend::system_configuration" icon="ri-sound-module-line" order="10300"/>
 </menus>

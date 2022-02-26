@@ -6,7 +6,7 @@
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box text-center">
-                <a href="../../../../../../../../index.html" class="logo logo-dark">
+                <a href="<?= $this->_request->getAdminUrl('admin') ?>" class="logo logo-dark">
                                 <span class="logo-sm">
                                     <img src="@static(Weline_Admin::assets/images/logo-sm.png)" alt="logo-sm-dark"
                                          height="50">
@@ -17,7 +17,7 @@
                                 </span>
                 </a>
 
-                <a href="../../../../../../../../index.html" class="logo logo-light">
+                <a href="<?= $this->_request->getAdminUrl('admin') ?>" class="logo logo-light">
                                 <span class="logo-sm">
                                     <img src="@static(Weline_Admin::assets/images/logo-sm.png)" alt="logo-sm-light"
                                          height="50">
@@ -188,7 +188,7 @@
                     <a class="dropdown-item" href="#"><i
                                 class="ri-lock-unlock-line align-middle me-1"></i> <?= __('锁定屏幕') ?></a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="<?=$this->getAdminUrl('admin/login/logout')?>"><i
+                    <a class="dropdown-item text-danger" href="<?= $this->getAdminUrl('admin/login/logout') ?>"><i
                                 class="ri-shut-down-line align-middle me-1 text-danger"></i> <?= __('退出') ?></a>
                 </div>
             </div>

@@ -8,8 +8,9 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Admin\Controller;
+namespace Weline\Admin\Controller\System;
 
+use Weline\Admin\Controller\BaseController;
 use Weline\Backend\Model\Menu;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;
@@ -19,11 +20,10 @@ class Menus extends BaseController
 
     function index()
     {
-        /**@var Menu $menu */
-        $menu = ObjectManager::getInstance(Menu::class);
+        $menu = $this->getMenu();
         $menu->pagination(
             intval($this->_request->getParam('page', 1)),
-            intval($this->_request->getParam('pageSize', 2)),
+            intval($this->_request->getParam('pageSize', 10)),
             $this->_request->getParams()
         )->select();
         $this->assign('menus', $menu->fetch());
@@ -46,5 +46,24 @@ class Menus extends BaseController
         } catch (\Exception $exception) {
             return $this->fetchJson(['code' => 403, 'msg' => $exception->getMessage(), 'data' => []]);
         }
+    }
+
+    function postSave()
+    {
+        try {
+            $data = json_decode($this->_request->getBodyParams(), true);
+            if ($data) {
+                $this->getMenu()->save($data);
+            }
+            return json_encode($this->success());
+        } catch (\Exception $exception) {
+            return json_encode($this->exception($exception));
+        }
+
+    }
+
+    private function getMenu(): Menu
+    {
+        return ObjectManager::getInstance(Menu::class);
     }
 }

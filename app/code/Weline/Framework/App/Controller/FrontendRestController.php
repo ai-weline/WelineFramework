@@ -25,19 +25,6 @@ class FrontendRestController extends AbstractRestController
         $this->getSession(FrontendApiSession::class);
     }
 
-    /**
-     * @DESC         |方法描述
-     *
-     * 参数区：
-     *
-     * @param string $msg
-     * @param bool $data
-     * @param int $code
-     */
-    public function error($msg = '错误！', $data = false, int $code = 400)
-    {
-        die($this->fetch(['msg' => $msg, 'data' => $data, 'code' => $code]));
-    }
 
     /**
      * @DESC         |方法描述

@@ -10,25 +10,45 @@ $(function () {
     let table_edit = $('.table-edits tr');
     table_edit.editable({
         /*选择数据*/
-        /* dropdowns: {
-             source: ['Weline_Backend::system_menu', 'Weline_Backend::system_configuration']
-           },*/
+         dropdowns: {
+             is_system: ['0', '1']
+           },
         edit: function (values) {
             $(".edit i", this)
                 .removeClass('fa-pencil-alt')
                 .addClass('fa-save')
                 .attr('title', '保存');
         },
-        save: function (values) {
+        save: async function (values) {
             $(".edit i", this)
                 .removeClass('fa-save')
                 .addClass('fa-pencil-alt')
                 .attr('title', '编辑');
-            console.log(this)
+
             if (this in pickers) {
                 pickers[this].destroy();
                 delete pickers[this];
             }
+            let data = {};
+            let tds = $(this).find('td')
+            for (let i = 0; i < tds.length; i++) {
+                let i_data_field = $(tds[i]).attr('data-field')
+                if (i_data_field) {
+                    data[i_data_field] = $(tds[i]).text()
+                }
+            }
+            console.log(data)
+            $.ajax({
+                url: SITE_DATA.buildUrl('menus/save'),
+                type: 'post',
+                dataType:'json',
+                data: JSON.stringify(data),
+                success: (res) => {
+                    console.log(res);
+                }, error: (res) => {
+                    console.log(res)
+                }
+            })
         },
         cancel: function (values) {
             $(".edit i", this)

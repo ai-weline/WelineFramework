@@ -51,11 +51,13 @@ class Core implements Data\DataInterface
     /**
      * @DESC          # 设置模块名
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/11 15:55
      * 参数区：
+     *
      * @param mixed $module
+     *
      * @return $this
      */
     function setModuleInfo(mixed $module): static
@@ -67,7 +69,7 @@ class Core implements Data\DataInterface
     /**
      * @DESC          # 获取模块名
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/11 15:55
      * 参数区：
@@ -81,11 +83,13 @@ class Core implements Data\DataInterface
     /**
      * @DESC          # 获取URL
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/6 21:25
      * 参数区：
+     *
      * @param string $path
+     *
      * @return string
      */
     function getUrl(string $path = ''): string
@@ -129,5 +133,25 @@ class Core implements Data\DataInterface
         }
 
         return $this->_debug;
+    }
+
+
+    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
+    public function success(string $msg = '请求成功！', mixed $data = '', int $code = 200): array
+    {
+        return ['msg' => __($msg), 'data' => $data, 'code' => $code];
+    }
+
+    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
+    public function error(string $msg = '请求失败！', mixed $data = '', int $code = 404): array
+    {
+        return ['msg' => __($msg), 'data' => $data, 'code' => $code];
+    }
+
+
+    #[\JetBrains\PhpStorm\ArrayShape(['msg' => "string", 'data' => "\Exception", 'code' => "int"])]
+    public function exception(\Exception $exception, int $code = 403): array
+    {
+        return ['msg' => $exception->getMessage(), 'data' => $exception, 'code' => $code];
     }
 }

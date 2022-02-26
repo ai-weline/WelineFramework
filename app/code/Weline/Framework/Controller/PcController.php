@@ -39,15 +39,16 @@ class PcController extends Core
 
     /**
      * @param string|int $url url或者http状态码
+     *
      * @return void
      * @throws Exception
      * @throws \ReflectionException
      */
     function redirect(string|int $url)
     {
-        if(is_string($url)){
+        if (is_string($url)) {
             $this->getRequest()->getResponse()->redirect($url);
-        }elseif($url=404){
+        } elseif ($url = 404) {
             $this->getRequest()->getResponse()->responseHttpCode($url);
         }
     }
@@ -73,7 +74,9 @@ class PcController extends Core
 
     /**
      * 设置
+     *
      * @param Template $template
+     *
      * @return PcController
      */
     public function setTemplate(Template $template): static
@@ -89,6 +92,7 @@ class PcController extends Core
      * 参数区：
      *
      * @param string|null $key
+     *
      * @return mixed
      * @throws Exception
      * @throws \ReflectionException
@@ -120,8 +124,9 @@ class PcController extends Core
      *
      * 参数区：
      *
-     * @param array|string $tpl_var
+     * @param array|string      $tpl_var
      * @param array|string|null $value
+     *
      * @return PcController
      */
     protected function assign(array|string $tpl_var, mixed $value = null): static
@@ -144,6 +149,7 @@ class PcController extends Core
      * 参数区：
      *
      * @param string|null $fileName
+     *
      * @return void
      */
     protected function fetch(string $fileName = null): mixed
@@ -163,7 +169,9 @@ class PcController extends Core
 
     /**
      * 返回JSON
+     *
      * @param string $data
+     *
      * @return string
      */
     protected function fetchJson(array $data): string
@@ -185,12 +193,12 @@ class PcController extends Core
         if ($module_dir = $this->getControllerCache()->get($cache_key)) {
             return $module_dir;
         }
-        $reflect = new ReflectionObject($this);
-        $filename = $reflect->getFileName();
-        $filename = str_replace(Env::GENERATED_DIR, 'app', $filename);
+        $reflect             = new ReflectionObject($this);
+        $filename            = $reflect->getFileName();
+        $filename            = str_replace(Env::GENERATED_DIR, 'app', $filename);
         $ctl_dir_reflect_arr = explode(self::dir, $filename);
-        $module_dir = array_shift($ctl_dir_reflect_arr);
-        $module_dir = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
+        $module_dir          = array_shift($ctl_dir_reflect_arr);
+        $module_dir          = $module_dir . DataInterface::dir . DIRECTORY_SEPARATOR;
         if (!is_dir($module_dir)) {
             mkdir($module_dir, 0775, true);
         }

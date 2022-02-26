@@ -22,6 +22,10 @@
 
 <body data-sidebar="dark">
 
+<!--页头工具条 开始-->
+@template(Weline_Admin::common/page/loading.phtml)
+<!--页头工具条 结束-->
+
 <!-- <body data-layout="horizontal" data-topbar="dark"> -->
 
 <!-- 开始 页面 -->
@@ -105,12 +109,12 @@
                                                 <td data-field='parent_source'><?= $menu->getParentSource() ?></td>
                                                 <td data-field='action'><?= $menu->getAction() ?></td>
                                                 <td data-field='module'><?= $menu->getModule() ?></td>
-                                                <td data-field='icon'><i class='<?= $menu->getIcon() ?>'></i>&nbsp;&nbsp;&nbsp;&nbsp;<span><?= $menu->getIcon() ?></span>
+                                                <td data-field='icon'><i class='<?= $menu->getIcon() ?>' style="margin-right: 25px"></i><span><?= $menu->getIcon() ?></span>
                                                 </td>
                                                 <td data-field='order'><?= $menu->getOrder() ?></td>
-                                                <td data-field='order'><?= $menu->isSystem() ? '<b style="color: rgba(144,59,28,1)">' . __('是') . '</b>' : __('否') ?></td>
-                                                <td data-field='order'><?= $menu->getCreateTime() ?></td>
-                                                <td data-field='order'><?= $menu->getUpdateTime() ?></td>
+                                                <td data-field='is_system'><?= $menu->isSystem() ?></td>
+                                                <td data-field='create_time'><?= $menu->getCreateTime() ?></td>
+                                                <td data-field='update_time'><?= $menu->getUpdateTime() ?></td>
                                                 <td style='width: 100px'>
                                                     <a class='btn btn-outline-secondary btn-sm edit'
                                                        title='<?= __('编辑') ?>'>
