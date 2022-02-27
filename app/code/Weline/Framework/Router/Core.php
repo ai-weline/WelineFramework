@@ -71,7 +71,6 @@ class Core
     {
         # 获取URL
         $url = $this->processUrl();
-
         $this->_router_cache_key = $this->area_router . $this->request->getUrlPath();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
@@ -126,15 +125,16 @@ class Core
 //            if (self::url_path_split === $url) {
 //                $url = self::default_index_url;
 //            }
-            $url = trim($url, self::url_path_split);
             # 去除后缀index
             $url_arr         = explode('/', $url);
+
             $last_rule_value = $url_arr[array_key_last($url_arr)] ?? '';
             while ('index' === array_pop($url_arr)) {
+                $last_rule_value = $url_arr[array_key_last($url_arr)] ?? '';
                 continue;
             }
             $url = implode('/', $url_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
-            $url = trim($url, '/');
+            $url = strtolower(trim($url, '/'));
             $this->cache->set($url_cache_key, $url);
         }
         return str_replace('//', '/', $url);
@@ -165,8 +165,8 @@ class Core
         if (file_exists($router_filepath)) {
             $routers = include $router_filepath;
             $method  = '::' . strtoupper($this->request->getMethod());
-            if (isset($routers[$url . $method]) || isset($routers[$url . '/index' . $method])) {
-                $this->router = $routers[$url . $method] ?? $routers[$url . '/index' . $method];
+            if (isset($routers[$url . $method])) {
+                $this->router = $routers[$url . $method];
                 # 缓存路由结果
                 $this->router['type'] = 'api';
                 $this->cache->set($this->_router_cache_key, $this->router);
@@ -208,7 +208,7 @@ class Core
             if (
                 isset($routers[$url])
             ) {
-                $this->router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url] ?? $routers[($url ? $url . self::default_index_url : ltrim(self::default_index_url, '/'))];
+                $this->router = $routers[$url];
                 # 缓存路由结果
                 $this->router['type'] = 'pc';
                 $this->cache->set($this->_router_cache_key, $this->router);

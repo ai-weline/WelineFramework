@@ -77,10 +77,11 @@ class Data extends AbstractHelper
                 // Api路由
                 if (!is_bool(strpos($dir, Handle::api_DIR))) {
                     foreach ($Files as $apiFile) {
-                        $apiDirArray  = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
-                        $baseRouter   = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
-                        $baseRouter   = $router . ($baseRouter ?: '');
-                        $baseRouter   = trim($baseRouter, '/');
+                        $apiDirArray = explode(Handle::api_DIR, $dir . DIRECTORY_SEPARATOR . $apiFile->getFilename());
+
+                        $baseRouter = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
+                        $baseRouter = trim($router . $baseRouter, '/');
+
                         $apiClassName = $this->getClassNamespace($apiFile) . '\\' . $apiFile->getFilename();
                         $apiClassName = str_replace("\\\\", "\\", $apiClassName);
                         // 删除父类方法：注册控制器方法
@@ -93,22 +94,42 @@ class Data extends AbstractHelper
                         $ctl_area    = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
+
+                            // 分析请求方法
+                            $request_method             = null;
+                            $rule_method                = $method;
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
-                            $request_method             = array_shift($request_method_split_array);
-                            $class_method               = strtolower(str_replace($request_method, '', $method));
-                            $request_method             = strtoupper($request_method);
-                            $request_method             = $request_method ?? RequestInterface::GET;
-                            $request_method             = strtoupper($request_method);
-                            if (!in_array($request_method, RequestInterface::METHODS, true)) {
-                                $request_method = RequestInterface::GET;
+                            $first_value                = $request_method_split_array[array_key_first($request_method_split_array)];
+                            if (in_array(strtoupper($first_value), RequestInterface::METHODS)) {
+                                $request_method = strtoupper($first_value);
+                                array_shift($request_method_split_array);
+                                $rule_method = implode('', $request_method_split_array);
                             }
+                            # 删除index后缀
+                            $rule_router     = strtolower($baseRouter . '/' . $rule_method);
+                            $rule_rule_arr   = explode('/', $rule_router);
+                            $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
+                            while ('index' === array_pop($rule_rule_arr)) {
+                                $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
+                                continue;
+                            }
+//                            if (is_int(strpos($controllerFile->getFilename(), 'Login'))) {
+//                                p($baseRouter,1);
+//                                p($rule_router);
+//                            }
+                            $rule_router    = implode('/', $rule_rule_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
+                            $rule_router    = trim($rule_router, '/');
+                            $request_method = $request_method ?? RequestInterface::GET;
+//                            if (in_array('BackendRestController', $ctl_area)) {
+//                                p($request_method);
+//                            }
                             // 路由注册+
                             Register::register(RegisterDataInterface::ROUTER, $name, [
                                 'type'           => DataInterface::type_API,
                                 'area'           => $ctl_area,
                                 'module'         => $name,
                                 'base_router'    => $router,
-                                'router'         => $baseRouter . ($class_method ? '/' . $class_method : '') . '::' . $request_method,
+                                'router'         => $rule_router . '::' . $request_method,
                                 'class'          => $apiClassName,
                                 'module_path'    => $path,
                                 'method'         => $method,
@@ -119,7 +140,6 @@ class Data extends AbstractHelper
                 } // PC路由
                 elseif (!is_bool(strpos($dir, Handle::pc_DIR))) {
                     foreach ($Files as $controllerFile) {
-
                         $controllerDirArray = explode($modules[$name]['path'] . Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
 
                         $baseRouter = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
@@ -139,7 +159,6 @@ class Data extends AbstractHelper
                         }
                         $ctl_methods = $ctl_data['methods'];
                         $ctl_area    = $ctl_data['area'];
-
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
                             $request_method             = '';
@@ -149,7 +168,7 @@ class Data extends AbstractHelper
                             if (in_array(strtoupper($first_value), RequestInterface::METHODS)) {
                                 $request_method = strtoupper($first_value);
                                 array_shift($request_method_split_array);
-                                $rule_method = implode('/', $request_method_split_array);
+                                $rule_method = implode('', $request_method_split_array);
                             }
                             # 删除index后缀
                             $rule_router     = strtolower($baseRouter . '/' . $rule_method);
