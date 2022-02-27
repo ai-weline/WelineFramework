@@ -111,22 +111,30 @@ class Core
                 if ($this->area_router === $this->_etc->getConfig('admin', '')) {
                     $url = str_replace($this->area_router, '', $url);
                     $url = trim($url, self::url_path_split);
-                    if (!is_int(strpos($url, self::url_path_split))) {
-                        $url .= self::default_index_url;
-                    }
+//                    if (!is_int(strpos($url, self::url_path_split))) {
+//                        $url .= self::default_index_url;
+//                    }
                 } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
                     $url = str_replace($this->area_router, '', $url);
                     $url = trim($url, self::url_path_split);
-                    if (!is_int(strpos($url, self::url_path_split))) {
-                        $url .= self::default_index_url;
-                    }
+//                    if (!is_int(strpos($url, self::url_path_split))) {
+//                        $url .= self::default_index_url;
+//                    }
                 }
             }
             // 找不到则访问默认控制器
-            if (self::url_path_split === $url) {
-                $url = self::default_index_url;
-            }
+//            if (self::url_path_split === $url) {
+//                $url = self::default_index_url;
+//            }
             $url = trim($url, self::url_path_split);
+            # 去除后缀index
+            $url_arr         = explode('/', $url);
+            $last_rule_value = $url_arr[array_key_last($url_arr)] ?? '';
+            while ('index' === array_pop($url_arr)) {
+                continue;
+            }
+            $url = implode('/', $url_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
+            $url = trim($url, '/');
             $this->cache->set($url_cache_key, $url);
         }
         return str_replace('//', '/', $url);
@@ -198,10 +206,7 @@ class Core
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
             if (
-                isset($routers[$url]) ||
-                isset($routers[$url . '/index']) ||
-                isset($routers[$url . self::default_index_url]) ||
-                isset($routers[($url ? $url . self::default_index_url : ltrim(self::default_index_url, '/'))])
+                isset($routers[$url])
             ) {
                 $this->router = $routers[$url] ?? $routers[$url . '/index'] ?? $routers[$url . self::default_index_url] ?? $routers[($url ? $url . self::default_index_url : ltrim(self::default_index_url, '/'))];
                 # 缓存路由结果
@@ -287,9 +292,10 @@ class Core
      */
     #[NoReturn] function route()
     {
+        # 全页缓存
         $cache_key = $this->cache->buildKey($this->router);
         if (PROD && $html = $this->cache->get($cache_key)) {
-           exit($html);
+            exit($html);
         }
         # 方法体方法和请求方法不匹配时 禁止访问
         if ('' !== $this->router['class']['request_method']) {
@@ -297,6 +303,7 @@ class Core
                 $this->request->getResponse()->noRouter();
             }
         }
+
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);
@@ -312,7 +319,7 @@ class Core
         }
         /** Get output buffer. */
         # FIXME 是否显示模板路径
-        $this->cache->set($cache_key, $result,30);
+        $this->cache->set($cache_key, $result, 30);
         exit($result);
     }
 }

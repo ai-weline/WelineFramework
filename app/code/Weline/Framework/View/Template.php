@@ -415,10 +415,11 @@ class Template extends DataObject
         if (empty($path)) {
             return $this->_request->getCurrentUrl();
         }
-        $pre = $this->_request->getBaseHost() . '/';
-        if ($this->_request->isBackend()) {
-            $pre .= Env::getInstance()->getConfig('admin') . '/';
-        }
+        $pre = $this->_request->getBaseHost() . '/'.Env::getInstance()->getConfig('admin') . '/';
+//        $pre = $this->_request->getBaseHost() . '/';
+//        if ($this->_request->isBackend()) {
+//            $pre .= Env::getInstance()->getConfig('admin') . '/';
+//        }
         $path = rtrim($pre . $path, '/');
         if (empty($params)) {
             return $path;

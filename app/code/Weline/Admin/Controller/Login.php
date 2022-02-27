@@ -55,7 +55,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch();
     }
 
-    function post()
+    function postPost()
     {
         # 已经登录直接进入后台
 //        $this->_session->logout();

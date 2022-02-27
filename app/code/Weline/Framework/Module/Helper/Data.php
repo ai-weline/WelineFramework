@@ -120,10 +120,14 @@ class Data extends AbstractHelper
                 elseif (!is_bool(strpos($dir, Handle::pc_DIR))) {
                     foreach ($Files as $controllerFile) {
 
-                        $controllerDirArray = explode(Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
-                        $baseRouter         = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
-                        $baseRouter         = $router . ($baseRouter ?? '');
-                        $baseRouter         = trim($baseRouter, '/');
+                        $controllerDirArray = explode($modules[$name]['path'] . Handle::pc_DIR, $dir . DIRECTORY_SEPARATOR . $controllerFile->getFilename());
+
+                        $baseRouter = str_replace('\\', '/', strtolower(array_pop($controllerDirArray)));
+
+                        $baseRouter = trim($router . $baseRouter, '/');
+//                        if(is_int(strpos($controllerFile->getFilename(), 'Login'))){
+//                            p( $baseRouter);
+//                        }
 
                         $controllerClassName = $this->getClassNamespace($controllerFile) . '\\' . $controllerFile->getFilename();
                         $controllerClassName = str_replace("\\\\", "\\", $controllerClassName);
@@ -138,21 +142,36 @@ class Data extends AbstractHelper
 
                         foreach ($ctl_methods as $method) {
                             // 分析请求方法
+                            $request_method             = '';
+                            $rule_method                = $method;
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
-                            $request_method             = array_shift($request_method_split_array);
-                            $request_method_name        = array_shift($request_method_split_array);
-                            $request_method             = $request_method ?? RequestInterface::GET;
-                            $request_method             = strtoupper($request_method);
-                            if (!in_array($request_method, RequestInterface::METHODS, true)) {
-                                $request_method = '';
+                            $first_value                = $request_method_split_array[array_key_first($request_method_split_array)];
+                            if (in_array(strtoupper($first_value), RequestInterface::METHODS)) {
+                                $request_method = strtoupper($first_value);
+                                array_shift($request_method_split_array);
+                                $rule_method = implode('/', $request_method_split_array);
                             }
+                            # 删除index后缀
+                            $rule_router     = strtolower($baseRouter . '/' . $rule_method);
+                            $rule_rule_arr   = explode('/', $rule_router);
+                            $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
+                            while ('index' === array_pop($rule_rule_arr)) {
+                                $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
+                                continue;
+                            }
+//                            if (is_int(strpos($controllerFile->getFilename(), 'Login'))) {
+//                                p($baseRouter,1);
+//                                p($rule_router);
+//                            }
+                            $rule_router = implode('/', $rule_rule_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
+                            $rule_router = trim($rule_router, '/');
 
                             Register::register(RegisterDataInterface::ROUTER, $name, [
                                 'type'           => DataInterface::type_PC,
                                 'area'           => $ctl_area,
                                 'module'         => $name,
                                 'base_router'    => $router,
-                                'router'         => $baseRouter . '/' . strtolower($request_method_name ?? $method),
+                                'router'         => $rule_router,
                                 'class'          => $controllerClassName,
                                 'method'         => $method,
                                 'module_path'    => $path,
