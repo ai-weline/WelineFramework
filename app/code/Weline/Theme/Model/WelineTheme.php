@@ -26,7 +26,9 @@ class WelineTheme extends Model
 
     const fields_ID = 'id';
 
-    const fields_NAME = 'name';
+    const fields_NAME        = 'name';
+
+    const fields_MODULE_NAME = 'module_name';
 
     const fields_PATH = 'path';
 
@@ -61,7 +63,7 @@ class WelineTheme extends Model
     /**
      * @DESC          # 获取激活的主题 有缓存
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/31 21:15
      * 参数区：
@@ -91,6 +93,18 @@ class WelineTheme extends Model
     public function setName($value): static
     {
         $this->setData(self::fields_NAME, $value);
+
+        return $this;
+    }
+
+    public function getModuleName()
+    {
+        return $this->getData(self::fields_MODULE_NAME);
+    }
+
+    public function setModuleName(string $module_name): static
+    {
+        $this->setData(self::fields_MODULE_NAME, $module_name);
 
         return $this;
     }
@@ -165,10 +179,10 @@ class WelineTheme extends Model
         if ($this->isActive() && $this->getId()) {
             #$this->query('UPDATE ' . $this->getTable() . ' SET `is_active`=0 WHERE id != ' . $this->getId())->fetch();
             $this->getQuery()
-                ->where(self::fields_IS_ACTIVE, 1)
-                ->where(self::fields_ID, $this->getId(), '!=')
-                ->update(self::fields_IS_ACTIVE, 0)
-                ->fetch();
+                 ->where(self::fields_IS_ACTIVE, 1)
+                 ->where(self::fields_ID, $this->getId(), '!=')
+                 ->update(self::fields_IS_ACTIVE, 0)
+                 ->fetch();
         }
     }
 
@@ -179,7 +193,7 @@ class WelineTheme extends Model
 
     function setup(ModelSetup $setup, Context $context): void
     {
-        /*if($setup->tableExist()){
+        if ($setup->tableExist()) {
             $setup->dropTable();
         }
         if (!$setup->tableExist()) {
@@ -192,6 +206,12 @@ class WelineTheme extends Model
                 11,
                 'primary key NOT NULL AUTO_INCREMENT',
                 'ID'
+            )->addColumn(
+                'module_name',
+                Create::column_type_VARCHAR,
+                '60',
+                'UNIQUE NOT NULL ',
+                '主题模块名'
             )->addColumn(
                 'name',
                 Create::column_type_VARCHAR,
@@ -233,7 +253,7 @@ class WelineTheme extends Model
                 'parent_id',
                 'parent_id'
             )->create();
-        }*/
+        }
     }
 
     function upgrade(ModelSetup $setup, Context $context): void
@@ -253,6 +273,12 @@ class WelineTheme extends Model
                 11,
                 'primary key NOT NULL AUTO_INCREMENT',
                 'ID'
+            )->addColumn(
+                'module_name',
+                Create::column_type_VARCHAR,
+                '60',
+                'UNIQUE NOT NULL ',
+                '主题模块名'
             )->addColumn(
                 'name',
                 Create::column_type_VARCHAR,

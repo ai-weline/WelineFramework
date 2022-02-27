@@ -11,6 +11,7 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     Register::MODULE,
+    'Aiweline_HelloWorld',
     __DIR__,
     '1.1.0',
     '<a href="bbs.aiweline.com">Index</a>'

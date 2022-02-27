@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Config\Xml;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\System\ModuleFileReader;
@@ -51,7 +52,7 @@ class Reader extends ModuleFileReader
             foreach ($module_files as $module_name => $module_file) {
                 if ($module_file) {
                     $event_xml_data = $this->parser->load($module_file)->xmlToArray();
-                    $data[$vendor . '_' . $module_name . '::' . $module_file] = $event_xml_data;
+                    $data[$module_name . '::' . $module_file] = $event_xml_data;
                 }
             }
         }

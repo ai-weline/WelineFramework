@@ -79,13 +79,12 @@ trait TraitTemplate
             if (!isset($module_lists[$pre_module_name])) throw new Exception(__('异常：你指定的模板文件所在的模块不存在！模块：%1，所使用的模板：%2', [$pre_module_name, $fileName]));
             $fileName = str_replace($pre_module_name . '::', '', $fileName);
             # 替换掉当前模块的视图目录
-            $view_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
-            $template_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
-
+            $view_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
+            $template_dir =  $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
             if (PROD) {
                 $compile_dir = str_replace(APP_CODE_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']) . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
             } else {
-                $compile_dir = BP . $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
+                $compile_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR;
             }
             # 文件目录
             $file_dir = str_replace($pre_module_name . '::', '', $file_dir);
@@ -139,7 +138,7 @@ trait TraitTemplate
                 if ($module_name) {
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
-                        $module_view_dir_path = BP . $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
+                        $module_view_dir_path = $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
                         $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
                         $t_f = str_replace($module_name . '::', '', $t_f);
                     }
@@ -194,7 +193,7 @@ trait TraitTemplate
                 if ($module_name) {
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
-                        $module_view_dir_path = BP . $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
+                        $module_view_dir_path =  $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
                         $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
                         $t_f = str_replace($module_name . '::', '', $t_f);
                     } else {

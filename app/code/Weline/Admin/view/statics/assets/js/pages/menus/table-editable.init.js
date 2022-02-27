@@ -37,18 +37,19 @@ $(function () {
                     data[i_data_field] = $(tds[i]).text()
                 }
             }
-            console.log(data)
+            showLoading();
             $.ajax({
-                url: SITE_DATA.buildUrl('menus/save'),
+                url: SITE_DATA.buildUrl('system/menus/save'),
                 type: 'post',
                 dataType:'json',
                 data: JSON.stringify(data),
-                success: (res) => {
+                success: async (res) => {
                     console.log(res);
                 }, error: (res) => {
                     console.log(res)
                 }
             })
+            hideLoading();
         },
         cancel: function (values) {
             $(".edit i", this)

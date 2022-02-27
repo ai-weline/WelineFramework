@@ -35,6 +35,12 @@ class Install implements InstallInterface
                 'primary key NOT NULL AUTO_INCREMENT',
                 'ID'
             )->addColumn(
+                'module_name',
+                Create::column_type_VARCHAR,
+                '60',
+                'UNIQUE NOT NULL ',
+                '主题模块名'
+            )->addColumn(
                 'name',
                 Create::column_type_VARCHAR,
                 '60',

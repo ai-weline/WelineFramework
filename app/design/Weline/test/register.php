@@ -11,6 +11,7 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     \Weline\Theme\Register\TypeInterface::type,
+    'Weline_test',
     [
         'name' => 'test',
         'path' => __DIR__,

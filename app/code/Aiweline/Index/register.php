@@ -11,6 +11,7 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     Register::MODULE,
+    'Aiweline_Index',
     __DIR__,
     '1.1.0',
     '<p>模组名：Aiweline_Index</p>

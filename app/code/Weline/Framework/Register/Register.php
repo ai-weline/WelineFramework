@@ -28,55 +28,35 @@ class Register implements RegisterDataInterface
      *
      * 参数区：
      *
-     * @param string $identity
-     * @param string $type
-     * @param array|string $param
-     * @param string $version
-     * @param string $description
-     * @throws ConsoleException
-     * @throws \Weline\Framework\App\Exception
+     * @param string       $type        注册类型
+     * @param string       $module_name 模组名
+     * @param array|string $param       参数[模组类型:此处传输目录__DIR__,主题类型：['name' => 'demo','path' => __DIR__,]]
+     * @param string       $version     版本
+     * @param string       $description 描述
+     *
+     * @return mixed
      */
-    public static function register(string $type, array|string $param, string $version = '', string $description = '')
+    public static function register(string $type, string $module_name, array|string $param, string $version = '', string $description = ''): mixed
     {
         $install_params = func_get_args();
         switch ($type) {
             // 模块安装
             case self::MODULE:
-                $appPathArray = explode(DIRECTORY_SEPARATOR, $param);
-                $module = array_pop($appPathArray);
-                $vendor = array_pop($appPathArray);
-                $code = array_pop($appPathArray);
-                $app = array_pop($appPathArray);
-                # 处理composer安装的模块名
-                $moduleName = self::moduleName($vendor,$module);
-                # 处理composer安装的模块
-                $app .= DIRECTORY_SEPARATOR;
-                if (is_int(strpos($param, VENDOR_PATH))) {
-                    $app = '';
+                $appPathArray       = explode(DIRECTORY_SEPARATOR, $param);
+                $module_name_dir = array_pop($appPathArray);
+                $vendor_dir = array_pop($appPathArray);
+                $moduleRegisterFile = $param . DIRECTORY_SEPARATOR . self::register_file;
+                if (!is_dir($param)) {
+                    return '';
                 }
-                $module_path = $app . $code . DIRECTORY_SEPARATOR . $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR;
-                $moduleRegisterFile = $module_path . self::register_file;
-                if (!is_file($param . DIRECTORY_SEPARATOR . self::register_file)) {
-                    throw new ConsoleException("{$moduleName}注册文件{$moduleRegisterFile}不存在！");
+                if (!is_file($moduleRegisterFile)) {
+                    throw new ConsoleException("{$module_name}注册文件{$moduleRegisterFile}不存在！");
                 }
-                $module_dir_path = '';
-                if (is_int(strpos($param, APP_CODE_PATH))) {
-                    $module_dir_path = str_replace(APP_CODE_PATH, '', $param);
-                }
-                if (empty($module_dir_path) && is_int(strpos($param, VENDOR_PATH))) {
-                    $module_dir_path = str_replace(VENDOR_PATH, '', $param);
-                }
-
                 // 安装数据
-                $install_params = [$type, ['dir_path' => $module_dir_path, 'base_path' => $module_path, 'module_name' => $moduleName], $version, $description];
-
+                $install_params = [$type, $module_name, ['dir_path' => $vendor_dir.DIRECTORY_SEPARATOR.$module_name_dir.DIRECTORY_SEPARATOR, 'base_path' => $param.DIRECTORY_SEPARATOR, 'module_name' => $module_name], $version, $description];
                 break;
             // 路由注册
             case self::ROUTER:
-                // 安装数据
-                $install_params = [$type, $param];
-
-                break;
             default:
         }
         /*
@@ -92,22 +72,17 @@ class Register implements RegisterDataInterface
         $eventsManager->dispatch('Framework_return Register::register_installer', ['data' => $installerPathData]);
         $installer_class = $installerPathData->getData('installer');
 
-        try {
-            /**@var RegisterInterface $installer */
-            $installer = ObjectManager::getInstance($installer_class);
-            if ($installer instanceof RegisterInterface) {
-                $register_arguments = $installerPathData->getData('register_arguments');
-                unset($register_arguments[0]);// 去除type类型标志 因为后续的register继承自
-                return $installer->register(...$register_arguments);
-            } else {
-                throw new ConsoleException($installer_class . __('安装器必须继承：') . RegisterInterface::class);
-            }
-        } catch (ConsoleException $exception) {
-            throw $exception;
+        /**@var RegisterInterface $installer */
+        $installer = ObjectManager::getInstance($installer_class);
+        if ($installer instanceof RegisterInterface) {
+            $register_arguments = $installerPathData->getData('register_arguments');
+            return $installer->register(...$register_arguments);
+        } else {
+            throw new ConsoleException($installer_class . __('安装器必须继承：') . RegisterInterface::class);
         }
     }
 
-/*TODO 待搬迁至模组模块*/
+    /*TODO 待搬迁至模组模块*/
     static function moduleName(string $vendor, string $module_name): string
     {
         $module_rename = '';

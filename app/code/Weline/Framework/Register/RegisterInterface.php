@@ -33,9 +33,11 @@ interface RegisterInterface
      *
      * 参数区：
      *
-     * @param $data
-     * @param string|null $version
-     * @param string $description
+     * @param string       $type
+     * @param string       $module_name
+     * @param array|string $param
+     * @param string       $version
+     * @param string       $description
      */
-    public function register(mixed $data, string $version = '', string $description = '');
+    public function register(string $type,string $module_name, array|string $param, string $version = '', string $description = ''):mixed;
 }

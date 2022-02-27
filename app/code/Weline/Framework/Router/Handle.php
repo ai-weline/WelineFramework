@@ -54,46 +54,48 @@ class Handle implements RegisterInterface
      *
      * 参数区：
      *
-     * @param array  $routerParam
-     * @param string $version
-     * @param string $description
+     * @param string       $type
+     * @param string       $module_name
+     * @param array|string $param
+     * @param string       $version
+     * @param string       $description
      *
-     * @return array|mixed
-     * @throws \Weline\Framework\App\Exception
-     * @throws ConsoleException
+     * @return array
+     * @throws Exception
      */
-    public function register($routerParam, string $version = '', string $description = '')
+    #[\JetBrains\PhpStorm\ArrayShape(['router' => "mixed|string", 'rule' => "array"])]
+    public function register(string $type, string $module_name, array|string $param, string $version = '', string $description = ''): array
     {
-        $controller = explode('Controller', $routerParam['class']);
+        $controller = explode('Controller',  $param['class']);
         $controller = array_pop($controller);
         $controller = ltrim(str_replace('\\', '/', $controller), '/');
-        switch ($routerParam['type']) {
+        switch ( $param['type']) {
             case DataInterface::type_API:
                 $path = '';
-                if (in_array(DataInterfaceAlias::type_api_REST_FRONTEND, $routerParam['area'], true)) {
+                if (in_array(DataInterfaceAlias::type_api_REST_FRONTEND,  $param['area'], true)) {
                     $path                = self::path_fronted_API;
-                    $routerParam['area'] = DataInterfaceAlias::type_api_REST_FRONTEND;
-                } elseif (in_array(DataInterfaceAlias::type_api_BACKEND, $routerParam['area'], true)) {
+                     $param['area'] = DataInterfaceAlias::type_api_REST_FRONTEND;
+                } elseif (in_array(DataInterfaceAlias::type_api_BACKEND,  $param['area'], true)) {
                     $path                = self::path_backend_API;
-                    $routerParam['area'] = DataInterfaceAlias::type_api_BACKEND;
+                     $param['area'] = DataInterfaceAlias::type_api_BACKEND;
                 } else {
-                    $routerParam['area'] = self::path_fronted_API;
+                     $param['area'] = self::path_fronted_API;
                 }
                 if ($path) {
                     $router = [
-                        'module'      => $routerParam['module'],
-                        'module_path' => $routerParam['module_path'],
-                        'router'      => $routerParam['base_router'],
+                        'module'      =>  $param['module'],
+                        'module_path' =>  $param['module_path'],
+                        'router'      =>  $param['base_router'],
                         'class'       => [
-                            'area'            => $routerParam['area'],
-                            'name'            => $routerParam['class'],
+                            'area'            =>  $param['area'],
+                            'name'            =>  $param['class'],
                             'controller_name' => $controller,
-                            'method'          => $routerParam['method'],
-                            'request_method'  => $routerParam['request_method'],
+                            'method'          =>  $param['method'],
+                            'request_method'  =>  $param['request_method'],
                         ],
                     ];
                     // 如果模块已安装
-                    $api = ['router' => $routerParam['router'], 'rule' => $router];
+                    $api = ['router' =>  $param['router'], 'rule' => $router];
                     // 更新api路由
                     $this->helper->updateApiRouters($path, $api);
 
@@ -103,41 +105,42 @@ class Handle implements RegisterInterface
                 break;
             case DataInterface::type_PC:
                 $path = '';
-                if (in_array(DataInterfaceAlias::type_pc_FRONTEND, $routerParam['area'], true)) {
+                if (in_array(DataInterfaceAlias::type_pc_FRONTEND,  $param['area'], true)) {
                     $path                = self::path_frontend_PC;
-                    $routerParam['area'] = DataInterfaceAlias::type_pc_FRONTEND;
-                } elseif (in_array(DataInterfaceAlias::type_pc_BACKEND, $routerParam['area'], true)) {
+                     $param['area'] = DataInterfaceAlias::type_pc_FRONTEND;
+                } elseif (in_array(DataInterfaceAlias::type_pc_BACKEND,  $param['area'], true)) {
                     $path                = self::path_backend_PC;
-                    $routerParam['area'] = DataInterfaceAlias::type_pc_BACKEND;
+                     $param['area'] = DataInterfaceAlias::type_pc_BACKEND;
                 }
+                $routers = [];
                 if ($path) {
-                    $routers = [];
                     if (is_file($path)) {
                         $routers = require $path;
                     }
                     $router                          = [
-                        'module'      => $routerParam['module'],
-                        'module_path' => $routerParam['module_path'],
-                        'router'      => $routerParam['base_router'],
+                        'module'      =>  $param['module'],
+                        'module_path' =>  $param['module_path'],
+                        'router'      =>  $param['base_router'],
                         'class'       => [
-                            'area'            => $routerParam['area'],
-                            'name'            => $routerParam['class'],
-                            'method'          => $routerParam['method'],
+                            'area'            =>  $param['area'],
+                            'name'            =>  $param['class'],
+                            'method'          =>  $param['method'],
                             'controller_name' => $controller,
-                            'request_method'  => $routerParam['request_method'],
+                            'request_method'  =>  $param['request_method'],
                         ],
                     ];
-                    $routers[$routerParam['router']] = $router;
+                    $routers[ $param['router']] = $router;
                     // 写入路由文件
                     $this->helper->updatePcRouters($path, $routers);
                 } else {
-                    $this->printing->error('未知的路由区域！文件:' . $routerParam['class']);
-                    if (DEV) throw new Exception(__('未知的路由区域！文件:') . $routerParam['class']);
+                    $this->printing->error('未知的路由区域！文件:' .  $param['class']);
+                    if (DEV) throw new Exception(__('未知的路由区域！文件:') .  $param['class']);
                 }
-
+                return $routers;
                 break;
             default:
-                throw new ConsoleException('未知的路由类型：' . $routerParam['type']);
+                throw new ConsoleException('未知的路由类型：' .  $param['type']);
         }
+        return [];
     }
 }

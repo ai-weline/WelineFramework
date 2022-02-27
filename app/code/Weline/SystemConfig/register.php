@@ -11,7 +11,8 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     Register::MODULE,
+    'Weline_SystemConfig',
     __DIR__,
     '1.0.0',
-    '<a href="bbs.aiweline.com">Admin模块</a>'
+    '<a href="https://bbs.aiweline.com">官网</a>系统配置模块：管理系统配置'
 );

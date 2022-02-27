@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Module\Model;
 
+use JetBrains\PhpStorm\Pure;
 use Weline\Framework\DataObject\DataObject;
 
 class Module extends DataObject
@@ -78,6 +79,8 @@ class Module extends DataObject
 
     /**
      * @param string $router
+     *
+     * @return Module
      */
     public function setRouter(string $router): static
     {
@@ -96,6 +99,8 @@ class Module extends DataObject
 
     /**
      * @param string $description
+     *
+     * @return Module
      */
     public function setDescription(string $description): static
     {
@@ -114,6 +119,8 @@ class Module extends DataObject
 
     /**
      * @param string $base_path
+     *
+     * @return Module
      */
     public function setBasePath(string $base_path): static
     {
@@ -133,6 +140,8 @@ class Module extends DataObject
 
     /**
      * @param string $namespace_path
+     *
+     * @return Module
      */
     public function setNamespacePath(string $namespace_path): static
     {
@@ -151,6 +160,8 @@ class Module extends DataObject
 
     /**
      * @param string $path
+     *
+     * @return Module
      */
     public function setPath(string $path): static
     {
@@ -169,6 +180,8 @@ class Module extends DataObject
 
     /**
      * @param string $name
+     *
+     * @return Module
      */
     public function setName(string $name): static
     {
@@ -177,7 +190,7 @@ class Module extends DataObject
         return $this;
     }
 
-    function getModuleFile(string $filename): string
+    #[Pure] function getModuleFile(string $filename): string
     {
         return BP . $this->getBasePath() . $filename;
     }

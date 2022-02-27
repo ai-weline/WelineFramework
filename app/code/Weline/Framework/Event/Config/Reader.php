@@ -100,8 +100,7 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
             }
             $event_observers_list[$module_and_file] = $module_event_observers;
         }
-        $this->eventCache->add('event', $event_observers_list);
-
+        $this->eventCache->set('event', $event_observers_list);
         return $event_observers_list;
     }
 }

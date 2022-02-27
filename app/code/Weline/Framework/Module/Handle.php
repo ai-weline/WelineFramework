@@ -150,31 +150,34 @@ class Handle implements HandleInterface, RegisterInterface
      *
      * 参数区：
      *
-     * @param string $name
-     * @param string $version
-     * @param string $description
-     * @throws ConsoleException
-     * @throws \Weline\Framework\App\Exception
+     * @param string       $type
+     * @param string       $module_name
+     * @param array|string $param
+     * @param string       $version
+     * @param string       $description
+     *
+     * @return Module
+     * @throws Exception
      * @throws \ReflectionException
      */
-    public function register(mixed $data, string $version = '', string $description = '')
+    public function register(string $type,string $module_name, array|string $param, string $version = '', string $description = ''): mixed
     {
-        if (!isset($data['base_path'])) {
+        if (!isset($param['base_path'])) {
             throw new Exception(__('尚未设置基础路径！%1', 'base_path'));
         }
-        if (!isset($data['dir_path'])) {
+        if (!isset($param['dir_path'])) {
             throw new Exception(__('尚未设置模组目录！%1', 'dir_path'));
         }
-        if (!isset($data['module_name'])) {
+        if (!isset($param['module_name'])) {
             throw new Exception(__('尚未设置模组名！%1', 'module_name'));
         }
         # 模块数据
         $module = new Module();
         $module->setStatus(true);
-        $module->setName($data['module_name']);
-        $module->setNamespacePath(str_replace('_', '\\', $data['module_name']));
-        $module->setBasePath($data['base_path']);
-        $module->setPath($data['dir_path']);
+        $module->setName($module_name);
+        $module->setNamespacePath(str_replace('_', '\\', $param['module_name']));
+        $module->setBasePath($param['base_path']);
+        $module->setPath($param['dir_path']);
         $module->setVersion($version ?: '1.0.0');
         $module->setDescription($description ?: '');
 
@@ -186,7 +189,7 @@ class Handle implements HandleInterface, RegisterInterface
         // 检测文件完整
         $router = '';
         foreach (DataInterface::files as $filename) {
-            $filepath = BP.$module->getBasePath() . $filename;
+            $filepath = $module->getBasePath() .DIRECTORY_SEPARATOR. $filename;
             if (is_file($filepath)) {
                 if ($filename === DataInterface::file_etc_Env) {
                     $env = (array)require $filepath;
@@ -203,6 +206,7 @@ class Handle implements HandleInterface, RegisterInterface
                 }
             }
         }
+        $module->setRouter($router);
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $module->getName(), 'module_version' => $version, 'module_description' => $description], '__construct');
         $setup_dir = BP . $module->getBasePath() . \Weline\Framework\Setup\Data\DataInterface::dir;
         $setup_namespace = $module->getNamespacePath() .'\\'. ucfirst(\Weline\Framework\Setup\Data\DataInterface::dir).'\\';
@@ -239,6 +243,7 @@ class Handle implements HandleInterface, RegisterInterface
                 // 更新路由
                 if (DEV) $this->printer->setup($module->getName() . '：更新路由...', '开发');
                 $this->modules[$module->getName()] = $module->getData();
+
                 $this->helper->registerModuleRouter($this->modules, $module->getBasePath(), $module->getName(), $router);
                 if (DEV) $this->printer->setup($module->getName() . '：更新路由完成...', '开发');
                 // 更新模块

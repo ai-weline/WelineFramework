@@ -11,6 +11,8 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     Register::MODULE,
+    'Weline_Maintenance',
     __DIR__,
-    '1.0.1'
+    '1.0.1',
+    '<a href="https://bbs.aiweline.com">官网</a>维护模块'
 );

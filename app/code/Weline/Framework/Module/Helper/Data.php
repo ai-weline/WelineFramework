@@ -11,6 +11,7 @@ namespace Weline\Framework\Module\Helper;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Register\RegisterDataInterface;
 use Weline\Framework\System\File\App\Scanner;
 use Weline\Framework\System\File\Io\File;
 use Weline\Framework\Helper\AbstractHelper;
@@ -67,7 +68,7 @@ class Data extends AbstractHelper
             // 扫描模块
             $appScanner->__init();
 
-            $moduleDir = $appScanner->scanDirTree(BP . $path);
+            $moduleDir = $appScanner->scanDirTree($path);
             /**@var Register $routerRegister */
             $routerRegister = ObjectManager::getInstance(Register::class);
             /** @var $Files \Weline\Framework\System\File\Data\File[] */
@@ -102,7 +103,7 @@ class Data extends AbstractHelper
                                 $request_method = RequestInterface::GET;
                             }
                             // 路由注册+
-                            Register::register(Register::ROUTER, [
+                            Register::register(RegisterDataInterface::ROUTER, $name, [
                                 'type'           => DataInterface::type_API,
                                 'area'           => $ctl_area,
                                 'module'         => $name,
@@ -146,7 +147,7 @@ class Data extends AbstractHelper
                                 $request_method = '';
                             }
 
-                            Register::register(Register::ROUTER, [
+                            Register::register(RegisterDataInterface::ROUTER, $name, [
                                 'type'           => DataInterface::type_PC,
                                 'area'           => $ctl_area,
                                 'module'         => $name,

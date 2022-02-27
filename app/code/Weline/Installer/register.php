@@ -11,6 +11,8 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     Register::MODULE,
+    'Weline_Installer',
     __DIR__,
-    '1.0.0'
+    '1.0.0',
+    '<a href="https://bbs.aiweline.com">安装模块</a>'
 );

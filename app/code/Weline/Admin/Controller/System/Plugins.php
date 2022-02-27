@@ -10,19 +10,18 @@ declare(strict_types=1);
 
 namespace Weline\Admin\Controller\System;
 
-use Weline\Framework\Event\Config\Reader;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Plugin\Config\Reader;
 
-class Events extends \Weline\Admin\Controller\BaseController
+class Plugins extends \Weline\Admin\Controller\BaseController
 {
-    public ?Reader $reader;
-
     function getIndex()
     {
-        $events = $this->getReader()->read();
-        $this->assign('events', $events);
+        $plugins = $this->getReader()->read();
+        $this->assign('plugins', $plugins);
         return $this->fetch();
     }
+
 
     private function getReader(): Reader
     {

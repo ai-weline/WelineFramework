@@ -99,7 +99,7 @@ class Template extends DataObject
     public function init()
     {
         $this->_request      = ObjectManager::getInstance(Request::class);
-        $this->view_dir      = BP . $this->_request->getRouterData('module_path') . DataInterface::dir . DIRECTORY_SEPARATOR;
+        $this->view_dir      = $this->_request->getRouterData('module_path') . DataInterface::dir . DIRECTORY_SEPARATOR;
         $this->vars['title'] = $this->_request->getModuleName();
 
         $this->theme         = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
@@ -209,7 +209,6 @@ class Template extends DataObject
             } else {
                 $tplFile = $template_dir . $fileName . self::file_ext;
             }
-
             $tplFile = $this->fetchFile($tplFile);
 
             if (!file_exists($tplFile)) {

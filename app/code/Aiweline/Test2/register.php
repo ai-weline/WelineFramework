@@ -11,6 +11,7 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     Register::MODULE,
+    'Aiweline_Test2',
     __DIR__,
     '1.0.0'
 );
