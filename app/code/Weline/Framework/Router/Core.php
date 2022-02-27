@@ -134,7 +134,7 @@ class Core
                 continue;
             }
             $url = implode('/', $url_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
-            $url = strtolower(trim($url, '/'));
+            $url = trim($url, '/');
             $this->cache->set($url_cache_key, $url);
         }
         return str_replace('//', '/', $url);
