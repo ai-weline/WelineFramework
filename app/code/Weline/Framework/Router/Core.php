@@ -280,8 +280,17 @@ class Core
         }
     }
 
+    /**
+     * @throws \ReflectionException
+     * @throws Exception
+     * @throws \Exception
+     */
     #[NoReturn] function route()
     {
+        $cache_key = $this->cache->buildKey($this->router);
+        if (PROD && $html = $this->cache->get($cache_key)) {
+           exit($html);
+        }
         # 方法体方法和请求方法不匹配时 禁止访问
         if ('' !== $this->router['class']['request_method']) {
             if ($this->router['class']['request_method'] !== $this->request->getMethod()) {
@@ -294,6 +303,16 @@ class Core
 
 //        return $dispatch->$method();
 //        exit($dispatch->$method());
-        exit(call_user_func([$dispatch, $method], $this->request->getParams()));
+        ob_start();
+        try {
+            $result = call_user_func([$dispatch, $method], $this->request->getParams());
+        } catch (\Exception $exception) {
+            ob_end_clean();
+            throw $exception;
+        }
+        /** Get output buffer. */
+        # FIXME 是否显示模板路径
+        $this->cache->set($cache_key, $result,30);
+        exit($result);
     }
 }

@@ -5,13 +5,8 @@
 
 微蓝WelineFramework框架！
 
-测试环境：http://m.dev.aiweline.com/
-~~~
-注意：dev开发环境下把防跨站攻击关闭。
+测试环境：http://m.dev.aiweline.com/ 随时在开发测试，有可能会访问不了
 
-~~~
-
-样本环境：http://m.dev.aiweline.com/
 
     1、代码可移植性。
     代码可安装到其他同框架的项目中。一个代码应用目录位置位于项目下的app/code中。模块中可设置Api目录,Controller目录，view目录等以及必须的register.php注册文件。
@@ -97,7 +92,7 @@
 
 #### 参与贡献
 
-如果你和我一样喜欢自由代码，可联系参与！
+如果你和我一样喜欢自由代码，可联系参与！ Oh~~
 
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
