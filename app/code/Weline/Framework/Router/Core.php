@@ -105,28 +105,10 @@ class Core
         if ($cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
         } else {
-            // 前后台路由处理
-            if ($this->is_admin) {
-                if ($this->area_router === $this->_etc->getConfig('admin', '')) {
-                    $url = str_replace($this->area_router, '', $url);
-                    $url = trim($url, self::url_path_split);
-//                    if (!is_int(strpos($url, self::url_path_split))) {
-//                        $url .= self::default_index_url;
-//                    }
-                } elseif ($this->area_router === $this->_etc->getConfig('api_admin', '')) {
-                    $url = str_replace($this->area_router, '', $url);
-                    $url = trim($url, self::url_path_split);
-//                    if (!is_int(strpos($url, self::url_path_split))) {
-//                        $url .= self::default_index_url;
-//                    }
-                }
-            }
-            // 找不到则访问默认控制器
-//            if (self::url_path_split === $url) {
-//                $url = self::default_index_url;
-//            }
+            if ($this->is_admin) $url = str_replace($this->area_router, '', $url);
+            $url = trim($url, self::url_path_split);
             # 去除后缀index
-            $url_arr         = explode('/', $url);
+            $url_arr = explode('/', $url);
 
             $last_rule_value = $url_arr[array_key_last($url_arr)] ?? '';
             while ('index' === array_pop($url_arr)) {
