@@ -178,21 +178,20 @@ File: Main Js File
         if (window.sessionStorage) {
             let alreadyVisited = sessionStorage.getItem("is_visited");
             // FIXME 解决加载闪屏问题
-            // let checkedVisited = "dark-mode-switch"
-            // $('input[class="theme-choice"]:checked').each(function () {
-            //     checkedVisited = $(this).attr('id');
-            // });
-            // if (checkedVisited === alreadyVisited) {
-            //     $(".right-bar input:checkbox").prop('checked', false);
-            //     $("#" + alreadyVisited).prop('checked', true);
-            //     return '';
-            // }
+            let checkedVisited = "dark-mode-switch"
+            $('input[class="theme-choice"]:checked').each(function () {
+                checkedVisited = $(this).attr('id');
+            });
+            if (checkedVisited === alreadyVisited) {
+                $(".right-bar input:checkbox").prop('checked', false);
+                $("#" + alreadyVisited).prop('checked', true);
+            }
             if (!alreadyVisited) {
                 sessionStorage.setItem("is_visited", "dark-mode-switch");
             } else {
                 $(".right-bar input:checkbox").prop('checked', false);
                 $("#" + alreadyVisited).prop('checked', true);
-                updateThemeSetting(alreadyVisited);
+                // updateThemeSetting(alreadyVisited);
             }
         }
         $("#light-mode-switch, #dark-mode-switch, #rtl-mode-switch").on("change", function (e) {

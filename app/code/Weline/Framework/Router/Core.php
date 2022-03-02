@@ -294,7 +294,8 @@ class Core
 //        exit($dispatch->$method());
         ob_start();
         try {
-            $result = call_user_func([$dispatch, $method], $this->request->getParams());
+//            $result = call_user_func([$dispatch, $method], $this->request->getParams());
+            $result = $dispatch->$method($this->request->getParams());
         } catch (\Exception $exception) {
             ob_end_clean();
             throw $exception;
