@@ -19,6 +19,7 @@ class File implements SessionDriverHandlerInterface
 
     /**
      * File 初始函数...
+     *
      * @param array $config
      */
     public function __construct(array $config)

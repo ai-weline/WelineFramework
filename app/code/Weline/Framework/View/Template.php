@@ -326,12 +326,19 @@ class Template extends DataObject
         $patterns = [
             '/\<\!--\s*\$([a-zA-Z]*)\s*--\>/',
             '/\@\{(.*)\}/',
-            '/\@include (.*)/',
-            '/\@block\((.*)\)/',
+//            '/\@include (.*)/',
+            '/\@include\((.+?)\)/',
+//            '/\@block\((.*)\)/',
+            '/\@block\((.+?)\)/',
             '/\@template\((.*)\)/',
-            '/\@static\((.*)\)/',
-            '/\@view\((.*)\)/',
-            '/\@p\((.+)\)/',
+//            '/\@template\((.*)\)/',
+            '/\@template\((.+?)\)/',
+//            '/\@static\((.*)\)/',
+            '/\@static\((.+?)\)/',
+//            '/\@view\((.*)\)/',
+            '/\@view\((.+?)\)/',
+//            '/\@p\((.+)\)/',
+            '/\@p\((.+?)\)/',
             '/\@controller\((.+)\)/',
         ];
         # 开发环境实时PHP代码输出资源
@@ -352,29 +359,7 @@ class Template extends DataObject
             $back[0]    = str_replace($back[1], '', $back[0]);
             $re_content = '';
             switch (strtolower($back[0])) {
-                case '@controller()':
-                    # FIXME 尚未想好的代码分支
-                    $cache_key = $this->viewCache->buildKey($fileName);
-                    # 控制解析
-                    $pipe_str = explode(',', trim($back[1]));
-                    foreach ($pipe_str as $pipe) {
-                        $pip = explode(':', $pipe);
-                        if (2 === count($pip)) {
-                            switch ($pip[0]) {
-                                case 'cache':
-                                    if (!is_numeric($pip[1])) throw new Exception(__('缓存值类型设置错误：%1 应当设置为整数，单位（毫秒） 设置文件：%2 正确设置示例：cache:60'));
-                                    if (!$this->viewCache->get($cache_key)) {
-                                        list($comFile, $tplFile) = $this->convertFetchFileName($fileName);
-                                        $re_content .= "<?php \$cache_key=\$this->viewCache->buildKey('{$fileName}');if(\$this->viewCache->get(\$cache_key)){echo \$this->viewCache->get(\$cache_key);}else{echo {file_get_contents($comFile)}}?>";
-                                        $this->viewCache->set($cache_key, $re_content . file_get_contents($comFile), $pip[1]);
-                                    }
-                                case 'ifconfig':
-                                default;
-                            }
-                        }
-                    }
-
-//                    $re_content = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
+                case '@{}':
                     break;
                 case '@static()':
                     $re_content = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));

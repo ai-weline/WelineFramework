@@ -8,35 +8,38 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Admin\Controller\Config;
+namespace Weline\Admin\Controller\ThemeConfig;
 
+use Weline\Admin\Block\ThemeConfig;
 use Weline\Admin\Model\AdminUserConfig;
 use Weline\Admin\Session\AdminSession;
 
 class Set extends \Weline\Admin\Controller\BaseController
 {
-    private AdminUserConfig $adminUserConfig;
+    private ThemeConfig $themeConfig;
     private AdminSession $adminSession;
 
     function __construct(
-        AdminUserConfig $adminUserConfig,
-        AdminSession    $adminSession
+        ThemeConfig  $themeConfig,
+        AdminSession $adminSession
     )
     {
 
-        $this->adminUserConfig = $adminUserConfig;
-        $this->adminSession    = $adminSession;
+        $this->themeConfig  = $themeConfig;
+        $this->adminSession = $adminSession;
     }
 
-    function postIndex()
+    function postIndex(): bool|string
     {
         $data = json_decode($this->_request->getBodyParams(), true);
         try {
-            $this->adminUserConfig->setAdminUserId($this->adminSession->getLoginUserID())
-                                  ->addConfig('theme_model', $data['model'])
-                                  ->forceCheck()
-                                  ->save();
-            $this->adminSession->setData('theme_model', $data['model']);
+            $this->themeConfig->setThemeConfig($data);
+            if (isset($data['layouts'])) {
+                $this->themeConfig->addLayouts($data['layouts']);
+            }
+            foreach ($data as $key => $datum) {
+                $this->adminSession->setData($key, $datum);
+            }
             return json_encode($this->success());
         } catch (\Exception $exception) {
             return json_encode($this->exception($exception));

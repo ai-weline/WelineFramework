@@ -359,8 +359,11 @@ abstract class AbstractModel extends DataObject
      * @throws \Weline\Framework\Exception\Core
      * @throws \ReflectionException
      */
-    public function save(array $data = [], string $sequence = null): bool
+    public function save(array|bool $data = [], string $sequence = null): bool
     {
+        if (is_bool($data)) {
+            $this->force_check_flag = $data;
+        }
         if ($data) {
             $this->setData($data);
         }
@@ -862,7 +865,7 @@ abstract class AbstractModel extends DataObject
         $hasNextPage                     = (intval($this->pagination['page']) < intval($this->pagination['lastPage']));
         $this->pagination['hasNextPage'] = $hasNextPage;
         /**@var Request $request */
-        $request        = ObjectManager::getInstance(Request::class);
+        $request                  = ObjectManager::getInstance(Request::class);
         $this->pagination['lang'] = $request->getHeader('WELINE-USER-LANG');
 
         # 页码缓存

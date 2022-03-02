@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Weline\Admin\Model;
 
+use Weline\Admin\Session\AdminSession;
 use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Setup\Data\Context;
@@ -55,20 +56,40 @@ class AdminUserConfig extends \Weline\Framework\Database\Model
         return $this->setData(self::fields_ID, $admin_user_id);
     }
 
-    function addConfig(string $key, mixed $data): static
+    function addConfig(string|array $key, mixed $data = null): static
     {
         try {
-            $config = $this->getConfig() ? json_decode($this->getConfig(), true) : [];
+            $config = $this->getOriginConfig() ? json_decode($this->getOriginConfig(), true) : [];
         } catch (\Exception $exception) {
             $config = [];
         }
-        $config[$key] = $data;
+        if (is_array($key)) {
+            $config = array_merge($config, $key);
+        } else {
+            $config[$key] = $data;
+        }
         $this->setData(self::fields_config, json_encode($config));
         return $this;
     }
 
-    function getConfig()
+    function getOriginConfig()
     {
         return $this->getData(self::fields_config);
+    }
+
+    function getConfig(string $key)
+    {
+        try {
+            $config = $this->getOriginConfig() ? json_decode($this->getOriginConfig(), true) : [];
+            return $config[$key] ?? '';
+        } catch (\Exception $exception) {
+            return '';
+        }
+    }
+
+    function save(bool|array $data = [], string $sequence = null): bool
+    {
+        $this->forceCheck();
+        return parent::save($data, $sequence);
     }
 }

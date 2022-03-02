@@ -1,5 +1,7 @@
 ﻿<?php
 /**@var \Weline\Framework\View\Template $this */
+/**@var \Weline\Admin\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\ThemeConfig::class);
 ?>
 <!DOCTYPE html>
 <!--
@@ -12,12 +14,13 @@
 <head>
     @template(Weline_Admin::common/head.phtml)
     <!-- jvectormap -->
-    <link href="@static(Weline_Admin::assets/libs/jqvmap/jqvmap.min.css)" rel="stylesheet" />
-    <title><?=__('Weline Admin 管理面板')?></title>
+    <link href="@static(Weline_Admin::assets/libs/jqvmap/jqvmap.min.css)" rel="stylesheet"/>
+    <title><?= __('Weline Admin 管理面板') ?></title>
 </head>
 
 <!--<body data-sidebar="dark" data-topbar='colored' data-layout='horizontal'>-->
-<body data-sidebar="dark" data-topbar='colored' data-layout='horizontal'>
+<body data-sidebar="<?= $themeConfig->getLayouts() ?? 'dark'; ?>"
+      data-topbar='colored' data-layout='horizontal' data-sidebar-size="small">
 
 <!-- <body data-layout="horizontal" data-topbar="dark"> -->
 <!--加载中组件 开始-->
@@ -47,12 +50,12 @@
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 class="mb-sm-0"><?=__('面板')?></h4>
+                            <h4 class="mb-sm-0"><?= __('面板') ?></h4>
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
                                     <li class="breadcrumb-item"><a href="javascript: void(0);"><?= __('系统') ?></a></li>
-                                    <li class="breadcrumb-item active"><?=__('面板')?></li>
+                                    <li class="breadcrumb-item active"><?= __('面板') ?></li>
                                 </ol>
                             </div>
 

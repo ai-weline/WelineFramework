@@ -22,7 +22,7 @@ interface SessionDriverHandlerInterface extends DriverInterface
      * @param $value
      * @return mixed
      */
-    public function set($name, $value);
+    public function set($name, $value): mixed;
 
     /**
      * @DESC         |方法描述

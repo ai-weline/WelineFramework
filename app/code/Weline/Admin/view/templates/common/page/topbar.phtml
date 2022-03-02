@@ -1,6 +1,11 @@
 <?php
 /**@var \Weline\Framework\View\Template $this */
+/**@var \Weline\Admin\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\ThemeConfig::class);
 ?>
+<script>
+    SITE_DATA['themeConfig'] = <?=$themeConfig->getThemeConfig()??'{}';?>;
+</script>
 <header id="page-topbar">
     <div class="navbar-header">
         <div class="d-flex">
