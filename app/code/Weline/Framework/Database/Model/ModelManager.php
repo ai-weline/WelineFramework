@@ -43,9 +43,7 @@ class ModelManager
         }
         foreach ($this->moduleReader->read() as $vendor => $vendor_modules) {
             foreach ($vendor_modules as $module => $model_files_data) {
-                $module_module_name = Register::moduleName($vendor,$module);
-                # 检测模型模组是否与传入模型相同
-                if ($module_module_name === $module_name) {
+                if ($module === $module_name) {
                     /**@var ModelSetup $modelSetup */
                     $modelSetup = ObjectManager::getInstance(ModelSetup::class);
                     foreach ($model_files_data as $model_path => $model_files) {

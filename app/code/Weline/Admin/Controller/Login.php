@@ -32,8 +32,8 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         Data           $helper
     )
     {
-        $this->adminUser = $adminUser;
-        $this->helper = $helper;
+        $this->adminUser      = $adminUser;
+        $this->helper         = $helper;
         $this->messageManager = $messageManager;
     }
 
@@ -92,8 +92,8 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $adminUsernameUser->addAttemptTimes()->save();
         } catch (\Exception $exception) {
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
-                ->setAttemptIp($this->_request->clientIP())
-                ->save();
+                              ->setAttemptIp($this->_request->clientIP())
+                              ->save();
             $this->messageManager->addError(__('登录异常！'));
             $this->redirect($this->getUrl());
         }
@@ -105,23 +105,23 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         if ($adminUsernameUser->getAttemptTimes() > 3 && ($this->_session->getData('backend_verification_code') !== $this->_request->getParam('code'))) {
             $this->messageManager->addError(__('验证码错误！'));
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
-                ->setAttemptIp($this->_request->clientIP())
-                ->save();
+                              ->setAttemptIp($this->_request->clientIP())
+                              ->save();
             $this->redirect($this->getUrl());
         }
         # 尝试登录
         $password = trim($this->_request->getParam('password'));
         if ($adminUsernameUser->getPassword() && password_verify($password, $adminUsernameUser->getPassword())) {
             # SESSION登录用户
-            $this->getSession()->login($adminUsernameUser->getUsername(),(int)$adminUsernameUser->getId());
+            $this->getSession()->login($adminUsernameUser, (int)$adminUsernameUser->getId());
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
-                ->setLoginIp($this->_request->clientIP());
+                              ->setLoginIp($this->_request->clientIP());
             # 重置 尝试登录次数
             $adminUsernameUser->resetAttemptTimes()->save();
         } else {
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
-                ->setAttemptIp($this->_request->clientIP())
-                ->save();
+                              ->setAttemptIp($this->_request->clientIP())
+                              ->save();
             $this->messageManager->addError(__('登录凭据错误！'));
         }
         # 跳转首页
@@ -138,7 +138,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     /**
      * @DESC          # 获取验证码
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/9 23:54
      * 参数区：

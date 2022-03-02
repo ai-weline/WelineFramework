@@ -24,17 +24,15 @@ class File implements SessionDriverHandlerInterface
     public function __construct(array $config)
     {
         $this->sessionPath = isset($config['path']) ? BP . str_replace('/', DIRECTORY_SEPARATOR, $config['path']) : BP . 'var' . DIRECTORY_SEPARATOR . 'session' . DIRECTORY_SEPARATOR;
+        if (!is_dir($this->sessionPath)) {
+            mkdir($this->sessionPath, 0700);
+        }
         # 会话启用 但是不存在时 新建会话
         if (session_status() !== PHP_SESSION_ACTIVE) {
-            if (!is_dir($this->sessionPath)) {
-                mkdir($this->sessionPath, 0700);
-            }
             session_save_path($this->sessionPath);
 //            session_set_cookie_params(3600, '/', '127.0.0.1', false, TRUE);
             ini_set('session.save_handler', 'files');
             ini_set('session.auto_start', '0');
-            # 检查session id
-            session_start();
         }
     }
 

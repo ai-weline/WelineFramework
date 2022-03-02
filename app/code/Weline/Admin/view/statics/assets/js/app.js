@@ -175,55 +175,32 @@ File: Main Js File
     }
 
     function initSettings() {
+        $("#light-mode-switch, #dark-mode-switch, #rtl-mode-switch").on("change", function (e) {
+            updateThemeSetting(e.target.id);
+        });
         if (window.sessionStorage) {
             let alreadyVisited = sessionStorage.getItem("is_visited");
-            // FIXME 解决加载闪屏问题
-            let checkedVisited = "dark-mode-switch"
-            $('input[class="theme-choice"]:checked').each(function () {
-                checkedVisited = $(this).attr('id');
-            });
-            if (checkedVisited === alreadyVisited) {
-                $(".right-bar input:checkbox").prop('checked', false);
-                $("#" + alreadyVisited).prop('checked', true);
-            }
             if (!alreadyVisited) {
                 sessionStorage.setItem("is_visited", "dark-mode-switch");
             } else {
                 $(".right-bar input:checkbox").prop('checked', false);
                 $("#" + alreadyVisited).prop('checked', true);
-                // updateThemeSetting(alreadyVisited);
+                updateThemeSetting(alreadyVisited);
             }
         }
-        $("#light-mode-switch, #dark-mode-switch, #rtl-mode-switch").on("change", function (e) {
-            updateThemeSetting(e.target.id);
-        });
+
     }
 
-// function updateThemeSetting(id) {
-//     if($("#light-mode-switch").prop("checked") == true && id === "light-mode-switch"){
-//         $("html").removeAttr("dir");
-//         $("#dark-mode-switch").prop("checked", false);
-//         $("#rtl-mode-switch").prop("checked", false);
-//         $("#bootstrap-style").attr('href','assets/css/bootstrap.min.css');
-//         $("#app-style").attr('href','assets/css/app.min.css');
-//         sessionStorage.setItem("is_visited", "light-mode-switch");
-//     } else if($("#dark-mode-switch").prop("checked") == true && id === "dark-mode-switch"){
-//         $("html").removeAttr("dir");
-//         $("#light-mode-switch").prop("checked", false);
-//         $("#rtl-mode-switch").prop("checked", false);
-//         $("#bootstrap-style").attr('href','assets/css/bootstrap-dark.min.css');
-//         $("#app-style").attr('href','assets/css/app-dark.min.css');
-//         sessionStorage.setItem("is_visited", "dark-mode-switch");
-//     } else if($("#rtl-mode-switch").prop("checked") == true && id === "rtl-mode-switch"){
-//         $("#light-mode-switch").prop("checked", false);
-//         $("#dark-mode-switch").prop("checked", false);
-//         $("#bootstrap-style").attr('href','assets/css/bootstrap-rtl.min.css');
-//         $("#app-style").attr('href','assets/css/app-rtl.min.css');
-//         $("html").attr("dir", 'rtl');
-//         sessionStorage.setItem("is_visited", "rtl-mode-switch");
-//     }
-// }
     function updateThemeSetting(id) {
+        // ajax请求设置主题模式
+        showLoading()
+        $.ajax({
+            url: SITE_DATA.buildUrl('config/set'),
+            data: JSON.stringify({model: id}),
+            dataType: 'json',
+            type: 'post'
+        })
+        hideLoading()
         let idDom = $('#' + id);
         if ($("#light-mode-switch").prop("checked") === true && id === "light-mode-switch") {
             $("html").removeAttr("dir");
@@ -261,7 +238,6 @@ File: Main Js File
         initComponents();
         initPreloader()
         initSettings();
-
         Waves.init();
     }
 

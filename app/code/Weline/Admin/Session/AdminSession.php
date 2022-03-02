@@ -12,6 +12,7 @@ namespace Weline\Admin\Session;
 
 use Weline\Admin\Model\AdminUser;
 use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Manager\ObjectManager;
 
 class AdminSession extends \Weline\Framework\App\Session\BackendSession
 {
