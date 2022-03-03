@@ -26,7 +26,15 @@ class ThemeConfig extends \Weline\Framework\View\Block
     {
         parent::__construct($data);
         $this->adminSession    = $adminSession;
-        $this->adminUserConfig = $adminSession->getLoginUserID() ? $adminUserConfig->load($adminSession->getLoginUserID()) : $adminUserConfig;
+        $this->adminUserConfig = $adminUserConfig;
+    }
+
+    function __init()
+    {
+        $this->adminUserConfig = $this->adminSession->getLoginUserID() ? $this->adminUserConfig->load($this->adminSession->getLoginUserID()) : $this->adminUserConfig;
+        if(!$this->adminUserConfig->getAdminUserId()){
+            $this->adminUserConfig->setId($this->adminSession->getLoginUserID());
+        }
     }
 
     function getThemeConfig(string $key = '')

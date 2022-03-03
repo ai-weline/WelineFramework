@@ -11,7 +11,6 @@ declare(strict_types=1);
 namespace Weline\Admin\Controller\ThemeConfig;
 
 use Weline\Admin\Block\ThemeConfig;
-use Weline\Admin\Model\AdminUserConfig;
 use Weline\Admin\Session\AdminSession;
 
 class Set extends \Weline\Admin\Controller\BaseController
@@ -38,7 +37,7 @@ class Set extends \Weline\Admin\Controller\BaseController
         $data = json_decode($this->_request->getBodyParams(), true);
         try {
             $old_layout = $this->themeConfig->getThemeConfig('layouts');
-            if (isset($data['layouts'])) $data['layouts'] = array_merge($old_layout, $data['layouts']);
+            if (isset($data['layouts'])&&is_array($data['layouts'])&&is_array($old_layout)) $data['layouts'] = array_merge($old_layout, $data['layouts']);
             $this->themeConfig->setThemeConfig($data);
             foreach ($data as $key => $datum) {
                 $this->adminSession->setData($key, $datum);
