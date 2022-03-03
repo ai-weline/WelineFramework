@@ -5,6 +5,8 @@ Version: 1.0.0
 更多支持：https://www.aiweline.com
 File: Main Js File
 */
+// import fa from "../libs/moment/locale/zh-cn";
+
 (function ($) {
 
     'use strict';
@@ -175,30 +177,10 @@ File: Main Js File
     }
 
     function initSettings() {
-        if (window.sessionStorage) {
-            let alreadyVisited = sessionStorage.getItem("is_visited");
-            // FIXME 解决加载闪屏问题
-            // let checkedVisited = "dark-mode-switch"
-            let checkedVisited = ""
-            $('input[class="form-check-input theme-choice"]:checked').each(function () {
-                checkedVisited = $(this).attr('id');
-            });
-            if (checkedVisited === alreadyVisited) {
-                $(".right-bar input:checkbox").prop('checked', false);
-                $("#" + alreadyVisited).prop('checked', true);
-            } else {
-                if (!alreadyVisited) {
-                    sessionStorage.setItem("is_visited", "dark-mode-switch");
-                } else {
-                    $(".right-bar input:checkbox").prop('checked', false);
-                    $("#" + alreadyVisited).prop('checked', true);
-                    updateThemeSetting(alreadyVisited);
-                }
-            }
-        }
         $("#light-mode-switch, #dark-mode-switch, #rtl-mode-switch").on("change", function (e) {
             updateThemeSetting(e.target.id);
         });
+
         // 菜单布局
         // 1、明亮
         let light_sidebar = $('#light-sidebar')
@@ -207,12 +189,11 @@ File: Main Js File
         }
         light_sidebar.on("change", function (e) {
             showLoading()
-            $.ajax({
-                url: SITE_DATA.buildUrl('ThemeConfig/Set'),
-                data: JSON.stringify({'light-sidebar': $(e.target).prop('checked'), 'layouts': {'data-topbar': "colored"}}),
-                dataType: 'json',
-                type: 'post'
-            })
+            let layout = {layouts: {'data-topbar': "dark", 'data-sidebar': 'dark'},'light-sidebar':false}
+            if ($(e.target).prop('checked')) {
+                layout = {layouts: {'data-topbar': "colored", 'data-sidebar': 'light'},'light-sidebar':true};
+            }
+            setThemeConfig(layout)
             hideLoading()
         });
         // 2、图标菜单
@@ -222,15 +203,11 @@ File: Main Js File
         }
         icon_sidebar.on("change", function (e) {
             showLoading()
-            $.ajax({
-                url: SITE_DATA.buildUrl('ThemeConfig/Set'),
-                data: JSON.stringify({
-                    'icon-sidebar': $(e.target).prop('checked'),
-                    'layouts': {'data-sidebar': "dark", 'data-keep-enlarged': "true", class: "vertical-collpsed"}
-                }),
-                dataType: 'json',
-                type: 'post'
-            })
+            let layout = {layouts: {'data-keep-enlarged': "false", class: ""},'icon-sidebar':false}
+            if ($(e.target).prop('checked')) {
+                layout = {layouts: {'data-keep-enlarged': "true", class: "vertical-collpsed"},'icon-sidebar':true};
+            }
+            setThemeConfig(layout)
             hideLoading()
         });
         // 3、图文菜单
@@ -240,15 +217,11 @@ File: Main Js File
         }
         layouts_compact_sidebar.on("change", function (e) {
             showLoading()
-            $.ajax({
-                url: SITE_DATA.buildUrl('ThemeConfig/Set'),
-                data: JSON.stringify({
-                    'layouts-compact-sidebar': $(e.target).prop('checked'),
-                    'layouts': {'data-sidebar': "dark", 'data-sidebar-size': "small"}
-                }),
-                dataType: 'json',
-                type: 'post'
-            })
+            let layout = {layouts: {'data-sidebar-size': ""},'layouts-compact-sidebar':false};
+            if ($(e.target).prop('checked')) {
+                layout = {layouts: {'data-sidebar-size': "small"},'layouts-compact-sidebar':true}
+            }
+            setThemeConfig(layout)
             hideLoading()
         });
         // 布局
@@ -259,18 +232,11 @@ File: Main Js File
         }
         layouts_horizontal.on("change", function (e) {
             showLoading()
-            $.ajax({
-                url: SITE_DATA.buildUrl('ThemeConfig/Set'),
-                data: JSON.stringify({
-                    'layouts_horizontal': $(e.target).prop('checked'),
-                    'layouts': {
-                        'data-topbar': "light",
-                        'data-layout': "horizontal"
-                    }
-                }),
-                dataType: 'json',
-                type: 'post'
-            })
+            let layout = {layouts:{'data-layout': ""},'layouts-horizontal':false};
+            if ($(e.target).prop('checked')) {
+                layout = {layouts:{'data-layout': "horizontal"},'layouts-horizontal':true}
+            }
+            setThemeConfig(layout)
             hideLoading()
         });
         // 2、水平顶黑
@@ -280,18 +246,11 @@ File: Main Js File
         }
         layouts_hori_topbar_dark.on("change", function (e) {
             showLoading()
-            $.ajax({
-                url: SITE_DATA.buildUrl('ThemeConfig/Set'),
-                data: JSON.stringify({
-                    'layouts-hori-topbar-dark':$(e.target).prop('checked'),
-                    'layouts': {
-                        'data-topbar': "dark",
-                        'data-layout': "horizontal"
-                    }
-                }),
-                dataType: 'json',
-                type: 'post'
-            })
+            let layout = {layouts:{'data-layout': ""},'layouts-hori-topbar-dark':false};
+            if ($(e.target).prop('checked')) {
+                layout = {layouts:{'data-layout': "horizontal", 'data-topbar': 'dark'},'layouts-hori-topbar-dark':true}
+            }
+            setThemeConfig(layout)
             hideLoading()
         });
         // 3、水平盒子
@@ -301,53 +260,56 @@ File: Main Js File
         }
         layouts_hori_boxed_width.on("change", function (e) {
             showLoading()
-            $.ajax({
-                url: SITE_DATA.buildUrl('ThemeConfig/Set'),
-                data: JSON.stringify({
-                    'layouts-hori-boxed-width': $(e.target).prop('checked'),
-                    'layouts': {
-                        "data-topbar": "light", 'data-layout': "horizontal", 'data-layout-size': "boxed"
-                    }
-                }),
-                dataType: 'json',
-                type: 'post'
-            })
+            let layout = {layouts:{'data-layout': "", 'data-layout-size': ""},'layouts-hori-boxed-width':false};
+            if ($(e.target).prop('checked')) {
+                layout = {layouts:{'data-layout': "horizontal", 'data-layout-size': "boxed"},'layouts-hori-boxed-width':true}
+            }
+            setThemeConfig(layout)
             hideLoading()
         });
     }
 
-    function updateThemeSetting(id) {
-        // ajax请求设置主题模式
-        showLoading()
+    async function setThemeConfig(layout, reload = true) {
         $.ajax({
             url: SITE_DATA.buildUrl('ThemeConfig/Set'),
-            data: JSON.stringify({'theme-model': id}),
+            data: JSON.stringify(layout),
             dataType: 'json',
-            type: 'post'
+            type: 'post',
+            success: async res => {
+                if ((200 === res.code) && reload) window.location.reload()
+            }
         })
-        hideLoading()
-        let idDom = $('#' + id);
+    }
+
+    function updateThemeSetting(id) {
+        showLoading()
+        // ajax请求设置主题模式
         if ($("#light-mode-switch").prop("checked") === true && id === "light-mode-switch") {
-            $("html").removeAttr("dir");
-            $("#dark-mode-switch").prop("checked", false);
-            $("#rtl-mode-switch").prop("checked", false);
-            $("#bootstrap-style").attr('href', idDom.attr('data-bsStyle'));
-            $("#app-style").attr('href', idDom.attr('data-appStyle'));
-            sessionStorage.setItem("is_visited", "light-mode-switch");
+            setThemeConfig({
+                layouts: {
+                    'data-topbar': 'light',
+                    'data-sidebar': 'light',
+                },
+                'light-mode-switch': true,
+                'dark-mode-switch': false,
+                'rtl-mode-switch': false,
+            })
         } else if ($("#dark-mode-switch").prop("checked") === true && id === "dark-mode-switch") {
-            $("html").removeAttr("dir");
-            $("#light-mode-switch").prop("checked", false);
-            $("#rtl-mode-switch").prop("checked", false);
-            $("#bootstrap-style").attr('href', idDom.attr('data-bsStyle'));
-            $("#app-style").attr('href', idDom.attr('data-appStyle'));
-            sessionStorage.setItem("is_visited", "dark-mode-switch");
+            setThemeConfig({
+                layouts: {
+                    'data-topbar': 'dark',
+                    'data-sidebar': 'dark',
+                },
+                'light-mode-switch': false,
+                'dark-mode-switch': true,
+                'rtl-mode-switch': false,
+            })
         } else if ($("#rtl-mode-switch").prop("checked") === true && id === "rtl-mode-switch") {
-            $("#light-mode-switch").prop("checked", false);
-            $("#dark-mode-switch").prop("checked", false);
-            $("#bootstrap-style").attr('href', idDom.attr('data-bsStyle'));
-            $("#app-style").attr('href', idDom.attr('data-appStyle'));
-            $("html").attr("dir", 'rtl');
-            sessionStorage.setItem("is_visited", "rtl-mode-switch");
+            setThemeConfig({
+                'light-mode-switch': false,
+                'dark-mode-switch': false,
+                'rtl-mode-switch': true,
+            })
         }
     }
 
@@ -362,9 +324,7 @@ File: Main Js File
         initDropdownMenu();
         initComponents();
         initPreloader()
-        window.onload = () => {
-            initSettings();
-        }
+        initSettings();
 
         Waves.init();
     }

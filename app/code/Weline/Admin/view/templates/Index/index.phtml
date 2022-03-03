@@ -10,7 +10,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
  *@Forum        https://bbs.aiweline.com
  *@DESC         后台共用头部
 -->
-<html lang="en">
+<html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?>>
 <head>
     @template(Weline_Admin::common/head.phtml)
     <!-- jvectormap -->
@@ -19,8 +19,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 </head>
 
 <!--<body data-sidebar="dark" data-topbar='colored' data-layout='horizontal'>-->
-<body data-sidebar="<?= $themeConfig->getLayouts() ?? 'dark'; ?>"
-      data-topbar='colored' data-layout='horizontal' data-sidebar-size="small">
+<body <?= $themeConfig->getLayouts() ?? ''; ?>>
 
 <!-- <body data-layout="horizontal" data-topbar="dark"> -->
 <!--加载中组件 开始-->
@@ -443,7 +442,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                         <div class="d-flex py-3">
                                             <div class="flex-shrink-0 me-3 align-self-center">
                                                 <img class="rounded-circle avatar-xs" alt=""
-                                                     src="@static(Weline_Admin::assets/images/users/avatar-3.jpg)">
+                                                     src="@static(Weline_Admin::/assets/images/users/avatar-3.jpg)">
                                             </div>
                                             <div class="flex-grow-1 overflow-hidden">
                                                 <h5 class="font-size-14 mb-1">Frank Martin</h5>

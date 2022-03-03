@@ -31,12 +31,15 @@ class Set extends \Weline\Admin\Controller\BaseController
 
     function postIndex(): bool|string
     {
+        # 释放缓存
+        foreach ($this->themeConfig::caches as $cach) {
+            $this->themeConfig->_cache->set($cach, false);
+        }
         $data = json_decode($this->_request->getBodyParams(), true);
         try {
+            $old_layout = $this->themeConfig->getThemeConfig('layouts');
+            if (isset($data['layouts'])) $data['layouts'] = array_merge($old_layout, $data['layouts']);
             $this->themeConfig->setThemeConfig($data);
-            if (isset($data['layouts'])) {
-                $this->themeConfig->addLayouts($data['layouts']);
-            }
             foreach ($data as $key => $datum) {
                 $this->adminSession->setData($key, $datum);
             }

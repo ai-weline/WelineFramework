@@ -12,12 +12,13 @@ namespace Weline\Admin\Block;
 
 use Weline\Admin\Model\AdminUserConfig;
 use Weline\Admin\Session\AdminSession;
-use Weline\Backend\Cache\BackendCache;
-use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Manager\ObjectManager;
 
 class ThemeConfig extends \Weline\Framework\View\Block
 {
+    const caches = [
+        'backend_body_layouts_attributes',
+        'backend_theme_model'
+    ];
     private AdminSession $adminSession;
     private AdminUserConfig $adminUserConfig;
 
@@ -25,7 +26,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
     {
         parent::__construct($data);
         $this->adminSession    = $adminSession;
-        $this->adminUserConfig = $adminUserConfig->load($adminSession->getLoginUserID());
+        $this->adminUserConfig = $adminSession->getLoginUserID() ? $adminUserConfig->load($adminSession->getLoginUserID()) : $adminUserConfig;
     }
 
     function getThemeConfig(string $key = '')
@@ -46,46 +47,46 @@ class ThemeConfig extends \Weline\Framework\View\Block
         return $data;
     }
 
+    function getThemeModel()
+    {
+        $cache_key = 'backend_theme_model';
+        if ($data = $this->_cache->get($cache_key)) {
+            return $data;
+        }
+        $data = '';
+        if ($this->getThemeConfig('rtl-mode-switch')) {
+            $data = 'rtl';
+        }
+        if ($this->getThemeConfig('dark-mode-switch')) {
+            $data = 'dark';
+        }
+        if ($this->getThemeConfig('light-mode-switch')) {
+            $data = '';
+        }
+        $this->_cache->set($cache_key, $data);
+        return $data;
+    }
+
     function setThemeConfig(string|array $key, mixed $value = ''): static
     {
         $this->adminUserConfig->addConfig($key, $value)->forceCheck()->save();
         return $this;
     }
 
-    function getThemeConfigJson()
-    {
-        $cache_key = 'backend_getThemeConfigJson';
-        if ($data = $this->_cache->get($cache_key)) {
-            return $data;
-        }
-        $json = $this->adminUserConfig->getOriginConfig();
-        $this->_cache->set($cache_key, $json);
-        return $json;
-    }
 
     public string $cache_key_backend_body_attributes = 'backend_body_layouts_attributes';
 
-    function addLayouts(string|array $attribute, string $value = ''): bool
-    {
-
-        $body_attributes = is_array($this->adminUserConfig->getConfig('layouts')) ?$this->adminUserConfig->getConfig('layouts'): [];
-        if (is_array($attribute)) {
-            $body_attributes = array_merge($body_attributes, $attribute);
-        } else {
-            $body_attributes[$attribute] = $value;
-        }
-        $body_attributes_str = implode(' ', $body_attributes);
-        $this->_cache->set($this->cache_key_backend_body_attributes, $body_attributes_str);
-        return $this->adminUserConfig->addConfig('layouts', $body_attributes_str)->save();
-    }
 
     function getLayouts()
     {
         if ($data = $this->_cache->get($this->cache_key_backend_body_attributes)) {
             return $data;
         }
-        $body_attributes     = is_array($this->adminUserConfig->getConfig('layouts')) ?$this->adminUserConfig->getConfig('layouts'): [];
-        $body_attributes_str = implode(' ', $body_attributes);
+        $body_attributes     = is_array($this->adminUserConfig->getConfig('layouts')) ? $this->adminUserConfig->getConfig('layouts') : [];
+        $body_attributes_str = '';
+        foreach ($body_attributes as $attribute => $value) {
+            if (is_string($value)) $body_attributes_str .= "$attribute=\"$value\" ";
+        }
         $this->_cache->set($this->cache_key_backend_body_attributes, $body_attributes_str);
         return $body_attributes_str;
     }

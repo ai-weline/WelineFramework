@@ -22,19 +22,19 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
             <div class='form-check form-switch mb-3'>
                 <input class='form-check-input' type='checkbox'
                        id='light-sidebar'
-                       checked="<?= ('1' === $themeConfig->getThemeConfig('light-sidebar')) ? 'checked' : '' ?>">
+                    <?= $themeConfig->getThemeConfig('light-sidebar') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="light-sidebar"><?= __('菜单明亮') ?></label>
             </div>
             <div class='form-check form-switch mb-3'>
                 <input class='form-check-input' type='checkbox'
                        id='icon-sidebar'
-                       checked="<?= ('1' === $themeConfig->getThemeConfig('icon-sidebar')) ? 'checked' : '' ?>">
+                    <?= $themeConfig->getThemeConfig('icon-sidebar') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="icon-sidebar"><?= __('图标菜单') ?></label>
             </div>
             <div class='form-check form-switch mb-3'>
                 <input class='form-check-input' type='checkbox'
                        id='layouts-compact-sidebar'
-                       checked="<?= ('1' === $themeConfig->getThemeConfig('layouts-compact-sidebar')) ? 'checked' : '' ?>">
+                    <?= $themeConfig->getThemeConfig('layouts-compact-sidebar') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="layouts-compact-sidebar"><?= __('图文菜单') ?></label>
             </div>
         </div>
@@ -44,19 +44,19 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
             <div class='form-check form-switch mb-3'>
                 <input class='form-check-input' type='checkbox'
                        id='layouts-horizontal'
-                       checked="<?= ('1' === $themeConfig->getThemeConfig('layouts-horizontal')) ? 'checked' : '' ?>">
+                    <?= $themeConfig->getThemeConfig('layouts-horizontal') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="layouts-horizontal"><?= __('水平布局') ?></label>
             </div>
             <div class='form-check form-switch mb-3'>
                 <input class='form-check-input' type='checkbox'
                        id='layouts-hori-topbar-dark'
-                       checked="<?= ('1' === $themeConfig->getThemeConfig('layouts-hori-topbar-dark')) ? 'checked' : '' ?>">
+                    <?= $themeConfig->getThemeConfig('layouts-hori-topbar-dark') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="layouts-hori-topbar-dark"><?= __('水平顶黑') ?></label>
             </div>
             <div class='form-check form-switch mb-3'>
                 <input class='form-check-input' type='checkbox'
                        id='layouts-hori-boxed-width'
-                       checked="<?= ('1' === $themeConfig->getThemeConfig('layouts-hori-boxed-width')) ? 'checked' : '' ?>">
+                    <?= $themeConfig->getThemeConfig('layouts-hori-boxed-width') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="layouts-hori-boxed-width"><?= __('水平盒子') ?></label>
             </div>
         </div>
@@ -70,8 +70,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
             </div>
             <div class="form-check form-switch mb-3">
                 <input class="form-check-input theme-choice" type="checkbox" id="light-mode-switch"
-                       data-bsStyle="@static(Weline_Admin::assets/css/bootstrap.min.css)"
-                       data-appStyle="@static(Weline_Admin::assets/css/app.min.css)" <?= 'light-mode-switch' === ($themeConfig->getThemeConfig('theme_mode')) ? 'checked' : '' ?>>
+                    <?= $themeConfig->getThemeConfig('light-mode-switch') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="light-mode-switch"><?= __('明亮模式') ?></label>
             </div>
 
@@ -80,9 +79,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                      alt="layout-2">
             </div>
             <div class="form-check form-switch mb-3">
-                <input class="form-check-input theme-choice" type="checkbox" id="dark-mode-switch"
-                       data-bsStyle="@static(Weline_Admin::assets/css/bootstrap-dark.min.css)"
-                       data-appStyle="@static(Weline_Admin::assets/css/app-dark.min.css)" <?= 'dark-mode-switch' === ($themeConfig->getThemeConfig('theme_mode')) ? 'checked' : '' ?>>
+                <input class="form-check-input theme-choice" type="checkbox"
+                       id="dark-mode-switch" <?= $themeConfig->getThemeConfig('dark-mode-switch') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="dark-mode-switch"><?= __('暗黑模式') ?></label>
             </div>
 
@@ -91,13 +89,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                      alt="layout-3">
             </div>
             <div class="form-check form-switch mb-5">
-                <input class="form-check-input theme-choice" type="checkbox" id="rtl-mode-switch"
-                       data-bsStyle="@static(Weline_Admin::assets/css/bootstrap-rtl.min.css)"
-                       data-appStyle="@static(Weline_Admin::assets/css/app-rtl.min.css)" <?= 'rtl-mode-switch' === ($themeConfig->getThemeConfig('theme_mode')) ? 'checked' : '' ?>>
+                <input class="form-check-input theme-choice" type="checkbox" id="rtl-mode-switch" <?= $themeConfig->getThemeConfig('rtl-mode-switch') ? 'checked' : '' ?>>
                 <label class="form-check-label" for="rtl-mode-switch"><?= __('RTL模式') ?></label>
             </div>
-
-
         </div>
 
     </div> <!-- end slimscroll-menu-->

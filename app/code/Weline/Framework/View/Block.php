@@ -18,7 +18,7 @@ use Weline\Framework\View\Cache\ViewCache;
 
 class  Block extends Template  implements BlockInterface
 {
-    protected ?CacheInterface $_cache = null;
+    public ?CacheInterface $_cache = null;
     protected ?Template $engine = null;
     protected string $_template = '';
 

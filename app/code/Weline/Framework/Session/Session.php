@@ -94,7 +94,7 @@ class Session implements SessionInterface
      *
      * @return string
      */
-    function getData(string $name): string
+    function getData(string $name): mixed
     {
         return $this->session->get($name);
     }

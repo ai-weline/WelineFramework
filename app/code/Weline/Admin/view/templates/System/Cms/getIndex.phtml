@@ -1,5 +1,7 @@
 ﻿<?php
 /**@var \Weline\Framework\View\Template $this */
+/**@var \Weline\Admin\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\ThemeConfig::class);
 ?>
 <!DOCTYPE html>
 <!--
@@ -8,7 +10,7 @@
  *@Forum        https://bbs.aiweline.com
  *@DESC         后台共用头部
 -->
-<html lang="en">
+<html lang='en' <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?>>
 <head>
     @template(Weline_Admin::common/head.phtml)
     <!-- jquery.mCustomScrollbar 插件 -->
@@ -18,7 +20,7 @@
     <title><?= __('Weline Admin 管理面板') ?></title>
 </head>
 
-<body data-sidebar="dark">
+<body <?= $themeConfig->getLayouts() ?? ''; ?>>
 
 <!--页头工具条 开始-->
 @template(Weline_Admin::common/page/loading.phtml)
@@ -96,62 +98,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-<!--                                --><?php
-//                                $events = $this->getData('events');
-//                                ?>
-<!--                                <div class='table-rep-plugin'>-->
-<!--                                    <div class='table-responsive mb-0' data-pattern='priority-columns'>-->
-<!--                                        <table id='tech-companies-1' class='table table-striped table-bordered'>-->
-<!--                                            <thead>-->
-<!--                                            <tr>-->
-<!--                                                <th data-priority='1'>--><?//= __('ID') ?><!--</th>-->
-<!--                                                <th data-priority='1'>--><?//= __('事件名') ?><!--</th>-->
-<!--                                                <th data-priority='3'>--><?//= __('示例类') ?><!--</th>-->
-<!--                                                <th data-priority='1'>--><?//= __('是否禁用') ?><!--</th>-->
-<!--                                                <th data-priority='3'>--><?//= __('是否共享') ?><!--</th>-->
-<!--                                            </tr>-->
-<!--                                            </thead>-->
-<!--                                            <tbody>-->
-<!--                                            --><?php
-//                                            foreach ($events as $file => $event) :
-//                                                ?>
-<!--                                                <tr>-->
-<!--                                                    <td></td>-->
-<!--                                                    <th colspan="4" class='co-name'>--><?//= $file ?><!--</th>-->
-<!--                                                </tr>-->
-<!--                                                --><?php
-//                                                foreach ($event as $name => $instances) {
-//                                                    ?>
-<!--                                                    <tr>-->
-<!--                                                        <td></td>-->
-<!--                                                        <th colspan="4" class='co-name'>--><?//= $name ?><!--</th>-->
-<!--                                                    </tr>-->
-<!--                                                    --><?php
-//                                                    foreach ($instances as $key => $instance) {
-//                                                        ?>
-<!--                                                        <tr>-->
-<!--                                                            <th class="co-name">--><?//= $key ?><!--</th>-->
-<!--                                                            <td>--><?//= $instance['name'] ?><!--</td>-->
-<!--                                                            <td>--><?//= $instance['instance'] ?><!--</td>-->
-<!--                                                            <td>--><?//= $instance['disabled'] ?><!--</td>-->
-<!--                                                            <td>--><?//= $instance['shared'] ?><!--</td>-->
-<!--                                                        </tr>-->
-<!--                                                        --><?php
-//                                                    }
-//                                                    ?>
-<!--                                                    --><?php
-//                                                }
-//                                                ?>
-<!--                                            --><?php
-//                                            endforeach;
-//                                            ?>
-<!--                                            </tbody>-->
-<!--                                        </table>-->
-<!--                                    </div>-->
-<!---->
-<!--                                </div>-->
-
+                                </div
                             </div>
                         </div>
                     </div> <!-- end col -->
