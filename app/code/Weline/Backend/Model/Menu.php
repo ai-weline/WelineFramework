@@ -111,7 +111,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getName(): string
     {
-        return parent::getData(self::fields_NAME);
+        return parent::getData(self::fields_NAME) ?? '';
     }
 
     public function setName(string $name): static
@@ -131,7 +131,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getSource(): string
     {
-        return parent::getData(self::fields_SOURCE);
+        return parent::getData(self::fields_SOURCE) ?? '';
     }
 
     public function setSource(string $source): static
@@ -141,7 +141,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getParentSource(): string
     {
-        return parent::getData(self::fields_PARENT_SOURCE);
+        return parent::getData(self::fields_PARENT_SOURCE) ?? '';
     }
 
     public function setParentSource(string $source): static
@@ -151,7 +151,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getAction(): string
     {
-        return parent::getData(self::fields_ACTION);
+        return parent::getData(self::fields_ACTION) ?? '';
     }
 
     public function setAction(string $url): static
@@ -161,7 +161,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getIcon(): string
     {
-        return parent::getData(self::fields_ICON);
+        return parent::getData(self::fields_ICON) ?? '';
     }
 
     public function setIcon(string $css_icon_class): static
@@ -171,7 +171,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getTitle(): string
     {
-        return parent::getData(self::fields_TITLE);
+        return parent::getData(self::fields_TITLE) ?? '';
     }
 
     public function setTitle(string $title): static
@@ -191,7 +191,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getModule(): string
     {
-        return $this->getData(self::fields_MODULE);
+        return $this->getData(self::fields_MODULE) ?? '';
     }
 
     public function setModule(string $module_name): static
@@ -212,7 +212,7 @@ class Menu extends \Weline\Framework\Database\Model
     /*----------------------助手函数区-------------------------*/
     function getUrl(): string
     {
-        return $this->url->build($this->getAction());
+        return $this->url->build($this->getAction()) ?? '';
     }
 
     /**
@@ -233,7 +233,7 @@ class Menu extends \Weline\Framework\Database\Model
         foreach ($top_menus as &$top_menu) {
             $top_menu = $this->getSubMenus($top_menu);
         }
-        $this->backendCache->set($cache_key, $top_menus, 10);
+        $this->backendCache->set($cache_key, $top_menus, 60);
         return $top_menus ?? [];
     }
 

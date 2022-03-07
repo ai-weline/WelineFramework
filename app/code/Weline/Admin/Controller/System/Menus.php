@@ -12,6 +12,7 @@ namespace Weline\Admin\Controller\System;
 
 use Weline\Admin\Controller\BaseController;
 use Weline\Backend\Model\Menu;
+use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -66,4 +67,5 @@ class Menus extends BaseController
     {
         return ObjectManager::getInstance(Menu::class);
     }
+
 }

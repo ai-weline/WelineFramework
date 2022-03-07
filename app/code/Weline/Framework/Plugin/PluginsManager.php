@@ -32,9 +32,10 @@ class PluginsManager
     private CacheInterface $pluginCache;
 
     public function __construct(
-        Reader $reader,
+        Reader      $reader,
         PluginCache $pluginCache
-    ) {
+    )
+    {
         $this->reader      = $reader;
         $this->pluginCache = $pluginCache->create();
     }
@@ -45,9 +46,10 @@ class PluginsManager
      * 参数区：
      *
      * @param bool $cache
-     * @throws \Weline\Framework\Exception\Core
-     * @throws \Weline\Framework\App\Exception
+     *
      * @return array
+     * @throws \Weline\Framework\App\Exception
+     * @throws \Weline\Framework\Exception\Core
      */
     public function scanPlugins(bool $cache = true): array
     {
@@ -131,7 +133,7 @@ class PluginsManager
                             );
 
                             // 检测首字母大小写字母匹配的方法是否存在：存在则不新增
-                            if (! in_array($name, $plugin_instance_methods, true) || ! in_array(lcfirst($name), $plugin_instance_methods, true)) {
+                            if (!in_array($name, $plugin_instance_methods, true) || !in_array(lcfirst($name), $plugin_instance_methods, true)) {
                                 // 检测首字母大小写字母匹配的方法
                                 if (in_array($name, $type_methods, true)) {
                                     $plugin_instance_methods[$name][] = $plugin_instance_method->name;
@@ -142,20 +144,20 @@ class PluginsManager
 
                             // 检测首字母大小写字母匹配的方法是否存在：存在则不新增:全局原始类函数，用于创建侦听类使用
                             $origin_in_listen = in_array($name, $type_methods, true);
-                            if (! in_array($name, $plugin_listen_methods, true) && $origin_in_listen) {
+                            if (!in_array($name, $plugin_listen_methods, true) && $origin_in_listen) {
                                 // 检测首字母大小写字母匹配的方法
                                 $origin_is_in = false;
-                                if (! in_array($name, $plugin_listen_methods, true)) {
+                                if (!in_array($name, $plugin_listen_methods, true)) {
                                     $plugin_listen_methods[] = $name;
                                     $origin_is_in            = true;
-                                } elseif (! $origin_is_in) {
-                                    if (! in_array($name, $plugin_listen_methods, true)) {
+                                } elseif (!$origin_is_in) {
+                                    if (!in_array($name, $plugin_listen_methods, true)) {
                                         $plugin_listen_methods[] = lcfirst($name);
                                         $origin_is_in            = true;
                                     }
                                 }
                                 // 还不在就创建
-                                if (! $origin_is_in) {
+                                if (!$origin_is_in) {
                                     $plugin_listen_methods[] = lcfirst($name);
                                 }
                             }
@@ -164,20 +166,20 @@ class PluginsManager
                             $lcfirst_name = lcfirst($name);
 
                             $lcfirst_in_listen = in_array($lcfirst_name, $type_methods, true);
-                            if (! in_array($lcfirst_name, $plugin_listen_methods, true) && $lcfirst_in_listen) {
+                            if (!in_array($lcfirst_name, $plugin_listen_methods, true) && $lcfirst_in_listen) {
                                 // 检测首字母大小写字母匹配的方法
                                 $lcfirst_is_in = false;
-                                if (! in_array($lcfirst_name, $plugin_listen_methods, true)) {
+                                if (!in_array($lcfirst_name, $plugin_listen_methods, true)) {
                                     $plugin_listen_methods[] = $lcfirst_name;
                                     $lcfirst_is_in           = true;
-                                } elseif (! $lcfirst_is_in) {
-                                    if (! in_array($lcfirst_name, $plugin_listen_methods, true)) {
+                                } elseif (!$lcfirst_is_in) {
+                                    if (!in_array($lcfirst_name, $plugin_listen_methods, true)) {
                                         $plugin_listen_methods[] = $lcfirst_name;
                                         $lcfirst_is_in           = true;
                                     }
                                 }
                                 // 还不在就创建
-                                if (! $lcfirst_is_in) {
+                                if (!$lcfirst_is_in) {
                                     $plugin_listen_methods[] = $lcfirst_name;
                                 }
                             }
@@ -227,7 +229,7 @@ class PluginsManager
             $method_plugins_methods = [];
             foreach ($plugin_data['listen_methods'] as $listen_method) {
                 foreach ($plugin_data['plugins_methods'] as $plugin_class => $plugin_methods) {
-                    if ($plugin_methods) {
+                    if ($plugin_methods && isset($plugin_methods[$listen_method])) {
                         foreach ($plugin_methods[$listen_method] as $plugin_method) {
                             $plugin_class_method_data = [
                                 'instance' => $plugin_class,
@@ -258,7 +260,7 @@ class PluginsManager
         if ($cache) {
             $this->pluginCache->set($cache_key, $types_plugins_info);
             $this->plugins = $this->pluginCache->get($cache_key);
-        }else{
+        } else {
             $this->plugins = $types_plugins_info;
         }
 
@@ -271,6 +273,7 @@ class PluginsManager
      * 参数区：
      *
      * @param string $class
+     *
      * @return mixed
      * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Exception\Core
@@ -290,9 +293,11 @@ class PluginsManager
      * 读取插件所有信息：插件定义的所有方法的 前置、环绕、后置 拦截信息
      *
      * 参数区：
-     * @param string $type
-     * @param string $method
+     *
+     * @param string      $type
+     * @param string      $method
      * @param string|null $code
+     *
      * @return array|mixed
      * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Exception\Core
@@ -320,11 +325,12 @@ class PluginsManager
      * @param string $type
      * @param string $method
      * @param string $code
+     *
      * @return array
      */
     public function getNext($type, $method, $code = '__self'): ?array
     {
-        if (! isset($this->plugin_map[$type . $method])) {
+        if (!isset($this->plugin_map[$type . $method])) {
             $this->_inheritPlugins($type);
         }
         $key = $type . '_' . lcfirst($method) . '_' . $code;
@@ -338,11 +344,12 @@ class PluginsManager
      * 参数区：
      *
      * @param string $class
-     * @param bool $cache
-     * @throws \Weline\Framework\App\Exception
+     * @param bool   $cache
+     *
+     * @return Proxy\Generator
      * @throws \Weline\Framework\Exception\Core
      * @throws \ReflectionException
-     * @return Proxy\Generator
+     * @throws \Weline\Framework\App\Exception
      */
     public function generatorInterceptor(string $class = '', bool $cache = false): Proxy\Generator
     {

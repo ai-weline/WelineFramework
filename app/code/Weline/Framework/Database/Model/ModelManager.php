@@ -45,12 +45,14 @@ class ModelManager
             foreach ($vendor_modules as $module => $model_files_data) {
                 if ($module === $module_name) {
                     /**@var ModelSetup $modelSetup */
+                    if(DEV) $this->printing->printing(ModelSetup::class);
                     $modelSetup = ObjectManager::getInstance(ModelSetup::class);
                     foreach ($model_files_data as $model_path => $model_files) {
                         /**@var File $model_file */
                         foreach ($model_files as $model_file) {
                             /**@var ModelInterface|AbstractModel $model */
                             $model = ObjectManager::getInstance($model_file->getNamespace() . '\\' . $model_file->getFilename());
+                            if(PROD) $this->printing->printing($model::class);
                             $modelSetup->putModel($model);
                             # 执行模型升级
                             $model->$type($modelSetup, $context);

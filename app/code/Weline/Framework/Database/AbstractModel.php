@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Database;
 
+use JetBrains\PhpStorm\Pure;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
@@ -29,7 +30,8 @@ use Weline\Framework\Manager\ObjectManager;
  * @method QueryInterface update(array $data, string $condition_field = 'id')
  * @method QueryInterface fields(string $fields)
  * @method QueryInterface join(string $table, string $condition, string $type = 'left')
- * @method QueryInterface where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic)
+ * @method QueryInterface where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic='AND')
+ *         = 'AND')
  *         = 'AND')
  * @method QueryInterface limit(int $size, int $offset = 0)
  * @method QueryInterface page(int $page = 1, int $pageSize = 20)
@@ -65,7 +67,7 @@ abstract class AbstractModel extends DataObject
 
     protected string $table = '';
     protected string $origin_table_name = '';
-    private ConnectionFactory $connection;
+    private ?ConnectionFactory $connection = null;
     public string $_suffix = '';
     public string $_primary_key = '';
     public string $_primary_key_default = 'id';
@@ -82,14 +84,6 @@ abstract class AbstractModel extends DataObject
     private mixed $_query_data = null;
     public array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
 
-    function __construct(
-        array $data = []
-    )
-    {
-        parent::__construct($data);
-        if (!isset($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
-    }
-
     /**
      * @DESC         |初始化连接、缓存、表前缀 读取模型自身表名字等
      *
@@ -103,10 +97,10 @@ abstract class AbstractModel extends DataObject
         # 重置查询
         if (!isset($this->_cache)) $this->_cache = ObjectManager::getInstance(DbModelCache::class . 'Factory');
         # 类属性
-        if (!isset($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
-        if (empty($this->_suffix)) $this->_suffix = $this->connection->getConfigProvider()->getPrefix() ?: '';
+        if (empty($this->connection)) $this->connection = $this->getConnection();
+        if (empty($this->_suffix)) $this->_suffix = $this->getConnection()->getConfigProvider()->getPrefix() ?: '';
         # 模型属性
-        if (empty($this->table)) $this->table = $this->provideTable() ?: $this->processTable();
+        if (empty($this->table)) $this->table = $this->provideTable() ? $this->_suffix . $this->provideTable() : $this->processTable();
         if (empty($this->origin_table_name)) $this->origin_table_name = $this->provideTable();
         if (empty($this->_primary_key)) {
             if ($this::fields_ID !== $this->_primary_key_default) {
@@ -121,20 +115,26 @@ abstract class AbstractModel extends DataObject
         }
     }
 
+    function getConnection()
+    {
+        if (empty($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
+        return $this->connection;
+    }
+
     function getIdField(): string
     {
         return $this->_primary_key;
     }
 
-//    public function __sleep()
-//    {
-//        return array('table', 'origin_table_name', '_suffix', '_primary_key', '_fields');
-//    }
-//
-//    function __wakeup()
-//    {
-//        $this->__init();
-//    }
+    public function __sleep()
+    {
+        return array('table', 'origin_table_name', '_suffix', '_primary_key', '_fields');
+    }
+
+    function __wakeup()
+    {
+        $this->__init();
+    }
 
 
     /**
@@ -149,11 +149,14 @@ abstract class AbstractModel extends DataObject
     protected function processTable(): string
     {
         if (!$this->table) {
-            $class_file_name_arr     = explode('\\', $this::class);
-            $class_file_name         = array_pop($class_file_name_arr);
-            $table_name              = str_replace('Model', '', $class_file_name);
+            $class_file_name_arr = explode('\\', $this::class);
+            $class_file_name     = array_pop($class_file_name_arr);
+            if (str_ends_with($class_file_name, 'Model')) {
+                $class_file_name = substr($class_file_name, 0, strpos($class_file_name, 'Model'));
+            }
+            $table_name              = $class_file_name;
             $this->origin_table_name = $this->_suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
-            $this->table             = "`{$this->connection->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
+            $this->table             = "`{$this->getConnection()->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
         }
         return $this->table;
     }
@@ -255,7 +258,7 @@ abstract class AbstractModel extends DataObject
             return $this->current_query;
         }
         # 区分是否保持查询
-        $this->current_query = $this->connection->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
+        $this->current_query = $this->getConnection()->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
         return $this->current_query;
     }
 
@@ -277,20 +280,6 @@ abstract class AbstractModel extends DataObject
             $this->current_query = $query;
         }
         return $this;
-    }
-
-    /**
-     * @DESC          # 获取链接
-     *
-     * @AUTH    秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/9/3 19:59
-     * 参数区：
-     * @return ConnectionFactory
-     */
-    function getConnection(): ConnectionFactory
-    {
-        return $this->connection;
     }
 
     /**

@@ -9,14 +9,10 @@
 
 namespace Weline\Framework\Manager;
 
-use MongoDB\BSON\Serializable;
 use ReflectionClass;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\Cache\ObjectCache;
-use Weline\Framework\Manager\Cache\ObjectCacheFactory;
-use Weline\Framework\View\Template;
 
 class ObjectManager implements ManagerInterface
 {
@@ -34,6 +30,13 @@ class ObjectManager implements ManagerInterface
     {
     }
 
+    function __init()
+    {
+        self::getCache();
+    }
+    function __construct(){
+        self::getCache();
+    }
 
     private static function getCache(): CacheInterface
     {
@@ -45,7 +48,13 @@ class ObjectManager implements ManagerInterface
 
     private static function initFactoryClass(string $class): string
     {
-        return str_replace('Factory', '', $class);
+        if (!class_exists($class)) {
+            if (str_ends_with($class, 'Factory')) {
+                $class = substr($class, 0, strrpos($class, 'Factory'));
+            }
+            if (!class_exists($class)) throw new Exception(__("工厂类：{$class}Factory 不存在！"));
+        }
+        return $class;
     }
 
     /**
@@ -67,8 +76,8 @@ class ObjectManager implements ManagerInterface
         if (empty(self::$instance)) {
             self::$instance = new self();
         }
-        if (isset(self::$instances[$class])) {
-            return self::$instances[$class];
+        if (isset(self::$instances[$class])&&$obj =self::$instances[$class]) {
+            return $obj;
         }
         // 缓存对象读取
         if ($cache && !CLI && $shared && PROD && $cache_class_object = self::getCache()->get($class)) {
@@ -76,7 +85,12 @@ class ObjectManager implements ManagerInterface
             return self::$instances[$class];
         }
         // 类名规则处理
-        $new_class = self::parserClass($class);
+        $class_cache_key = $class . '_cache_key';
+        $new_class       = self::$cache->get($class_cache_key);
+        if (empty($new_class)) {
+            $new_class = self::parserClass($class);
+            self::$cache->set($class_cache_key, $new_class);
+        }
         $arguments = $arguments ?: self::getMethodParams($new_class);
 //        if ($new_class == 'Aiweline\Bbs\Controller\Index') {
 //            p($arguments);
@@ -154,18 +168,13 @@ class ObjectManager implements ManagerInterface
     public static function parserClass(string $class): string
     {
         // 拦截器处理
-        $new_class   = $class;
         $interceptor = $class . '\\Interceptor';
 
         if (class_exists($interceptor)) {
-            $new_class = $interceptor;
+            return $interceptor;
         }
         // 工厂类处理 工厂类不存在时还原类
-        if (!class_exists($class)) {
-            $new_class = self::initFactoryClass($class);
-        }
-
-        return $new_class;
+        return self::initFactoryClass($class);
     }
 
     /**
@@ -182,9 +191,8 @@ class ObjectManager implements ManagerInterface
         if (method_exists($new_object, $init_method_name)) {
             $new_object->$init_method_name();
         }
-
         // 工厂类
-        if (self::initFactoryClass($class) !== $class) {
+        if (str_ends_with($class, 'Factory')) {
             $create_method = 'create';
             if (method_exists($new_object, $create_method)) {
                 $new_object = $new_object->$create_method();

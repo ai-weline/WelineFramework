@@ -94,15 +94,18 @@ class SystemConfig extends \Weline\Framework\Database\Model
     /**
      * @DESC          # 设置配置
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 21:25
      * 参数区：
+     *
      * @param string $key
      * @param string $value
-     * @param string $area
      * @param string $module
+     * @param string $area
+     *
      * @return bool
+     * @throws Exception
      */
     function setConfig(string $key, string $value, string $module, string $area): bool
     {

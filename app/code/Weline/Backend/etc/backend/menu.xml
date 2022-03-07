@@ -8,4 +8,8 @@
     <!--顶层：系统配置-->
     <add source="Weline_Backend::system_configuration" name="system_configuration" title="系统配置" action="" parent=""
          icon="" order="10000"/>
+
+    <!--顶层：开发配置-->
+    <add source="Weline_Backend::system_dev_configuration" name="system_dev_configuration" title="开发配置" action="" parent=""
+         icon="" order="20000"/>
 </menus>

@@ -12,12 +12,29 @@ namespace Weline\Admin\Controller\System;
 
 use Weline\Admin\Controller\BaseController;
 use Weline\Framework\App\Env;
+use Weline\Framework\Manager\ObjectManager;
+use Weline\SystemConfig\Model\SystemConfig;
 
 class Modules extends BaseController
 {
     function getIndex()
     {
         $this->assign('modules', Env::getInstance()->getModuleList());
+        return $this->fetch();
+    }
+
+    public function router()
+    {
+        try {
+            $routers = include Env::path_FRONTEND_PC_ROUTER_FILE;
+        } catch (\Exception $exception) {
+            $routers = [];
+        }
+        $modules_routers = [];
+        foreach ($routers as $path => $router) {
+            $modules_routers[$router['module']][$path] = $router;
+        }
+        $this->assign('routers', $modules_routers);
         return $this->fetch();
     }
 }

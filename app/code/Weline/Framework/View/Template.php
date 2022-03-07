@@ -326,18 +326,12 @@ class Template extends DataObject
         $patterns = [
             '/\<\!--\s*\$([a-zA-Z]*)\s*--\>/',
             '/\@\{(.*)\}/',
-//            '/\@include (.*)/',
             '/\@include\((.+?)\)/',
-//            '/\@block\((.*)\)/',
             '/\@block\((.+?)\)/',
             '/\@template\((.*)\)/',
-//            '/\@template\((.*)\)/',
             '/\@template\((.+?)\)/',
-//            '/\@static\((.*)\)/',
             '/\@static\((.+?)\)/',
-//            '/\@view\((.*)\)/',
             '/\@view\((.+?)\)/',
-//            '/\@p\((.+)\)/',
             '/\@p\((.+?)\)/',
             '/\@controller\((.+)\)/',
         ];
@@ -360,6 +354,7 @@ class Template extends DataObject
             $re_content = '';
             switch (strtolower($back[0])) {
                 case '@{}':
+                    $re_content = '<?=$'.trim($back[1]).'?>';
                     break;
                 case '@static()':
                     $re_content = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));

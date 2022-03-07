@@ -40,7 +40,7 @@ try {
     /**
      * 初始化应用...
      */
-    \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\App::class)::run();
+    \Weline\Framework\App::run();
 } catch (Exception $exception) {
     if (DEV) {
         echo '<pre>';

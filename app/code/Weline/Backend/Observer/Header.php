@@ -20,8 +20,8 @@ class Header implements \Weline\Framework\Event\ObserverInterface
      */
     public function execute(Event $event)
     {
-        if($event->getData('is_backend')){
-            $event->setData('class',\Weline\Backend\Model\Html\Header::class);
+        if ($event->getData('is_backend')) {
+            $event->setData('class', \Weline\Backend\Model\Html\Header::class);
         }
     }
 }

@@ -25,7 +25,7 @@ class PluginTest
         return $a;
     }
 
-    public function afterGetName(\Aiweline\HelloWorld\Model\PluginTestModel $object, $a)
+    public function afterGetName(\Aiweline\HelloWorld\Model\PluginTestModel $object, $a,$result)
     {
         $a .= '我被PluginTest类的afterGetName修改过';
 

@@ -13,7 +13,7 @@ use Weline\Framework\App\Env;
 use Weline\Framework\App\System;
 use Weline\Framework\Console\CommandAbstract;
 use Weline\Framework\Console\Deploy\Upgrade;
-use Weline\Framework\Console\Setup\Di\Compile;
+use Weline\Framework\Setup\Console\Setup\Di\Compile;
 use Weline\Framework\System\File\App\Scanner as AppScanner;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Data\DataInterface;

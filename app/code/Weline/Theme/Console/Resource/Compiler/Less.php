@@ -22,6 +22,6 @@ class Less extends Compiler
 
     public function compile(string $source_file = null, string $out_file = null)
     {
-        p('等待编译开发...');
+        p('等待编译开发...',1);
     }
 }

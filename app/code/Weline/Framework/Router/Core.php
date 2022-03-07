@@ -13,8 +13,6 @@ use JetBrains\PhpStorm\NoReturn;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\DataObject\DataObject;
-use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Router\Cache\RouterCache;
@@ -71,6 +69,7 @@ class Core
     {
         # 获取URL
         $url = $this->processUrl();
+
         $this->_router_cache_key = $this->area_router . $this->request->getUrlPath();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
@@ -117,9 +116,10 @@ class Core
             }
             $url = implode('/', $url_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
             $url = trim($url, '/');
+            $url = str_replace('//', '/', $url);
             $this->cache->set($url_cache_key, $url);
         }
-        return str_replace('//', '/', $url);
+        return $url;
     }
 
     /**
@@ -289,17 +289,16 @@ class Core
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);
-
-        ob_start();
         try {
-            $result = call_user_func([$dispatch, $method], $this->request->getParams());
-        } catch (\Exception $exception) {
+            ob_start();
+            $result = call_user_func([$dispatch, $method]/*, ...$this->request->getParams()*/);
             ob_end_clean();
+        } catch (\Exception $exception) {
             throw $exception;
         }
         /** Get output buffer. */
         # FIXME 是否显示模板路径
-        $this->cache->set($cache_key, $result, 30);
+        $this->cache->set($cache_key, $result, 60);
         exit($result);
     }
 }

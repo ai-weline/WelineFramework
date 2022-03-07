@@ -152,6 +152,6 @@ class Core implements Data\DataInterface
     #[\JetBrains\PhpStorm\ArrayShape(['msg' => "string", 'data' => "\Exception", 'code' => "int"])]
     public function exception(\Exception $exception, int $code = 403): array
     {
-        return ['msg' => $exception->getMessage(), 'data' => $exception, 'code' => $code];
+        return ['msg' => '请求异常！', 'data' => DEV ? $exception : $exception->getMessage(), 'code' => $code];
     }
 }

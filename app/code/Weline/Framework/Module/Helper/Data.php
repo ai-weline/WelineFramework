@@ -157,6 +157,7 @@ class Data extends AbstractHelper
                         if (empty($ctl_data)) {
                             continue;
                         }
+
                         $ctl_methods = $ctl_data['methods'];
                         $ctl_area    = $ctl_data['area'];
                         foreach ($ctl_methods as $method) {

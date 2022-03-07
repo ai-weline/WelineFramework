@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Cache;
 
+use Weline\Framework\App;
 use Weline\Framework\App\Env;
 use Weline\Framework\Manager\ObjectManager;
 use function PHPUnit\Framework\isInstanceOf;
@@ -29,7 +30,7 @@ class CacheFactory
 
     public function __construct(string $identity = 'cache_system')
     {
-        $this->config   = (array)Env::getInstance()->getConfig('cache');
+        $this->config   = App::Env('cache');
         $this->identity = $identity;
     }
 
@@ -44,7 +45,10 @@ class CacheFactory
      * @DESC         |创建缓存
      *
      * 参数区：
+     *
      * @param string $driver
+     * @param string $driver_class
+     *
      * @return CacheInterface
      */
     public function create(string $driver = '',string $driver_class=''): CacheInterface

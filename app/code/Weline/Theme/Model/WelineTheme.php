@@ -9,6 +9,7 @@
 
 namespace Weline\Theme\Model;
 
+use Weline\Framework\App;
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Db\TableInterface;
@@ -111,7 +112,10 @@ class WelineTheme extends Model
 
     public function getPath(): string
     {
-        return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::fields_PATH)) . DIRECTORY_SEPARATOR;
+        if($this->getData(self::fields_PATH)){
+            return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::fields_PATH)) . DIRECTORY_SEPARATOR;
+        }
+        return App::Env('theme')['path']??'';
     }
 
     public function getOriginPath(): string
