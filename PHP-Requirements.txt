@@ -2,7 +2,7 @@
 exec
 putenv
 symlink
-proc_open
+proc_opengit
 proc_get_status
 [拓展]
 ext-exif

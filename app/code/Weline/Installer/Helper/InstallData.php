@@ -21,6 +21,7 @@ class InstallData
             'commands' => [
                 'bin'.DIRECTORY_SEPARATOR.'m command:upgrade',
                 'bin'.DIRECTORY_SEPARATOR.'m module:upgrade',
+                'bin'.DIRECTORY_SEPARATOR.'m deploy:mode:set dev',
             ]
         ];
 

@@ -11,8 +11,10 @@ declare(strict_types=1);
 namespace Weline\Admin\Model;
 
 use Weline\Admin\Session\AdminSession;
+use Weline\Backend\Model\Config;
 use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Database\Db\Ddl\Table;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
@@ -33,6 +35,9 @@ class AdminUserConfig extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_config, Table::column_type_TEXT, null, '', '配置JSON信息')
                   ->create();
         }
+//        /**@var Config $config*/
+//        $config = ObjectManager::getInstance(Config::class);
+//        $config->setConfig('admin_default_avatar', 'Weline_Admin::/img/logo.png', 'Weline_Admin');
     }
 
     /**
