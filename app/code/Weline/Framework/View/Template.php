@@ -354,7 +354,7 @@ class Template extends DataObject
             $re_content = '';
             switch (strtolower($back[0])) {
                 case '@{}':
-                    $re_content = '<?=$'.trim($back[1]).'?>';
+                    $re_content = '<?=$' . trim($back[1]) . '?>';
                     break;
                 case '@static()':
                     $re_content = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
@@ -395,7 +395,7 @@ class Template extends DataObject
         if (empty($path)) {
             return $this->_request->getCurrentUrl();
         }
-        $pre = $this->_request->getBaseHost() . '/'.Env::getInstance()->getConfig('admin') . '/';
+        $pre = $this->_request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . '/';
 //        $pre = $this->_request->getBaseHost() . '/';
 //        if ($this->_request->isBackend()) {
 //            $pre .= Env::getInstance()->getConfig('admin') . '/';

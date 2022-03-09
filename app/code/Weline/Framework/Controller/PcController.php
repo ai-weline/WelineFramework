@@ -155,7 +155,7 @@ class PcController extends Core
     protected function fetch(string $fileName = null): mixed
     {
         # 如果指定了模板就直接读取
-        if ($fileName && strpos($fileName, '::')) {
+        if ($fileName && is_int(strpos($fileName, '::'))) {
             return $this->getTemplate()->fetch($fileName);
         }
         $controller_class_name = $this->_request->getRouterData('class/controller_name');

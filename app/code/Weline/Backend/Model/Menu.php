@@ -233,8 +233,9 @@ class Menu extends \Weline\Framework\Database\Model
         foreach ($top_menus as &$top_menu) {
             $top_menu = $this->getSubMenus($top_menu);
         }
-        $this->backendCache->set($cache_key, $top_menus, 60);
-        return $top_menus ?? [];
+        $top_menus = $top_menus ?? [];
+        if($top_menus)$this->backendCache->set($cache_key, $top_menus, 60);
+        return $top_menus;
     }
 
     /**
