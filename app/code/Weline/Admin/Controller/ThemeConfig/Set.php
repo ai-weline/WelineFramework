@@ -12,6 +12,7 @@ namespace Weline\Admin\Controller\ThemeConfig;
 
 use Weline\Admin\Block\ThemeConfig;
 use Weline\Admin\Session\AdminSession;
+use Weline\Framework\App\System;
 
 class Set extends \Weline\Admin\Controller\BaseController
 {
@@ -42,6 +43,7 @@ class Set extends \Weline\Admin\Controller\BaseController
             foreach ($data as $key => $datum) {
                 $this->adminSession->setData($key, $datum);
             }
+            (new System())->exec('bin/m c:c');
             return json_encode($this->success());
         } catch (\Exception $exception) {
             return json_encode($this->exception($exception));

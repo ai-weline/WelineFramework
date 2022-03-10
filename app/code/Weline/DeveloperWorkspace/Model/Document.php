@@ -8,7 +8,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\DevTool\Model;
+namespace Weline\DeveloperWorkspace\Model;
 
 use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Setup\Data\Context;
@@ -16,8 +16,6 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Document extends \Weline\Framework\Database\Model
 {
-    const table = 'm_dev_tool_document';
-
     const fields_ID = 'id';
     const fields_TITLE = 'title';
     const fields_AUTHOR_ID = 'author_id';
@@ -64,11 +62,6 @@ class Document extends \Weline\Framework\Database\Model
         }else{
             $setup->getPrinting()->setup('跳过安装数据表...',$setup->getTable());
         }
-    }
-
-    function provideTable(): string
-    {
-        return self::table;
     }
 
     function getTitle()

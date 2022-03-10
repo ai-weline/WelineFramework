@@ -8,7 +8,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\DevTool\Model;
+namespace Weline\DeveloperWorkspace\Model;
 
 use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Setup\Data\Context;
@@ -16,8 +16,6 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Catalog extends \Weline\Framework\Database\Model
 {
-    const table = 'm_dev_tool_document_catalog';
-
     const fields_ID = 'id';
     const fields_NAME = 'name';
     const fields_PID = 'pid';
@@ -60,11 +58,6 @@ class Catalog extends \Weline\Framework\Database\Model
             $setup->getPrinting()->warning('跳过安装数据表...', $setup->getTable());
         }
 
-    }
-
-    function provideTable(): string
-    {
-        return self::table;
     }
 
     function getName()

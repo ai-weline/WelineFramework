@@ -11,5 +11,5 @@
 
     <!--顶层：开发配置-->
     <add source="Weline_Backend::system_dev_configuration" name="system_dev_configuration" title="开发配置" action="" parent=""
-         icon="" order="20000"/>
+         icon="" order="90000"/>
 </menus>

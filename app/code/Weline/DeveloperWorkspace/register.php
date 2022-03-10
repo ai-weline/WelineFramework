@@ -11,7 +11,7 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     Register::MODULE,
-    'Weline_DevTool',
+    'Weline_DeveloperWorkspace',
     __DIR__,
     '1.0.0',
     '系统开发文档'
