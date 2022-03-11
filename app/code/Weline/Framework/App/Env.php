@@ -15,7 +15,7 @@ use Weline\Framework\System\File\Io\File;
 class Env
 {
     const APP_CODE_PATH = '';
-    const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
+    const vendor_path   = BP . 'vendor' . DIRECTORY_SEPARATOR;
 
     const framework_name = 'Weline';
 
@@ -44,18 +44,18 @@ class Env
     const path_LANGUAGE_PACK = BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR;
 
     const register_FILE_PATHS = [
-        'app_code' => APP_CODE_PATH,
-        'vendor_code' => self::path_VENDOR_CODE,
-        'theme_design' => self::path_CODE_DESIGN,
+        'app_code'      => APP_CODE_PATH,
+        'vendor_code'   => self::path_VENDOR_CODE,
+        'theme_design'  => self::path_CODE_DESIGN,
         'language_pack' => self::path_LANGUAGE_PACK,
     ];
 
     const default_theme_DATA = [
-        'id' => 0,
-        'name' => 'default',
-        'path' => 'Weline' . DIRECTORY_SEPARATOR . 'default',
-        'parent_id' => null,
-        'is_active' => 1,
+        'id'          => 0,
+        'name'        => 'default',
+        'path'        => 'Weline' . DIRECTORY_SEPARATOR . 'default',
+        'parent_id'   => null,
+        'is_active'   => 1,
         'create_time' => '2021-04-05 16:49:58',
     ];
 
@@ -77,14 +77,19 @@ class Env
         self::path_FRONTEND_PC_ROUTER_FILE,
     ];
 
-    const GENERATED_DIR = 'generated';
+    // 生成文件的目录
+
+    const GENERATED_DIR = BP . 'generated';
+
+    // 编译生成文件目录
+    const path_COMPLICATE_GENERATED_DIR = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'complicate' . DIRECTORY_SEPARATOR;
 
     // 翻译词典 目录
-    const path_TRANSLATE_FILES_PATH = BP . self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR;
+    const path_TRANSLATE_FILES_PATH = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR;
 
-    const path_TRANSLATE_DEFAULT_FILE = BP . self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'zh_Hans_CN.php';
+    const path_TRANSLATE_DEFAULT_FILE = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'zh_Hans_CN.php';
 
-    const path_TRANSLATE_ALL_COLLECTIONS_WORDS_FILE = BP . self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'words.php';
+    const path_TRANSLATE_ALL_COLLECTIONS_WORDS_FILE = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'words.php';
 
     // 日志
     const log_path_ERROR = 'error';
@@ -113,32 +118,32 @@ class Env
     private static Env $instance;
 
     const default_CONFIG = [
-        'cache' => self::default_CACHE,
+        'cache'   => self::default_CACHE,
         'session' => self::default_SESSION,
-        'log' => self::default_LOG,
-        'php-cs' => true,
+        'log'     => self::default_LOG,
+        'php-cs'  => true,
     ];
 
     // 日志
     const default_LOG = [
-        'error' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log',
+        'error'     => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log',
         'exception' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'exception.log',
-        'notice' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'notice.log',
-        'warning' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'warning.log',
-        'debug' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log',
+        'notice'    => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'notice.log',
+        'warning'   => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'warning.log',
+        'debug'     => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'debug.log',
     ];
 
     // 缓存
     const default_CACHE = [
         'default' => 'file',
         'drivers' => [
-            'file' => [
+            'file'  => [
                 'path' => 'var/cache/',
             ],
             'redis' => [
-                'tip' => '开发中...',
-                'server' => '127.0.0.1',
-                'port' => 6379,
+                'tip'      => '开发中...',
+                'server'   => '127.0.0.1',
+                'port'     => 6379,
                 'database' => 1,
             ],
         ],
@@ -148,7 +153,7 @@ class Env
     const default_SESSION = [
         'default' => 'file',
         'drivers' => [
-            'file' => [
+            'file'  => [
                 'path' => 'var/session/',
             ],
             'mysql' => [
@@ -228,7 +233,8 @@ class Env
      * 参数区：
      *
      * @param string $name
-     * @param  $default
+     * @param        $default
+     *
      * @return mixed
      */
     public function getConfig(string $name = '', $default = null): mixed
@@ -247,14 +253,15 @@ class Env
      * 参数区：
      *
      * @param string $key
-     * @param  $value
+     * @param        $value
+     *
      * @return bool
      */
     public function setConfig(string $key, $value = null): bool
     {
         $this->hasGetConfig[$key] = $value;
-        $config = $this->getConfig();
-        $config[$key] = $value;
+        $config                   = $this->getConfig();
+        $config[$key]             = $value;
 
         try {
             $file = new File();
@@ -276,6 +283,7 @@ class Env
      * 参数区：
      *
      * @param string $type
+     *
      * @return string
      */
     public function getLogPath(string $type): string
@@ -301,6 +309,7 @@ class Env
      * 参数区：
      *
      * @param bool $reget
+     *
      * @return array
      */
     public function getModuleList(bool $reget = false): array
@@ -316,11 +325,13 @@ class Env
     /**
      * @DESC          # 获取模块信息
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/17 9:13
      * 参数区：
+     *
      * @param string $module_name
+     *
      * @return mixed
      */
     public function getModuleInfo(string $module_name): mixed

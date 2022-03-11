@@ -36,7 +36,7 @@ endif;
         base_router: '<?=$this->_request->getRouterData('router')?>',
         //i18n: '<?php //Weline\Framework\Phrase\Parser::getI18nWords()?>//',
         buildUrl: (path) => {
-            return SITE_DATA.base_host + '/' + SITE_DATA.base_router + '/' + path;
+            return SITE_DATA.base_host + '/' + path;
         },
     };
 </script>

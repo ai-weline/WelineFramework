@@ -51,7 +51,6 @@ class SystemConfig extends \Weline\Framework\Database\Model
 
     function __sleep()
     {
-        $parent_vars = parent::__sleep();
         $parent_vars[]='cache';
         return $parent_vars;
     }

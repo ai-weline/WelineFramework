@@ -43,6 +43,7 @@ class Set extends CommandAbstract
             case 'prod':
                 $this->printer->note('正在清除模组模板编译文件...');
                 $this->cleanTplComDir();
+                $this->clearGeneratedComplicateDir();
                 $this->printer->note('编译静态资源...');
                 ObjectManager::getInstance(Compile::class)->execute();
                 $this->printer->note('正在清除pub目录下生成的静态文件...');
@@ -95,6 +96,11 @@ class Set extends CommandAbstract
                 }
             }
         }
+    }
+
+    function clearGeneratedComplicateDir(){
+        $complicate = Env::path_COMPLICATE_GENERATED_DIR;
+        $this->system->exec("rm -rf $complicate");
     }
 
     /**
