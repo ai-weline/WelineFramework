@@ -36,7 +36,8 @@
     "ext-gd": "*",
     "wikimedia/less.php": "^3.1",
     "mrclay/jsmin-php": "^2.4",
-    "aiweline/website-monitoring": "dev-master"
+    "aiweline/website-monitoring": "dev-master",
+    "guzzlehttp/guzzle": "^7.4"
   },
   "autoload": {
     "psr-4": {

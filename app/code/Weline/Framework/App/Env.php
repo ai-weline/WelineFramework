@@ -10,11 +10,11 @@
 namespace Weline\Framework\App;
 
 use Weline\Framework\App\Env\Modules;
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\System\File\Io\File;
 
-class Env
+class Env extends DataObject
 {
-    const APP_CODE_PATH = '';
     const vendor_path   = BP . 'vendor' . DIRECTORY_SEPARATOR;
 
     const framework_name = 'Weline';
@@ -208,7 +208,7 @@ class Env
         }
         // 覆盖默认配置
         $this->config = array_merge(self::default_CONFIG, (array)include self::path_ENV_FILE);
-
+        $this->setData($this->config);
         return $this;
     }
 

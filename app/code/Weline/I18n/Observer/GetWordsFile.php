@@ -27,6 +27,7 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
 
     /**
      * GetWordsFile 初始函数...
+     *
      * @param I18n $i18n
      */
     public function __construct(
@@ -52,7 +53,7 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
         }
         // 翻译收集
         $translate_mode = Env::getInstance()->getConfig('translate_mode');
-        if ($translate_mode === 'online') {
+        if ($translate_mode === 'online' || DEV) {
             try {
                 $this->i18n->convertToLanguageFile();
             } catch (\Exception $e) {

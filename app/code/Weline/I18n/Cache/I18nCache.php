@@ -11,8 +11,8 @@ namespace Weline\I18n\Cache;
 
 class I18nCache extends \Weline\Framework\Cache\CacheFactory
 {
-    public function __construct(string $identity = 'framework_i18n')
+    public function __construct(string $identity = 'i18n')
     {
-        parent::__construct($identity);
+        parent::__construct($identity,'国际化缓存');
     }
 }

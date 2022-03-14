@@ -18,6 +18,6 @@ class DbCache extends \Weline\Framework\Cache\CacheFactory
 {
     function __construct(string $identity = 'database')
     {
-        parent::__construct($identity);
+        parent::__construct($identity,'数据库缓存');
     }
 }

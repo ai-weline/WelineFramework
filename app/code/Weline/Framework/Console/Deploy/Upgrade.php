@@ -42,7 +42,6 @@ class Upgrade extends CommandAbstract
         // 注册模块
         foreach ($registers as $vendor => $modules) {
             foreach ($modules as $name => $register) {
-                $this->printer->note($vendor . '_' . $name . '...');
                 $module_view_static_dir = $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::dir_type_STATICS;
                 $module_view_dir        = $vendor . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . DataInterface::dir . DIRECTORY_SEPARATOR;
                 // windows的文件复制兼容
@@ -52,6 +51,7 @@ class Upgrade extends CommandAbstract
                 # FIXME 兼容composer下模块的静态文件
                 $origin_view_dir = APP_CODE_PATH . $module_view_static_dir;
                 if (is_dir($origin_view_dir)) {
+                    $this->printer->note($vendor . '_' . $name . '...');
                     // 主题配置
                     $theme        = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
 

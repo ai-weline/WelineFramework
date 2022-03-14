@@ -33,12 +33,12 @@ class BackendController extends PcController
     {
         parent::isAllowed();
         # 验证除了登录页面以外的所有地址需要登录 FIXME 处理无限跳转问题
-        if (!$this->_session->isLogin()) {
+        if (!CLI and !$this->_session->isLogin()) {
             $whitelist_url_cache_key = 'whitelist_url_cache_key';
-            $whitelist_url = $this->cache->get($whitelist_url_cache_key);
+            $whitelist_url           = $this->cache->get($whitelist_url_cache_key);
             if (!$whitelist_url) {
                 /**@var EventsManager $evenManager */
-                $evenManager = ObjectManager::getInstance(EventsManager::class);
+                $evenManager      = ObjectManager::getInstance(EventsManager::class);
                 $whitelistUrlData = new DataObject(['whitelist_url' => []]);
                 $evenManager->dispatch('Framework_Router::backend_whitelist_url', ['data' => $whitelistUrlData]);
                 $whitelist_url = $whitelistUrlData->getData('whitelist_url');
@@ -46,10 +46,10 @@ class BackendController extends PcController
             }
             if (!in_array($this->_request->getUrl(), $whitelist_url)) {
                 $no_login_url_cache_key = 'no_login_redirect_url';
-                $no_login_redirect_url = $this->cache->get($no_login_url_cache_key);
+                $no_login_redirect_url  = $this->cache->get($no_login_url_cache_key);
                 if (!$no_login_redirect_url) {
                     /**@var EventsManager $evenManager */
-                    $evenManager = ObjectManager::getInstance(EventsManager::class);
+                    $evenManager        = ObjectManager::getInstance(EventsManager::class);
                     $noLoginRedirectUrl = new DataObject(['no_login_redirect_url' => []]);
                     $evenManager->dispatch('Framework_Router::backend_no_login_redirect_url', ['data' => $noLoginRedirectUrl]);
                     $no_login_redirect_url = $noLoginRedirectUrl->getData('no_login_redirect_url');

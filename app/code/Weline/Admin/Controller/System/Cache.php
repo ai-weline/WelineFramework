@@ -8,12 +8,12 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Router\Cache;
+namespace Weline\Admin\Controller\System;
 
-class RouterCache extends \Weline\Framework\Cache\CacheFactory
+class Cache extends \Weline\Admin\Controller\BaseController
 {
-    function __construct(string $identity = 'router_cache')
+    function index()
     {
-        parent::__construct($identity,'路由缓存');
+        return $this->fetch();
     }
 }

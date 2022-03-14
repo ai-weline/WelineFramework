@@ -17,7 +17,9 @@
          parent="Weline_Backend::system_configuration" icon="ri-spy-fill" order="10100"/>
     <!--插件管理-->
     <add source="Weline_Admin::system_plugins" name="system_plugins" title="插件管理" action="admin/system/plugins"
-         parent="Weline_Backend::system_configuration" icon="ri-plug-2-line" order="10200"/>
+         parent="Weline_Backend::system_configuration" icon="ri-plug-2-line" order="10200"/>    <!--插件管理-->
+    <add source="Weline_Admin::system_cache" name="system_cache" title="缓存管理" action="admin/system/cache"
+         parent="Weline_Backend::system_configuration" icon="mdi mdi-cached" order="10201"/>
     <!--模组管理-->
     <add source="Weline_Admin::system_modules" name="system_modules" title="模组" action="admin/system/modules"
          parent="Weline_Backend::system_configuration" icon="ri-sound-module-line" order="10300"/>

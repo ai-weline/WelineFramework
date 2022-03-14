@@ -9,36 +9,23 @@
 
 namespace Weline\Framework\Cache\Driver;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheDriverInterface;
 use Weline\Framework\Cache\CacheInterface;
 
-class File implements CacheInterface, CacheDriverInterface
+class File extends CacheDriverAbstract
 {
-    private int $status;
-
     /**
      * @var string 存储缓存文件的目录。
      * 缓存文件的地址，例如/var/html/projects/var/cache/
      */
     private string $cachePath;
 
-    protected array $config;
-
-    private function __clone(){}
-
-    public function __construct(string $identity, array $config)
-    {
-        if (! isset($config['path'])) {
-            $config['path'] = 'var/cache/';
-        }
-        $config['path']  = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
-        $this->config = $config;
-        $this->setIdentity($identity);
-    }
+    private function __clone() { }
 
     function setIdentity(string $identity): static
     {
-        $this->cachePath = BP . $this->config['path'] . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $identity . DIRECTORY_SEPARATOR;
+        $this->identity = $identity;
         $this->__init();
         return $this;
     }
@@ -50,7 +37,12 @@ class File implements CacheInterface, CacheDriverInterface
      */
     public function __init()
     {
-        if(!is_dir($this->cachePath . DIRECTORY_SEPARATOR)){
+        $this->cachePath = BP . $this->config['path'] . DIRECTORY_SEPARATOR . $this->identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->identity . DIRECTORY_SEPARATOR;
+        if (!isset($config['path'])) {
+            $config['path'] = 'var/cache/';
+        }
+        $config['path'] = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
+        if (!is_dir($this->cachePath . DIRECTORY_SEPARATOR)) {
             mkdir($this->cachePath . DIRECTORY_SEPARATOR, 0775, true);
         }
     }
@@ -61,31 +53,18 @@ class File implements CacheInterface, CacheDriverInterface
     }
 
     /**
-     * @DESC         |获取状态
-     * 0 : 关闭
-     * 1 : 开启
-     * 参数区：
-     *
-     * @return int
-     */
-    public function getStatus(): int
-    {
-        return $this->status;
-    }
-
-    /**
      * @DESC         |设置状态
      * 0 : 关闭
      * 1 : 开启
      * 参数区：
      *
      * @param int $status
+     *
      * @return CacheInterface
      */
-    public function setStatus(int $status): CacheInterface
+    public function setStatus(bool $status): CacheInterface
     {
         $this->status = $status;
-
         return $this;
     }
 
@@ -95,11 +74,12 @@ class File implements CacheInterface, CacheDriverInterface
      * 参数区：
      *
      * @param $key
+     *
      * @return string
      */
     public function buildKey($key): string
     {
-        if (! is_string($key)) {
+        if (!is_string($key)) {
             // 不是字符串，json_encode转成字符串
             $key = json_encode($key);
         }
@@ -113,10 +93,12 @@ class File implements CacheInterface, CacheDriverInterface
      * 参数区：
      *
      * @param $key
+     *
      * @return bool|mixed
      */
     public function get($key): mixed
     {
+        if (!$this->status) return false;
         $key       = $this->buildKey($key);
         $cacheFile = $this->processCacheFile($this->cachePath . $key);
         // filemtime用来获取文件的修改时间
@@ -134,10 +116,12 @@ class File implements CacheInterface, CacheDriverInterface
      * 参数区：
      *
      * @param $key
+     *
      * @return bool
      */
     public function exists($key): bool
     {
+        if (!$this->status) return false;
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         $this->processCacheFile($cacheFile);
@@ -151,10 +135,12 @@ class File implements CacheInterface, CacheDriverInterface
      * 参数区：
      *
      * @param $keys
+     *
      * @return array
      */
     public function getMulti($keys): array
     {
+        if (!$this->status) return [];
         $results = [];
         foreach ($keys as $key) {
             $results[$key] = $this->get($key);
@@ -168,9 +154,10 @@ class File implements CacheInterface, CacheDriverInterface
      *
      * 参数区：
      *
-     * @param $key
-     * @param $value
+     * @param     $key
+     * @param     $value
      * @param int $duration
+     *
      * @return bool
      */
     public function set($key, $value, int $duration = 0): bool
@@ -202,8 +189,9 @@ class File implements CacheInterface, CacheDriverInterface
      *
      * 参数区：
      *
-     * @param $items
+     * @param     $items
      * @param int $duration
+     *
      * @return array
      */
     public function setMulti($items, int $duration = 0): array
@@ -224,15 +212,16 @@ class File implements CacheInterface, CacheDriverInterface
      *
      * 参数区：
      *
-     * @param $key
-     * @param $value
+     * @param     $key
+     * @param     $value
      * @param int $duration
+     *
      * @return bool
      */
     public function add($key, $value, int $duration = 0): bool
     {
         //  key不存在，就设置缓存
-        if (! $this->exists($key)) {
+        if (!$this->exists($key)) {
             return $this->set($key, $value, $duration);
         }
 
@@ -245,8 +234,9 @@ class File implements CacheInterface, CacheDriverInterface
      *
      * 参数区：
      *
-     * @param $items
+     * @param     $items
      * @param int $duration
+     *
      * @return array
      */
     public function addMulti($items, int $duration = 0): array
@@ -267,6 +257,7 @@ class File implements CacheInterface, CacheDriverInterface
      * 参数区：
      *
      * @param $key
+     *
      * @return bool
      */
     public function delete($key): bool
@@ -282,13 +273,13 @@ class File implements CacheInterface, CacheDriverInterface
      * @DESC          # 从缓存中删除所有值。
      *                  如果在多个应用程序之间执行共享缓存操作，请小心操作。
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 22:10
      * 参数区：
      * @return mixed
      */
-    public function flush():bool
+    public function flush(): bool
     {
         // 打开cache文件所在目录
         if ($dir = @dir($this->cachePath)) {
@@ -307,7 +298,7 @@ class File implements CacheInterface, CacheDriverInterface
     /**
      * @DESC          # 从缓存中删除所有键的值。（清理缓存）
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 22:10
      * 参数区：
@@ -337,11 +328,12 @@ class File implements CacheInterface, CacheDriverInterface
      * 参数区：
      *
      * @param string $cacheFile
+     *
      * @return string
      */
     public function processCacheFile(string $cacheFile): string
     {
-        if (! file_exists($cacheFile)) {
+        if (!file_exists($cacheFile)) {
             touch($cacheFile);
             chmod($cacheFile, 0755);
         }

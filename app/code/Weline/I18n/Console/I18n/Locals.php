@@ -44,7 +44,7 @@ class Locals implements \Weline\Framework\Console\CommandInterface
      */
     public function execute($args = [])
     {
-        $this->printing->printList(['本地语言：' => $this->i18n->getLocals()], '=>', 58);
+        $this->printing->printList(['本地语言：' => $this->i18n->getLocals()], '=>', 15);
     }
 
     /**

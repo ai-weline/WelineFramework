@@ -15,17 +15,16 @@ use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Cache\Driver\Memcached\Connection;
 use Weline\Framework\Manager\ObjectManager;
 
-class Memcached implements  CacheInterface,\Weline\Framework\Cache\CacheDriverInterface
+class Memcached extends CacheDriverAbstract
 {
     private Connection $connection;
-    private string $identity;
-    private int $status;
+
     private function __clone()
     {
     }
-    public function __construct(string $identity, array $config)
+
+    function __init()
     {
-        $this->identity = $identity;
         if (empty($config['options'])) {
             $config['options'] = [];
         }
@@ -64,18 +63,17 @@ class Memcached implements  CacheInterface,\Weline\Framework\Cache\CacheDriverIn
     }
 
 
-
     function setIdentity(string $identity)
     {
         $this->identity = $identity;
     }
 
-    public function getStatus(): int
+    public function getStatus(): bool
     {
         return $this->status;
     }
 
-    public function setStatus(int $status): CacheInterface
+    public function setStatus(bool $status): CacheInterface
     {
         $this->status = $status;
         return $this;
@@ -93,7 +91,7 @@ class Memcached implements  CacheInterface,\Weline\Framework\Cache\CacheDriverIn
 
     public function exists($key): mixed
     {
-        if($this->connection->getData($key)){
+        if ($this->connection->getData($key)) {
             return true;
         }
         return false;
@@ -106,25 +104,25 @@ class Memcached implements  CacheInterface,\Weline\Framework\Cache\CacheDriverIn
 
     public function set($key, $value, int $duration = 1800): mixed
     {
-        $this->connection->getMemcached()->set($key, $value,$duration);
+        $this->connection->getMemcached()->set($key, $value, $duration);
         return $this;
     }
 
-    public function setMulti($items, int $duration = 1800,$udf_flag=''): mixed
+    public function setMulti($items, int $duration = 1800, $udf_flag = ''): mixed
     {
-        $this->connection->getMemcached()->setMulti($items, $duration,$udf_flag);
+        $this->connection->getMemcached()->setMulti($items, $duration, $udf_flag);
         return $this;
     }
 
     public function add($key, $value, int $duration = 1800): mixed
     {
-        $this->connection->getMemcached()->add($key, $value,$duration);
+        $this->connection->getMemcached()->add($key, $value, $duration);
         return $this;
     }
 
     public function addMulti($items, int $duration = 1800): mixed
     {
-        $this->connection->getMemcached()->setMulti($items,$duration);
+        $this->connection->getMemcached()->setMulti($items, $duration);
         return $this;
     }
 

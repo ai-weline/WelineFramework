@@ -30,15 +30,16 @@ endif;
 <!--加载require常用js模块-->
 <!--<script src="@static(Weline_Backend::base/require.configs.js)"></script>-->
 <script>
-    var SITE_DATA = {
+    window.site = {
         host: '<?=$this->_request->getBaseHost()?>',
         base_host: '<?=$this->_request->isBackend() ? $this->_request->getAdminUrl('/') : $this->_request->getBaseHost()?>',
         base_router: '<?=$this->_request->getRouterData('router')?>',
-        //i18n: '<?php //Weline\Framework\Phrase\Parser::getI18nWords()?>//',
+        i18n: <?php json_encode(Weline\Framework\Phrase\Parser::getI18nWords()??[])?>,
         buildUrl: (path) => {
-            return SITE_DATA.base_host + '/' + path;
+            return window.SITE.base_host + '/' + path;
         },
-    };
+        themeConfig: <?=$themeConfig->getThemeConfig() ?? '{}';?>
+    }
 </script>
 
 <!--css-->
@@ -58,7 +59,7 @@ endif;
 <!--JS-->
 <script src="@static(Weline_Backend::/backend/lib/jquery/3.6.0/jquery.js)"></script>
 <?php if (DEV): ?>
-<!--    <script src="@static(Weline_Backend::/backend/lib/jquery/3.6.0/jquery.map)"></script>-->
+    <!--    <script src="@static(Weline_Backend::/backend/lib/jquery/3.6.0/jquery.map)"></script>-->
 <?php endif; ?>
 <!--加载配置页头-->
 <?php

@@ -82,7 +82,7 @@ File: Main Css File
     display: inline-block; } }
 
 .page-content {
-  padding: calc(70px + 24px) calc(24px / 2) 60px calc(24px / 2); }
+  padding: calc(70px + 24px) calc(24px / 2) 60px calc(24px / 2); min-height: 800px}
 
 .header-item {
   height: 70px;
@@ -2750,5 +2750,4 @@ input[switch="dark"]:checked + label {
   bottom: 12px; }
 
 .error-text {
-  text-shadow: 4px 4px rgba(11, 177, 151, 0.4); }
-xt-shadow: -4px 4px rgba(11, 177, 151, 0.4); }
+  text-shadow: 4px 4px rgba(11, 177, 151, 0.4);}

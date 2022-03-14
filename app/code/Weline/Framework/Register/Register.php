@@ -43,8 +43,8 @@ class Register implements RegisterDataInterface
             // 模块安装
             case self::MODULE:
                 $appPathArray       = explode(DIRECTORY_SEPARATOR, $param);
-                $module_name_dir = array_pop($appPathArray);
-                $vendor_dir = array_pop($appPathArray);
+                $module_name_dir    = array_pop($appPathArray);
+                $vendor_dir         = array_pop($appPathArray);
                 $moduleRegisterFile = $param . DIRECTORY_SEPARATOR . self::register_file;
                 if (!is_dir($param)) {
                     return '';
@@ -53,7 +53,7 @@ class Register implements RegisterDataInterface
                     throw new ConsoleException("{$module_name}注册文件{$moduleRegisterFile}不存在！");
                 }
                 // 安装数据
-                $install_params = [$type, $module_name, ['dir_path' => $vendor_dir.DIRECTORY_SEPARATOR.$module_name_dir.DIRECTORY_SEPARATOR, 'base_path' => $param.DIRECTORY_SEPARATOR, 'module_name' => $module_name], $version, $description];
+                $install_params = [$type, $module_name, ['dir_path' => $vendor_dir . DIRECTORY_SEPARATOR . $module_name_dir . DIRECTORY_SEPARATOR, 'base_path' => $param . DIRECTORY_SEPARATOR, 'module_name' => $module_name], $version, $description];
                 break;
             // 路由注册
             case self::ROUTER:
@@ -92,6 +92,6 @@ class Register implements RegisterDataInterface
                 $module_rename .= ucfirst($item);
             }
         }
-        return ucfirst($vendor) . '_' . ucfirst($module_rename ?: $module_name);
+        return ucfirst($vendor) . ucfirst($module_rename ? ($vendor?'_':'') . $module_rename : $module_name);
     }
 }

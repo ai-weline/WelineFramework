@@ -13,6 +13,6 @@ class ConfigCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'config')
     {
-        parent::__construct($identity);
+        parent::__construct($identity,'配置缓存');
     }
 }

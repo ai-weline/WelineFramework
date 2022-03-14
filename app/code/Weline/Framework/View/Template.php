@@ -334,6 +334,8 @@ class Template extends DataObject
             '/\@view\((.+?)\)/',
             '/\@p\((.+?)\)/',
             '/\@controller\((.+)\)/',
+            '/\@hook\((.+)\)/',// 系统钩子
+            '/<lang>(.+)<\/lang>/',// 翻译函数
         ];
         # 开发环境实时PHP代码输出资源
 //        if (DEV) {
@@ -353,6 +355,9 @@ class Template extends DataObject
             $back[0]    = str_replace($back[1], '', $back[0]);
             $re_content = '';
             switch (strtolower($back[0])) {
+                case '<lang></lang>':
+                    $re_content = '<?=__(\'' . trim($back[1]) . '\')?>';
+                    break;
                 case '@{}':
                     $re_content = '<?=$' . trim($back[1]) . '?>';
                     break;
@@ -381,7 +386,11 @@ class Template extends DataObject
                     break;
 
             }
-            return $re_content;
+            /**@var EventsManager $event */
+            $event = ObjectManager::getInstance(EventsManager::class);
+            $data  = (new DataObject(['back' => $back, 'content' => $re_content]));
+            $event->dispatch('Framework_Template::after_replace', ['data' => $data]);
+            return $data->getData('content');
         },                           $content);
     }
 

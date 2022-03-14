@@ -13,6 +13,6 @@ class ControllerCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_controller')
     {
-        parent::__construct($identity);
+        parent::__construct($identity,'控制器缓存');
     }
 }

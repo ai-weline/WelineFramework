@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Cache;
 
-interface CacheDriverInterface
+interface CacheDriverInterface extends CacheInterface
 {
     public function __construct(string $identity, array $config);
 

@@ -10,6 +10,7 @@
 namespace Weline\Framework\System\File\App;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\Register\Register;
 use Weline\Framework\System\File\Scan;
 use Weline\Framework\Register\RegisterInterface;
 
@@ -33,7 +34,7 @@ class Scanner extends Scan
             unset($vendors[$key]);
             // 常规模块
             if ($vendor_files = $this->scanVendorModules($vendor)) {
-                $vendors[$vendor] = $vendor_files;
+                $vendors[Register::moduleName($vendor, '')] = $vendor_files;
             }
             //
         }
@@ -133,13 +134,12 @@ class Scanner extends Scan
                 $app_module_path = $register_FILE_PATH . $vendor . DIRECTORY_SEPARATOR . $module ;
                 if(is_dir($app_module_path)){
                     if (is_file($app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
-                        $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
+                        $modules[Register::moduleName('', $module)] = $app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file;
                     }
                 }
 
             }
         }
-
         return $modules;
     }
 }

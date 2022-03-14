@@ -12,6 +12,28 @@ namespace Weline\Framework\Cache;
 interface CacheInterface
 {
     /**
+     * @DESC          # 缓存说明
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/3/14 22:29
+     * 参数区：
+     * @return string
+     */
+    function tip(): string;
+
+    /**
+     * @DESC          # 获取识别名
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/3/14 23:52
+     * 参数区：
+     * @return string
+     */
+    function getIdentify():string;
+
+    /**
      * @DESC         |获取状态
      * 0 : 关闭
      * 1 : 开启
@@ -19,7 +41,7 @@ interface CacheInterface
      *
      * @return int
      */
-    public function getStatus(): int;
+    public function getStatus(): bool;
 
     /**
      * @DESC         |设置状态
@@ -28,9 +50,10 @@ interface CacheInterface
      * 参数区：
      *
      * @param int $status
+     *
      * @return CacheInterface
      */
-    public function setStatus(int $status):CacheInterface;
+    public function setStatus(bool $status): CacheInterface;
 
     /**
      * @DESC         |从给定键生成规范化缓存键。
@@ -38,6 +61,7 @@ interface CacheInterface
      * 参数区：
      *
      * @param $key
+     *
      * @return mixed
      */
     public function buildKey($key): mixed;
@@ -48,6 +72,7 @@ interface CacheInterface
      * 参数区：
      *
      * @param $key
+     *
      * @return mixed
      */
     public function get($key): mixed;
@@ -58,6 +83,7 @@ interface CacheInterface
      * 参数区：
      *
      * @param $key
+     *
      * @return mixed
      */
     public function exists($key): mixed;
@@ -68,6 +94,7 @@ interface CacheInterface
      * 参数区：
      *
      * @param $keys
+     *
      * @return mixed
      */
     public function getMulti($keys): mixed;
@@ -77,9 +104,10 @@ interface CacheInterface
      *
      * 参数区：
      *
-     * @param $key
-     * @param $value
+     * @param     $key
+     * @param     $value
      * @param int $duration
+     *
      * @return mixed
      */
     public function set($key, $value, int $duration = 1800): mixed;
@@ -89,8 +117,9 @@ interface CacheInterface
      *
      * 参数区：
      *
-     * @param $items
+     * @param     $items
      * @param int $duration
+     *
      * @return mixed
      */
     public function setMulti($items, int $duration = 1800): mixed;
@@ -101,9 +130,10 @@ interface CacheInterface
      *
      * 参数区：
      *
-     * @param $key
-     * @param $value
+     * @param     $key
+     * @param     $value
      * @param int $duration
+     *
      * @return mixed
      */
     public function add($key, $value, int $duration = 1800): mixed;
@@ -114,8 +144,9 @@ interface CacheInterface
      *
      * 参数区：
      *
-     * @param $items
+     * @param     $items
      * @param int $duration
+     *
      * @return mixed
      */
     public function addMulti($items, int $duration = 1800): mixed;
@@ -126,6 +157,7 @@ interface CacheInterface
      * 参数区：
      *
      * @param $key
+     *
      * @return mixed
      */
     public function delete($key): mixed;
@@ -142,7 +174,7 @@ interface CacheInterface
     /**
      * @DESC          # 从缓存中删除所有键的值。（清理缓存）
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 22:13
      * 参数区：

@@ -39,7 +39,7 @@ $(function () {
             }
             showLoading();
             $.ajax({
-                url: SITE_DATA.buildUrl('system/menus/save'),
+                url: SITE.buildUrl('system/menus/save'),
                 type: 'post',
                 dataType:'json',
                 data: JSON.stringify(data),

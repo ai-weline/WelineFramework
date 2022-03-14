@@ -23,20 +23,23 @@ class CacheFactory
     private array $config;
 
     private string $identity;
+    private string $tip;
 
-    private ?CacheInterface $driver=null;
+    private ?CacheInterface $driver = null;
 
     // FIXME 缓存清理后首次存储缓存set后 立即读取get 将返回false 待后期处理 先直接返回结果
 
-    public function __construct(string $identity = 'cache_system')
+    public function __construct(string $identity = 'cache_system', string $tip = '')
     {
         $this->config   = App::Env('cache');
         $this->identity = $identity;
+        $this->tip = $tip;
     }
 
-    function __wakeup(){
-        if(empty($this->driver)){
-            $this->config   = (array)Env::getInstance()->getConfig('cache');
+    function __wakeup()
+    {
+        if (empty($this->driver)) {
+            $this->config = (array)Env::getInstance()->getConfig('cache');
             $this->driver = $this->create();
         }
     }
@@ -46,18 +49,22 @@ class CacheFactory
      *
      * 参数区：
      *
-     * @param string $driver
-     * @param string $driver_class
+     * @param string $driver [驱动名|驱动类]
+     * @param string $tip    [缓存说明]
      *
      * @return CacheInterface
      */
-    public function create(string $driver = '',string $driver_class=''): CacheInterface
+    public function create(string $driver = '', string $tip = null): CacheInterface
     {
         if (empty($driver) && isset($this->config['default'])) {
             $driver = $this->config['default'];
         }
-        $driver_class = self::driver_NAMESPACE . ucfirst($driver);
-        $this->driver = new $driver_class($this->identity, $this->config['drivers'][$driver]);
+        if (class_exists($driver)) {
+            $driver_class = $driver;
+        } else {
+            $driver_class = self::driver_NAMESPACE . ucfirst($driver);
+        }
+        $this->driver = new $driver_class($this->identity, $this->config['drivers'][$driver], $tip??$this->tip);
         return $this->driver;
     }
 }

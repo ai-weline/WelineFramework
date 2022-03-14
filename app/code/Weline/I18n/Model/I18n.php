@@ -46,7 +46,7 @@ class I18n
         foreach (Locales::getLocales() as $index => $locale) {
             foreach (Locales::getNames() as $local => $name) {
                 if ($locale === $local) {
-                    $locals[$index . '-' . __($name)] = $locale;
+                    $locals[$index] = str_pad($local, 15,' ').$name;
                 }
             }
         }

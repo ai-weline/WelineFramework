@@ -40,14 +40,13 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
             foreach ($modules as $module_name => $register_file) {
                 $relate_scan_path = $vendor . DIRECTORY_SEPARATOR . $module_name . DIRECTORY_SEPARATOR . self::dir . DIRECTORY_SEPARATOR;
                 $scan_path        = APP_CODE_PATH . $relate_scan_path;
-                if ($cacheManagers = $this->scanDir($scan_path)) {
+                if (is_file($register_file)&&$cacheManagers = $this->scanDir($scan_path)) {
                     foreach ($cacheManagers as $cacheManager) {
                         $app_caches[] = ['class' => str_replace('/', '\\', $relate_scan_path) . str_replace('.php', '', $cacheManager), 'path' => $scan_path . $cacheManager];
                     }
                 }
             }
         }
-
         return $app_caches;
     }
 
