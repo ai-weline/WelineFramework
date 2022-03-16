@@ -10,6 +10,7 @@
 namespace Weline\Framework\Cache;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Data\File;
 
 class Scanner extends \Weline\Framework\System\File\App\Scanner
@@ -40,9 +41,10 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
             foreach ($modules as $module_name => $register_file) {
                 $relate_scan_path = $vendor . DIRECTORY_SEPARATOR . $module_name . DIRECTORY_SEPARATOR . self::dir . DIRECTORY_SEPARATOR;
                 $scan_path        = APP_CODE_PATH . $relate_scan_path;
-                if (is_file($register_file)&&$cacheManagers = $this->scanDir($scan_path)) {
+                if (is_file($register_file) && $cacheManagers = $this->scanDir($scan_path)) {
                     foreach ($cacheManagers as $cacheManager) {
-                        $app_caches[] = ['class' => str_replace('/', '\\', $relate_scan_path) . str_replace('.php', '', $cacheManager), 'path' => $scan_path . $cacheManager];
+                        $class = str_replace('/', '\\', $relate_scan_path) . str_replace('.php', '', $cacheManager);
+                        if (ObjectManager::getInstance($class) instanceof CacheInterface) $app_caches[] = ['class' => $class, 'path' => $scan_path . $cacheManager];
                     }
                 }
             }
@@ -76,7 +78,7 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
                 $dir_arr = explode(DIRECTORY_SEPARATOR, $dir);
                 if (count($dir_arr) === 4 && self::dir === array_pop($dir_arr)) {
                     $scan_path = APP_CODE_PATH . $dir;
-                    if (! is_dir($scan_path)) {
+                    if (!is_dir($scan_path)) {
                         $scan_path = Env::vendor_path . $dir;
                     }
                     if ($cacheManagers = $this->scanDir($scan_path)) {

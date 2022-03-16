@@ -34,7 +34,7 @@ class Scanner extends Scan
             unset($vendors[$key]);
             // 常规模块
             if ($vendor_files = $this->scanVendorModules($vendor)) {
-                $vendors[Register::moduleName($vendor, '')] = $vendor_files;
+                $vendors[Register::parserModuleVendor($vendor)] = $vendor_files;
             }
             //
         }
@@ -134,7 +134,7 @@ class Scanner extends Scan
                 $app_module_path = $register_FILE_PATH . $vendor . DIRECTORY_SEPARATOR . $module ;
                 if(is_dir($app_module_path)){
                     if (is_file($app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
-                        $modules[Register::moduleName('', $module)] = $app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file;
+                        $modules[Register::parserModuleName($module)] = $app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file;
                     }
                 }
 

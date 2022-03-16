@@ -39,8 +39,9 @@
                                 </div>
                             <?php
                             else:
+                                $avatar = $notice->getAvatar()?$this->fetchTagSourceFile('static', 'Weline_Admin::'.$notice->getAvatar()):'';
                                 ?>
-                                <img src="<?= $this->getUrl($notice->getAvatar()) ?>" class="rounded-circle avatar-xs"
+                                <img src="<?= $avatar ?>" class="rounded-circle avatar-xs"
                                      alt="user-pic">
                             <?php
                             endif;

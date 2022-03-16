@@ -58,7 +58,7 @@ class File extends CacheDriverAbstract
      * 1 : 开启
      * 参数区：
      *
-     * @param int $status
+     * @param bool $status
      *
      * @return CacheInterface
      */
@@ -121,7 +121,6 @@ class File extends CacheDriverAbstract
      */
     public function exists($key): bool
     {
-        if (!$this->status) return false;
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         $this->processCacheFile($cacheFile);
@@ -140,7 +139,6 @@ class File extends CacheDriverAbstract
      */
     public function getMulti($keys): array
     {
-        if (!$this->status) return [];
         $results = [];
         foreach ($keys as $key) {
             $results[$key] = $this->get($key);
@@ -162,6 +160,7 @@ class File extends CacheDriverAbstract
      */
     public function set($key, $value, int $duration = 0): bool
     {
+        if (!$this->status) return false;
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         // serialize用来序列化缓存内容
@@ -196,6 +195,7 @@ class File extends CacheDriverAbstract
      */
     public function setMulti($items, int $duration = 0): array
     {
+        if (!$this->status) return [];
         $failedKeys = [];
         foreach ($items as $key => $value) {
             if ($this->set($key, $value, $duration) === false) {
@@ -220,6 +220,7 @@ class File extends CacheDriverAbstract
      */
     public function add($key, $value, int $duration = 0): bool
     {
+        if (!$this->status) return false;
         //  key不存在，就设置缓存
         if (!$this->exists($key)) {
             return $this->set($key, $value, $duration);
@@ -241,6 +242,7 @@ class File extends CacheDriverAbstract
      */
     public function addMulti($items, int $duration = 0): array
     {
+        if (!$this->status) return [];
         $failedKeys = [];
         foreach ($items as $key => $value) {
             if ($this->add($key, $value, $duration) === false) {

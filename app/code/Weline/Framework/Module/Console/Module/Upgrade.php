@@ -99,19 +99,8 @@ class Upgrade extends CommandAbstract
         $registers = $this->scanner->scanAppModules();
         foreach ($registers as $vendor => $modules) {
             foreach ($modules as $name => $register) {
-                if (is_file(APP_CODE_PATH . $register)) {
-                    require APP_CODE_PATH . $register;
-                }
-                if (is_file(BP . 'vendor' . DIRECTORY_SEPARATOR . $register)) {
-                    require BP . 'vendor' . DIRECTORY_SEPARATOR . $register;
-                }
-                // 主题
-                if (is_file(BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR . $register)) {
-                    require BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR . $register;
-                }
-                // i18n国际化
-                if (is_file(BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . $register)) {
-                    require BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . $register;
+                if (is_file($register)) {
+                    require $register;
                 }
             }
         }

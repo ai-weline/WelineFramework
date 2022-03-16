@@ -116,8 +116,6 @@ class Scanner extends Scan
             $modules      = array_merge($core_modules, $app_modules);
             foreach ($modules as $key => $origin_module_name) {
                 $module_name = Register::moduleName($vendor, $origin_module_name);
-                $vendor_arr  = explode('_', $module_name);
-                $vendor      = array_shift($vendor_arr);
                 // app下的代码优先度更高
                 $app_module_path = APP_CODE_PATH . $vendor . DIRECTORY_SEPARATOR . $origin_module_name;
                 unset($modules[$key]);
@@ -135,7 +133,7 @@ class Scanner extends Scan
                     }
                 }
                 // vendor下的代码会被覆盖
-                $vendor_app_module_path      = VENDOR_PATH . $vendor . DIRECTORY_SEPARATOR . $origin_module_name;
+                $vendor_app_module_path      = VENDOR_PATH . strtolower($vendor) . DIRECTORY_SEPARATOR . $origin_module_name;
                 $vendor_app_need_file_or_dir = $app_module_path . DIRECTORY_SEPARATOR . $file_or_dir;
                 if (!isset($modules[$module_name])) {
                     if (is_dir($vendor_app_module_path)) {
@@ -165,9 +163,10 @@ class Scanner extends Scan
             }
 
             if ($modules) {
-                $vendors_modules[$vendor] = $modules;
+                $vendors_modules[ucfirst($vendor)] = $modules;
             }
         }
+
         # 带有回调处理的方法
         if ($callback) {
             $vendors_modules = $callback($vendors_modules);

@@ -49,6 +49,7 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
             return $event;
         }
         $configs = parent::read();
+
         // 合并掉所有相同名字的事件的观察者，方便获取
         $event_observers_list = [];
         foreach ($configs as $module_and_file => $config) {

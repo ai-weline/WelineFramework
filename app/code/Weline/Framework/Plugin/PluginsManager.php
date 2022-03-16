@@ -259,11 +259,8 @@ class PluginsManager
         // 正式环境则缓存
         if ($cache) {
             $this->pluginCache->set($cache_key, $types_plugins_info);
-            $this->plugins = $this->pluginCache->get($cache_key);
-        } else {
-            $this->plugins = $types_plugins_info;
         }
-
+        $this->plugins = $types_plugins_info;
         return $this->plugins;
     }
 

@@ -37,7 +37,7 @@ class Session implements SessionInterface
         if (isset($_SERVER['REQUEST_URI']) && !isset($this->session)) {
             $type          = 'frontend';
             $identity_path = '/';
-            if (is_int(strpos($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('admin')))) {
+            if (is_int(strpos($_SERVER['REQUEST_URI'], Env::getInstance()->getData('admin')))) {
                 $identity_path .= Env::getInstance()->getConfig('admin');
                 $type          = 'backend';
             } elseif (is_int(strpos($_SERVER['REQUEST_URI'], Env::getInstance()->getConfig('api_admin')))) {

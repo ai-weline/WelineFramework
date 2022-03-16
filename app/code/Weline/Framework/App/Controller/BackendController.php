@@ -24,8 +24,8 @@ class BackendController extends PcController
 
     function __init()
     {
-        $this->getSession(BackendSession::class);
         $this->cache = $this->getControllerCache();
+        $this->getSession(BackendSession::class);
         parent::__init();
     }
 

@@ -11,8 +11,6 @@ declare(strict_types=1);
 namespace Weline\Framework\Cache\Driver;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\DataObject\DataObject;
 
 abstract class CacheDriverAbstract implements \Weline\Framework\Cache\CacheDriverInterface
 {
@@ -26,7 +24,7 @@ abstract class CacheDriverAbstract implements \Weline\Framework\Cache\CacheDrive
         $this->identity = $identity;
         $this->config   = $config;
         $this->tip      = $tip;
-        $this->status   = (bool)Env::getInstance()->getData('cache_status/' . $identity);
+        $this->status   = (bool)Env::getInstance()->getData('cache/status/' . $identity);
         if (method_exists($this, '__init')) {
             $this->__init();
         }

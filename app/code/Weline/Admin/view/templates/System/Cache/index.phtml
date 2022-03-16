@@ -83,68 +83,62 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                     <table class="table table-editable table-nowrap align-middle table-edits">
                                         <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th><?= __('菜单名') ?></th>
-                                            <th><?= __('标题') ?></th>
-                                            <th><?= __('资源') ?></th>
-                                            <th><?= __('父资源') ?></th>
-                                            <th><?= __('动作') ?></th>
-                                            <th><?= __('模组') ?></th>
-                                            <th><?= __('Icon图标') ?></th>
-                                            <th><?= __('排序') ?></th>
-                                            <th><?= __('是否系统菜单') ?></th>
-                                            <th><?= __('创建时间') ?></th>
-                                            <th><?= __('更新时间') ?></th>
+                                            <th>
+                                                <lang>类型</lang>
+                                            </th>
+                                            <th>
+                                                <lang>类</lang>
+                                            </th>
+                                            <th>
+                                                <lang>文件</lang>
+                                            </th>
+                                            <th>
+                                                <lang>备注</lang>
+                                            </th>
                                             <th><?= __('操作') ?></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <?php
-                                        /**@var \Weline\Backend\Model\Menu $menu */
-                                        foreach ($this->getData('menus') as $menu) {
+                                        foreach ($this->getData('caches') as $type => $caches) {
                                             ?>
-                                            <tr data-id='<?= $menu->getId() ?>'>
-                                                <td data-field='id' style='width: 80px'><?= $menu->getId() ?></td>
-                                                <td data-field='name'><?= $menu->getName() ?></td>
-                                                <td data-field='title'><?= $menu->getTitle() ?></td>
-                                                <td data-field='source'><?= $menu->getSource() ?></td>
-                                                <td data-field='parent_source'><?= $menu->getParentSource() ?></td>
-                                                <td data-field='action'><?= $menu->getAction() ?></td>
-                                                <td data-field='module'><?= $menu->getModule() ?></td>
-                                                <td data-field='icon'><i class='<?= $menu->getIcon() ?>'
-                                                                         style="margin-right: 25px"></i><span><?= $menu->getIcon() ?></span>
-                                                </td>
-                                                <td data-field='order'><?= $menu->getOrder() ?></td>
-                                                <td data-field='is_system'><?= $menu->isSystem() ?></td>
-                                                <td data-field='create_time'><?= $menu->getCreateTime() ?></td>
-                                                <td data-field='update_time'><?= $menu->getUpdateTime() ?></td>
-                                                <td style='width: 100px'>
-                                                    <a class='btn btn-outline-secondary btn-sm edit'
-                                                       title='<?= __('编辑') ?>'>
-                                                        <i class='fas fa-pencil-alt'></i>
-                                                    </a>
-                                                    <a class='btn btn-outline-secondary btn-sm <?= $menu->isSystem() ? '' : 'menu-delete' ?>'
-                                                       data-id="<?= $menu->getId() ?>"
-                                                       title='<?= $menu->isSystem() ? __('系统菜单无法删除！') : __('删除') ?>'>
-                                                        <i class='mdi <?= $menu->isSystem() ? 'mdi-delete-off' : 'mdi-delete' ?> '
-                                                           style="<?= $menu->isSystem() ? 'color:red' : '' ?>"
-                                                           data-id="<?= $menu->getId() ?>"></i>
-                                                    </a>
-                                                </td>
+                                            <tr>
+                                                <td colspan="3" class="h-25">@{$type}</td>
                                             </tr>
                                             <?php
+                                            /**@var \Weline\Framework\Cache\CacheInterface $cacheObject */
+                                            foreach ($caches as $key => $cache) {
+                                                $cacheObject    = \Weline\Framework\Manager\ObjectManager::getInstance((rtrim($cache['class'], 'Factory')) . 'Factory');
+                                                $status_checked = $cacheObject->getStatus() ? 'checked' : '';
+                                                $switch_id      = "switch$key";
+                                                ?>
+                                                <tr>
+                                                    <td></td>
+                                                    <td>@{$cacheObject::class}</td>
+                                                    <td>@{$cache['path']}</td>
+                                                    <td>@{$cacheObject->tip()}</td>
+                                                    <td style='width: 100px'>
+                                                        <input class='form-check form-switch' type='checkbox'
+                                                               id='@{$switch_id}' switch='bool' <?= $status_checked ?>>
+                                                        <label class='form-label' for='@{$switch_id}'
+                                                               data-on-label='<?= __('开启') ?>'
+                                                               data-off-label='<?= __('关闭') ?>'></label>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
                                         }
                                         ?>
                                         </tbody>
                                     </table>
+                                    <script>
+                                        $('.form-switch').bind('input propertychange', (e) => {
+                                            console.log(e)
+                                        })
+                                    </script>
                                 </div>
                             </div>
                         </div>
-                        <?php
-                        $pagination = $this->getData('pagination');
-                        echo $pagination['html'];
-                        ?>
-
                     </div> <!-- end col -->
                 </div> <!-- end row -->
             </div> <!-- container-fluid -->

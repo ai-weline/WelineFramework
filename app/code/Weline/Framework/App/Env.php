@@ -15,7 +15,7 @@ use Weline\Framework\System\File\Io\File;
 
 class Env extends DataObject
 {
-    const vendor_path   = BP . 'vendor' . DIRECTORY_SEPARATOR;
+    const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
 
     const framework_name = 'Weline';
 
@@ -147,6 +147,19 @@ class Env extends DataObject
                 'database' => 1,
             ],
         ],
+        'status'  => [
+            'config'               => 1,
+            'framework_controller' => 1,
+            'database'             => 1,
+            'database_model'       => 1,
+            'framework_event'      => 1,
+            'framework_object'     => 1,
+            'framework_phrase'     => 1,
+            'framework_plugin'     => 1,
+            'router_cache'         => 1,
+            'framework_view'       => 1,
+            'frontend_cache'       => 1,
+        ]
     ];
 
     // Session
@@ -185,11 +198,23 @@ class Env extends DataObject
      */
     private function __construct()
     {
+        parent::__construct();
         try {
             $this->reload();
         } catch (Exception $e) {
             throw new Exception(__('系统加载错误：%1', $e->getMessage()));
         }
+    }
+
+    function setData($key, $value = null): static
+    {
+        parent::setData($key, $value);
+        $file = new File();
+        $file->open(self::path_ENV_FILE, $file::mode_w);
+        $text = '<?php return ' . var_export($this->getData(), true) . ';';
+        $file->write($text);
+        $file->close();
+        return $this;
     }
 
     public function reload(): static

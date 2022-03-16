@@ -52,7 +52,7 @@ class ObjectManager implements ManagerInterface
             if (str_ends_with($class, 'Factory')) {
                 $class = substr($class, 0, strrpos($class, 'Factory'));
             }
-            if (!class_exists($class)) throw new Exception(__("工厂类：{$class}Factory 不存在！"));
+            if (!class_exists($class)) throw new Exception(__("工厂类：{$class} 不存在！"));
         }
         return $class;
     }

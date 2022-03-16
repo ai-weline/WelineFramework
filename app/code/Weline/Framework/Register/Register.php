@@ -69,9 +69,9 @@ class Register implements RegisterDataInterface
             ->setData('register_arguments', $install_params);
         /**@var EventsManager $eventsManager */
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
-        $eventsManager->dispatch('Framework_return Register::register_installer', ['data' => $installerPathData]);
+        $eventsManager->dispatch('Framework_Register::register_installer', ['data' => $installerPathData]);
         $installer_class = $installerPathData->getData('installer');
-
+        if ($installer_class === 'Weline\Framework\Theme\Handle') p($installer_class);
         /**@var RegisterInterface $installer */
         $installer = ObjectManager::getInstance($installer_class);
         if ($installer instanceof RegisterInterface) {
@@ -82,8 +82,17 @@ class Register implements RegisterDataInterface
         }
     }
 
-    /*TODO 待搬迁至模组模块*/
     static function moduleName(string $vendor, string $module_name): string
+    {
+        return self::parserModuleVendor($vendor) . '_' . self::parserModuleName($module_name);
+    }
+
+    static function parserModuleVendor(string $vendor): string
+    {
+        return ucfirst($vendor);
+    }
+
+    static function parserModuleName(string $module_name): string
     {
         $module_rename = '';
         if (is_int(strpos($module_name, '-'))) {
@@ -91,7 +100,9 @@ class Register implements RegisterDataInterface
             foreach ($module_arr as $item) {
                 $module_rename .= ucfirst($item);
             }
+        } else {
+            $module_rename = $module_name;
         }
-        return ucfirst($vendor) . ucfirst($module_rename ? ($vendor?'_':'') . $module_rename : $module_name);
+        return ucfirst($module_rename);
     }
 }

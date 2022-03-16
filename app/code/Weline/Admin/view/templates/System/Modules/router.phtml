@@ -93,13 +93,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                         <?php
                                         foreach ($this->getData('routers') as $module => $router) {
                                             ?>
-                                            <tr data-id='@{module}' class="success">
-                                                <td colspan="3" style="font-weight: 700;font-size: 18px">@{module}</td>
+                                            <tr data-id='@{$module}' class="success">
+                                                <td colspan="3" style="font-weight: 700;font-size: 18px">@{$module}</td>
                                             </tr>
                                             <?php foreach ($router as $path => $value): ?>
-                                                <tr data-id='@{module}'>
+                                                <tr data-id='@{$module}'>
                                                     <td></td>
-                                                    <td data-field='path'>@{path}</td>
+                                                    <td data-field='path'>@{$path}</td>
                                                     <td data-field='info'>
                                                         <?php foreach ($value as $key => $item):
                                                             if (is_string($item)):
