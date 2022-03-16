@@ -17,18 +17,18 @@ namespace Weline\Framework\Plugin\Cache;
  * 时间：   15:16
  * 网站：   https://bbs.aiweline.com
  * Email：  aiweline@qq.com
- * @DESC:    此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+ * @DESC    :    此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  * @SuppressWarnings(PHPMD.NumberOfChildren)
- * @since 1.2
+ * @since   1.2
  *
  * Class EventCache
  * @package M\Framework\Event\Cache
- * @since 100
+ * @since   100
  */
 class PluginCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_plugin')
     {
-        parent::__construct($identity,'插件缓存');
+        parent::__construct($identity, '插件缓存',true,);
     }
 }

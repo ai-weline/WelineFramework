@@ -772,7 +772,7 @@ abstract class AbstractModel extends DataObject
             return $_model_fields;
         }
         $module__fields_cache_key = $this::class . '_module__fields_cache_key';
-        if (PROD && $_model_fields = $this->_cache->get($module__fields_cache_key)) {
+        if ($_model_fields = $this->_cache->get($module__fields_cache_key)) {
             return $_model_fields;
         }
         $objClass = new \ReflectionClass($this::class);

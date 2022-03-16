@@ -49,8 +49,8 @@ class Reader extends \Weline\Framework\System\ModuleFileReader
     {
         if (empty($this->models)) {
             $cache_key = 'db_models';
-            # 非开发模式读取缓存
-            if (PROD && $models = $this->dbModelCache->get($cache_key)) {
+            # 读取缓存
+            if ($models = $this->dbModelCache->get($cache_key)) {
                 return $this->models = $models;
             }
             # 模型读取回调（排除非模型文件）
@@ -89,7 +89,7 @@ class Reader extends \Weline\Framework\System\ModuleFileReader
             };
             $this->models = $this->getFileList($callback);
             # 模型数据缓存
-            if (PROD) $this->dbModelCache->set($cache_key, $this->models);
+            $this->dbModelCache->set($cache_key, $this->models);
         }
 
         return $this->models;

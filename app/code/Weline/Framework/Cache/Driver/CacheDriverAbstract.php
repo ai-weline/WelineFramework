@@ -19,12 +19,12 @@ abstract class CacheDriverAbstract implements \Weline\Framework\Cache\CacheDrive
     protected string $identity;
     protected string $tip;
 
-    public function __construct(string $identity, array $config, $tip = '')
+    public function __construct(string $identity, array $config, $tip = '', bool $status=true)
     {
         $this->identity = $identity;
         $this->config   = $config;
         $this->tip      = $tip;
-        $this->status   = (bool)Env::getInstance()->getData('cache/status/' . $identity);
+        $this->status   = $status;
         if (method_exists($this, '__init')) {
             $this->__init();
         }

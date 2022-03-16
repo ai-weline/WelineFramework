@@ -53,7 +53,7 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
         }
         // 翻译收集
         $translate_mode = Env::getInstance()->getConfig('translate_mode');
-        if ($translate_mode === 'online' || DEV) {
+        if ($translate_mode === 'online') {
             try {
                 $this->i18n->convertToLanguageFile();
             } catch (\Exception $e) {
@@ -71,6 +71,22 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
         } else {
             $words_file = Env::path_TRANSLATE_DEFAULT_FILE;
         }
-        $words_file_data->setData('file_path', $words_file);
+        # 检测词典文件是否准确生成
+        if (is_file($words_file)) {
+            $words_file_data->setData('file_path', $words_file);
+        } else if ($translate_mode !== 'online') {
+            # 没有生成 且不是 实时翻译模式
+            try {
+                $this->i18n->convertToLanguageFile();
+            } catch (\Exception $e) {
+                /**@var Printing $debug */
+                $debug = ObjectManager::getInstance(Printing::class);
+                $debug->debug($e->getMessage());
+                if (CLI) {
+                    throw $e;
+                }
+            }
+            $words_file_data->setData('file_path', $words_file);
+        }
     }
 }

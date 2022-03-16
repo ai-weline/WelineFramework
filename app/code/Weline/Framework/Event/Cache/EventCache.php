@@ -29,6 +29,6 @@ class EventCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_event')
     {
-        parent::__construct($identity,'事件缓存');
+        parent::__construct($identity,'事件缓存',true);
     }
 }

@@ -13,6 +13,6 @@ class I18nCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'i18n')
     {
-        parent::__construct($identity,'国际化缓存');
+        parent::__construct($identity,'国际化缓存',true);
     }
 }

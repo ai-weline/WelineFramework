@@ -276,7 +276,7 @@ class Core
     {
         # 全页缓存
         $cache_key = $this->cache->buildKey($this->router);
-        if (!PROD && $html = $this->cache->get($cache_key)) {
+        if ($html = $this->cache->get($cache_key)) {
             exit($html);
         }
         # 方法体方法和请求方法不匹配时 禁止访问
@@ -288,11 +288,11 @@ class Core
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);
-        $result = call_user_func([$dispatch, $method]/*, ...$this->request->getParams()*/);
+        $result   = call_user_func([$dispatch, $method]/*, ...$this->request->getParams()*/);
 //        file_put_contents(__DIR__.'/'.$cache_key.'.html', $result);
         /** Get output buffer. */
         # FIXME 是否显示模板路径
-        if (PROD) $this->cache->set($cache_key, $result, 60);
+        $this->cache->set($cache_key, $result, 5);
         exit($result);
     }
 }
