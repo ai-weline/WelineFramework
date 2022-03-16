@@ -71,7 +71,6 @@ class Register implements RegisterDataInterface
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
         $eventsManager->dispatch('Framework_Register::register_installer', ['data' => $installerPathData]);
         $installer_class = $installerPathData->getData('installer');
-        if ($installer_class === 'Weline\Framework\Theme\Handle') p($installer_class);
         /**@var RegisterInterface $installer */
         $installer = ObjectManager::getInstance($installer_class);
         if ($installer instanceof RegisterInterface) {

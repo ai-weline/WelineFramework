@@ -33,8 +33,13 @@ class Scanner extends Scan
         foreach ($vendors as $key => $vendor) {
             unset($vendors[$key]);
             // 常规模块
-            if ($vendor_files = $this->scanVendorModules($vendor)) {
-                $vendors[Register::parserModuleVendor($vendor)] = $vendor_files;
+            if ($vendor_module_register_files = $this->scanVendorModules($vendor)) {
+                if(isset($vendors[Register::parserModuleName($vendor)])&&$modules = $vendors[Register::parserModuleName($vendor)]){
+                    $modules = array_merge($modules,$vendor_module_register_files);
+                }else{
+                    $modules = $vendor_module_register_files;
+                }
+                $vendors[Register::parserModuleName($vendor)] = $modules;
             }
             //
         }
@@ -133,8 +138,9 @@ class Scanner extends Scan
             foreach (Env::register_FILE_PATHS as $type=>$register_FILE_PATH) {
                 $app_module_path = $register_FILE_PATH . $vendor . DIRECTORY_SEPARATOR . $module ;
                 if(is_dir($app_module_path)){
-                    if (is_file($app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
-                        $modules[Register::parserModuleName($module)] = $app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file;
+                    $register = $app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file;
+                    if (is_file($register)) {
+                        $modules[Register::parserModuleName($module)] = $register;
                     }
                 }
 

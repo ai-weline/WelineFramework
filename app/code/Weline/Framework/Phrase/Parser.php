@@ -101,6 +101,6 @@ class Parser
                 }
             }
         }
-        return self::$words;
+        return self::$words??[];
     }
 }

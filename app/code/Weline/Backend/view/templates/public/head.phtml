@@ -24,13 +24,13 @@ endif;
 echo $this->getHeader()->getHtml();
 ?>
 <script>
-    window.SITE = {
+    window.site = {
         host: '<?=$this->_request->getBaseHost()?>',
         base_host: '<?=$this->_request->isBackend() ? $this->_request->getAdminUrl('/') : $this->_request->getBaseHost()?>',
         base_router: '<?=$this->_request->getRouterData('router')?>',
-        i18n: <?php json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
+        i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
         buildUrl: (path) => {
-            return window.SITE.base_host + '/' + path;
+            return window.site.base_host + '/' + path;
         },
     };
 </script>

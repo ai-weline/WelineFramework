@@ -276,7 +276,7 @@ class Core
     {
         # 全页缓存
         $cache_key = $this->cache->buildKey($this->router);
-        if ($html = $this->cache->get($cache_key)) {
+        if (PROD && $html = $this->cache->get($cache_key)) {
             return $html;
         }
         # 方法体方法和请求方法不匹配时 禁止访问

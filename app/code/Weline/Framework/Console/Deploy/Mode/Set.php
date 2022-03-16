@@ -56,6 +56,7 @@ class Set extends CommandAbstract
             case 'dev':
                 $this->printer->note('正在清除模组模板编译文件...');
                 $this->cleanTplComDir();
+                $this->clearGeneratedComplicateDir();
 
                 break;
             default:

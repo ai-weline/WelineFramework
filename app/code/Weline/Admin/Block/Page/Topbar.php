@@ -26,7 +26,7 @@ class Topbar extends \Weline\Framework\View\Block
 
     function __construct(Config $config, AdminSession $session)
     {
-        $this->config = $config;
+        $this->config  = $config;
         $this->session = $session;
         parent::__construct();
     }
@@ -39,13 +39,15 @@ class Topbar extends \Weline\Framework\View\Block
     function getAvatar()
     {
         /**@var AdminUser $user */
-        $user = $this->session->getLoginUser();
+        $user   = $this->session->getLoginUser();
         $avatar = '';
         if ($user) {
             $avatar = $user->getAvatar();
         }
         if (empty($avatar)) {
-            $avatar = Template::getInstance()->fetchTagSourceFile(DataInterface::view_STATICS_DIR, $this->config->getConfig('admin_default_avatar', 'Weline_Admin'));
+            if ($avatar = $this->config->getConfig('admin_default_avatar', 'Weline_Admin')) {
+                $avatar = Template::getInstance()->fetchTagSourceFile(DataInterface::view_STATICS_DIR, $avatar);
+            }
         }
         return $avatar;
     }

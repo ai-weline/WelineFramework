@@ -185,7 +185,6 @@ class Data extends AbstractHelper
 //                            }
                             $rule_router = implode('/', $rule_rule_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
                             $rule_router = trim($rule_router, '/');
-
                             Register::register(RegisterDataInterface::ROUTER, $name, [
                                 'type'           => DataInterface::type_PC,
                                 'area'           => $ctl_area,
