@@ -14,6 +14,7 @@ use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\App\Helper;
 use Weline\Framework\Cache\CacheFactory;
+use Weline\Framework\Manager\Cache\ObjectCache;
 use Weline\Framework\Manager\ObjectManager;
 
 class App
@@ -30,7 +31,8 @@ class App
      * 参数区：
      *
      * @param string|null $key
-     * @param null $value
+     * @param null        $value
+     *
      * @return mixed
      */
     public static function Env(string $key = null, $value = null): mixed
@@ -108,7 +110,7 @@ class App
 
         // ############################# 环境配置 #####################
         // 环境
-        $config = [];
+        $config       = [];
         $env_filename = APP_PATH . 'etc/env.php';
         if (is_file($env_filename)) {
             $config = require $env_filename;
@@ -175,7 +177,20 @@ class App
         self::init();
         if (!CLI) {
             try {
-                return ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
+//                $cache     = (new ObjectCache())->create();
+//                $cache_key = 'framework_system_container_cache';
+                $result = ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
+//                /**@var ObjectManager $container */
+//                if (!DEV && $container = $cache->get($cache_key)) {
+//                    $result = $container::getInstance(\Weline\Framework\Router\Core::class)->start();
+////                    p();
+//                } else {
+//                    $container = ObjectManager::getInstance();
+//                    $result    = $container::getInstance(\Weline\Framework\Router\Core::class)->start();
+//                    $cache->set($cache_key, $container);
+////                    p();
+//                }
+                exit($result);
             } catch (\ReflectionException | App\Exception $e) {
                 throw new Exception(__('系统错误：%1', $e->getMessage()));
             }

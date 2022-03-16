@@ -194,7 +194,7 @@ class Core
                 # 缓存路由结果
                 $this->router['type'] = 'pc';
                 $this->cache->set($this->_router_cache_key, $this->router);
-                $this->route();
+                return $this->route();
             }
         }
         // 如果是PC后端请求，找不到路由就直接404
@@ -272,12 +272,12 @@ class Core
      * @throws Exception
      * @throws \Exception
      */
-    #[NoReturn] function route()
+    function route()
     {
         # 全页缓存
         $cache_key = $this->cache->buildKey($this->router);
         if ($html = $this->cache->get($cache_key)) {
-            exit($html);
+            return $html;
         }
         # 方法体方法和请求方法不匹配时 禁止访问
         if ('' !== $this->router['class']['request_method']) {
@@ -293,6 +293,6 @@ class Core
         /** Get output buffer. */
         # FIXME 是否显示模板路径
         $this->cache->set($cache_key, $result, 5);
-        exit($result);
+        return $result;
     }
 }
