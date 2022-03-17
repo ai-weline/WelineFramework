@@ -180,6 +180,7 @@ class Template extends DataObject
             $comFileName = $this->viewCache->get($comFileName_cache_key);
             $tplFile     = $this->viewCache->get($tplFile_cache_key);
         }
+
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
@@ -194,9 +195,9 @@ class Template extends DataObject
             if (count($file_name_dir_arr) > 1) {
                 $file_name = array_pop($file_name_dir_arr);
                 $file_dir  = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
-                if ($file_dir) {
+                /*if ($file_dir) {
                     $file_dir .= DIRECTORY_SEPARATOR;
-                }
+                }*/
             }
             // 判断文件后缀
             $file_ext = substr(strrchr($fileName, '.'), 1);
@@ -236,10 +237,11 @@ class Template extends DataObject
                 $this->viewCache->set($tplFile_cache_key, $tplFile);
             };
         }
+
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
-        if (is_int(strpos($comFileName, '\\'))) str_replace('\\', DIRECTORY_SEPARATOR, $comFileName);
-        if (is_int(strpos($comFileName, '//'))) str_replace('/', DIRECTORY_SEPARATOR, $comFileName);
+        if (is_int(strpos($comFileName, '\\'))) $comFileName = str_replace('\\', DIRECTORY_SEPARATOR, $comFileName);
+        if (is_int(strpos($comFileName, '//'))) $comFileName = str_replace('//', DIRECTORY_SEPARATOR, $comFileName);
         return [$comFileName, $tplFile];
     }
 
@@ -267,7 +269,7 @@ class Template extends DataObject
      * @return bool|void
      * @throws \Exception
      */
-    public function fetch(string $fileName, array $dictionary = [])
+    public function fetch(string $fileName)
     {
         /** Get output buffer. */
         return $this->fetchHtml($fileName);

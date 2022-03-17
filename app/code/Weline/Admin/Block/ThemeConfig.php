@@ -32,7 +32,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
     function __init()
     {
         $this->adminUserConfig = $this->adminSession->getLoginUserID() ? $this->adminUserConfig->load($this->adminSession->getLoginUserID()) : $this->adminUserConfig;
-        if(!$this->adminUserConfig->getAdminUserId()){
+        if (!$this->adminUserConfig->getAdminUserId()) {
             $this->adminUserConfig->setId($this->adminSession->getLoginUserID());
         }
     }
@@ -62,13 +62,11 @@ class ThemeConfig extends \Weline\Framework\View\Block
             return $data;
         }
         $data = '';
-        if ($this->getThemeConfig('rtl-mode-switch')) {
-            $data = 'rtl';
-        }
         if ($this->getThemeConfig('dark-mode-switch')) {
             $data = 'dark';
-        }
-        if ($this->getThemeConfig('light-mode-switch')) {
+        } elseif ($this->getThemeConfig('rtl-mode-switch')) {
+            $data = 'rtl';
+        } elseif ($this->getThemeConfig('light-mode-switch')) {
             $data = '';
         }
         $this->_cache->set($cache_key, $data);

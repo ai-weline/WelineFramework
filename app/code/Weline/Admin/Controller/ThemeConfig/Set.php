@@ -12,11 +12,6 @@ namespace Weline\Admin\Controller\ThemeConfig;
 
 use Weline\Admin\Block\ThemeConfig;
 use Weline\Admin\Session\AdminSession;
-use Weline\Framework\App\System;
-use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Cache\Console\Cache\Clear;
-use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\Router\Cache\RouterCache;
 
 class Set extends \Weline\Admin\Controller\BaseController
 {
@@ -35,10 +30,6 @@ class Set extends \Weline\Admin\Controller\BaseController
 
     function postIndex(): bool|string
     {
-        # 释放缓存
-        foreach ($this->themeConfig::caches as $cach) {
-            $this->themeConfig->_cache->set($cach, false);
-        }
         $data = json_decode($this->_request->getBodyParams(), true);
         try {
             $old_layout = $this->themeConfig->getThemeConfig('layouts');
@@ -47,10 +38,10 @@ class Set extends \Weline\Admin\Controller\BaseController
             foreach ($data as $key => $datum) {
                 $this->adminSession->setData($key, $datum);
             }
-            # 缓存清理
-            ob_start();
-            ObjectManager::getInstance(Clear::class)->execute();
-            ob_clean();
+            # 释放缓存
+            foreach ($this->themeConfig::caches as $cach) {
+                $this->themeConfig->_cache->delete($cach);
+            }
             return json_encode($this->success());
         } catch (\Exception $exception) {
             return json_encode($this->exception($exception));
