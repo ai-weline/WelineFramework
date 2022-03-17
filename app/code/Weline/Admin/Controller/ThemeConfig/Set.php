@@ -14,6 +14,7 @@ use Weline\Admin\Block\ThemeConfig;
 use Weline\Admin\Session\AdminSession;
 use Weline\Framework\App\System;
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Cache\Console\Cache\Clear;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Router\Cache\RouterCache;
 
@@ -46,9 +47,10 @@ class Set extends \Weline\Admin\Controller\BaseController
             foreach ($data as $key => $datum) {
                 $this->adminSession->setData($key, $datum);
             }
-            /**@var CacheInterface $fullCache*/
-            $fullCache = ObjectManager::getInstance(RouterCache::class.'Factory');
-            $fullCache->flush();
+            # 缓存清理
+            ob_start();
+            ObjectManager::getInstance(Clear::class)->execute();
+            ob_clean();
             return json_encode($this->success());
         } catch (\Exception $exception) {
             return json_encode($this->exception($exception));

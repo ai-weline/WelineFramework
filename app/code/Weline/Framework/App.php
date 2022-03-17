@@ -107,6 +107,11 @@ class App
         if (!defined('DEBUG')) {
             define('DEBUG', false);
         }
+        // 调试模式
+        if (!defined('UMASK')) {
+            define('UMASK', 0022);
+        }
+        umask(UMASK);
 
         // ############################# 环境配置 #####################
         // 环境

@@ -37,13 +37,13 @@ class File extends CacheDriverAbstract
      */
     public function __init()
     {
-        $this->cachePath = BP . $this->config['path'] . DIRECTORY_SEPARATOR . $this->identity . DIRECTORY_SEPARATOR ?? BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->identity . DIRECTORY_SEPARATOR;
+        $this->cachePath = $this->config['path'] ? BP . rtrim($this->config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->identity : BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->identity;
         if (!isset($config['path'])) {
             $config['path'] = 'var/cache/';
         }
         $config['path'] = str_replace('/', DIRECTORY_SEPARATOR, $config['path']);
-        if (!is_dir($this->cachePath . DIRECTORY_SEPARATOR)) {
-            mkdir($this->cachePath . DIRECTORY_SEPARATOR, 0775, true);
+        if (!is_dir($this->cachePath)) {
+            mkdir($this->cachePath, 0775, true);
         }
     }
 

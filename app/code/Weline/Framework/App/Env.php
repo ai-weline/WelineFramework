@@ -206,17 +206,6 @@ class Env extends DataObject
         }
     }
 
-    function setData($key, $value = null): static
-    {
-        parent::setData($key, $value);
-        $file = new File();
-        $file->open(self::path_ENV_FILE, $file::mode_w);
-        $text = '<?php return ' . var_export($this->getData(), true) . ';';
-        $file->write($text);
-        $file->close();
-        return $this;
-    }
-
     public function reload(): static
     {
         if (!is_file(self::path_ENV_FILE)) {
