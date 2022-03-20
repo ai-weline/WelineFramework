@@ -62,11 +62,6 @@ class Template extends DataObject
      */
     private string $view_dir;
 
-    /**
-     * @var array $vars 读取模板中所有变量的数组
-     */
-    private array $vars = [];
-
     private array $theme;
 
     private EventsManager $eventsManager;
@@ -98,9 +93,9 @@ class Template extends DataObject
 
     public function init()
     {
-        $this->_request      = ObjectManager::getInstance(Request::class);
-        $this->view_dir      = $this->_request->getRouterData('module_path') . DataInterface::dir . DIRECTORY_SEPARATOR;
-        $this->vars['title'] = $this->_request->getModuleName();
+        $this->_request = ObjectManager::getInstance(Request::class);
+        $this->view_dir = $this->_request->getRouterData('module_path') . DataInterface::dir . DIRECTORY_SEPARATOR;
+        $this->setData('title', $this->_request->getModuleName());
 
         $this->theme         = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
         $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
@@ -195,9 +190,9 @@ class Template extends DataObject
             if (count($file_name_dir_arr) > 1) {
                 $file_name = array_pop($file_name_dir_arr);
                 $file_dir  = implode(DIRECTORY_SEPARATOR, $file_name_dir_arr);
-                /*if ($file_dir) {
+                if ($file_dir) {
                     $file_dir .= DIRECTORY_SEPARATOR;
-                }*/
+                }
             }
             // 判断文件后缀
             $file_ext = substr(strrchr($fileName, '.'), 1);
@@ -316,6 +311,7 @@ class Template extends DataObject
      */
     private function tmp_replace(string $content, string $fileName): array|string|null
     {
+        # 系统自带的
         $template_elements = [
             'php'      => function ($back) {
                 return '<?php ' . trim($back[1]) . '?>';
@@ -340,10 +336,12 @@ class Template extends DataObject
             },
             'hook',
             'js'       => function ($back) {
-                return "<script src='{$back[1]}'></script>";
+                $source = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
+                return "<script src='{$source}'></script>";
             },
             'css'      => function ($back) {
-                return " <link href=\"{$back[1]}\" rel=\"stylesheet\" type=\"text/css\"/>";
+                $source = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
+                return "<link href=\"{$source}\" rel=\"stylesheet\" type=\"text/css\"/>";
             },
             'lang'     => function ($back) {
                 return '<?=__(\'' . trim($back[1]) . '\')?>';
