@@ -30,9 +30,7 @@ use Weline\Framework\Manager\ObjectManager;
  * @method QueryInterface update(array $data, string $condition_field = 'id')
  * @method QueryInterface fields(string $fields)
  * @method QueryInterface join(string $table, string $condition, string $type = 'left')
- * @method QueryInterface where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic='AND')
- *         = 'AND')
- *         = 'AND')
+ * @method QueryInterface where(array|string $field, mixed $value = null, string $con = '=', string $logic = 'AND')
  * @method QueryInterface limit(int $size, int $offset = 0)
  * @method QueryInterface page(int $page = 1, int $pageSize = 20)
  * @method QueryInterface order(string $fields, string $sort = 'ASC')
@@ -56,6 +54,8 @@ use Weline\Framework\Manager\ObjectManager;
  */
 abstract class AbstractModel extends DataObject
 {
+    const table       = '';
+    const primary_key = '';
     /**
      * 对象属性
      *
@@ -63,8 +63,8 @@ abstract class AbstractModel extends DataObject
      */
     const fields_ID          = 'id';
     const fields_CREATE_TIME = 'create_time';
-    const fields_UPDATE_TIME = 'update_time';
 
+    const fields_UPDATE_TIME = 'update_time';
     protected string $table = '';
     protected string $origin_table_name = '';
     private ?ConnectionFactory $connection = null;
@@ -79,7 +79,7 @@ abstract class AbstractModel extends DataObject
 
     private ?QueryInterface $_bind_query = null;
     private ?QueryInterface $current_query = null;
-    private ?CacheInterface $_cache = null;
+    protected ?CacheInterface $_cache = null;
     private array $_fetch_data = [];
     private mixed $_query_data = null;
     public array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
@@ -100,15 +100,20 @@ abstract class AbstractModel extends DataObject
         if (empty($this->connection)) $this->connection = $this->getConnection();
         if (empty($this->_suffix)) $this->_suffix = $this->getConnection()->getConfigProvider()->getPrefix() ?: '';
         # 模型属性
-        if (empty($this->table)) $this->table = $this->provideTable() ? $this->_suffix . $this->provideTable() : $this->processTable();
-        if (empty($this->origin_table_name)) $this->origin_table_name = $this->provideTable();
+        if (!empty($this::table)) {
+            $this->table = $this::table;
+        }
+        if (empty($this->table)) $this->table = $this->processTable();
+        if (!empty(self::primary_key)) {
+            $this->_primary_key = $this::primary_key;
+        }
         if (empty($this->_primary_key)) {
             if ($this::fields_ID !== $this->_primary_key_default) {
                 $this->_primary_key = $this::fields_ID;
             } else {
-                $this->_primary_key = $this->providePrimaryField();
+                $this->_primary_key = $this->_primary_key_default;
             }
-        };
+        }
         # 字段解析
         if (empty($this->_fields)) {
             $this->getModelFields();
@@ -153,6 +158,7 @@ abstract class AbstractModel extends DataObject
             $this->origin_table_name = $this->_suffix . strtolower(implode('_', m_split_by_capital(lcfirst($table_name))));
             $this->table             = "`{$this->getConnection()->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
         }
+        $this->origin_table_name = empty($this->origin_table_name) ? $this->table : $this->origin_table_name;
         return $this->table;
     }
 
@@ -382,7 +388,6 @@ abstract class AbstractModel extends DataObject
                 $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                 $this->setData($this->_primary_key, $save_result);
             }
-
             $this->getQuery()->commit();
         } catch (\Exception $exception) {
             $this->getQuery()->rollBack();
@@ -773,13 +778,14 @@ abstract class AbstractModel extends DataObject
         }
         $module__fields_cache_key = $this::class . '_module__fields_cache_key';
         if ($_model_fields = $this->_cache->get($module__fields_cache_key)) {
-            return $_model_fields;
+//            return $_model_fields;
         }
         $objClass = new \ReflectionClass($this::class);
         $arrConst = $objClass->getConstants();
-        $_fields  = [];
+//        if ($this::class === \Weline\Theme\Model\WelineTheme::class) p($arrConst,1);
+        $_fields = [];
         foreach ($arrConst as $key => $val) {
-            if ($key !== 'fields_ID' && str_starts_with($key, 'fields')) {
+            if ($val && $key !== 'fields_ID' && str_starts_with($key, "fields_")) {
                 $_fields[] = $val;
             }
         }

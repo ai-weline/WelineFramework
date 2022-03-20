@@ -8,14 +8,14 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Framework\Database;
+namespace Weline\Admin\Controller\Template;
 
-
-abstract class Model extends AbstractModel implements ModelInterface
+class BaseController extends \Weline\Admin\Controller\BaseController
 {
     function __init()
     {
+        # 设置模板文件为html
+        $this->getTemplate()->setFileExt('html');
         parent::__init();
-        $this->clear();
     }
 }

@@ -31,7 +31,7 @@ class AdminUserConfig extends \Weline\Framework\Database\Model
 //        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable()
-                  ->addColumn(self::fields_ID, Table::column_type_INTEGER, null, 'primary key not null', '管理员ID')
+                  ->addColumn(self::fields_ID, Table::column_type_INTEGER, null, 'primary key', '管理员ID')
                   ->addColumn(self::fields_config, Table::column_type_TEXT, null, '', '配置JSON信息')
                   ->create();
         }

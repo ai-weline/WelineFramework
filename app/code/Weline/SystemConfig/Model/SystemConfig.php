@@ -21,12 +21,14 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class SystemConfig extends \Weline\Framework\Database\Model
 {
-    const fields_KEY = 'key';
-    const fields_VALUE = 'v';
-    const fields_MODULE = 'module';
-    const fields_AREA = 'area';
+    const primary_key   = 'key';
 
-    const area_BACKEND = 'backend';
+    const fields_KEY    = 'key';
+    const fields_VALUE  = 'v';
+    const fields_MODULE = 'module';
+    const fields_AREA   = 'area';
+
+    const area_BACKEND  = 'backend';
     const area_FRONTEND = 'frontend';
 
     private CacheInterface $cache;
@@ -44,32 +46,29 @@ class SystemConfig extends \Weline\Framework\Database\Model
     function __init()
     {
         parent::__init();
-        if(!isset($this->cache)){
+        if (!isset($this->cache)) {
             $this->cache = ObjectManager::getInstance(BackendCache::class);
         }
     }
 
     function __sleep()
     {
-        $parent_vars[]='cache';
+        $parent_vars[] = 'cache';
         return $parent_vars;
-    }
-
-    function providePrimaryField(): string
-    {
-        return self::fields_KEY;
     }
 
     /**
      * @DESC          # 获取配置
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 21:25
      * 参数区：
+     *
      * @param string $key
      * @param string $area
      * @param string $module
+     *
      * @return mixed
      */
     function getConfig(string $key, string $module, string $area): mixed
@@ -81,7 +80,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
         }
 
         $config_value = $this->where([['key', $key], ['area', $area], ['module', $module]])->find()->fetch();
-        $result = null;
+        $result       = null;
         if (isset($config_value['v'])) {
             $result = $config_value['v'];
         }
@@ -110,8 +109,8 @@ class SystemConfig extends \Weline\Framework\Database\Model
         $cache_key = 'system_config_cache_' . $key . '_' . $area . '_' . $module;
         try {
             $this->setData(['key' => $key, 'area' => $area, 'module' => $module, 'v' => $value])
-                ->forceCheck()
-                ->save();
+                 ->forceCheck()
+                 ->save();
             # 设置配置缓存
             $this->cache->set($cache_key, $value,);
             return true;
@@ -147,16 +146,16 @@ class SystemConfig extends \Weline\Framework\Database\Model
      */
     function install(ModelSetup $setup, Context $context): void
     {
-        if(!$setup->tableExist()){
-            $setup->getPrinting()->printing('安装',$setup->getTable());
+        if (!$setup->tableExist()) {
+            $setup->getPrinting()->printing('安装', $setup->getTable());
             $setup->createTable('系统配置表')
-                ->addColumn(self::fields_KEY, TableInterface::column_type_VARCHAR, 120, 'primary key', '键')
-                ->addColumn(self::fields_VALUE, TableInterface::column_type_TEXT, 0, '', '值')
-                ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')
-                ->addColumn(self::fields_AREA, TableInterface::column_type_VARCHAR, 120, "NOT NULL DEFAULT 'frontend'", '区域：backend/frontend')
-                ->create();
-        }else{
-            $setup->getPrinting()->printing('已存在，跳过',$setup->getTable());
+                  ->addColumn(self::fields_KEY, TableInterface::column_type_VARCHAR, 120, 'primary key', '键')
+                  ->addColumn(self::fields_VALUE, TableInterface::column_type_TEXT, 0, '', '值')
+                  ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')
+                  ->addColumn(self::fields_AREA, TableInterface::column_type_VARCHAR, 120, "NOT NULL DEFAULT 'frontend'", '区域：backend/frontend')
+                  ->create();
+        } else {
+            $setup->getPrinting()->printing('已存在，跳过', $setup->getTable());
         }
 
     }

@@ -27,7 +27,7 @@ class WelineTheme extends Model
 
     const fields_ID = 'id';
 
-    const fields_NAME        = 'name';
+    const fields_NAME = 'name';
 
     const fields_MODULE_NAME = 'module_name';
 
@@ -37,29 +37,7 @@ class WelineTheme extends Model
 
     const fields_IS_ACTIVE = 'is_active';
 
-    const fields_CREATE_TIME = 'create_time';
-
-    protected string $pk = self::fields_ID;
-
 //    protected $table = Install::table_THEME; # 如果需要设置特殊表名 需要加前缀
-
-    /**
-     * @var CacheInterface
-     */
-    private CacheInterface $themeCache;
-
-    public function __construct(
-        array $data = []
-    )
-    {
-        parent::__construct($data);
-    }
-
-    public function __init()
-    {
-        $this->themeCache = ObjectManager::getInstance(ThemeCache::class)->create();
-        parent::__init();
-    }
 
     /**
      * @DESC          # 获取激活的主题 有缓存
@@ -74,13 +52,13 @@ class WelineTheme extends Model
      */
     public function getActiveTheme(): static
     {
-        if ($theme = $this->themeCache->get('theme')) {
+        if ($theme = $this->_cache->get('theme')) {
             return $this->setData($theme);
         }
         $this->load(self::fields_IS_ACTIVE, 1);
 
         if ($this->getId()) {
-            $this->themeCache->set('theme', $this->getData(), static::cache_TIME);
+            $this->_cache->set('theme', $this->getData(), static::cache_TIME);
             Env::getInstance()->setConfig('theme', $this->getData());
         }
         return $this;
@@ -112,10 +90,10 @@ class WelineTheme extends Model
 
     public function getPath(): string
     {
-        if($this->getData(self::fields_PATH)){
+        if ($this->getData(self::fields_PATH)) {
             return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::fields_PATH)) . DIRECTORY_SEPARATOR;
         }
-        return App::Env('theme')['path']??'';
+        return App::Env('theme')['path'] ?? '';
     }
 
     public function getOriginPath(): string
@@ -188,11 +166,6 @@ class WelineTheme extends Model
                  ->update(self::fields_IS_ACTIVE, 0)
                  ->fetch();
         }
-    }
-
-    function provideTable(): string
-    {
-        return '';
     }
 
     function setup(ModelSetup $setup, Context $context): void

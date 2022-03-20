@@ -32,7 +32,7 @@ class Template extends DataObject
 {
     use TraitTemplate;
 
-    const file_ext = '.phtml';
+    private string $file_ext = '.phtml';
 
     protected Request $_request;
     private Session $session;
@@ -84,6 +84,38 @@ class Template extends DataObject
             self::$instance->init();
         }
         return self::$instance;
+    }
+
+    /**
+     * @DESC          # 读取模板文件拓展
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/3/20 20:18
+     * 参数区：
+     * @return string
+     */
+    function getFileExt(): string
+    {
+        return $this->file_ext;
+    }
+
+    /**
+     * @DESC          # 设置模板文件拓展
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/3/20 20:17
+     * 参数区：
+     *
+     * @param string $ext 拓展：例如.phtml则填写phtml
+     *
+     * @return $this
+     */
+    function setFileExt(string $ext): static
+    {
+        $this->file_ext = '.' . $ext;
+        return $this;
     }
 
     function getBlock(string $class)
@@ -204,7 +236,7 @@ class Template extends DataObject
             if ($file_ext) {
                 $tplFile = $view_dir . $fileName;
             } else {
-                $tplFile = $template_dir . $fileName . self::file_ext;
+                $tplFile = $template_dir . $fileName . $this->getFileExt();
             }
             $tplFile = $this->fetchFile($tplFile);
 
@@ -223,7 +255,7 @@ class Template extends DataObject
             if ($file_ext) {
                 $comFileName = $baseComFileDir . 'com_' . $file_name;
             } else {
-                $comFileName = $baseComFileDir . 'com_' . $file_name . self::file_ext;
+                $comFileName = $baseComFileDir . 'com_' . $file_name . $this->getFileExt();
             }
             $comFileName = $this->fetchFile($comFileName);
             # 生产模式缓存: 根据管道设置缓存
@@ -313,38 +345,46 @@ class Template extends DataObject
     {
         # 系统自带的
         $template_elements = [
-            'php'      => function ($back) {
+            'php'       => function ($back) {
                 return '<?php ' . trim($back[1]) . '?>';
             },
-            'template' => function ($back) {
+            'template'  => function ($back) {
                 return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
             },
-            'var'      => function ($back) {
+            'var'       => function ($back) {
                 return '<?=' . trim($back[1]) . '?>';
             },
-            'pp'       => function ($back) {
+            'pp'        => function ($back) {
                 return "<?php p($back[1])?>";
             },
-            'include'  => function ($back) {
+            'include'   => function ($back) {
                 return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
             },
-            'block'    => function ($back) {
+            'block'     => function ($back) {
                 return $this->getBlock(trim($back[1]))->__toString();
             },
-            'static'   => function ($back) {
+            'static'    => function ($back) {
                 return $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
             },
             'hook',
-            'js'       => function ($back) {
+            'js'        => function ($back) {
                 $source = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
                 return "<script src='{$source}'></script>";
             },
-            'css'      => function ($back) {
+            'css'       => function ($back) {
                 $source = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
                 return "<link href=\"{$source}\" rel=\"stylesheet\" type=\"text/css\"/>";
             },
-            'lang'     => function ($back) {
+            'lang'      => function ($back) {
                 return '<?=__(\'' . trim($back[1]) . '\')?>';
+            },
+            'url'       => function ($back) {
+                $data = trim($back[1]);
+                return "<?=\$this->getUrl($data)?>";
+            },
+            'admin_url' => function ($back) {
+                $data = trim($back[1]);
+                return "<?=\$this->getAdminUrl({$data})?>";
             },
         ];
         /**@var EventsManager $event */

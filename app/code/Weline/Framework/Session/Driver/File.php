@@ -34,6 +34,7 @@ class File implements SessionDriverHandlerInterface
 //            session_set_cookie_params(3600, '/', '127.0.0.1', false, TRUE);
             ini_set('session.save_handler', 'files');
             ini_set('session.auto_start', '0');
+            session_start();
         }
     }
 

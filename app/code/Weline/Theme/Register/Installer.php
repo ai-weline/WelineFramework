@@ -66,6 +66,7 @@ class Installer implements RegisterInterface
 
         // 检查主题是否已经安装
         $this->welineTheme->load('name', $param['name']);
+
         $action_string = __('安装');
         if ($this->welineTheme->getId()) {
             if ($this->welineTheme->getPath() !== $param['path'] . DIRECTORY_SEPARATOR) {

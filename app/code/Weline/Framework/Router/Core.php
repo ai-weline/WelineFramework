@@ -68,8 +68,8 @@ class Core
     public function start()
     {
         # 获取URL
-        $url = $this->processUrl();
-
+        $origin_url = $this->processUrl();
+        $url = str_replace('-', '', $origin_url);
         $this->_router_cache_key = $this->area_router . $this->request->getUrlPath();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
@@ -88,7 +88,7 @@ class Core
             $this->request->getResponse()->noRouter();
         } else {
             // 开发模式(静态资源可访问app本地静态资源)
-            $static = $this->StaticFile($url);
+            $static = $this->StaticFile($origin_url);
             if ($static) exit($static);
             http_response_code(404);
             throw new Exception('未知的路由！');
@@ -101,11 +101,12 @@ class Core
         // 读取url
         $url           = $this->request->getUrlPath();
         $url_cache_key = 'url_cache_key_' . $url;
-        if ($cached_url = $this->cache->get($url_cache_key)) {
+        if (/*PROD&&*/$cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
         } else {
             if ($this->is_admin) $url = str_replace($this->area_router, '', $url);
             $url = trim($url, self::url_path_split);
+            $url = str_replace('.html', '', $url);
             # 去除后缀index
             $url_arr = explode('/', $url);
 

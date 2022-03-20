@@ -18,10 +18,10 @@ class Set extends \Weline\Admin\Controller\BaseController
     private ThemeConfig $themeConfig;
 
     function __construct(
-        ThemeConfig  $themeConfig,
+        ThemeConfig $themeConfig,
     )
     {
-        $this->themeConfig  = $themeConfig;
+        $this->themeConfig = $themeConfig;
     }
 
     function postIndex(): bool|string
@@ -31,13 +31,7 @@ class Set extends \Weline\Admin\Controller\BaseController
             $old_layout = $this->themeConfig->getThemeConfig('layouts');
             if (isset($data['layouts']) && is_array($data['layouts']) && is_array($old_layout)) $data['layouts'] = array_merge($old_layout, $data['layouts']);
             $this->themeConfig->setThemeConfig($data);
-//            /**@var RouterCache $routerCache*/
-//            $routerCache = ObjectManager::getInstance(RouterCache::class);
-//            $routerCache->create()->clear();
-//            /**@var ViewCache $viewCache*/
-//            $viewCache = ObjectManager::getInstance(ViewCache::class);
-//            $viewCache->create()->clear();
-
+            $this->themeConfig->setData('backend_body_layouts_attributes', false);
             return json_encode($this->success());
         } catch (\Exception $exception) {
             return json_encode($this->exception($exception));

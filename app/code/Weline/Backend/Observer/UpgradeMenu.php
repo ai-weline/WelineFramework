@@ -36,6 +36,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
     public function execute(Event $event)
     {
         $modules_xml_menus = $this->menuReader->read();
+        $this->menu->query('TRUNCATE TABLE '.$this->menu->getTable());
         # 先更新顶层菜单
         foreach ($modules_xml_menus as $module => $menus) {
             foreach ($menus['data'] as $key => $menu) {

@@ -46,7 +46,7 @@ class SessionManager
     }
 
     /**
-     * @DESC         |方法描述
+     * @DESC         |创建session
      *
      * 参数区：
      * @param string $driver

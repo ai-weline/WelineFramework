@@ -46,7 +46,6 @@ class Session implements SessionInterface
             }
             if (session_status() !== PHP_SESSION_ACTIVE) {
                 session_set_cookie_params(3600, $identity_path);
-                session_start();
             }
             $this->session = SessionManager::getInstance()->create();
             $this->setType($type)->setData('path', $identity_path);

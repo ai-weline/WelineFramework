@@ -20,6 +20,7 @@ use Weline\Framework\Setup\Db\ModelSetup;
 class Menu extends \Weline\Framework\Database\Model
 {
     const table = 'm_backend_menu';
+    const primary_key = 'name';
 
     const fields_NAME          = 'name';
     const fields_TITLE         = 'title';
@@ -102,11 +103,6 @@ class Menu extends \Weline\Framework\Database\Model
             $setup->getPrinting()->warning('数据表存在，跳过安装数据表...' . self::table);
         }
 
-    }
-
-    function provideTable(): string
-    {
-        return self::table;
     }
 
     public function getName(): string

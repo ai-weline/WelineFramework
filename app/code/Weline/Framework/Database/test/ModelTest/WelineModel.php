@@ -13,19 +13,4 @@ namespace Weline\Framework\Database\test\ModelTest;
 
 class WelineModel extends \Weline\Framework\Database\Model
 {
-
-    function provideTable(): string
-    {
-        return 'weline';
-    }
-
-    function providePrimaryField(): string
-    {
-        return '';
-    }
-
-    function provideFields(): array
-    {
-        return [];
-    }
 }

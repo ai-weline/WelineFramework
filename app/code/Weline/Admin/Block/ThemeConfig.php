@@ -53,10 +53,6 @@ class ThemeConfig extends \Weline\Framework\View\Block
 
     function getThemeModel()
     {
-        $session_key = 'backend_theme_model';
-        if ($data = $this->adminSession->getData($session_key)) {
-            return $data;
-        }
         $data = '';
         if ($this->getThemeConfig('dark-mode-switch')) {
             $data = 'dark';
@@ -65,20 +61,18 @@ class ThemeConfig extends \Weline\Framework\View\Block
         } elseif ($this->getThemeConfig('light-mode-switch')) {
             $data = '';
         }
-        $this->adminSession->setData($session_key, $data);
         return $data;
     }
 
     function setThemeConfig(string|array $key, mixed $value = ''): static
     {
-        if(is_array($key)){
-            foreach ($key as $i=>$v) {
+        if (is_array($key)) {
+            foreach ($key as $i => $v) {
                 $this->adminSession->setData($i, $v);
             }
-        }else{
+        } else {
             $this->adminSession->setData($key, $value);
         }
-        p($this->adminSession->getOriginSession());
         $this->adminUserConfig->addConfig($key, $value)->forceCheck()->save();
         return $this;
     }
@@ -89,9 +83,6 @@ class ThemeConfig extends \Weline\Framework\View\Block
 
     function getLayouts()
     {
-        if ($data = $this->adminSession->getData($this->cache_key_backend_body_attributes)) {
-            return $data;
-        }
         $body_attributes     = is_array($this->adminUserConfig->getConfig('layouts')) ? $this->adminUserConfig->getConfig('layouts') : [];
         $body_attributes_str = '';
         foreach ($body_attributes as $attribute => $value) {

@@ -17,17 +17,6 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Index extends Model
 {
-
-    function provideTable(): string
-    {
-        return '';
-    }
-
-    function providePrimaryField(): string
-    {
-        return 'id';
-    }
-
     /**
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception

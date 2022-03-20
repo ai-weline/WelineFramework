@@ -85,11 +85,6 @@ class AdminUser extends \Weline\Framework\Database\Model
         }
     }
 
-    function providePrimaryField(): string
-    {
-        return 'user_id';
-    }
-
     function getAttemptTimes()
     {
         return intval($this->getData(self::fields_attempt_times));
