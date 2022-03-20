@@ -13,6 +13,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?> class='no-js'>
 <head>
     <title><lang>Weline Admin 管理面板</lang></title>
+    <w-template>Weline_Admin::common/head.phtml</w-template>
     @template(Weline_Admin::common/head.phtml)
     <!-- jvectormap -->
     <link href="@static(Weline_Admin::assets/libs/jqvmap/jqvmap.min.css)" rel="stylesheet"/>

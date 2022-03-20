@@ -25,6 +25,7 @@ class ObjectManager implements ManagerInterface
     private static ?ObjectManager $instance = null;
 
     private static array $instances = [];
+    private static array $origin_instances = [];
 
     private function __clone()
     {
@@ -34,7 +35,9 @@ class ObjectManager implements ManagerInterface
     {
         self::getCache();
     }
-    function __construct(){
+
+    function __construct()
+    {
         self::getCache();
     }
 
@@ -58,15 +61,21 @@ class ObjectManager implements ManagerInterface
     }
 
     /**
-     * @DESC         |获取实例(如果不填写class则获取对象管理器本身，如果填写则获取class实例)
+     * @DESC          # 获取实例(如果不填写class则获取对象管理器本身，如果填写则获取class实例)
      *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/3/20 13:34
      * 参数区：
      *
-     * @param string $class
-     * @param array  $arguments
-     * @param bool   $shared
+     * @param string $class     类
+     * @param array  $arguments __construct()初始化参数
+     * @param bool   $shared    是否共享：共享后会多次调用存储在对象管理器中的同一个对象（上一次存储的对象）
+     * @param bool   $cache     是否缓存
      *
      * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true, bool $cache = false): mixed
     {
@@ -76,7 +85,7 @@ class ObjectManager implements ManagerInterface
         if (empty(self::$instance)) {
             self::$instance = new self();
         }
-        if (isset(self::$instances[$class])&&$obj =self::$instances[$class]) {
+        if (isset(self::$instances[$class]) && $obj = self::$instances[$class]) {
             return $obj;
         }
         // 缓存对象读取
@@ -122,6 +131,79 @@ class ObjectManager implements ManagerInterface
         };
 
         return self::_getInstance($class);
+    }
+
+    /**
+     * @DESC          # 读取原始对象数据，不处理Factory工厂类
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/3/20 13:34
+     * 参数区：
+     *
+     * @param string $class     类
+     * @param array  $arguments __construct()初始化参数
+     * @param bool   $shared    是否共享：共享后会多次调用存储在对象管理器中的同一个对象（上一次存储的对象）
+     * @param bool   $cache     是否缓存
+     *
+     * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    public static function getOriginInstance(string $class, array $arguments = [], bool $shared = true, bool $cache = false): mixed
+    {
+        if (empty($class)) {
+            return self::$instance = new self();
+        }
+        if (empty(self::$instance)) {
+            self::$instance = new self();
+        }
+        if (isset(self::$origin_instances['' . $class]) && $obj = self::$origin_instances[$class]) {
+            return $obj;
+        }
+        // 缓存对象读取
+        if ($cache && !CLI && $shared && $cache_class_object = self::getCache()->get($class)) {
+            self::$origin_instances[$class] = self::initClassInstance($class, $cache_class_object, false);
+            return self::$origin_instances[$class];
+        }
+        // 类名规则处理
+        $class_cache_key = $class . '_cache_key';
+        $new_class       = self::$cache->get($class_cache_key);
+        if (empty($new_class)) {
+            $new_class = self::parserClass($class);
+            self::$cache->set($class_cache_key, $new_class);
+        }
+        $arguments = $arguments ?: self::getMethodParams($new_class);
+//        if ($new_class == 'Aiweline\Bbs\Controller\Index') {
+//            p($arguments);
+//        }
+        $refClass = (new \ReflectionClass($new_class));
+//        p($refClass->getAttributes());
+        $new_object = $refClass->newInstanceArgs($arguments);
+        /*$classAttrs = $refClass->getAttributes();
+        foreach ($classAttrs as $key => $classAttr) {
+            $value = $classAttr->getName();
+            if ($value === $scanAnno) {
+                $refProperties =  $refClass->getProperties();
+                $obj = $refClass->newInstance();
+                foreach ($refProperties as $key => $refProperty) {
+                    $refProperty = $refClass->getProperty($refProperty->getName());
+                    $propertyAttrs = $refProperty->getAttributes();
+                    $value = $propertyAttrs[0]->getArguments();
+                    $refProperty->setValue($obj, $value[0]);
+                    $container[$class] = $obj;
+                }
+            }
+        }*/
+        $new_object = self::initClassInstance($class, $new_object, false);
+
+        self::$origin_instances[$class] = $new_object;
+        // 缓存可缓存对象
+        if ($cache && !CLI && !in_array($class, self::unserializable_class)) {
+            self::getCache()->set($class, self::$origin_instances[$class]);
+        };
+
+        return self::$origin_instances[$class];
     }
 
     /**
@@ -185,14 +267,14 @@ class ObjectManager implements ManagerInterface
      *
      * @return mixed
      */
-    private static function initClassInstance(string $class, $new_object): mixed
+    private static function initClassInstance(string $class, $new_object, bool $init_factory = true): mixed
     {
         $init_method_name = '__init';
         if (method_exists($new_object, $init_method_name)) {
             $new_object->$init_method_name();
         }
         // 工厂类
-        if (str_ends_with($class, 'Factory')) {
+        if (str_ends_with($class, 'Factory') && $init_factory) {
             $create_method = 'create';
             if (method_exists($new_object, $create_method)) {
                 $new_object = $new_object->$create_method();

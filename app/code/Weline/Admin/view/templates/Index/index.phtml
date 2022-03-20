@@ -12,7 +12,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 -->
 <html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?>>
 <head>
-    @template(Weline_Admin::common/head.phtml)
+    <w-template>Weline_Admin::common/head.phtml</w-template>
     <!-- jvectormap -->
     <link href="@static(Weline_Admin::assets/libs/jqvmap/jqvmap.min.css)" rel="stylesheet"/>
     <title><?= __('Weline Admin 管理面板') ?></title>
@@ -23,17 +23,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 
 <!-- <body data-layout="horizontal" data-topbar="dark"> -->
 <!--加载中组件 开始-->
-@template(Weline_Admin::common/page/loading.phtml)
+<w-template>Weline_Admin::common/page/loading.phtml</w-template>
 <!-- 开始 页面 -->
 <div id="layout-wrapper">
 
     <!--页头工具条 开始-->
-    @template(Weline_Admin::common/page/topbar.phtml)
+    <w-template>Weline_Admin::common/page/topbar.phtml</w-template>
     <!--页头工具条 结束-->
 
     <!-- ========== Left Sidebar Start ========== -->
     <!--左侧菜单栏 开始-->
-    @template(Weline_Admin::common/left-sidebar.phtml)
+    <w-template>Weline_Admin::common/left-sidebar.phtml</w-template>
     <!--左侧菜单栏 结束-->
 
 
@@ -760,18 +760,19 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <!-- END layout-wrapper -->
 
 <!--右边栏-->
-@template(Weline_Admin::common/right-sidebar.phtml)
+<w-template>Weline_Admin::common/right-sidebar.phtml</w-template>
 <!--页脚-->
-@template(Weline_Admin::common/footer.phtml)
+<w-template>Weline_Admin::common/footer.phtml</w-template>
 
 <!-- apexcharts js -->
-<script src="@static(Weline_Admin::assets/libs/apexcharts/apexcharts.min.js)"></script>
+<w-script>Weline_Admin::assets/libs/apexcharts/apexcharts.min.js|attr="type='js'"</w-script>
 
 <!-- jquery.vectormap map -->
-<script src="@static(Weline_Admin::assets/libs/jqvmap/jquery.vmap.min.js)"></script>
-<script src="@static(Weline_Admin::assets/libs/jqvmap/maps/jquery.vmap.usa.js)"></script>
+<w-script>Weline_Admin::assets/libs/jqvmap/jquery.vmap.min.js</w-script>
+<w-script>Weline_Admin::assets/libs/jqvmap/maps/jquery.vmap.usa.js</w-script>
+<w-script>Weline_Admin::assets/libs/jqvmap/maps/jquery.vmap.usa.js</w-script>
 
-<script src="@static(Weline_Admin::assets/js/pages/dashboard.init.js)"></script>
+<w-script>Weline_Admin::assets/js/pages/dashboard.init.js)</w-script>
 </body>
 </html>
 

@@ -28,7 +28,8 @@ class CacheFactory
 
     private ?CacheInterface $driver = null;
 
-    // FIXME 缓存清理后首次存储缓存set后 立即读取get 将返回false 待后期处理 先直接返回结果
+    // 是否持久缓存
+    private bool $keep;
 
     /**
      * @param string $identity    [缓存识别]
@@ -37,10 +38,16 @@ class CacheFactory
      */
     public function __construct(string $identity = 'cache_system', string $tip = '', bool $permanently = false)
     {
-        $this->config   = App::Env('cache');
-        $this->identity = $identity;
-        $this->tip      = $tip;
-        $this->status   = $permanently;
+        $this->config      = App::Env('cache');
+        $this->identity    = $identity;
+        $this->tip         = $tip;
+        $this->keep = $permanently;
+        $this->status      = $permanently;
+    }
+
+    function isKeep(): bool
+    {
+        return $this->keep;
     }
 
     function __wakeup()
@@ -61,7 +68,7 @@ class CacheFactory
      *
      * @return CacheInterface
      */
-    public function create(string $driver = '',  string $tip = null): CacheInterface
+    public function create(string $driver = '', string $tip = null): CacheInterface
     {
         if (empty($driver) && isset($this->config['default'])) {
             $driver = $this->config['default'];
@@ -71,9 +78,25 @@ class CacheFactory
         } else {
             $driver_class = self::driver_NAMESPACE . ucfirst($driver);
         }
-        $status = (bool)Env::getInstance()->getData('cache/status/' . $this->identity);
-        $this->driver = new $driver_class($this->identity, $this->config['drivers'][$driver], $tip ?? $this->tip, $status??$this->status);
+        $status       = (bool)Env::getInstance()->getData('cache/status/' . $this->identity);
+        $this->driver = new $driver_class($this->identity, $this->config['drivers'][$driver], $tip ?? $this->tip, $status ?? $this->status);
         return $this->driver;
+    }
+
+    /**
+     * @return bool|string
+     */
+    public function getStatus(): bool|string
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTip(): string
+    {
+        return $this->tip;
     }
 
 }

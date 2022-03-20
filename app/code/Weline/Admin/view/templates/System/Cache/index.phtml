@@ -95,6 +95,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                             <th>
                                                 <lang>备注</lang>
                                             </th>
+                                            <th>
+                                                <lang>是否持久化</lang>
+                                            </th>
                                             <th><?= __('操作') ?></th>
                                         </tr>
                                         </thead>
@@ -103,24 +106,26 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                         foreach ($this->getData('caches') as $type => $caches) {
                                             ?>
                                             <tr>
-                                                <td colspan="3" class="h-25">@{$type}</td>
+                                                <td colspan="3" class="h-25"><var>$type</var></td>
                                             </tr>
                                             <?php
                                             /**@var \Weline\Framework\Cache\CacheInterface $cacheObject */
                                             foreach ($caches as $key => $cache) {
-                                                $cacheObject    = \Weline\Framework\Manager\ObjectManager::getInstance((rtrim($cache['class'], 'Factory')) . 'Factory');
+                                                $cacheObject    = \Weline\Framework\Manager\ObjectManager::make($cache['class']);
                                                 $status_checked = $cacheObject->getStatus() ? 'checked' : '';
                                                 $switch_id      = "switch$key";
                                                 ?>
                                                 <tr>
                                                     <td></td>
-                                                    <td>@{$cacheObject::class}</td>
-                                                    <td>@{$cache['path']}</td>
-                                                    <td>@{$cacheObject->tip()}</td>
+                                                    <td><var>$cacheObject::class</var></td>
+                                                    <td><var>$cache['path']</var></td>
+                                                    <td><var>$cacheObject->getTip()</var></td>
+                                                    <td><var>$cacheObject->isKeep()?__('是'):__("否")</var></td>
                                                     <td style='width: 100px'>
-                                                        <input class='form-check form-switch' type='checkbox'
-                                                               id='@{$switch_id}' switch='bool' <?= $status_checked ?>>
-                                                        <label class='form-label' for='@{$switch_id}'
+                                                        <input class='form-check form-switch' type='checkbox' alt="@php{echo $cacheObject->isKeep()?__('系统持久缓存无法操作'):'状态开关'}"
+                                                               @php{echo $cacheObject->isKeep()?'disabled':''}
+                                                        id='@var($switch_id)' switch='bool' @var($status_checked )>
+                                                        <label class='form-label' for='@var($switch_id)'
                                                                data-on-label='<?= __('开启') ?>'
                                                                data-off-label='<?= __('关闭') ?>'></label>
                                                     </td>

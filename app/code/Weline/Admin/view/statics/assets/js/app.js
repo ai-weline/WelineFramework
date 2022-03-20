@@ -189,9 +189,9 @@ File: Main Js File
         }
         light_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-topbar': "dark", 'data-sidebar': 'dark'},'light-sidebar':false}
+            let layout = {layouts: {'data-topbar': "dark", 'data-sidebar': 'dark'}, 'light-sidebar': false}
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-topbar': "colored", 'data-sidebar': 'light'},'light-sidebar':true};
+                layout = {layouts: {'data-topbar': "colored", 'data-sidebar': 'light'}, 'light-sidebar': true};
             }
             setThemeConfig(layout)
             hideLoading()
@@ -203,9 +203,9 @@ File: Main Js File
         }
         icon_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-keep-enlarged': "false", class: ""},'icon-sidebar':false}
+            let layout = {layouts: {'data-keep-enlarged': "false", class: ""}, 'icon-sidebar': false}
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-keep-enlarged': "true", class: "vertical-collpsed"},'icon-sidebar':true};
+                layout = {layouts: {'data-keep-enlarged': "true", class: "vertical-collpsed"}, 'icon-sidebar': true};
             }
             setThemeConfig(layout)
             hideLoading()
@@ -217,9 +217,9 @@ File: Main Js File
         }
         layouts_compact_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-sidebar-size': ""},'layouts-compact-sidebar':false};
+            let layout = {layouts: {'data-sidebar-size': ""}, 'layouts-compact-sidebar': false};
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-sidebar-size': "small"},'layouts-compact-sidebar':true}
+                layout = {layouts: {'data-sidebar-size': "small"}, 'layouts-compact-sidebar': true}
             }
             setThemeConfig(layout)
             hideLoading()
@@ -232,9 +232,9 @@ File: Main Js File
         }
         layouts_horizontal.on("change", function (e) {
             showLoading()
-            let layout = {layouts:{'data-layout': ""},'layouts-horizontal':false};
+            let layout = {layouts: {'data-layout': ""}, 'layouts-horizontal': false};
             if ($(e.target).prop('checked')) {
-                layout = {layouts:{'data-layout': "horizontal"},'layouts-horizontal':true}
+                layout = {layouts: {'data-layout': "horizontal"}, 'layouts-horizontal': true}
             }
             setThemeConfig(layout)
             hideLoading()
@@ -246,9 +246,12 @@ File: Main Js File
         }
         layouts_hori_topbar_dark.on("change", function (e) {
             showLoading()
-            let layout = {layouts:{'data-layout': ""},'layouts-hori-topbar-dark':false};
+            let layout = {layouts: {'data-layout': ""}, 'layouts-hori-topbar-dark': false};
             if ($(e.target).prop('checked')) {
-                layout = {layouts:{'data-layout': "horizontal", 'data-topbar': 'dark'},'layouts-hori-topbar-dark':true}
+                layout = {
+                    layouts: {'data-layout': "horizontal", 'data-topbar': 'dark'},
+                    'layouts-hori-topbar-dark': true
+                }
             }
             setThemeConfig(layout)
             hideLoading()
@@ -260,9 +263,12 @@ File: Main Js File
         }
         layouts_hori_boxed_width.on("change", function (e) {
             showLoading()
-            let layout = {layouts:{'data-layout': "", 'data-layout-size': ""},'layouts-hori-boxed-width':false};
+            let layout = {layouts: {'data-layout': "", 'data-layout-size': ""}, 'layouts-hori-boxed-width': false};
             if ($(e.target).prop('checked')) {
-                layout = {layouts:{'data-layout': "horizontal", 'data-layout-size': "boxed"},'layouts-hori-boxed-width':true}
+                layout = {
+                    layouts: {'data-layout': "horizontal", 'data-layout-size': "boxed"},
+                    'layouts-hori-boxed-width': true
+                }
             }
             setThemeConfig(layout)
             hideLoading()
@@ -282,9 +288,9 @@ File: Main Js File
     }
 
     function updateThemeSetting(id) {
-        showLoading()
         // ajax请求设置主题模式
         if ($("#light-mode-switch").prop("checked") === true && id === "light-mode-switch") {
+            showLoading()
             setThemeConfig({
                 layouts: {
                     'data-topbar': 'light',
@@ -295,6 +301,7 @@ File: Main Js File
                 'rtl-mode-switch': false,
             })
         } else if ($("#dark-mode-switch").prop("checked") === true && id === "dark-mode-switch") {
+            showLoading()
             setThemeConfig({
                 layouts: {
                     'data-topbar': 'dark',
@@ -305,6 +312,7 @@ File: Main Js File
                 'rtl-mode-switch': false,
             })
         } else if ($("#rtl-mode-switch").prop("checked") === true && id === "rtl-mode-switch") {
+            showLoading()
             setThemeConfig({
                 'light-mode-switch': false,
                 'dark-mode-switch': false,
@@ -314,6 +322,7 @@ File: Main Js File
     }
 
     function init() {
+        initSettings();
         initMetisMenu();
         initLeftMenuCollapse();
         initActiveMenu();
@@ -324,7 +333,6 @@ File: Main Js File
         initDropdownMenu();
         initComponents();
         initPreloader()
-        initSettings();
 
         Waves.init();
     }

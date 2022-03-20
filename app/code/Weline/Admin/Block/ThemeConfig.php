@@ -15,10 +15,6 @@ use Weline\Admin\Session\AdminSession;
 
 class ThemeConfig extends \Weline\Framework\View\Block
 {
-    const caches = [
-        'backend_body_layouts_attributes',
-        'backend_theme_model'
-    ];
     private AdminSession $adminSession;
     private AdminUserConfig $adminUserConfig;
 
@@ -39,26 +35,26 @@ class ThemeConfig extends \Weline\Framework\View\Block
 
     function getThemeConfig(string $key = '')
     {
-        if ($data = $this->_cache->get($key)) {
-            return $data;
-        }
         if ($key) {
             if ($data = $this->adminSession->getData($key)) {
                 return $data;
             }
             $data = $this->adminUserConfig->getConfig($key);
-            $this->adminSession->setData($key, $data);
         } else {
+            $key = 'theme_config';
+            if ($data = $this->adminSession->getData($key)) {
+                return $data;
+            }
             $data = $this->adminUserConfig->getOriginConfig();
         }
-        $this->_cache->set($key, $data);
+        $this->adminSession->setData($key, $data);
         return $data;
     }
 
     function getThemeModel()
     {
-        $cache_key = 'backend_theme_model';
-        if ($data = $this->_cache->get($cache_key)) {
+        $session_key = 'backend_theme_model';
+        if ($data = $this->adminSession->getData($session_key)) {
             return $data;
         }
         $data = '';
@@ -69,12 +65,20 @@ class ThemeConfig extends \Weline\Framework\View\Block
         } elseif ($this->getThemeConfig('light-mode-switch')) {
             $data = '';
         }
-        $this->_cache->set($cache_key, $data);
+        $this->adminSession->setData($session_key, $data);
         return $data;
     }
 
     function setThemeConfig(string|array $key, mixed $value = ''): static
     {
+        if(is_array($key)){
+            foreach ($key as $i=>$v) {
+                $this->adminSession->setData($i, $v);
+            }
+        }else{
+            $this->adminSession->setData($key, $value);
+        }
+        p($this->adminSession->getOriginSession());
         $this->adminUserConfig->addConfig($key, $value)->forceCheck()->save();
         return $this;
     }
@@ -85,7 +89,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
 
     function getLayouts()
     {
-        if ($data = $this->_cache->get($this->cache_key_backend_body_attributes)) {
+        if ($data = $this->adminSession->getData($this->cache_key_backend_body_attributes)) {
             return $data;
         }
         $body_attributes     = is_array($this->adminUserConfig->getConfig('layouts')) ? $this->adminUserConfig->getConfig('layouts') : [];
@@ -93,7 +97,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
         foreach ($body_attributes as $attribute => $value) {
             if (is_string($value)) $body_attributes_str .= "$attribute=\"$value\" ";
         }
-        $this->_cache->set($this->cache_key_backend_body_attributes, $body_attributes_str);
+        $this->adminSession->setData($this->cache_key_backend_body_attributes, $body_attributes_str);
         return $body_attributes_str;
     }
 }

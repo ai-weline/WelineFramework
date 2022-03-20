@@ -16,16 +16,12 @@ use Weline\Admin\Session\AdminSession;
 class Set extends \Weline\Admin\Controller\BaseController
 {
     private ThemeConfig $themeConfig;
-    private AdminSession $adminSession;
 
     function __construct(
         ThemeConfig  $themeConfig,
-        AdminSession $adminSession
     )
     {
-
         $this->themeConfig  = $themeConfig;
-        $this->adminSession = $adminSession;
     }
 
     function postIndex(): bool|string
@@ -33,15 +29,15 @@ class Set extends \Weline\Admin\Controller\BaseController
         $data = json_decode($this->_request->getBodyParams(), true);
         try {
             $old_layout = $this->themeConfig->getThemeConfig('layouts');
-            if (isset($data['layouts'])&&is_array($data['layouts'])&&is_array($old_layout)) $data['layouts'] = array_merge($old_layout, $data['layouts']);
+            if (isset($data['layouts']) && is_array($data['layouts']) && is_array($old_layout)) $data['layouts'] = array_merge($old_layout, $data['layouts']);
             $this->themeConfig->setThemeConfig($data);
-            foreach ($data as $key => $datum) {
-                $this->adminSession->setData($key, $datum);
-            }
-            # 释放缓存
-            foreach ($this->themeConfig::caches as $cach) {
-                $this->themeConfig->_cache->delete($cach);
-            }
+//            /**@var RouterCache $routerCache*/
+//            $routerCache = ObjectManager::getInstance(RouterCache::class);
+//            $routerCache->create()->clear();
+//            /**@var ViewCache $viewCache*/
+//            $viewCache = ObjectManager::getInstance(ViewCache::class);
+//            $viewCache->create()->clear();
+
             return json_encode($this->success());
         } catch (\Exception $exception) {
             return json_encode($this->exception($exception));

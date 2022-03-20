@@ -316,75 +316,95 @@ class Template extends DataObject
      */
     private function tmp_replace(string $content, string $fileName): array|string|null
     {
-        $static_url_path = $this->getUrlPath($this->statics_dir);
-        $replaces        = [
-            '__static__' => $static_url_path,
-            '__STATIC__' => $static_url_path,
-            '<php>'      => '<?php ',
-            '</php>'     => '?>',
+        $template_elements = [
+            'php',
+            'template',
+            'var',
+            'pp',
+            'include',
+            'block',
+            'static',
+            'hook',
+            'js',
+            'css',
+            'lang',
         ];
-        foreach ($replaces as $tag => $replace) {
-            $content = str_replace($tag, $replace, $content);
+        /**@var EventsManager $event */
+        $event = ObjectManager::getInstance(EventsManager::class);
+        $data  = (new DataObject(['template' => $this, 'template_elements' => $template_elements]));
+        $event->dispatch('Framework_Template::after_system_patterns', ['data' => $data]);
+        $template_elements = $data->getData('template_elements');
+
+        // 替换函数
+        $patternsSynonymous = function (string $template_element, $other = []) {
+            return array_merge([
+                                   '/<w-' . $template_element . '>(.+)<\/w-' . $template_element . '>/',
+                                   '/<' . $template_element . '>(.+)<\/' . $template_element . '>/',
+                                   '/\@' . $template_element . '\((.+?)\)/',
+                                   '/\@' . $template_element . '\{(.+?)\}/',
+                               ], $other);
+        };
+        $patterns           = [];
+        foreach ($template_elements as $template_element) {
+            $patterns = array_merge($patterns, $patternsSynonymous($template_element));
         }
-        $patterns = [
-            '/\<\!--\s*\$([a-zA-Z]*)\s*--\>/',
-            '/\@\{(.*)\}/',
-            '/\@include\((.+?)\)/',
-            '/\@block\((.+?)\)/',
-            '/\@template\((.*)\)/',
-            '/\@template\((.+?)\)/',
-            '/\@static\((.+?)\)/',
-            '/\@view\((.+?)\)/',
-            '/\@p\((.+?)\)/',
-            '/\@controller\((.+)\)/',
-            '/\@hook\((.+)\)/',// 系统钩子
-            '/<lang>(.+)<\/lang>/',// 翻译函数
-        ];
         # 开发环境实时PHP代码输出资源
-//        if (DEV) {
-//            $dev_replacement = [
-        /*                '<?php echo $this->vars["${1}"]; ?>',*/
-        /*                '<?php ${1} ?>',*/
-        /*                '<?php include(trim("${1}")); ?>',*/
-        /*                '<?php echo $this->getBlock(trim("${1}"));//打印Block块对象 ?>',*/
-        /*                '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE,trim("${1}"));// 读取资源文件 ?>',*/
-        /*                '<?php echo $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS,trim("${1}"));// 读取资源文件 ?>',*/
-        /*                '<?php echo $this->fetch(trim("${1}")); ?>',*/
-        /*                '<?php p(isset($this->getData("${1}"))?:${1}); ?>',*/
-//            ];
-//            return preg_replace($patterns, $dev_replacement, $content);
-//        }
         return preg_replace_callback($patterns, function ($back) use ($fileName) {
             $back[0]    = str_replace($back[1], '', $back[0]);
             $re_content = '';
             switch (strtolower($back[0])) {
-                case '<lang></lang>':
-                    $re_content = '<?=__(\'' . trim($back[1]) . '\')?>';
+                case '<w-php></w-php>':
+                case '<php></php>':
+                case '@php()':
+                case '@php{}':
+                    $re_content = '<?php ' . trim($back[1]) . '?>';
                     break;
-                case '@{}':
-                    $re_content = '<?=' . trim($back[1]) . '?>';
-                    break;
-                case '@static()':
-                    $re_content = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
-                    break;
-
-                case '@block()':
-                    $re_content = $this->getBlock(trim($back[1]))->__toString();
-                    break;
-
+                case '<template></template>':
+                case '<w-template></w-template>':
                 case '@template()':
+                case '@template{}':
                     $re_content = file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
                     break;
 
+                case '<w-lang></w-lang>':
+                case '<lang></lang>':
+                case '@lang()':
+                case '@lang{}':
+                    $re_content = '<?=__(\'' . trim($back[1]) . '\')?>';
+                    break;
+                case '<var></var>':
+                case '<w-var></w-var>':
+                case '@var()':
+                case '@var{}':
+                    $re_content = '<?=' . trim($back[1]) . '?>';
+                    break;
+
+                case '<static></static>':
+                case '<w-static></w-static>':
+                case '@static()':
+                case '@static{}':
+                    $re_content = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
+                    break;
+
+                case '<block></block>':
+                case '<w-block></w-block>':
+                case '@block()':
+                case '@block{}':
+                    $re_content = $this->getBlock(trim($back[1]))->__toString();
+                    break;
+
+
+                case '<include></include>':
+                case '<w-include></w-include>':
                 case '@include()':
+                case '@include{}':
                     $re_content = file_get_contents(trim($back[1]));
                     break;
 
-                case '@view()':
-                    $re_content = $this->fetch(trim($back[1]));
-                    break;
-
+                case '<w-p></w-p>':
+                case '<p></p>':
                 case '@p()':
+                case '@p{}':
                     $re_content = "<?php p($back[1])?>";
                     break;
 
@@ -392,7 +412,7 @@ class Template extends DataObject
             /**@var EventsManager $event */
             $event = ObjectManager::getInstance(EventsManager::class);
             $data  = (new DataObject(['back' => $back, 'content' => $re_content]));
-            $event->dispatch('Framework_Template::after_replace', ['data' => $data]);
+            $event->dispatch('Framework_Template::after_template_replace', ['data' => $data]);
             return $data->getData('content');
         },                           $content);
     }
