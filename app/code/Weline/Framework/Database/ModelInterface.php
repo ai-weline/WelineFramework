@@ -48,4 +48,15 @@ interface ModelInterface
      * @Suppress("unused")
      */
     function install(ModelSetup $setup, Context $context): void;
+
+    /**
+     * @DESC          # 模型列
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/3/21 20:49
+     * 参数区：
+     * @return array
+     */
+    function columns(): array;
 }

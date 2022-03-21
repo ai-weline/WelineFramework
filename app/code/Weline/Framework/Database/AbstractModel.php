@@ -9,12 +9,10 @@
 
 namespace Weline\Framework\Database;
 
-use JetBrains\PhpStorm\Pure;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Cache\DbModelCache;
-use Weline\Framework\Database\Connection\Query;
 use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
@@ -116,7 +114,11 @@ abstract class AbstractModel extends DataObject
         }
         # 字段解析
         if (empty($this->_fields)) {
-            $this->getModelFields();
+            $this->_fields = $this->getModelFields();
+        }
+        # 动态属性字段
+        if ($this->_data) foreach ($this->_data as $key => $data) {
+            if (is_string($key)) $this->$key = $data;
         }
     }
 
@@ -150,7 +152,8 @@ abstract class AbstractModel extends DataObject
     {
         if (!$this->table) {
             $class_file_name_arr = explode('\\', $this::class);
-            $class_file_name     = array_pop($class_file_name_arr);
+//            $module_table_pre     = array_shift($class_file_name_arr).'_'.array_shift($class_file_name_arr);
+            $class_file_name = array_pop($class_file_name_arr);
             if (str_ends_with($class_file_name, 'Model')) {
                 $class_file_name = substr($class_file_name, 0, strpos($class_file_name, 'Model'));
             }
@@ -778,7 +781,7 @@ abstract class AbstractModel extends DataObject
         }
         $module__fields_cache_key = $this::class . '_module__fields_cache_key';
         if ($_model_fields = $this->_cache->get($module__fields_cache_key)) {
-//            return $_model_fields;
+            return $_model_fields;
         }
         $objClass = new \ReflectionClass($this::class);
         $arrConst = $objClass->getConstants();

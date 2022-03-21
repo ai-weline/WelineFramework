@@ -18,4 +18,15 @@ abstract class Model extends AbstractModel implements ModelInterface
         parent::__init();
         $this->clear();
     }
+
+    function columns(): array
+    {
+        $cache_key = $this->getTable() . '_columns';
+        if ($columns = $this->_cache->get($cache_key)) {
+            return $columns;
+        }
+        $columns = (array)$this->query("SHOW FULL COLUMNS FROM {$this->getTable()} ")->fetch();
+        $this->_cache->set($cache_key, $columns);
+        return $columns;
+    }
 }

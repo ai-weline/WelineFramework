@@ -19,10 +19,13 @@ class Document extends \Weline\Framework\App\Controller\BackendController
     {
         /**@var Catalog $catalog */
         $catalog = ObjectManager::getInstance(Catalog::class);
-        $catalog = $catalog->pagination(intval($this->_request->getParam('page', 1)),
+        $catalogs = $catalog->pagination(intval($this->_request->getParam('page', 1)),
                                         intval($this->_request->getParam('pageSize', 10)),
-                                        $this->_request->getParams())->select()->fetch();
-        $this->assign('catalog', $catalog);
+                                        $this->_request->getParams())
+                           ->select()
+                           ->fetch();
+        $this->assign('catalogs', $catalogs);
+        $this->assign('columns', $catalog->columns());
         return $this->fetch();
     }
 }

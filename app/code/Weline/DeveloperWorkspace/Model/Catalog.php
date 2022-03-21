@@ -16,21 +16,17 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Catalog extends \Weline\Framework\Database\Model
 {
-    const fields_ID = 'id';
+//    const table       = 'dev_document_catalog';
+    const fields_ID   = 'id';
     const fields_NAME = 'name';
-    const fields_PID = 'pid';
+    const fields_PID  = 'pid';
 
     /**
      * @inheritDoc
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-        /*$setup->getPrinting()->setup('安装数据表...');
-        $setup->createTable('目录')
-            ->addColumn('id', TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
-            ->addColumn('name', TableInterface::column_type_VARCHAR, 60, 'not null ', '目录名')
-            ->addColumn('pid', TableInterface::column_type_INTEGER, 0, '', '父目录')
-            ->create();*/
+        $this->install($setup, $context);
     }
 
     /**
@@ -50,10 +46,10 @@ class Catalog extends \Weline\Framework\Database\Model
         $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
         if (!$setup->tableExist()) {
             $setup->createTable('目录')
-                ->addColumn('id', TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
-                ->addColumn('name', TableInterface::column_type_VARCHAR, 60, 'not null ', '目录名')
-                ->addColumn('pid', TableInterface::column_type_INTEGER, 0, '', '父目录')
-                ->create();
+                  ->addColumn('id', TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
+                  ->addColumn('name', TableInterface::column_type_VARCHAR, 60, 'not null ', '目录名')
+                  ->addColumn('pid', TableInterface::column_type_INTEGER, 0, '', '父目录')
+                  ->create();
         } else {
             $setup->getPrinting()->warning('跳过安装数据表...', $setup->getTable());
         }

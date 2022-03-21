@@ -341,12 +341,30 @@ class Template extends DataObject
      * @return string|string[]|null
      * @throws Core
      */
-    private function tmp_replace(string $content, string $fileName): array|string|null
+    private function tmp_replace(string $content): array|string|null
     {
         # 系统自带的
         $template_elements = [
             'php'       => function ($back) {
                 return '<?php ' . trim($back[1]) . '?>';
+            },
+            'foreach'   => function ($back) {
+                preg_match('/name=[\'|"](.*?)[\'|"]/', $back['attrs'], $name);
+                $name = array_pop($name);
+                preg_match('/key=[\'|"](.*?)[\'|"]/', $back['attrs'], $key);
+                $key = array_pop($key);
+                preg_match('/item=[\'|"](.*?)[\'|"]/', $back['attrs'], $item);
+                $item = array_pop($item);
+                return <<<FOREACH
+<!-- foreach 属性： {$back['attrs']} -->
+<?php
+        foreach (\$this->getData('{$name}') as \${$key} => \${$item}) {
+        ?>
+                    {$this->tmp_replace($back['content'])}
+                    <?php
+                }
+?>
+FOREACH;
             },
             'template'  => function ($back) {
                 return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
@@ -355,7 +373,7 @@ class Template extends DataObject
                 return '<?=' . trim($back[1]) . '?>';
             },
             'pp'        => function ($back) {
-                return "<?php p($back[1])?>";
+                return "<?php p({$back[1]})?>";
             },
             'include'   => function ($back) {
                 return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
@@ -379,12 +397,10 @@ class Template extends DataObject
                 return '<?=__(\'' . trim($back[1]) . '\')?>';
             },
             'url'       => function ($back) {
-                $data = trim($back[1]);
-                return "<?=\$this->getUrl($data)?>";
+                return "<?=\$this->getUrl({$back[1]})?>";
             },
             'admin_url' => function ($back) {
-                $data = trim($back[1]);
-                return "<?=\$this->getAdminUrl({$data})?>";
+                return "<?=\$this->getAdminUrl({$back[1]})?>";
             },
         ];
         /**@var EventsManager $event */
@@ -397,17 +413,17 @@ class Template extends DataObject
         $patternsSynonymous     = function (string $template_element, &$replace_call_back) {
             return [
                 'patterns'                   => [
-                    '/<w-' . $template_element . '>([\s\S]*?)<\/w-' . $template_element . '>/m',
-                    '/<' . $template_element . '>([\s\S]*?)<\/' . $template_element . '>/m',
+                    '/<w-' . $template_element . '([\s\S]*?)<\/w-' . $template_element . '>/m',
+                    '/<' . $template_element . '([\s\S]*?)<\/' . $template_element . '>/m',
                     '/\@' . $template_element . '\(([\s\S]*?)\)/m',
 
                     '/\@' . $template_element . '\{([\s\S]*?)\}/m',
                 ],
                 'replace_match_and_callback' => [
-                    '<w-' . $template_element . '></w-' . $template_element . '>' => $replace_call_back,
-                    '<' . $template_element . '></' . $template_element . '>'     => $replace_call_back,
-                    '@' . $template_element . '()'                                => $replace_call_back,
-                    '@' . $template_element . '{}'                                => $replace_call_back,
+                    '<w-' . $template_element . '</w-' . $template_element . '>' => $replace_call_back,
+                    '<' . $template_element . '</' . $template_element . '>'     => $replace_call_back,
+                    '@' . $template_element . '()'                               => $replace_call_back,
+                    '@' . $template_element . '{}'                               => $replace_call_back,
                 ]
             ];
         };
@@ -419,15 +435,21 @@ class Template extends DataObject
             $patterns_and_callbacks = array_merge($patterns_and_callbacks, $pattern_and_callback['replace_match_and_callback']);
         }
         # 开发环境实时PHP代码输出资源
-        return preg_replace_callback($patterns, function ($back) use ($fileName, $patterns_and_callbacks) {
-            $back[0]    = str_replace($back[1], '', $back[0]);
-            $re_content = '';
+        return preg_replace_callback($patterns, function ($back) use ($patterns_and_callbacks) {
+            $back[0]         = str_replace($back[1], '', $back[0]);
+            $back_arr        = explode('>', $back[1]);
+            $back[1]         = ltrim($back[1], '>');
+            $attrs           = array_shift($back_arr);
+            $content         = $back_arr ? ltrim(implode('>', $back_arr), '>') : $attrs;
+            $back['content'] = $content;
+            $back['attrs']   = $attrs;
+            $re_content      = '';
             if (isset($patterns_and_callbacks[$back[0]]) && $callback = $patterns_and_callbacks[$back[0]]) {
                 $re_content = $callback($back);
             }
             /**@var EventsManager $event */
             $event = ObjectManager::getInstance(EventsManager::class);
-            $data  = (new DataObject(['back' => $back, 'content' => $re_content,'object'=>$this]));
+            $data  = (new DataObject(['back' => $back, 'content' => $re_content, 'object' => $this]));
             $event->dispatch('Framework_Template::after_template_replace', ['data' => $data]);
             return $data->getData('content');
         },                           $content);

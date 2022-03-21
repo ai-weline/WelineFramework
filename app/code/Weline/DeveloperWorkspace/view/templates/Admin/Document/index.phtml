@@ -13,19 +13,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?> class='no-js'>
 <head>
     <title><lang>Weline Admin 管理面板</lang></title>
+    <!--模板Weline_Admin::common/head.phtml-->
     <w-template>Weline_Admin::common/head.phtml</w-template>
-    @template(Weline_Admin::common/head.phtml)
     <!-- jvectormap -->
-    <link href="@static(Weline_Admin::assets/libs/jqvmap/jqvmap.min.css)" rel="stylesheet"/>
+    <w-css>Weline_Admin::assets/libs/jqvmap/jqvmap.min.css</w-css>
     <!-- Responsive Table css -->
-    <link href='@static(Weline_Admin::assets/libs/admin-resources/rwd-table/rwd-table.min.css)' rel='stylesheet' type='text/css'/>
+    <link href='@static(Weline_Admin::assets/libs/admin-resources/rwd-table/rwd-table.min.css)' rel='stylesheet'
+          type='text/css'/>
 </head>
 
 <!--<body data-sidebar="dark" data-topbar='colored' data-layout='horizontal'>-->
 <body <?= $themeConfig->getLayouts() ?? ''; ?>>
-@php{
-echo '1234111111111111111111111111';
-}
 <!--加载中组件 开始-->
 @template(Weline_Admin::common/page/loading.phtml)
 <!-- 开始 页面 -->
@@ -53,12 +51,18 @@ echo '1234111111111111111111111111';
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 class="mb-sm-0"><lang>开发文档管理器</lang></h4>
+                            <h4 class="mb-sm-0">
+                                <lang>开发文档管理器</lang>
+                            </h4>
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);"><lang>系统</lang></a></li>
-                                    <li class="breadcrumb-item active"><lang>开发文档管理器</lang></li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">
+                                            <lang>系统</lang>
+                                        </a></li>
+                                    <li class="breadcrumb-item active">
+                                        <lang>开发文档管理器</lang>
+                                    </li>
                                 </ol>
                             </div>
                         </div>
@@ -69,38 +73,47 @@ echo '1234111111111111111111111111';
                     <div class='col-12'>
                         <div class='card'>
                             <div class='card-body'>
-
-                                <h4 class='card-title'><lang>开发文档</lang></h4>
-                                <p class='card-title-desc'><lang>编写开发文档</lang></p>
-
+                                <h4 class='card-title'>
+                                    <lang>开发文档</lang>
+                                </h4>
+                                <p class='card-title-desc'>
+                                    <lang>编写开发文档</lang>
+                                </p>
+                                <div class="panel card">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class='col-6 text-left'>
+                                            </div>
+                                            <div class='col-6 text-right'>
+                                                <button type='button' class='btn btn-success waves-effect waves-light'>
+                                                    <lang>新增</lang>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class='table-rep-plugin'>
                                     <div class='table-responsive mb-0' data-pattern='priority-columns'>
                                         <table id='tech-companies-1' class='table table-striped'>
                                             <thead>
                                             <tr>
-                                                <th>Company</th>
-                                                <th data-priority='1'>Last Trade</th>
-                                                <th data-priority='3'>Trade Time</th>
-                                                <th data-priority='1'>Change</th>
-                                                <th data-priority='3'>Prev Close</th>
-                                                <th data-priority='3'>Open</th>
-                                                <th data-priority='6'>Bid</th>
-                                                <th data-priority='6'>Ask</th>
-                                                <th data-priority='6'>1y Target Est</th>
+                                                <foreach name="columns" key="k" item="v">
+                                                    <th data-priority='@var($k)'
+                                                        data-field="@var{$v->getData('Field')}"><var>$v->Comment</var>
+                                                    </th>
+                                                </foreach>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <tr>
-                                                <th>GOOG <span class='co-name'>Google Inc.</span></th>
-                                                <td>597.74</td>
-                                                <td>12:12PM</td>
-                                                <td>14.81 (2.54%)</td>
-                                                <td>582.93</td>
-                                                <td>597.95</td>
-                                                <td>597.73 x 100</td>
-                                                <td>597.91 x 300</td>
-                                                <td>731.10</td>
-                                            </tr>
+                                            <foreach name="catalogs" key="k" item="vo">
+                                                <tr>
+                                                    <th><var>$vo->id</var></th>
+                                                    <th><var>$vo->name</var></th>
+                                                    <th><var>$vo->pid</var></th>
+                                                    <th><var>$vo->create_time</var></th>
+                                                    <th><var>$vo->update_time</var></th>
+                                                </tr>
+                                            </foreach>
                                             </tbody>
                                         </table>
                                     </div>
