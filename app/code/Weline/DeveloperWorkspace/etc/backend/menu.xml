@@ -3,8 +3,8 @@
        xs:noNamespaceSchemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd"
        xs:schemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd">
     <!--开发工具-->
-    <add source="Weline_DeveloperWorkspace::dev-tool" name="dev-tool" title="开发工具" action="dev-tool/admin"
+    <add source="Weline_DeveloperWorkspace::dev-tool" name="dev-tool" title="开发工具" action="dev/tool/admin"
          parent="Weline_Backend::system_dev_configuration" icon="ri-code-box-line" order="20001"/>
-    <add source="Weline_DeveloperWorkspace::dev-tool-document" name="dev-tool-document" title="开发文档" action="dev-tool/admin/document"
+    <add source="Weline_DeveloperWorkspace::dev-tool-document" name="dev-tool-document" title="开发文档" action="dev/tool/admin/document"
          parent="Weline_DeveloperWorkspace::dev-tool" icon="mdi mdi-file-document-multiple" order="20002"/>
 </menus>

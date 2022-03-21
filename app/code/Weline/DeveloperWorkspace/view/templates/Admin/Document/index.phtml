@@ -23,7 +23,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 
 <!--<body data-sidebar="dark" data-topbar='colored' data-layout='horizontal'>-->
 <body <?= $themeConfig->getLayouts() ?? ''; ?>>
-
+@php{
+echo '1234111111111111111111111111';
+}
 <!--加载中组件 开始-->
 @template(Weline_Admin::common/page/loading.phtml)
 <!-- 开始 页面 -->

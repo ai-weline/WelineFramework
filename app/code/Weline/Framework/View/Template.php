@@ -390,17 +390,18 @@ class Template extends DataObject
         /**@var EventsManager $event */
         $event = ObjectManager::getInstance(EventsManager::class);
         $data  = (new DataObject(['template' => $this, 'template_elements' => $template_elements]));
-        $event->dispatch('Framework_Template::after_system_patterns', ['data' => $data]);
+        $event->dispatch('Framework_Template::after_template_patterns_callback_map', ['data' => $data]);
         $template_elements = $data->getData('template_elements');
 
         // 替换函数
         $patternsSynonymous     = function (string $template_element, &$replace_call_back) {
             return [
                 'patterns'                   => [
-                    '/<w-' . $template_element . '>(.+)<\/w-' . $template_element . '>/',
-                    '/<' . $template_element . '>(.+)<\/' . $template_element . '>/',
-                    '/\@' . $template_element . '\((.+?)\)/',
-                    '/\@' . $template_element . '\{(.+?)\}/',
+                    '/<w-' . $template_element . '>([\s\S]*?)<\/w-' . $template_element . '>/m',
+                    '/<' . $template_element . '>([\s\S]*?)<\/' . $template_element . '>/m',
+                    '/\@' . $template_element . '\(([\s\S]*?)\)/m',
+
+                    '/\@' . $template_element . '\{([\s\S]*?)\}/m',
                 ],
                 'replace_match_and_callback' => [
                     '<w-' . $template_element . '></w-' . $template_element . '>' => $replace_call_back,
@@ -426,7 +427,7 @@ class Template extends DataObject
             }
             /**@var EventsManager $event */
             $event = ObjectManager::getInstance(EventsManager::class);
-            $data  = (new DataObject(['back' => $back, 'content' => $re_content]));
+            $data  = (new DataObject(['back' => $back, 'content' => $re_content,'object'=>$this]));
             $event->dispatch('Framework_Template::after_template_replace', ['data' => $data]);
             return $data->getData('content');
         },                           $content);
