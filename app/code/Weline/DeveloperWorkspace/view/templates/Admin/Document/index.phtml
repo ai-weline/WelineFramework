@@ -99,13 +99,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                             <tr>
                                                 <foreach name="columns" key="k" item="v">
                                                     <th data-priority='@var($k)'
-                                                        data-field="@var{$v->getData('Field')}"><var>$v->Comment</var>
+                                                        data-field="@var{$v->Field}"><var>$v->Comment</var>
                                                     </th>
                                                 </foreach>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <foreach name="catalogs" key="k" item="vo">
+                                            <foreach name="catalogs" item="vo">
                                                 <tr>
                                                     <th><var>$vo->id</var></th>
                                                     <th><var>$vo->name</var></th>

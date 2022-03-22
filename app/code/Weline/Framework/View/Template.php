@@ -353,6 +353,7 @@ class Template extends DataObject
                 $name = array_pop($name);
                 preg_match('/key=[\'|"](.*?)[\'|"]/', $back['attrs'], $key);
                 $key = array_pop($key);
+                $key = $key??'key';
                 preg_match('/item=[\'|"](.*?)[\'|"]/', $back['attrs'], $item);
                 $item = array_pop($item);
                 return <<<FOREACH

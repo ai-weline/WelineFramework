@@ -31,13 +31,17 @@ class PhpCsFixer implements \Weline\Framework\Console\CommandInterface
     {
         array_shift($args);
         $args = implode(' ', $args);
+        $v = '3.0';
+//        $v = '2';
         // 运行代码标准程序 php-cs-fixer
-        if (PHP_CS && is_file(\Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v3.0.phar')) {
+        if (PHP_CS && is_file(\Weline\Framework\App\Env::extend_dir . "php-cs-fixer-v{$v}.phar")) {
             $this->printing->note(__('正在美化代码...'));
-            exec('php ' . \Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v3.0.phar fix ' . $args, $out);
+            exec('php ' . \Weline\Framework\App\Env::extend_dir . "php-cs-fixer-v{$v}.phar fix " . $args, $out);
+//            p('php ' . \Weline\Framework\App\Env::vendor_path . 'vendor'.DIRECTORY_SEPARATOR.'friendsofphp'.DIRECTORY_SEPARATOR.'php-cs-fixer'.DIRECTORY_SEPARATOR.'php-cs-fixer fix ' . BP);
+//            exec('php ' . \Weline\Framework\App\Env::vendor_path . "vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix " . $args, $out);
             $this->printing->success(__('代码美化完成...'));
         } else {
-            throw new \Weline\Framework\App\Exception(__('标准化代码文件缺失：%1',\Weline\Framework\App\Env::extend_dir . 'php-cs-fixer-v3.0.phar'));
+            throw new \Weline\Framework\App\Exception(__('标准化代码文件缺失：%1',\Weline\Framework\App\Env::extend_dir . "php-cs-fixer-v{$v}.phar"));
         }
     }
 
