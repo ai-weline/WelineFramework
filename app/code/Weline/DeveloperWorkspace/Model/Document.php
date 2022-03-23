@@ -16,25 +16,19 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Document extends \Weline\Framework\Database\Model
 {
-    const fields_ID = 'id';
-    const fields_TITLE = 'title';
-    const fields_AUTHOR_ID = 'author_id';
-    const fields_TAG_ID = 'tag_id';
-    const fields_CONTEND = 'content';
+    const fields_ID          = 'id';
+    const fields_TITLE       = 'title';
+    const fields_AUTHOR_ID   = 'author_id';
+    const fields_CATEGORY_ID = 'category_id';
+    const fields_TAG_ID      = 'tag_id';
+    const fields_CONTEND     = 'content';
 
     /**
      * @inheritDoc
      */
     function setup(ModelSetup $setup, Context $context): void
     {
-        /*$setup->getPrinting()->setup('安装数据表...');
-        $setup->createTable('开发文章')
-            ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment ', 'ID')
-            ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 120, 'not null', '标题')
-            ->addColumn(self::fields_AUTHOR_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '作者ID')
-            ->addColumn(self::fields_TAG_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '标签ID')
-            ->addColumn(self::fields_CONTEND, TableInterface::column_type_TEXT, 0, 'not null', '内容')
-            ->create();*/
+        $this->install($setup, $context);
     }
 
     /**
@@ -50,17 +44,18 @@ class Document extends \Weline\Framework\Database\Model
      */
     function install(ModelSetup $setup, Context $context): void
     {
-        $setup->getPrinting()->setup('安装数据表...',$setup->getTable());
-        if(!$setup->tableExist()){
+        $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
+        if (!$setup->tableExist()) {
             $setup->createTable('开发文章')
-                ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment ', 'ID')
-                ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 120, 'not null', '标题')
-                ->addColumn(self::fields_AUTHOR_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '作者ID')
-                ->addColumn(self::fields_TAG_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '标签ID')
-                ->addColumn(self::fields_CONTEND, TableInterface::column_type_TEXT, 0, 'not null', '内容')
-                ->create();
-        }else{
-            $setup->getPrinting()->setup('跳过安装数据表...',$setup->getTable());
+                  ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment ', 'ID')
+                  ->addColumn(self::fields_CATEGORY_ID, TableInterface::column_type_INTEGER, 0, 'not null ', '分类ID')
+                  ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 120, 'not null', '标题')
+                  ->addColumn(self::fields_AUTHOR_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '作者ID')
+                  ->addColumn(self::fields_TAG_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '标签ID')
+                  ->addColumn(self::fields_CONTEND, TableInterface::column_type_TEXT, 0, 'not null', '内容')
+                  ->create();
+        } else {
+            $setup->getPrinting()->setup('跳过安装数据表...', $setup->getTable());
         }
     }
 
@@ -102,5 +97,15 @@ class Document extends \Weline\Framework\Database\Model
     function setContent(string $content): Document
     {
         return $this->setData(self::fields_CONTEND, $content);
+    }
+
+    function setCategoryId(string $category_id): Document
+    {
+        return $this->setData(self::fields_CATEGORY_ID, $category_id);
+    }
+
+    function getCategoryId(): Document
+    {
+        return $this->getData(self::fields_CATEGORY_ID);
     }
 }

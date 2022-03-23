@@ -169,19 +169,6 @@ trait TraitTemplate
      */
     public function fetchTagSource(string $type, string $source)
     {
-//        # 管道解析
-//        $pipes = [];
-//        if (is_int(strrpos($source, '|'))) {
-//            $pipe_str = explode(',', substr($source, strrpos($source, '|') + 1, strlen($source)));
-//            foreach ($pipe_str as $pipe) {
-//                $pip = explode(':', $pipe);
-//                if (2 === count($pip)) {
-//                    $pipes[$pip[0]] = $pip[1];
-//                }
-//            }
-//            $source = substr($source, 0, strrpos($source, '|'));
-//        }
-
         $source = trim($source);
         $cache_key = $type . '_' . $source;
         if (PROD && $data = $this->viewCache->get($cache_key)) return $data;
@@ -209,30 +196,13 @@ trait TraitTemplate
                 $data = $this->getFetchFile($t_f, $module_name);
                 break;
         }
-
+        $data = str_replace('\\', '/', $data);
+        $data = str_replace('//', '/', $data);
         # 是否静态文件添加
         if ($type === 'statics' && Env::getInstance()->getConfig('static_file_rand_version')) {
             $version = random_int(10000, 100000);
-            $data = str_replace('\\', '/', $data);
-            $data = str_replace('//', '/', $data);
             $data .= '?v=' . $version;
         }
-//        # 1、检测管道是否需要缓存或者启用
-//        if ($pipes) {
-//            foreach ($pipes as $pipe_attribute => $pipe_value) {
-//                switch ($pipe_attribute):
-//                    case 'cache':
-//                        break;
-//                    case 'ifconfig':
-//                        /**@var SystemConfig $systemConfig */
-//                        $systemConfig = ObjectManager::getInstance(SystemConfig::class);
-//                        if ($systemConfig->getConfig($pipe_value, $module_name, $this->_request->isBackend() ? 'backend' : 'frontend')) {
-//
-//                        }
-//                    default:
-//
-//                    }
-//        }
         $this->viewCache->set($cache_key, $data);
         return $data;
     }

@@ -359,7 +359,7 @@ class Template extends DataObject
                 return <<<FOREACH
 <!-- foreach 属性： {$back['attrs']} -->
 <?php
-        foreach (\$this->getData('{$name}') as \${$key} => \${$item}) {
+        foreach (\$this->getData('{$name}')??[] as \${$key} => \${$item}) {
         ?>
                     {$this->tmp_replace($back['content'])}
                     <?php
@@ -395,13 +395,13 @@ FOREACH;
                 return "<link href=\"{$source}\" rel=\"stylesheet\" type=\"text/css\"/>";
             },
             'lang'      => function ($back) {
-                return '<?=__(\'' . trim($back[1]) . '\')?>';
+                return "<?=__(trim('{$back[1]}'))?>";
             },
             'url'       => function ($back) {
-                return "<?=\$this->getUrl({$back[1]})?>";
+                return "<?=\$this->getUrl('{$back[1]}')?>";
             },
             'admin-url' => function ($back) {
-                return "<?=\$this->getAdminUrl({$back[1]})?>";
+                return "<?=\$this->getAdminUrl('{$back[1]}')?>";
             },
         ];
         /**@var EventsManager $event */
@@ -440,6 +440,8 @@ FOREACH;
             $back[0]         = str_replace($back[1], '', $back[0]);
             $back_arr        = explode('>', $back[1]);
             $back[1]         = ltrim($back[1], '>');
+            $back[1]         = trim($back[1], "'");
+            $back[1]         = trim($back[1], "\"");
             $attrs           = array_shift($back_arr);
             $content         = $back_arr ? ltrim(implode('>', $back_arr), '>') : $attrs;
             $back['content'] = $content;

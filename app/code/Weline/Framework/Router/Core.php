@@ -68,8 +68,8 @@ class Core
     public function start()
     {
         # 获取URL
-        $origin_url = $this->processUrl();
-        $url = str_replace('-', '', $origin_url);
+        $origin_url              = $this->processUrl();
+        $url                     = str_replace('-', '', $origin_url);
         $this->_router_cache_key = $this->area_router . $this->request->getUrlPath();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
@@ -101,7 +101,7 @@ class Core
         // 读取url
         $url           = $this->request->getUrlPath();
         $url_cache_key = 'url_cache_key_' . $url;
-        if (/*PROD&&*/$cached_url = $this->cache->get($url_cache_key)) {
+        if (/*PROD&&*/ $cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
         } else {
             if ($this->is_admin) $url = str_replace($this->area_router, '', $url);
@@ -231,6 +231,8 @@ class Core
             $file_ext     = end($filename_arr);
             if ($file_ext === 'css') {
                 $mime_type = 'text/css';
+            } else if ($file_ext === 'js') {
+                $mime_type = 'text/javascript; charset=utf-8';
             } else {
                 $fi        = new \finfo(FILEINFO_MIME_TYPE);
                 $mime_type = $fi->file($filename);
