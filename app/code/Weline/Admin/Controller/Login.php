@@ -40,7 +40,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     function index()
     {
         if ($this->_session->isLogin()) {
-            $this->redirect($this->getUrl('index/index'));
+            $this->redirect($this->getUrl('admin'));
         }
 //        $this->getSession()->delete('backend_disable_login');
         $this->assign('post_url', $this->getUrl('admin/login/post'));
@@ -107,7 +107,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
                               ->setAttemptIp($this->_request->clientIP())
                               ->save();
-            $this->redirect($this->getUrl());
+            $this->redirect($this->getUrl('admin/login'));
         }
         # 尝试登录
         $password = trim($this->_request->getParam('password'));

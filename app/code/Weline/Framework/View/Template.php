@@ -400,7 +400,7 @@ FOREACH;
             'url'       => function ($back) {
                 return "<?=\$this->getUrl({$back[1]})?>";
             },
-            'admin_url' => function ($back) {
+            'admin-url' => function ($back) {
                 return "<?=\$this->getAdminUrl({$back[1]})?>";
             },
         ];
