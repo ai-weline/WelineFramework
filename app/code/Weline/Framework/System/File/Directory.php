@@ -11,7 +11,7 @@ namespace Weline\Framework\System\File;
 
 class Directory
 {
-    const static_dir = PUB . 'static';
+    public const static_dir = PUB . 'static';
 
-    const upload_dir = PUB . 'upload';
+    public const upload_dir = PUB . 'upload';
 }

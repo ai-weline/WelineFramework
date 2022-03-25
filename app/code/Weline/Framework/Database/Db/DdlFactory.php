@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,6 @@ use Weline\Framework\Manager\ObjectManager;
 
 class DdlFactory implements FactoryInterface
 {
-
     /**
      * @DESC          # 创建Table动作
      *

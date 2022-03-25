@@ -153,7 +153,7 @@ class File extends DataObject
     /**
      * @return string
      */
-    public function getExtension():string
+    public function getExtension(): string
     {
         return $this->extension;
     }

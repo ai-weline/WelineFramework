@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -19,30 +20,29 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Menu extends \Weline\Framework\Database\Model
 {
-    const table = 'm_backend_menu';
-    const primary_key = 'name';
+    public const table = 'm_backend_menu';
+    public const primary_key = 'name';
 
-    const fields_NAME          = 'name';
-    const fields_TITLE         = 'title';
-    const fields_PID           = 'pid';
-    const fields_SOURCE        = 'source';
-    const fields_PARENT_SOURCE = 'parent_source';
-    const fields_ACTION        = 'action';
-    const fields_MODULE        = 'module';
-    const fields_ICON          = 'icon';
-    const fields_ORDER         = 'order';
-    const fields_IS_SYSTEM     = 'is_system';
+    public const fields_NAME          = 'name';
+    public const fields_TITLE         = 'title';
+    public const fields_PID           = 'pid';
+    public const fields_SOURCE        = 'source';
+    public const fields_PARENT_SOURCE = 'parent_source';
+    public const fields_ACTION        = 'action';
+    public const fields_MODULE        = 'module';
+    public const fields_ICON          = 'icon';
+    public const fields_ORDER         = 'order';
+    public const fields_IS_SYSTEM     = 'is_system';
 
     private CacheInterface $backendCache;
 
     private Url $url;
 
-    function __construct(
+    public function __construct(
         Url          $url,
         BackendCache $backendCache,
         array        $data = []
-    )
-    {
+    ) {
         parent::__construct($data);
         $this->url          = $url;
         $this->backendCache = $backendCache->create();
@@ -51,7 +51,7 @@ class Menu extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
         /*$setup->dropTable();
         $setup->getPrinting()->setup('安装数据表...' . self::table);
@@ -74,7 +74,7 @@ class Menu extends \Weline\Framework\Database\Model
      * @inheritDoc
      */
 
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement upgrade() method.
     }
@@ -82,7 +82,7 @@ class Menu extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         $setup->getPrinting()->setup('安装数据表...' . self::table);
         if (!$setup->tableExist()) {
@@ -102,7 +102,6 @@ class Menu extends \Weline\Framework\Database\Model
         } else {
             $setup->getPrinting()->warning('数据表存在，跳过安装数据表...' . self::table);
         }
-
     }
 
     public function getName(): string
@@ -206,7 +205,7 @@ class Menu extends \Weline\Framework\Database\Model
     }
 
     /*----------------------助手函数区-------------------------*/
-    function getUrl(): string
+    public function getUrl(): string
     {
         return $this->url->build($this->getAction()) ?? '';
     }
@@ -219,7 +218,7 @@ class Menu extends \Weline\Framework\Database\Model
      * @DateTime: 2022/2/9 0:38
      * 参数区：
      */
-    function getMenuTree(): mixed
+    public function getMenuTree(): mixed
     {
         $cache_key = 'backend_menu_cache';
         if (PROD && $data = $this->backendCache->get($cache_key)) {
@@ -230,7 +229,9 @@ class Menu extends \Weline\Framework\Database\Model
             $top_menu = $this->getSubMenus($top_menu);
         }
         $top_menus = $top_menus ?? [];
-        if($top_menus)$this->backendCache->set($cache_key, $top_menus, 60);
+        if ($top_menus) {
+            $this->backendCache->set($cache_key, $top_menus, 60);
+        }
         return $top_menus;
     }
 
@@ -243,12 +244,12 @@ class Menu extends \Weline\Framework\Database\Model
      * 参数区：
      * @return \Weline\Backend\Model\Menu[]
      */
-    function getSubMenu(): array
+    public function getSubMenu(): array
     {
         return $this->getData('sub_menu') ?? [];
     }
 
-    function getSubMenus(\Weline\Backend\Model\Menu &$menu): Menu
+    public function getSubMenus(\Weline\Backend\Model\Menu &$menu): Menu
     {
         if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getId())->order('order', 'ASC')->select()->fetch()) {
             foreach ($sub_menus as &$sub_menu) {

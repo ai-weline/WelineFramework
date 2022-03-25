@@ -16,7 +16,7 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Cli extends CliAbstract
 {
-    const core_FRAMEWORK_NAMESPACE = Env::framework_name . '\\Framework';
+    public const core_FRAMEWORK_NAMESPACE = Env::framework_name . '\\Framework';
 
     /**
      * @DESC         |方法描述

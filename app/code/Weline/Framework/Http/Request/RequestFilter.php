@@ -13,11 +13,11 @@ class RequestFilter
 {
     private static $instance;
 
-    const request_ENCODES = [
+    public const request_ENCODES = [
         'UTF-8', 'ASCII', 'GB2312', 'GBK', 'BIG5',
     ];
 
-    const default_ENCODE = 'UTF-8';
+    public const default_ENCODE = 'UTF-8';
 
     private function __clone()
     {

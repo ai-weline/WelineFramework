@@ -8,7 +8,7 @@ class CreateTagTests extends AbstractUnitTests
     public function testCreateTagForTagWithAttributes()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $expected = "<myNs:myTag foo=\"bar\" />";
         $this->assertEquals($expected, XML_Util::createTag($originalTag, $originalAttributes));
     }
@@ -19,7 +19,7 @@ class CreateTagTests extends AbstractUnitTests
     public function testCreateTagForTagWithAttributesAndContent()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalContent = "This is inside the tag";
         $expected = "<myNs:myTag foo=\"bar\">This is inside the tag</myNs:myTag>";
         $this->assertEquals($expected, XML_Util::createTag($originalTag, $originalAttributes, $originalContent));
@@ -31,7 +31,7 @@ class CreateTagTests extends AbstractUnitTests
     public function testCreateTagForTagWithAttributesAndContentAndNamespace()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalContent = "This is inside the tag";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected = "<myNs:myTag foo=\"bar\" xmlns:myNs=\"http://www.w3c.org/myNs#\">This is inside the tag</myNs:myTag>";
@@ -45,7 +45,7 @@ class CreateTagTests extends AbstractUnitTests
     public function testCreateTagForTagWithAttributesAndContentAndNamespaceWithCDataSection()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalContent = "This is inside the tag and has < & @ > in it";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected = "<myNs:myTag foo=\"bar\" xmlns:myNs=\"http://www.w3c.org/myNs#\"><![CDATA[This is inside the tag and has < & @ > in it]]></myNs:myTag>";
@@ -58,7 +58,7 @@ class CreateTagTests extends AbstractUnitTests
     public function testCreateTagForTagWithAttributesAndContentAndNamespaceWithReplaceEntities()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalContent = "This is inside the tag and has < & @ > in it";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected = "<myNs:myTag foo=\"bar\" xmlns:myNs=\"http://www.w3c.org/myNs#\">This is inside the tag and has &lt; &amp; @ &gt; in it</myNs:myTag>";
@@ -71,7 +71,7 @@ class CreateTagTests extends AbstractUnitTests
     public function testCreateTagForTagWithAttributesAndContentAndNamespaceWithReplaceEntitiesAndMultilineFalse()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalContent = "This is inside the tag and has < & @ > in it";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $multiline = false;
@@ -85,7 +85,7 @@ class CreateTagTests extends AbstractUnitTests
     public function testCreateTagForTagWithAttributesAndContentAndNamespaceWithReplaceEntitiesAndMultilineTrue()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalContent = "This is inside the tag and has < & @ > in it";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $multiline = true;
@@ -103,7 +103,7 @@ EOF;
     public function testCreateTagForTagWithAttributesAndContentAndNamespaceWithReplaceEntitiesAndMultilineTrueAndIndent()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalContent = "This is inside the tag and has < & @ > in it";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $multiline = true;
@@ -123,7 +123,7 @@ EOF;
     public function testCreateTagForTagWithAttributesAndContentAndNamespaceWithReplaceEntitiesAndMultilineTrueAndIndentAndLinebreak()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalContent = "This is inside the tag and has < & @ > in it";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $multiline = true;
@@ -139,7 +139,7 @@ EOF;
     public function testCreateTagForTagWithAttributesAndContentAndNamespaceWithReplaceEntitiesAndMultilineTrueAndIndentAndLinebreakAndSortAttributesTrue()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar", "boo" => "baz");
+        $originalAttributes = ["foo" => "bar", "boo" => "baz"];
         $originalContent = "This is inside the tag and has < & @ > in it";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $multiline = true;
@@ -156,7 +156,7 @@ EOF;
     public function testCreateTagForTagWithAttributesAndContentAndNamespaceWithReplaceEntitiesAndMultilineTrueAndIndentAndLinebreakAndSortAttributesFalse()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar", "boo" => "baz");
+        $originalAttributes = ["foo" => "bar", "boo" => "baz"];
         $originalContent = "This is inside the tag and has < & @ > in it";
         $originalNamespace = "http://www.w3c.org/myNs#";
         $multiline = true;

@@ -29,28 +29,28 @@ require_once 'PEAR/PackageFile/v1.php';
  */
 class PEAR_PackageFile_Parser_v1
 {
-    var $_registry;
-    var $_config;
-    var $_logger;
+    public $_registry;
+    public $_config;
+    public $_logger;
     /**
      * BC hack to allow PEAR_Common::infoFromString() to sort of
      * work with the version 2.0 format - there's no filelist though
      * @param PEAR_PackageFile_v2
      */
-    function fromV2($packagefile)
+    public function fromV2($packagefile)
     {
         $info = $packagefile->getArray(true);
-        $ret = new PEAR_PackageFile_v1;
+        $ret = new PEAR_PackageFile_v1();
         $ret->fromArray($info['old']);
     }
 
-    function setConfig(&$c)
+    public function setConfig(&$c)
     {
         $this->_config = &$c;
         $this->_registry = &$c->getRegistry();
     }
 
-    function setLogger(&$l)
+    public function setLogger(&$l)
     {
         $this->_logger = &$l;
     }
@@ -59,7 +59,7 @@ class PEAR_PackageFile_Parser_v1
      * @param string contents of package.xml file, version 1.0
      * @return bool success of parsing
      */
-    function &parse($data, $file, $archive = false)
+    public function &parse($data, $file, $archive = false)
     {
         if (!extension_loaded('xml')) {
             return PEAR::raiseError('Cannot create xml parser for parsing package.xml, no xml extension');
@@ -74,13 +74,13 @@ class PEAR_PackageFile_Parser_v1
         xml_set_character_data_handler($xp, '_pkginfo_cdata_1_0');
         xml_parser_set_option($xp, XML_OPTION_CASE_FOLDING, false);
 
-        $this->element_stack = array();
-        $this->_packageInfo = array('provides' => array());
+        $this->element_stack = [];
+        $this->_packageInfo = ['provides' => []];
         $this->current_element = false;
         unset($this->dir_install);
-        $this->_packageInfo['filelist'] = array();
+        $this->_packageInfo['filelist'] = [];
         $this->filelist =& $this->_packageInfo['filelist'];
-        $this->dir_names = array();
+        $this->dir_names = [];
         $this->in_changelog = false;
         $this->d_i = 0;
         $this->cdata = '';
@@ -90,14 +90,17 @@ class PEAR_PackageFile_Parser_v1
             $code = xml_get_error_code($xp);
             $line = xml_get_current_line_number($xp);
             xml_parser_free($xp);
-            $a = PEAR::raiseError(sprintf("XML error: %s at line %d",
-                           $str = xml_error_string($code), $line), 2);
+            $a = PEAR::raiseError(sprintf(
+                "XML error: %s at line %d",
+                $str = xml_error_string($code),
+                $line
+            ), 2);
             return $a;
         }
 
         xml_parser_free($xp);
 
-        $pf = new PEAR_PackageFile_v1;
+        $pf = new PEAR_PackageFile_v1();
         $pf->setConfig($this->_config);
         if (isset($this->_logger)) {
             $pf->setLogger($this->_logger);
@@ -115,7 +118,7 @@ class PEAR_PackageFile_Parser_v1
      * @return string
      * @access private
      */
-    function _unIndent($str)
+    public function _unIndent($str)
     {
         // remove leading newlines
         $str = preg_replace('/^[\r\n]+/', '', $str);
@@ -148,7 +151,7 @@ class PEAR_PackageFile_Parser_v1
      *
      * @access private
      */
-    function _element_start_1_0($xp, $name, $attribs)
+    public function _element_start_1_0($xp, $name, $attribs)
     {
         array_push($this->element_stack, $name);
         $this->current_element = $name;
@@ -162,11 +165,17 @@ class PEAR_PackageFile_Parser_v1
                     break;
                 }
                 if (array_key_exists('name', $attribs) && $attribs['name'] != '/') {
-                    $attribs['name'] = preg_replace(array('!\\\\+!', '!/+!'), array('/', '/'),
-                        $attribs['name']);
+                    $attribs['name'] = preg_replace(
+                        ['!\\\\+!', '!/+!'],
+                        ['/', '/'],
+                        $attribs['name']
+                    );
                     if (strrpos($attribs['name'], '/') === strlen($attribs['name']) - 1) {
-                        $attribs['name'] = substr($attribs['name'], 0,
-                            strlen($attribs['name']) - 1);
+                        $attribs['name'] = substr(
+                            $attribs['name'],
+                            0,
+                            strlen($attribs['name']) - 1
+                        );
                     }
                     if (strpos($attribs['name'], '/') === 0) {
                         $attribs['name'] = substr($attribs['name'], 1);
@@ -191,15 +200,17 @@ class PEAR_PackageFile_Parser_v1
                             $path .= $dir . '/';
                         }
                     }
-                    $path .= preg_replace(array('!\\\\+!', '!/+!'), array('/', '/'),
-                        $attribs['name']);
+                    $path .= preg_replace(
+                        ['!\\\\+!', '!/+!'],
+                        ['/', '/'],
+                        $attribs['name']
+                    );
                     unset($attribs['name']);
                     $this->current_path = $path;
                     $this->filelist[$path] = $attribs;
                     // Set the baseinstalldir only if the file don't have this attrib
                     if (!isset($this->filelist[$path]['baseinstalldir']) &&
-                        isset($this->dir_install))
-                    {
+                        isset($this->dir_install)) {
                         $this->filelist[$path]['baseinstalldir'] = $this->dir_install;
                     }
                     // Set the Role
@@ -214,26 +225,26 @@ class PEAR_PackageFile_Parser_v1
                 }
                 break;
             case 'maintainers':
-                $this->_packageInfo['maintainers'] = array();
+                $this->_packageInfo['maintainers'] = [];
                 $this->m_i = 0; // maintainers array index
                 break;
             case 'maintainer':
                 // compatibility check
                 if (!isset($this->_packageInfo['maintainers'])) {
-                    $this->_packageInfo['maintainers'] = array();
+                    $this->_packageInfo['maintainers'] = [];
                     $this->m_i = 0;
                 }
-                $this->_packageInfo['maintainers'][$this->m_i] = array();
+                $this->_packageInfo['maintainers'][$this->m_i] = [];
                 $this->current_maintainer =& $this->_packageInfo['maintainers'][$this->m_i];
                 break;
             case 'changelog':
-                $this->_packageInfo['changelog'] = array();
+                $this->_packageInfo['changelog'] = [];
                 $this->c_i = 0; // changelog array index
                 $this->in_changelog = true;
                 break;
             case 'release':
                 if ($this->in_changelog) {
-                    $this->_packageInfo['changelog'][$this->c_i] = array();
+                    $this->_packageInfo['changelog'][$this->c_i] = [];
                     $this->current_release = &$this->_packageInfo['changelog'][$this->c_i];
                 } else {
                     $this->current_release = &$this->_packageInfo;
@@ -241,7 +252,7 @@ class PEAR_PackageFile_Parser_v1
                 break;
             case 'deps':
                 if (!$this->in_changelog) {
-                    $this->_packageInfo['release_deps'] = array();
+                    $this->_packageInfo['release_deps'] = [];
                 }
                 break;
             case 'dep':
@@ -254,7 +265,7 @@ class PEAR_PackageFile_Parser_v1
                 break;
             case 'configureoptions':
                 if (!$this->in_changelog) {
-                    $this->_packageInfo['configure_options'] = array();
+                    $this->_packageInfo['configure_options'] = [];
                 }
                 break;
             case 'configureoption':
@@ -269,7 +280,7 @@ class PEAR_PackageFile_Parser_v1
                 $attribs['explicit'] = true;
                 $this->_packageInfo['provides']["$attribs[type];$attribs[name]"] = $attribs;
                 break;
-            case 'package' :
+            case 'package':
                 if (isset($attribs['version'])) {
                     $this->_packageInfo['xsdversion'] = trim($attribs['version']);
                 } else {
@@ -296,7 +307,7 @@ class PEAR_PackageFile_Parser_v1
      *
      * @access private
      */
-    function _element_end_1_0($xp, $name)
+    public function _element_end_1_0($xp, $name)
     {
         $data = trim($this->cdata);
         switch ($name) {
@@ -310,7 +321,7 @@ class PEAR_PackageFile_Parser_v1
                         break;
                 }
                 break;
-            case 'extends' :
+            case 'extends':
                 $this->_packageInfo['extends'] = $data;
                 break;
             case 'summary':
@@ -401,8 +412,7 @@ class PEAR_PackageFile_Parser_v1
                     $this->filelist[$path] = $this->current_attributes;
                     // Set the baseinstalldir only if the file don't have this attrib
                     if (!isset($this->filelist[$path]['baseinstalldir']) &&
-                        isset($this->dir_install))
-                    {
+                        isset($this->dir_install)) {
                         $this->filelist[$path]['baseinstalldir'] = $this->dir_install;
                     }
                     // Set the Role
@@ -446,7 +456,7 @@ class PEAR_PackageFile_Parser_v1
      *
      * @access private
      */
-    function _pkginfo_cdata_1_0($xp, $data)
+    public function _pkginfo_cdata_1_0($xp, $data)
     {
         if (isset($this->cdata)) {
             $this->cdata .= $data;
@@ -455,4 +465,3 @@ class PEAR_PackageFile_Parser_v1
 
     // }}}
 }
-?>

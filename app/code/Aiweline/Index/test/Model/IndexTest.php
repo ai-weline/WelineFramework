@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,7 +11,6 @@ declare(strict_types=1);
 
 namespace Aiweline\Index\test\Model;
 
-
 use Aiweline\Index\Model\Index;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
@@ -18,12 +18,13 @@ use Weline\Framework\UnitTest\TestCore;
 class IndexTest extends TestCore
 {
     private Index $indexModel;
-    function setUp(): void
+    public function setUp(): void
     {
         $this->indexModel = ObjectManager::getInstance(Index::class);
     }
 
-    function testIndex(){
+    public function testIndex()
+    {
         p($this->indexModel->getTable());
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,8 @@ namespace Weline\DeveloperWorkspace\Controller\Admin;
 
 class Index extends \Weline\Framework\App\Controller\BackendController
 {
-    function index(){
+    public function index()
+    {
         return $this->fetch();
     }
 }

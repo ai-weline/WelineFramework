@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4: */
 /**
  * PHP Version 5
@@ -31,7 +32,6 @@ require_once 'PEAR.php';
  */
 class Console_Getopt
 {
-
     /**
      * Parses the command-line options.
      *
@@ -107,10 +107,10 @@ class Console_Getopt
         }
 
         if (empty($args)) {
-            return array(array(), array());
+            return [[], []];
         }
 
-        $non_opts = $opts = array();
+        $non_opts = $opts = [];
 
         settype($args, 'array');
 
@@ -142,12 +142,14 @@ class Console_Getopt
                 $non_opts = array_merge($non_opts, array_slice($args, $i));
                 break;
             } elseif (strlen($arg) > 1 && $arg[1] == '-') {
-                $error = Console_Getopt::_parseLongOption(substr($arg, 2),
-                                                          $long_options,
-                                                          $opts,
-                                                          $i,
-                                                          $args,
-                                                          $skip_unknown);
+                $error = Console_Getopt::_parseLongOption(
+                    substr($arg, 2),
+                    $long_options,
+                    $opts,
+                    $i,
+                    $args,
+                    $skip_unknown
+                );
                 if (PEAR::isError($error)) {
                     return $error;
                 }
@@ -156,19 +158,21 @@ class Console_Getopt
                 $non_opts = array_merge($non_opts, array_slice($args, $i));
                 break;
             } else {
-                $error = Console_Getopt::_parseShortOption(substr($arg, 1),
-                                                           $short_options,
-                                                           $opts,
-                                                           $i,
-                                                           $args,
-                                                           $skip_unknown);
+                $error = Console_Getopt::_parseShortOption(
+                    substr($arg, 1),
+                    $short_options,
+                    $opts,
+                    $i,
+                    $args,
+                    $skip_unknown
+                );
                 if (PEAR::isError($error)) {
                     return $error;
                 }
             }
         }
 
-        return array($opts, $non_opts);
+        return [$opts, $non_opts];
     }
 
     /**
@@ -204,16 +208,16 @@ class Console_Getopt
                     if ($i + 1 < strlen($arg)) {
                         /* Option takes an optional argument. Use the remainder of
                            the arg string if there is anything left. */
-                        $opts[] = array($opt, substr($arg, $i + 1));
+                        $opts[] = [$opt, substr($arg, $i + 1)];
                         break;
                     }
                 } else {
                     /* Option requires an argument. Use the remainder of the arg
                        string if there is anything left. */
                     if ($i + 1 < strlen($arg)) {
-                        $opts[] = array($opt,  substr($arg, $i + 1));
+                        $opts[] = [$opt,  substr($arg, $i + 1)];
                         break;
-                    } else if (isset($args[++$argIdx])) {
+                    } elseif (isset($args[++$argIdx])) {
                         $opt_arg = $args[$argIdx];
                         /* Else use the next argument. */;
                         if (Console_Getopt::_isShortOpt($opt_arg)
@@ -228,7 +232,7 @@ class Console_Getopt
                 }
             }
 
-            $opts[] = array($opt, $opt_arg);
+            $opts[] = [$opt, $opt_arg];
         }
     }
 
@@ -301,7 +305,6 @@ class Console_Getopt
                 $opt == substr($long_options[$i+1], 0, $opt_len) &&
                 $next_option_rest != '' &&
                 $next_option_rest[0] != '=') {
-
                 $msg = "Console_Getopt: option --$opt is ambiguous";
                 return PEAR::raiseError($msg);
             }
@@ -324,12 +327,12 @@ class Console_Getopt
                         return PEAR::raiseError($msg);
                     }
                 }
-            } else if ($opt_arg) {
+            } elseif ($opt_arg) {
                 $msg = "Console_Getopt: option --$opt doesn't allow an argument";
                 return PEAR::raiseError($msg);
             }
 
-            $opts[] = array('--' . $opt, $opt_arg);
+            $opts[] = ['--' . $opt, $opt_arg];
             return;
         }
 
@@ -361,5 +364,4 @@ class Console_Getopt
         }
         return $argv;
     }
-
 }

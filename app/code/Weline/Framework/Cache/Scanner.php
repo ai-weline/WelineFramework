@@ -17,7 +17,7 @@ use Weline\Framework\System\File\Data\File;
 
 class Scanner extends \Weline\Framework\System\File\App\Scanner
 {
-    const dir = 'Cache';
+    public const dir = 'Cache';
 
     public function getCaches()
     {
@@ -46,7 +46,9 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
                 if (is_file($register_file) && is_dir($scan_path) && $cacheManagers = $this->scanDir($scan_path)) {
                     foreach ($cacheManagers as $cacheManager) {
                         $class = Register::parserModuleVendor($vendor) . '\\' . Register::parserModuleName($module_name) . '\\Cache\\' . str_replace('.php', '', $cacheManager);
-                        if (ObjectManager::getInstance(rtrim($class,"Factory").'Factory') instanceof CacheInterface) $app_caches[] = ['class' => $class, 'path' => $scan_path . $cacheManager];
+                        if (ObjectManager::getInstance(rtrim($class, "Factory") . 'Factory') instanceof CacheInterface) {
+                            $app_caches[] = ['class' => $class, 'path' => $scan_path . $cacheManager];
+                        }
                     }
                 }
             }

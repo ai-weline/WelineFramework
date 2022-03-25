@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -21,7 +22,7 @@ interface HtmlInterface
      * 参数区：
      * @param string $html
      */
-    function setHtml(string $html);
+    public function setHtml(string $html);
 
     /**
      * @DESC          # 读取头部信息
@@ -32,5 +33,5 @@ interface HtmlInterface
      * 参数区：
      * @return string
      */
-    function getHtml():string;
+    public function getHtml(): string;
 }

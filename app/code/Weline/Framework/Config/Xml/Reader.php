@@ -17,12 +17,12 @@ use Weline\Framework\Xml\Parser;
 
 class Reader extends ModuleFileReader
 {
-    const ROOT_NAMESPACE_PREFIX = 'x';
+    public const ROOT_NAMESPACE_PREFIX = 'x';
 
     /**
      * Format of items in errors array to be used by default. Available placeholders - fields of \LibXMLError.
      */
-    const ERROR_FORMAT_DEFAULT = "%message%\nLine: %line%\n";
+    public const ERROR_FORMAT_DEFAULT = "%message%\nLine: %line%\n";
 
     /**
      * @var Parser
@@ -32,9 +32,8 @@ class Reader extends ModuleFileReader
     public function __construct(
         Scanner $scanner,
         Parser  $parser,
-                $path = 'module.xml'
-    )
-    {
+        $path = 'module.xml'
+    ) {
         parent::__construct($scanner, 'etc' . DIRECTORY_SEPARATOR . $path);
         $this->parser = $parser;
     }
@@ -131,7 +130,7 @@ class Reader extends ModuleFileReader
      * @param string $error
      * @throws Core
      */
-    function checkElementAttribute(array $element, string $attribute, string $error)
+    public function checkElementAttribute(array $element, string $attribute, string $error)
     {
         if (!isset($element['_attribute'][$attribute])) {
             throw new Core($error);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -40,7 +41,7 @@ class ConfigProvider extends DataObject implements ConfigProviderInterface
     /**
      * @throws Exception
      */
-    function __construct($db_conf = [])
+    public function __construct($db_conf = [])
     {
         if (empty($db_conf)) {
             $db_conf = $this->getConfig();
@@ -77,103 +78,103 @@ class ConfigProvider extends DataObject implements ConfigProviderInterface
     }
 
 
-    function getConnectionName(): string
+    public function getConnectionName(): string
     {
         return $this->connection_name;
     }
 
-    function setConnectionName($connection_name): ConfigProviderInterface
+    public function setConnectionName($connection_name): ConfigProviderInterface
     {
         $this->connection_name = $connection_name;
         return $this;
     }
 
-    function setDbType(string $type): ConfigProviderInterface
+    public function setDbType(string $type): ConfigProviderInterface
     {
         return $this->setData('type', $type);
     }
 
-    function getDbType(): string|null
+    public function getDbType(): string|null
     {
         return $this->getData('type');
     }
 
-    function setHostName(string $hostname): ConfigProviderInterface
+    public function setHostName(string $hostname): ConfigProviderInterface
     {
         return $this->setData('hostname', $hostname);
     }
 
-    function getHostName(): string
+    public function getHostName(): string
     {
         return $this->getData('hostname');
     }
 
-    function setDatabase(string $database_name): ConfigProviderInterface
+    public function setDatabase(string $database_name): ConfigProviderInterface
     {
         return $this->setData('database', $database_name);
     }
 
-    function getDatabase(): string
+    public function getDatabase(): string
     {
         return $this->getData('database');
     }
 
-    function setUsername(string $username): ConfigProviderInterface
+    public function setUsername(string $username): ConfigProviderInterface
     {
         return $this->setData('username', $username);
     }
 
-    function getUsername(): string
+    public function getUsername(): string
     {
         return $this->getData('username');
     }
 
-    function setPassword(string $password): ConfigProviderInterface
+    public function setPassword(string $password): ConfigProviderInterface
     {
         return $this->setData('password', $password);
     }
 
-    function getPassword(): string
+    public function getPassword(): string
     {
         return $this->getData('password');
     }
 
-    function setHostPort(string $host_port): ConfigProviderInterface
+    public function setHostPort(string $host_port): ConfigProviderInterface
     {
         return $this->setData('hostport', $host_port);
     }
 
-    function getHostPort(): string
+    public function getHostPort(): string
     {
         return $this->getData('hostport');
     }
 
-    function setPrefix(string $prefix): ConfigProviderInterface
+    public function setPrefix(string $prefix): ConfigProviderInterface
     {
         return $this->setData('prefix', $prefix);
     }
 
-    function getPrefix(): string
+    public function getPrefix(): string
     {
         return $this->getData('prefix');
     }
 
-    function setCharset(string $charset = 'utf8mb4'): ConfigProviderInterface
+    public function setCharset(string $charset = 'utf8mb4'): ConfigProviderInterface
     {
         return $this->setData('charset', $charset);
     }
 
-    function getCharset(): string
+    public function getCharset(): string
     {
         return $this->getData('charset') ?? 'utf8mb4';
     }
 
-    function setOptions(array $pdo_options = []): ConfigProviderInterface
+    public function setOptions(array $pdo_options = []): ConfigProviderInterface
     {
         return $this->setData('options', $pdo_options);
     }
 
-    function getOptions(): array
+    public function getOptions(): array
     {
         return $this->getData('options') ?? [];
     }

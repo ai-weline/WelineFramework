@@ -34,8 +34,7 @@ class PluginsManager
     public function __construct(
         Reader      $reader,
         PluginCache $pluginCache
-    )
-    {
+    ) {
         $this->reader      = $reader;
         $this->pluginCache = $pluginCache->create();
     }

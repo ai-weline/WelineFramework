@@ -20,7 +20,7 @@ interface CacheInterface
      * 参数区：
      * @return string
      */
-    function tip(): string;
+    public function tip(): string;
 
     /**
      * @DESC          # 获取识别名
@@ -31,7 +31,7 @@ interface CacheInterface
      * 参数区：
      * @return string
      */
-    function getIdentify():string;
+    public function getIdentify(): string;
 
     /**
      * @DESC         |获取状态

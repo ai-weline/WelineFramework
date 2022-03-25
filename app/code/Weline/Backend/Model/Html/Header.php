@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,20 +11,18 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Model\Html;
 
-
 use Weline\Backend\Model\Config;
 use Weline\Framework\View\Data\HtmlInterface;
 
 class Header implements HtmlInterface
 {
-    const key = 'header';
-    const module = 'Weline_Backend';
+    public const key = 'header';
+    public const module = 'Weline_Backend';
     private Config $backendConfig;
 
-    function __construct(
+    public function __construct(
         Config $backendConfig
-    )
-    {
+    ) {
         $this->backendConfig = $backendConfig;
     }
 
@@ -36,7 +35,7 @@ class Header implements HtmlInterface
      * 参数区：
      * @return mixed
      */
-    function getHtml(): string
+    public function getHtml(): string
     {
         return $this->backendConfig->getConfig(self::key, self::module) ?? '';
     }
@@ -50,7 +49,7 @@ class Header implements HtmlInterface
      * 参数区：
      * @param string $html
      */
-    function setHtml(string $html)
+    public function setHtml(string $html)
     {
         $this->backendConfig->setConfig(self::key, $html, self::module);
     }

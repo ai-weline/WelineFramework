@@ -12,7 +12,7 @@ use Weline\Framework\App\Exception;
 require 'check.php';
 
 //// 项目根目录
-if(!defined('BP')){
+if (!defined('BP')) {
     define("BP", dirname(__DIR__) . DIRECTORY_SEPARATOR);
 }
 const DEV = true;

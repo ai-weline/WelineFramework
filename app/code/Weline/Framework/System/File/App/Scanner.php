@@ -34,9 +34,9 @@ class Scanner extends Scan
             unset($vendors[$key]);
             // 常规模块
             if ($vendor_module_register_files = $this->scanVendorModules($vendor)) {
-                if(isset($vendors[Register::parserModuleName($vendor)])&&$modules = $vendors[Register::parserModuleName($vendor)]){
-                    $modules = array_merge($modules,$vendor_module_register_files);
-                }else{
+                if (isset($vendors[Register::parserModuleName($vendor)])&&$modules = $vendors[Register::parserModuleName($vendor)]) {
+                    $modules = array_merge($modules, $vendor_module_register_files);
+                } else {
                     $modules = $vendor_module_register_files;
                 }
                 $vendors[Register::parserModuleName($vendor)] = $modules;
@@ -113,7 +113,7 @@ class Scanner extends Scan
 //        $modules = array_merge($modules, $theme_modules);
         $modules = [];
         foreach (Env::register_FILE_PATHS as $register_FILE_PATH) {
-            if(is_dir($register_FILE_PATH . $vendor)){
+            if (is_dir($register_FILE_PATH . $vendor)) {
                 $modules = array_merge($modules, $this->scanDir($register_FILE_PATH . $vendor));
             }
         }
@@ -137,13 +137,12 @@ class Scanner extends Scan
 //            }
             foreach (Env::register_FILE_PATHS as $type=>$register_FILE_PATH) {
                 $app_module_path = $register_FILE_PATH . $vendor . DIRECTORY_SEPARATOR . $module ;
-                if(is_dir($app_module_path)){
-                    $register = $app_module_path. DIRECTORY_SEPARATOR . RegisterInterface::register_file;
+                if (is_dir($app_module_path)) {
+                    $register = $app_module_path . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
                     if (is_file($register)) {
                         $modules[Register::parserModuleName($module)] = $register;
                     }
                 }
-
             }
         }
         return $modules;

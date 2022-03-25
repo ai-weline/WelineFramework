@@ -56,7 +56,7 @@ class TemplateFetchFile implements ObserverInterface
         # 开始分析主题路径
         try {
             $theme = $this->welineTheme->getActiveTheme();
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             throw  new Exception(__('主题异常：') . $exception->getMessage());
         }
 
@@ -69,7 +69,7 @@ class TemplateFetchFile implements ObserverInterface
         if (!is_file($theme_file_path)) {
             $theme_file_path = $module_file_path;
         }
-        $theme_file_path = str_replace('\\', DIRECTORY_SEPARATOR,  $theme_file_path );
+        $theme_file_path = str_replace('\\', DIRECTORY_SEPARATOR, $theme_file_path);
         $fileData->setData('filename', $theme_file_path);
     }
 }

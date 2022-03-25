@@ -25,10 +25,10 @@ class GetDocTypeDeclarationTests extends AbstractUnitTests
      */
     public function testGetDocTypeDeclarationUsingRootAndArrayUri()
     {
-        $uri = array(
+        $uri = [
             'uri' => 'http://pear.php.net/dtd/package-1.0',
             'id' => '-//PHP//PEAR/DTD PACKAGE 0.1'
-        );
+        ];
         $expected = "<!DOCTYPE rootTag PUBLIC \"-//PHP//PEAR/DTD PACKAGE 0.1\" \"http://pear.php.net/dtd/package-1.0\">";
         $this->assertEquals($expected, XML_Util::getDocTypeDeclaration("rootTag", $uri));
     }
@@ -38,10 +38,10 @@ class GetDocTypeDeclarationTests extends AbstractUnitTests
      */
     public function testGetDocTypeDeclarationUsingRootAndArrayUriAndInternalDtd()
     {
-        $uri = array(
+        $uri = [
             'uri' => 'http://pear.php.net/dtd/package-1.0',
             'id' => '-//PHP//PEAR/DTD PACKAGE 0.1'
-        );
+        ];
         $dtdEntry = '<!ELEMENT additionalInfo (#PCDATA)>';
         $expected =
 <<< EOF

@@ -40,7 +40,7 @@ class Core implements Data\DataInterface
         $this->getRequest();
     }
 
-    function getSession(string $session_class_name = null): SessionInterface
+    public function getSession(string $session_class_name = null): SessionInterface
     {
         if (!isset($this->_session)) {
             $this->_session = $this->getObjectManager()->getInstance($session_class_name ?? Session::class);
@@ -60,7 +60,7 @@ class Core implements Data\DataInterface
      *
      * @return $this
      */
-    function setModuleInfo(mixed $module): static
+    public function setModuleInfo(mixed $module): static
     {
         $this->_module = $module;
         return $this;
@@ -75,7 +75,7 @@ class Core implements Data\DataInterface
      * 参数区：
      * @return string
      */
-    function getModule(): mixed
+    public function getModule(): mixed
     {
         return $this->_module;
     }
@@ -92,7 +92,7 @@ class Core implements Data\DataInterface
      *
      * @return string
      */
-    function getUrl(string $path = ''): string
+    public function getUrl(string $path = ''): string
     {
         if (!isset($this->_url)) {
             $this->_url = ObjectManager::getInstance(Url::class);

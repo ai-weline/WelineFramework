@@ -22,14 +22,14 @@ class BackendController extends PcController
 {
     protected CacheInterface $cache;
 
-    function __init()
+    public function __init()
     {
         $this->cache = $this->getControllerCache();
         $this->getSession(BackendSession::class);
         parent::__init();
     }
 
-    function isAllowed(): void
+    public function isAllowed(): void
     {
         parent::isAllowed();
         # 验证除了登录页面以外的所有地址需要登录 FIXME 处理无限跳转问题

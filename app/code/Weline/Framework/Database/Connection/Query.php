@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -9,7 +10,6 @@ declare(strict_types=1);
  */
 
 namespace Weline\Framework\Database\Connection;
-
 
 use PDO;
 use PDOStatement;
@@ -26,15 +26,15 @@ abstract class Query implements QueryInterface
     public string $identity_field = 'id';
     public string $table = '';
     public string $table_alias = 'main_table';
-    public array $insert = array();
-    public array $joins = array();
+    public array $insert = [];
+    public array $joins = [];
     public string $fields = '*';
-    public array $single_updates = array();
-    public array $updates = array();
-    public array $wheres = array();
-    public $bound_values = array();
+    public array $single_updates = [];
+    public array $updates = [];
+    public array $wheres = [];
+    public $bound_values = [];
     public string $limit = '';
-    public array $order = array();
+    public array $order = [];
 
     public ?PDOStatement $PDOStatement = null;
     public string $sql = '';
@@ -45,19 +45,19 @@ abstract class Query implements QueryInterface
     public array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
 
 
-    function identity(string $field): QueryInterface
+    public function identity(string $field): QueryInterface
     {
         $this->identity_field = $field;
         return $this;
     }
 
-    function table(string $table_name): QueryInterface
+    public function table(string $table_name): QueryInterface
     {
         $this->table = $this->getTable($table_name);
         return $this;
     }
 
-    function insert(array $data): QueryInterface
+    public function insert(array $data): QueryInterface
     {
         if (is_string(array_key_first($data))) {
             $this->insert[] = $data;
@@ -77,7 +77,7 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function update(array|string $field, int|string $value_or_condition_field = 'id'): QueryInterface
+    public function update(array|string $field, int|string $value_or_condition_field = 'id'): QueryInterface
     {
         if (empty($field)) {
             throw new DbException(__('更新异常，不可更新空数据！'));
@@ -101,26 +101,28 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function alias(string $table_alias_name): QueryInterface
+    public function alias(string $table_alias_name): QueryInterface
     {
         $this->table_alias = $table_alias_name;
         return $this;
     }
 
-    function join(string $table, string $condition, string $type = 'left'): QueryInterface
+    public function join(string $table, string $condition, string $type = 'left'): QueryInterface
     {
-        if (1 === count(func_get_args())) $type = 'inner';
+        if (1 === count(func_get_args())) {
+            $type = 'inner';
+        }
         $this->joins[] = [$table, $condition, $type];
         return $this;
     }
 
-    function fields(string $fields): QueryInterface
+    public function fields(string $fields): QueryInterface
     {
         $this->fields = $fields;
         return $this;
     }
 
-    function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): QueryInterface
+    public function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): QueryInterface
     {
 //        if (PROD) {
 //            $this->cache->get();// TODO 缓存
@@ -155,19 +157,17 @@ abstract class Query implements QueryInterface
             # 检测条件数组 检测第二个元素必须是限定的 条件操作符
             $this->checkConditionString($where_array);
             $this->wheres[] = $where_array;
-
         }
         return $this;
-
     }
 
-    function limit($size, $offset = 0): QueryInterface
+    public function limit($size, $offset = 0): QueryInterface
     {
         $this->limit = " LIMIT $offset,$size";
         return $this;
     }
 
-    function page(int $page = 1, int $pageSize = 20): QueryInterface
+    public function page(int $page = 1, int $pageSize = 20): QueryInterface
     {
         $offset = 0;
         if (1 < $page) {
@@ -178,7 +178,7 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function pagination(int $page = 1, int $pageSize = 20, array $params = []): QueryInterface
+    public function pagination(int $page = 1, int $pageSize = 20, array $params = []): QueryInterface
     {
         $this->pagination['page']     = $page;
         $this->pagination['pageSize'] = $pageSize;
@@ -198,7 +198,7 @@ abstract class Query implements QueryInterface
         return $query;
     }
 
-    function order(string $field, string $sort = 'DESC'): QueryInterface
+    public function order(string $field, string $sort = 'DESC'): QueryInterface
     {
         if (!is_int(strpos($field, '`'))) {
             $field = "`{$field}`";
@@ -207,7 +207,7 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function find(): QueryInterface
+    public function find(): QueryInterface
     {
         $this->limit(1, 0);
         $this->fetch_type = __FUNCTION__;
@@ -215,7 +215,7 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function total(string $field = '*', string $alias = 'total'): int
+    public function total(string $field = '*', string $alias = 'total'): int
     {
         $this->limit(1, 0);
         $this->fetch_type = 'find';
@@ -228,21 +228,21 @@ abstract class Query implements QueryInterface
         return intval($result);
     }
 
-    function select(): QueryInterface
+    public function select(): QueryInterface
     {
         $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         return $this;
     }
 
-    function delete(): QueryInterface
+    public function delete(): QueryInterface
     {
         $this->fetch_type = __FUNCTION__;
         $this->prepareSql(__FUNCTION__);
         return $this;
     }
 
-    function query(string $sql): QueryInterface
+    public function query(string $sql): QueryInterface
     {
         $this->sql          = $sql;
         $this->fetch_type   = __FUNCTION__;
@@ -250,13 +250,13 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function additional(string $additional_sql): QueryInterface
+    public function additional(string $additional_sql): QueryInterface
     {
         $this->additional_sql = $additional_sql;
         return $this;
     }
 
-    function fetch(string $model_class = ''): mixed
+    public function fetch(string $model_class = ''): mixed
     {
         $result = $this->PDOStatement->execute($this->bound_values);
 
@@ -293,7 +293,7 @@ abstract class Query implements QueryInterface
         return $result;
     }
 
-    function fetchOrigin(): array
+    public function fetchOrigin(): array
     {
         $this->PDOStatement->execute($this->bound_values);
         $origin_data = $this->PDOStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -302,7 +302,7 @@ abstract class Query implements QueryInterface
     }
 
 
-    function clear(string $type = ''): QueryInterface
+    public function clear(string $type = ''): QueryInterface
     {
         if ($type) {
             $attr_var_name = $type;
@@ -317,7 +317,7 @@ abstract class Query implements QueryInterface
     }
 
 
-    function clearQuery(string $type = ''): QueryInterface
+    public function clearQuery(string $type = ''): QueryInterface
     {
         if ($type) {
             $attr_var_name = $type;
@@ -333,7 +333,7 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function reset(): QueryInterface
+    public function reset(): QueryInterface
     {
         foreach (self::init_vars as $init_field => $init_var) {
             $this->$init_field = $init_var;
@@ -341,17 +341,17 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    function beginTransaction(): void
+    public function beginTransaction(): void
     {
         $this->connection->getLink()->beginTransaction();
     }
 
-    function rollBack(): void
+    public function rollBack(): void
     {
         $this->connection->getLink()->rollBack();
     }
 
-    function commit(): void
+    public function commit(): void
     {
         $this->connection->getLink()->commit();
     }

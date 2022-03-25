@@ -11,5 +11,5 @@ namespace Weline\Framework\Register\Module\Data;
 
 interface DataInterface
 {
-    const dir = 'register.php';
+    public const dir = 'register.php';
 }

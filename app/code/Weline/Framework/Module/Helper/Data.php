@@ -25,12 +25,12 @@ class Data extends AbstractHelper
     private array $parent_class_arr = [];
     private File $file;
 
-    function __init()
+    public function __init()
     {
         $this->file = ObjectManager::getInstance(File::class);
     }
 
-    function getClassNamespace(\Weline\Framework\System\File\Data\File $controllerFile)
+    public function getClassNamespace(\Weline\Framework\System\File\Data\File $controllerFile)
     {
         $namespace_arr = explode('\\', $controllerFile->getNamespace());
         foreach ($namespace_arr as &$item) {

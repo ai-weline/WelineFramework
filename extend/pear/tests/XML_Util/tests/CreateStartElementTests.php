@@ -18,7 +18,7 @@ class CreateStartElementTests extends AbstractUnitTests
     public function testCreateStartElementForTagWithAttributes()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $expected = "<myNs:myTag foo=\"bar\">";
         $this->assertEquals($expected, XML_Util::createStartElement($originalTag, $originalAttributes));
     }
@@ -40,7 +40,7 @@ class CreateStartElementTests extends AbstractUnitTests
     public function testCreateStartElementForTagWithAttributesAndNamespace()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected = "<myNs:myTag foo=\"bar\" xmlns:myNs=\"http://www.w3c.org/myNs#\">";
         $this->assertEquals($expected, XML_Util::createStartElement($originalTag, $originalAttributes, $originalNamespace));
@@ -64,7 +64,7 @@ class CreateStartElementTests extends AbstractUnitTests
     public function testCreateStartElementForTagWithAttributesAndNamespaceWithMultiline()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected =
 <<< EOF
@@ -81,7 +81,7 @@ EOF;
     public function testCreateStartElementForTagWithAttributesAndNamespaceWithMultilineAndIndent()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected =
 <<< EOF
@@ -99,7 +99,7 @@ EOF;
     public function testCreateStartElementForTagWithAttributesAndNamespaceWithMultilineAndIndentAndLinebreak()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar");
+        $originalAttributes = ["foo" => "bar"];
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected = "<myNs:myTag foo=\"bar\"^  xmlns:myNs=\"http://www.w3c.org/myNs#\">";
         $multiline = true;
@@ -114,7 +114,7 @@ EOF;
     public function testCreateStartElementForTagWithAttributesAndNamespaceWithMultilineAndIndentAndLinebreakAndSortAttributesIsTrue()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar", "boo" => "baz");
+        $originalAttributes = ["foo" => "bar", "boo" => "baz"];
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected = "<myNs:myTag boo=\"baz\"^  foo=\"bar\"^  xmlns:myNs=\"http://www.w3c.org/myNs#\">";
         $multiline = true;
@@ -130,7 +130,7 @@ EOF;
     public function testCreateStartElementForTagWithAttributesAndNamespaceWithMultilineAndIndentAndLinebreakAndSortAttributesIsFalse()
     {
         $originalTag = "myNs:myTag";
-        $originalAttributes = array("foo" => "bar", "boo" => "baz");
+        $originalAttributes = ["foo" => "bar", "boo" => "baz"];
         $originalNamespace = "http://www.w3c.org/myNs#";
         $expected = "<myNs:myTag foo=\"bar\"^  boo=\"baz\"^  xmlns:myNs=\"http://www.w3c.org/myNs#\">";
         $multiline = true;

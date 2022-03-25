@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,8 +19,7 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Menus extends BaseController
 {
-
-    function index()
+    public function index()
     {
         $menu = $this->getMenu();
         $menu->pagination(
@@ -32,13 +32,15 @@ class Menus extends BaseController
         return $this->fetch();
     }
 
-    function postDelete()
+    public function postDelete()
     {
         try {
             if ($id = $this->_request->getPost('id', 0)) {
                 /**@var Menu $menu */
                 $menu = ObjectManager::getInstance(Menu::class)->load($id);
-                if ($menu->isSystem()) throw new Exception(__('系统菜单无法删除！'));
+                if ($menu->isSystem()) {
+                    throw new Exception(__('系统菜单无法删除！'));
+                }
                 $menu->delete();
                 return $this->fetchJson(['code' => 200, 'msg' => __('删除成功！'), 'data' => []]);
             } else {
@@ -49,7 +51,7 @@ class Menus extends BaseController
         }
     }
 
-    function postSave()
+    public function postSave()
     {
         try {
             $data = json_decode($this->_request->getBodyParams(), true);
@@ -60,12 +62,10 @@ class Menus extends BaseController
         } catch (\Exception $exception) {
             return json_encode($this->exception($exception));
         }
-
     }
 
     private function getMenu(): Menu
     {
         return ObjectManager::getInstance(Menu::class);
     }
-
 }

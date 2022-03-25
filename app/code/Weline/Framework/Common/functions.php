@@ -25,7 +25,7 @@
  * @param $endDelimiter
  * @return array
  */
-if(!function_exists('getStringBetweenContents')){
+if (!function_exists('getStringBetweenContents')) {
     function getStringBetweenContents(string $str, string $startDelimiter, string $endDelimiter): array
     {
         $contents = [];
@@ -45,7 +45,7 @@ if(!function_exists('getStringBetweenContents')){
         return $contents;
     }
 }
-if(!function_exists('__')){
+if (!function_exists('__')) {
     /**
      * @DESC          # 翻译
      *
@@ -62,7 +62,7 @@ if(!function_exists('__')){
         return \Weline\Framework\Phrase\Parser::parse($words, $args);
     }
 }
-if(!function_exists('m_split_by_capital')){
+if (!function_exists('m_split_by_capital')) {
     /**
      * @DESC          | 以大写字母分割字符串
      *
@@ -78,6 +78,3 @@ if(!function_exists('m_split_by_capital')){
         return preg_split('/(?=[A-Z])/', $str);
     }
 }
-
-
-

@@ -30,8 +30,7 @@ class ModuleFileReader extends DataObject
     public function __construct(
         Scanner $scanner,
         string  $path = 'etc' . DIRECTORY_SEPARATOR . 'module.xml'
-    )
-    {
+    ) {
         $this->scanner = $scanner;
         $this->path = $path;
         parent::__construct();

@@ -32,8 +32,7 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
      */
     public function __construct(
         I18n $i18n
-    )
-    {
+    ) {
         $this->i18n = $i18n;
     }
 
@@ -74,7 +73,7 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
         # 检测词典文件是否准确生成
         if (is_file($words_file)) {
             $words_file_data->setData('file_path', $words_file);
-        } else if ($translate_mode !== 'online') {
+        } elseif ($translate_mode !== 'online') {
             # 没有生成 且不是 实时翻译模式
             try {
                 $this->i18n->convertToLanguageFile();

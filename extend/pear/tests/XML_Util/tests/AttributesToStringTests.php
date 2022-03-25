@@ -7,7 +7,7 @@ class AttributesToStringTests extends AbstractUnitTests
      */
     public function testAttributesToStringBasicUsage()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
+        $original = ['foo' => 'bar','boo' => 'baz',];
         $expected = " boo=\"baz\" foo=\"bar\"";
         $this->assertEquals($expected, XML_Util::attributesToString($original));
     }
@@ -17,7 +17,7 @@ class AttributesToStringTests extends AbstractUnitTests
      */
     public function testAttributesToStringWithExplicitSortTrue()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
+        $original = ['foo' => 'bar','boo' => 'baz',];
         $expected = " boo=\"baz\" foo=\"bar\"";
         $sort = true;
         $this->assertEquals($expected, XML_Util::attributesToString($original, $sort));
@@ -28,7 +28,7 @@ class AttributesToStringTests extends AbstractUnitTests
      */
     public function testAttributesToStringWithExplicitSortFalse()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
+        $original = ['foo' => 'bar','boo' => 'baz',];
         $expected = " foo=\"bar\" boo=\"baz\"";
         $sort = false;
         $this->assertEquals($expected, XML_Util::attributesToString($original, $sort));
@@ -39,7 +39,7 @@ class AttributesToStringTests extends AbstractUnitTests
      */
     public function testAttributesToStringWithMultilineFalse()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
+        $original = ['foo' => 'bar','boo' => 'baz',];
         $expected = " boo=\"baz\" foo=\"bar\"";
         $sort = true;
         $multiline = false;
@@ -51,7 +51,7 @@ class AttributesToStringTests extends AbstractUnitTests
      */
     public function testAttributesToStringWithMultilineTrue()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
+        $original = ['foo' => 'bar','boo' => 'baz',];
         $expected =
 <<< EOF
  boo="baz"
@@ -67,7 +67,7 @@ EOF;
      */
     public function testAttributesToStringWithExplicitIndent()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
+        $original = ['foo' => 'bar','boo' => 'baz',];
         $expected = " boo=\"baz\"\n        foo=\"bar\"";
         $sort = true;
         $multiline = true;
@@ -80,7 +80,7 @@ EOF;
      */
     public function testAttributesToStringWithExplicitLinebreak()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
+        $original = ['foo' => 'bar','boo' => 'baz',];
         $expected = " boo=\"baz\"\n^foo=\"bar\"";
         $sort = true;
         $multiline = true;
@@ -93,14 +93,14 @@ EOF;
      */
     public function testAttributesToStringWithOptionsThatIncludesSort()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
-        $options = array(
+        $original = ['foo' => 'bar','boo' => 'baz',];
+        $options = [
             'multiline' => true,
             'indent'    => '----',
             'linebreak' => "^",
             'entities'  => XML_UTIL_ENTITIES_XML,
             'sort'      => true,
-        );
+        ];
 
         $expected = " boo=\"baz\"\n----foo=\"bar\"";
         $this->assertEquals($expected, XML_Util::attributesToString($original, $options));
@@ -111,13 +111,13 @@ EOF;
      */
     public function testAttributesToStringWithOptionsThatExcludesSort()
     {
-        $original = array('foo' => 'bar','boo' => 'baz',);
-        $options = array(
+        $original = ['foo' => 'bar','boo' => 'baz',];
+        $options = [
             'multiline' => true,
             'indent'    => '----',
             'linebreak' => "^",
             'entities'  => XML_UTIL_ENTITIES_XML,
-        );
+        ];
 
         $expected = " boo=\"baz\"\n----foo=\"bar\"";
         $this->assertEquals($expected, XML_Util::attributesToString($original, $options));
@@ -128,7 +128,7 @@ EOF;
      */
     public function testAttributesToStringWithEntitiesNone()
     {
-        $original = array("foo" => "b@&r", "boo" => "b><z");
+        $original = ["foo" => "b@&r", "boo" => "b><z"];
         $expected = " boo=\"b><z\" foo=\"b@&r\"";
         $sort = true;
         $multiline = false;
@@ -141,7 +141,7 @@ EOF;
      */
     public function testAttributesToStringWithEntitiesXml()
     {
-        $original = array("foo" => "b@&r", "boo" => "b><z");
+        $original = ["foo" => "b@&r", "boo" => "b><z"];
         $expected = " boo=\"b&gt;&lt;z\" foo=\"b@&amp;r\"";
         $sort = true;
         $multiline = false;
@@ -154,7 +154,7 @@ EOF;
      */
     public function testAttributesToStringWithEntitiesXmlRequired()
     {
-        $original = array("foo" => "b@&r", "boo" => "b><z");
+        $original = ["foo" => "b@&r", "boo" => "b><z"];
         $expected = " boo=\"b>&lt;z\" foo=\"b@&amp;r\"";
         $sort = true;
         $multiline = false;
@@ -167,7 +167,7 @@ EOF;
      */
     public function testAttributesToStringWithEntitiesHtml()
     {
-        $original = array("foo" => "b@&r", "boo" => "b><z");
+        $original = ["foo" => "b@&r", "boo" => "b><z"];
         $expected = " boo=\"b&gt;&lt;z\" foo=\"b@&amp;r\"";
         $sort = true;
         $multiline = false;
@@ -183,14 +183,14 @@ EOF;
      */
     public function testAttributesToStringWithCDataSectionForSingleAttribute()
     {
-        $original = array('foo' => 'bar'); // need exactly one attribute here
-        $options = array(
+        $original = ['foo' => 'bar']; // need exactly one attribute here
+        $options = [
             'sort'      => true,   // doesn't matter for this testcase
             'multiline' => false,  // doesn't matter for this testcase
             'indent'    => null,   // doesn't matter for this testcase
             'linebreak' => null,   // doesn't matter for this testcase
             'entities'  => XML_UTIL_CDATA_SECTION, // DOES matter for this testcase
-        );
+        ];
         $expected = " foo=\"bar\"";
         $this->assertEquals($expected, XML_Util::attributesToString($original, $options));
     }
@@ -203,14 +203,14 @@ EOF;
      */
     public function testAttributesToStringWithCDataSectionForMultipleAttributesAndMultilineFalse()
     {
-        $original = array('foo' => 'bar', 'boo' => 'baz'); // need more than one attribute here
-        $options = array(
+        $original = ['foo' => 'bar', 'boo' => 'baz']; // need more than one attribute here
+        $options = [
             'sort'      => true,   // doesn't matter for this testcase
             'multiline' => false,  // DOES matter for this testcase, must be false
             'indent'    => null,   // doesn't matter for this testcase
             'linebreak' => null,   // doesn't matter for this testcase
             'entities'  => XML_UTIL_CDATA_SECTION, // DOES matter for this testcase
-        );
+        ];
         $expected = " boo=\"baz\" foo=\"bar\"";
         $this->assertEquals($expected, XML_Util::attributesToString($original, $options));
     }

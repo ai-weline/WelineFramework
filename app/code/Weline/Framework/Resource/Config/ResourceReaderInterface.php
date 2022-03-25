@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,5 +13,5 @@ namespace Weline\Framework\Resource\Config;
 
 interface ResourceReaderInterface
 {
-    function getResourceFiles();
+    public function getResourceFiles();
 }

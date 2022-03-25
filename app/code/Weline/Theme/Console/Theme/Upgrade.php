@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -24,13 +25,12 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
     private System $system;
     private Printing $printing;
 
-    function __construct(
+    public function __construct(
         WelineTheme $welineTheme,
         Printing    $printing,
         System      $system,
         Scan        $scan
-    )
-    {
+    ) {
         $this->welineTheme = $welineTheme;
         $this->scan = $scan;
         $this->system = $system;
@@ -49,7 +49,9 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
         foreach ($args as $key => $arg) {
             switch ($arg) {
                 case '-t':
-                    if (!$args[$key + 1]) throw new ConsoleException(__('设置了 -t 参数，但却没有-t参数值！'));
+                    if (!$args[$key + 1]) {
+                        throw new ConsoleException(__('设置了 -t 参数，但却没有-t参数值！'));
+                    }
                     $theme_name = $args[$key + 1];
                     unset($args[$key]);
                     unset($args[$key + 1]);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -22,12 +23,10 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     private System $system;
     private Printing $printing;
 
-    function __construct(
+    public function __construct(
         Printing $printing,
         System   $system
-    )
-    {
-
+    ) {
         $this->system = $system;
         $this->printing = $printing;
     }
@@ -58,12 +57,12 @@ class Clear implements \Weline\Framework\Console\CommandInterface
         }
     }
 
-    function clear(string $module_name, string $base_path)
+    public function clear(string $module_name, string $base_path)
     {
         $this->printing->note($module_name);
-        if(is_dir($base_path. DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::dir_type_TEMPLATE_COMPILE)){
+        if (is_dir($base_path . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::dir_type_TEMPLATE_COMPILE)) {
 //            p($this->system->exec("rm -rf $base_path" . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::dir_type_TEMPLATE_COMPILE. DIRECTORY_SEPARATOR,true));
-            $this->system->exec("rm -rf $base_path" . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::dir_type_TEMPLATE_COMPILE. DIRECTORY_SEPARATOR);
+            $this->system->exec("rm -rf $base_path" . DataInterface::dir . DIRECTORY_SEPARATOR . DataInterface::dir_type_TEMPLATE_COMPILE . DIRECTORY_SEPARATOR);
             $this->printing->note(__('清理完成：%1', $module_name));
         }
     }

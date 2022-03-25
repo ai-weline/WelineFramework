@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,275 +13,275 @@ namespace Weline\Admin\Controller\Template;
 
 class Upzet extends BaseController
 {
-    function index()
+    public function index()
     {
         return $this->fetch();
     }
 
-    function calendar()
+    public function calendar()
     {
         return $this->fetch();
     }
 
-    function emailInbox()
+    public function emailInbox()
     {
         return $this->fetch();
     }
 
-    function emailRead()
+    public function emailRead()
     {
         return $this->fetch();
     }
 
-    function emailCompose()
+    public function emailCompose()
     {
         return $this->fetch();
     }
 
-    function layoutsLightSidebar()
+    public function layoutsLightSidebar()
     {
         return $this->fetch('layouts-light-sidebar');
     }
 
-    function layoutsCompactSidebar()
+    public function layoutsCompactSidebar()
     {
         return $this->fetch('layouts-compact-sidebar');
     }
 
-    function layoutsIconSidebar()
+    public function layoutsIconSidebar()
     {
         return $this->fetch('layouts-icon-sidebar');
     }
 
-    function layoutsBoxed()
+    public function layoutsBoxed()
     {
         return $this->fetch('layouts-boxed');
     }
-    function layoutshorizontal()
+    public function layoutshorizontal()
     {
         return $this->fetch('layouts-horizontal');
     }
-    function authlockscreen()
+    public function authlockscreen()
     {
         return $this->fetch('auth-lock-screen');
     }
-    function authlogin()
+    public function authlogin()
     {
         return $this->fetch('auth-login');
     }
-    function authrecoverpw()
+    public function authrecoverpw()
     {
         return $this->fetch('auth-recoverpw');
     }
-    function authregister()
+    public function authregister()
     {
         return $this->fetch('auth-register');
     }
-    function chartsapex()
+    public function chartsapex()
     {
         return $this->fetch('charts-apex');
     }
-    function chartschartjs()
+    public function chartschartjs()
     {
         return $this->fetch('charts-chartjs');
     }
-    function chartsflot()
+    public function chartsflot()
     {
         return $this->fetch('charts-flot');
     }
-    function chartsknob()
+    public function chartsknob()
     {
         return $this->fetch('charts-knob');
     }
-    function chartssparkline()
+    public function chartssparkline()
     {
         return $this->fetch('charts-sparkline');
     }
-    function formadvanced()
+    public function formadvanced()
     {
         return $this->fetch('form-advanced');
     }
-    function formeditors()
+    public function formeditors()
     {
         return $this->fetch('form-editors');
     }
-    function formelements()
+    public function formelements()
     {
         return $this->fetch('form-elements');
     }
-    function formmask()
+    public function formmask()
     {
         return $this->fetch('form-mask');
     }
-    function formuploads()
+    public function formuploads()
     {
         return $this->fetch('form-uploads');
     }
-    function formvalidation()
+    public function formvalidation()
     {
         return $this->fetch('form-validation');
     }
-    function formwizard()
+    public function formwizard()
     {
         return $this->fetch('form-wizard');
     }
-    function formxeditable()
+    public function formxeditable()
     {
         return $this->fetch('form-xeditable');
     }
-    function iconsdripicons()
+    public function iconsdripicons()
     {
         return $this->fetch('icons-dripicons');
     }
-    function iconsfontawesome()
+    public function iconsfontawesome()
     {
         return $this->fetch('icons-fontawesome');
     }
-    function iconsmaterialdesign()
+    public function iconsmaterialdesign()
     {
         return $this->fetch('icons-materialdesign');
     }
-    function iconsremix()
+    public function iconsremix()
     {
         return $this->fetch('icons-remix');
     }
-    function mapsgoogle()
+    public function mapsgoogle()
     {
         return $this->fetch('maps-google');
     }
-    function mapsvector()
+    public function mapsvector()
     {
         return $this->fetch('maps-vector');
     }
-    function pages404()
+    public function pages404()
     {
         return $this->fetch('pages-404');
     }
-    function pages500()
+    public function pages500()
     {
         return $this->fetch('pages-500');
     }
-    function pagescomingsoon()
+    public function pagescomingsoon()
     {
         return $this->fetch('pages-comingsoon');
     }
-    function pagesfaqs()
+    public function pagesfaqs()
     {
         return $this->fetch('pages-faqs');
     }
-    function pagesmaintenance()
+    public function pagesmaintenance()
     {
         return $this->fetch('pages-maintenance');
     }
-    function pagespricing()
+    public function pagespricing()
     {
         return $this->fetch('pages-pricing');
     }
-    function pagesstarter()
+    public function pagesstarter()
     {
         return $this->fetch('pages-starter');
     }
-    function pagestimeline()
+    public function pagestimeline()
     {
         return $this->fetch('pages-timeline');
     }
-    function tablesbasic()
+    public function tablesbasic()
     {
         return $this->fetch('tables-basic');
     }
-    function tablesdatatable()
+    public function tablesdatatable()
     {
         return $this->fetch('tables-datatable');
     }
-    function tableseditable()
+    public function tableseditable()
     {
         return $this->fetch('tables-editable');
     }
-    function tablesresponsive()
+    public function tablesresponsive()
     {
         return $this->fetch('tables-responsive');
     }
-    function uialerts()
+    public function uialerts()
     {
         return $this->fetch('ui-alerts');
     }
-    function uibadge()
+    public function uibadge()
     {
         return $this->fetch('ui-badge');
     }
-    function uibuttons()
+    public function uibuttons()
     {
         return $this->fetch('ui-buttons');
     }
-    function uicards()
+    public function uicards()
     {
         return $this->fetch('ui-cards');
     }
-    function uicarousel()
+    public function uicarousel()
     {
         return $this->fetch('ui-carousel');
     }
-    function uidropdowns()
+    public function uidropdowns()
     {
         return $this->fetch('ui-dropdowns');
     }
-    function uigrid()
+    public function uigrid()
     {
         return $this->fetch('ui-grid');
     }
-    function uiimages()
+    public function uiimages()
     {
         return $this->fetch('ui-images');
     }
-    function uilightbox()
+    public function uilightbox()
     {
         return $this->fetch('ui-lightbox');
     }
-    function uimodals()
+    public function uimodals()
     {
         return $this->fetch('ui-modals');
     }
-    function uioffcanvas()
+    public function uioffcanvas()
     {
         return $this->fetch('ui-offcanvas');
     }
-    function uipagination()
+    public function uipagination()
     {
         return $this->fetch('ui-pagination');
     }
-    function uipopovertooltips()
+    public function uipopovertooltips()
     {
         return $this->fetch('ui-popover-tooltips');
     }
-    function uiprogressbars()
+    public function uiprogressbars()
     {
         return $this->fetch('ui-progressbars');
     }
-    function uirangeslider()
+    public function uirangeslider()
     {
         return $this->fetch('ui-rangeslider');
     }
-    function uirating()
+    public function uirating()
     {
         return $this->fetch('ui-rating');
     }
-    function uisessiontimeout()
+    public function uisessiontimeout()
     {
         return $this->fetch('ui-session-timeout');
     }
-    function uisweetalert()
+    public function uisweetalert()
     {
         return $this->fetch('ui-sweet-alert');
     }
-    function uitabsaccordions()
+    public function uitabsaccordions()
     {
         return $this->fetch('ui-tabs-accordions');
     }
-    function uitypography()
+    public function uitypography()
     {
         return $this->fetch('ui-typography');
     }
-    function uivideo()
+    public function uivideo()
     {
         return $this->fetch('ui-video');
     }

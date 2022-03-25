@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,7 +14,6 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\test;
 
-
 use Weline\Framework\App\Env;
 use Weline\Framework\Database\DbManager\ConfigProvider;
 use Weline\Framework\Database\ConnectionFactory;
@@ -21,7 +21,8 @@ use Weline\Framework\Manager\ObjectManager;
 
 class DbManager extends \Weline\Framework\UnitTest\TestCore
 {
-    function testCreate(){
+    public function testCreate()
+    {
         /**@var \Weline\Framework\Database\DbManager $dbManager*/
         $dbManager = ObjectManager::getInstance(\Weline\Framework\Database\DbManager::class);
         /**@var ConnectionFactory $connection*/

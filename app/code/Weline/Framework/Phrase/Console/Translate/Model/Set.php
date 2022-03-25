@@ -34,8 +34,7 @@ class Set implements CommandInterface
     public function __construct(
         Printing $printing,
         System   $system
-    )
-    {
+    ) {
         $this->printing = $printing;
         $this->system = $system;
     }

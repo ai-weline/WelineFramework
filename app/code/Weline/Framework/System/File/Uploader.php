@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -30,7 +31,7 @@ class Uploader
      * @param string $module_name 需要设置上传的目录位置
      * @return array
      */
-    function saveFiles(string $module_name = '', string $move_to_dir = ''): array
+    public function saveFiles(string $module_name = '', string $move_to_dir = ''): array
     {
         if ($move_to_dir) {
             $this->setBaseUploaderDir($move_to_dir);
@@ -61,7 +62,7 @@ class Uploader
      * @return string
      * @throws Exception
      */
-    function saveFile(string $file_tmp, string $filename): string
+    public function saveFile(string $file_tmp, string $filename): string
     {
         $dir = dirname($filename);
         if (!is_dir($dir)) {

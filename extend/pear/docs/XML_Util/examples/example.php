@@ -6,7 +6,7 @@
  * Examples (file #1)
  *
  * several examples for the methods of XML_Util
- * 
+ *
  * PHP versions 4 and 5
  *
  * LICENSE:
@@ -54,7 +54,7 @@
     error_reporting(E_ALL);
 
     require_once 'XML/Util.php';
-    
+
     /**
      * replacing XML entities
      */
@@ -84,31 +84,37 @@
      * building document type declaration
      */
     print 'building DocType declaration:<br>';
-    print htmlspecialchars(XML_Util::getDocTypeDeclaration('package', 
-        'http://pear.php.net/dtd/package-1.0'));
+    print htmlspecialchars(XML_Util::getDocTypeDeclaration(
+        'package',
+        'http://pear.php.net/dtd/package-1.0'
+    ));
     print "\n<br><br>\n";
 
     print 'building DocType declaration with public ID (does not exist):<br>';
-    print htmlspecialchars(XML_Util::getDocTypeDeclaration('package', 
-        array('uri' => 'http://pear.php.net/dtd/package-1.0', 
-            'id' => '-//PHP//PEAR/DTD PACKAGE 0.1')));
+    print htmlspecialchars(XML_Util::getDocTypeDeclaration(
+        'package',
+        ['uri' => 'http://pear.php.net/dtd/package-1.0',
+            'id' => '-//PHP//PEAR/DTD PACKAGE 0.1']
+    ));
     print "\n<br><br>\n";
 
     print 'building DocType declaration with internal DTD:<br>';
     print '<pre>';
-    print htmlspecialchars(XML_Util::getDocTypeDeclaration('package', 
-        'http://pear.php.net/dtd/package-1.0', 
-        '<!ELEMENT additionalInfo (#PCDATA)>'));
+    print htmlspecialchars(XML_Util::getDocTypeDeclaration(
+        'package',
+        'http://pear.php.net/dtd/package-1.0',
+        '<!ELEMENT additionalInfo (#PCDATA)>'
+    ));
     print '</pre>';
     print "\n<br><br>\n";
 
     /**
      * creating an attribute string
      */
-    $att = array(
+    $att = [
         'foo'  => 'bar',
         'argh' => 'tomato'
-    );
+    ];
 
     print 'converting array to string:<br>';
     print XML_Util::attributesToString($att);
@@ -118,10 +124,10 @@
     /**
      * creating an attribute string with linebreaks
      */
-    $att = array(
+    $att = [
         'foo'  => 'bar',
         'argh' => 'tomato'
-    );
+    ];
 
     print 'converting array to string (including line breaks):<br>';
     print '<pre>';
@@ -167,7 +173,7 @@
     print_r(XML_Util::isValidname('My Private Tag'));
     print '</pre>';
     print "\n<br><br>\n";
-    
+
     print 'verifying \'-MyTag\':<br>';
     print '<pre>';
     print_r(XML_Util::isValidname('-MyTag'));
@@ -177,12 +183,12 @@
     /**
      * creating an XML tag
      */
-    $tag = array(
+    $tag = [
         'namespace'  => 'foo',
         'localPart'  => 'bar',
-        'attributes' => array('key' => 'value', 'argh' => 'fruit&vegetable'),
+        'attributes' => ['key' => 'value', 'argh' => 'fruit&vegetable'],
         'content'    => 'I\'m inside the tag'
-    );
+    ];
 
     print 'creating a tag with namespace and local part:<br>';
     print htmlentities(XML_Util::createTagFromArray($tag));
@@ -191,12 +197,12 @@
     /**
      * creating an XML tag
      */
-    $tag = array(
+    $tag = [
         'qname'        => 'foo:bar',
         'namespaceUri' => 'http://foo.com',
-        'attributes'   => array('key' => 'value', 'argh' => 'fruit&vegetable'),
+        'attributes'   => ['key' => 'value', 'argh' => 'fruit&vegetable'],
         'content'      => 'I\'m inside the tag'
-    );
+    ];
 
     print 'creating a tag with qualified name and namespaceUri:<br>';
     print htmlentities(XML_Util::createTagFromArray($tag));
@@ -205,11 +211,11 @@
     /**
      * creating an XML tag
      */
-    $tag = array(
+    $tag = [
         'qname'        => 'bar',
         'namespaceUri' => 'http://foo.com',
-        'attributes'   => array('key' => 'value', 'argh' => 'fruit&vegetable')
-    );
+        'attributes'   => ['key' => 'value', 'argh' => 'fruit&vegetable']
+    ];
 
     print 'creating an empty tag without namespace but namespace Uri:<br>';
     print htmlentities(XML_Util::createTagFromArray($tag));
@@ -218,16 +224,16 @@
     /**
      * creating an XML tag with more namespaces
      */
-    $tag = array(
+    $tag = [
         'namespace'   => 'foo',
         'localPart'   => 'bar',
-        'attributes'  => array('key' => 'value', 'argh' => 'fruit&vegetable'),
+        'attributes'  => ['key' => 'value', 'argh' => 'fruit&vegetable'],
         'content'     => 'I\'m inside the tag',
-        'namespaces'  => array(
+        'namespaces'  => [
             'bar'  => 'http://bar.com',
             'pear' => 'http://pear.php.net',
-        )
-    );
+        ]
+    ];
 
     print 'creating an XML tag with more namespaces:<br />';
     print htmlentities(XML_Util::createTagFromArray($tag));
@@ -236,11 +242,11 @@
     /**
      * creating an XML tag with a CData Section
      */
-    $tag = array(
+    $tag = [
         'qname'      => 'foo',
-        'attributes' => array('key' => 'value', 'argh' => 'fruit&vegetable'),
+        'attributes' => ['key' => 'value', 'argh' => 'fruit&vegetable'],
         'content'    => 'I\'m inside the tag'
-    );
+    ];
 
     print 'creating a tag with CData section:<br>';
     print htmlentities(XML_Util::createTagFromArray($tag, XML_UTIL_CDATA_SECTION));
@@ -249,13 +255,13 @@
     /**
      * creating an XML tag with a CData Section
      */
-    $tag = array(
+    $tag = [
         'qname'      => 'foo',
-        'attributes' => array('key' => 'value', 'argh' => 'tütü'),
-        'content'    => 
+        'attributes' => ['key' => 'value', 'argh' => 'tütü'],
+        'content'    =>
             'Also XHTML-tags can be created '
             . 'and HTML entities can be replaced Ä ä Ü ö <>.'
-    );
+    ];
 
     print 'creating a tag with HTML entities:<br>';
     print htmlentities(XML_Util::createTagFromArray($tag, XML_UTIL_ENTITIES_HTML));
@@ -265,35 +271,36 @@
     * creating an XML tag with createTag
     */
     print 'creating a tag with createTag:<br>';
-    print htmlentities(XML_Util::createTag('myNs:myTag', 
-        array('foo' => 'bar'), 
-        'This is inside the tag', 
-        'http://www.w3c.org/myNs#'));
+    print htmlentities(XML_Util::createTag(
+        'myNs:myTag',
+        ['foo' => 'bar'],
+        'This is inside the tag',
+        'http://www.w3c.org/myNs#'
+    ));
     print "\n<br><br>\n";
 
-    
+
     /**
      * trying to create an XML tag with an array as content
      */
-    $tag = array(
+    $tag = [
         'qname'   => 'bar',
-        'content' => array('foo' => 'bar')
-    );
+        'content' => ['foo' => 'bar']
+    ];
     print 'trying to create an XML tag with an array as content:<br>';
     print '<pre>';
     print_r(XML_Util::createTagFromArray($tag));
     print '</pre>';
     print "\n<br><br>\n";
-    
+
     /**
      * trying to create an XML tag without a name
      */
-    $tag = array(
-        'attributes' => array('foo' => 'bar'),
-    );
+    $tag = [
+        'attributes' => ['foo' => 'bar'],
+    ];
     print 'trying to create an XML tag without a name:<br>';
     print '<pre>';
     print_r(XML_Util::createTagFromArray($tag));
     print '</pre>';
     print "\n<br><br>\n";
-?>

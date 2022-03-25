@@ -44,7 +44,7 @@ interface SessionDriverHandlerInterface extends DriverInterface
      * @param $name
      * @return bool
      */
-    public function delete($name):bool;
+    public function delete($name): bool;
 
     public function destroy();
 
@@ -57,5 +57,5 @@ interface SessionDriverHandlerInterface extends DriverInterface
      * 参数区：
      * @return mixed
      */
-    public function getSessionId():string;
+    public function getSessionId(): string;
 }

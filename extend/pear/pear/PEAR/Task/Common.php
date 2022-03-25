@@ -90,7 +90,7 @@ class PEAR_Task_Common
      * @param PEAR_Config
      * @param PEAR_Common
      */
-    function __construct(&$config, &$logger, $phase)
+    public function __construct(&$config, &$logger, $phase)
     {
         $this->config = &$config;
         $this->registry = &$config->getRegistry();
@@ -172,14 +172,14 @@ class PEAR_Task_Common
         return isset($GLOBALS['_PEAR_TASK_POSTINSTANCES']);
     }
 
-     /**
-      * @final
-      */
+    /**
+     * @final
+     */
     public static function runPostinstallTasks()
     {
         foreach ($GLOBALS['_PEAR_TASK_POSTINSTANCES'] as $class => $tasks) {
             $err = call_user_func(
-                array($class, 'run'),
+                [$class, 'run'],
                 $GLOBALS['_PEAR_TASK_POSTINSTANCES'][$class]
             );
             if ($err) {
@@ -195,7 +195,7 @@ class PEAR_Task_Common
      */
     public function isScript()
     {
-            return $this->type == 'script';
+        return $this->type == 'script';
     }
 
     public function throwError($msg, $code = -1)

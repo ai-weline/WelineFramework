@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,9 +13,9 @@ namespace Weline\Framework\View;
 
 interface BlockInterface
 {
-    function setTemplate(string $template);
+    public function setTemplate(string $template);
 
-    function render();
+    public function render();
 
-    function __toString();
+    public function __toString();
 }

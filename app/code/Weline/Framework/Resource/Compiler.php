@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -21,13 +22,13 @@ class Compiler implements CompilerInterface
 
     protected ?ResourceReaderInterface $reader;
 
-    function setReader(ResourceReaderInterface $resourceReader): static
+    public function setReader(ResourceReaderInterface $resourceReader): static
     {
         $this->reader = $resourceReader;
         return $this;
     }
 
-    function getEventManager(): EventsManager
+    public function getEventManager(): EventsManager
     {
         if (!isset($this->eventsManager, $_)) {
             $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
@@ -42,5 +43,4 @@ class Compiler implements CompilerInterface
             $this->getEventManager()->dispatch('Framework_Resource::compiler', ['data' => new DataObject(['area' => $area, 'type' => $this->reader->getSourceType(), 'resources' => $config_resource])]);
         }
     }
-
 }

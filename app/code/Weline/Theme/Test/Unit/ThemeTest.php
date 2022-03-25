@@ -21,7 +21,7 @@ class ThemeTest extends TestCore
      */
     private WelineTheme $theme;
 
-    function setUp(): void
+    public function setUp(): void
     {
         $this->theme = ObjectManager::getInstance(WelineTheme::class);
     }

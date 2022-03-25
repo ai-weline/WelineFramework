@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,14 +14,13 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\Exception;
 
-
 use Weline\Framework\Exception\Core;
 
 class LinkException extends Core
 {
-    function __construct($message = null, \Exception $cause = null, $code = 0)
+    public function __construct($message = null, \Exception $cause = null, $code = 0)
     {
-        $message = 'DB Error:'.$message;
+        $message = 'DB Error:' . $message;
         parent::__construct($message, $cause, $code);
     }
 }

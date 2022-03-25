@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,10 +19,9 @@ class BackendNoLoginRedirectUrl implements \Weline\Framework\Event\ObserverInter
 {
     private Url $url;
 
-    function __construct(
+    public function __construct(
         Url $url
-    )
-    {
+    ) {
         $this->url = $url;
     }
 

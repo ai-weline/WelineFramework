@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -20,25 +21,22 @@ class StarPage
 {
     private CacheInterface $cache;
 
-    function __construct(
+    public function __construct(
         CacheFactory $cacheFactory
-    )
-    {
+    ) {
         $this->cache = $cacheFactory->create();
     }
 
-    function afterProcessUrl(\Weline\Framework\Router\Core $core, $result)
+    public function afterProcessUrl(\Weline\Framework\Router\Core $core, $result)
     {
         if (empty($result)) {
             if ($result = $this->cache->get(KeysInterface::cache_start_page_path)) {
-
             } else {
                 /**@var Config $configModel */
                 $configModel = ObjectManager::getInstance(Config::class);
                 $result      = $configModel->getConfig(KeysInterface::key_start_page_path, KeysInterface::start_module);
                 $this->cache->set(KeysInterface::cache_start_page_path, $result);
             }
-
         }
         return $result??'';
     }

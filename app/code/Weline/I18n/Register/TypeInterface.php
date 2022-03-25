@@ -11,5 +11,5 @@ namespace Weline\I18n\Register;
 
 interface TypeInterface
 {
-    const type = 'lang';
+    public const type = 'lang';
 }

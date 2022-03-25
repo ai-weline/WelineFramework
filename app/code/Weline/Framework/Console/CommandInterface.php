@@ -20,9 +20,9 @@ namespace Weline\Framework\Console;
  */
 interface CommandInterface
 {
-    const version = '1.0.0';
+    public const version = '1.0.0';
 
-    const dir = 'Console';
+    public const dir = 'Console';
 
     /**
      * @DESC         |命令行类接口运行方法

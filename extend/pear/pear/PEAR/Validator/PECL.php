@@ -29,7 +29,7 @@ require_once 'PEAR/Validate.php';
  */
 class PEAR_Validator_PECL extends PEAR_Validate
 {
-    function validateVersion()
+    public function validateVersion()
     {
         if ($this->_state == PEAR_VALIDATE_PACKAGING) {
             $version = $this->_packagexml->getVersion();
@@ -44,7 +44,7 @@ class PEAR_Validator_PECL extends PEAR_Validate
         return true;
     }
 
-    function validatePackageName()
+    public function validatePackageName()
     {
         $ret = parent::validatePackageName();
         if ($this->_packagexml->getPackageType() == 'extsrc' ||
@@ -59,4 +59,3 @@ class PEAR_Validator_PECL extends PEAR_Validate
         return $ret;
     }
 }
-?>

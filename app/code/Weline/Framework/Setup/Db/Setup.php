@@ -28,11 +28,10 @@ class Setup extends DbManager
      * @throws Exception
      * @throws \ReflectionException
      */
-    function __construct(
+    public function __construct(
         ConfigProvider $configProvider,
         DdlFactory $ddl_table
-    )
-    {
+    ) {
         parent::__construct($configProvider);
         $this->ddl_table = $ddl_table->create();
     }
@@ -63,10 +62,10 @@ class Setup extends DbManager
      * @param string $new_table_name
      * @return Table\Alter
      */
-    public function alterTable(string $table_name, string $primary_key,string $comment = '',string $new_table_name=''): Table\Alter
+    public function alterTable(string $table_name, string $primary_key, string $comment = '', string $new_table_name=''): Table\Alter
     {
         $table_name = $this->getTable($table_name);
-        return $this->ddl_table->alterTable()->forTable($table_name, $primary_key,$comment,$new_table_name);
+        return $this->ddl_table->alterTable()->forTable($table_name, $primary_key, $comment, $new_table_name);
     }
 
     /**
@@ -156,7 +155,7 @@ class Setup extends DbManager
      * @throws \ReflectionException
      * @throws \Weline\Framework\Database\Exception\LinkException
      */
-    function query(string $sql): mixed
+    public function query(string $sql): mixed
     {
         return $this->getConnection()->query($sql)->fetch();
     }

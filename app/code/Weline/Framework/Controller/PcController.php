@@ -28,13 +28,17 @@ class PcController extends Core
 
     private CacheInterface $controllerCache;
 
-    function __init()
+    public function __init()
     {
         parent::__init();
         $this->isAllowed();
         $this->assign($this->_request->getParams());
-        if (empty($this->controllerCache)) $this->controllerCache = $this->getControllerCache();
-        if (empty($this->_eventManager)) $this->_eventManager = ObjectManager::getInstance(EventsManager::class);
+        if (empty($this->controllerCache)) {
+            $this->controllerCache = $this->getControllerCache();
+        }
+        if (empty($this->_eventManager)) {
+            $this->_eventManager = ObjectManager::getInstance(EventsManager::class);
+        }
     }
 
     /**
@@ -44,7 +48,7 @@ class PcController extends Core
      * @throws Exception
      * @throws \ReflectionException
      */
-    function redirect(string|int $url)
+    public function redirect(string|int $url)
     {
         if (is_string($url)) {
             $this->getRequest()->getResponse()->redirect($url);
@@ -53,7 +57,7 @@ class PcController extends Core
         }
     }
 
-    function isAllowed(): void
+    public function isAllowed(): void
     {
         # FIXME 存储需要验证的URL才合理 放入SESSION不合理
         if (!empty($form_key_paths_str = $this->getSession()->getData('form_key_paths')) && !empty($form_key = $this->getSession()->getData('form_key'))) {

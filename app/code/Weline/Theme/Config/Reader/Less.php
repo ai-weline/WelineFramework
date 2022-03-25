@@ -27,7 +27,7 @@ class Less extends ResourceReader
     {
         return Env::getInstance()->getConfig('theme');
     }
-    function getFileList(\Closure $callback = null): array
+    public function getFileList(\Closure $callback = null): array
     {
         $callback = function ($data) {
             $need_data = [];
@@ -57,23 +57,23 @@ class Less extends ResourceReader
         };
         return parent::getFileList($callback);
     }
-    function getResourceFiles():array
+    public function getResourceFiles(): array
     {
         # less文件
         $less_files = $this->getFileList();
 
         foreach ($less_files as $require_config_key => $less_file) {
             $area = $less_file['area'];
-            if(!isset($this->config_resources[$area])){
+            if (!isset($this->config_resources[$area])) {
                 $this->config_resources[$area]='';
             }
             $content = file_get_contents($less_file['origin']);
             # 替换模块的路径
             foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
-                $related_file_path = str_replace(trim($module_info['base_path'],DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.'view', '/', $less_file['dir']);
+                $related_file_path = str_replace(trim($module_info['base_path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'view', '/', $less_file['dir']);
                 $related_file_path = str_replace('//', '/', $related_file_path);
                 $related_file_path = str_replace('//', '/', $related_file_path);
-                $file_path = $this->fetchFile($module_name.'::'.$related_file_path);
+                $file_path = $this->fetchFile($module_name . '::' . $related_file_path);
                 $file_path = str_replace('//', '/', $file_path);
                 $file_path = str_replace('//', '/', $file_path);
                 $content =str_replace($module_name, $file_path, $content);
@@ -94,7 +94,7 @@ class Less extends ResourceReader
         return $this->template;
     }
 
-    function fetchFile(string $source)
+    public function fetchFile(string $source)
     {
         return $this->getTemplate()->fetchTagSourceFile('statics', $source);
     }

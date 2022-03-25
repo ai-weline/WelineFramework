@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -36,12 +37,11 @@ class ModelSetup extends DbManager
      * @throws Exception
      * @throws \ReflectionException
      */
-    function __construct(
+    public function __construct(
         ConfigProvider $configProvider,
         Printing       $printing,
         DdlFactory     $ddl_table
-    )
-    {
+    ) {
         parent::__construct($configProvider);
         $this->ddl_table = $ddl_table->create();
         $this->printing = $printing;
@@ -57,7 +57,7 @@ class ModelSetup extends DbManager
      * @param AbstractModel $model
      * @return $this
      */
-    function putModel(AbstractModel $model): ModelSetup
+    public function putModel(AbstractModel $model): ModelSetup
     {
         $this->model = $model;
         return $this;
@@ -115,7 +115,7 @@ class ModelSetup extends DbManager
      */
     public function tableExist(string $table_name=''): bool
     {
-        if(empty($table_name)){
+        if (empty($table_name)) {
             $table_name = $this->model->getTable();
         }
         try {
@@ -154,7 +154,7 @@ class ModelSetup extends DbManager
      */
     public function dropTable(string $table_name=''): bool
     {
-        if(empty($table_name)){
+        if (empty($table_name)) {
             $table_name = $this->model->getTable();
         }
         try {
@@ -178,7 +178,7 @@ class ModelSetup extends DbManager
      * @throws \ReflectionException
      * @throws \Weline\Framework\Database\Exception\LinkException
      */
-    function query(string $sql): mixed
+    public function query(string $sql): mixed
     {
         return $this->getConnection()->query($sql)->fetch();
     }
@@ -192,7 +192,7 @@ class ModelSetup extends DbManager
      * 参数区：
      * @return Printing
      */
-    function getPrinting(): Printing
+    public function getPrinting(): Printing
     {
         return $this->printing;
     }

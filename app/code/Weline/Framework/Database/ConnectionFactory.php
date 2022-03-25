@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -12,7 +13,6 @@ declare(strict_types=1);
  */
 
 namespace Weline\Framework\Database;
-
 
 use PDO;
 use PDOException;
@@ -35,7 +35,7 @@ class ConnectionFactory
      * @param ConfigProvider $configProvider
      * @throws LinkException
      */
-    function __construct(ConfigProvider $configProvider)
+    public function __construct(ConfigProvider $configProvider)
     {
         $this->configProvider = $configProvider;
         $this->create();
@@ -48,7 +48,7 @@ class ConnectionFactory
      *
      * @return ConfigProvider
      */
-    function getConfigProvider(): ConfigProvider
+    public function getConfigProvider(): ConfigProvider
     {
         return $this->configProvider;
     }
@@ -62,7 +62,7 @@ class ConnectionFactory
      */
     public function __sleep()
     {
-        return array('configProvider', 'query');
+        return ['configProvider', 'query'];
     }
 
     /**
@@ -167,7 +167,7 @@ class ConnectionFactory
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      */
-    function query(string $sql): QueryInterface
+    public function query(string $sql): QueryInterface
     {
         return $this->getQuery()->query($sql);
     }
@@ -195,7 +195,7 @@ class ConnectionFactory
      * @param string $driver_type
      * @return string
      */
-    function getAdapter(string $driver_type='Query'): string
+    public function getAdapter(string $driver_type='Query'): string
     {
         $driver_type = ucfirst($driver_type);
         return "Weline\\Framework\\Database\\Connection\\{$driver_type}\\Adapter\\" . ucfirst($this->configProvider->getDbType());

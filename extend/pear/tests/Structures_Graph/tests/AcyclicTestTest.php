@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/helper.inc';
 require_once 'Structures/Graph/Manipulator/AcyclicTest.php';
 
@@ -46,4 +47,3 @@ class AcyclicTestTest extends PHPUnit_Framework_TestCase
         );
     }
 }
-?>

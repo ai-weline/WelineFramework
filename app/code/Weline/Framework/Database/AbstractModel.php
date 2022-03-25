@@ -52,17 +52,17 @@ use Weline\Framework\Manager\ObjectManager;
  */
 abstract class AbstractModel extends DataObject
 {
-    const table       = '';
-    const primary_key = '';
+    public const table       = '';
+    public const primary_key = '';
     /**
      * 对象属性
      *
      * @var array
      */
-    const fields_ID          = 'id';
-    const fields_CREATE_TIME = 'create_time';
+    public const fields_ID          = 'id';
+    public const fields_CREATE_TIME = 'create_time';
 
-    const fields_UPDATE_TIME = 'update_time';
+    public const fields_UPDATE_TIME = 'update_time';
     protected string $table = '';
     protected string $origin_table_name = '';
     private ?ConnectionFactory $connection = null;
@@ -93,15 +93,23 @@ abstract class AbstractModel extends DataObject
     public function __init()
     {
         # 重置查询
-        if (!isset($this->_cache)) $this->_cache = ObjectManager::getInstance(DbModelCache::class . 'Factory');
+        if (!isset($this->_cache)) {
+            $this->_cache = ObjectManager::getInstance(DbModelCache::class . 'Factory');
+        }
         # 类属性
-        if (empty($this->connection)) $this->connection = $this->getConnection();
-        if (empty($this->_suffix)) $this->_suffix = $this->getConnection()->getConfigProvider()->getPrefix() ?: '';
+        if (empty($this->connection)) {
+            $this->connection = $this->getConnection();
+        }
+        if (empty($this->_suffix)) {
+            $this->_suffix = $this->getConnection()->getConfigProvider()->getPrefix() ?: '';
+        }
         # 模型属性
         if (!empty($this::table)) {
             $this->table = $this::table;
         }
-        if (empty($this->table)) $this->table = $this->processTable();
+        if (empty($this->table)) {
+            $this->table = $this->processTable();
+        }
         if (!empty(self::primary_key)) {
             $this->_primary_key = $this::primary_key;
         }
@@ -117,23 +125,29 @@ abstract class AbstractModel extends DataObject
             $this->_fields = $this->getModelFields();
         }
         # 动态属性字段
-        if ($this->_data) foreach ($this->_data as $key => $data) {
-            if (is_string($key)) $this->$key = $data;
+        if ($this->_data) {
+            foreach ($this->_data as $key => $data) {
+                if (is_string($key)) {
+                    $this->$key = $data;
+                }
+            }
         }
     }
 
-    function getConnection()
+    public function getConnection()
     {
-        if (empty($this->connection)) $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
+        if (empty($this->connection)) {
+            $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
+        }
         return $this->connection;
     }
 
-    function getIdField(): string
+    public function getIdField(): string
     {
         return $this->_primary_key;
     }
 
-    function __wakeup()
+    public function __wakeup()
     {
         $this->__init();
     }
@@ -165,16 +179,18 @@ abstract class AbstractModel extends DataObject
         return $this->table;
     }
 
-    function getData(string $key = '', $index = null): mixed
+    public function getData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
-            if ($this->_data) return $this->_data;
+            if ($this->_data) {
+                return $this->_data;
+            }
             return $this->getFetchData();
         }
         return parent::getData($key, $index);
     }
 
-    function getOriginData(string $key = '', $index = null): mixed
+    public function getOriginData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
             $data = [];
@@ -185,10 +201,11 @@ abstract class AbstractModel extends DataObject
                 return $data;
             }
             if (empty($data)) {
-                if (is_int(array_key_first($this->getFetchData())) && ($this->getFetchData()[0] instanceof DataObject))
+                if (is_int(array_key_first($this->getFetchData())) && ($this->getFetchData()[0] instanceof DataObject)) {
                     foreach ($this->getFetchData() as $datum) {
                         $data[] = $datum->getData();
                     }
+                }
                 return $data;
             }
         }
@@ -207,7 +224,7 @@ abstract class AbstractModel extends DataObject
      *
      * @return string
      */
-    function getTable(string $table = ''): string
+    public function getTable(string $table = ''): string
     {
         if (empty($table)) {
             return $this->processTable();
@@ -224,7 +241,7 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      * @return string
      */
-    function getOriginTableName(): string
+    public function getOriginTableName(): string
     {
         $this->processTable();
         return $this->origin_table_name;
@@ -313,7 +330,9 @@ abstract class AbstractModel extends DataObject
         } else {
             $data = $this->getQuery()->where($field_or_pk_value, $value)->find()->fetch();
         }
-        if (is_array($data)) $this->setData($data);
+        if (is_array($data)) {
+            $this->setData($data);
+        }
         // load之之后事件
         $this->getEvenManager()->dispatch($this->getOriginTableName() . '_model_load_after', ['model' => $this]);
         // 加载之后
@@ -424,7 +443,7 @@ abstract class AbstractModel extends DataObject
      *
      * @return AbstractModel
      */
-    function forceCheck(bool $force_check_flag = true): AbstractModel
+    public function forceCheck(bool $force_check_flag = true): AbstractModel
     {
         $this->force_check_flag = $force_check_flag;
         return $this;
@@ -458,7 +477,7 @@ abstract class AbstractModel extends DataObject
      * @throws Exception
      * @throws \ReflectionException
      */
-    function delete(): AbstractModel
+    public function delete(): AbstractModel
     {
         // 加载之前
         $this->delete_before();
@@ -473,15 +492,15 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    function delete_before()
+    public function delete_before()
     {
     }
 
-    function delete_after()
+    public function delete_after()
     {
     }
 
-    function clearData(): static
+    public function clearData(): static
     {
         $this->_fields     = [];
         $this->_joins      = [];
@@ -503,7 +522,7 @@ abstract class AbstractModel extends DataObject
      * @throws \Weline\Framework\Exception\Core
      * @throws \ReflectionException
      */
-    function __call($method, $args)
+    public function __call($method, $args)
     {
         // 模型查询
         if (in_array($method, get_class_methods(QueryInterface::class))) {
@@ -663,19 +682,17 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    function getQueryData()
+    public function getQueryData()
     {
         return $this->_query_data;
     }
 
-    function fetch_before()
+    public function fetch_before()
     {
-
     }
 
-    function fetch_after()
+    public function fetch_after()
     {
-
     }
 
     /**
@@ -688,7 +705,7 @@ abstract class AbstractModel extends DataObject
      *
      * @param AbstractModel[] $value
      */
-    function setFetchData(array $value): self
+    public function setFetchData(array $value): self
     {
         $this->_fetch_data = $value;
         return $this;
@@ -702,12 +719,12 @@ abstract class AbstractModel extends DataObject
      * @DateTime: 2021/9/22 19:32
      * 参数区：
      */
-    function getFetchData(): mixed
+    public function getFetchData(): mixed
     {
         return $this->_fetch_data;
     }
 
-    function setData($key, $value = null): static
+    public function setData($key, $value = null): static
     {
         $this->set_data_before($key, $value);
         parent::setData($key, $value);
@@ -715,14 +732,12 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    function set_data_before(string|array $key, mixed $value = null)
+    public function set_data_before(string|array $key, mixed $value = null)
     {
-
     }
 
-    function set_data_after(string|array $key, mixed $value = null)
+    public function set_data_after(string|array $key, mixed $value = null)
     {
-
     }
 
 
@@ -736,7 +751,7 @@ abstract class AbstractModel extends DataObject
      * @DateTime: 2021/8/26 21:54
      * 参数区：
      */
-    function getId()
+    public function getId()
     {
         return $this->getData($this->_primary_key);
     }
@@ -749,32 +764,32 @@ abstract class AbstractModel extends DataObject
      * @DateTime: 2021/8/26 21:54
      * 参数区：
      */
-    function setId($primary_id): AbstractModel
+    public function setId($primary_id): AbstractModel
     {
         return $this->setData($this->_primary_key, $primary_id);
     }
 
-    function getCreateTime()
+    public function getCreateTime()
     {
         return $this->getData(self::fields_CREATE_TIME);
     }
 
-    function setCreateTime(string $create_time): static
+    public function setCreateTime(string $create_time): static
     {
         return $this->setData(self::fields_CREATE_TIME, $create_time);
     }
 
-    function getUpdateTime()
+    public function getUpdateTime()
     {
         return $this->getData(self::fields_UPDATE_TIME);
     }
 
-    function setUpdateTime(string $update_time): static
+    public function setUpdateTime(string $update_time): static
     {
         return $this->setData(self::fields_CREATE_TIME, $update_time);
     }
 
-    function getModelFields()
+    public function getModelFields()
     {
         if ($_model_fields = $this->_model_fields) {
             return $_model_fields;
@@ -798,7 +813,7 @@ abstract class AbstractModel extends DataObject
         return $_fields;
     }
 
-    function bindModelFields(array $fields): static
+    public function bindModelFields(array $fields): static
     {
         foreach ($fields as $key => $bind_field) {
             if (in_array($bind_field, $this->_model_fields)) {
@@ -818,7 +833,7 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      * @return array
      */
-    function getModelData(): array
+    public function getModelData(): array
     {
         $data = [];
         foreach ($this->getModelFields() as $key => $val) {
@@ -831,14 +846,14 @@ abstract class AbstractModel extends DataObject
         return $data;
     }
 
-    function pagination(int $page = 1, int $pageSize = 20, array $params = []): AbstractModel|static
+    public function pagination(int $page = 1, int $pageSize = 20, array $params = []): AbstractModel|static
     {
         $this->setQuery($this->getQuery()->pagination($page, $pageSize, $params));
         $this->pagination = $this->getQuery()->pagination;
         return $this;
     }
 
-    function getPagination(string $url_path = ''): array
+    public function getPagination(string $url_path = ''): array
     {
         $this->pagination['path'] = $url_path;
         # 上一页
@@ -885,7 +900,6 @@ abstract class AbstractModel extends DataObject
                     href='{$pageUrl}'>{$i}</a>
             </li>
 PAGELISTHTML;
-
         }
 
         $nextPageName = __('下一页');
@@ -915,13 +929,13 @@ PAGINATION;
 
     /**----------链接查询--------------*/
 
-    function bindQuery(QueryInterface $query): static
+    public function bindQuery(QueryInterface $query): static
     {
         $this->_bind_query = $query;
         return $this;
     }
 
-    function joinModel(AbstractModel|string $model, string $alias = '', $condition = '', $type = 'LEFT', string $fields = '*'): AbstractModel
+    public function joinModel(AbstractModel|string $model, string $alias = '', $condition = '', $type = 'LEFT', string $fields = '*'): AbstractModel
     {
         $query = $this->getQuery(true);
         if (is_string($model)) {

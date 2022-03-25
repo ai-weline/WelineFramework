@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,7 @@ namespace Weline\Admin\Controller\System;
 
 class Cms extends \Weline\Admin\Controller\BaseController
 {
-    function getIndex()
+    public function getIndex()
     {
         return $this->fetch();
     }

@@ -20,13 +20,13 @@ use Weline\Framework\Router\Helper\Data;
 
 class Handle implements RegisterInterface
 {
-    const path_backend_PC = Env::path_BACKEND_PC_ROUTER_FILE;
+    public const path_backend_PC = Env::path_BACKEND_PC_ROUTER_FILE;
 
-    const path_frontend_PC = Env::path_FRONTEND_PC_ROUTER_FILE;
+    public const path_frontend_PC = Env::path_FRONTEND_PC_ROUTER_FILE;
 
-    const path_fronted_API = Env::path_FRONTEND_REST_API_ROUTER_FILE;
+    public const path_fronted_API = Env::path_FRONTEND_REST_API_ROUTER_FILE;
 
-    const path_backend_API = Env::path_BACKEND_REST_API_ROUTER_FILE;
+    public const path_backend_API = Env::path_BACKEND_REST_API_ROUTER_FILE;
 
     private Data $helper;
 
@@ -66,20 +66,20 @@ class Handle implements RegisterInterface
     #[\JetBrains\PhpStorm\ArrayShape(['router' => "mixed|string", 'rule' => "array"])]
     public function register(string $type, string $module_name, array|string $param, string $version = '', string $description = ''): array
     {
-        $controller = explode('Controller',  $param['class']);
+        $controller = explode('Controller', $param['class']);
         $controller = array_pop($controller);
         $controller = ltrim(str_replace('\\', '/', $controller), '/');
-        switch ( $param['type']) {
+        switch ($param['type']) {
             case DataInterface::type_API:
                 $path = '';
-                if (in_array(DataInterfaceAlias::type_api_REST_FRONTEND,  $param['area'], true)) {
+                if (in_array(DataInterfaceAlias::type_api_REST_FRONTEND, $param['area'], true)) {
                     $path                = self::path_fronted_API;
-                     $param['area'] = DataInterfaceAlias::type_api_REST_FRONTEND;
-                } elseif (in_array(DataInterfaceAlias::type_api_BACKEND,  $param['area'], true)) {
+                    $param['area'] = DataInterfaceAlias::type_api_REST_FRONTEND;
+                } elseif (in_array(DataInterfaceAlias::type_api_BACKEND, $param['area'], true)) {
                     $path                = self::path_backend_API;
-                     $param['area'] = DataInterfaceAlias::type_api_BACKEND;
+                    $param['area'] = DataInterfaceAlias::type_api_BACKEND;
                 } else {
-                     $param['area'] = self::path_fronted_API;
+                    $param['area'] = self::path_fronted_API;
                 }
                 if ($path) {
                     $router = [
@@ -105,12 +105,12 @@ class Handle implements RegisterInterface
                 break;
             case DataInterface::type_PC:
                 $path = '';
-                if (in_array(DataInterfaceAlias::type_pc_FRONTEND,  $param['area'], true)) {
+                if (in_array(DataInterfaceAlias::type_pc_FRONTEND, $param['area'], true)) {
                     $path                = self::path_frontend_PC;
-                     $param['area'] = DataInterfaceAlias::type_pc_FRONTEND;
-                } elseif (in_array(DataInterfaceAlias::type_pc_BACKEND,  $param['area'], true)) {
+                    $param['area'] = DataInterfaceAlias::type_pc_FRONTEND;
+                } elseif (in_array(DataInterfaceAlias::type_pc_BACKEND, $param['area'], true)) {
                     $path                = self::path_backend_PC;
-                     $param['area'] = DataInterfaceAlias::type_pc_BACKEND;
+                    $param['area'] = DataInterfaceAlias::type_pc_BACKEND;
                 }
                 $routers = [];
                 if ($path) {
@@ -133,13 +133,15 @@ class Handle implements RegisterInterface
                     // 写入路由文件
                     $this->helper->updatePcRouters($path, $routers);
                 } else {
-                    $this->printing->error('未知的路由区域！文件:' .  $param['class']);
-                    if (DEV) throw new Exception(__('未知的路由区域！文件:') .  $param['class']);
+                    $this->printing->error('未知的路由区域！文件:' . $param['class']);
+                    if (DEV) {
+                        throw new Exception(__('未知的路由区域！文件:') . $param['class']);
+                    }
                 }
                 return $routers;
                 break;
             default:
-                throw new ConsoleException('未知的路由类型：' .  $param['type']);
+                throw new ConsoleException('未知的路由类型：' . $param['type']);
         }
         return [];
     }

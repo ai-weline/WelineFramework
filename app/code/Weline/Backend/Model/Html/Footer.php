@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,14 +16,13 @@ use Weline\Framework\View\Data\HtmlInterface;
 
 class Footer implements HtmlInterface
 {
-    const key = 'footer';
-    const module = 'Weline_Backend';
+    public const key = 'footer';
+    public const module = 'Weline_Backend';
     private Config $backendConfig;
 
-    function __construct(
+    public function __construct(
         Config $backendConfig
-    )
-    {
+    ) {
         $this->backendConfig = $backendConfig;
     }
 
@@ -35,7 +35,7 @@ class Footer implements HtmlInterface
      * 参数区：
      * @return mixed
      */
-    function getHtml(): string
+    public function getHtml(): string
     {
         return $this->backendConfig->getConfig(self::key, self::module)??'';
     }
@@ -49,7 +49,7 @@ class Footer implements HtmlInterface
      * 参数区：
      * @param string $html
      */
-    function setHtml(string $html)
+    public function setHtml(string $html)
     {
         $this->backendConfig->setConfig(self::key, $html, self::module);
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,27 +16,27 @@ use Weline\Framework\Database\Model;
 
 interface SessionInterface
 {
-    function start(string $session_id);
+    public function start(string $session_id);
 
-    function getData(string $name);
+    public function getData(string $name);
 
-    function setData(string $name, mixed $value);
+    public function setData(string $name, mixed $value);
 
-    function isLogin();
+    public function isLogin();
 
-    function login(Model $user, int $user_id);
+    public function login(Model $user, int $user_id);
 
-    function getLoginUser(string $model): ?AbstractModel;
+    public function getLoginUser(string $model): ?AbstractModel;
 
-    function getLoginUsername();
+    public function getLoginUsername();
 
-    function getLoginUserID();
+    public function getLoginUserID();
 
-    function logout();
+    public function logout();
 
-    function getOriginSession();
+    public function getOriginSession();
 
-    function destroy();
+    public function destroy();
 
-    function delete(string $name);
+    public function delete(string $name);
 }

@@ -16,7 +16,7 @@ use function PHPUnit\Framework\isInstanceOf;
 
 class CacheFactory
 {
-    const driver_NAMESPACE = Env::framework_name . '\\Framework\\Cache\\Driver\\';
+    public const driver_NAMESPACE = Env::framework_name . '\\Framework\\Cache\\Driver\\';
 
     private static CacheFactory $instance;
 
@@ -45,12 +45,12 @@ class CacheFactory
         $this->status      = $permanently;
     }
 
-    function isKeep(): bool
+    public function isKeep(): bool
     {
         return $this->keep;
     }
 
-    function __wakeup()
+    public function __wakeup()
     {
         if (empty($this->driver)) {
             $this->config = (array)Env::getInstance()->getConfig('cache');
@@ -98,5 +98,4 @@ class CacheFactory
     {
         return $this->tip;
     }
-
 }

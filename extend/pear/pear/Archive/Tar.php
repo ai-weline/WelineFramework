@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4 softtabstop=4: */
 
 /**
@@ -162,7 +163,7 @@ class Archive_Tar extends PEAR
                     if ($data == "\37\213") {
                         $this->_compress = true;
                         $this->_compress_type = 'gz';
-                        // No sure it's enought for a magic code ....
+                    // No sure it's enought for a magic code ....
                     } elseif ($data == "BZ") {
                         $this->_compress = true;
                         $this->_compress_type = 'bz2';
@@ -325,7 +326,7 @@ class Archive_Tar extends PEAR
      */
     public function listContent()
     {
-        $v_list_detail = array();
+        $v_list_detail = [];
 
         if ($this->_openRead()) {
             if (!$this->_extractList('', $v_list_detail, "list", '', '')) {
@@ -498,7 +499,7 @@ class Archive_Tar extends PEAR
      *
      * @return true on success, false on error.
      */
-    public function addString($p_filename, $p_string, $p_datetime = false, $p_params = array())
+    public function addString($p_filename, $p_string, $p_datetime = false, $p_params = [])
     {
         $p_stamp = @$p_params["stamp"] ? $p_params["stamp"] : ($p_datetime ? $p_datetime : time());
         $p_mode = @$p_params["mode"] ? $p_params["mode"] : 0600;
@@ -566,7 +567,7 @@ class Archive_Tar extends PEAR
     public function extractModify($p_path, $p_remove_path, $p_preserve = false, $p_symlinks = true)
     {
         $v_result = true;
-        $v_list_detail = array();
+        $v_list_detail = [];
 
         if ($v_result = $this->_openRead()) {
             $v_result = $this->_extractList(
@@ -628,7 +629,7 @@ class Archive_Tar extends PEAR
     public function extractList($p_filelist, $p_path = '', $p_remove_path = '', $p_preserve = false, $p_symlinks = true)
     {
         $v_result = true;
-        $v_list_detail = array();
+        $v_list_detail = [];
 
         if (is_array($p_filelist)) {
             $v_list = $p_filelist;
@@ -681,7 +682,7 @@ class Archive_Tar extends PEAR
             // ----- Look for next option
             switch ($v_att_list[$i]) {
                 // ----- Look for options that request a string value
-                case ARCHIVE_TAR_ATT_SEPARATOR :
+                case ARCHIVE_TAR_ATT_SEPARATOR:
                     // ----- Check the number of parameters
                     if (($i + 1) >= $v_size) {
                         $this->_error(
@@ -696,7 +697,7 @@ class Archive_Tar extends PEAR
                     $i++;
                     break;
 
-                default :
+                default:
                     $this->_error('Unknown attribute code ' . $v_att_list[$i] . '');
                     return false;
             }
@@ -731,7 +732,7 @@ class Archive_Tar extends PEAR
      */
     public function setIgnoreList($list)
     {
-        $regexp = str_replace(array('#', '.', '^', '$'), array('\#', '\.', '\^', '\$'), $list);
+        $regexp = str_replace(['#', '.', '^', '$'], ['\#', '\.', '\^', '\$'], $list);
         $regexp = '#/' . join('$|/', $list) . '#';
         $this->setIgnoreRegexp($regexp);
     }
@@ -1131,7 +1132,7 @@ class Archive_Tar extends PEAR
     public function _addList($p_list, $p_add_dir, $p_remove_dir)
     {
         $v_result = true;
-        $v_header = array();
+        $v_header = [];
 
         // ----- Remove potential windows directory separator
         $p_add_dir = $this->_translateWinPath($p_add_dir);
@@ -1300,7 +1301,7 @@ class Archive_Tar extends PEAR
      * @param array $p_params
      * @return bool
      */
-    public function _addString($p_filename, $p_string, $p_datetime = false, $p_params = array())
+    public function _addString($p_filename, $p_string, $p_datetime = false, $p_params = [])
     {
         $p_stamp = @$p_params["stamp"] ? $p_params["stamp"] : ($p_datetime ? $p_datetime : time());
         $p_mode = @$p_params["mode"] ? $p_params["mode"] : 0600;
@@ -1483,8 +1484,7 @@ class Archive_Tar extends PEAR
         $p_type = '',
         $p_uid = 0,
         $p_gid = 0
-    )
-    {
+    ) {
         $p_filename = $this->_pathReduction($p_filename);
 
         if (strlen($p_filename) > 99) {
@@ -1679,14 +1679,14 @@ class Archive_Tar extends PEAR
         }
 
         if (!is_array($v_header)) {
-            $v_header = array();
+            $v_header = [];
         }
         // ----- Calculate the checksum
         $v_checksum = 0;
         // ..... First part of the header
         $v_binary_split = str_split($v_binary_data);
         $v_checksum += array_sum(array_map('ord', array_slice($v_binary_split, 0, 148)));
-        $v_checksum += array_sum(array_map('ord', array(' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',)));
+        $v_checksum += array_sum(array_map('ord', [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ',]));
         $v_checksum += array_sum(array_map('ord', array_slice($v_binary_split, 156, 512)));
 
 
@@ -1782,7 +1782,6 @@ class Archive_Tar extends PEAR
             }
 
             return $size;
-
         } else {
             return OctDec(trim($tar_size));
         }
@@ -1933,8 +1932,7 @@ class Archive_Tar extends PEAR
         $p_remove_path,
         $p_preserve = false,
         $p_symlinks = true
-    )
-    {
+    ) {
         $v_result = true;
         $v_nb = 0;
         $v_extract_all = true;
@@ -1955,19 +1953,19 @@ class Archive_Tar extends PEAR
         $p_remove_path_size = strlen($p_remove_path);
 
         switch ($p_mode) {
-            case "complete" :
+            case "complete":
                 $v_extract_all = true;
                 $v_listing = false;
                 break;
-            case "partial" :
+            case "partial":
                 $v_extract_all = false;
                 $v_listing = false;
                 break;
-            case "list" :
+            case "list":
                 $v_extract_all = false;
                 $v_listing = true;
                 break;
-            default :
+            default:
                 $this->_error('Invalid extract mode (' . $p_mode . ')');
                 return false;
         }
@@ -2094,10 +2092,10 @@ class Archive_Tar extends PEAR
                 } // ----- Check the directory availability and create it if necessary
                 elseif (($v_result
                         = $this->_dirCheck(
-                        ($v_header['typeflag'] == "5"
+                            ($v_header['typeflag'] == "5"
                             ? $v_header['filename']
                             : dirname($v_header['filename']))
-                    )) != 1
+                        )) != 1
                 ) {
                     $this->_error('Unable to create path for ' . $v_header['filename']);
                     return false;
@@ -2116,7 +2114,8 @@ class Archive_Tar extends PEAR
                         }
                     } elseif ($v_header['typeflag'] == "2") {
                         if (!$p_symlinks) {
-                            $this->_warning('Symbolic links are not allowed. '
+                            $this->_warning(
+                                'Symbolic links are not allowed. '
                                 . 'Unable to extract {'
                                 . $v_header['filename'] . '}'
                             );

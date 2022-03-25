@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -9,7 +10,6 @@ declare(strict_types=1);
  */
 
 namespace Weline\Framework\Database\test\ModelTest;
-
 
 class WelineModel extends \Weline\Framework\Database\Model
 {

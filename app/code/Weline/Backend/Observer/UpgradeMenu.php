@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,16 +17,13 @@ use Weline\Framework\Event\Event;
 
 class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
 {
-
     private \Weline\Backend\Model\Menu $menu;
     private MenuReader $menuReader;
 
-    function __construct(
+    public function __construct(
         \Weline\Backend\Model\Menu $menu,
         MenuReader                 $menuReader
-    )
-    {
-
+    ) {
         $this->menu       = $menu;
         $this->menuReader = $menuReader;
     }
@@ -36,7 +34,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
     public function execute(Event $event)
     {
         $modules_xml_menus = $this->menuReader->read();
-        $this->menu->query('TRUNCATE TABLE '.$this->menu->getTable());
+        $this->menu->query('TRUNCATE TABLE ' . $this->menu->getTable());
         # 先更新顶层菜单
         foreach ($modules_xml_menus as $module => $menus) {
             foreach ($menus['data'] as $key => $menu) {
@@ -58,7 +56,9 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                     $this->menu->clearData();
                     $menuModel = $this->menu->where(Menu::fields_NAME, $menu[Menu::fields_NAME])->find()->fetch();
                     # 保存时检测查询数据，存在则更新
-                    if ($menuModel->getId()) $menu[Menu::fields_ID] = $menuModel->getId();
+                    if ($menuModel->getId()) {
+                        $menu[Menu::fields_ID] = $menuModel->getId();
+                    }
                     $menuModel->clearData();
                     $result = $menuModel->setData($menu)->forceCheck(true)->save();
                     # 2 检查自身是否被别的模块作为父分类
@@ -94,7 +94,9 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 $this->menu->clearData();
                 $menuModel = $this->menu->where(Menu::fields_NAME, $menu[Menu::fields_NAME])->find()->fetch();
                 # 保存时检测查询数据，存在则更新
-                if ($menuModel->getId()) $menu[Menu::fields_ID] = $menuModel->getId();
+                if ($menuModel->getId()) {
+                    $menu[Menu::fields_ID] = $menuModel->getId();
+                }
                 $menuModel->clearData();
                 $result = $menuModel->setData($menu)->forceCheck(true)->save();
                 # 2 检查自身是否被别的模块作为父分类

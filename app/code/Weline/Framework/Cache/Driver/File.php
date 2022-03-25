@@ -21,9 +21,11 @@ class File extends CacheDriverAbstract
      */
     private string $cachePath;
 
-    private function __clone() { }
+    private function __clone()
+    {
+    }
 
-    function setIdentity(string $identity): static
+    public function setIdentity(string $identity): static
     {
         $this->identity = $identity;
         $this->__init();
@@ -37,7 +39,7 @@ class File extends CacheDriverAbstract
      */
     public function __init()
     {
-        $this->cachePath = $this->config['path'] ? BP . rtrim($this->config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->identity. DIRECTORY_SEPARATOR : BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->identity. DIRECTORY_SEPARATOR;
+        $this->cachePath = $this->config['path'] ? BP . rtrim($this->config['path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $this->identity . DIRECTORY_SEPARATOR : BP . 'var' . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $this->identity . DIRECTORY_SEPARATOR;
         if (!is_dir($this->cachePath)) {
             mkdir($this->cachePath, 0775, true);
         }
@@ -94,7 +96,9 @@ class File extends CacheDriverAbstract
      */
     public function get($key): mixed
     {
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
         $key       = $this->buildKey($key);
         $cacheFile = $this->processCacheFile($this->cachePath . $key);
         // filemtime用来获取文件的修改时间
@@ -156,7 +160,9 @@ class File extends CacheDriverAbstract
      */
     public function set($key, $value, int $duration = 0): bool
     {
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
         // serialize用来序列化缓存内容
@@ -191,7 +197,9 @@ class File extends CacheDriverAbstract
      */
     public function setMulti($items, int $duration = 0): array
     {
-        if (!$this->status) return [];
+        if (!$this->status) {
+            return [];
+        }
         $failedKeys = [];
         foreach ($items as $key => $value) {
             if ($this->set($key, $value, $duration) === false) {
@@ -216,7 +224,9 @@ class File extends CacheDriverAbstract
      */
     public function add($key, $value, int $duration = 0): bool
     {
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
         //  key不存在，就设置缓存
         if (!$this->exists($key)) {
             return $this->set($key, $value, $duration);
@@ -238,7 +248,9 @@ class File extends CacheDriverAbstract
      */
     public function addMulti($items, int $duration = 0): array
     {
-        if (!$this->status) return [];
+        if (!$this->status) {
+            return [];
+        }
         $failedKeys = [];
         foreach ($items as $key => $value) {
             if ($this->add($key, $value, $duration) === false) {

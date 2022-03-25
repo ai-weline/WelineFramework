@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/helper.inc';
 
 class Structures_Graph_AllTests

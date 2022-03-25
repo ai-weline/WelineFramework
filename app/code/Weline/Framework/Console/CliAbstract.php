@@ -14,7 +14,7 @@ use Weline\Framework\System\File\Io\File;
 
 abstract class CliAbstract implements CommandInterface
 {
-    const RETURN_FAILURE = '异常退出！';
+    public const RETURN_FAILURE = '异常退出！';
 
     /**
      * @var array

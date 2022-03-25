@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -20,7 +21,7 @@ class Collect implements \Weline\Framework\Console\CommandInterface
     private Client $client;
     private Printing $printing;
 
-    function __construct(Client $client, Printing $printing)
+    public function __construct(Client $client, Printing $printing)
     {
         $this->client   = $client;
         $this->printing = $printing;
@@ -36,7 +37,7 @@ class Collect implements \Weline\Framework\Console\CommandInterface
         foreach ($frontend_routers as $frontend_router => $router_data) {
             $url = 'http://' . Env::getInstance()->getConfig('domain') . '/' . $frontend_router;
             $this->printing->note($url);
-            $this->client->get( $url);
+            $this->client->get($url);
         }
         $this->printing->warning(__('后台词组收集：'));
         $backend_routers = (array)(require Env::path_BACKEND_PC_ROUTER_FILE);

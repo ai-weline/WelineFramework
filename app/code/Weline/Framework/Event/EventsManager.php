@@ -28,8 +28,7 @@ class EventsManager
 
     public function __construct(
         Reader $reader
-    )
-    {
+    ) {
         $this->reader = $reader;
     }
 
@@ -92,7 +91,7 @@ class EventsManager
      * @param string $eventName
      * @return DataObject|null
      */
-    function getEventData(string $eventName): DataObject|null
+    public function getEventData(string $eventName): DataObject|null
     {
         if (isset($this->events[$eventName])) {
             return $this->events[$eventName];

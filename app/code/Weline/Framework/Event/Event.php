@@ -33,7 +33,7 @@ class Event extends \Weline\Framework\DataObject\DataObject
         $this->setData($data);
     }
 
-    function getEvenData()
+    public function getEvenData()
     {
         return $this->getData('data');
     }
@@ -103,5 +103,4 @@ class Event extends \Weline\Framework\DataObject\DataObject
             $observer->execute($this);
         }
     }
-
 }

@@ -39,12 +39,12 @@ class Response implements ResponseInterface
         return $this;
     }
 
-    function getRequest(): Request
+    public function getRequest(): Request
     {
         return ObjectManager::getInstance(Request::class);
     }
 
-    function setData(mixed $data): static
+    public function setData(mixed $data): static
     {
         /**@var DataObject $dataObject */
         $dataObject = ObjectManager::getInstance(DataObject::class);
@@ -56,7 +56,7 @@ class Response implements ResponseInterface
         if (str_contains($this->getRequest()->getContentType(), 'text/xml')) {
             header('Content-type: text/xml');
             echo $dataObject->toXml();
-        }else {
+        } else {
             echo $dataObject->toString();
         }
         return $this;

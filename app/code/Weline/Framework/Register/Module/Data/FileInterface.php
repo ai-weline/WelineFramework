@@ -14,5 +14,5 @@ interface FileInterface
     /**
      * 模块注册文件
      */
-    const file_register = 'register.php';
+    public const file_register = 'register.php';
 }

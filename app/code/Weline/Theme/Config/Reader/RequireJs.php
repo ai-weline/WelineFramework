@@ -26,21 +26,21 @@ class RequireJs extends ResourceReader
     {
         return Env::getInstance()->getConfig('theme');
     }
-    function getResourceFiles():array
+    public function getResourceFiles(): array
     {
         # require js 配置
         $require_configs = $this->getFileList();
         foreach ($require_configs as $require_config_key => $require_config_js) {
             $area = $require_config_js['area'];
-            if(!isset($this->config_resources[$area])){
+            if (!isset($this->config_resources[$area])) {
                 $this->config_resources[$area]='';
             }
             $content = file_get_contents($require_config_js['origin']);
             # 替换模块的路径
             foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
-                $related_file_path = str_replace(trim($module_info['path'].DIRECTORY_SEPARATOR.'view',DIRECTORY_SEPARATOR), '/', $require_config_js['dir']);
+                $related_file_path = str_replace(trim($module_info['path'] . DIRECTORY_SEPARATOR . 'view', DIRECTORY_SEPARATOR), '/', $require_config_js['dir']);
                 $related_file_path = str_replace('//', '/', $related_file_path);
-                $file_path = $this->fetchFile($module_name.'::'.$related_file_path);
+                $file_path = $this->fetchFile($module_name . '::' . $related_file_path);
                 $file_path = str_replace('//', '/', $file_path);
                 $file_path = str_replace('//', '/', $file_path);
                 $content =str_replace($module_name, $file_path, $content);
@@ -61,7 +61,7 @@ class RequireJs extends ResourceReader
         return $this->template;
     }
 
-    function fetchFile(string $source)
+    public function fetchFile(string $source)
     {
         return $this->getTemplate()->fetchTagSourceFile('statics', $source);
     }

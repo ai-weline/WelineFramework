@@ -11,18 +11,18 @@ namespace Weline\Framework\Module\Must;
 
 interface DataInterface
 {
-    const file_Register = 'register.php';
+    public const file_Register = 'register.php';
 
-    const file_etc_Env = 'etc'.DIRECTORY_SEPARATOR.'env.php';
+    public const file_etc_Env = 'etc' . DIRECTORY_SEPARATOR . 'env.php';
 
-    const dir_Etc = 'etc';
+    public const dir_Etc = 'etc';
 
-    const files = [
+    public const files = [
         self::file_Register,
         self::file_etc_Env,
     ];
 
-    const dirs = [
+    public const dirs = [
         self::dir_Etc,
     ];
 }

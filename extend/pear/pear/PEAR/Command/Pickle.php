@@ -33,21 +33,21 @@ require_once 'PEAR/Command/Common.php';
 
 class PEAR_Command_Pickle extends PEAR_Command_Common
 {
-    var $commands = array(
-        'pickle' => array(
+    public $commands = [
+        'pickle' => [
             'summary' => 'Build PECL Package',
             'function' => 'doPackage',
             'shortcut' => 'pi',
-            'options' => array(
-                'nocompress' => array(
+            'options' => [
+                'nocompress' => [
                     'shortopt' => 'Z',
                     'doc' => 'Do not gzip the package file'
-                    ),
-                'showname' => array(
+                    ],
+                'showname' => [
                     'shortopt' => 'n',
                     'doc' => 'Print the name of the packaged file.',
-                    ),
-                ),
+                    ],
+                ],
             'doc' => '[descfile]
 Creates a PECL package from its package2.xml file.
 
@@ -67,15 +67,15 @@ will cause pickle to fail, and output an error message.  If your package2.xml
 uses any of these features, you are best off using PEAR_PackageFileManager to
 generate both package.xml.
 '
-            ),
-        );
+            ],
+        ];
 
     /**
      * PEAR_Command_Package constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
+    public function __construct(&$ui, &$config)
     {
         parent::__construct($ui, $config);
     }
@@ -85,13 +85,13 @@ generate both package.xml.
      *
      * @return PEAR_Packager
      */
-    function &getPackager()
+    public function &getPackager()
     {
         if (!class_exists('PEAR_Packager')) {
             require_once 'PEAR/Packager.php';
         }
 
-        $a = new PEAR_Packager;
+        $a = new PEAR_Packager();
         return $a;
     }
 
@@ -103,7 +103,7 @@ generate both package.xml.
      * @param string|null $tmpdir
      * @return PEAR_PackageFile
      */
-    function &getPackageFile($config, $debug = false)
+    public function &getPackageFile($config, $debug = false)
     {
         if (!class_exists('PEAR_Common')) {
             require_once 'PEAR/Common.php';
@@ -114,13 +114,13 @@ generate both package.xml.
         }
 
         $a = new PEAR_PackageFile($config, $debug);
-        $common = new PEAR_Common;
+        $common = new PEAR_Common();
         $common->ui = $this->ui;
         $a->setLogger($common);
         return $a;
     }
 
-    function doPackage($command, $options, $params)
+    public function doPackage($command, $options, $params)
     {
         $this->output = '';
         $pkginfofile = isset($params[0]) ? $params[0] : 'package2.xml';
@@ -143,7 +143,7 @@ generate both package.xml.
         return true;
     }
 
-    function _convertPackage($packagexml)
+    public function _convertPackage($packagexml)
     {
         $pkg = &$this->getPackageFile($this->config);
         $pf2 = &$pkg->fromPackageFile($packagexml, PEAR_VALIDATE_NORMAL);
@@ -153,7 +153,7 @@ generate both package.xml.
         }
 
         require_once 'PEAR/PackageFile/v1.php';
-        $pf = new PEAR_PackageFile_v1;
+        $pf = new PEAR_PackageFile_v1();
         $pf->setConfig($this->config);
         if ($pf2->getPackageType() != 'extsrc' && $pf2->getPackageType() != 'zendextsrc') {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
@@ -183,19 +183,19 @@ generate both package.xml.
         if (isset($deps['required']['subpackage']) ||
               isset($deps['optional']['subpackage'])) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains subpackage dependencies.  Using a PEAR_PackageFileManager-based  '.
+            '", contains subpackage dependencies.  Using a PEAR_PackageFileManager-based  ' .
             'script is an option');
         }
 
         if (isset($deps['required']['os'])) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains os dependencies.  Using a PEAR_PackageFileManager-based  '.
+            '", contains os dependencies.  Using a PEAR_PackageFileManager-based  ' .
             'script is an option');
         }
 
         if (isset($deps['required']['arch'])) {
             return $this->raiseError('Cannot safely convert "' . $packagexml .
-            '", contains arch dependencies.  Using a PEAR_PackageFileManager-based  '.
+            '", contains arch dependencies.  Using a PEAR_PackageFileManager-based  ' .
             'script is an option');
         }
 
@@ -203,8 +203,12 @@ generate both package.xml.
         $pf->setSummary($pf2->getSummary());
         $pf->setDescription($pf2->getDescription());
         foreach ($pf2->getMaintainers() as $maintainer) {
-            $pf->addMaintainer($maintainer['role'], $maintainer['handle'],
-                $maintainer['name'], $maintainer['email']);
+            $pf->addMaintainer(
+                $maintainer['role'],
+                $maintainer['handle'],
+                $maintainer['name'],
+                $maintainer['email']
+            );
         }
 
         $pf->setVersion($pf2->getVersion());
@@ -219,7 +223,7 @@ generate both package.xml.
 
         if (isset($deps['required']['package'])) {
             if (!isset($deps['required']['package'][0])) {
-                $deps['required']['package'] = array($deps['required']['package']);
+                $deps['required']['package'] = [$deps['required']['package']];
             }
 
             foreach ($deps['required']['package'] as $dep) {
@@ -259,7 +263,7 @@ generate both package.xml.
 
         if (isset($deps['required']['extension'])) {
             if (!isset($deps['required']['extension'][0])) {
-                $deps['required']['extension'] = array($deps['required']['extension']);
+                $deps['required']['extension'] = [$deps['required']['extension']];
             }
 
             foreach ($deps['required']['extension'] as $dep) {
@@ -285,7 +289,7 @@ generate both package.xml.
 
         if (isset($deps['optional']['package'])) {
             if (!isset($deps['optional']['package'][0])) {
-                $deps['optional']['package'] = array($deps['optional']['package']);
+                $deps['optional']['package'] = [$deps['optional']['package']];
             }
 
             foreach ($deps['optional']['package'] as $dep) {
@@ -319,7 +323,7 @@ generate both package.xml.
 
         if (isset($deps['optional']['extension'])) {
             if (!isset($deps['optional']['extension'][0])) {
-                $deps['optional']['extension'] = array($deps['optional']['extension']);
+                $deps['optional']['extension'] = [$deps['optional']['extension']];
             }
 
             foreach ($deps['optional']['extension'] as $dep) {
@@ -360,7 +364,7 @@ generate both package.xml.
 
         if (isset($release['filelist']['install']) &&
               !isset($release['filelist']['install'][0])) {
-            $release['filelist']['install'] = array($release['filelist']['install']);
+            $release['filelist']['install'] = [$release['filelist']['install']];
         }
 
         if (isset($contents['dir']['attribs']['baseinstalldir'])) {
@@ -370,7 +374,7 @@ generate both package.xml.
         }
 
         if (!isset($contents['dir']['file'][0])) {
-            $contents['dir']['file'] = array($contents['dir']['file']);
+            $contents['dir']['file'] = [$contents['dir']['file']];
         }
 
         foreach ($contents['dir']['file'] as $file) {

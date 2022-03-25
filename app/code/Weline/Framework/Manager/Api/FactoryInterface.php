@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,6 @@ namespace Weline\Framework\Manager\Api;
 
 interface FactoryInterface
 {
-
     /**
      * @DESC          # 方法描述
      *
@@ -21,5 +21,5 @@ interface FactoryInterface
      * @DateTime: 2021/9/5 20:58
      * 参数区：
      */
-    public function create():mixed;
+    public function create(): mixed;
 }

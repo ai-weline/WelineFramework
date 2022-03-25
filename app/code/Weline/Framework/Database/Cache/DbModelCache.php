@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,11 +14,10 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\Cache;
 
-
 class DbModelCache extends \Weline\Framework\Cache\CacheFactory
 {
-    function __construct(string $identity = 'database_model')
+    public function __construct(string $identity = 'database_model')
     {
-        parent::__construct($identity,'数据库模型缓存',true);
+        parent::__construct($identity, '数据库模型缓存', true);
     }
 }

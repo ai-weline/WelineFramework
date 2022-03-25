@@ -81,7 +81,7 @@ class DataObject implements \ArrayAccess
      * @param $data
      * @return DataObject
      */
-    function addToIndex(string $index, $data): static
+    public function addToIndex(string $index, $data): static
     {
         if ($index_data = $this->getData($index)) {
             if (is_array($index_data)) {
@@ -153,7 +153,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      * @return $this
      */
-    function clearDataObject(): DataObject
+    public function clearDataObject(): DataObject
     {
         $this->_data = [];
         return $this;
@@ -411,8 +411,7 @@ class DataObject implements \ArrayAccess
         string $rootName = 'item',
         bool   $addOpenTag = false,
         bool   $addCdata = true
-    ): string
-    {
+    ): string {
         return $this->toXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
     }
 
@@ -679,7 +678,8 @@ class DataObject implements \ArrayAccess
      * 参数区：
      * @return array|string|string[]
      */
-    public function __toString(){
+    public function __toString()
+    {
         return $this->toString();
     }
 }

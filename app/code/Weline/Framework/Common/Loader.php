@@ -11,7 +11,8 @@ namespace Weline\Framework\Common;
 
 class Loader
 {
-    static function load(){
+    public static function load()
+    {
         require __DIR__ . '/functions.php';
         require __DIR__ . '/func_debug.php';
     }

@@ -23,19 +23,19 @@ use Weline\Theme\Cache\ThemeCache;
 
 class WelineTheme extends Model
 {
-    const cache_TIME = 604800;
+    public const cache_TIME = 604800;
 
-    const fields_ID = 'id';
+    public const fields_ID = 'id';
 
-    const fields_NAME = 'name';
+    public const fields_NAME = 'name';
 
-    const fields_MODULE_NAME = 'module_name';
+    public const fields_MODULE_NAME = 'module_name';
 
-    const fields_PATH = 'path';
+    public const fields_PATH = 'path';
 
-    const fields_PARENT_ID = 'parent_id';
+    public const fields_PARENT_ID = 'parent_id';
 
-    const fields_IS_ACTIVE = 'is_active';
+    public const fields_IS_ACTIVE = 'is_active';
 
 //    protected $table = Install::table_THEME; # 如果需要设置特殊表名 需要加前缀
 
@@ -168,7 +168,7 @@ class WelineTheme extends Model
         }
     }
 
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
         if ($setup->tableExist()) {
             $setup->dropTable();
@@ -233,12 +233,12 @@ class WelineTheme extends Model
         }
     }
 
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement upgrade() method.
     }
 
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         if (!$setup->tableExist()) {
             $setup->getPrinting()->warning('安装数据库表：' . $this->getTable());
@@ -298,6 +298,5 @@ class WelineTheme extends Model
                 'parent_id'
             )->create();
         }
-
     }
 }

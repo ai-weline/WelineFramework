@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,11 +18,9 @@ class Listing implements \Weline\Framework\Console\CommandInterface
 {
     private Printing $printing;
 
-    function __construct(
+    public function __construct(
         Printing $printing
-    )
-    {
-
+    ) {
         $this->printing = $printing;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -9,7 +10,6 @@ declare(strict_types=1);
  */
 
 namespace Weline\Framework\Database;
-
 
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
@@ -25,7 +25,7 @@ interface ModelInterface
      * 参数区：
      * @Suppress("unused")
      */
-    function setup(ModelSetup $setup, Context $context): void;
+    public function setup(ModelSetup $setup, Context $context): void;
 
     /**
      * @DESC          # 模块更新时执行
@@ -36,7 +36,7 @@ interface ModelInterface
      * 参数区：
      * @Suppress("unused")
      */
-    function upgrade(ModelSetup $setup, Context $context): void;
+    public function upgrade(ModelSetup $setup, Context $context): void;
 
     /**
      * @DESC          # 模块安装时执行
@@ -47,7 +47,7 @@ interface ModelInterface
      * 参数区：
      * @Suppress("unused")
      */
-    function install(ModelSetup $setup, Context $context): void;
+    public function install(ModelSetup $setup, Context $context): void;
 
     /**
      * @DESC          # 模型列
@@ -58,5 +58,5 @@ interface ModelInterface
      * 参数区：
      * @return array
      */
-    function columns(): array;
+    public function columns(): array;
 }

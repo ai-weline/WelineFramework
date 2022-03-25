@@ -43,20 +43,20 @@ putenv("PHP_PEAR_RUNTESTS=1");
  */
 class PEAR_RunTest
 {
-    var $_headers = array();
-    var $_logger;
-    var $_options;
-    var $_php;
-    var $tests_count;
-    var $xdebug_loaded;
+    public $_headers = [];
+    public $_logger;
+    public $_options;
+    public $_php;
+    public $tests_count;
+    public $xdebug_loaded;
     /**
      * Saved value of php executable, used to reset $_php when we
      * have a test that uses cgi
      *
      * @var unknown_type
      */
-    var $_savephp;
-    var $ini_overwrites = array(
+    public $_savephp;
+    public $ini_overwrites = [
         'output_handler=',
         'open_basedir=',
         'disable_functions=',
@@ -74,13 +74,13 @@ class PEAR_RunTest
         'auto_append_file=',
         'xdebug.default_enable=0',
         'allow_url_fopen=1',
-    );
+    ];
 
     /**
      * An object that supports the PEAR_Common->log() signature, or null
      * @param PEAR_Common|null
      */
-    function __construct($logger = null, $options = array())
+    public function __construct($logger = null, $options = [])
     {
         if (!defined('E_DEPRECATED')) {
             define('E_DEPRECATED', 0);
@@ -91,7 +91,7 @@ class PEAR_RunTest
         $this->ini_overwrites[] = 'error_reporting=' . (E_ALL & ~(E_DEPRECATED | E_STRICT));
         if (is_null($logger)) {
             require_once 'PEAR/Common.php';
-            $logger = new PEAR_Common;
+            $logger = new PEAR_Common();
         }
         $this->_logger  = $logger;
         $this->_options = $options;
@@ -108,14 +108,14 @@ class PEAR_RunTest
      * @param string $stdin standard input to pass to the command
      * @return unknown
      */
-    function system_with_timeout($commandline, $env = null, $stdin = null)
+    public function system_with_timeout($commandline, $env = null, $stdin = null)
     {
         $data = '';
-        $proc = proc_open($commandline, array(
-            0 => array('pipe', 'r'),
-            1 => array('pipe', 'w'),
-            2 => array('pipe', 'w')
-        ), $pipes, null, $env, array('suppress_errors' => true));
+        $proc = proc_open($commandline, [
+            0 => ['pipe', 'r'],
+            1 => ['pipe', 'w'],
+            2 => ['pipe', 'w']
+        ], $pipes, null, $env, ['suppress_errors' => true]);
 
         if (!$proc) {
             return false;
@@ -137,8 +137,8 @@ class PEAR_RunTest
                 /* timed out */
                 $data .= "\n ** ERROR: process timed out **\n";
                 proc_terminate($proc);
-                return array(1234567890, $data);
-            } else if ($n > 0) {
+                return [1234567890, $data];
+            } elseif ($n > 0) {
                 $line = fread($pipes[1], 8192);
                 if (strlen($line) == 0) {
                     /* EOF */
@@ -150,14 +150,14 @@ class PEAR_RunTest
         if (function_exists('proc_get_status')) {
             $stat = proc_get_status($proc);
             if ($stat['signaled']) {
-                $data .= "\nTermsig=".$stat['stopsig'];
+                $data .= "\nTermsig=" . $stat['stopsig'];
             }
         }
         $code = proc_close($proc);
         if (function_exists('proc_get_status')) {
             $code = $stat['exitcode'];
         }
-        return array($code, $data);
+        return [$code, $data];
     }
 
     /**
@@ -175,20 +175,20 @@ class PEAR_RunTest
      * @param string an PHP INI string, -d "include_path=/foo/bar"
      * @return array
      */
-    function iniString2array($ini_string)
+    public function iniString2array($ini_string)
     {
         if (!$ini_string) {
-            return array();
+            return [];
         }
         $split = preg_split('/[\s]|=/', $ini_string, -1, PREG_SPLIT_NO_EMPTY);
-        $key   = $split[1][0] == '"'                     ? substr($split[1], 1)     : $split[1];
+        $key   = $split[1][0] == '"' ? substr($split[1], 1) : $split[1];
         $value = $split[2][strlen($split[2]) - 1] == '"' ? substr($split[2], 0, -1) : $split[2];
         // FIXME review if this is really the struct to go with
-        $array = array($key => array('operator' => $split[0], 'value' => $value));
+        $array = [$key => ['operator' => $split[0], 'value' => $value]];
         return $array;
     }
 
-    function settings2array($settings, $ini_settings)
+    public function settings2array($settings, $ini_settings)
     {
         foreach ($settings as $setting) {
             if (strpos($setting, '=') !== false) {
@@ -201,7 +201,7 @@ class PEAR_RunTest
         return $ini_settings;
     }
 
-    function settings2params($ini_settings)
+    public function settings2params($ini_settings)
     {
         $settings = '';
         foreach ($ini_settings as $name => $value) {
@@ -217,7 +217,7 @@ class PEAR_RunTest
         return $settings;
     }
 
-    function _preparePhpBin($php, $file, $ini_settings)
+    public function _preparePhpBin($php, $file, $ini_settings)
     {
         $file = escapeshellarg($file);
         $cmd = $php . $ini_settings . ' -f ' . $file;
@@ -225,7 +225,7 @@ class PEAR_RunTest
         return $cmd;
     }
 
-    function runPHPUnit($file, $ini_settings = '')
+    public function runPHPUnit($file, $ini_settings = '')
     {
         if (!file_exists($file) && file_exists(getcwd() . DIRECTORY_SEPARATOR . $file)) {
             $file = realpath(getcwd() . DIRECTORY_SEPARATOR . $file);
@@ -257,14 +257,14 @@ class PEAR_RunTest
      *                       test came out.
      *                       PEAR Error when the tester it self fails
      */
-    function run($file, $ini_settings = array(), $test_number = 1)
+    public function run($file, $ini_settings = [], $test_number = 1)
     {
         $this->_restorePHPBinary();
 
         if (empty($this->_options['cgi'])) {
             // try to see if php-cgi is in the path
             $res = $this->system_with_timeout('php-cgi -v');
-            if (false !== $res && !(is_array($res) && in_array($res[0], array(-1, 127)))) {
+            if (false !== $res && !(is_array($res) && in_array($res[0], [-1, 127]))) {
                 $this->_options['cgi'] = 'php-cgi';
             }
         }
@@ -301,7 +301,7 @@ class PEAR_RunTest
             if (strpos($section_text['INI'], '{PWD}') !== false) {
                 $section_text['INI'] = str_replace('{PWD}', dirname($file), $section_text['INI']);
             }
-            $ini = preg_split( "/[\n\r]+/", $section_text['INI']);
+            $ini = preg_split("/[\n\r]+/", $section_text['INI']);
             $ini_settings = $this->settings2array($ini, $ini_settings);
         }
         $ini_settings = $this->settings2params($ini_settings);
@@ -318,7 +318,7 @@ class PEAR_RunTest
                     $this->_logger->log(0, "SKIP $test_nr$tested (reason: --cgi option needed for this test, type 'pear help run-tests')");
                 }
                 if (isset($this->_options['tapoutput'])) {
-                    return array('ok', ' # skip --cgi option needed for this test, "pear help run-tests" for info');
+                    return ['ok', ' # skip --cgi option needed for this test, "pear help run-tests" for info'];
                 }
                 return 'SKIPPED';
             }
@@ -328,14 +328,14 @@ class PEAR_RunTest
 
         $temp_dir = realpath(dirname($file));
         $main_file_name = basename($file, 'phpt');
-        $diff_filename     = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name.'diff';
-        $log_filename      = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name.'log';
-        $exp_filename      = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name.'exp';
-        $output_filename   = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name.'out';
-        $memcheck_filename = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name.'mem';
-        $temp_file         = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name.'php';
-        $temp_skipif       = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name.'skip.php';
-        $temp_clean        = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name.'clean.php';
+        $diff_filename     = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'diff';
+        $log_filename      = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'log';
+        $exp_filename      = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'exp';
+        $output_filename   = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'out';
+        $memcheck_filename = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'mem';
+        $temp_file         = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'php';
+        $temp_skipif       = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'skip.php';
+        $temp_clean        = $temp_dir . DIRECTORY_SEPARATOR . $main_file_name . 'clean.php';
         $tmp_post          = $temp_dir . DIRECTORY_SEPARATOR . uniqid('phpt.');
 
         // unlink old test results
@@ -394,12 +394,12 @@ class PEAR_RunTest
                 "\n\n" . 'register_shutdown_function("' . $coverage_shutdown . '");';
             $text .= "\n" . 'xdebug_start_code_coverage(XDEBUG_CC_UNUSED | XDEBUG_CC_DEAD_CODE);' . "\n";
 
-            $this->save_text($temp_file, "<?php\n" . $namespace . $text  . "\n" . implode("\n", $lines));
+            $this->save_text($temp_file, "<?php\n" . $namespace . $text . "\n" . implode("\n", $lines));
         } else {
             $this->save_text($temp_file, $section_text['FILE']);
         }
 
-        $args = $section_text['ARGS'] ? ' -- '.$section_text['ARGS'] : '';
+        $args = $section_text['ARGS'] ? ' -- ' . $section_text['ARGS'] : '';
         $cmd = $this->_preparePhpBin($this->_php, $temp_file, $ini_settings);
         $cmd.= "$args 2>&1";
         if (isset($this->_logger)) {
@@ -520,11 +520,11 @@ class PEAR_RunTest
                     // %f allows two points "-.0.0" but that is the best *simple* expression
                 }
 
-    /* DEBUG YOUR REGEX HERE
-            var_dump($wanted_re);
-            print(str_repeat('=', 80) . "\n");
-            var_dump($output);
-    */
+                /* DEBUG YOUR REGEX HERE
+                        var_dump($wanted_re);
+                        print(str_repeat('=', 80) . "\n");
+                        var_dump($output);
+                */
                 if (!$returnfail && preg_match("/^$wanted_re\$/s", $output)) {
                     if (file_exists($temp_file)) {
                         unlink($temp_file);
@@ -536,7 +536,7 @@ class PEAR_RunTest
                         $this->_logger->log(0, "PASS $test_nr$tested$info");
                     }
                     if (isset($this->_options['tapoutput'])) {
-                        return array('ok', ' - ' . $tested);
+                        return ['ok', ' - ' . $tested];
                     }
                     return 'PASSED';
                 }
@@ -569,7 +569,7 @@ class PEAR_RunTest
                         $this->_logger->log(0, "PASS $test_nr$tested$info");
                     }
                     if (isset($this->_options['tapoutput'])) {
-                        return array('ok', ' - ' . $tested);
+                        return ['ok', ' - ' . $tested];
                     }
                     return 'PASSED';
                 }
@@ -588,7 +588,7 @@ class PEAR_RunTest
                     $this->_logger->log(0, "PASS $test_nr$tested$info");
                 }
                 if (isset($this->_options['tapoutput'])) {
-                    return array('ok', ' - ' . $tested);
+                    return ['ok', ' - ' . $tested];
                 }
                 return 'PASSED';
             }
@@ -618,7 +618,7 @@ class PEAR_RunTest
 
         // write .diff
         $returns = isset($section_text['RETURNS']) ?
-                        array(trim($section_text['RETURNS']), $return_value) : null;
+                        [trim($section_text['RETURNS']), $return_value] : null;
         $expectf = isset($section_text['EXPECTF']) ? $wanted_re : null;
         $data = $this->generate_diff($wanted, $output, $returns, $expectf);
         $res  = $this->_writeLog($diff_filename, $data);
@@ -659,19 +659,19 @@ $return_value
             $wanted = "# Expected output:\n#\n#" . implode("\n#", $wanted);
             $output = explode("\n", $output);
             $output = "#\n#\n# Actual output:\n#\n#" . implode("\n#", $output);
-            return array($wanted . $output . 'not ok', ' - ' . $tested);
+            return [$wanted . $output . 'not ok', ' - ' . $tested];
         }
         return $warn ? 'WARNED' : 'FAILED';
     }
 
-    function generate_diff($wanted, $output, $rvalue, $wanted_re)
+    public function generate_diff($wanted, $output, $rvalue, $wanted_re)
     {
         $w  = explode("\n", $wanted);
         $o  = explode("\n", $output);
         $wr = explode("\n", $wanted_re);
         $w1 = array_diff_assoc($w, $o);
         $o1 = array_diff_assoc($o, $w);
-        $o2 = $w2 = array();
+        $o2 = $w2 = [];
         foreach ($w1 as $idx => $val) {
             if (!$wanted_re || !isset($wr[$idx]) || !isset($o1[$idx]) ||
                   !preg_match('/^' . $wr[$idx] . '\\z/', $o1[$idx])) {
@@ -691,32 +691,34 @@ $return_value
     }
 
     //  Write the given text to a temporary file, and return the filename.
-    function save_text($filename, $text)
+    public function save_text($filename, $text)
     {
         if (!$fp = fopen($filename, 'w')) {
             return PEAR::raiseError("Cannot open file '" . $filename . "' (save_text)");
         }
         fwrite($fp, $text);
         fclose($fp);
-    if (1 < DETAILED) echo "
+        if (1 < DETAILED) {
+            echo "
 FILE $filename {{{
 $text
 }}}
 ";
+        }
     }
 
-    function _cleanupOldFiles($file)
+    public function _cleanupOldFiles($file)
     {
         $temp_dir = realpath(dirname($file));
         $mainFileName = basename($file, 'phpt');
-        $diff_filename     = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName.'diff';
-        $log_filename      = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName.'log';
-        $exp_filename      = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName.'exp';
-        $output_filename   = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName.'out';
-        $memcheck_filename = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName.'mem';
-        $temp_file         = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName.'php';
-        $temp_skipif       = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName.'skip.php';
-        $temp_clean        = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName.'clean.php';
+        $diff_filename     = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName . 'diff';
+        $log_filename      = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName . 'log';
+        $exp_filename      = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName . 'exp';
+        $output_filename   = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName . 'out';
+        $memcheck_filename = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName . 'mem';
+        $temp_file         = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName . 'php';
+        $temp_skipif       = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName . 'skip.php';
+        $temp_clean        = $temp_dir . DIRECTORY_SEPARATOR . $mainFileName . 'clean.php';
         $tmp_post          = $temp_dir . DIRECTORY_SEPARATOR . uniqid('phpt.');
 
         // unlink old test results
@@ -731,7 +733,7 @@ $text
         @unlink($temp_clean);
     }
 
-    function _runSkipIf($section_text, $temp_skipif, $tested, $ini_settings)
+    public function _runSkipIf($section_text, $temp_skipif, $tested, $ini_settings)
     {
         $info = '';
         $warn = false;
@@ -750,7 +752,7 @@ $text
                     $this->_logger->log(0, $skipreason);
                 }
                 if (isset($this->_options['tapoutput'])) {
-                    return array('ok', ' # skip ' . $reason);
+                    return ['ok', ' # skip ' . $reason];
                 }
                 return 'SKIPPED';
             }
@@ -767,12 +769,12 @@ $text
             }
         }
 
-        return array('warn' => $warn, 'info' => $info);
+        return ['warn' => $warn, 'info' => $info];
     }
 
-    function _stripHeadersCGI($output)
+    public function _stripHeadersCGI($output)
     {
-        $this->headers = array();
+        $this->headers = [];
         if (!empty($this->_options['cgi']) &&
               $this->_php == $this->_options['cgi'] &&
               preg_match("/^(.*?)(?:\n\n(.*)|\\z)/s", $output, $match)) {
@@ -788,9 +790,9 @@ $text
      *
      * @param string $text
      */
-    function _processHeaders($text)
+    public function _processHeaders($text)
     {
-        $headers = array();
+        $headers = [];
         $rh = preg_split("/[\n\r]+/", $text);
         foreach ($rh as $line) {
             if (strpos($line, ':')!== false) {
@@ -801,10 +803,10 @@ $text
         return $headers;
     }
 
-    function _readFile($file)
+    public function _readFile($file)
     {
         // Load the sections of the test file.
-        $section_text = array(
+        $section_text = [
             'TEST'   => '(unnamed test)',
             'SKIPIF' => '',
             'GET'    => '',
@@ -813,7 +815,7 @@ $text
             'ARGS'   => '',
             'INI'    => '',
             'CLEAN'  => '',
-        );
+        ];
 
         if (!is_file($file) || !$fp = fopen($file, "r")) {
             return PEAR::raiseError("Cannot open test file: $file");
@@ -841,7 +843,7 @@ $text
         return $section_text;
     }
 
-    function _writeLog($logname, $data)
+    public function _writeLog($logname, $data)
     {
         if (!$log = fopen($logname, 'w')) {
             return PEAR::raiseError("Cannot create test log - $logname");
@@ -850,7 +852,7 @@ $text
         fclose($log);
     }
 
-    function _resetEnv($section_text, $temp_file)
+    public function _resetEnv($section_text, $temp_file)
     {
         $env = $_ENV;
         $env['REDIRECT_STATUS'] = '';
@@ -888,7 +890,7 @@ $text
         return $env;
     }
 
-    function _processUpload($section_text, $file)
+    public function _processUpload($section_text, $file)
     {
         if (array_key_exists('UPLOAD', $section_text) && !empty($section_text['UPLOAD'])) {
             $upload_files = trim($section_text['UPLOAD']);
@@ -939,7 +941,7 @@ $text
         return $section_text;
     }
 
-    function _testCleanup($section_text, $temp_clean)
+    public function _testCleanup($section_text, $temp_clean)
     {
         if ($section_text['CLEAN']) {
             $this->_restorePHPBinary();
@@ -956,15 +958,14 @@ $text
         }
     }
 
-    function _savePHPBinary()
+    public function _savePHPBinary()
     {
         $this->_savephp = $this->_php;
     }
 
-    function _restorePHPBinary()
+    public function _restorePHPBinary()
     {
-        if (isset($this->_savephp))
-        {
+        if (isset($this->_savephp)) {
             $this->_php = $this->_savephp;
             unset($this->_savephp);
         }

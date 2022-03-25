@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,7 +15,6 @@ use Weline\Framework\Event\Event;
 
 class Footer implements \Weline\Framework\Event\ObserverInterface
 {
-
     /**
      * @inheritDoc
      */

@@ -9,14 +9,13 @@
 
 namespace Weline\Framework\Session\Driver;
 
-
-abstract class AbstractSessionDriverHandlerDriverHandle implements SessionDriverHandlerInterface,\SessionHandlerInterface
+abstract class AbstractSessionDriverHandlerDriverHandle implements SessionDriverHandlerInterface, \SessionHandlerInterface
 {
     private function __clone()
     {
     }
     public function __construct(array $config)
     {
-        session_set_save_handler($this,true);
+        session_set_save_handler($this, true);
     }
 }

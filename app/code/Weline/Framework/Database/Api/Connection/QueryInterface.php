@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,7 +14,6 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\Api\Connection;
 
-
 use PDOStatement;
 use Weline\Framework\Database\Connection;
 use Weline\Framework\Database\AbstractModel;
@@ -21,44 +21,44 @@ use Weline\Framework\Database\Connection\Query;
 
 interface QueryInterface
 {
-    const attr_IDENTITY_FIELD = 'identity_field';
-    const attr_TABLE          = 'table';
-    const attr_TABLE_ALIA     = 'table_alias';
-    const attr_INSERT         = 'insert';
-    const attr_JOIN           = 'joins';
-    const attr_FIELD          = 'fields';
-    const attr_UPDATE         = 'updates';
-    const attr_WHERE          = 'wheres';
-    const attr_BOUND_VALUE    = 'bound_values';
-    const attr_LIMIT          = 'limit';
-    const attr_ORDER          = 'order';
-    const attr_SQL            = 'sql';
-    const attr_ADDITIONAL_SQL = 'additional_sql';
+    public const attr_IDENTITY_FIELD = 'identity_field';
+    public const attr_TABLE          = 'table';
+    public const attr_TABLE_ALIA     = 'table_alias';
+    public const attr_INSERT         = 'insert';
+    public const attr_JOIN           = 'joins';
+    public const attr_FIELD          = 'fields';
+    public const attr_UPDATE         = 'updates';
+    public const attr_WHERE          = 'wheres';
+    public const attr_BOUND_VALUE    = 'bound_values';
+    public const attr_LIMIT          = 'limit';
+    public const attr_ORDER          = 'order';
+    public const attr_SQL            = 'sql';
+    public const attr_ADDITIONAL_SQL = 'additional_sql';
 
-    const init_vars  = [
+    public const init_vars  = [
         self::attr_IDENTITY_FIELD => 'id',
         self::attr_TABLE          => '',
         self::attr_TABLE_ALIA     => 'main_table',
-        self::attr_INSERT         => array(),
-        self::attr_JOIN           => array(),
+        self::attr_INSERT         => [],
+        self::attr_JOIN           => [],
         self::attr_FIELD          => '*',
-        self::attr_UPDATE         => array(),
-        self::attr_WHERE          => array(),
-        self::attr_BOUND_VALUE    => array(),
+        self::attr_UPDATE         => [],
+        self::attr_WHERE          => [],
+        self::attr_BOUND_VALUE    => [],
         self::attr_LIMIT          => '',
-        self::attr_ORDER          => array(),
+        self::attr_ORDER          => [],
         self::attr_SQL            => '',
         self::attr_ADDITIONAL_SQL => '',
     ];
-    const query_vars = [
-        self::attr_INSERT         => array(),
-        self::attr_JOIN           => array(),
+    public const query_vars = [
+        self::attr_INSERT         => [],
+        self::attr_JOIN           => [],
         self::attr_FIELD          => '*',
-        self::attr_UPDATE         => array(),
-        self::attr_WHERE          => array(),
-        self::attr_BOUND_VALUE    => array(),
+        self::attr_UPDATE         => [],
+        self::attr_WHERE          => [],
+        self::attr_BOUND_VALUE    => [],
         self::attr_LIMIT          => '',
-        self::attr_ORDER          => array(),
+        self::attr_ORDER          => [],
         self::attr_SQL            => '',
         self::attr_ADDITIONAL_SQL => '',
     ];
@@ -75,7 +75,7 @@ interface QueryInterface
      *
      * @return mixed
      */
-    function identity(string $field): QueryInterface;
+    public function identity(string $field): QueryInterface;
 
     /**
      * @DESC          # 表名设置
@@ -89,7 +89,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function table(string $table_name): QueryInterface;
+    public function table(string $table_name): QueryInterface;
 
     /**
      * @DESC          # 表名别名
@@ -103,7 +103,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function alias(string $table_alias_name): QueryInterface;
+    public function alias(string $table_alias_name): QueryInterface;
 
     /**
      * @DESC          # 更新
@@ -118,7 +118,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function update(array|string $field, int|string $value_or_condition_field = 'id'): QueryInterface;
+    public function update(array|string $field, int|string $value_or_condition_field = 'id'): QueryInterface;
 
     /**
      * @DESC          # 表名设置
@@ -132,7 +132,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function fields(string $fields): QueryInterface;
+    public function fields(string $fields): QueryInterface;
 
     /**
      * @DESC          # 连接查询
@@ -148,7 +148,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function join(string $table, string $condition, string $type = 'left'): QueryInterface;
+    public function join(string $table, string $condition, string $type = 'left'): QueryInterface;
 
     /**
      * @DESC          | 条件查询
@@ -171,7 +171,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): QueryInterface;
+    public function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): QueryInterface;
 
     /**
      * @DESC          # 限制查询
@@ -186,7 +186,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function limit(int $size, int $offset = 0): QueryInterface;
+    public function limit(int $size, int $offset = 0): QueryInterface;
 
     /**
      * @DESC          # 限制查询
@@ -201,7 +201,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function page(int $page = 1, int $pageSize = 20): QueryInterface;
+    public function page(int $page = 1, int $pageSize = 20): QueryInterface;
 
     /**
      * @DESC          # 统计页码，总数等信息，为了性能当第一次统计时使用此函数
@@ -217,7 +217,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function pagination(int $page = 1, int $pageSize = 20, array $params = []): QueryInterface;
+    public function pagination(int $page = 1, int $pageSize = 20, array $params = []): QueryInterface;
 
     /**
      * @DESC          # 方法描述
@@ -232,7 +232,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function order(string $fields, string $sort = 'ASC'): QueryInterface;
+    public function order(string $fields, string $sort = 'ASC'): QueryInterface;
 
     /**
      * @DESC          # 仅查找一个
@@ -243,7 +243,7 @@ interface QueryInterface
      * 参数区：
      * @return QueryInterface
      */
-    function find(): QueryInterface;
+    public function find(): QueryInterface;
 
     /**
      * @DESC         |选择
@@ -252,7 +252,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function select(): QueryInterface;
+    public function select(): QueryInterface;
 
     /**
      * @DESC         |插入
@@ -263,7 +263,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function insert(array $data): QueryInterface;
+    public function insert(array $data): QueryInterface;
 
     /**
      * @DESC         |删除
@@ -272,7 +272,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function delete(): QueryInterface;
+    public function delete(): QueryInterface;
 
     /**
      * @DESC          | 查询结果集
@@ -285,7 +285,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function query(string $sql): QueryInterface;
+    public function query(string $sql): QueryInterface;
 
     /**
      * @DESC          # 附加的sql 用于复杂自定义的长sql 比如聚合函数的使用
@@ -299,7 +299,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function additional(string $additional_sql): QueryInterface;
+    public function additional(string $additional_sql): QueryInterface;
 
     /**
      * @DESC          | 查询最终的结果
@@ -312,7 +312,7 @@ interface QueryInterface
      *
      * @return mixed
      */
-    function fetch(string $model_class = ''): mixed;
+    public function fetch(string $model_class = ''): mixed;
 
     /**
      * @DESC          | 查询原始最终的结果
@@ -323,7 +323,7 @@ interface QueryInterface
      *
      * @return array
      */
-    function fetchOrigin(): array;
+    public function fetchOrigin(): array;
 
     /**
      * @DESC          # 清理特定条件
@@ -337,7 +337,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function clear(string $type = ''): QueryInterface;
+    public function clear(string $type = ''): QueryInterface;
 
     /**
      * @DESC          # 清理特定条件
@@ -352,7 +352,7 @@ interface QueryInterface
      *
      * @return QueryInterface
      */
-    function clearQuery(string $type = ''): QueryInterface;
+    public function clearQuery(string $type = ''): QueryInterface;
 
     /**
      * @DESC          # 重置所有
@@ -363,7 +363,7 @@ interface QueryInterface
      * 参数区：
      * @return QueryInterface
      */
-    function reset(): QueryInterface;
+    public function reset(): QueryInterface;
 
     /**
      * @DESC          # 开启事务
@@ -374,7 +374,7 @@ interface QueryInterface
      * 参数区：
      * @return void
      */
-    function beginTransaction(): void;
+    public function beginTransaction(): void;
 
     /**
      * @DESC          # 事务回滚
@@ -385,7 +385,7 @@ interface QueryInterface
      * 参数区：
      * @return void
      */
-    function rollBack(): void;
+    public function rollBack(): void;
 
     /**
      * @DESC          # 事务提交
@@ -396,7 +396,7 @@ interface QueryInterface
      * 参数区：
      * @return void
      */
-    function commit(): void;
+    public function commit(): void;
 
     /**
      * 归档数据
@@ -420,7 +420,7 @@ interface QueryInterface
      *
      * @return string
      */
-    function getLastSql(bool $format = true): string;
+    public function getLastSql(bool $format = true): string;
 
     /**
      * @DESC          # 读取预编译sql
@@ -434,5 +434,5 @@ interface QueryInterface
      *
      * @return string
      */
-    function getPrepareSql(bool $format = true): string;
+    public function getPrepareSql(bool $format = true): string;
 }

@@ -16,7 +16,7 @@ abstract class Mysql extends AbstractSessionDriverHandlerDriverHandle implements
         // TODO: Implement set() method.
     }
 
-    public function get($name):mixed
+    public function get($name): mixed
     {
         // TODO: Implement get() method.
     }

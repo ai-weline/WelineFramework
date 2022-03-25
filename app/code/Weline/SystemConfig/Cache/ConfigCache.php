@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,7 @@ namespace Weline\SystemConfig\Cache;
 
 class ConfigCache extends \Weline\Framework\Cache\CacheFactory
 {
-    function __construct(string $identity = 'system_config')
+    public function __construct(string $identity = 'system_config')
     {
         parent::__construct($identity);
     }

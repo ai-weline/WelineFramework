@@ -17,7 +17,7 @@ class FrontendController extends PcController
 {
     private ?FrontendSession $session = null;
 
-    function __init()
+    public function __init()
     {
         parent::__init();
         $this->getSession(FrontendSession::class);

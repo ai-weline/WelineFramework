@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,7 @@ class Events extends \Weline\Admin\Controller\BaseController
 {
     public ?Reader $reader;
 
-    function getIndex()
+    public function getIndex()
     {
         $events = $this->getReader()->read();
         $this->assign('events', $events);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -19,11 +20,10 @@ class Data extends \Weline\Framework\App\Helper
     protected Request $_request;
     private AdminUser $adminUser;
 
-    function __construct(
+    public function __construct(
         Request   $_request,
         AdminUser $adminUser
-    )
-    {
+    ) {
         $this->_request = $_request;
         $this->adminUser = $adminUser;
     }
@@ -37,7 +37,7 @@ class Data extends \Weline\Framework\App\Helper
      * 参数区：
      * @return AdminUser
      */
-    function getRequestAdminUser(): AdminUser
+    public function getRequestAdminUser(): AdminUser
     {
         $username = $this->_request->getParam('username');
         try {

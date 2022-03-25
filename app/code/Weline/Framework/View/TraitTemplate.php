@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -31,7 +32,7 @@ trait TraitTemplate
      * 参数区：
      * @return HtmlInterface|string
      */
-    function getHeader(): HtmlInterface|string
+    public function getHeader(): HtmlInterface|string
     {
         return $this->fetchClassObject('header');
     }
@@ -45,7 +46,7 @@ trait TraitTemplate
      * 参数区：
      * @return HtmlInterface|string
      */
-    function getFooter(): HtmlInterface|string
+    public function getFooter(): HtmlInterface|string
     {
         return $this->fetchClassObject('footer');
     }
@@ -59,15 +60,19 @@ trait TraitTemplate
         }
         $this->eventsManager->dispatch("Framework_View::{$position}", ['is_backend' => $is_backend, 'class' => '']);
         $class = $this->eventsManager->getEventData("Framework_View::{$position}")->getData('class');
-        if (empty($class) || !class_exists($class)) return '';
+        if (empty($class) || !class_exists($class)) {
+            return '';
+        }
         $object = ObjectManager::getInstance($class);
-        if (PROD) $this->viewCache->set($cache_key, $object);
+        if (PROD) {
+            $this->viewCache->set($cache_key, $object);
+        }
         return $object;
     }
 
     /**--------------------------资源处理------------------------------*/
 
-    function processFileSource(string $fileName, string $file_dir): array
+    public function processFileSource(string $fileName, string $file_dir): array
     {
         $view_dir = $this->view_dir;
         $template_dir = $this->template_dir;
@@ -76,7 +81,9 @@ trait TraitTemplate
             $pre_module_name = substr($fileName, 0, strpos($fileName, '::'));
             # 到模块配置中获取模块的模板文件路径
             $module_lists = Env::getInstance()->getModuleList();
-            if (!isset($module_lists[$pre_module_name])) throw new Exception(__('异常：你指定的模板文件所在的模块不存在！模块：%1，所使用的模板：%2', [$pre_module_name, $fileName]));
+            if (!isset($module_lists[$pre_module_name])) {
+                throw new Exception(__('异常：你指定的模板文件所在的模块不存在！模块：%1，所使用的模板：%2', [$pre_module_name, $fileName]));
+            }
             $fileName = str_replace($pre_module_name . '::', '', $fileName);
             # 替换掉当前模块的视图目录
             $view_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
@@ -92,7 +99,7 @@ trait TraitTemplate
         return [$fileName, $file_dir, $view_dir, $template_dir, $compile_dir];
     }
 
-    function processModuleSourceFilePath(string $type, string $source): array
+    public function processModuleSourceFilePath(string $type, string $source): array
     {
         $t_f = $type . DIRECTORY_SEPARATOR . $source;
         $t_f_arr = [];
@@ -124,8 +131,8 @@ trait TraitTemplate
                     $data = $this->fetch($t_f);
                     break;
                 }
-                list($t_f,$module_name) = $this->processModuleSourceFilePath($type, $source);
-                $data = $this->fetch($t_f,$module_name);
+                list($t_f, $module_name) = $this->processModuleSourceFilePath($type, $source);
+                $data = $this->fetch($t_f, $module_name);
                 $this->viewCache->set($cache_key, $t_f);
                 break;
             case DataInterface::dir_type_STATICS:
@@ -171,7 +178,9 @@ trait TraitTemplate
     {
         $source = trim($source);
         $cache_key = $type . '_' . $source;
-        if (PROD && $data = $this->viewCache->get($cache_key)) return $data;
+        if (PROD && $data = $this->viewCache->get($cache_key)) {
+            return $data;
+        }
         switch ($type) {
             case DataInterface::dir_type_STATICS:
                 list($t_f, $module_name) = $this->processModuleSourceFilePath($type, $source);
@@ -275,7 +284,7 @@ trait TraitTemplate
         if (DEV) {
             if (is_int(strpos($real_path, APP_CODE_PATH))) {
                 $url_path = rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace(APP_CODE_PATH, '', $real_path)), '/');
-            } else if (is_int(strpos($real_path, VENDOR_PATH))) {
+            } elseif (is_int(strpos($real_path, VENDOR_PATH))) {
                 $url_path = rtrim(str_replace('\\', '/', DIRECTORY_SEPARATOR . str_replace(VENDOR_PATH, '', $real_path)), '/');
             }
         } else {
@@ -308,5 +317,4 @@ trait TraitTemplate
         $this->viewCache->set($filename, $event_filename);
         return $event_filename;
     }
-
 }

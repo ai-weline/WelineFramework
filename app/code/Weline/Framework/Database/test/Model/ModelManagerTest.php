@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,7 +19,7 @@ class ModelManagerTest extends TestCore
 {
     private ModelManager $model;
 
-    function setUp(): void
+    public function setUp(): void
     {
         $this->model = ObjectManager::getInstance(ModelManager::class);
     }

@@ -10,27 +10,27 @@
  */
 class Bug18343Tests extends AbstractUnitTests
 {
-    private $tagArray = array(
+    private $tagArray = [
         "qname"      => "install",
-        "attributes" => array(
+        "attributes" => [
             "as"    => "Horde/Feed/fixtures/lexicon/http-p.moreover.com-cgi-local-page%2Fo=rss&s=Newsweek",
             "name"  => "test/Horde/Feed/fixtures/lexicon/http-p.moreover.com-cgi-local-page%2Fo=rss&s=Newsweek",
-        )
-    );
+        ]
+    ];
 
     public function getFlagsToTest()
     {
         new XML_Util(); // for constants to be declared
 
-        return array(
-            array('no flag', null),
-            array('false', false),
-            array('ENTITIES_NONE', XML_UTIL_ENTITIES_NONE),
-            array('ENTITIES_XML', XML_UTIL_ENTITIES_XML),
-            array('ENTITIES_XML_REQUIRED', XML_UTIL_ENTITIES_XML_REQUIRED),
-            array('ENTITIES_HTML', XML_UTIL_ENTITIES_HTML),
-            array('REPLACE_ENTITIES', XML_UTIL_REPLACE_ENTITIES),
-        );
+        return [
+            ['no flag', null],
+            ['false', false],
+            ['ENTITIES_NONE', XML_UTIL_ENTITIES_NONE],
+            ['ENTITIES_XML', XML_UTIL_ENTITIES_XML],
+            ['ENTITIES_XML_REQUIRED', XML_UTIL_ENTITIES_XML_REQUIRED],
+            ['ENTITIES_HTML', XML_UTIL_ENTITIES_HTML],
+            ['REPLACE_ENTITIES', XML_UTIL_REPLACE_ENTITIES],
+        ];
     }
 
     /**

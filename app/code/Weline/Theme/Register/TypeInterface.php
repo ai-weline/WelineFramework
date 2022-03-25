@@ -11,5 +11,5 @@ namespace Weline\Theme\Register;
 
 interface TypeInterface
 {
-    const type = 'theme';
+    public const type = 'theme';
 }

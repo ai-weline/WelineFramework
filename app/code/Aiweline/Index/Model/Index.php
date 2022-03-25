@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -9,7 +10,6 @@ declare(strict_types=1);
  */
 
 namespace Aiweline\Index\Model;
-
 
 use Weline\Framework\Database\Model;
 use Weline\Framework\Setup\Data\Context;
@@ -22,7 +22,7 @@ class Index extends Model
      * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Database\Exception\LinkException
      */
-    function setup(ModelSetup $setup,Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
         # 有表则删除
         if ($setup->tableExist()) {
@@ -45,12 +45,12 @@ class Index extends Model
 //            ->alter();
     }
 
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: 处理安装时配置不写，以及删除模组后模型安装列表依然存在问题
     }
 
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement install() method.
     }

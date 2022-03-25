@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,9 +15,7 @@ use PHPUnit\Framework\TestCase;
 
 class SystemConfigTest extends TestCase
 {
-
     public function testGetKey()
     {
-
     }
 }

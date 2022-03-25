@@ -11,17 +11,17 @@ namespace Weline\Framework\Http;
 
 interface RequestInterface
 {
-    const GET = 'GET';
+    public const GET = 'GET';
 
-    const POST = 'POST';
+    public const POST = 'POST';
 
-    const PUT = 'PUT';
+    public const PUT = 'PUT';
 
-    const DELETE = 'DELETE';
+    public const DELETE = 'DELETE';
 
-    const UPDATE = 'UPDATE';
+    public const UPDATE = 'UPDATE';
 
-    const METHODS = [
+    public const METHODS = [
         self::GET,
         self::POST,
         self::PUT,
@@ -29,14 +29,14 @@ interface RequestInterface
         self::UPDATE,
     ];
 
-    const CONTENT_TYPE = [
+    public const CONTENT_TYPE = [
         'json' => 'application/json',
         'xml'  => 'application/xml',
     ];
 
-    const auth_TYPE_BEARER = 'bearer';
+    public const auth_TYPE_BEARER = 'bearer';
 
-    const auth_TYPE_BASIC_AUTH = 'basic';
+    public const auth_TYPE_BASIC_AUTH = 'basic';
 
     /**
      * @DESC         |获取服务server
@@ -93,7 +93,7 @@ interface RequestInterface
      * @param string $key
      * @return string
      */
-    public function getApiKey(string $key):string;
+    public function getApiKey(string $key): string;
 
     /**
      * @DESC         |获取传统键值对参数
@@ -206,7 +206,7 @@ interface RequestInterface
      * @param string $path
      * @return string
      */
-    public function getUrl(string $path=''):string;
+    public function getUrl(string $path=''): string;
 
     /**
      * @DESC          # 获取模组名字
@@ -217,5 +217,5 @@ interface RequestInterface
      * 参数区：
      * @return string
      */
-    public function getModuleName():string;
+    public function getModuleName(): string;
 }

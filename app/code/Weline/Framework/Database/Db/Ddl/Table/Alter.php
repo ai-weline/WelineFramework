@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -181,7 +182,6 @@ class Alter extends TableAbstract implements AlterInterface
                 } catch (\Exception $exception) {
                     exit(__('更新表注释错误：%1', $exception->getMessage()) . PHP_EOL);
                 }
-
             }
             $table_fields = $this->getTableColumns();
             # 字段编辑
@@ -245,7 +245,6 @@ class Alter extends TableAbstract implements AlterInterface
                     } catch (\Exception $exception) {
                         exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                     }
-
                 }
             }
 
@@ -258,7 +257,6 @@ class Alter extends TableAbstract implements AlterInterface
                     exit($exception->getMessage() . PHP_EOL . __('数据库SQL:%1', $sql) . PHP_EOL);
                 }
             }
-
         } catch (\Exception $exception) {
             exit($exception->getMessage());
         }
@@ -266,7 +264,7 @@ class Alter extends TableAbstract implements AlterInterface
         return true;
     }
 
-    function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): AlterInterface
+    public function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): AlterInterface
     {
         $on_delete_str = $on_delete ? 'on delete cascade' : '';
         $on_update_str = $on_update ? 'on update cascade' : '';

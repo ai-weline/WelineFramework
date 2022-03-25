@@ -11,9 +11,9 @@ namespace Weline\Framework\Register\Router\Data;
 
 interface DataInterface
 {
-    const register_file = 'register.php';
+    public const register_file = 'register.php';
 
-    const register_param = [
+    public const register_param = [
         'type'           => null,
         'area'           => null,
         'module'         => null,
@@ -23,7 +23,7 @@ interface DataInterface
         'request_method' => null,
     ];
 
-    const type_API = 'api';
+    public const type_API = 'api';
 
-    const type_PC = 'pc';
+    public const type_PC = 'pc';
 }

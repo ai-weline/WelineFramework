@@ -6,7 +6,7 @@
  * Examples (file #2)
  *
  * several examples for the methods of XML_Util
- * 
+ *
  * PHP versions 4 and 5
  *
  * LICENSE:
@@ -59,8 +59,11 @@
      * creating a start element
      */
     print 'creating a start element:<br>';
-    print htmlentities(XML_Util::createStartElement('myNs:myTag', 
-        array('foo' => 'bar'), 'http://www.w3c.org/myNs#'));
+    print htmlentities(XML_Util::createStartElement(
+        'myNs:myTag',
+        ['foo' => 'bar'],
+        'http://www.w3c.org/myNs#'
+    ));
     print "\n<br><br>\n";
 
 
@@ -68,8 +71,11 @@
      * creating a start element
      */
     print 'creating a start element:<br>';
-    print htmlentities(XML_Util::createStartElement('myTag', 
-        array(), 'http://www.w3c.org/myNs#'));
+    print htmlentities(XML_Util::createStartElement(
+        'myTag',
+        [],
+        'http://www.w3c.org/myNs#'
+    ));
     print "\n<br><br>\n";
 
     /**
@@ -77,9 +83,12 @@
      */
     print 'creating a start element:<br>';
     print '<pre>';
-    print htmlentities(XML_Util::createStartElement('myTag', 
-        array('foo' => 'bar', 'argh' => 'tomato'), 
-        'http://www.w3c.org/myNs#', true));
+    print htmlentities(XML_Util::createStartElement(
+        'myTag',
+        ['foo' => 'bar', 'argh' => 'tomato'],
+        'http://www.w3c.org/myNs#',
+        true
+    ));
     print '</pre>';
     print "\n<br><br>\n";
 
@@ -108,38 +117,46 @@
     /**
      * creating an XML tag with multiline mode
      */
-    $tag = array(
+    $tag = [
         'qname'        => 'foo:bar',
         'namespaceUri' => 'http://foo.com',
-        'attributes'   => array('key' => 'value', 'argh' => 'fruit&vegetable'),
+        'attributes'   => ['key' => 'value', 'argh' => 'fruit&vegetable'],
         'content'      => 'I\'m inside the tag & contain dangerous chars'
-    );
+    ];
 
     print 'creating a tag with qualified name and namespaceUri:<br>';
     print '<pre>';
-    print htmlentities(XML_Util::createTagFromArray($tag, 
-        XML_UTIL_REPLACE_ENTITIES, true));
+    print htmlentities(XML_Util::createTagFromArray(
+        $tag,
+        XML_UTIL_REPLACE_ENTITIES,
+        true
+    ));
     print '</pre>';
     print "\n<br><br>\n";
 
     /**
      * create an attribute string without replacing the entities
      */
-    $atts = array('series' => 'Starsky &amp; Hutch', 'channel' => 'ABC');
+    $atts = ['series' => 'Starsky &amp; Hutch', 'channel' => 'ABC'];
     print 'creating a attribute string, '
         . 'entities in values already had been replaced:<br>';
-    print htmlentities(XML_Util::attributesToString($atts, 
-        true, false, false, false, XML_UTIL_ENTITIES_NONE));
+    print htmlentities(XML_Util::attributesToString(
+        $atts,
+        true,
+        false,
+        false,
+        false,
+        XML_UTIL_ENTITIES_NONE
+    ));
     print "\n<br><br>\n";
 
     /**
      * using the array-syntax for attributesToString()
      */
-    $atts = array('series' => 'Starsky &amp; Hutch', 'channel' => 'ABC');
+    $atts = ['series' => 'Starsky &amp; Hutch', 'channel' => 'ABC'];
     print 'using the array-syntax for attributesToString()<br>';
-    print htmlentities(XML_Util::attributesToString($atts, 
-        array('entities' => XML_UTIL_ENTITIES_NONE)));
+    print htmlentities(XML_Util::attributesToString(
+        $atts,
+        ['entities' => XML_UTIL_ENTITIES_NONE]
+    ));
     print "\n<br><br>\n";
-
-
-?>

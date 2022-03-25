@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,7 @@ namespace Weline\Admin\Controller\Template;
 
 class BaseController extends \Weline\Admin\Controller\BaseController
 {
-    function __init()
+    public function __init()
     {
         # 设置模板文件为html
         $this->getTemplate()->setFileExt('html');

@@ -29,9 +29,9 @@ use Weline\Framework\Setup\Data\Context as SetupContext;
 
 class Handle implements HandleInterface, RegisterInterface
 {
-    const api_DIR = 'Api';// api特殊目录，注册api路由
+    public const api_DIR = 'Api';// api特殊目录，注册api路由
 
-    const pc_DIR = 'Controller';// pc特殊目录，注册pc路由
+    public const pc_DIR = 'Controller';// pc特殊目录，注册pc路由
 
     private Printing $printer;
 
@@ -83,8 +83,7 @@ class Handle implements HandleInterface, RegisterInterface
         SetupHelper $setup_helper,
         SetupData   $setup_data,
         Compress    $compress
-    )
-    {
+    ) {
         $this->modules = Env::getInstance()->getModuleList();
         $this->helper = $helper;
         $this->system = $system;
@@ -93,7 +92,7 @@ class Handle implements HandleInterface, RegisterInterface
         $this->printer = $printer;
         $this->compress = $compress;
     }
-    
+
     /**
      * @DESC         |移除应用
      *
@@ -160,7 +159,7 @@ class Handle implements HandleInterface, RegisterInterface
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function register(string $type,string $module_name, array|string $param, string $version = '', string $description = ''): mixed
+    public function register(string $type, string $module_name, array|string $param, string $version = '', string $description = ''): mixed
     {
         if (!isset($param['base_path'])) {
             throw new Exception(__('尚未设置基础路径！%1', 'base_path'));
@@ -181,7 +180,9 @@ class Handle implements HandleInterface, RegisterInterface
         $module->setVersion($version ?: '1.0.0');
         $module->setDescription($description ?: '');
 
-        if (DEV) $this->printer->error($module->getName() . '：处理...', '开发');
+        if (DEV) {
+            $this->printer->error($module->getName() . '：处理...', '开发');
+        }
         // 模块路径
         // 模型管理器
         /**@var ModelManager $modelManager */
@@ -189,7 +190,7 @@ class Handle implements HandleInterface, RegisterInterface
         // 检测文件完整
         $router = '';
         foreach (DataInterface::files as $filename) {
-            $filepath = $module->getBasePath() .DIRECTORY_SEPARATOR. $filename;
+            $filepath = $module->getBasePath() . DIRECTORY_SEPARATOR . $filename;
             if (is_file($filepath)) {
                 if ($filename === DataInterface::file_etc_Env) {
                     $env = (array)require $filepath;
@@ -209,14 +210,16 @@ class Handle implements HandleInterface, RegisterInterface
         $module->setRouter($router);
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $module->getName(), 'module_version' => $version, 'module_description' => $description], '__construct');
         $setup_dir = BP . $module->getBasePath() . \Weline\Framework\Setup\Data\DataInterface::dir;
-        $setup_namespace = $module->getNamespacePath() .'\\'. ucfirst(\Weline\Framework\Setup\Data\DataInterface::dir).'\\';
+        $setup_namespace = $module->getNamespacePath() . '\\' . ucfirst(\Weline\Framework\Setup\Data\DataInterface::dir) . '\\';
 
-        if (is_dir($setup_dir) && DEV) $this->printer->setup($setup_dir . '：升级目录...', '开发');
+        if (is_dir($setup_dir) && DEV) {
+            $this->printer->setup($setup_dir . '：升级目录...', '开发');
+        }
         // 已经存在模块则更新
         if ($this->helper->isInstalled($this->modules, $module->getName())) {
             if ($this->helper->isDisabled($this->modules, $module->getName())) {
                 $this->printer->warning(str_pad($module->getName(), 45) . __('已禁用！'));
-            }else{
+            } else {
                 // 是否更新模块：是则加载模块下的Setup模块下的文件进行更新
                 $old_version = $this->modules[$module->getName()]['version'];
                 if ($this->helper->isUpgrade($this->modules, $module->getName(), $version)) {
@@ -229,7 +232,7 @@ class Handle implements HandleInterface, RegisterInterface
                     foreach (\Weline\Framework\Setup\Data\DataInterface::upgrade_FILES as $upgrade_FILE) {
                         $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $upgrade_FILE . '.php';
                         if (file_exists($setup_file)) {
-                            $setup = ObjectManager::getInstance($setup_namespace.$upgrade_FILE);
+                            $setup = ObjectManager::getInstance($setup_namespace . $upgrade_FILE);
                             $result = $setup->setup($this->setup_data, $this->setup_context);
                             $this->printer->note("{$result}");
                         }
@@ -237,15 +240,25 @@ class Handle implements HandleInterface, RegisterInterface
                 }
 
                 # 升级模块的模型
-                if (DEV) $this->printer->setup($module->getName() . '：模型升级...', '开发');
-                if (DEV) $modelManager->update($module->getName(), $this->setup_context, 'setup');
-                if (DEV) $this->printer->setup($module->getName() . '：模型升级完成...', '开发');
+                if (DEV) {
+                    $this->printer->setup($module->getName() . '：模型升级...', '开发');
+                }
+                if (DEV) {
+                    $modelManager->update($module->getName(), $this->setup_context, 'setup');
+                }
+                if (DEV) {
+                    $this->printer->setup($module->getName() . '：模型升级完成...', '开发');
+                }
                 // 更新路由
-                if (DEV) $this->printer->setup($module->getName() . '：更新路由...', '开发');
+                if (DEV) {
+                    $this->printer->setup($module->getName() . '：更新路由...', '开发');
+                }
                 $this->modules[$module->getName()] = $module->getData();
 
                 $this->helper->registerModuleRouter($this->modules, $module->getBasePath(), $module->getName(), $router);
-                if (DEV) $this->printer->setup($module->getName() . '：更新路由完成...', '开发');
+                if (DEV) {
+                    $this->printer->setup($module->getName() . '：更新路由完成...', '开发');
+                }
                 // 更新模块
                 $this->printer->success(str_pad($module->getName(), 45) . __('已更新！'));
             }
@@ -262,13 +275,15 @@ class Handle implements HandleInterface, RegisterInterface
             foreach (\Weline\Framework\Setup\Data\DataInterface::install_FILES as $install_FILE) {
                 $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $install_FILE . '.php';
                 if (file_exists($setup_file)) {
-                    $setup = ObjectManager::getInstance($setup_namespace.$install_FILE);
+                    $setup = ObjectManager::getInstance($setup_namespace . $install_FILE);
                     $setup->setup($this->setup_data, $this->setup_context);
                 }
             }
 
             # 执行模型setup
-            if (DEV) $modelManager->update($module->getName(), $this->setup_context, 'setup');
+            if (DEV) {
+                $modelManager->update($module->getName(), $this->setup_context, 'setup');
+            }
             $this->modules[$module->getName()] = $module->getData();
             // 更新路由
             $this->helper->registerModuleRouter($this->modules, $module->getBasePath(), $module->getName(), $router);

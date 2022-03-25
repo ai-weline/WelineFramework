@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,10 +11,9 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Cache;
 
-
 class BackendCache extends \Weline\Framework\Cache\CacheFactory
 {
-    function __construct(string $identity = 'backend_cache')
+    public function __construct(string $identity = 'backend_cache')
     {
         parent::__construct($identity);
     }

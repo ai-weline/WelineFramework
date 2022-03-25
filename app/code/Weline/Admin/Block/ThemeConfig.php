@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,14 +19,14 @@ class ThemeConfig extends \Weline\Framework\View\Block
     private AdminSession $adminSession;
     private AdminUserConfig $adminUserConfig;
 
-    function __construct(AdminUserConfig $adminUserConfig, AdminSession $adminSession, array $data = [])
+    public function __construct(AdminUserConfig $adminUserConfig, AdminSession $adminSession, array $data = [])
     {
         parent::__construct($data);
         $this->adminSession    = $adminSession;
         $this->adminUserConfig = $adminUserConfig;
     }
 
-    function __init()
+    public function __init()
     {
         $this->adminUserConfig = $this->adminSession->getLoginUserID() ? $this->adminUserConfig->load($this->adminSession->getLoginUserID()) : $this->adminUserConfig;
         if (!$this->adminUserConfig->getAdminUserId()) {
@@ -33,7 +34,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
         }
     }
 
-    function getThemeConfig(string $key = '')
+    public function getThemeConfig(string $key = '')
     {
         if ($key) {
             if ($data = $this->adminSession->getData($key)) {
@@ -51,7 +52,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
         return $data;
     }
 
-    function getThemeModel()
+    public function getThemeModel()
     {
         $data = '';
         if ($this->getThemeConfig('dark-mode-switch')) {
@@ -64,7 +65,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
         return $data;
     }
 
-    function setThemeConfig(string|array $key, mixed $value = ''): static
+    public function setThemeConfig(string|array $key, mixed $value = ''): static
     {
         if (is_array($key)) {
             foreach ($key as $i => $v) {
@@ -81,12 +82,14 @@ class ThemeConfig extends \Weline\Framework\View\Block
     public string $cache_key_backend_body_attributes = 'backend_body_layouts_attributes';
 
 
-    function getLayouts()
+    public function getLayouts()
     {
         $body_attributes     = is_array($this->adminUserConfig->getConfig('layouts')) ? $this->adminUserConfig->getConfig('layouts') : [];
         $body_attributes_str = '';
         foreach ($body_attributes as $attribute => $value) {
-            if (is_string($value)) $body_attributes_str .= "$attribute=\"$value\" ";
+            if (is_string($value)) {
+                $body_attributes_str .= "$attribute=\"$value\" ";
+            }
         }
         $this->adminSession->setData($this->cache_key_backend_body_attributes, $body_attributes_str);
         return $body_attributes_str;

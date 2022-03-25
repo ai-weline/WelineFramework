@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -21,29 +22,28 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class SystemConfig extends \Weline\Framework\Database\Model
 {
-    const primary_key   = 'key';
+    public const primary_key   = 'key';
 
-    const fields_KEY    = 'key';
-    const fields_VALUE  = 'v';
-    const fields_MODULE = 'module';
-    const fields_AREA   = 'area';
+    public const fields_KEY    = 'key';
+    public const fields_VALUE  = 'v';
+    public const fields_MODULE = 'module';
+    public const fields_AREA   = 'area';
 
-    const area_BACKEND  = 'backend';
-    const area_FRONTEND = 'frontend';
+    public const area_BACKEND  = 'backend';
+    public const area_FRONTEND = 'frontend';
 
     private CacheInterface $cache;
     private array $cache_data;
 
-    function __construct(
+    public function __construct(
         BackendCache $cache,
         array        $data = []
-    )
-    {
+    ) {
         $this->cache = $cache->create();
         parent::__construct($data);
     }
 
-    function __init()
+    public function __init()
     {
         parent::__init();
         if (!isset($this->cache)) {
@@ -51,7 +51,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
         }
     }
 
-    function __sleep()
+    public function __sleep()
     {
         $parent_vars[] = 'cache';
         return $parent_vars;
@@ -71,7 +71,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
      *
      * @return mixed
      */
-    function getConfig(string $key, string $module, string $area): mixed
+    public function getConfig(string $key, string $module, string $area): mixed
     {
         $cache_key = 'system_config_cache_' . $key . '_' . $area . '_' . $module;
 
@@ -104,7 +104,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
      * @return bool
      * @throws Exception
      */
-    function setConfig(string $key, string $value, string $module, string $area): bool
+    public function setConfig(string $key, string $value, string $module, string $area): bool
     {
         $cache_key = 'system_config_cache_' . $key . '_' . $area . '_' . $module;
         try {
@@ -112,7 +112,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
                  ->forceCheck()
                  ->save();
             # 设置配置缓存
-            $this->cache->set($cache_key, $value,);
+            $this->cache->set($cache_key, $value, );
             return true;
         } catch (\ReflectionException | Core $e) {
             throw new Exception($e->getMessage());
@@ -122,7 +122,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
         /* $setup->dropTable();
          $setup->createTable('系统配置表')
@@ -136,7 +136,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement upgrade() method.
     }
@@ -144,7 +144,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         if (!$setup->tableExist()) {
             $setup->getPrinting()->printing('安装', $setup->getTable());
@@ -157,6 +157,5 @@ class SystemConfig extends \Weline\Framework\Database\Model
         } else {
             $setup->getPrinting()->printing('已存在，跳过', $setup->getTable());
         }
-
     }
 }

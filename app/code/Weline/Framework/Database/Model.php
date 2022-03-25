@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,16 +11,15 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database;
 
-
 abstract class Model extends AbstractModel implements ModelInterface
 {
-    function __init()
+    public function __init()
     {
         parent::__init();
         $this->clear();
     }
 
-    function columns(): array
+    public function columns(): array
     {
         $cache_key = $this->getTable() . '_columns';
         if ($columns = $this->_cache->get($cache_key)) {

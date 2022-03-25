@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,5 +15,8 @@ use Weline\Framework\Cache\CacheInterface;
 
 class CacheFactory extends \Weline\Framework\Cache\CacheFactory
 {
-    function __construct(string $identity = 'frontend_cache') { parent::__construct($identity); }
+    public function __construct(string $identity = 'frontend_cache')
+    {
+        parent::__construct($identity);
+    }
 }

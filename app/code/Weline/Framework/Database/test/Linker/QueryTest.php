@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,7 +16,6 @@ use Weline\Framework\Manager\ObjectManager;
 
 class QueryTest extends \Weline\Framework\UnitTest\TestCore
 {
-
     public function testWhere()
     {
         /**@var \Weline\Framework\Database\DbManager $dbManager */
@@ -33,7 +33,8 @@ class QueryTest extends \Weline\Framework\UnitTest\TestCore
 //            ->delete()->fetch()
 //        );
         # 改
-        pp($query->table('weline')
+        pp(
+            $query->table('weline')
 //            ->alias('a')
 //            ->where('a.id', 3)
             ->update([

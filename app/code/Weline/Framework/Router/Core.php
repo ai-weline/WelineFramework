@@ -19,11 +19,11 @@ use Weline\Framework\Router\Cache\RouterCache;
 
 class Core
 {
-    const dir_static = 'static';
+    public const dir_static = 'static';
 
-    const default_index_url = '/index/index';
+    public const default_index_url = '/index/index';
 
-    const url_path_split = '/';
+    public const url_path_split = '/';
 
     private ?Env $_etc;
 
@@ -49,11 +49,21 @@ class Core
     public function __init()
     {
         $this->request = ObjectManager::getInstance(Request::class);
-        if (empty($this->cache)) $this->cache = ObjectManager::getInstance(RouterCache::class . 'Factory');
-        if (empty($this->request_area)) $this->request_area = $this->request->getRequestArea();
-        if (empty($this->area_router)) $this->area_router = $this->request->getAreaRouter();
-        if (empty($this->_etc)) $this->_etc = Env::getInstance();
-        if (empty($this->is_admin)) $this->is_admin = is_int(strpos(strtolower($this->request_area), \Weline\Framework\Router\DataInterface::area_BACKEND));
+        if (empty($this->cache)) {
+            $this->cache = ObjectManager::getInstance(RouterCache::class . 'Factory');
+        }
+        if (empty($this->request_area)) {
+            $this->request_area = $this->request->getRequestArea();
+        }
+        if (empty($this->area_router)) {
+            $this->area_router = $this->request->getAreaRouter();
+        }
+        if (empty($this->_etc)) {
+            $this->_etc = Env::getInstance();
+        }
+        if (empty($this->is_admin)) {
+            $this->is_admin = is_int(strpos(strtolower($this->request_area), \Weline\Framework\Router\DataInterface::area_BACKEND));
+        }
     }
 
 
@@ -89,14 +99,16 @@ class Core
         } else {
             // 开发模式(静态资源可访问app本地静态资源)
             $static = $this->StaticFile($origin_url);
-            if ($static) exit($static);
+            if ($static) {
+                exit($static);
+            }
             http_response_code(404);
             throw new Exception('未知的路由！');
         }
         return '';
     }
 
-    function processUrl()
+    public function processUrl()
     {
         // 读取url
         $url           = $this->request->getUrlPath();
@@ -104,7 +116,9 @@ class Core
         if (/*PROD&&*/ $cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
         } else {
-            if ($this->is_admin) $url = str_replace($this->area_router, '', $url);
+            if ($this->is_admin) {
+                $url = str_replace($this->area_router, '', $url);
+            }
             $url = trim($url, self::url_path_split);
             $url = str_replace('.html', '', $url);
             # 去除后缀index
@@ -231,7 +245,7 @@ class Core
             $file_ext     = end($filename_arr);
             if ($file_ext === 'css') {
                 $mime_type = 'text/css';
-            } else if ($file_ext === 'js') {
+            } elseif ($file_ext === 'js') {
                 $mime_type = 'text/javascript; charset=utf-8';
             } else {
                 $fi        = new \finfo(FILEINFO_MIME_TYPE);
@@ -244,7 +258,7 @@ class Core
     }
 
 
-    function getController(array $router): array
+    public function getController(array $router): array
     {
         $controller_cache_controller_key = 'controller_cache_key_' . implode('_', $router['class']) . '_controller';
         $controller_cache_method_key     = 'controller_cache_key_' . implode('_', $router['class']) . '_method';
@@ -275,7 +289,7 @@ class Core
      * @throws Exception
      * @throws \Exception
      */
-    function route()
+    public function route()
     {
         # 全页缓存
         $cache_key = $this->cache->buildKey($this->router);

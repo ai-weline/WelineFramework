@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -12,7 +13,6 @@ declare(strict_types=1);
  */
 
 namespace Weline\Theme\Console\Theme;
-
 
 use Weline\Framework\Console\CommandInterface;
 use Weline\Framework\Output\Cli\Printing;
@@ -29,11 +29,10 @@ abstract class AbstractConsole implements CommandInterface
      */
     protected Printing $printing;
 
-    function __construct(
+    public function __construct(
         WelineTheme $welineTheme,
         Printing $printing
-    )
-    {
+    ) {
         $this->welineTheme = $welineTheme;
         $this->printing = $printing;
     }

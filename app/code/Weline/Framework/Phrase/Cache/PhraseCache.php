@@ -15,6 +15,6 @@ class PhraseCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_phrase')
     {
-        parent::__construct($identity,'翻译缓存',true);
+        parent::__construct($identity, '翻译缓存', true);
     }
 }

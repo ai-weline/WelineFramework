@@ -1,6 +1,9 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Weline\Framework\Database\Api\Db\Ddl\Table;
+
 /*
  * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
  * 邮箱：aiweline@qq.com
@@ -12,8 +15,8 @@ use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\ConnectionFactory;
 
-interface CreateInterface extends TableInterface {
-
+interface CreateInterface extends TableInterface
+{
     /**
      * @DESC          # 创建表
      *
@@ -48,7 +51,7 @@ interface CreateInterface extends TableInterface {
      * 参数区：
      * @return ConnectionFactory
      */
-    function getConnection(): ConnectionFactory;
+    public function getConnection(): ConnectionFactory;
 
     /**
      * @DESC          # 添加字段
@@ -165,5 +168,5 @@ interface CreateInterface extends TableInterface {
      * @param false $on_update
      * @return $this
      */
-    function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): CreateInterface;
+    public function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): CreateInterface;
 }

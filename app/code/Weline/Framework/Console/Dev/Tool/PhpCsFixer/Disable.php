@@ -8,7 +8,6 @@
 
 namespace Weline\Framework\Console\Dev\Tool\PhpCsFixer;
 
-
 use Weline\Framework\App\Env;
 use Weline\Framework\Output\Cli\Printing;
 
@@ -16,10 +15,9 @@ class Disable implements \Weline\Framework\Console\CommandInterface
 {
     private Printing $printing;
 
-    function __construct(
+    public function __construct(
         Printing $printing
-    )
-    {
+    ) {
         $this->printing = $printing;
     }
 
@@ -28,8 +26,8 @@ class Disable implements \Weline\Framework\Console\CommandInterface
      */
     public function execute($args = [])
     {
-        Env::getInstance()->setConfig('php-cs',true);
-        $this->printing->success(__('成功禁用php-cs代码美化工具：'.Env::getInstance()->getConfig('php-cs')));
+        Env::getInstance()->setConfig('php-cs', true);
+        $this->printing->success(__('成功禁用php-cs代码美化工具：' . Env::getInstance()->getConfig('php-cs')));
     }
 
     /**

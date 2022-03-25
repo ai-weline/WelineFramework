@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,9 +17,12 @@ class Cache extends \Weline\Admin\Controller\BaseController
 {
     private Scanner $scanner;
 
-    function __construct(Scanner $scanner) { $this->scanner = $scanner; }
+    public function __construct(Scanner $scanner)
+    {
+        $this->scanner = $scanner;
+    }
 
-    function index()
+    public function index()
     {
         $cache_key = 'system_caches_key';
         $data      = $this->cache->get($cache_key);
@@ -27,7 +31,7 @@ class Cache extends \Weline\Admin\Controller\BaseController
             $frameworkCaches = $this->scanner->scanFrameworkCaches();
             $appCaches       = $this->scanner->scanAppCaches();
             $data            = ['framework' => $frameworkCaches, 'app' => $appCaches];
-            $this->cache->set($cache_key,$data);
+            $this->cache->set($cache_key, $data);
         }
         $this->assign('caches', $data);
         return $this->fetch();

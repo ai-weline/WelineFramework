@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,7 +15,7 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Config extends \Weline\Framework\App\Controller\BackendController
 {
-    function set($key, $value, $type = 'json')
+    public function set($key, $value, $type = 'json')
     {
         /**@var \Weline\Backend\Model\Config $config */
         $config = ObjectManager::getInstance(\Weline\Backend\Model\Config::class);
@@ -22,7 +23,7 @@ class Config extends \Weline\Framework\App\Controller\BackendController
         $fetchName = 'fetch' . ucfirst($type);
         try {
             return  $this->$fetchName($this->success());
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return  $this->$fetchName($this->exception($exception));
         }
     }

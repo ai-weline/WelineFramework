@@ -77,7 +77,7 @@ class Template extends DataObject
     {
     }
 
-    final static function getInstance(): Template
+    final public static function getInstance(): Template
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
@@ -95,7 +95,7 @@ class Template extends DataObject
      * 参数区：
      * @return string
      */
-    function getFileExt(): string
+    public function getFileExt(): string
     {
         return $this->file_ext;
     }
@@ -112,13 +112,13 @@ class Template extends DataObject
      *
      * @return $this
      */
-    function setFileExt(string $ext): static
+    public function setFileExt(string $ext): static
     {
         $this->file_ext = '.' . $ext;
         return $this;
     }
 
-    function getBlock(string $class)
+    public function getBlock(string $class)
     {
         return ObjectManager::getInstance($class);
     }
@@ -148,7 +148,7 @@ class Template extends DataObject
      * 参数区：
      * @return string
      */
-    function getFormKey($url): string
+    public function getFormKey($url): string
     {
         return ObjectManager::getInstance(FormKey::class)->getHtml($url);
     }
@@ -196,7 +196,7 @@ class Template extends DataObject
      * @throws Core
      * @throws Exception
      */
-    function convertFetchFileName(string $fileName): array
+    public function convertFetchFileName(string $fileName): array
     {
         $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName';
         $tplFile_cache_key     = $this->view_dir . $fileName . '_tplFile';
@@ -267,13 +267,17 @@ class Template extends DataObject
 
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
-        if (is_int(strpos($comFileName, '\\'))) $comFileName = str_replace('\\', DIRECTORY_SEPARATOR, $comFileName);
-        if (is_int(strpos($comFileName, '//'))) $comFileName = str_replace('//', DIRECTORY_SEPARATOR, $comFileName);
+        if (is_int(strpos($comFileName, '\\'))) {
+            $comFileName = str_replace('\\', DIRECTORY_SEPARATOR, $comFileName);
+        }
+        if (is_int(strpos($comFileName, '//'))) {
+            $comFileName = str_replace('//', DIRECTORY_SEPARATOR, $comFileName);
+        }
         return [$comFileName, $tplFile];
     }
 
 
-    function getFetchFile(string $fileName, string $module_name = ''): string
+    public function getFetchFile(string $fileName, string $module_name = ''): string
     {
         list($comFileName, $tplFile) = $this->convertFetchFileName($fileName);
         # 检测编译文件，如果不符合条件则重新进行文件编译
@@ -348,15 +352,45 @@ class Template extends DataObject
             'php'       => function ($back) {
                 return '<?php ' . trim($back[1]) . '?>';
             },
+            'empty'     => function ($back) {
+                switch ($back[0]) {
+                    // @empty{$name|<li>空的</li>}
+                    case '@empty{}':
+                    case '@empty()':
+                        $content_arr = explode('|', $back[1]);
+                        return '<?php if(empty($this->getData(\'' . $content_arr[0] . '\')))echo \'' . $this->tmp_replace(trim($content_arr[1] ?? '')) . '\'?>';
+                    case '<w-empty></w-empty>':
+                    case '<empty></empty>':
+                        preg_match('/name=[\'|"](.*?)[\'|"]/', $back['attrs'], $name);
+                        $name = array_pop($name);
+                        return '<?php if(empty($this->getData(\'' . $name . '\')))echo \'' . $this->tmp_replace(trim($back['content'])) . '\'?>';
+                    default:
+                        return '';
+                }
+            },
             'foreach'   => function ($back) {
-                preg_match('/name=[\'|"](.*?)[\'|"]/', $back['attrs'], $name);
-                $name = array_pop($name);
-                preg_match('/key=[\'|"](.*?)[\'|"]/', $back['attrs'], $key);
-                $key = array_pop($key);
-                $key = $key??'key';
-                preg_match('/item=[\'|"](.*?)[\'|"]/', $back['attrs'], $item);
-                $item = array_pop($item);
-                return <<<FOREACH
+                switch ($back[0]) {
+                    // @foreach{$name as $key=>$v|<li><var>$k</var>:<var>$v</var>}
+                    case '@foreach{}':
+                    case '@foreach()':
+                        $content_arr = explode('|', $back[1]);
+                        return "<?php
+                        foreach({$content_arr[0]}){
+                        ?>
+                            {$this->tmp_replace($content_arr[1]??'')}
+                            <?php
+                        }
+                        ?>";
+                    case '<w-foreach</w-foreach>':
+                    case '<foreach</foreach>':
+                        preg_match('/name=[\'|"](.*?)[\'|"]/', $back['attrs'], $name);
+                        $name = array_pop($name);
+                        preg_match('/key=[\'|"](.*?)[\'|"]/', $back['attrs'], $key);
+                        $key = array_pop($key);
+                        $key = $key ?? 'key';
+                        preg_match('/item=[\'|"](.*?)[\'|"]/', $back['attrs'], $item);
+                        $item = array_pop($item);
+                        return <<<FOREACH
 <!-- foreach 属性： {$back['attrs']} -->
 <?php
         foreach (\$this->getData('{$name}')??[] as \${$key} => \${$item}) {
@@ -366,6 +400,76 @@ class Template extends DataObject
                 }
 ?>
 FOREACH;
+                    default:
+                        return '';
+                }
+            },
+            'if'        => function ($back) {
+                $condition_contents = [];
+                switch ($back[0]) {
+                    // @if{$a === 1=><li><var>$a</var></li>|$a===2=><li><var>$a</var></li>}
+                    case '@if{}':
+                    case '@if()':
+                        $content_arr = explode('|', $back[1]);
+                        foreach ($content_arr as $item) {
+                            $item_arr = explode('=>', $item);
+                            $condition = array_shift($item_arr);
+                            $condition_contents[] = ['condition' =>$condition,'content'=>implode('=>', $item_arr)];
+                        }
+                        break;
+                    case '<w-if</w-if>':
+                    case '<if</if>':
+                        # 分析条件
+                        preg_match_all('/ condition=[\'|"]([\s\S]*?)[\'|"]>/', $back[1], $conditions);
+                        #剥离条件
+                        $content = $back[1];
+                        foreach ($conditions[0] as $mach) {
+                            $content = str_replace($mach, '>', $content);
+                        }
+                        $content     = ltrim($content, '>');
+                        $content     = str_replace('<elseif></elseif>', '<else>', $content);
+                        $content     = str_replace('<else></else>', '<else>', $content);
+                        $content     = str_replace('</else>', '<else>', $content);
+                        $content_arr = explode('<else>', $content);
+                        foreach ($conditions[1] as $key => $condition) {
+                            $condition_contents[] = ['condition' => $condition, 'content' => $content_arr[$key]];
+                            unset($content_arr[$key]);
+                        }
+                        if ($content_arr) {
+                            $condition_contents[] = ['condition' => $condition, 'content' => array_pop($content_arr)];
+                        }
+                        break;
+                    default:
+                        return '';
+                }
+                $if_code = '';
+                foreach ($condition_contents as $key => $condition_content) {
+                    if (0 === $key) {
+                        $if_code .= "<!-- if 属性： {$condition_content['condition']} -->
+                                    <?php
+                                       if ({$condition_content['condition']}) {
+                                            ?>
+                                           {$this->tmp_replace($condition_content['content'])}
+                                    <?php
+                                         }?>";
+                    } else if ($key === (count($condition_contents) - 1)) {
+                        $if_code = rtrim($if_code, '?>');
+                        $if_code .= "else{
+                                        ?>
+                                            {$this->tmp_replace($condition_content['content'])}
+                                    <?php
+                                    }?>";
+                    } else {
+                        $if_code = rtrim($if_code, '?>');
+                        $if_code .= "elseif({$condition_content['condition']}){
+                                    ?>
+                                        {$this->tmp_replace($condition_content['content'])}
+                                    <?php
+                                    }?>";
+                    }
+                }
+                return $if_code;
+
             },
             'template'  => function ($back) {
                 return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
@@ -417,7 +521,6 @@ FOREACH;
                     '/<w-' . $template_element . '([\s\S]*?)<\/w-' . $template_element . '>/m',
                     '/<' . $template_element . '([\s\S]*?)<\/' . $template_element . '>/m',
                     '/\@' . $template_element . '\(([\s\S]*?)\)/m',
-
                     '/\@' . $template_element . '\{([\s\S]*?)\}/m',
                 ],
                 'replace_match_and_callback' => [
@@ -463,7 +566,7 @@ FOREACH;
         return $this->_request->getUrl($path, $params, $merge_query);
     }
 
-    function getAdminUrl(string $path, array|bool $params = []): string
+    public function getAdminUrl(string $path, array|bool $params = []): string
     {
         if (empty($path)) {
             return $this->_request->getCurrentUrl();
@@ -483,10 +586,8 @@ FOREACH;
         return $path;
     }
 
-    function getRequest(): Request
+    public function getRequest(): Request
     {
         return ObjectManager::getInstance(Request::class);
     }
-
 }
-

@@ -14,7 +14,7 @@ use Weline\Framework\Session\Driver\SessionDriverHandlerInterface;
 
 class SessionManager
 {
-    const driver_NAMESPACE = Env::framework_name . '\\Framework\\Session\\Driver\\';
+    public const driver_NAMESPACE = Env::framework_name . '\\Framework\\Session\\Driver\\';
 
     private static SessionManager $instance;
 

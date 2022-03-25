@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,20 +17,24 @@ use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Cache\ViewCache;
 
-class  Block extends Template  implements BlockInterface
+class Block extends Template implements BlockInterface
 {
     public ?CacheInterface $_cache = null;
     protected ?Template $engine = null;
     protected string $_template = '';
 
-    function __construct(array $data = [])
+    public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if (empty($this->_cache)) $this->_cache = ObjectManager::getInstance(ViewCache::class . 'Factory');
-        if (empty($this->engine)) $this->engine = Template::getInstance()->init();
+        if (empty($this->_cache)) {
+            $this->_cache = ObjectManager::getInstance(ViewCache::class . 'Factory');
+        }
+        if (empty($this->engine)) {
+            $this->engine = Template::getInstance()->init();
+        }
     }
 
-    function setTemplate(string $template = '')
+    public function setTemplate(string $template = '')
     {
         if (empty($template) && isset($this->_template)) {
             $template = $this->_template;
@@ -44,7 +49,7 @@ class  Block extends Template  implements BlockInterface
         return $this;
     }
 
-    function getTemplate(): string
+    public function getTemplate(): string
     {
         $template = $this->getData('template');
         if (empty($template) && isset($this->_template)) {
@@ -53,7 +58,7 @@ class  Block extends Template  implements BlockInterface
         return $template;
     }
 
-    function getTemplateEngine(): ?Template
+    public function getTemplateEngine(): ?Template
     {
         return $this->engine;
     }
@@ -61,12 +66,12 @@ class  Block extends Template  implements BlockInterface
     /**
      * @throws \Exception
      */
-    function render()
+    public function render()
     {
         return $this->engine->fetchHtml($this->getTemplate());
     }
 
-    function __toString()
+    public function __toString()
     {
         return $this->render();
     }

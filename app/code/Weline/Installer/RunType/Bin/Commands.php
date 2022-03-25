@@ -34,8 +34,8 @@ class Commands
         $tmp    = [];
         foreach ($this->data->getCommands() as $needCommand) {
             try {
-                $command = 'php '.BP.$needCommand;
-                \exec($command,$result,$return);
+                $command = 'php ' . BP . $needCommand;
+                \exec($command, $result, $return);
                 $tmp[$needCommand]=implode(',', $result);
                 $value = str_pad('✔', 10, ' ', STR_PAD_BOTH);
             } catch (Exception $e) {

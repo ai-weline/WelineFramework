@@ -51,7 +51,7 @@ class PEAR_REST_13 extends PEAR_REST_10
      * @param bool $installed the installed version of this package to compare against
      * @return array|false|PEAR_Error see {@link _returnDownloadURL()}
      */
-    function getDownloadURL($base, $packageinfo, $prefstate, $installed, $channel = false)
+    public function getDownloadURL($base, $packageinfo, $prefstate, $installed, $channel = false)
     {
         $states = $this->betterStates($prefstate, true);
         if (!$states) {
@@ -60,7 +60,7 @@ class PEAR_REST_13 extends PEAR_REST_10
 
         $channel  = $packageinfo['channel'];
         $package  = $packageinfo['package'];
-        $state    = isset($packageinfo['state'])   ? $packageinfo['state']   : null;
+        $state    = isset($packageinfo['state']) ? $packageinfo['state'] : null;
         $version  = isset($packageinfo['version']) ? $packageinfo['version'] : null;
         $restFile = $base . 'r/' . strtolower($package) . '/allreleases2.xml';
 
@@ -76,7 +76,7 @@ class PEAR_REST_13 extends PEAR_REST_10
 
         $release = $found = false;
         if (!is_array($info['r']) || !isset($info['r'][0])) {
-            $info['r'] = array($info['r']);
+            $info['r'] = [$info['r']];
         }
 
         $skippedphp = false;
@@ -141,9 +141,15 @@ class PEAR_REST_13 extends PEAR_REST_10
         return $this->_returnDownloadURL($base, $package, $release, $info, $found, $skippedphp, $channel);
     }
 
-    function getDepDownloadURL($base, $xsdversion, $dependency, $deppackage,
-                               $prefstate = 'stable', $installed = false, $channel = false)
-    {
+    public function getDepDownloadURL(
+        $base,
+        $xsdversion,
+        $dependency,
+        $deppackage,
+        $prefstate = 'stable',
+        $installed = false,
+        $channel = false
+    ) {
         $states = $this->betterStates($prefstate, true);
         if (!$states) {
             return PEAR::raiseError('"' . $prefstate . '" is not a valid state');
@@ -151,9 +157,9 @@ class PEAR_REST_13 extends PEAR_REST_10
 
         $channel  = $dependency['channel'];
         $package  = $dependency['name'];
-        $state    = isset($dependency['state'])   ? $dependency['state']   : null;
+        $state    = isset($dependency['state']) ? $dependency['state'] : null;
         $version  = isset($dependency['version']) ? $dependency['version'] : null;
-        $restFile = $base . 'r/' . strtolower($package) .'/allreleases2.xml';
+        $restFile = $base . 'r/' . strtolower($package) . '/allreleases2.xml';
 
         $info = $this->_rest->retrieveData($restFile, false, false, $channel);
         if (PEAR::isError($info)) {
@@ -165,31 +171,31 @@ class PEAR_REST_13 extends PEAR_REST_10
             return false;
         }
 
-        $exclude = array();
+        $exclude = [];
         $min = $max = $recommended = false;
         if ($xsdversion == '1.0') {
             $pinfo['package'] = $dependency['name'];
             $pinfo['channel'] = 'pear.php.net'; // this is always true - don't change this
             switch ($dependency['rel']) {
-                case 'ge' :
+                case 'ge':
                     $min = $dependency['version'];
                 break;
-                case 'gt' :
+                case 'gt':
                     $min = $dependency['version'];
-                    $exclude = array($dependency['version']);
+                    $exclude = [$dependency['version']];
                 break;
-                case 'eq' :
+                case 'eq':
                     $recommended = $dependency['version'];
                 break;
-                case 'lt' :
+                case 'lt':
                     $max = $dependency['version'];
-                    $exclude = array($dependency['version']);
+                    $exclude = [$dependency['version']];
                 break;
-                case 'le' :
+                case 'le':
                     $max = $dependency['version'];
                 break;
-                case 'ne' :
-                    $exclude = array($dependency['version']);
+                case 'ne':
+                    $exclude = [$dependency['version']];
                 break;
             }
         } else {
@@ -200,14 +206,14 @@ class PEAR_REST_13 extends PEAR_REST_10
                 $dependency['recommended'] : false;
             if (isset($dependency['exclude'])) {
                 if (!isset($dependency['exclude'][0])) {
-                    $exclude = array($dependency['exclude']);
+                    $exclude = [$dependency['exclude']];
                 }
             }
         }
 
         $skippedphp = $found = $release = false;
         if (!is_array($info['r']) || !isset($info['r'][0])) {
-            $info['r'] = array($info['r']);
+            $info['r'] = [$info['r']];
         }
 
         foreach ($info['r'] as $release) {
@@ -223,14 +229,14 @@ class PEAR_REST_13 extends PEAR_REST_10
             // allow newer releases to say "I'm OK with the dependent package"
             if ($xsdversion == '2.0' && isset($release['co'])) {
                 if (!is_array($release['co']) || !isset($release['co'][0])) {
-                    $release['co'] = array($release['co']);
+                    $release['co'] = [$release['co']];
                 }
 
                 foreach ($release['co'] as $entry) {
                     if (isset($entry['x']) && !is_array($entry['x'])) {
-                        $entry['x'] = array($entry['x']);
+                        $entry['x'] = [$entry['x']];
                     } elseif (!isset($entry['x'])) {
-                        $entry['x'] = array();
+                        $entry['x'] = [];
                     }
 
                     if ($entry['c'] == $deppackage['channel'] &&
@@ -299,20 +305,20 @@ class PEAR_REST_13 extends PEAR_REST_10
     /**
      * List package upgrades but take the PHP version into account.
      */
-    function listLatestUpgrades($base, $pref_state, $installed, $channel, &$reg)
+    public function listLatestUpgrades($base, $pref_state, $installed, $channel, &$reg)
     {
         $packagelist = $this->_rest->retrieveData($base . 'p/packages.xml', false, false, $channel);
         if (PEAR::isError($packagelist)) {
             return $packagelist;
         }
 
-        $ret = array();
+        $ret = [];
         if (!is_array($packagelist) || !isset($packagelist['p'])) {
             return $ret;
         }
 
         if (!is_array($packagelist['p'])) {
-            $packagelist['p'] = array($packagelist['p']);
+            $packagelist['p'] = [$packagelist['p']];
         }
 
         foreach ($packagelist['p'] as $package) {
@@ -336,11 +342,11 @@ class PEAR_REST_13 extends PEAR_REST_10
 
             $release = $found = false;
             if (!is_array($info['r']) || !isset($info['r'][0])) {
-                $info['r'] = array($info['r']);
+                $info['r'] = [$info['r']];
             }
 
             // $info['r'] is sorted by version number
-            usort($info['r'], array($this, '_sortReleasesByVersionNumber'));
+            usort($info['r'], [$this, '_sortReleasesByVersionNumber']);
             foreach ($info['r'] as $release) {
                 if ($inst_version && version_compare($release['v'], $inst_version, '<=')) {
                     // not newer than the one installed
@@ -384,11 +390,11 @@ class PEAR_REST_13 extends PEAR_REST_10
                 return $relinfo;
             }
 
-            $ret[$package] = array(
+            $ret[$package] = [
                 'version'  => $release['v'],
                 'state'    => $release['s'],
                 'filesize' => $relinfo['f'],
-            );
+            ];
         }
 
         return $ret;

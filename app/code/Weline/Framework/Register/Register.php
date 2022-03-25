@@ -17,7 +17,6 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Register implements RegisterDataInterface
 {
-
     /**
      * @DESC         |注册
      *
@@ -81,17 +80,17 @@ class Register implements RegisterDataInterface
         }
     }
 
-    static function moduleName(string $vendor, string $module_name): string
+    public static function moduleName(string $vendor, string $module_name): string
     {
         return self::parserModuleVendor($vendor) . '_' . self::parserModuleName($module_name);
     }
 
-    static function parserModuleVendor(string $vendor): string
+    public static function parserModuleVendor(string $vendor): string
     {
         return ucfirst($vendor);
     }
 
-    static function parserModuleName(string $module_name): string
+    public static function parserModuleName(string $module_name): string
     {
         $module_rename = '';
         if (is_int(strpos($module_name, '-'))) {

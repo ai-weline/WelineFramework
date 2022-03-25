@@ -17,10 +17,9 @@ class PhpCsFixer implements \Weline\Framework\Console\CommandInterface
 {
     private Printing $printing;
 
-    function __construct(
+    public function __construct(
         Printing $printing
-    )
-    {
+    ) {
         $this->printing = $printing;
     }
 
@@ -30,20 +29,34 @@ class PhpCsFixer implements \Weline\Framework\Console\CommandInterface
     public function execute($args = [])
     {
         array_shift($args);
+        $show = true;
+        /*剥离参数选项*/
+        if (in_array('no-show', $args)) {
+            foreach ($args as $key=>$arg) {
+                if ('no-show'===$arg) {
+                    unset($args[$key]);
+                }
+            }
+            $show = false;
+        }
         $args = implode(' ', $args);
-        $v = '3.0';
-//        $v = '2';
         // 运行代码标准程序 php-cs-fixer
-        if (PHP_CS && is_file(\Weline\Framework\App\Env::extend_dir . "php-cs-fixer-v{$v}.phar")) {
-            $this->printing->note(__('正在美化代码...'));
-            exec('php ' . \Weline\Framework\App\Env::extend_dir . "php-cs-fixer-v{$v}.phar fix " . $args, $out);
-//            p('php ' . \Weline\Framework\App\Env::vendor_path . 'vendor'.DIRECTORY_SEPARATOR.'friendsofphp'.DIRECTORY_SEPARATOR.'php-cs-fixer'.DIRECTORY_SEPARATOR.'php-cs-fixer fix ' . BP);
-//            exec('php ' . \Weline\Framework\App\Env::vendor_path . "vendor/friendsofphp/php-cs-fixer/php-cs-fixer fix " . $args, $out);
-            $this->printing->success(__('代码美化完成...'));
+        if (PHP_CS) {
+            if ($show) {
+                $this->printing->note(__('正在美化代码...'));
+            }
+            exec('php ' . VENDOR_PATH . 'friendsofphp' . DIRECTORY_SEPARATOR . 'php-cs-fixer' . DIRECTORY_SEPARATOR . 'php-cs-fixer fix ' . $args, $out);
+            if ($out) {
+                $this->printing->error(implode('', $out));
+            }
+            if ($show) {
+                $this->printing->success(__('代码美化完成...'));
+            }
         } else {
-            throw new \Weline\Framework\App\Exception(__('标准化代码文件缺失：%1',\Weline\Framework\App\Env::extend_dir . "php-cs-fixer-v{$v}.phar"));
+            throw new \Weline\Framework\App\Exception(__('未开启代码美化工具。'));
         }
     }
+
 
     /**
      * @inheritDoc

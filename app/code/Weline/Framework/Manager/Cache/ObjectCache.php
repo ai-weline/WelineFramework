@@ -13,6 +13,6 @@ class ObjectCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_object')
     {
-        parent::__construct($identity,'对象缓存',true);
+        parent::__construct($identity, '对象缓存', true);
     }
 }

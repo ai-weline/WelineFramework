@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -19,7 +20,7 @@ class Notification extends \Weline\Framework\View\Block
 {
     private CacheInterface $cache;
 
-    function __construct(BackendCache $backendCache, array $data = [])
+    public function __construct(BackendCache $backendCache, array $data = [])
     {
         $this->cache = $backendCache->create();
         parent::__construct($data);
@@ -36,7 +37,7 @@ class Notification extends \Weline\Framework\View\Block
      * 参数区：
      * @return Notification []
      */
-    function getNotices(): array
+    public function getNotices(): array
     {
 //        $cache_key = $this->cache->buildKey('backend_system_notice');
 //        if ($notices = $this->cache->get($cache_key)) {

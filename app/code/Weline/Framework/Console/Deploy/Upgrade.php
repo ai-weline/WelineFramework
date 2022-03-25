@@ -56,7 +56,7 @@ class Upgrade extends CommandAbstract
                     $theme        = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
 
                     $pub_view_dir = PUB . 'static' . DIRECTORY_SEPARATOR . $theme['path'] . DIRECTORY_SEPARATOR . $module_view_dir;
-                    if(is_int(strpos($pub_view_dir, '\\'))){
+                    if (is_int(strpos($pub_view_dir, '\\'))) {
                         $pub_view_dir = str_replace('\\', DIRECTORY_SEPARATOR, $pub_view_dir);
                     }
                     if (! is_dir($pub_view_dir)) {

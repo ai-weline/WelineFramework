@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -27,12 +28,12 @@ abstract class TableAbstract implements TableInterface
 
     protected string $comment;
 
-    protected array $fields = array();
-    protected array $alter_fields = array();
-    protected array $delete_fields = array();
-    protected array $indexes = array();
+    protected array $fields = [];
+    protected array $alter_fields = [];
+    protected array $delete_fields = [];
+    protected array $indexes = [];
 
-    protected array $foreign_keys = array();
+    protected array $foreign_keys = [];
 
     protected string $constraints = '';
 
@@ -51,7 +52,7 @@ abstract class TableAbstract implements TableInterface
      * @throws Exception
      * @throws \ReflectionException
      */
-    function __init()
+    public function __init()
     {
         if (!isset($this->connection)) {
             $this->connection = ObjectManager::getInstance(DbManager::class . 'Factory');
@@ -73,12 +74,14 @@ abstract class TableAbstract implements TableInterface
      * @param string $comment
      * @param string $new_table_name
      */
-    protected function startTable(string $table, string $comment = '', string $primary_key='',string $new_table_name = '')
+    protected function startTable(string $table, string $comment = '', string $primary_key='', string $new_table_name = '')
     {
         # 清空所有表操作属性
         $this->init_vars();
         # 重新赋予新表的值
-        if ($primary_key) $this->primary_key = $primary_key;
+        if ($primary_key) {
+            $this->primary_key = $primary_key;
+        }
         $this->table = $table;
         $this->new_table_name = $new_table_name ? '`' . $this->connection->getConfigProvider()->getDatabase() . '`.`' . $new_table_name . '`' : '';
         $this->comment = $comment;
@@ -154,7 +157,7 @@ abstract class TableAbstract implements TableInterface
      * 参数区：
      * @return ConnectionFactory
      */
-    function getConnection(): ConnectionFactory
+    public function getConnection(): ConnectionFactory
     {
         return $this->connection;
     }
@@ -168,7 +171,7 @@ abstract class TableAbstract implements TableInterface
      * 参数区：
      * @return QueryInterface
      */
-    function getQuery(): QueryInterface
+    public function getQuery(): QueryInterface
     {
         return $this->query;
     }

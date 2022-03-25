@@ -11,15 +11,15 @@ namespace Weline\Framework\Register;
 
 interface RegisterDataInterface
 {
-    const NAMESPACE = 'Weline\\Framework\\';
+    public const NAMESPACE = 'Weline\\Framework\\';
 
-    const MODULE = 'module';
+    public const MODULE = 'module';
 
-    const I18N = 'i18n';
+    public const I18N = 'i18n';
 
-    const ROUTER = 'router';
+    public const ROUTER = 'router';
 
-    const THEME = 'theme';
+    public const THEME = 'theme';
 
-    const register_file = 'register.php';
+    public const register_file = 'register.php';
 }

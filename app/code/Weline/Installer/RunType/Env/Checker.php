@@ -14,11 +14,11 @@ use Weline\Installer\Helper\Data;
 
 class Checker
 {
-    const type_MODULES = 'modules';
+    public const type_MODULES = 'modules';
 
-    const type_FUNCTIONS = 'functions';
+    public const type_FUNCTIONS = 'functions';
 
-    const type_CONFIG = 'config';
+    public const type_CONFIG = 'config';
 
     protected Data $helper;
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -22,5 +23,5 @@ interface UrlInterface
      * @param string $path
      * @return string
      */
-    function build(string $path): string;
+    public function build(string $path): string;
 }

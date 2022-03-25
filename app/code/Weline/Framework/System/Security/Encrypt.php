@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -23,12 +24,12 @@ class Encrypt
      * @param $salt
      * @return string
      */
-    static function md5_salt($password, $salt): string
+    public static function md5_salt($password, $salt): string
     {
         $str1 = mb_substr($password, 0, 5);
         $str2 = mb_substr($salt, 0, 2);
         $str3 = mb_substr($salt, -2);
         $str4 = mb_substr($password, -5);
-        return crypt(md5($str1 . $str2 . $password . $str3 . $str4),$salt);
+        return crypt(md5($str1 . $str2 . $password . $str3 . $str4), $salt);
     }
 }

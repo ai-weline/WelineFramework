@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -19,16 +20,15 @@ use Weline\Framework\Xml\Parser;
 
 class MenuReader extends Reader
 {
-
-    function __construct(
+    public function __construct(
         Scanner $scanner,
         Parser  $parser,
-                $path = 'backend/menu.xml')
-    {
+        $path = 'backend/menu.xml'
+    ) {
         parent::__construct($scanner, $parser, $path);
     }
 
-    function read(): array
+    public function read(): array
     {
         $configs = parent::read();
         // 菜单提取
@@ -42,7 +42,8 @@ class MenuReader extends Reader
             $module_menus[$module]['data'] = [];
             if (
                 !isset($config['menus']['_attribute']['noNamespaceSchemaLocation']) && (
-                    'urn:weline:module:Weline_Backend::etc/xsd/menu.xsd' !== $config['menus']['_attribute']['noNamespaceSchemaLocation'])
+                    'urn:weline:module:Weline_Backend::etc/xsd/menu.xsd' !== $config['menus']['_attribute']['noNamespaceSchemaLocation']
+                )
             ) {
                 $this->checkElementAttribute(
                     $config['menus'],
@@ -127,9 +128,10 @@ class MenuReader extends Reader
                         }
                         $has_orders[] = $menu['add']['_attribute']['order'];*/
                         $menu['add']['_attribute']['is_system'] = 1;
-                        if ($menu['add']['_attribute']) $module_menus[$module]['data'][] = $menu['add']['_attribute'];
+                        if ($menu['add']['_attribute']) {
+                            $module_menus[$module]['data'][] = $menu['add']['_attribute'];
+                        }
                     }
-
                 }
             }
         }

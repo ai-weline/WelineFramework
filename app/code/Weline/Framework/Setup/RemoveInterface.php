@@ -11,5 +11,5 @@ namespace Weline\Framework\Setup;
 
 interface RemoveInterface
 {
-    public function setup(Data\ModelSetup $setup, Data\Context $context):void;
+    public function setup(Data\ModelSetup $setup, Data\Context $context): void;
 }

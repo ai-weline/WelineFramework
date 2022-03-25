@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,10 +19,9 @@ class BackendWhitelistUrl implements \Weline\Framework\Event\ObserverInterface
 {
     private Url $url;
 
-    function __construct(
+    public function __construct(
         Url $url
-    ){
-
+    ) {
         $this->url = $url;
     }
 
@@ -33,7 +33,7 @@ class BackendWhitelistUrl implements \Weline\Framework\Event\ObserverInterface
         /**@var DataObject $data*/
         $data = $event->getData('data');
         $whitelist = $data->getData('whitelist_url');
-        $data->setData('whitelist_url',array_merge($whitelist,[
+        $data->setData('whitelist_url', array_merge($whitelist, [
             $this->url->build('admin/login/post'),
             $this->url->build('admin/login/verificationCode'),
             $this->url->build('admin/login/verificationcode'),

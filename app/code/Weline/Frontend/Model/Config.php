@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,11 +17,9 @@ class Config
 {
     private SystemConfig $systemConfig;
 
-    function __construct(
+    public function __construct(
         SystemConfig $systemConfig
-    )
-    {
-
+    ) {
         $this->systemConfig = $systemConfig;
     }
 
@@ -35,7 +34,7 @@ class Config
      * @param string $module
      * @return mixed
      */
-    function getConfig(string $key, string $module): mixed
+    public function getConfig(string $key, string $module): mixed
     {
         return $this->systemConfig->getConfig($key, $module, SystemConfig::area_FRONTEND);
     }
@@ -52,7 +51,7 @@ class Config
      * @param string $module
      * @return bool
      */
-    function setConfig(string $key, string $value, string $module): bool
+    public function setConfig(string $key, string $value, string $module): bool
     {
         return $this->systemConfig->setConfig($key, $value, $module, SystemConfig::area_FRONTEND);
     }

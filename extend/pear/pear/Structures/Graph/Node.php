@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +-----------------------------------------------------------------------------+
 // | Copyright (c) 2003 Sérgio Gonçalves Carvalho                                |
@@ -25,7 +26,7 @@
 //
 /**
  * This file contains the definition of the Structures_Graph_Node class
- * 
+ *
  * @see Structures_Graph_Node
  * @package Structures_Graph
  */
@@ -39,33 +40,34 @@ require_once 'Structures/Graph.php';
 
 /* class Structures_Graph_Node {{{ */
 /**
- * The Structures_Graph_Node class represents a Node that can be member of a 
+ * The Structures_Graph_Node class represents a Node that can be member of a
  * graph node set.
  *
- * A graph node can contain data. Under this API, the node contains default data, 
- * and key index data. It behaves, thus, both as a regular data node, and as a 
+ * A graph node can contain data. Under this API, the node contains default data,
+ * and key index data. It behaves, thus, both as a regular data node, and as a
  * dictionary (or associative array) node.
- * 
+ *
  * Regular data is accessed via getData and setData. Key indexed data is accessed
  * via getMetadata and setMetadata.
  *
- * @author		Sérgio Carvalho <sergio.carvalho@portugalmail.com> 
+ * @author		Sérgio Carvalho <sergio.carvalho@portugalmail.com>
  * @copyright	(c) 2004 by Sérgio Carvalho
  * @package Structures_Graph
  */
 /* }}} */
-class Structures_Graph_Node {
+class Structures_Graph_Node
+{
     /* fields {{{ */
-    /** 
-     * @access private 
+    /**
+     * @access private
      */
-    var $_data = null;
+    public $_data = null;
     /** @access private */
-    var $_metadata = array();
+    public $_metadata = [];
     /** @access private */
-    var $_arcs = array();
+    public $_arcs = [];
     /** @access private */
-    var $_graph = null;
+    public $_graph = null;
     /* }}} */
 
     /* Constructor {{{ */
@@ -75,7 +77,8 @@ class Structures_Graph_Node {
     *
     * @access	public
     */
-    function __construct() {
+    public function __construct()
+    {
     }
     /* }}} */
 
@@ -87,7 +90,8 @@ class Structures_Graph_Node {
     * @return	Structures_Graph	Graph where node is stored
     * @access	public
     */
-    function &getGraph() {
+    public function &getGraph()
+    {
         return $this->_graph;
     }
     /* }}} */
@@ -97,11 +101,12 @@ class Structures_Graph_Node {
     *
     * Node graph setter. This method should not be called directly. Use Graph::addNode instead.
     *
-    * @param    Structures_Graph   Set the graph for this node. 
+    * @param    Structures_Graph   Set the graph for this node.
     * @see      Structures_Graph::addNode()
     * @access	public
     */
-    function setGraph(&$graph) {
+    public function setGraph(&$graph)
+    {
         $this->_graph =& $graph;
     }
     /* }}} */
@@ -110,13 +115,14 @@ class Structures_Graph_Node {
     /**
     *
     * Node data getter.
-    * 
+    *
     * Each graph node can contain a reference to one variable. This is the getter for that reference.
     *
     * @return	mixed	Data stored in node
     * @access	public
     */
-    function &getData() {
+    public function &getData()
+    {
         return $this->_data;
     }
     /* }}} */
@@ -131,7 +137,8 @@ class Structures_Graph_Node {
     * @return	mixed	Data to store in node
     * @access	public
     */
-    function setData(&$data) {
+    public function setData(&$data)
+    {
         $this->_data =& $data;
     }
     /* }}} */
@@ -141,14 +148,15 @@ class Structures_Graph_Node {
     *
     * Test for existence of metadata under a given key.
     *
-    * Each graph node can contain multiple 'metadata' entries, each stored under a different key, as in an 
+    * Each graph node can contain multiple 'metadata' entries, each stored under a different key, as in an
     * associative array or in a dictionary. This method tests whether a given metadata key exists for this node.
     *
     * @param    string    Key to test
-    * @return	boolean	 
+    * @return	boolean
     * @access	public
     */
-    function metadataKeyExists($key) {
+    public function metadataKeyExists($key)
+    {
         return array_key_exists($key, $this->_metadata);
     }
     /* }}} */
@@ -158,7 +166,7 @@ class Structures_Graph_Node {
     *
     * Node metadata getter
     *
-    * Each graph node can contain multiple 'metadata' entries, each stored under a different key, as in an 
+    * Each graph node can contain multiple 'metadata' entries, each stored under a different key, as in an
     * associative array or in a dictionary. This method gets the data under the given key. If the key does
     * not exist, an error will be thrown, so testing using metadataKeyExists might be needed.
     *
@@ -168,7 +176,8 @@ class Structures_Graph_Node {
     * @see      metadataKeyExists
     * @access	public
     */
-    function &getMetadata($key, $nullIfNonexistent = false) {
+    public function &getMetadata($key, $nullIfNonexistent = false)
+    {
         if (array_key_exists($key, $this->_metadata)) {
             return $this->_metadata[$key];
         } else {
@@ -188,15 +197,18 @@ class Structures_Graph_Node {
     *
     * Delete metadata by key
     *
-    * Each graph node can contain multiple 'metadata' entries, each stored under a different key, as in an 
+    * Each graph node can contain multiple 'metadata' entries, each stored under a different key, as in an
     * associative array or in a dictionary. This method removes any data that might be stored under the provided key.
     * If the key does not exist, no error is thrown, so it is safe using this method without testing for key existence.
     *
     * @param    string  Key
     * @access	public
     */
-    function unsetMetadata($key) {
-        if (array_key_exists($key, $this->_metadata)) unset($this->_metadata[$key]);
+    public function unsetMetadata($key)
+    {
+        if (array_key_exists($key, $this->_metadata)) {
+            unset($this->_metadata[$key]);
+        }
     }
     /* }}} */
 
@@ -205,22 +217,24 @@ class Structures_Graph_Node {
     *
     * Node metadata setter
     *
-    * Each graph node can contain multiple 'metadata' entries, each stored under a different key, as in an 
+    * Each graph node can contain multiple 'metadata' entries, each stored under a different key, as in an
     * associative array or in a dictionary. This method stores data under the given key. If the key already exists,
     * previously stored data is discarded.
     *
     * @param    string  Key
-    * @param    mixed   Data 
+    * @param    mixed   Data
     * @access	public
     */
-    function setMetadata($key, &$data) {
+    public function setMetadata($key, &$data)
+    {
         $this->_metadata[$key] =& $data;
     }
     /* }}} */
 
     /* _connectTo {{{ */
     /** @access private */
-    function _connectTo(&$destinationNode) {
+    public function _connectTo(&$destinationNode)
+    {
         $this->_arcs[] =& $destinationNode;
     }
     /* }}} */
@@ -229,18 +243,25 @@ class Structures_Graph_Node {
     /**
     *
     * Connect this node to another one.
-    * 
+    *
     * If the graph is not directed, the reverse arc, connecting $destinationNode to $this is also created.
     *
     * @param    Structures_Graph_Node Node to connect to
     * @access	public
     */
-    function connectTo(&$destinationNode) {
+    public function connectTo(&$destinationNode)
+    {
         // We only connect to nodes
-        if (!is_a($destinationNode, 'Structures_Graph_Node')) return Pear::raiseError('Structures_Graph_Node::connectTo received an object that is not a Structures_Graph_Node', STRUCTURES_GRAPH_ERROR_GENERIC);
+        if (!is_a($destinationNode, 'Structures_Graph_Node')) {
+            return Pear::raiseError('Structures_Graph_Node::connectTo received an object that is not a Structures_Graph_Node', STRUCTURES_GRAPH_ERROR_GENERIC);
+        }
         // Nodes must already be in graphs to be connected
-        if ($this->_graph == null) return Pear::raiseError('Structures_Graph_Node::connectTo Tried to connect a node that is not in a graph', STRUCTURES_GRAPH_ERROR_GENERIC);
-        if ($destinationNode->getGraph() == null) return Pear::raiseError('Structures_Graph_Node::connectTo Tried to connect to a node that is not in a graph', STRUCTURES_GRAPH_ERROR_GENERIC);
+        if ($this->_graph == null) {
+            return Pear::raiseError('Structures_Graph_Node::connectTo Tried to connect a node that is not in a graph', STRUCTURES_GRAPH_ERROR_GENERIC);
+        }
+        if ($destinationNode->getGraph() == null) {
+            return Pear::raiseError('Structures_Graph_Node::connectTo Tried to connect to a node that is not in a graph', STRUCTURES_GRAPH_ERROR_GENERIC);
+        }
         // Connect here
         $this->_connectTo($destinationNode);
         // If graph is undirected, connect back
@@ -254,11 +275,12 @@ class Structures_Graph_Node {
     /**
     *
     * Return nodes connected to this one.
-    * 
+    *
     * @return   array   Array of nodes
     * @access	public
     */
-    function getNeighbours() {
+    public function getNeighbours()
+    {
         return $this->_arcs;
     }
     /* }}} */
@@ -271,14 +293,15 @@ class Structures_Graph_Node {
     * @return	boolean   True if the two nodes are connected
     * @access	public
     */
-    function connectsTo(&$target) {
+    public function connectsTo(&$target)
+    {
         if (version_compare(PHP_VERSION, '5.0.0') >= 0) {
             return in_array($target, $this->getNeighbours(), true);
         }
 
         $copy = $target;
         $arcKeys = array_keys($this->_arcs);
-        foreach($arcKeys as $key) {
+        foreach ($arcKeys as $key) {
             /* ZE1 chokes on this expression:
                 if ($target === $arc) return true;
               so, we'll use more convoluted stuff
@@ -302,23 +325,29 @@ class Structures_Graph_Node {
     /**
     *
     * Calculate the in degree of the node.
-    * 
-    * The indegree for a node is the number of arcs entering the node. For non directed graphs, 
+    *
+    * The indegree for a node is the number of arcs entering the node. For non directed graphs,
     * the indegree is equal to the outdegree.
     *
     * @return	integer	 In degree of the node
     * @access	public
     */
-    function inDegree() {
-        if ($this->_graph == null) return 0;
-        if (!$this->_graph->isDirected()) return $this->outDegree();
+    public function inDegree()
+    {
+        if ($this->_graph == null) {
+            return 0;
+        }
+        if (!$this->_graph->isDirected()) {
+            return $this->outDegree();
+        }
         $result = 0;
         $graphNodes =& $this->_graph->getNodes();
         foreach (array_keys($graphNodes) as $key) {
-            if ($graphNodes[$key]->connectsTo($this)) $result++;
+            if ($graphNodes[$key]->connectsTo($this)) {
+                $result++;
+            }
         }
         return $result;
-        
     }
     /* }}} */
 
@@ -329,14 +358,16 @@ class Structures_Graph_Node {
     *
     * The outdegree for a node is the number of arcs exiting the node. For non directed graphs,
     * the outdegree is always equal to the indegree.
-    * 
+    *
     * @return	integer	 Out degree of the node
     * @access	public
     */
-    function outDegree() {
-        if ($this->_graph == null) return 0;
+    public function outDegree()
+    {
+        if ($this->_graph == null) {
+            return 0;
+        }
         return sizeof($this->_arcs);
     }
     /* }}} */
 }
-?>

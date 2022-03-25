@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -20,13 +21,13 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class AdminUserConfig extends \Weline\Framework\Database\Model
 {
-    const fields_ID     = 'admin_user_id';
-    const fields_config = 'config';
+    public const fields_ID     = 'admin_user_id';
+    public const fields_config = 'config';
 
     /**
      * @inheritDoc
      */
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
 //        $setup->dropTable();
         if (!$setup->tableExist()) {
@@ -40,7 +41,7 @@ class AdminUserConfig extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement upgrade() method.
     }
@@ -48,7 +49,7 @@ class AdminUserConfig extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         $this->setup($setup, $context);
         /**@var Config $config*/
@@ -61,7 +62,7 @@ class AdminUserConfig extends \Weline\Framework\Database\Model
         return $this->setData(self::fields_ID, $admin_user_id);
     }
 
-    function addConfig(string|array $key, mixed $data = null): static
+    public function addConfig(string|array $key, mixed $data = null): static
     {
         try {
             $config = $this->getOriginConfig() ? json_decode($this->getOriginConfig(), true) : [];
@@ -77,12 +78,12 @@ class AdminUserConfig extends \Weline\Framework\Database\Model
         return $this;
     }
 
-    function getOriginConfig()
+    public function getOriginConfig()
     {
         return $this->getData(self::fields_config);
     }
 
-    function getConfig(string $key)
+    public function getConfig(string $key)
     {
         try {
             $config = $this->getOriginConfig() ? json_decode($this->getOriginConfig(), true) : [];
@@ -92,7 +93,7 @@ class AdminUserConfig extends \Weline\Framework\Database\Model
         }
     }
 
-    function save(bool|array $data = [], string $sequence = null): bool
+    public function save(bool|array $data = [], string $sequence = null): bool
     {
         $this->forceCheck();
         return parent::save($data, $sequence);

@@ -11,9 +11,9 @@ namespace Weline\Framework\Session\Driver;
 
 interface DriverInterface
 {
-    const driver_FILE = 'files';
+    public const driver_FILE = 'files';
 
-    const driver_REDIS = 'redis';
+    public const driver_REDIS = 'redis';
 
     public function __construct(array $config);
 }

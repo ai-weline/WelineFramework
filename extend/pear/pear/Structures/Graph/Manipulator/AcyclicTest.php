@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +-----------------------------------------------------------------------------+
 // | Copyright (c) 2003 Sérgio Gonçalves Carvalho                                |
@@ -25,7 +26,7 @@
 //
 /**
  * This file contains the definition of the Structures_Graph_Manipulator_AcyclicTest graph manipulator.
- * 
+ *
  * @see Structures_Graph_Manipulator_AcyclicTest
  * @package Structures_Graph
  */
@@ -42,33 +43,36 @@ require_once 'Structures/Graph/Node.php';
 /* class Structures_Graph_Manipulator_AcyclicTest {{{ */
 /**
  * The Structures_Graph_Manipulator_AcyclicTest is a graph manipulator
- * which tests whether a graph contains a cycle. 
- * 
- * The definition of an acyclic graph used in this manipulator is that of a 
- * DAG. The graph must be directed, or else it is considered cyclic, even when 
+ * which tests whether a graph contains a cycle.
+ *
+ * The definition of an acyclic graph used in this manipulator is that of a
+ * DAG. The graph must be directed, or else it is considered cyclic, even when
  * there are no arcs.
  *
- * @author		Sérgio Carvalho <sergio.carvalho@portugalmail.com> 
+ * @author		Sérgio Carvalho <sergio.carvalho@portugalmail.com>
  * @copyright	(c) 2004 by Sérgio Carvalho
  * @package Structures_Graph
  */
-class Structures_Graph_Manipulator_AcyclicTest {
+class Structures_Graph_Manipulator_AcyclicTest
+{
     /* _nonVisitedInDegree {{{ */
     /**
     *
-    * This is a variant of Structures_Graph::inDegree which does 
+    * This is a variant of Structures_Graph::inDegree which does
     * not count nodes marked as visited.
     *
     * @return	integer	 Number of non-visited nodes that link to this one
     */
-    protected static function _nonVisitedInDegree(&$node) {
+    protected static function _nonVisitedInDegree(&$node)
+    {
         $result = 0;
         $graphNodes =& $node->_graph->getNodes();
         foreach (array_keys($graphNodes) as $key) {
-            if ((!$graphNodes[$key]->getMetadata('acyclic-test-visited')) && $graphNodes[$key]->connectsTo($node)) $result++;
+            if ((!$graphNodes[$key]->getMetadata('acyclic-test-visited')) && $graphNodes[$key]->connectsTo($node)) {
+                $result++;
+            }
         }
         return $result;
-        
     }
     /* }}} */
 
@@ -76,12 +80,13 @@ class Structures_Graph_Manipulator_AcyclicTest {
     /**
      * Check if the graph is acyclic
      */
-    protected static function _isAcyclic(&$graph) {
+    protected static function _isAcyclic(&$graph)
+    {
         // Mark every node as not visited
         $nodes =& $graph->getNodes();
         $nodeKeys = array_keys($nodes);
-        $refGenerator = array();
-        foreach($nodeKeys as $key) {
+        $refGenerator = [];
+        foreach ($nodeKeys as $key) {
             $refGenerator[] = false;
             $nodes[$key]->setMetadata('acyclic-test-visited', $refGenerator[sizeof($refGenerator) - 1]);
         }
@@ -89,8 +94,8 @@ class Structures_Graph_Manipulator_AcyclicTest {
         // Iteratively peel off leaf nodes
         do {
             // Find out which nodes are leafs (excluding visited nodes)
-            $leafNodes = array();
-            foreach($nodeKeys as $key) {
+            $leafNodes = [];
+            foreach ($nodeKeys as $key) {
                 if ((!$nodes[$key]->getMetadata('acyclic-test-visited')) && Structures_Graph_Manipulator_AcyclicTest::_nonVisitedInDegree($nodes[$key]) == 0) {
                     $leafNodes[] =& $nodes[$key];
                 }
@@ -105,10 +110,16 @@ class Structures_Graph_Manipulator_AcyclicTest {
 
         // If graph is a DAG, there should be no non-visited nodes. Let's try to prove otherwise
         $result = true;
-        foreach($nodeKeys as $key) if (!$nodes[$key]->getMetadata('acyclic-test-visited')) $result = false;
-        
+        foreach ($nodeKeys as $key) {
+            if (!$nodes[$key]->getMetadata('acyclic-test-visited')) {
+                $result = false;
+            }
+        }
+
         // Cleanup visited marks
-        foreach($nodeKeys as $key) $nodes[$key]->unsetMetadata('acyclic-test-visited');
+        foreach ($nodeKeys as $key) {
+            $nodes[$key]->unsetMetadata('acyclic-test-visited');
+        }
 
         return $result;
     }
@@ -121,14 +132,18 @@ class Structures_Graph_Manipulator_AcyclicTest {
     *
     * @return	boolean	 true iff graph is acyclic
     */
-    public static function isAcyclic(&$graph) {
+    public static function isAcyclic(&$graph)
+    {
         // We only test graphs
-        if (!is_a($graph, 'Structures_Graph')) return Pear::raiseError('Structures_Graph_Manipulator_AcyclicTest::isAcyclic received an object that is not a Structures_Graph', STRUCTURES_GRAPH_ERROR_GENERIC);
-        if (!$graph->isDirected()) return false; // Only directed graphs may be acyclic
+        if (!is_a($graph, 'Structures_Graph')) {
+            return Pear::raiseError('Structures_Graph_Manipulator_AcyclicTest::isAcyclic received an object that is not a Structures_Graph', STRUCTURES_GRAPH_ERROR_GENERIC);
+        }
+        if (!$graph->isDirected()) {
+            return false;
+        } // Only directed graphs may be acyclic
 
         return Structures_Graph_Manipulator_AcyclicTest::_isAcyclic($graph);
     }
     /* }}} */
 }
 /* }}} */
-?>

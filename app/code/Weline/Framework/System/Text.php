@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,8 +13,8 @@ namespace Weline\Framework\System;
 
 class Text
 {
-    static function rand_str(): string
+    public static function rand_str(): string
     {
-        return crypt(md5(microtime()),md5(microtime()));
+        return crypt(md5(microtime()), md5(microtime()));
     }
 }

@@ -25,9 +25,8 @@
  */
 class PEAR_Installer_Role_Src extends PEAR_Installer_Role_Common
 {
-    function setup(&$installer, $pkg, $atts, $file)
+    public function setup(&$installer, $pkg, $atts, $file)
     {
         $installer->source_files++;
     }
 }
-?>

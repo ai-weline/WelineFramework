@@ -11,9 +11,9 @@ namespace Weline\Framework\Plugin\Api\Data;
 
 interface InterceptorInterface
 {
-    const LISTENER_BEFORE = 'before';
+    public const LISTENER_BEFORE = 'before';
 
-    const LISTENER_AROUND = 'around';
+    public const LISTENER_AROUND = 'around';
 
-    const LISTENER_AFTER = 'after';
+    public const LISTENER_AFTER = 'after';
 }

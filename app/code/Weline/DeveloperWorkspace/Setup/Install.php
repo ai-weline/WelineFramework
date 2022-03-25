@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,15 +14,14 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Setup;
 
-
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Database\Db\Ddl\Create;
 use Weline\Framework\Setup\Data;
 
 class Install implements \Weline\Framework\Setup\InstallInterface
 {
-    const table_DEV_DOCUMENT = 'weline_dev_tool_document_catalog';
-    const table_DEV_DOCUMENT_CONTENT = 'weline_dev_tool_document_catalog_content';
+    public const table_DEV_DOCUMENT = 'weline_dev_tool_document_catalog';
+    public const table_DEV_DOCUMENT_CONTENT = 'weline_dev_tool_document_catalog_content';
 
     public function setup(Data\Setup $setup, Data\Context $context): void
     {
@@ -29,7 +29,7 @@ class Install implements \Weline\Framework\Setup\InstallInterface
         $printer = $setup->getPrinter();
         // 如果表不存在就创建
         if (!$db->tableExist(self::table_DEV_DOCUMENT)) {
-            $printer->warning(self::table_DEV_DOCUMENT.__('安装中...'));
+            $printer->warning(self::table_DEV_DOCUMENT . __('安装中...'));
             $db->createTable(self::table_DEV_DOCUMENT)
                 ->addColumn(
                     'id',

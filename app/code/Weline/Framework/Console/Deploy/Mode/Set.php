@@ -99,7 +99,8 @@ class Set extends CommandAbstract
         }
     }
 
-    function clearGeneratedComplicateDir(){
+    public function clearGeneratedComplicateDir()
+    {
         $complicate = Env::path_COMPLICATE_GENERATED_DIR;
         $this->system->exec("rm -rf $complicate");
     }

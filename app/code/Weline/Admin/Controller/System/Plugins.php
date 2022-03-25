@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,7 +16,7 @@ use Weline\Framework\Plugin\Config\Reader;
 
 class Plugins extends \Weline\Admin\Controller\BaseController
 {
-    function getIndex()
+    public function getIndex()
     {
         $plugins = $this->getReader()->read();
         $this->assign('plugins', $plugins);

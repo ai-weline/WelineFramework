@@ -14,8 +14,9 @@ use Weline\Framework\Output\Debug\Printing;
 class AbstractHelper
 {
     protected Printing $_debug;
-    function getDebug(){
-        if(!isset($this->_debug)){
+    public function getDebug()
+    {
+        if (!isset($this->_debug)) {
             $this->_debug = new Printing();
         }
         return $this->_debug;

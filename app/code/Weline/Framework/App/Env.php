@@ -15,42 +15,42 @@ use Weline\Framework\System\File\Io\File;
 
 class Env extends DataObject
 {
-    const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
+    public const vendor_path = BP . 'vendor' . DIRECTORY_SEPARATOR;
 
-    const framework_name = 'Weline';
+    public const framework_name = 'Weline';
 
-    const path_framework_generated = BP . 'generated' . DIRECTORY_SEPARATOR;
+    public const path_framework_generated = BP . 'generated' . DIRECTORY_SEPARATOR;
 
-    const path_framework_generated_code = self::path_framework_generated . 'code' . DIRECTORY_SEPARATOR;
+    public const path_framework_generated_code = self::path_framework_generated . 'code' . DIRECTORY_SEPARATOR;
 
     # 框架模板文件位置
-    const path_framework_generated_complicate = self::path_framework_generated . 'complicate' . DIRECTORY_SEPARATOR;
+    public const path_framework_generated_complicate = self::path_framework_generated . 'complicate' . DIRECTORY_SEPARATOR;
 
     // -----------------路径--------------------
-    const path_ENV_FILE = APP_ETC_PATH . 'env.php';
+    public const path_ENV_FILE = APP_ETC_PATH . 'env.php';
 
-    const path_SYSTEM_META_DATA = self::path_framework_generated . 'configs.php'; //FIXME 元数据等待开发
+    public const path_SYSTEM_META_DATA = self::path_framework_generated . 'configs.php'; //FIXME 元数据等待开发
 
-    const path_MODULES_FILE = APP_ETC_PATH . 'modules.php';
+    public const path_MODULES_FILE = APP_ETC_PATH . 'modules.php';
 
-    const path_COMMANDS_FILE = self::path_framework_generated . 'commands.php';
+    public const path_COMMANDS_FILE = self::path_framework_generated . 'commands.php';
 
     // 注册register路径
 
-    const path_VENDOR_CODE = self::vendor_path;
+    public const path_VENDOR_CODE = self::vendor_path;
 
-    const path_CODE_DESIGN = BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR;
+    public const path_CODE_DESIGN = BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR;
 
-    const path_LANGUAGE_PACK = BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR;
+    public const path_LANGUAGE_PACK = BP . 'app' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR;
 
-    const register_FILE_PATHS = [
+    public const register_FILE_PATHS = [
         'app_code'      => APP_CODE_PATH,
         'vendor_code'   => self::path_VENDOR_CODE,
         'theme_design'  => self::path_CODE_DESIGN,
         'language_pack' => self::path_LANGUAGE_PACK,
     ];
 
-    const default_theme_DATA = [
+    public const default_theme_DATA = [
         'id'          => 0,
         'name'        => 'default',
         'path'        => 'Weline' . DIRECTORY_SEPARATOR . 'default',
@@ -60,17 +60,17 @@ class Env extends DataObject
     ];
 
     // 路由
-    const path_ROUTERS_DIR = self::path_framework_generated . 'routers' . DIRECTORY_SEPARATOR;
+    public const path_ROUTERS_DIR = self::path_framework_generated . 'routers' . DIRECTORY_SEPARATOR;
 
-    const path_BACKEND_REST_API_ROUTER_FILE = self::path_ROUTERS_DIR . 'backend_rest_api.php';
+    public const path_BACKEND_REST_API_ROUTER_FILE = self::path_ROUTERS_DIR . 'backend_rest_api.php';
 
-    const path_BACKEND_PC_ROUTER_FILE = self::path_ROUTERS_DIR . 'backend_pc.php';
+    public const path_BACKEND_PC_ROUTER_FILE = self::path_ROUTERS_DIR . 'backend_pc.php';
 
-    const path_FRONTEND_REST_API_ROUTER_FILE = self::path_ROUTERS_DIR . 'frontend_rest_api.php';
+    public const path_FRONTEND_REST_API_ROUTER_FILE = self::path_ROUTERS_DIR . 'frontend_rest_api.php';
 
-    const path_FRONTEND_PC_ROUTER_FILE = self::path_ROUTERS_DIR . 'frontend_pc.php';
+    public const path_FRONTEND_PC_ROUTER_FILE = self::path_ROUTERS_DIR . 'frontend_pc.php';
 
-    const router_files_PATH = [
+    public const router_files_PATH = [
         self::path_BACKEND_REST_API_ROUTER_FILE,
         self::path_FRONTEND_REST_API_ROUTER_FILE,
         self::path_BACKEND_PC_ROUTER_FILE,
@@ -79,36 +79,36 @@ class Env extends DataObject
 
     // 生成文件的目录
 
-    const GENERATED_DIR = BP . 'generated';
+    public const GENERATED_DIR = BP . 'generated';
 
     // 编译生成文件目录
-    const path_COMPLICATE_GENERATED_DIR = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'complicate' . DIRECTORY_SEPARATOR;
+    public const path_COMPLICATE_GENERATED_DIR = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'complicate' . DIRECTORY_SEPARATOR;
 
     // 翻译词典 目录
-    const path_TRANSLATE_FILES_PATH = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR;
+    public const path_TRANSLATE_FILES_PATH = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR;
 
-    const path_TRANSLATE_DEFAULT_FILE = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'zh_Hans_CN.php';
+    public const path_TRANSLATE_DEFAULT_FILE = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'zh_Hans_CN.php';
 
-    const path_TRANSLATE_ALL_COLLECTIONS_WORDS_FILE = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'words.php';
+    public const path_TRANSLATE_ALL_COLLECTIONS_WORDS_FILE = self::GENERATED_DIR . DIRECTORY_SEPARATOR . 'language' . DIRECTORY_SEPARATOR . 'words.php';
 
     // 日志
-    const log_path_ERROR = 'error';
+    public const log_path_ERROR = 'error';
 
-    const log_path_EXCEPTION = 'exception';
+    public const log_path_EXCEPTION = 'exception';
 
-    const log_path_NOTICE = 'notice';
+    public const log_path_NOTICE = 'notice';
 
-    const log_path_WARNING = 'warning';
+    public const log_path_WARNING = 'warning';
 
-    const log_path_DEBUG = 'debug';
+    public const log_path_DEBUG = 'debug';
 
     // 拓展目录
-    const extend_dir = BP . 'extend' . DIRECTORY_SEPARATOR;
+    public const extend_dir = BP . 'extend' . DIRECTORY_SEPARATOR;
 
     // 主题设计
-    const path_THEME_DESIGN_DIR = BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR;
+    public const path_THEME_DESIGN_DIR = BP . 'app' . DIRECTORY_SEPARATOR . 'design' . DIRECTORY_SEPARATOR;
     // 主题设计
-    const path_UPLOAD_DIR = PUB . 'upload' . DIRECTORY_SEPARATOR;
+    public const path_UPLOAD_DIR = PUB . 'upload' . DIRECTORY_SEPARATOR;
 
     // 变量
 
@@ -117,7 +117,7 @@ class Env extends DataObject
      */
     private static Env $instance;
 
-    const default_CONFIG = [
+    public const default_CONFIG = [
         'cache'   => self::default_CACHE,
         'session' => self::default_SESSION,
         'log'     => self::default_LOG,
@@ -125,7 +125,7 @@ class Env extends DataObject
     ];
 
     // 日志
-    const default_LOG = [
+    public const default_LOG = [
         'error'     => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'error.log',
         'exception' => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'exception.log',
         'notice'    => 'var' . DIRECTORY_SEPARATOR . 'log' . DIRECTORY_SEPARATOR . 'notice.log',
@@ -134,7 +134,7 @@ class Env extends DataObject
     ];
 
     // 缓存
-    const default_CACHE = [
+    public const default_CACHE = [
         'default' => 'file',
         'drivers' => [
             'file'  => [
@@ -163,7 +163,7 @@ class Env extends DataObject
     ];
 
     // Session
-    const default_SESSION = [
+    public const default_SESSION = [
         'default' => 'file',
         'drivers' => [
             'file'  => [
@@ -253,7 +253,9 @@ class Env extends DataObject
      */
     public function getConfig(string $name = '', $default = null): mixed
     {
-        if (isset($this->hasGetConfig[$name])) return $this->hasGetConfig[$name];
+        if (isset($this->hasGetConfig[$name])) {
+            return $this->hasGetConfig[$name];
+        }
         if ('' === $name) {
             return $this->config;
         }
@@ -358,11 +360,12 @@ class Env extends DataObject
         return null;
     }
 
-    static function getCommands(): array
+    public static function getCommands(): array
     {
         $commands = [];
-        if (file_exists(Env::path_COMMANDS_FILE)) $commands = (array)require self::path_COMMANDS_FILE;
+        if (file_exists(Env::path_COMMANDS_FILE)) {
+            $commands = (array)require self::path_COMMANDS_FILE;
+        }
         return $commands;
     }
-
 }

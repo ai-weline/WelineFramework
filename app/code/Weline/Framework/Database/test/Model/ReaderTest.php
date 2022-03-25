@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,7 +19,7 @@ class ReaderTest extends TestCore
 {
     private Reader $model;
 
-    function setUp(): void
+    public function setUp(): void
     {
         $this->model = ObjectManager::getInstance(Reader::class);
     }

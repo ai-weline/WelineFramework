@@ -19,7 +19,7 @@ class FrontendRestController extends AbstractRestController
     private ?FrontendApiSession $session = null;
 
 
-    function __init()
+    public function __init()
     {
         parent::__init();
         $this->getSession(FrontendApiSession::class);

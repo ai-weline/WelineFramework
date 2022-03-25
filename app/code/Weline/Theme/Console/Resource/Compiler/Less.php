@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,13 +16,13 @@ use Weline\Framework\Resource\Compiler;
 
 class Less extends Compiler
 {
-    function __init()
+    public function __init()
     {
         $this->setReader(ObjectManager::getInstance(\Weline\Theme\Config\Reader\Less::class));
     }
 
     public function compile(string $source_file = null, string $out_file = null)
     {
-        p('等待编译开发...',1);
+        p('等待编译开发...', 1);
     }
 }

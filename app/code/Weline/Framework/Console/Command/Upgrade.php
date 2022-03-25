@@ -35,8 +35,7 @@ class Upgrade extends CommandAbstract
         Printing $printer,
         Command  $command,
         System   $system
-    )
-    {
+    ) {
         $this->printer = $printer;
         $this->system = $system;
         $this->command = $command;
@@ -167,7 +166,9 @@ class Upgrade extends CommandAbstract
                                     if ($command_class instanceof CommandInterface) {
                                         $commands[$command_tip][$command] = $command_class->getTip();
                                     } else {
-                                        if (DEV && CLI) $this->printer->warning(__('命令类：%1 必须继承：%2', [$command_class_path, CommandInterface::class]));
+                                        if (DEV && CLI) {
+                                            $this->printer->warning(__('命令类：%1 必须继承：%2', [$command_class_path, CommandInterface::class]));
+                                        }
                                     }
                                 } catch (\Exception $exception) {
                                     // 异常的类不加入命令

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,9 +18,7 @@ use Weline\Framework\View\Block;
 
 class Menu extends Block
 {
-
-
-    function __toString()
+    public function __toString()
     {
         parent::__toString();
     }

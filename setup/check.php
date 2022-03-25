@@ -9,7 +9,7 @@
 
 ini_set('error_reporting', 1);
 
-if(!function_exists('register_shutdown_function')){
+if (!function_exists('register_shutdown_function')) {
     function cache_shutdown_error()
     {
         $_error = error_get_last();
@@ -26,7 +26,7 @@ if(!function_exists('register_shutdown_function')){
     register_shutdown_function('cache_shutdown_error');
 }
 // 安装检测
-if (is_file(__DIR__ . DIRECTORY_SEPARATOR.'install.lock')) {
+if (is_file(__DIR__ . DIRECTORY_SEPARATOR . 'install.lock')) {
     http_response_code(404);
     exit(0);
 }

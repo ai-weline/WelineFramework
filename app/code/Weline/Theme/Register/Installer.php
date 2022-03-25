@@ -36,8 +36,7 @@ class Installer implements RegisterInterface
     public function __construct(
         WelineTheme $welineTheme,
         Printing    $printing
-    )
-    {
+    ) {
         $this->welineTheme = $welineTheme;
         $this->printing    = $printing;
     }

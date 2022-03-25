@@ -8,7 +8,6 @@
 
 namespace Weline\Framework\Database\Model;
 
-
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Cache\DbModelCache;
@@ -24,12 +23,11 @@ class Reader extends \Weline\Framework\System\ModuleFileReader
     private CacheInterface $dbModelCache;
     private ?array $models;
 
-    function __construct(
+    public function __construct(
         DbModelCache $dbModelCache,
         Scanner      $scanner,
-                     $path = 'Model' . DIRECTORY_SEPARATOR
-    )
-    {
+        $path = 'Model' . DIRECTORY_SEPARATOR
+    ) {
         parent::__construct($scanner, $path);
         $this->dbModelCache = $dbModelCache->create();
         $this->scanner = $scanner;

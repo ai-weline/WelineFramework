@@ -92,13 +92,13 @@
  */
 class OS_Guess
 {
-    var $sysname;
-    var $nodename;
-    var $cpu;
-    var $release;
-    var $extra;
+    public $sysname;
+    public $nodename;
+    public $cpu;
+    public $release;
+    public $extra;
 
-    function __construct($uname = null)
+    public function __construct($uname = null)
     {
         list($this->sysname,
              $this->release,
@@ -107,17 +107,17 @@ class OS_Guess
              $this->nodename) = $this->parseSignature($uname);
     }
 
-    function parseSignature($uname = null)
+    public function parseSignature($uname = null)
     {
-        static $sysmap = array(
+        static $sysmap = [
             'HP-UX' => 'hpux',
             'IRIX64' => 'irix',
-        );
-        static $cpumap = array(
+        ];
+        static $cpumap = [
             'i586' => 'i386',
             'i686' => 'i386',
             'ppc' => 'powerpc',
-        );
+        ];
         if ($uname === null) {
             $uname = php_uname();
         }
@@ -184,10 +184,10 @@ class OS_Guess
         if (isset($cpumap[$cpu])) {
             $cpu = $cpumap[$cpu];
         }
-        return array($sysname, $release, $cpu, $extra, $nodename);
+        return [$sysname, $release, $cpu, $extra, $nodename];
     }
 
-    function _detectGlibcVersion()
+    public function _detectGlibcVersion()
     {
         static $glibc = false;
         if ($glibc !== false) {
@@ -201,7 +201,7 @@ class OS_Guess
             if (preg_match('/^libc-(.*)\.so$/', basename(readlink('/lib64/libc.so.6')), $matches)) {
                 list($major, $minor) = explode('.', $matches[1]);
             }
-        } else if (@is_link('/lib/libc.so.6')) {
+        } elseif (@is_link('/lib/libc.so.6')) {
             // Let's try reading the libc.so.6 symlink
             if (preg_match('/^libc-(.*)\.so$/', basename(readlink('/lib/libc.so.6')), $matches)) {
                 list($major, $minor) = explode('.', $matches[1]);
@@ -229,7 +229,7 @@ class OS_Guess
                         continue;
                     }
 
-                    if (strpos($line, '__GLIBC_MINOR__'))  {
+                    if (strpos($line, '__GLIBC_MINOR__')) {
                         // got the minor version number
                         // #define __GLIBC_MINOR__ version
                         $line = preg_split('/\s+/', $line);
@@ -272,7 +272,7 @@ class OS_Guess
         return $glibc = "glibc{$major}.{$minor}";
     }
 
-    function getSignature()
+    public function getSignature()
     {
         if (empty($this->extra)) {
             return "{$this->sysname}-{$this->release}-{$this->cpu}";
@@ -280,32 +280,32 @@ class OS_Guess
         return "{$this->sysname}-{$this->release}-{$this->cpu}-{$this->extra}";
     }
 
-    function getSysname()
+    public function getSysname()
     {
         return $this->sysname;
     }
 
-    function getNodename()
+    public function getNodename()
     {
         return $this->nodename;
     }
 
-    function getCpu()
+    public function getCpu()
     {
         return $this->cpu;
     }
 
-    function getRelease()
+    public function getRelease()
     {
         return $this->release;
     }
 
-    function getExtra()
+    public function getExtra()
     {
         return $this->extra;
     }
 
-    function matchSignature($match)
+    public function matchSignature($match)
     {
         $fragments = is_array($match) ? $match : explode('-', $match);
         $n = count($fragments);
@@ -325,15 +325,14 @@ class OS_Guess
         return ($matches == $n);
     }
 
-    function _matchFragment($fragment, $value)
+    public function _matchFragment($fragment, $value)
     {
         if (strcspn($fragment, '*?') < strlen($fragment)) {
-            $reg = '/^' . str_replace(array('*', '?', '/'), array('.*', '.', '\\/'), $fragment) . '\\z/';
+            $reg = '/^' . str_replace(['*', '?', '/'], ['.*', '.', '\\/'], $fragment) . '\\z/';
             return preg_match($reg, $value);
         }
         return ($fragment == '*' || !strcasecmp($fragment, $value));
     }
-
 }
 /*
  * Local Variables:

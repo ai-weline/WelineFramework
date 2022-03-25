@@ -37,16 +37,16 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
      * @var string
      * @access public
      */
-    var $type = 'CLI';
-    var $lp = ''; // line prefix
+    public $type = 'CLI';
+    public $lp = ''; // line prefix
 
-    var $params = array();
-    var $term = array(
+    public $params = [];
+    public $term = [
         'bold'   => '',
         'normal' => '',
-    );
+    ];
 
-    function __construct()
+    public function __construct()
     {
         parent::__construct();
         $term = getenv('TERM'); //(cox) $_ENV is empty for me in 4.1.1
@@ -68,7 +68,7 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
     /**
      * @param object PEAR_Error object
      */
-    function displayError($e)
+    public function displayError($e)
     {
         return $this->_displayLine($e->getMessage());
     }
@@ -76,7 +76,7 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
     /**
      * @param object PEAR_Error object
      */
-    function displayFatalError($eobj)
+    public function displayFatalError($eobj)
     {
         $this->displayError($eobj);
         if (class_exists('PEAR_Config')) {
@@ -100,10 +100,10 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
                         }
                     }
 
-                    $frame['class']    = !isset($frame['class'])    ? '' : $frame['class'];
-                    $frame['type']     = !isset($frame['type'])     ? '' : $frame['type'];
+                    $frame['class']    = !isset($frame['class']) ? '' : $frame['class'];
+                    $frame['type']     = !isset($frame['type']) ? '' : $frame['type'];
                     $frame['function'] = !isset($frame['function']) ? '' : $frame['function'];
-                    $frame['line']     = !isset($frame['line'])     ? '' : $frame['line'];
+                    $frame['line']     = !isset($frame['line']) ? '' : $frame['line'];
                     $this->_displayLine("#$i: $frame[class]$frame[type]$frame[function] $frame[line]");
                 }
             }
@@ -121,12 +121,12 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
      * post-install scripts without losing the cross-Frontend ability to retrieve user input
      * @param string
      */
-    function skipParamgroup($id)
+    public function skipParamgroup($id)
     {
         $this->_skipSections[$id] = true;
     }
 
-    function runPostinstallScripts(&$scripts)
+    public function runPostinstallScripts(&$scripts)
     {
         foreach ($scripts as $i => $script) {
             $this->runInstallScript($scripts[$i]->_params, $scripts[$i]->_obj);
@@ -138,17 +138,17 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
      * @param object $script post-installation script
      * @param string install|upgrade
      */
-    function runInstallScript($xml, &$script)
+    public function runInstallScript($xml, &$script)
     {
-        $this->_skipSections = array();
+        $this->_skipSections = [];
         if (!is_array($xml) || !isset($xml['paramgroup'])) {
-            $script->run(array(), '_default');
+            $script->run([], '_default');
             return;
         }
 
-        $completedPhases = array();
+        $completedPhases = [];
         if (!isset($xml['paramgroup'][0])) {
-            $xml['paramgroup'] = array($xml['paramgroup']);
+            $xml['paramgroup'] = [$xml['paramgroup']];
         }
 
         foreach ($xml['paramgroup'] as $group) {
@@ -170,23 +170,25 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
 
                 if (isset($answers[$group['name']])) {
                     switch ($group['conditiontype']) {
-                        case '=' :
+                        case '=':
                             if ($answers[$group['name']] != $group['value']) {
                                 continue 2;
                             }
                         break;
-                        case '!=' :
+                        case '!=':
                             if ($answers[$group['name']] == $group['value']) {
                                 continue 2;
                             }
                         break;
-                        case 'preg_match' :
-                            if (!@preg_match('/' . $group['value'] . '/',
-                                  $answers[$group['name']])) {
+                        case 'preg_match':
+                            if (!@preg_match(
+                                '/' . $group['value'] . '/',
+                                $answers[$group['name']]
+                            )) {
                                 continue 2;
                             }
                         break;
-                        default :
+                        default:
                         return;
                     }
                 }
@@ -198,7 +200,7 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
             }
 
             if (!isset($group['param'][0])) {
-                $group['param'] = array($group['param']);
+                $group['param'] = [$group['param']];
             }
 
             if (isset($group['param'])) {
@@ -231,7 +233,7 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
 
             if ((isset($answers) && $answers) || !isset($group['param'])) {
                 if (!isset($answers)) {
-                    $answers = array();
+                    $answers = [];
                 }
 
                 array_unshift($completedPhases, $group['id']);
@@ -252,9 +254,9 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
      *              'text to display', 'type' => 'string'[, default => 'default value'])
      * @return array
      */
-    function confirmDialog($params)
+    public function confirmDialog($params)
     {
-        $answers = $prompts = $types = array();
+        $answers = $prompts = $types = [];
         foreach ($params as $param) {
             $prompts[$param['name']] = $param['prompt'];
             $types[$param['name']]   = $param['type'];
@@ -280,10 +282,10 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
         return $answers;
     }
 
-    function userDialog($command, $prompts, $types = array(), $defaults = array(), $screensize = 20)
+    public function userDialog($command, $prompts, $types = [], $defaults = [], $screensize = 20)
     {
         if (!is_array($prompts)) {
-            return array();
+            return [];
         }
 
         $testprompts = array_keys($prompts);
@@ -355,11 +357,11 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
         return $result;
     }
 
-    function userConfirm($prompt, $default = 'yes')
+    public function userConfirm($prompt, $default = 'yes')
     {
         trigger_error("PEAR_Frontend_CLI::userConfirm not yet converted", E_USER_ERROR);
-        static $positives = array('y', 'yes', 'on', '1');
-        static $negatives = array('n', 'no', 'off', '0');
+        static $positives = ['y', 'yes', 'on', '1'];
+        static $negatives = ['n', 'no', 'off', '0'];
         print "$this->lp$prompt [$default] : ";
         $fp = fopen("php://stdin", "r");
         $line = fgets($fp, 2048);
@@ -380,7 +382,7 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
         return false;
     }
 
-    function outputData($data, $command = '_default')
+    public function outputData($data, $command = '_default')
     {
         switch ($command) {
             case 'channel-info':
@@ -397,11 +399,11 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
             case 'upgrade-all':
                 if (is_array($data) && isset($data['release_warnings'])) {
                     $this->_displayLine('');
-                    $this->_startTable(array(
+                    $this->_startTable([
                         'border' => false,
                         'caption' => 'Release Warnings'
-                    ));
-                    $this->_tableRow(array($data['release_warnings']), null, array(1 => array('wrap' => 55)));
+                    ]);
+                    $this->_tableRow([$data['release_warnings']], null, [1 => ['wrap' => 55]]);
                     $this->_endTable();
                     $this->_displayLine('');
                 }
@@ -411,12 +413,12 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
             case 'search':
                 $this->_startTable($data);
                 if (isset($data['headline']) && is_array($data['headline'])) {
-                    $this->_tableRow($data['headline'], array('bold' => true), array(1 => array('wrap' => 55)));
+                    $this->_tableRow($data['headline'], ['bold' => true], [1 => ['wrap' => 55]]);
                 }
 
-                $packages = array();
-                foreach($data['data'] as $category) {
-                    foreach($category as $name => $pkg) {
+                $packages = [];
+                foreach ($data['data'] as $category) {
+                    foreach ($category as $name => $pkg) {
                         $packages[$pkg[0]] = $pkg;
                     }
                 }
@@ -424,25 +426,25 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
                 $p = array_keys($packages);
                 natcasesort($p);
                 foreach ($p as $name) {
-                    $this->_tableRow($packages[$name], null, array(1 => array('wrap' => 55)));
+                    $this->_tableRow($packages[$name], null, [1 => ['wrap' => 55]]);
                 }
 
                 $this->_endTable();
                 break;
             case 'list-all':
                 if (!isset($data['data'])) {
-                      $this->_displayLine('No packages in channel');
-                      break;
+                    $this->_displayLine('No packages in channel');
+                    break;
                 }
 
                 $this->_startTable($data);
                 if (isset($data['headline']) && is_array($data['headline'])) {
-                    $this->_tableRow($data['headline'], array('bold' => true), array(1 => array('wrap' => 55)));
+                    $this->_tableRow($data['headline'], ['bold' => true], [1 => ['wrap' => 55]]);
                 }
 
-                $packages = array();
-                foreach($data['data'] as $category) {
-                    foreach($category as $name => $pkg) {
+                $packages = [];
+                foreach ($data['data'] as $category) {
+                    foreach ($category as $name => $pkg) {
                         $packages[$pkg[0]] = $pkg;
                     }
                 }
@@ -452,22 +454,22 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
                 foreach ($p as $name) {
                     $pkg = $packages[$name];
                     unset($pkg[4], $pkg[5]);
-                    $this->_tableRow($pkg, null, array(1 => array('wrap' => 55)));
+                    $this->_tableRow($pkg, null, [1 => ['wrap' => 55]]);
                 }
 
                 $this->_endTable();
                 break;
             case 'config-show':
                 $data['border'] = false;
-                $opts = array(
-                    0 => array('wrap' => 30),
-                    1 => array('wrap' => 20),
-                    2 => array('wrap' => 35)
-                );
+                $opts = [
+                    0 => ['wrap' => 30],
+                    1 => ['wrap' => 20],
+                    2 => ['wrap' => 35]
+                ];
 
                 $this->_startTable($data);
                 if (isset($data['headline']) && is_array($data['headline'])) {
-                    $this->_tableRow($data['headline'], array('bold' => true), $opts);
+                    $this->_tableRow($data['headline'], ['bold' => true], $opts);
                 }
 
                 foreach ($data['data'] as $group) {
@@ -484,55 +486,58 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
                 break;
             case 'remote-info':
                 $d = $data;
-                $data = array(
+                $data = [
                     'caption' => 'Package details:',
                     'border'  => false,
-                    'data'    => array(
-                        array("Latest",      $data['stable']),
-                        array("Installed",   $data['installed']),
-                        array("Package",     $data['name']),
-                        array("License",     $data['license']),
-                        array("Category",    $data['category']),
-                        array("Summary",     $data['summary']),
-                        array("Description", $data['description']),
-                    ),
-                );
+                    'data'    => [
+                        ["Latest",      $data['stable']],
+                        ["Installed",   $data['installed']],
+                        ["Package",     $data['name']],
+                        ["License",     $data['license']],
+                        ["Category",    $data['category']],
+                        ["Summary",     $data['summary']],
+                        ["Description", $data['description']],
+                    ],
+                ];
 
                 if (isset($d['deprecated']) && $d['deprecated']) {
                     $conf = &PEAR_Config::singleton();
                     $reg = $conf->getRegistry();
                     $name = $reg->parsedPackageNameToString($d['deprecated'], true);
-                    $data['data'][] = array('Deprecated! use', $name);
+                    $data['data'][] = ['Deprecated! use', $name];
                 }
+                // no break
             default: {
                 if (is_array($data)) {
                     $this->_startTable($data);
                     $count = count($data['data'][0]);
                     if ($count == 2) {
-                        $opts = array(0 => array('wrap' => 25),
-                                      1 => array('wrap' => 48)
-                        );
+                        $opts = [0 => ['wrap' => 25],
+                                      1 => ['wrap' => 48]
+                        ];
                     } elseif ($count == 3) {
-                        $opts = array(0 => array('wrap' => 30),
-                                      1 => array('wrap' => 20),
-                                      2 => array('wrap' => 35)
-                        );
+                        $opts = [0 => ['wrap' => 30],
+                                      1 => ['wrap' => 20],
+                                      2 => ['wrap' => 35]
+                        ];
                     } else {
                         $opts = null;
                     }
                     if (isset($data['headline']) && is_array($data['headline'])) {
-                        $this->_tableRow($data['headline'],
-                                         array('bold' => true),
-                                         $opts);
+                        $this->_tableRow(
+                            $data['headline'],
+                            ['bold' => true],
+                            $opts
+                        );
                     }
 
                     if (is_array($data['data'])) {
-                        foreach($data['data'] as $row) {
+                        foreach ($data['data'] as $row) {
                             $this->_tableRow($row, null, $opts);
                         }
                     } else {
-                        $this->_tableRow(array($data['data']), null, $opts);
-                     }
+                        $this->_tableRow([$data['data']], null, $opts);
+                    }
                     $this->_endTable();
                 } else {
                     $this->_displayLine($data);
@@ -541,7 +546,7 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
         }
     }
 
-    function log($text, $append_crlf = true)
+    public function log($text, $append_crlf = true)
     {
         if ($append_crlf) {
             return $this->_displayLine($text);
@@ -550,7 +555,7 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
         return $this->_display($text);
     }
 
-    function bold($text)
+    public function bold($text)
     {
         if (empty($this->term['bold'])) {
             return strtoupper($text);
@@ -559,22 +564,22 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
         return $this->term['bold'] . $text . $this->term['normal'];
     }
 
-    function _displayHeading($title)
+    public function _displayHeading($title)
     {
-        print $this->lp.$this->bold($title)."\n";
-        print $this->lp.str_repeat("=", strlen($title))."\n";
+        print $this->lp . $this->bold($title) . "\n";
+        print $this->lp . str_repeat("=", strlen($title)) . "\n";
     }
 
-    function _startTable($params = array())
+    public function _startTable($params = [])
     {
-        $params['table_data'] = array();
-        $params['widest']     = array();  // indexed by column
-        $params['highest']    = array(); // indexed by row
+        $params['table_data'] = [];
+        $params['widest']     = [];  // indexed by column
+        $params['highest']    = []; // indexed by row
         $params['ncols']      = 0;
         $this->params         = $params;
     }
 
-    function _tableRow($columns, $rowparams = array(), $colparams = array())
+    public function _tableRow($columns, $rowparams = [], $colparams = [])
     {
         $highest = 1;
         for ($i = 0; $i < count($columns); $i++) {
@@ -617,16 +622,16 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
             $this->params['ncols'] = count($columns);
         }
 
-        $new_row = array(
+        $new_row = [
             'data'      => $columns,
             'height'    => $highest,
             'rowparams' => $rowparams,
             'colparams' => $colparams,
-        );
+        ];
         $this->params['table_data'][] = $new_row;
     }
 
-    function _endTable()
+    public function _endTable()
     {
         extract($this->params);
         if (!empty($caption)) {
@@ -673,14 +678,14 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
         for ($i = 0; $i < count($table_data); $i++) {
             extract($table_data[$i]);
             if (!is_array($rowparams)) {
-                $rowparams = array();
+                $rowparams = [];
             }
 
             if (!is_array($colparams)) {
-                $colparams = array();
+                $colparams = [];
             }
 
-            $rowlines = array();
+            $rowlines = [];
             if ($height > 1) {
                 for ($c = 0; $c < count($data); $c++) {
                     $rowlines[$c] = preg_split('/(\r?\n|\r)/', $data[$c]);
@@ -690,7 +695,7 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
                 }
             } else {
                 for ($c = 0; $c < count($data); $c++) {
-                    $rowlines[$c] = array($data[$c]);
+                    $rowlines[$c] = [$data[$c]];
                 }
             }
 
@@ -738,12 +743,12 @@ class PEAR_Frontend_CLI extends PEAR_Frontend
         }
     }
 
-    function _displayLine($text)
+    public function _displayLine($text)
     {
         print "$this->lp$text\n";
     }
 
-    function _display($text)
+    public function _display($text)
     {
         print $text;
     }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,19 +17,18 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class SystemNotification extends \Weline\Framework\Database\Model
 {
-
-    const fields_ID = 'notification_id';
-    const fields_title = 'title';
-    const fields_is_read = 'is_read';
-    const fields_content = 'content';
-    const fields_is_img = 'is_img';
-    const fields_is_icon = 'is_icon';
-    const fields_avatar = 'avatar';
+    public const fields_ID = 'notification_id';
+    public const fields_title = 'title';
+    public const fields_is_read = 'is_read';
+    public const fields_content = 'content';
+    public const fields_is_img = 'is_img';
+    public const fields_is_icon = 'is_icon';
+    public const fields_avatar = 'avatar';
 
     /**
      * @inheritDoc
      */
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
 //        $setup->dropTable();
 //        $setup->createTable()
@@ -72,7 +72,7 @@ class SystemNotification extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement upgrade() method.
     }
@@ -80,7 +80,7 @@ class SystemNotification extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         if (!$setup->tableExist()) {
             $setup->createTable()
@@ -122,37 +122,36 @@ class SystemNotification extends \Weline\Framework\Database\Model
         }
     }
 
-    function getTitle(): string
+    public function getTitle(): string
     {
         return $this->getData(self::fields_title)??'';
     }
 
-    function setTitle(string $title): static
+    public function setTitle(string $title): static
     {
         $this->setData(self::fields_title, $title);
         return $this;
     }
 
-    function getContent(): string
+    public function getContent(): string
     {
         return $this->getData(self::fields_content)??'';
     }
 
-    function setContent(string $content): static
+    public function setContent(string $content): static
     {
         $this->setData(self::fields_content, $content);
         return $this;
     }
 
-    function isRead()
+    public function isRead()
     {
         return $this->getData(self::fields_is_read);
     }
 
-    function setIsRead(bool $is_read = false): static
+    public function setIsRead(bool $is_read = false): static
     {
         $this->setData(self::fields_is_read, (int)$is_read);
         return $this;
     }
-
 }

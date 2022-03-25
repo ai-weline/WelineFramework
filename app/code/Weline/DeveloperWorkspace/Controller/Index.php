@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,13 +14,12 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller;
 
-
-
 use Weline\Framework\App\Controller\FrontendController;
 
 class Index extends FrontendController
 {
-    function index(){
+    public function index()
+    {
         return $this->fetch();
     }
 }

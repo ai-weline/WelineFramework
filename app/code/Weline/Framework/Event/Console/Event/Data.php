@@ -39,12 +39,12 @@ class Data implements \Weline\Framework\Console\CommandInterface
     {
         $eventList = $this->reader->read();
         array_shift($args);
-        if($args){
+        if ($args) {
             foreach ($eventList as $key => $item) {
                 $key_arr = explode('::', $key);
                 $module_name = array_shift($key_arr);
                 foreach ($args as $module) {
-                    if($module_name===$module){
+                    if ($module_name===$module) {
                         $this->printing->setup(__('事件监听文件：') . $key);
                         foreach ($item as $k => $i) {
                             $this->printing->printing(__('事件名：') . $k);
@@ -53,7 +53,7 @@ class Data implements \Weline\Framework\Console\CommandInterface
                     }
                 }
             }
-        }else{
+        } else {
             foreach ($eventList as $key => $item) {
                 $this->printing->setup(__('事件监听文件：') . $key);
                 foreach ($item as $k => $i) {

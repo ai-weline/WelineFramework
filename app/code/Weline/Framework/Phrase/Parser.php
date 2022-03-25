@@ -70,7 +70,7 @@ class Parser
         return $words;
     }
 
-    static function getI18nWords()
+    public static function getI18nWords()
     {
         // 仅加载一次翻译到对象self::$words
         if (empty(self::$words)) {

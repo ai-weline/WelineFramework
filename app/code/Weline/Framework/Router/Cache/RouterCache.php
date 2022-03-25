@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,8 +13,8 @@ namespace Weline\Framework\Router\Cache;
 
 class RouterCache extends \Weline\Framework\Cache\CacheFactory
 {
-    function __construct(string $identity = 'router_cache')
+    public function __construct(string $identity = 'router_cache')
     {
-        parent::__construct($identity,'路由缓存');
+        parent::__construct($identity, '路由缓存');
     }
 }

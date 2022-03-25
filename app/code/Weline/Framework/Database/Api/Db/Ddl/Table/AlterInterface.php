@@ -1,7 +1,9 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Weline\Framework\Database\Api\Db\Ddl\Table;
+
 /*
  * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。
  * 邮箱：aiweline@qq.com
@@ -13,7 +15,6 @@ use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 
 interface AlterInterface extends TableInterface
 {
-
     /**
      * @DESC          # 修改表
      *
@@ -26,7 +27,7 @@ interface AlterInterface extends TableInterface
      * @param string $comment 表注释
      * @return AlterInterface
      */
-    public function forTable(string $table_name, string $primary_key,string $comment = '',string $new_table_name=''): AlterInterface;
+    public function forTable(string $table_name, string $primary_key, string $comment = '', string $new_table_name=''): AlterInterface;
 
     /**
      * @DESC          # 修改字段 【$old_field和$field_name相同则是修改字段属性，不同则是修改字段名】
@@ -74,7 +75,7 @@ interface AlterInterface extends TableInterface
      * @param string $comment 字段注释
      * @return AlterInterface
      */
-    public function addColumn(string $field_name,string $after_column, string $type, ?int $length, string $options, string $comment): AlterInterface;
+    public function addColumn(string $field_name, string $after_column, string $type, ?int $length, string $options, string $comment): AlterInterface;
 
     /**
      * @DESC          # 添加索引
@@ -144,7 +145,7 @@ interface AlterInterface extends TableInterface
      * @param false $on_update
      * @return AlterInterface
      */
-    function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): AlterInterface;
+    public function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): AlterInterface;
 
     /**
      * @DESC          # 添加alter函数进行表更改
@@ -155,5 +156,5 @@ interface AlterInterface extends TableInterface
      * 参数区：
      * @return bool
      */
-    function alter():bool;
+    public function alter(): bool;
 }

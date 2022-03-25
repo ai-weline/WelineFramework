@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -19,17 +20,16 @@ class FormKey
     private string $_key = '';
     private array $_key_paths = [];
 
-    const key_name = 'form_key';
-    const form_key_paths = 'form_key_paths';
+    public const key_name = 'form_key';
+    public const form_key_paths = 'form_key_paths';
 
-    function __construct(
+    public function __construct(
         Session $session
-    )
-    {
+    ) {
         $this->_session = $session;
     }
 
-    function setKey(): static
+    public function setKey(): static
     {
         if (empty($this->_key)) {
             $this->_key = Text::rand_str();
@@ -38,12 +38,12 @@ class FormKey
         return $this;
     }
 
-    function __sleep()
+    public function __sleep()
     {
-        return array();
+        return [];
     }
 
-    function getKey(string $path): string
+    public function getKey(string $path): string
     {
         if (empty($this->_key)) {
             $this->setKey();
@@ -54,7 +54,7 @@ class FormKey
         return $this->_session->getData(self::key_name);
     }
 
-    function getHtml(string $path): string
+    public function getHtml(string $path): string
     {
         return '<input type="hidden" name="form_key" value="' . $this->getKey($path) . '"/>';
     }

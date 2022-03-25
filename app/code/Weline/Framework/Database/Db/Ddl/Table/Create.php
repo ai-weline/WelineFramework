@@ -31,7 +31,7 @@ class Create extends TableAbstract implements CreateInterface
             if (is_int($length)) {
                 if ($length <= 2) {
                     $type = 'smallint';
-                } else if (2 < $length && $length <= 11) {
+                } elseif (2 < $length && $length <= 11) {
                     $type = 'int';
                 } else {
                     $type = 'bigint';
@@ -102,7 +102,7 @@ class Create extends TableAbstract implements CreateInterface
     }
 
 
-    function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): CreateInterface
+    public function addForeignKey(string $FK_Name, string $FK_Field, string $references_table, string $references_field, bool $on_delete = false, bool $on_update = false): CreateInterface
     {
         $on_delete_str = $on_delete ? 'on delete cascade' : '';
         $on_update_str = $on_update ? 'on update cascade' : '';

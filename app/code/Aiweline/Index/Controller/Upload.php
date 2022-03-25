@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,7 +15,8 @@ use Weline\Framework\App\Controller\FrontendController;
 
 class Upload extends FrontendController
 {
-    function index(){
+    public function index()
+    {
         return $this->fetch();
     }
 }

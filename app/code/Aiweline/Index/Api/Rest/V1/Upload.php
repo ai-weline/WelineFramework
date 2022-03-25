@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,12 +13,13 @@ namespace Aiweline\Index\Api\Rest\V1;
 
 class Upload extends \Weline\Framework\App\Controller\FrontendRestController
 {
-    function postIndex(){
+    public function postIndex()
+    {
         $filename = $_FILES['file']['name'];
         $filetmp = $_FILES['file']['tmp_name'];
-        $dir_name = __DIR__.DIRECTORY_SEPARATOR;
-        $file_path = $dir_name.$filename;
-        if(!is_dir(__DIR__.DIRECTORY_SEPARATOR)){
+        $dir_name = __DIR__ . DIRECTORY_SEPARATOR;
+        $file_path = $dir_name . $filename;
+        if (!is_dir(__DIR__ . DIRECTORY_SEPARATOR)) {
             mkdir($dir_name);
         }
         move_uploaded_file($filetmp, $file_path);

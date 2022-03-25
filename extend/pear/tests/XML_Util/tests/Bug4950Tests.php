@@ -13,7 +13,7 @@ class Bug4950Tests extends AbstractUnitTests
     public function testCreateTagForBug4950()
     {
         $qname = "test";
-        $attributes = array();
+        $attributes = [];
         $content = "Content ]]></test> here!";
         $namespaceUrl = null;
         $expected = "<test><![CDATA[Content ]]]]><![CDATA[></test> here!]]></test>";

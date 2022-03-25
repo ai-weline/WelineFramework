@@ -11,7 +11,7 @@ namespace Weline\Framework\Router;
 
 interface DataInterface
 {
-    const area_BACKEND = 'backend';
+    public const area_BACKEND = 'backend';
 
-    const area_FROMTEND = 'frontend';
+    public const area_FROMTEND = 'frontend';
 }

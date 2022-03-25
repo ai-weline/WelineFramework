@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +-----------------------------------------------------------------------------+
 // | Copyright (c) 2003 Sérgio Gonçalves Carvalho                                |
@@ -31,14 +32,16 @@ require_once dirname(__FILE__) . '/helper.inc';
  */
 class BasicGraph extends PHPUnit_Framework_TestCase
 {
-    var $_graph = null;
+    public $_graph = null;
 
-    function test_create_graph() {
+    public function test_create_graph()
+    {
         $this->_graph = new Structures_Graph();
-        $this->assertTrue(is_a($this->_graph, 'Structures_Graph')); 
+        $this->assertTrue(is_a($this->_graph, 'Structures_Graph'));
     }
 
-    function test_add_node() {
+    public function test_add_node()
+    {
         $this->_graph = new Structures_Graph();
         $data = 1;
         $node = new Structures_Graph_Node($data);
@@ -49,7 +52,8 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $this->_graph->addNode($node);
     }
 
-    function test_connect_node() {
+    public function test_connect_node()
+    {
         $this->_graph = new Structures_Graph();
         $data = 1;
         $node1 = new Structures_Graph_Node($data);
@@ -62,7 +66,7 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $node =& $node[0];
         $node = $node->getNeighbours();
         $node =& $node[0];
-        /* 
+        /*
          ZE1 == and === operators fail on $node,$node2 because of the recursion introduced
          by the _graph field in the Node object. So, we'll use the stupid method for reference
          testing
@@ -73,7 +77,8 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $this->assertFalse($node2);
     }
 
-    function test_data_references() {
+    public function test_data_references()
+    {
         $this->_graph = new Structures_Graph();
         $data = 1;
         $node = new Structures_Graph_Node();
@@ -86,7 +91,8 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $this->assertEquals($data, $dataInNode);
     }
 
-    function test_metadata_references() {
+    public function test_metadata_references()
+    {
         $this->_graph = new Structures_Graph();
         $data = 1;
         $node = new Structures_Graph_Node();
@@ -95,8 +101,9 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $dataInNode =& $node->getMetadata('5');
         $this->assertEquals($data, $dataInNode);
     }
-   
-    function test_metadata_key_exists() {
+
+    public function test_metadata_key_exists()
+    {
         $this->_graph = new Structures_Graph();
         $data = 1;
         $node = new Structures_Graph_Node();
@@ -105,9 +112,10 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $this->assertFalse($node->metadataKeyExists('1'));
     }
 
-    function test_directed_degree() {
+    public function test_directed_degree()
+    {
         $this->_graph = new Structures_Graph(true);
-        $node = array();
+        $node = [];
         $node[] = new Structures_Graph_Node();
         $node[] = new Structures_Graph_Node();
         $node[] = new Structures_Graph_Node();
@@ -136,9 +144,10 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $this->assertEquals(0, $node[2]->outDegree(), 'outDegree test failed for node 2 with 2 arcs');
     }
 
-    function test_undirected_degree() {
+    public function test_undirected_degree()
+    {
         $this->_graph = new Structures_Graph(false);
-        $node = array();
+        $node = [];
         $node[] = new Structures_Graph_Node();
         $node[] = new Structures_Graph_Node();
         $node[] = new Structures_Graph_Node();
@@ -167,4 +176,3 @@ class BasicGraph extends PHPUnit_Framework_TestCase
         $this->assertEquals(1, $node[2]->outDegree(), 'outDegree test failed for node 2 with 2 arcs');
     }
 }
-?>

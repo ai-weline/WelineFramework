@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,7 @@ namespace Weline\Framework\Module;
 
 interface ModuleInterface
 {
-    function getName();
-    function getPath();
-    function getVersion();
+    public function getName();
+    public function getPath();
+    public function getVersion();
 }

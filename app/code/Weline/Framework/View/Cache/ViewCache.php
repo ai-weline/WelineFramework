@@ -13,6 +13,6 @@ class ViewCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_view')
     {
-        parent::__construct($identity,'视图缓存');
+        parent::__construct($identity, '视图缓存');
     }
 }

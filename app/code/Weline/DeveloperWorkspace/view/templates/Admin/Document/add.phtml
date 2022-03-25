@@ -50,21 +50,25 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                     <div class='col-xl-12'>
                         <div class='card'>
                             <div class='card-body'>
-                                <h4 class='card-title'>管理开发文档</h4>
-                                <p class='card-title-desc'>开发文档编辑器 有新的开发文档时可以随时编辑 </p>
-                                <form class='needs-validation' method="post" action="@admin-url(dev/tool/admin/document/post)" novalidate>
+                                <h4 class='card-title'>
+                                    <lang>管理开发文档</lang>
+                                </h4>
+                                <p class='card-title-desc'>
+                                    <lang>开发文档编辑器 有新的开发文档时可以随时编辑</lang>
+                                </p>
+                                <form class='needs-validation' method="post"
+                                      action="@admin-url(dev/tool/admin/document/post)" novalidate>
                                     <div class="row col">
                                         <div class="col-6 pull-left">
 
                                         </div>
                                         <div class='col-6 pull-right'>
-                                            <button type='button'
+                                            <button type='submit'
                                                     class='btn btn-primary waves-effect waves-light pull-right'>
                                                 <lang>保存</lang>
                                             </button>
                                         </div>
                                     </div>
-
                                     <div class='row'>
                                         <div class='col-md-6'>
                                             <div class='mb-3 position-relative'>
@@ -135,6 +139,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                         <lang>保存</lang>
                                     </button>
                                 </form>
+                                <php>$a =$this->getData('a');</php>
+                                @if{$a === 1=>
+                                <li><var>$a</var></li>
+                                |$a===2=>
+                                <li><var>$a</var></li>
+                                }
                             </div>
                         </div>
                         <!-- end card -->
@@ -187,14 +197,14 @@ File: Form editor Js File
             tinymce.init({
                 selector: '#elm1',
                 language: 'zh_CN',
-                language_url : '@static(Weline_Admin::assets/libs/tinymce/langs/zh_CN.js)',
+                language_url: '@static(Weline_Admin::assets/libs/tinymce/langs/zh_CN.js)',
                 height: 300,
                 auto_focus: true,
                 branding: false, // 隐藏右下角的驱动字样
                 contextmenu: 'bold copy ',
                 draggable_modal: true,
                 skin: 'oxide-dark',
-                theme:'silver',
+                theme: 'silver',
                 automatic_uploads: false,
                 images_upload_url: '@admin-url(dev/tool/admin/document/upload)',
                 plugins: [

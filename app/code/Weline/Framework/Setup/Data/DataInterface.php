@@ -11,23 +11,23 @@ namespace Weline\Framework\Setup\Data;
 
 interface DataInterface
 {
-    const dir = 'Setup';
+    public const dir = 'Setup';
 
-    const type_INSTALL = 'Install';
+    public const type_INSTALL = 'Install';
 
-    const type_UPGRADE = 'Upgrade';
+    public const type_UPGRADE = 'Upgrade';
 
-    const type_REMOVE = 'Remove';
+    public const type_REMOVE = 'Remove';
 
-    const upgrade_FILES = [
+    public const upgrade_FILES = [
         self::type_UPGRADE,
     ];
 
-    const install_FILES = [
+    public const install_FILES = [
         self::type_INSTALL,
     ];
 
-    const remove_FILES = [
+    public const remove_FILES = [
         self::type_REMOVE,
     ];
 }

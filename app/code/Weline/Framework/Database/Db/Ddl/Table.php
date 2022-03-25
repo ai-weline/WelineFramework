@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,13 +18,12 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Table implements Db\TableInterface
 {
-
-    function createTable(): \Weline\Framework\Database\Api\Db\Ddl\Table\CreateInterface
+    public function createTable(): \Weline\Framework\Database\Api\Db\Ddl\Table\CreateInterface
     {
         return ObjectManager::getInstance(Create::class);
     }
 
-    function alterTable(): \Weline\Framework\Database\Api\Db\Ddl\Table\AlterInterface
+    public function alterTable(): \Weline\Framework\Database\Api\Db\Ddl\Table\AlterInterface
     {
         return ObjectManager::getInstance(Alter::class);
     }

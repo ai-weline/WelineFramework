@@ -28,8 +28,7 @@ class Status implements \Weline\Framework\Console\CommandInterface
     public function __construct(
         Scanner  $scanner,
         Printing $printing
-    )
-    {
+    ) {
         $this->scanner  = $scanner;
         $this->printing = $printing;
     }
@@ -71,7 +70,7 @@ class Status implements \Weline\Framework\Console\CommandInterface
                             }
                             # 配置缓存
                             $cache_config['status'] = $set_data;
-                            Env::getInstance()->setData("cache",  $cache_config);
+                            Env::getInstance()->setData("cache", $cache_config);
                             $this->printAll();
                             $this->printing->error(__('不存在的缓存标识：'));
                             $this->printing->printList($no_has_data);
@@ -81,7 +80,7 @@ class Status implements \Weline\Framework\Console\CommandInterface
                                 $set_data[$identify] = 1;
                             }
                             $cache_config['status'] = $set_data;
-                            Env::getInstance()->setData("cache",$cache_config);
+                            Env::getInstance()->setData("cache", $cache_config);
                             $this->printAll();
                         }
 
@@ -94,11 +93,9 @@ class Status implements \Weline\Framework\Console\CommandInterface
                 }
             }
         }
-
-
     }
 
-    function printAll()
+    public function printAll()
     {
         $this->printing->warning(__('模组缓存'));
         $caches = $this->scanner->scanAppCaches();

@@ -11,7 +11,7 @@ namespace Weline\Framework\Env;
 
 interface EnvInterface
 {
-    public function setRouter(string $router_identity):string;
+    public function setRouter(string $router_identity): string;
 
-    public function getRouter():string;
+    public function getRouter(): string;
 }

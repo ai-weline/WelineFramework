@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,14 +18,14 @@ use Weline\Framework\Setup\Db\ModelSetup;
 class Catalog extends \Weline\Framework\Database\Model
 {
 //    const table       = 'dev_document_catalog';
-    const fields_ID   = 'id';
-    const fields_NAME = 'name';
-    const fields_PID  = 'pid';
+    public const fields_ID   = 'id';
+    public const fields_NAME = 'name';
+    public const fields_PID  = 'pid';
 
     /**
      * @inheritDoc
      */
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
         $this->install($setup, $context);
     }
@@ -32,7 +33,7 @@ class Catalog extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         # 更新提示
         $setup->getPrinting()->setup($context->getVersion());
@@ -41,7 +42,7 @@ class Catalog extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
         if (!$setup->tableExist()) {
@@ -53,25 +54,24 @@ class Catalog extends \Weline\Framework\Database\Model
         } else {
             $setup->getPrinting()->warning('跳过安装数据表...', $setup->getTable());
         }
-
     }
 
-    function getName()
+    public function getName()
     {
         return $this->getData(self::fields_NAME);
     }
 
-    function setName(string $name): Catalog
+    public function setName(string $name): Catalog
     {
         return $this->setData(self::fields_NAME, $name);
     }
 
-    function getPid()
+    public function getPid()
     {
         return $this->getData(self::fields_PID);
     }
 
-    function setPid(string|int $pid): Catalog
+    public function setPid(string|int $pid): Catalog
     {
         return $this->setData(self::fields_PID, $pid);
     }

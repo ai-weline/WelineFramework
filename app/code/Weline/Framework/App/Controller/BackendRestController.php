@@ -16,8 +16,7 @@ use Weline\Framework\Manager\ObjectManager;
 
 class BackendRestController extends AbstractRestController
 {
-
-    function __init()
+    public function __init()
     {
         parent::__init();
         $this->getSession(BackendApiSession::class);

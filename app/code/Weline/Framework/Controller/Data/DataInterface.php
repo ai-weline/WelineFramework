@@ -11,13 +11,13 @@ namespace Weline\Framework\Controller\Data;
 
 interface DataInterface
 {
-    const dir = 'Controller';
+    public const dir = 'Controller';
 
-    const type_pc_FRONTEND = 'FrontendController';
+    public const type_pc_FRONTEND = 'FrontendController';
 
-    const type_pc_BACKEND = 'BackendController';
+    public const type_pc_BACKEND = 'BackendController';
 
-    const type_api_REST_FRONTEND = 'FrontendRestController';
+    public const type_api_REST_FRONTEND = 'FrontendRestController';
 
-    const type_api_BACKEND = 'BackendRestController';
+    public const type_api_BACKEND = 'BackendRestController';
 }

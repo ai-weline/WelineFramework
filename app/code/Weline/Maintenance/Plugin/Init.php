@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,17 +14,15 @@ declare(strict_types=1);
 
 namespace Weline\Maintenance\Plugin;
 
-
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 
 class Init
 {
-    function beforeStart(
+    public function beforeStart(
         \Weline\Framework\Router\Core $router
-    )
-    {
-        if(Env::getInstance()->getConfig('maintenance',false)){
+    ) {
+        if (Env::getInstance()->getConfig('maintenance', false)) {
             throw new Exception(__('程序维护中...'));
         }
     }

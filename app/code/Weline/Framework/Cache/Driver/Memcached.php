@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -23,7 +24,7 @@ class Memcached extends CacheDriverAbstract
     {
     }
 
-    function __init()
+    public function __init()
     {
         if (empty($config['options'])) {
             $config['options'] = [];
@@ -63,7 +64,7 @@ class Memcached extends CacheDriverAbstract
     }
 
 
-    function setIdentity(string $identity)
+    public function setIdentity(string $identity)
     {
         $this->identity = $identity;
     }
@@ -104,28 +105,36 @@ class Memcached extends CacheDriverAbstract
 
     public function set($key, $value, int $duration = 1800): mixed
     {
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
         $this->connection->getMemcached()->set($key, $value, $duration);
         return $this;
     }
 
     public function setMulti($items, int $duration = 1800, $udf_flag = ''): mixed
     {
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
         $this->connection->getMemcached()->setMulti($items, $duration, $udf_flag);
         return $this;
     }
 
     public function add($key, $value, int $duration = 1800): mixed
     {
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
         $this->connection->getMemcached()->add($key, $value, $duration);
         return $this;
     }
 
     public function addMulti($items, int $duration = 1800): mixed
     {
-        if (!$this->status) return false;
+        if (!$this->status) {
+            return false;
+        }
         $this->connection->getMemcached()->setMulti($items, $duration);
         return $this;
     }

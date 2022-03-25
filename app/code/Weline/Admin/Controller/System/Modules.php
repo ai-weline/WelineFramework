@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,7 @@ use Weline\SystemConfig\Model\SystemConfig;
 
 class Modules extends BaseController
 {
-    function getIndex()
+    public function getIndex()
     {
         $this->assign('modules', Env::getInstance()->getModuleList());
         return $this->fetch();

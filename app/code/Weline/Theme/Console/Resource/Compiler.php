@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -19,11 +20,9 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
 {
     private Printing $printing;
 
-    function __construct(
+    public function __construct(
         Printing $printing
-    )
-    {
-
+    ) {
         $this->printing = $printing;
     }
 
@@ -63,7 +62,7 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
         ObjectManager::getInstance(Clear::class)->execute();
     }
 
-    function getTypes(bool $to_string = false)
+    public function getTypes(bool $to_string = false)
     {
         $data = [
             'less' => __('编译less静态资源！'),

@@ -15,7 +15,7 @@ use Weline\Framework\Setup\InstallInterface;
 
 class Install implements InstallInterface
 {
-    const table_DEMO = 'aiweline_hello_world';
+    public const table_DEMO = 'aiweline_hello_world';
 
     /**
      * @DESC         |安装方法

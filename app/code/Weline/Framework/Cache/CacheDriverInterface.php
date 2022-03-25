@@ -13,5 +13,5 @@ interface CacheDriverInterface extends CacheInterface
 {
     public function __construct(string $identity, array $config, $tip = '', bool $status=true);
 
-    function setIdentity(string $identity);
+    public function setIdentity(string $identity);
 }

@@ -20,8 +20,8 @@
  */
 //the space is needed for windows include paths with trailing backslash
 // http://pear.php.net/bugs/bug.php?id=19482
-if ('E:\WelineFramework\extend\pear\\pear ' != '@'.'include_path'.'@ ') {
-    ini_set('include_path', trim('E:\WelineFramework\extend\pear\\pear '). PATH_SEPARATOR .  get_include_path());
+if ('E:\WelineFramework\extend\pear\\pear ' != '@' . 'include_path' . '@ ') {
+    ini_set('include_path', trim('E:\WelineFramework\extend\pear\\pear ') . PATH_SEPARATOR . get_include_path());
     $raw = false;
 } else {
     // this is a raw, uninstalled pear, either a cvs checkout, or php distro
@@ -39,5 +39,3 @@ require_once 'pearcmd.php';
  * End:
  */
 // vim600:syn=php
-
-?>

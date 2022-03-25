@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,12 +16,11 @@ use Weline\Framework\UnitTest\TestCore;
 
 class ScanTest extends TestCore
 {
-
     public function testScanDirTree()
     {
         /**@var Scanner $scanner*/
         $scanner = ObjectManager::getInstance(Scanner::class);
         p($scanner->scan('E:\WelineFramework\app\code\/Weline/Admin/'));
-        p($scanner->scanDirTree('E:\WelineFramework\app\code\/Weline/Admin/',12));
+        p($scanner->scanDirTree('E:\WelineFramework\app\code\/Weline/Admin/', 12));
     }
 }

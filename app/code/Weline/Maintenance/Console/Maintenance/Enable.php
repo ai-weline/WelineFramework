@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,13 +14,11 @@ declare(strict_types=1);
 
 namespace Weline\Maintenance\Console\Maintenance;
 
-
 use Weline\Framework\App\Env;
 use Weline\Framework\Output\Cli\Printing;
 
 class Enable implements \Weline\Framework\Console\CommandInterface
 {
-
     /**
      * @var Printing
      */
@@ -29,10 +28,9 @@ class Enable implements \Weline\Framework\Console\CommandInterface
      * Enable 初始函数...
      * @param Printing $printing
      */
-    function __construct(
+    public function __construct(
         Printing $printing
-    )
-    {
+    ) {
         $this->printing = $printing;
     }
 

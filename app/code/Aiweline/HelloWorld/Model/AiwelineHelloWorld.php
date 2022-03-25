@@ -15,17 +15,17 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class AiwelineHelloWorld extends Model
 {
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement setup() method.
     }
 
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement upgrade() method.
     }
 
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement install() method.
     }

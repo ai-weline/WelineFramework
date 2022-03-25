@@ -23,5 +23,6 @@
  * @link       http://pear.php.net/package/PEAR
  * @since      Class available since Release 1.4.0a1
  */
-class PEAR_Installer_Role_Ext extends PEAR_Installer_Role_Common {}
-?>
+class PEAR_Installer_Role_Ext extends PEAR_Installer_Role_Common
+{
+}

@@ -8,10 +8,10 @@ class SplitQualifiedNameTests extends AbstractUnitTests
     public function testSplitQualifiedNameWithoutNamespace()
     {
         $original = "xslt:stylesheet";
-        $expected = array(
+        $expected = [
             'namespace' => 'xslt',
             'localPart' => 'stylesheet',
-        );
+        ];
         $this->assertEquals($expected, XML_Util::splitQualifiedName($original));
     }
 
@@ -22,10 +22,10 @@ class SplitQualifiedNameTests extends AbstractUnitTests
     {
         $original = "stylesheet";
         $namespace = "myNs";
-        $expected = array(
+        $expected = [
             'namespace' => 'myNs',
             'localPart' => 'stylesheet',
-        );
+        ];
         $this->assertEquals($expected, XML_Util::splitQualifiedName($original, $namespace));
     }
 }

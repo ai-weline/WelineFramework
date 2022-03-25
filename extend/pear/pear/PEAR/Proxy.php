@@ -2,11 +2,11 @@
 /**
  * PEAR_Proxy
  *
- * HTTP Proxy handling 
+ * HTTP Proxy handling
  *
  * @category   pear
  * @package    PEAR
- * @author     Nico Boehr 
+ * @author     Nico Boehr
  * @copyright  1997-2009 The Authors
  * @license    http://opensource.org/licenses/bsd-license.php New BSD License
  * @link       http://pear.php.net/package/PEAR
@@ -14,30 +14,30 @@
 
 class PEAR_Proxy
 {
-    var $config = null;
+    public $config = null;
 
     /**
      * @access private
      */
-    var $proxy_host;
+    public $proxy_host;
     /**
      * @access private
      */
-    var $proxy_port;
+    public $proxy_port;
     /**
      * @access private
      */
-    var $proxy_user;
+    public $proxy_user;
     /**
      * @access private
      */
-    var $proxy_pass;
+    public $proxy_pass;
     /**
      * @access private
      */
-    var $proxy_schema;
+    public $proxy_schema;
 
-    function __construct($config = null)
+    public function __construct($config = null)
     {
         $this->config = $config;
         $this->_parseProxyInfo();
@@ -46,7 +46,7 @@ class PEAR_Proxy
     /**
      * @access private
      */
-    function _parseProxyInfo()
+    public function _parseProxyInfo()
     {
         $this->proxy_host = $this->proxy_port = $this->proxy_user = $this->proxy_pass = '';
         if ($this->config->get('http_proxy')&&
@@ -64,7 +64,7 @@ class PEAR_Proxy
     /**
      * @access private
      */
-    function _httpConnect($fp, $host, $port)
+    public function _httpConnect($fp, $host, $port)
     {
         fwrite($fp, "CONNECT $host:$port HTTP/1.1\r\n");
         fwrite($fp, "Host: $host:$port\r\n");
@@ -101,7 +101,7 @@ class PEAR_Proxy
         // stream_socket_enable_crypto()
         // see
         // <http://php.net/manual/en/function.stream-socket-enable-crypto.php>
-        stream_set_blocking ($fp, true);
+        stream_set_blocking($fp, true);
         $crypto_res = stream_socket_enable_crypto($fp, true, $crypto_method);
         if (!$crypto_res) {
             return PEAR::raiseError("Could not establish SSL connection through proxy $proxy_host:$proxy_port: $crypto_res");
@@ -114,10 +114,10 @@ class PEAR_Proxy
      * get the authorization information for the proxy, encoded to be
      * passed in the Proxy-Authentication HTTP header.
      * @return null|string the encoded authentication information if a
-     *                     proxy and authentication is configured, null 
+     *                     proxy and authentication is configured, null
      *                     otherwise.
      */
-    function getProxyAuth()
+    public function getProxyAuth()
     {
         if ($this->isProxyConfigured() && $this->proxy_user != '') {
             return base64_encode($this->proxy_user . ':' . $this->proxy_pass);
@@ -125,7 +125,7 @@ class PEAR_Proxy
         return null;
     }
 
-    function getProxyUser()
+    public function getProxyUser()
     {
         return $this->proxy_user;
     }
@@ -137,7 +137,7 @@ class PEAR_Proxy
      *                 otherwise.
      * @access public
      */
-    function isProxyConfigured()
+    public function isProxyConfigured()
     {
         return $this->proxy_host != '';
     }
@@ -155,12 +155,15 @@ class PEAR_Proxy
      *                        using TLS.
      * @access public
      */
-    function openSocket($host, $port, $secure = false)
+    public function openSocket($host, $port, $secure = false)
     {
         if ($this->isProxyConfigured()) {
             $fp = @fsockopen(
-                $this->proxy_host, $this->proxy_port, 
-                $errno, $errstr, 15
+                $this->proxy_host,
+                $this->proxy_port,
+                $errno,
+                $errstr,
+                15
             );
 
             if (!$fp) {

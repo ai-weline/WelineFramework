@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -20,20 +21,19 @@ use Weline\Framework\View\Template;
 
 class AdminUser extends \Weline\Framework\Database\Model
 {
-
-    const fields_ID = 'user_id';
-    const fields_username = 'username';
-    const fields_password = 'password';
-    const fields_avatar = 'avatar';
-    const fields_login_ip = 'login_ip';
-    const fields_attempt_ip = 'attempt_ip';
-    const fields_attempt_times = 'attempt_times';
-    const fields_sess_id = 'sess_id';
+    public const fields_ID = 'user_id';
+    public const fields_username = 'username';
+    public const fields_password = 'password';
+    public const fields_avatar = 'avatar';
+    public const fields_login_ip = 'login_ip';
+    public const fields_attempt_ip = 'attempt_ip';
+    public const fields_attempt_times = 'attempt_times';
+    public const fields_sess_id = 'sess_id';
 
     /**
      * @inheritDoc
      */
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
 //        $setup->dropTable();
 //        $setup->createTable('管理员表')
@@ -56,7 +56,7 @@ class AdminUser extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement upgrade() method.
     }
@@ -64,7 +64,7 @@ class AdminUser extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         if (!$setup->tableExist()) {
             $setup->createTable('管理员表')
@@ -85,81 +85,81 @@ class AdminUser extends \Weline\Framework\Database\Model
         }
     }
 
-    function getAttemptTimes()
+    public function getAttemptTimes()
     {
         return intval($this->getData(self::fields_attempt_times));
     }
 
-    function addAttemptTimes(): static
+    public function addAttemptTimes(): static
     {
         $this->setData(self::fields_attempt_times, intval($this->getData(self::fields_attempt_times)) + 1);
         return $this;
     }
 
-    function getAttemptIp()
+    public function getAttemptIp()
     {
         return $this->getData(self::fields_attempt_ip);
     }
 
-    function setAttemptIp($ip)
+    public function setAttemptIp($ip)
     {
         return $this->setData(self::fields_attempt_ip, $ip);
     }
 
-    function resetAttemptTimes(): static
+    public function resetAttemptTimes(): static
     {
         $this->setData(self::fields_attempt_times, 0);
         $this->save();
         return $this;
     }
 
-    function getUsername()
+    public function getUsername()
     {
         return $this->getData('username');
     }
 
-    function setUsername(string $username)
+    public function setUsername(string $username)
     {
         return $this->setData('username', $username);
     }
 
-    function getAvatar()
+    public function getAvatar()
     {
         return $this->getData('avatar');
     }
 
-    function setAvatar(string $avatar)
+    public function setAvatar(string $avatar)
     {
         return $this->setData('avatar', $avatar);
     }
 
-    function getPassword()
+    public function getPassword()
     {
         return $this->getData('password');
     }
 
-    function setPassword(string $password)
+    public function setPassword(string $password)
     {
         return $this->setData('password', password_hash($password, PASSWORD_DEFAULT));
     }
 
 
-    function getSessionId()
+    public function getSessionId()
     {
         return $this->getData(self::fields_sess_id);
     }
 
-    function setSessionId(string $sess_id): AdminUser
+    public function setSessionId(string $sess_id): AdminUser
     {
         return $this->setData(self::fields_sess_id, $sess_id);
     }
 
-    function getLoginIp()
+    public function getLoginIp()
     {
         return $this->getData(self::fields_login_ip);
     }
 
-    function setLoginIp(string $ip): AdminUser
+    public function setLoginIp(string $ip): AdminUser
     {
         return $this->setData(self::fields_login_ip, $ip);
     }

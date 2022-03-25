@@ -49,13 +49,14 @@ class System
             if (is_int(strpos($linux_command, 'xcopy'))) {
                 $linux_command = str_replace('/S/Q', '/S/Q/Y', $linux_command);
             }
-
         }
         if ($preview) {
             return $linux_command;
         }
         # 检测函数是否解禁
-        if (!function_exists('exec')) throw new Exception(__(' exec() 函数需要解禁: 请到 php.ini 中找到 disable_function 删除 exec '));
+        if (!function_exists('exec')) {
+            throw new Exception(__(' exec() 函数需要解禁: 请到 php.ini 中找到 disable_function 删除 exec '));
+        }
 
         exec($linux_command, $output, $return_var);
 

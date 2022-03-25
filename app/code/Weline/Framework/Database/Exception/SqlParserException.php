@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,8 +11,6 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\Exception;
 
-
 class SqlParserException extends \Weline\Framework\App\Exception
 {
-
 }

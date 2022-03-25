@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,7 +14,6 @@ declare(strict_types=1);
 
 namespace Aiweline\HelloWorld\Console\Command;
 
-
 use Weline\Framework\Output\Cli\Printing;
 
 class HelloWorld implements \Weline\Framework\Console\CommandInterface
@@ -23,10 +23,9 @@ class HelloWorld implements \Weline\Framework\Console\CommandInterface
      */
     private Printing $printing;
 
-    function __construct(
+    public function __construct(
         Printing $printing
-    )
-    {
+    ) {
         $this->printing = $printing;
     }
 

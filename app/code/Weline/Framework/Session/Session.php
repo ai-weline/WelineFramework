@@ -16,9 +16,9 @@ use Weline\Framework\Session\Driver\SessionDriverHandlerInterface;
 
 class Session implements SessionInterface
 {
-    const login_KEY        = 'WL_USER';
-    const login_KEY_ID     = 'WL_USER_ID';
-    const login_USER_MODEL = 'WL_USER_MODEL';
+    public const login_KEY        = 'WL_USER';
+    public const login_KEY_ID     = 'WL_USER_ID';
+    public const login_USER_MODEL = 'WL_USER_MODEL';
 
     private ?AbstractModel $user = null;
 
@@ -32,7 +32,7 @@ class Session implements SessionInterface
     }
 
 
-    function __init()
+    public function __init()
     {
         if (isset($_SERVER['REQUEST_URI']) && !isset($this->session)) {
             $type          = 'frontend';
@@ -52,7 +52,7 @@ class Session implements SessionInterface
         }
     }
 
-    function start(string $session_id = null)
+    public function start(string $session_id = null)
     {
         if ($session_id) {
             session_id($session_id);
@@ -75,7 +75,7 @@ class Session implements SessionInterface
      *
      * @return SessionDriverHandlerInterface
      */
-    function setData(string $name, mixed $value): SessionDriverHandlerInterface
+    public function setData(string $name, mixed $value): SessionDriverHandlerInterface
     {
         $this->session->set($name, $value);
         return $this->session;
@@ -93,7 +93,7 @@ class Session implements SessionInterface
      *
      * @return string
      */
-    function getData(string $name): mixed
+    public function getData(string $name): mixed
     {
         return $this->session->get($name);
     }
@@ -110,7 +110,7 @@ class Session implements SessionInterface
      *
      * @return string
      */
-    function addData(string $name, string $value): string
+    public function addData(string $name, string $value): string
     {
         return $this->session->set($name, $this->session->get($name) . $value);
     }
@@ -127,7 +127,7 @@ class Session implements SessionInterface
         return $this->session;
     }
 
-    function getSessionId(): string
+    public function getSessionId(): string
     {
         return $this->session->getSessionId();
     }
@@ -155,7 +155,9 @@ class Session implements SessionInterface
 
     public function getLoginUser(string $model): ?AbstractModel
     {
-        if ($this->user) return $this->user;
+        if ($this->user) {
+            return $this->user;
+        }
         $this->user = ObjectManager::getInstance($model)->load($this->session->get(self::login_KEY_ID));
         return $this->user;
     }
@@ -175,43 +177,43 @@ class Session implements SessionInterface
         return $this->session->delete(self::login_KEY);
     }
 
-    function getType(): string
+    public function getType(): string
     {
         return $this->session->get('type');
     }
 
-    function setType(string $type): static
+    public function setType(string $type): static
     {
         $this->session->set('type', $type);
         return $this;
     }
 
-    function isBackend(): bool
+    public function isBackend(): bool
     {
         return $this->getType() === 'backend';
     }
 
-    function isApi(): bool
+    public function isApi(): bool
     {
         return $this->getType() === 'api';
     }
 
-    function isApiBackend(): bool
+    public function isApiBackend(): bool
     {
         return $this->getType() === 'api_backend';
     }
 
-    function isFrontend(): bool
+    public function isFrontend(): bool
     {
         return $this->getType() === 'frontend';
     }
 
-    function destroy()
+    public function destroy()
     {
         return $this->session->destroy();
     }
 
-    function delete(string $name)
+    public function delete(string $name)
     {
         if (isset($_SESSION[$name])) {
             unset($_SESSION[$name]);

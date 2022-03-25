@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,12 +19,11 @@ use Weline\Framework\View\Template;
 
 class TemplateTest extends TestCore
 {
-
     private Template $template;
-    function setUp(): void
+    public function setUp(): void
     {
         $indexController = ObjectManager::getInstance(Index::class);
-       $this->template = ObjectManager::getInstance(Template::class,[$indexController]);
+        $this->template = ObjectManager::getInstance(Template::class, [$indexController]);
     }
 
     public function testfetchTagSource()

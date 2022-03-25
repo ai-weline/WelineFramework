@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -24,14 +25,14 @@ class Module extends DataObject
     private string $namespace_path;
     private string $path;
 
-    const name = 'name';
-    const status = 'status';
-    const version = 'version';
-    const router = 'router';
-    const description = 'description';
-    const base_path = 'base_path';
-    const namespace_path = 'namespace_path';
-    const path = 'path';
+    public const name = 'name';
+    public const status = 'status';
+    public const version = 'version';
+    public const router = 'router';
+    public const description = 'description';
+    public const base_path = 'base_path';
+    public const namespace_path = 'namespace_path';
+    public const path = 'path';
 
     /**
      * @return bool
@@ -190,7 +191,7 @@ class Module extends DataObject
         return $this;
     }
 
-    #[Pure] function getModuleFile(string $filename): string
+    #[Pure] public function getModuleFile(string $filename): string
     {
         return BP . $this->getBasePath() . $filename;
     }

@@ -11,7 +11,7 @@ namespace Weline\Framework\Database\Setup;
 
 interface DataInterface
 {
-    const db_keys = [
+    public const db_keys = [
         'hostname' => null,
         'database' => null,
         'username' => null,

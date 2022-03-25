@@ -30,17 +30,17 @@ require_once 'PEAR/PackageFile/v2.php';
  */
 class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
 {
-    var $_config;
-    var $_logger;
-    var $_registry;
+    public $_config;
+    public $_logger;
+    public $_registry;
 
-    function setConfig(&$c)
+    public function setConfig(&$c)
     {
         $this->_config = &$c;
         $this->_registry = &$c->getRegistry();
     }
 
-    function setLogger(&$l)
+    public function setLogger(&$l)
     {
         $this->_logger = &$l;
     }
@@ -51,7 +51,7 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
      * @return string
      * @access private
      */
-    function _unIndent($str)
+    public function _unIndent($str)
     {
         // remove leading newlines
         $str = preg_replace('/^[\r\n]+/', '', $str);
@@ -76,7 +76,7 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
      * @param string $data
      * @param string $element element name
      */
-    function postProcess($data, $element)
+    public function postProcess($data, $element)
     {
         if ($element == 'notes') {
             return trim($this->_unIndent($data));
@@ -92,13 +92,13 @@ class PEAR_PackageFile_Parser_v2 extends PEAR_XMLParser
      *               a subclass
      * @return PEAR_PackageFile_v2
      */
-    function parse($data, $file = null, $archive = false, $class = 'PEAR_PackageFile_v2')
+    public function parse($data, $file = null, $archive = false, $class = 'PEAR_PackageFile_v2')
     {
         if (PEAR::isError($err = parent::parse($data))) {
             return $err;
         }
 
-        $ret = new $class;
+        $ret = new $class();
         $ret->encoding = $this->encoding;
         $ret->setConfig($this->_config);
         if (isset($this->_logger)) {

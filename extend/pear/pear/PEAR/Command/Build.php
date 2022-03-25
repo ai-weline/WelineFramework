@@ -36,34 +36,34 @@ require_once 'PEAR/Command/Common.php';
  */
 class PEAR_Command_Build extends PEAR_Command_Common
 {
-    var $commands = array(
-        'build' => array(
+    public $commands = [
+        'build' => [
             'summary' => 'Build an Extension From C Source',
             'function' => 'doBuild',
             'shortcut' => 'b',
-            'options' => array(
-                'configureoptions' => array(
+            'options' => [
+                'configureoptions' => [
                     'shortopt' => 'D',
                     'arg' => 'OPTION1=VALUE[ OPTION2=VALUE]',
                     'doc' => 'space-delimited list of configure options',
-                    ),
-                ),
+                    ],
+                ],
             'doc' => '[package.xml]
 Builds one or more extensions contained in a package.'
-            ),
-        );
+            ],
+        ];
 
     /**
      * PEAR_Command_Build constructor.
      *
      * @access public
      */
-    function __construct(&$ui, &$config)
+    public function __construct(&$ui, &$config)
     {
         parent::__construct($ui, $config);
     }
 
-    function doBuild($command, $options, $params)
+    public function doBuild($command, $options, $params)
     {
         require_once 'PEAR/Builder.php';
         if (sizeof($params) < 1) {
@@ -73,7 +73,7 @@ Builds one or more extensions contained in a package.'
         $configureoptions = empty($options['configureoptions']) ? '' : $options['configureoptions'];
         $builder = new PEAR_Builder($configureoptions, $this->ui);
         $this->debug = $this->config->get('verbose');
-        $err = $builder->build($params[0], array(&$this, 'buildCallback'));
+        $err = $builder->build($params[0], [&$this, 'buildCallback']);
         if (PEAR::isError($err)) {
             return $err;
         }
@@ -81,7 +81,7 @@ Builds one or more extensions contained in a package.'
         return true;
     }
 
-    function buildCallback($what, $data)
+    public function buildCallback($what, $data)
     {
         if (($what == 'cmdoutput' && $this->debug > 1) ||
             ($what == 'output' && $this->debug > 0)) {

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -24,19 +25,19 @@ class Topbar extends \Weline\Framework\View\Block
     private AdminSession $session;
     private ?AdminUser $user = null;
 
-    function __construct(Config $config, AdminSession $session)
+    public function __construct(Config $config, AdminSession $session)
     {
         $this->config  = $config;
         $this->session = $session;
         parent::__construct();
     }
 
-    function __init()
+    public function __init()
     {
         $this->getUser();
     }
 
-    function getAvatar()
+    public function getAvatar()
     {
         /**@var AdminUser $user */
         $user   = $this->session->getLoginUser();
@@ -52,7 +53,7 @@ class Topbar extends \Weline\Framework\View\Block
         return $avatar;
     }
 
-    function getUser(): AdminUser|AbstractModel
+    public function getUser(): AdminUser|AbstractModel
     {
         if (empty($this->user)) {
             $this->user = $this->session->getLoginUser();

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,7 +16,7 @@ use Weline\Framework\UnitTest\TestCore;
 
 class MenuTest extends TestCore
 {
-    function testGetMenuTree()
+    public function testGetMenuTree()
     {
         /**@var Menu $menu */
         $menu = ObjectManager::getInstance(Menu::class);

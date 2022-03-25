@@ -28,34 +28,33 @@ require_once 'PEAR/ErrorStack.php';
  */
 class PEAR_PackageFile_v2
 {
-
     /**
      * Parsed package information
      * @var array
      * @access private
      */
-    var $_packageInfo = array();
+    public $_packageInfo = [];
 
     /**
      * path to package .tgz or false if this is a local/extracted package.xml
      * @var string|false
      * @access private
      */
-    var $_archiveFile;
+    public $_archiveFile;
 
     /**
      * path to package .xml or false if this is an abstract parsed-from-string xml
      * @var string|false
      * @access private
      */
-    var $_packageFile;
+    public $_packageFile;
 
     /**
      * This is used by file analysis routines to log progress information
      * @var PEAR_Common
      * @access protected
      */
-    var $_logger;
+    public $_logger;
 
     /**
      * This is set to the highest validation level that has been validated
@@ -69,43 +68,43 @@ class PEAR_PackageFile_v2
      * @var int
      * @access private
      */
-    var $_isValid = 0;
+    public $_isValid = 0;
 
     /**
      * True if the filelist has been validated
      * @param bool
      */
-    var $_filesValid = false;
+    public $_filesValid = false;
 
     /**
      * @var PEAR_Registry
      * @access protected
      */
-    var $_registry;
+    public $_registry;
 
     /**
      * @var PEAR_Config
      * @access protected
      */
-    var $_config;
+    public $_config;
 
     /**
      * Optional Dependency group requested for installation
      * @var string
      * @access private
      */
-    var $_requestedGroup = false;
+    public $_requestedGroup = false;
 
     /**
      * @var PEAR_ErrorStack
      * @access protected
      */
-    var $_stack;
+    public $_stack;
 
     /**
      * Namespace prefix used for tasks in this package.xml - use tasks: whenever possible
      */
-    var $_tasksNs;
+    public $_tasksNs;
 
     /**
      * Determines whether this packagefile was initialized only with partial package info
@@ -118,17 +117,17 @@ class PEAR_PackageFile_v2
      * @var boolean
      * @access private
      */
-    var $_incomplete = true;
+    public $_incomplete = true;
 
     /**
      * @var PEAR_PackageFile_v2_Validator
      */
-    var $_v2Validator;
+    public $_v2Validator;
 
     /**
      * The constructor merely sets up the private error stack
      */
-    function __construct()
+    public function __construct()
     {
         $this->_stack = new PEAR_ErrorStack('PEAR_PackageFile_v2', false, null);
         $this->_isValid = false;
@@ -151,7 +150,7 @@ class PEAR_PackageFile_v2
      * @return PEAR_Downloader
      * @access protected
      */
-    function &getPEARDownloader(&$i, $o, &$c)
+    public function &getPEARDownloader(&$i, $o, &$c)
     {
         $z = new PEAR_Downloader($i, $o, $c);
         return $z;
@@ -166,7 +165,7 @@ class PEAR_PackageFile_v2
      * @return PEAR_Dependency2
      * @access protected
      */
-    function &getPEARDependency2(&$c, $o, $p, $s = PEAR_VALIDATE_INSTALLING)
+    public function &getPEARDependency2(&$c, $o, $p, $s = PEAR_VALIDATE_INSTALLING)
     {
         if (!class_exists('PEAR_Dependency2')) {
             require_once 'PEAR/Dependency2.php';
@@ -175,7 +174,7 @@ class PEAR_PackageFile_v2
         return $z;
     }
 
-    function getInstalledBinary()
+    public function getInstalledBinary()
     {
         return isset($this->_packageInfo['#binarypackage']) ? $this->_packageInfo['#binarypackage'] :
             false;
@@ -187,7 +186,7 @@ class PEAR_PackageFile_v2
      * @param PEAR_Installer
      * @return array|false
      */
-    function installBinary(&$installer)
+    public function installBinary(&$installer)
     {
         if (!OS_WINDOWS) {
             $a = false;
@@ -212,21 +211,24 @@ class PEAR_PackageFile_v2
                     $this->_packageInfo['providesextension'] . '"');
                 $params = $this->_packageInfo[$releasetype]['binarypackage'];
                 if (!is_array($params) || !isset($params[0])) {
-                    $params = array($params);
+                    $params = [$params];
                 }
                 if (isset($this->_packageInfo['channel'])) {
                     foreach ($params as $i => $param) {
-                        $params[$i] = array('channel' => $this->_packageInfo['channel'],
-                            'package' => $param, 'version' => $this->getVersion());
+                        $params[$i] = ['channel' => $this->_packageInfo['channel'],
+                            'package' => $param, 'version' => $this->getVersion()];
                     }
                 }
-                $dl = &$this->getPEARDownloader($installer->ui, $installer->getOptions(),
-                    $installer->config);
+                $dl = &$this->getPEARDownloader(
+                    $installer->ui,
+                    $installer->getOptions(),
+                    $installer->config
+                );
                 $verbose = $dl->config->get('verbose');
                 $dl->config->set('verbose', -1);
                 foreach ($params as $param) {
                     PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
-                    $ret = $dl->download(array($param));
+                    $ret = $dl->download([$param]);
                     PEAR::popErrorHandling();
                     if (is_array($ret) && count($ret)) {
                         break;
@@ -245,15 +247,19 @@ class PEAR_PackageFile_v2
                             $this->_registry->addPackage2($this);
                             $installer->log(0, 'Download and install of binary extension "' .
                                 $this->_registry->parsedPackageNameToString(
-                                    array('channel' => $pf->getChannel(),
-                                          'package' => $pf->getPackage()), true) . '" successful');
-                            $a = array($ret[0], $err);
+                                    ['channel' => $pf->getChannel(),
+                                          'package' => $pf->getPackage()],
+                                    true
+                                ) . '" successful');
+                            $a = [$ret[0], $err];
                             return $a;
                         }
                         $installer->log(0, 'Download and install of binary extension "' .
                             $this->_registry->parsedPackageNameToString(
-                                    array('channel' => $pf->getChannel(),
-                                          'package' => $pf->getPackage()), true) . '" failed');
+                                ['channel' => $pf->getChannel(),
+                                          'package' => $pf->getPackage()],
+                                true
+                            ) . '" failed');
                     }
                 }
             }
@@ -265,10 +271,12 @@ class PEAR_PackageFile_v2
     /**
      * @return string|false Extension name
      */
-    function getProvidesExtension()
+    public function getProvidesExtension()
     {
-        if (in_array($this->getPackageType(),
-              array('extsrc', 'extbin', 'zendextsrc', 'zendextbin'))) {
+        if (in_array(
+            $this->getPackageType(),
+            ['extsrc', 'extbin', 'zendextsrc', 'zendextbin']
+        )) {
             if (isset($this->_packageInfo['providesextension'])) {
                 return $this->_packageInfo['providesextension'];
             }
@@ -280,10 +288,12 @@ class PEAR_PackageFile_v2
      * @param string Extension name
      * @return bool
      */
-    function isExtension($extension)
+    public function isExtension($extension)
     {
-        if (in_array($this->getPackageType(),
-              array('extsrc', 'extbin', 'zendextsrc', 'zendextbin'))) {
+        if (in_array(
+            $this->getPackageType(),
+            ['extsrc', 'extbin', 'zendextsrc', 'zendextbin']
+        )) {
             return $this->_packageInfo['providesextension'] == $extension;
         }
         return false;
@@ -295,7 +305,7 @@ class PEAR_PackageFile_v2
      * @param PEAR_PackageFile_v1
      * @return bool
      */
-    function isEquivalent($pf1)
+    public function isEquivalent($pf1)
     {
         if (!$pf1) {
             return true;
@@ -329,8 +339,10 @@ class PEAR_PackageFile_v2
             $this->_differentState($pf1->getState());
             $pass = false;
         }
-        if (!strstr(preg_replace('/\s+/', '', $this->getNotes()),
-              preg_replace('/\s+/', '', $pf1->getNotes()))) {
+        if (!strstr(
+            preg_replace('/\s+/', '', $this->getNotes()),
+            preg_replace('/\s+/', '', $pf1->getNotes())
+        )) {
             $this->_differentNotes($pf1->getNotes());
             $pass = false;
         }
@@ -341,18 +353,27 @@ class PEAR_PackageFile_v2
             for ($i2 = 0; $i2 < count($mymaintainers); $i2++) {
                 if ($mymaintainers[$i2]['handle'] == $yourmaintainers[$i1]['handle']) {
                     if ($mymaintainers[$i2]['role'] != $yourmaintainers[$i1]['role']) {
-                        $this->_differentRole($mymaintainers[$i2]['handle'],
-                            $yourmaintainers[$i1]['role'], $mymaintainers[$i2]['role']);
+                        $this->_differentRole(
+                            $mymaintainers[$i2]['handle'],
+                            $yourmaintainers[$i1]['role'],
+                            $mymaintainers[$i2]['role']
+                        );
                         $pass = false;
                     }
                     if ($mymaintainers[$i2]['email'] != $yourmaintainers[$i1]['email']) {
-                        $this->_differentEmail($mymaintainers[$i2]['handle'],
-                            $yourmaintainers[$i1]['email'], $mymaintainers[$i2]['email']);
+                        $this->_differentEmail(
+                            $mymaintainers[$i2]['handle'],
+                            $yourmaintainers[$i1]['email'],
+                            $mymaintainers[$i2]['email']
+                        );
                         $pass = false;
                     }
                     if ($mymaintainers[$i2]['name'] != $yourmaintainers[$i1]['name']) {
-                        $this->_differentName($mymaintainers[$i2]['handle'],
-                            $yourmaintainers[$i1]['name'], $mymaintainers[$i2]['name']);
+                        $this->_differentName(
+                            $mymaintainers[$i2]['handle'],
+                            $yourmaintainers[$i1]['name'],
+                            $mymaintainers[$i2]['name']
+                        );
                         $pass = false;
                     }
                     unset($mymaintainers[$i2]);
@@ -378,105 +399,157 @@ class PEAR_PackageFile_v2
         return $pass;
     }
 
-    function _differentPackage($package)
+    public function _differentPackage($package)
     {
-        $this->_stack->push(__FUNCTION__, 'error', array('package' => $package,
-            'self' => $this->getPackage()),
-            'package.xml 1.0 package "%package%" does not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['package' => $package,
+            'self' => $this->getPackage()],
+            'package.xml 1.0 package "%package%" does not match "%self%"'
+        );
     }
 
-    function _differentVersion($version)
+    public function _differentVersion($version)
     {
-        $this->_stack->push(__FUNCTION__, 'error', array('version' => $version,
-            'self' => $this->getVersion()),
-            'package.xml 1.0 version "%version%" does not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['version' => $version,
+            'self' => $this->getVersion()],
+            'package.xml 1.0 version "%version%" does not match "%self%"'
+        );
     }
 
-    function _differentState($state)
+    public function _differentState($state)
     {
-        $this->_stack->push(__FUNCTION__, 'error', array('state' => $state,
-            'self' => $this->getState()),
-            'package.xml 1.0 state "%state%" does not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['state' => $state,
+            'self' => $this->getState()],
+            'package.xml 1.0 state "%state%" does not match "%self%"'
+        );
     }
 
-    function _differentRole($handle, $role, $selfrole)
+    public function _differentRole($handle, $role, $selfrole)
     {
-        $this->_stack->push(__FUNCTION__, 'error', array('handle' => $handle,
-            'role' => $role, 'self' => $selfrole),
-            'package.xml 1.0 maintainer "%handle%" role "%role%" does not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['handle' => $handle,
+            'role' => $role, 'self' => $selfrole],
+            'package.xml 1.0 maintainer "%handle%" role "%role%" does not match "%self%"'
+        );
     }
 
-    function _differentEmail($handle, $email, $selfemail)
+    public function _differentEmail($handle, $email, $selfemail)
     {
-        $this->_stack->push(__FUNCTION__, 'error', array('handle' => $handle,
-            'email' => $email, 'self' => $selfemail),
-            'package.xml 1.0 maintainer "%handle%" email "%email%" does not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['handle' => $handle,
+            'email' => $email, 'self' => $selfemail],
+            'package.xml 1.0 maintainer "%handle%" email "%email%" does not match "%self%"'
+        );
     }
 
-    function _differentName($handle, $name, $selfname)
+    public function _differentName($handle, $name, $selfname)
     {
-        $this->_stack->push(__FUNCTION__, 'error', array('handle' => $handle,
-            'name' => $name, 'self' => $selfname),
-            'package.xml 1.0 maintainer "%handle%" name "%name%" does not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['handle' => $handle,
+            'name' => $name, 'self' => $selfname],
+            'package.xml 1.0 maintainer "%handle%" name "%name%" does not match "%self%"'
+        );
     }
 
-    function _unmatchedMaintainers($my, $yours)
+    public function _unmatchedMaintainers($my, $yours)
     {
         if ($my) {
-            array_walk($my, function(&$i, $k) { $i = $i["handle"]; });
-            $this->_stack->push(__FUNCTION__, 'error', array('handles' => $my),
-                'package.xml 2.0 has unmatched extra maintainers "%handles%"');
+            array_walk($my, function (&$i, $k) {
+                $i = $i["handle"];
+            });
+            $this->_stack->push(
+                __FUNCTION__,
+                'error',
+                ['handles' => $my],
+                'package.xml 2.0 has unmatched extra maintainers "%handles%"'
+            );
         }
         if ($yours) {
-            array_walk($yours, function(&$i, $k) { $i = $i["handle"]; });
-            $this->_stack->push(__FUNCTION__, 'error', array('handles' => $yours),
-                'package.xml 1.0 has unmatched extra maintainers "%handles%"');
+            array_walk($yours, function (&$i, $k) {
+                $i = $i["handle"];
+            });
+            $this->_stack->push(
+                __FUNCTION__,
+                'error',
+                ['handles' => $yours],
+                'package.xml 1.0 has unmatched extra maintainers "%handles%"'
+            );
         }
     }
 
-    function _differentNotes($notes)
+    public function _differentNotes($notes)
     {
         $truncnotes = strlen($notes) < 25 ? $notes : substr($notes, 0, 24) . '...';
         $truncmynotes = strlen($this->getNotes()) < 25 ? $this->getNotes() :
             substr($this->getNotes(), 0, 24) . '...';
-        $this->_stack->push(__FUNCTION__, 'error', array('notes' => $truncnotes,
-            'self' => $truncmynotes),
-            'package.xml 1.0 release notes "%notes%" do not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['notes' => $truncnotes,
+            'self' => $truncmynotes],
+            'package.xml 1.0 release notes "%notes%" do not match "%self%"'
+        );
     }
 
-    function _differentSummary($summary)
+    public function _differentSummary($summary)
     {
         $truncsummary = strlen($summary) < 25 ? $summary : substr($summary, 0, 24) . '...';
         $truncmysummary = strlen($this->getsummary()) < 25 ? $this->getSummary() :
             substr($this->getsummary(), 0, 24) . '...';
-        $this->_stack->push(__FUNCTION__, 'error', array('summary' => $truncsummary,
-            'self' => $truncmysummary),
-            'package.xml 1.0 summary "%summary%" does not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['summary' => $truncsummary,
+            'self' => $truncmysummary],
+            'package.xml 1.0 summary "%summary%" does not match "%self%"'
+        );
     }
 
-    function _differentDescription($description)
+    public function _differentDescription($description)
     {
         $truncdescription = trim(strlen($description) < 25 ? $description : substr($description, 0, 24) . '...');
         $truncmydescription = trim(strlen($this->getDescription()) < 25 ? $this->getDescription() :
             substr($this->getdescription(), 0, 24) . '...');
-        $this->_stack->push(__FUNCTION__, 'error', array('description' => $truncdescription,
-            'self' => $truncmydescription),
-            'package.xml 1.0 description "%description%" does not match "%self%"');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['description' => $truncdescription,
+            'self' => $truncmydescription],
+            'package.xml 1.0 description "%description%" does not match "%self%"'
+        );
     }
 
-    function _missingFile($file)
+    public function _missingFile($file)
     {
-        $this->_stack->push(__FUNCTION__, 'error', array('file' => $file),
-            'package.xml 1.0 file "%file%" is not present in <contents>');
+        $this->_stack->push(
+            __FUNCTION__,
+            'error',
+            ['file' => $file],
+            'package.xml 1.0 file "%file%" is not present in <contents>'
+        );
     }
 
     /**
      * WARNING - do not use this function unless you know what you're doing
      */
-    function setRawState($state)
+    public function setRawState($state)
     {
         if (!isset($this->_packageInfo['stability'])) {
-            $this->_packageInfo['stability'] = array();
+            $this->_packageInfo['stability'] = [];
         }
         $this->_packageInfo['stability']['release'] = $state;
     }
@@ -484,7 +557,7 @@ class PEAR_PackageFile_v2
     /**
      * WARNING - do not use this function unless you know what you're doing
      */
-    function setRawCompatible($compatible)
+    public function setRawCompatible($compatible)
     {
         $this->_packageInfo['compatible'] = $compatible;
     }
@@ -492,7 +565,7 @@ class PEAR_PackageFile_v2
     /**
      * WARNING - do not use this function unless you know what you're doing
      */
-    function setRawPackage($package)
+    public function setRawPackage($package)
     {
         $this->_packageInfo['name'] = $package;
     }
@@ -500,17 +573,17 @@ class PEAR_PackageFile_v2
     /**
      * WARNING - do not use this function unless you know what you're doing
      */
-    function setRawChannel($channel)
+    public function setRawChannel($channel)
     {
         $this->_packageInfo['channel'] = $channel;
     }
 
-    function setRequestedGroup($group)
+    public function setRequestedGroup($group)
     {
         $this->_requestedGroup = $group;
     }
 
-    function getRequestedGroup()
+    public function getRequestedGroup()
     {
         if (isset($this->_requestedGroup)) {
             return $this->_requestedGroup;
@@ -524,7 +597,7 @@ class PEAR_PackageFile_v2
      * Set the last version that was installed
      * @param string
      */
-    function setLastInstalledVersion($version)
+    public function setLastInstalledVersion($version)
     {
         $this->_packageInfo['_lastversion'] = $version;
     }
@@ -532,7 +605,7 @@ class PEAR_PackageFile_v2
     /**
      * @return string|false
      */
-    function getLastInstalledVersion()
+    public function getLastInstalledVersion()
     {
         if (isset($this->_packageInfo['_lastversion'])) {
             return $this->_packageInfo['_lastversion'];
@@ -544,15 +617,15 @@ class PEAR_PackageFile_v2
      * Determines whether this package.xml has post-install scripts or not
      * @return array|false
      */
-    function listPostinstallScripts()
+    public function listPostinstallScripts()
     {
         $filelist = $this->getFilelist();
         $contents = $this->getContents();
         $contents = $contents['dir']['file'];
         if (!is_array($contents) || !isset($contents[0])) {
-            $contents = array($contents);
+            $contents = [$contents];
         }
-        $taskfiles = array();
+        $taskfiles = [];
         foreach ($contents as $file) {
             $atts = $file['attribs'];
             unset($file['attribs']);
@@ -560,10 +633,10 @@ class PEAR_PackageFile_v2
                 $taskfiles[$atts['name']] = $file;
             }
         }
-        $common = new PEAR_Common;
+        $common = new PEAR_Common();
         $common->debug = $this->_config->get('verbose');
-        $this->_scripts = array();
-        $ret = array();
+        $this->_scripts = [];
+        $ret = [];
         foreach ($taskfiles as $name => $tasks) {
             if (!isset($filelist[$name])) {
                 // ignored files will not be in the filelist
@@ -591,15 +664,15 @@ class PEAR_PackageFile_v2
      * indicates whether any exist
      * @return bool
      */
-    function initPostinstallScripts()
+    public function initPostinstallScripts()
     {
         $filelist = $this->getFilelist();
         $contents = $this->getContents();
         $contents = $contents['dir']['file'];
         if (!is_array($contents) || !isset($contents[0])) {
-            $contents = array($contents);
+            $contents = [$contents];
         }
-        $taskfiles = array();
+        $taskfiles = [];
         foreach ($contents as $file) {
             $atts = $file['attribs'];
             unset($file['attribs']);
@@ -607,9 +680,9 @@ class PEAR_PackageFile_v2
                 $taskfiles[$atts['name']] = $file;
             }
         }
-        $common = new PEAR_Common;
+        $common = new PEAR_Common();
         $common->debug = $this->_config->get('verbose');
-        $this->_scripts = array();
+        $this->_scripts = [];
         foreach ($taskfiles as $name => $tasks) {
             if (!isset($filelist[$name])) {
                 // file was not installed due to installconditions
@@ -641,7 +714,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function runPostinstallScripts()
+    public function runPostinstallScripts()
     {
         if ($this->initPostinstallScripts()) {
             $ui = &PEAR_Frontend::singleton();
@@ -656,12 +729,12 @@ class PEAR_PackageFile_v2
      * Convert a recursive set of <dir> and <file> tags into a single <dir> tag with
      * <file> tags.
      */
-    function flattenFilelist()
+    public function flattenFilelist()
     {
         if (isset($this->_packageInfo['bundle'])) {
             return;
         }
-        $filelist = array();
+        $filelist = [];
         if (isset($this->_packageInfo['contents']['dir']['dir'])) {
             $this->_getFlattenedFilelist($filelist, $this->_packageInfo['contents']['dir']);
             if (!isset($filelist[1])) {
@@ -682,7 +755,7 @@ class PEAR_PackageFile_v2
                     }
                 } else {
                     if (!isset($this->_packageInfo['contents']['dir']['file']['attribs']['baseinstalldir'])) {
-                       $this->_packageInfo['contents']['dir']['file']['attribs']['baseinstalldir']
+                        $this->_packageInfo['contents']['dir']['file']['attribs']['baseinstalldir']
                             = $this->_packageInfo['contents']['dir']['attribs']['baseinstalldir'];
                     }
                 }
@@ -698,14 +771,14 @@ class PEAR_PackageFile_v2
      * @return array
      * @access protected
      */
-    function _getFlattenedFilelist(&$files, $dir, $baseinstall = false, $path = '')
+    public function _getFlattenedFilelist(&$files, $dir, $baseinstall = false, $path = '')
     {
         if (isset($dir['attribs']) && isset($dir['attribs']['baseinstalldir'])) {
             $baseinstall = $dir['attribs']['baseinstalldir'];
         }
         if (isset($dir['dir'])) {
             if (!isset($dir['dir'][0])) {
-                $dir['dir'] = array($dir['dir']);
+                $dir['dir'] = [$dir['dir']];
             }
             foreach ($dir['dir'] as $subdir) {
                 if (!isset($subdir['attribs']) || !isset($subdir['attribs']['name'])) {
@@ -715,13 +788,17 @@ class PEAR_PackageFile_v2
                 }
                 $newpath = empty($path) ? $name :
                     $path . '/' . $name;
-                $this->_getFlattenedFilelist($files, $subdir,
-                    $baseinstall, $newpath);
+                $this->_getFlattenedFilelist(
+                    $files,
+                    $subdir,
+                    $baseinstall,
+                    $newpath
+                );
             }
         }
         if (isset($dir['file'])) {
             if (!isset($dir['file'][0])) {
-                $dir['file'] = array($dir['file']);
+                $dir['file'] = [$dir['file']];
             }
             foreach ($dir['file'] as $file) {
                 $attrs = $file['attribs'];
@@ -730,21 +807,24 @@ class PEAR_PackageFile_v2
                     $attrs['baseinstalldir'] = $baseinstall;
                 }
                 $attrs['name'] = empty($path) ? $name : $path . '/' . $name;
-                $attrs['name'] = preg_replace(array('!\\\\+!', '!/+!'), array('/', '/'),
-                    $attrs['name']);
+                $attrs['name'] = preg_replace(
+                    ['!\\\\+!', '!/+!'],
+                    ['/', '/'],
+                    $attrs['name']
+                );
                 $file['attribs'] = $attrs;
                 $files[] = $file;
             }
         }
     }
 
-    function setConfig(&$config)
+    public function setConfig(&$config)
     {
         $this->_config = &$config;
         $this->_registry = &$config->getRegistry();
     }
 
-    function setLogger(&$logger)
+    public function setLogger(&$logger)
     {
         if (!is_object($logger) || !method_exists($logger, 'log')) {
             return PEAR::raiseError('Logger must be compatible with PEAR_Common::log');
@@ -755,7 +835,7 @@ class PEAR_PackageFile_v2
     /**
      * WARNING - do not use this function directly unless you know what you're doing
      */
-    function setDeps($deps)
+    public function setDeps($deps)
     {
         $this->_packageInfo['dependencies'] = $deps;
     }
@@ -763,12 +843,12 @@ class PEAR_PackageFile_v2
     /**
      * WARNING - do not use this function directly unless you know what you're doing
      */
-    function setCompatible($compat)
+    public function setCompatible($compat)
     {
         $this->_packageInfo['compatible'] = $compat;
     }
 
-    function setPackagefile($file, $archive = false)
+    public function setPackagefile($file, $archive = false)
     {
         $this->_packageFile = $file;
         $this->_archiveFile = $archive ? $archive : $file;
@@ -779,17 +859,17 @@ class PEAR_PackageFile_v2
      * @param boolean determines whether to purge the error stack after retrieving
      * @return array
      */
-    function getValidationWarnings($purge = true)
+    public function getValidationWarnings($purge = true)
     {
         return $this->_stack->getErrors($purge);
     }
 
-    function getPackageFile()
+    public function getPackageFile()
     {
         return $this->_packageFile;
     }
 
-    function getArchiveFile()
+    public function getArchiveFile()
     {
         return $this->_archiveFile;
     }
@@ -802,19 +882,19 @@ class PEAR_PackageFile_v2
      * inside PEAR or by inputting an array saved from an existing PEAR_PackageFile_v2
      * @param array
      */
-    function fromArray($pinfo)
+    public function fromArray($pinfo)
     {
         unset($pinfo['old']);
         unset($pinfo['xsdversion']);
         // If the changelog isn't an array then it was passed in as an empty tag
         if (isset($pinfo['changelog']) && !is_array($pinfo['changelog'])) {
-          unset($pinfo['changelog']);
+            unset($pinfo['changelog']);
         }
         $this->_incomplete = false;
         $this->_packageInfo = $pinfo;
     }
 
-    function isIncomplete()
+    public function isIncomplete()
     {
         return $this->_incomplete;
     }
@@ -822,7 +902,7 @@ class PEAR_PackageFile_v2
     /**
      * @return array
      */
-    function toArray($forreg = false)
+    public function toArray($forreg = false)
     {
         if (!$this->validate(PEAR_VALIDATE_NORMAL)) {
             return false;
@@ -830,11 +910,11 @@ class PEAR_PackageFile_v2
         return $this->getArray($forreg);
     }
 
-    function getArray($forReg = false)
+    public function getArray($forReg = false)
     {
         if ($forReg) {
             $arr = $this->_packageInfo;
-            $arr['old'] = array();
+            $arr['old'] = [];
             $arr['old']['version'] = $this->getVersion();
             $arr['old']['release_date'] = $this->getDate();
             $arr['old']['release_state'] = $this->getState();
@@ -857,7 +937,7 @@ class PEAR_PackageFile_v2
         }
     }
 
-    function packageInfo($field)
+    public function packageInfo($field)
     {
         $arr = $this->getArray(true);
         if ($field == 'state') {
@@ -884,12 +964,12 @@ class PEAR_PackageFile_v2
         return null;
     }
 
-    function getName()
+    public function getName()
     {
         return $this->getPackage();
     }
 
-    function getPackage()
+    public function getPackage()
     {
         if (isset($this->_packageInfo['name'])) {
             return $this->_packageInfo['name'];
@@ -897,7 +977,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getChannel()
+    public function getChannel()
     {
         if (isset($this->_packageInfo['uri'])) {
             return '__uri';
@@ -908,7 +988,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getUri()
+    public function getUri()
     {
         if (isset($this->_packageInfo['uri'])) {
             return $this->_packageInfo['uri'];
@@ -916,7 +996,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getExtends()
+    public function getExtends()
     {
         if (isset($this->_packageInfo['extends'])) {
             return $this->_packageInfo['extends'];
@@ -924,7 +1004,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getSummary()
+    public function getSummary()
     {
         if (isset($this->_packageInfo['summary'])) {
             return $this->_packageInfo['summary'];
@@ -932,7 +1012,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getDescription()
+    public function getDescription()
     {
         if (isset($this->_packageInfo['description'])) {
             return $this->_packageInfo['description'];
@@ -940,24 +1020,24 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getMaintainers($raw = false)
+    public function getMaintainers($raw = false)
     {
         if (!isset($this->_packageInfo['lead'])) {
             return false;
         }
         if ($raw) {
-            $ret = array('lead' => $this->_packageInfo['lead']);
+            $ret = ['lead' => $this->_packageInfo['lead']];
             (isset($this->_packageInfo['developer'])) ?
-                $ret['developer'] = $this->_packageInfo['developer'] :null;
+                $ret['developer'] = $this->_packageInfo['developer'] : null;
             (isset($this->_packageInfo['contributor'])) ?
-                $ret['contributor'] = $this->_packageInfo['contributor'] :null;
+                $ret['contributor'] = $this->_packageInfo['contributor'] : null;
             (isset($this->_packageInfo['helper'])) ?
-                $ret['helper'] = $this->_packageInfo['helper'] :null;
+                $ret['helper'] = $this->_packageInfo['helper'] : null;
             return $ret;
         } else {
-            $ret = array();
+            $ret = [];
             $leads = isset($this->_packageInfo['lead'][0]) ? $this->_packageInfo['lead'] :
-                array($this->_packageInfo['lead']);
+                [$this->_packageInfo['lead']];
             foreach ($leads as $lead) {
                 $s = $lead;
                 $s['handle'] = $s['user'];
@@ -968,7 +1048,7 @@ class PEAR_PackageFile_v2
             if (isset($this->_packageInfo['developer'])) {
                 $leads = isset($this->_packageInfo['developer'][0]) ?
                     $this->_packageInfo['developer'] :
-                    array($this->_packageInfo['developer']);
+                    [$this->_packageInfo['developer']];
                 foreach ($leads as $maintainer) {
                     $s = $maintainer;
                     $s['handle'] = $s['user'];
@@ -980,7 +1060,7 @@ class PEAR_PackageFile_v2
             if (isset($this->_packageInfo['contributor'])) {
                 $leads = isset($this->_packageInfo['contributor'][0]) ?
                     $this->_packageInfo['contributor'] :
-                    array($this->_packageInfo['contributor']);
+                    [$this->_packageInfo['contributor']];
                 foreach ($leads as $maintainer) {
                     $s = $maintainer;
                     $s['handle'] = $s['user'];
@@ -992,7 +1072,7 @@ class PEAR_PackageFile_v2
             if (isset($this->_packageInfo['helper'])) {
                 $leads = isset($this->_packageInfo['helper'][0]) ?
                     $this->_packageInfo['helper'] :
-                    array($this->_packageInfo['helper']);
+                    [$this->_packageInfo['helper']];
                 foreach ($leads as $maintainer) {
                     $s = $maintainer;
                     $s['handle'] = $s['user'];
@@ -1006,7 +1086,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getLeads()
+    public function getLeads()
     {
         if (isset($this->_packageInfo['lead'])) {
             return $this->_packageInfo['lead'];
@@ -1014,7 +1094,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getDevelopers()
+    public function getDevelopers()
     {
         if (isset($this->_packageInfo['developer'])) {
             return $this->_packageInfo['developer'];
@@ -1022,7 +1102,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getContributors()
+    public function getContributors()
     {
         if (isset($this->_packageInfo['contributor'])) {
             return $this->_packageInfo['contributor'];
@@ -1030,7 +1110,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getHelpers()
+    public function getHelpers()
     {
         if (isset($this->_packageInfo['helper'])) {
             return $this->_packageInfo['helper'];
@@ -1038,37 +1118,45 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function setDate($date)
+    public function setDate($date)
     {
         if (!isset($this->_packageInfo['date'])) {
             // ensure that the extends tag is set up in the right location
-            $this->_packageInfo = $this->_insertBefore($this->_packageInfo,
-                array('time', 'version',
+            $this->_packageInfo = $this->_insertBefore(
+                $this->_packageInfo,
+                ['time', 'version',
                     'stability', 'license', 'notes', 'contents', 'compatible',
                     'dependencies', 'providesextension', 'srcpackage', 'srcuri',
                     'phprelease', 'extsrcrelease', 'extbinrelease', 'zendextsrcrelease',
-                    'zendextbinrelease', 'bundle', 'changelog'), array(), 'date');
+                    'zendextbinrelease', 'bundle', 'changelog'],
+                [],
+                'date'
+            );
         }
         $this->_packageInfo['date'] = $date;
         $this->_isValid = 0;
     }
 
-    function setTime($time)
+    public function setTime($time)
     {
         $this->_isValid = 0;
         if (!isset($this->_packageInfo['time'])) {
             // ensure that the time tag is set up in the right location
-            $this->_packageInfo = $this->_insertBefore($this->_packageInfo,
-                    array('version',
+            $this->_packageInfo = $this->_insertBefore(
+                $this->_packageInfo,
+                ['version',
                     'stability', 'license', 'notes', 'contents', 'compatible',
                     'dependencies', 'providesextension', 'srcpackage', 'srcuri',
                     'phprelease', 'extsrcrelease', 'extbinrelease', 'zendextsrcrelease',
-                    'zendextbinrelease', 'bundle', 'changelog'), $time, 'time');
+                    'zendextbinrelease', 'bundle', 'changelog'],
+                $time,
+                'time'
+            );
         }
         $this->_packageInfo['time'] = $time;
     }
 
-    function getDate()
+    public function getDate()
     {
         if (isset($this->_packageInfo['date'])) {
             return $this->_packageInfo['date'];
@@ -1076,7 +1164,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getTime()
+    public function getTime()
     {
         if (isset($this->_packageInfo['time'])) {
             return $this->_packageInfo['time'];
@@ -1087,7 +1175,7 @@ class PEAR_PackageFile_v2
     /**
      * @param package|api version category to return
      */
-    function getVersion($key = 'release')
+    public function getVersion($key = 'release')
     {
         if (isset($this->_packageInfo['version'][$key])) {
             return $this->_packageInfo['version'][$key];
@@ -1095,7 +1183,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getStability()
+    public function getStability()
     {
         if (isset($this->_packageInfo['stability'])) {
             return $this->_packageInfo['stability'];
@@ -1103,7 +1191,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getState($key = 'release')
+    public function getState($key = 'release')
     {
         if (isset($this->_packageInfo['stability'][$key])) {
             return $this->_packageInfo['stability'][$key];
@@ -1111,7 +1199,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getLicense($raw = false)
+    public function getLicense($raw = false)
     {
         if (isset($this->_packageInfo['license'])) {
             if ($raw) {
@@ -1126,7 +1214,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getLicenseLocation()
+    public function getLicenseLocation()
     {
         if (!isset($this->_packageInfo['license']) || !is_array($this->_packageInfo['license'])) {
             return false;
@@ -1134,7 +1222,7 @@ class PEAR_PackageFile_v2
         return $this->_packageInfo['license']['attribs'];
     }
 
-    function getNotes()
+    public function getNotes()
     {
         if (isset($this->_packageInfo['notes'])) {
             return $this->_packageInfo['notes'];
@@ -1146,7 +1234,7 @@ class PEAR_PackageFile_v2
      * Return the <usesrole> tag contents, if any
      * @return array|false
      */
-    function getUsesrole()
+    public function getUsesrole()
     {
         if (isset($this->_packageInfo['usesrole'])) {
             return $this->_packageInfo['usesrole'];
@@ -1158,7 +1246,7 @@ class PEAR_PackageFile_v2
      * Return the <usestask> tag contents, if any
      * @return array|false
      */
-    function getUsestask()
+    public function getUsestask()
     {
         if (isset($this->_packageInfo['usestask'])) {
             return $this->_packageInfo['usestask'];
@@ -1169,19 +1257,19 @@ class PEAR_PackageFile_v2
     /**
      * This should only be used to retrieve filenames and install attributes
      */
-    function getFilelist($preserve = false)
+    public function getFilelist($preserve = false)
     {
         if (isset($this->_packageInfo['filelist']) && !$preserve) {
             return $this->_packageInfo['filelist'];
         }
         $this->flattenFilelist();
         if ($contents = $this->getContents()) {
-            $ret = array();
+            $ret = [];
             if (!isset($contents['dir'])) {
                 return false;
             }
             if (!isset($contents['dir']['file'][0])) {
-                $contents['dir']['file'] = array($contents['dir']['file']);
+                $contents['dir']['file'] = [$contents['dir']['file']];
             }
             foreach ($contents['dir']['file'] as $file) {
                 if (!isset($file['attribs']['name'])) {
@@ -1206,7 +1294,7 @@ class PEAR_PackageFile_v2
      *
      * @return array|false
      */
-    function getConfigureOptions()
+    public function getConfigureOptions()
     {
         if ($this->getPackageType() != 'extsrc' && $this->getPackageType() != 'zendextsrc') {
             return false;
@@ -1219,7 +1307,7 @@ class PEAR_PackageFile_v2
 
         if (isset($releases['configureoption'])) {
             if (!isset($releases['configureoption'][0])) {
-                $releases['configureoption'] = array($releases['configureoption']);
+                $releases['configureoption'] = [$releases['configureoption']];
             }
 
             for ($i = 0; $i < count($releases['configureoption']); $i++) {
@@ -1236,16 +1324,16 @@ class PEAR_PackageFile_v2
      * This is only used at install-time, after all serialization
      * is over.
      */
-    function resetFilelist()
+    public function resetFilelist()
     {
-        $this->_packageInfo['filelist'] = array();
+        $this->_packageInfo['filelist'] = [];
     }
 
     /**
      * Retrieve a list of files that should be installed on this computer
      * @return array
      */
-    function getInstallationFilelist($forfilecheck = false)
+    public function getInstallationFilelist($forfilecheck = false)
     {
         $contents = $this->getFilelist(true);
         if (isset($contents['dir']['attribs']['baseinstalldir'])) {
@@ -1253,7 +1341,8 @@ class PEAR_PackageFile_v2
         }
         if (isset($this->_packageInfo['bundle'])) {
             return PEAR::raiseError(
-                'Exception: bundles should be handled in download code only');
+                'Exception: bundles should be handled in download code only'
+            );
         }
         $release = $this->getReleases();
         if ($release) {
@@ -1264,11 +1353,14 @@ class PEAR_PackageFile_v2
                     }
                     return $contents;
                 }
-                $release = array($release);
+                $release = [$release];
             }
-            $depchecker = &$this->getPEARDependency2($this->_config, array(),
-                array('channel' => $this->getChannel(), 'package' => $this->getPackage()),
-                PEAR_VALIDATE_INSTALLING);
+            $depchecker = &$this->getPEARDependency2(
+                $this->_config,
+                [],
+                ['channel' => $this->getChannel(), 'package' => $this->getPackage()],
+                PEAR_VALIDATE_INSTALLING
+            );
             foreach ($release as $instance) {
                 if (isset($instance['installconditions'])) {
                     $installconditions = $instance['installconditions'];
@@ -1276,7 +1368,7 @@ class PEAR_PackageFile_v2
                         PEAR::pushErrorHandling(PEAR_ERROR_RETURN);
                         foreach ($installconditions as $type => $conditions) {
                             if (!isset($conditions[0])) {
-                                $conditions = array($conditions);
+                                $conditions = [$conditions];
                             }
                             foreach ($conditions as $condition) {
                                 $ret = $depchecker->{"validate{$type}Dependency"}($condition);
@@ -1295,16 +1387,16 @@ class PEAR_PackageFile_v2
                     if (isset($instance['filelist']['ignore'])) {
                         $ignore = isset($instance['filelist']['ignore'][0]) ?
                             $instance['filelist']['ignore'] :
-                            array($instance['filelist']['ignore']);
+                            [$instance['filelist']['ignore']];
                         foreach ($ignore as $ig) {
-                            unset ($contents[$ig['attribs']['name']]);
+                            unset($contents[$ig['attribs']['name']]);
                         }
                     }
                     // install files as this name
                     if (isset($instance['filelist']['install'])) {
                         $installas = isset($instance['filelist']['install'][0]) ?
                             $instance['filelist']['install'] :
-                            array($instance['filelist']['install']);
+                            [$instance['filelist']['install']];
                         foreach ($installas as $as) {
                             $contents[$as['attribs']['name']]['attribs']['install-as'] =
                                 $as['attribs']['as'];
@@ -1335,7 +1427,7 @@ class PEAR_PackageFile_v2
      * @param string file name
      * @param string installed path
      */
-    function setInstalledAs($file, $path)
+    public function setInstalledAs($file, $path)
     {
         if ($path) {
             return $this->_packageInfo['filelist'][$file]['installed_as'] = $path;
@@ -1343,7 +1435,7 @@ class PEAR_PackageFile_v2
         unset($this->_packageInfo['filelist'][$file]['installed_as']);
     }
 
-    function getInstalledLocation($file)
+    public function getInstalledLocation($file)
     {
         if (isset($this->_packageInfo['filelist'][$file]['installed_as'])) {
             return $this->_packageInfo['filelist'][$file]['installed_as'];
@@ -1355,7 +1447,7 @@ class PEAR_PackageFile_v2
      * This is only used at install-time, after all serialization
      * is over.
      */
-    function installedFile($file, $atts)
+    public function installedFile($file, $atts)
     {
         if (isset($this->_packageInfo['filelist'][$file])) {
             $this->_packageInfo['filelist'][$file] =
@@ -1368,7 +1460,7 @@ class PEAR_PackageFile_v2
     /**
      * Retrieve the contents tag
      */
-    function getContents()
+    public function getContents()
     {
         if (isset($this->_packageInfo['contents'])) {
             return $this->_packageInfo['contents'];
@@ -1384,10 +1476,10 @@ class PEAR_PackageFile_v2
      *            of files.  Index is zero-based like PHP arrays.
      * @return bool success of operation
      */
-    function setFileAttribute($filename, $attr, $value, $index = false)
+    public function setFileAttribute($filename, $attr, $value, $index = false)
     {
         $this->_isValid = 0;
-        if (in_array($attr, array('role', 'name', 'baseinstalldir'))) {
+        if (in_array($attr, ['role', 'name', 'baseinstalldir'])) {
             $this->_filesValid = false;
         }
         if ($index !== false &&
@@ -1400,7 +1492,7 @@ class PEAR_PackageFile_v2
         }
         $files = $this->_packageInfo['contents']['dir']['file'];
         if (!isset($files[0])) {
-            $files = array($files);
+            $files = [$files];
             $ind = false;
         } else {
             $ind = true;
@@ -1420,15 +1512,15 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function setDirtree($path)
+    public function setDirtree($path)
     {
         if (!isset($this->_packageInfo['dirtree'])) {
-            $this->_packageInfo['dirtree'] = array();
+            $this->_packageInfo['dirtree'] = [];
         }
         $this->_packageInfo['dirtree'][$path] = true;
     }
 
-    function getDirtree()
+    public function getDirtree()
     {
         if (isset($this->_packageInfo['dirtree']) && count($this->_packageInfo['dirtree'])) {
             return $this->_packageInfo['dirtree'];
@@ -1436,7 +1528,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function resetDirtree()
+    public function resetDirtree()
     {
         unset($this->_packageInfo['dirtree']);
     }
@@ -1447,7 +1539,7 @@ class PEAR_PackageFile_v2
      * @param PEAR_PackageFile_v2|PEAR_PackageFile_v1|PEAR_Downloader_Package
      * @return boolean
      */
-    function isCompatible($pf)
+    public function isCompatible($pf)
     {
         if (!isset($this->_packageInfo['compatible'])) {
             return false;
@@ -1458,7 +1550,7 @@ class PEAR_PackageFile_v2
         $me = $pf->getVersion();
         $compatible = $this->_packageInfo['compatible'];
         if (!isset($compatible[0])) {
-            $compatible = array($compatible);
+            $compatible = [$compatible];
         }
         $found = false;
         foreach ($compatible as $info) {
@@ -1474,7 +1566,7 @@ class PEAR_PackageFile_v2
         }
         if (isset($info['exclude'])) {
             if (!isset($info['exclude'][0])) {
-                $info['exclude'] = array($info['exclude']);
+                $info['exclude'] = [$info['exclude']];
             }
             foreach ($info['exclude'] as $exclude) {
                 if (version_compare($me, $exclude, '==')) {
@@ -1491,7 +1583,7 @@ class PEAR_PackageFile_v2
     /**
      * @return array|false
      */
-    function getCompatible()
+    public function getCompatible()
     {
         if (isset($this->_packageInfo['compatible'])) {
             return $this->_packageInfo['compatible'];
@@ -1499,7 +1591,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getDependencies()
+    public function getDependencies()
     {
         if (isset($this->_packageInfo['dependencies'])) {
             return $this->_packageInfo['dependencies'];
@@ -1507,7 +1599,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function isSubpackageOf($p)
+    public function isSubpackageOf($p)
     {
         return $p->isSubpackage($this);
     }
@@ -1519,32 +1611,32 @@ class PEAR_PackageFile_v2
      * @param PEAR_PackageFile_v1|PEAR_PackageFile_v2
      * @return bool
      */
-    function isSubpackage($p)
+    public function isSubpackage($p)
     {
-        $sub = array();
+        $sub = [];
         if (isset($this->_packageInfo['dependencies']['required']['subpackage'])) {
             $sub = $this->_packageInfo['dependencies']['required']['subpackage'];
             if (!isset($sub[0])) {
-                $sub = array($sub);
+                $sub = [$sub];
             }
         }
         if (isset($this->_packageInfo['dependencies']['optional']['subpackage'])) {
             $sub1 = $this->_packageInfo['dependencies']['optional']['subpackage'];
             if (!isset($sub1[0])) {
-                $sub1 = array($sub1);
+                $sub1 = [$sub1];
             }
             $sub = array_merge($sub, $sub1);
         }
         if (isset($this->_packageInfo['dependencies']['group'])) {
             $group = $this->_packageInfo['dependencies']['group'];
             if (!isset($group[0])) {
-                $group = array($group);
+                $group = [$group];
             }
             foreach ($group as $deps) {
                 if (isset($deps['subpackage'])) {
                     $sub2 = $deps['subpackage'];
                     if (!isset($sub2[0])) {
-                        $sub2 = array($sub2);
+                        $sub2 = [$sub2];
                     }
                     $sub = array_merge($sub, $sub2);
                 }
@@ -1566,16 +1658,16 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function dependsOn($package, $channel)
+    public function dependsOn($package, $channel)
     {
         if (!($deps = $this->getDependencies())) {
             return false;
         }
-        foreach (array('package', 'subpackage') as $type) {
-            foreach (array('required', 'optional') as $needed) {
+        foreach (['package', 'subpackage'] as $type) {
+            foreach (['required', 'optional'] as $needed) {
                 if (isset($deps[$needed][$type])) {
                     if (!isset($deps[$needed][$type][0])) {
-                        $deps[$needed][$type] = array($deps[$needed][$type]);
+                        $deps[$needed][$type] = [$deps[$needed][$type]];
                     }
                     foreach ($deps[$needed][$type] as $dep) {
                         $depchannel = isset($dep['channel']) ? $dep['channel'] : '__uri';
@@ -1588,12 +1680,12 @@ class PEAR_PackageFile_v2
             }
             if (isset($deps['group'])) {
                 if (!isset($deps['group'][0])) {
-                    $dep['group'] = array($deps['group']);
+                    $dep['group'] = [$deps['group']];
                 }
                 foreach ($deps['group'] as $group) {
                     if (isset($group[$type])) {
                         if (!is_array($group[$type])) {
-                            $group[$type] = array($group[$type]);
+                            $group[$type] = [$group[$type]];
                         }
                         foreach ($group[$type] as $dep) {
                             $depchannel = isset($dep['channel']) ? $dep['channel'] : '__uri';
@@ -1614,7 +1706,7 @@ class PEAR_PackageFile_v2
      * @param string
      * @return array|false
      */
-    function getDependencyGroup($name)
+    public function getDependencyGroup($name)
     {
         $name = strtolower($name);
         if (!isset($this->_packageInfo['dependencies']['group'])) {
@@ -1622,7 +1714,7 @@ class PEAR_PackageFile_v2
         }
         $groups = $this->_packageInfo['dependencies']['group'];
         if (!isset($groups[0])) {
-            $groups = array($groups);
+            $groups = [$groups];
         }
         foreach ($groups as $group) {
             if (strtolower($group['attribs']['name']) == $name) {
@@ -1643,22 +1735,22 @@ class PEAR_PackageFile_v2
      * @param boolean return package.xml 2.0 <dependencies> tag
      * @return array|false
      */
-    function getDeps($raw = false, $nopearinstaller = false)
+    public function getDeps($raw = false, $nopearinstaller = false)
     {
         if (isset($this->_packageInfo['dependencies'])) {
             if ($raw) {
                 return $this->_packageInfo['dependencies'];
             }
-            $ret = array();
-            $map = array(
+            $ret = [];
+            $map = [
                 'php' => 'php',
                 'package' => 'pkg',
                 'subpackage' => 'pkg',
                 'extension' => 'ext',
                 'os' => 'os',
                 'pearinstaller' => 'pkg',
-                );
-            foreach (array('required', 'optional') as $type) {
+                ];
+            foreach (['required', 'optional'] as $type) {
                 $optional = ($type == 'optional') ? 'yes' : 'no';
                 if (!isset($this->_packageInfo['dependencies'][$type])
                     || empty($this->_packageInfo['dependencies'][$type])) {
@@ -1669,7 +1761,7 @@ class PEAR_PackageFile_v2
                         continue;
                     }
                     if ((is_array($deps) && !isset($deps[0])) || !is_array($deps)) {
-                        $deps = array($deps);
+                        $deps = [$deps];
                     }
                     foreach ($deps as $dep) {
                         if (!isset($map[$dtype])) {
@@ -1680,7 +1772,7 @@ class PEAR_PackageFile_v2
                             $dep['name'] = 'PEAR';
                             $dep['channel'] = 'pear.php.net';
                         }
-                        $s = array('type' => $map[$dtype]);
+                        $s = ['type' => $map[$dtype]];
                         if (isset($dep['channel'])) {
                             $s['channel'] = $dep['channel'];
                         }
@@ -1754,7 +1846,7 @@ class PEAR_PackageFile_v2
     /**
      * @return php|extsrc|extbin|zendextsrc|zendextbin|bundle|false
      */
-    function getPackageType()
+    public function getPackageType()
     {
         if (isset($this->_packageInfo['phprelease'])) {
             return 'php';
@@ -1780,7 +1872,7 @@ class PEAR_PackageFile_v2
     /**
      * @return array|false
      */
-    function getReleases()
+    public function getReleases()
     {
         $type = $this->getPackageType();
         if ($type != 'bundle') {
@@ -1795,7 +1887,7 @@ class PEAR_PackageFile_v2
     /**
      * @return array
      */
-    function getChangelog()
+    public function getChangelog()
     {
         if (isset($this->_packageInfo['changelog'])) {
             return $this->_packageInfo['changelog'];
@@ -1803,12 +1895,12 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function hasDeps()
+    public function hasDeps()
     {
         return isset($this->_packageInfo['dependencies']);
     }
 
-    function getPackagexmlVersion()
+    public function getPackagexmlVersion()
     {
         if (isset($this->_packageInfo['zendextsrcrelease'])) {
             return '2.1';
@@ -1822,17 +1914,17 @@ class PEAR_PackageFile_v2
     /**
      * @return array|false
      */
-    function getSourcePackage()
+    public function getSourcePackage()
     {
         if (isset($this->_packageInfo['extbinrelease']) ||
               isset($this->_packageInfo['zendextbinrelease'])) {
-            return array('channel' => $this->_packageInfo['srcchannel'],
-                         'package' => $this->_packageInfo['srcpackage']);
+            return ['channel' => $this->_packageInfo['srcchannel'],
+                         'package' => $this->_packageInfo['srcpackage']];
         }
         return false;
     }
 
-    function getBundledPackages()
+    public function getBundledPackages()
     {
         if (isset($this->_packageInfo['bundle'])) {
             return $this->_packageInfo['contents']['bundledpackage'];
@@ -1840,7 +1932,7 @@ class PEAR_PackageFile_v2
         return false;
     }
 
-    function getLastModified()
+    public function getLastModified()
     {
         if (isset($this->_packageInfo['_lastmodified'])) {
             return $this->_packageInfo['_lastmodified'];
@@ -1853,13 +1945,16 @@ class PEAR_PackageFile_v2
      * @param string
      * @return string
      */
-    function getFileContents($file)
+    public function getFileContents($file)
     {
         if ($this->_archiveFile == $this->_packageFile) { // unpacked
             $dir = dirname($this->_packageFile);
             $file = $dir . DIRECTORY_SEPARATOR . $file;
-            $file = str_replace(array('/', '\\'),
-                array(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), $file);
+            $file = str_replace(
+                ['/', '\\'],
+                [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR],
+                $file
+            );
             if (file_exists($file) && is_readable($file)) {
                 return implode('', file($file));
             }
@@ -1878,12 +1973,12 @@ class PEAR_PackageFile_v2
         }
     }
 
-    function &getRW()
+    public function &getRW()
     {
         if (!class_exists('PEAR_PackageFile_v2_rw')) {
             require_once 'PEAR/PackageFile/v2/rw.php';
         }
-        $a = new PEAR_PackageFile_v2_rw;
+        $a = new PEAR_PackageFile_v2_rw();
         foreach (get_object_vars($this) as $name => $unused) {
             if (!isset($this->$name)) {
                 continue;
@@ -1898,7 +1993,7 @@ class PEAR_PackageFile_v2
         return $a;
     }
 
-    function &getDefaultGenerator()
+    public function &getDefaultGenerator()
     {
         if (!class_exists('PEAR_PackageFile_Generator_v2')) {
             require_once 'PEAR/PackageFile/Generator/v2.php';
@@ -1907,19 +2002,19 @@ class PEAR_PackageFile_v2
         return $a;
     }
 
-    function analyzeSourceCode($file, $string = false)
+    public function analyzeSourceCode($file, $string = false)
     {
         if (!isset($this->_v2Validator) ||
               !is_a($this->_v2Validator, 'PEAR_PackageFile_v2_Validator')) {
             if (!class_exists('PEAR_PackageFile_v2_Validator')) {
                 require_once 'PEAR/PackageFile/v2/Validator.php';
             }
-            $this->_v2Validator = new PEAR_PackageFile_v2_Validator;
+            $this->_v2Validator = new PEAR_PackageFile_v2_Validator();
         }
         return $this->_v2Validator->analyzeSourceCode($file, $string);
     }
 
-    function validate($state = PEAR_VALIDATE_NORMAL)
+    public function validate($state = PEAR_VALIDATE_NORMAL)
     {
         if (!isset($this->_packageInfo) || !is_array($this->_packageInfo)) {
             return false;
@@ -1929,7 +2024,7 @@ class PEAR_PackageFile_v2
             if (!class_exists('PEAR_PackageFile_v2_Validator')) {
                 require_once 'PEAR/PackageFile/v2/Validator.php';
             }
-            $this->_v2Validator = new PEAR_PackageFile_v2_Validator;
+            $this->_v2Validator = new PEAR_PackageFile_v2_Validator();
         }
         if (isset($this->_packageInfo['xsdversion'])) {
             unset($this->_packageInfo['xsdversion']);
@@ -1937,7 +2032,7 @@ class PEAR_PackageFile_v2
         return $this->_v2Validator->validate($this, $state);
     }
 
-    function getTasksNs()
+    public function getTasksNs()
     {
         if (!isset($this->_tasksNs)) {
             if (isset($this->_packageInfo['attribs'])) {
@@ -1962,13 +2057,13 @@ class PEAR_PackageFile_v2
      * @param string
      * @return boolean
      */
-    function getTask($task)
+    public function getTask($task)
     {
         $this->getTasksNs();
         // transform all '-' to '/' and 'tasks:' to '' so tasks:replace becomes replace
-        $task = str_replace(array($this->_tasksNs . ':', '-'), array('', ' '), $task);
+        $task = str_replace([$this->_tasksNs . ':', '-'], ['', ' '], $task);
         $taskfile = str_replace(' ', '/', ucwords($task));
-        $task = str_replace(array(' ', '/'), '_', ucwords($task));
+        $task = str_replace([' ', '/'], '_', ucwords($task));
         if (class_exists("PEAR_Task_$task")) {
             return "PEAR_Task_$task";
         }
@@ -1987,7 +2082,7 @@ class PEAR_PackageFile_v2
      * @param mixed the value to splice in
      * @param string the new tag name
      */
-    function _ksplice($array, $key, $value, $newkey)
+    public function _ksplice($array, $key, $value, $newkey)
     {
         $offset = array_search($key, array_keys($array));
         $after = array_slice($array, $offset);
@@ -2002,7 +2097,7 @@ class PEAR_PackageFile_v2
      * @param string tag name
      * @access private
      */
-    function _insertBefore($array, $keys, $contents, $newkey)
+    public function _insertBefore($array, $keys, $contents, $newkey)
     {
         foreach ($keys as $key) {
             if (isset($array[$key])) {
@@ -2027,13 +2122,13 @@ class PEAR_PackageFile_v2
      * This allows construction of nested tags
      * @access private
      */
-    function _mergeTag($manip, $contents, $order)
+    public function _mergeTag($manip, $contents, $order)
     {
         if (count($order)) {
             foreach ($order as $tag => $curorder) {
                 if (!isset($manip[$tag])) {
                     // ensure that the tag is set up
-                    $manip = $this->_insertBefore($manip, $curorder, array(), $tag);
+                    $manip = $this->_insertBefore($manip, $curorder, [], $tag);
                 }
                 if (count($order) > 1) {
                     $manip[$tag] = $this->_mergeTag($manip[$tag], $contents, array_slice($order, 1));
@@ -2049,11 +2144,10 @@ class PEAR_PackageFile_v2
             if (is_array($manip[$tag]) && !count($manip[$tag])) {
                 $manip[$tag] = $contents;
             } else {
-                $manip[$tag] = array($manip[$tag]);
+                $manip[$tag] = [$manip[$tag]];
                 $manip[$tag][] = $contents;
             }
         }
         return $manip;
     }
 }
-?>

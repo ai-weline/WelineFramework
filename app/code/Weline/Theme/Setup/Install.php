@@ -15,7 +15,7 @@ use Weline\Framework\Setup\InstallInterface;
 
 class Install implements InstallInterface
 {
-    const table_THEME = 'weline_theme';
+    public const table_THEME = 'weline_theme';
 
     public function setup(Data\Setup $setup, Data\Context $context): void
     {

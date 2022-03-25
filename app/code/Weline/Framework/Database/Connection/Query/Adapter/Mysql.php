@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 /**
  * 文件信息
@@ -13,12 +14,8 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\Connection\Query\Adapter;
 
-
-
 use Weline\Framework\Database\Connection\Query;
 
 class Mysql extends Query
 {
-
-
 }

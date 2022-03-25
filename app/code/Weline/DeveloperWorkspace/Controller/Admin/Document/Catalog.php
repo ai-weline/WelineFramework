@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,7 @@ namespace Weline\DeveloperWorkspace\Controller\Admin\Document;
 
 class Catalog extends \Weline\Admin\Controller\BaseController
 {
-    function index(){
-
+    public function index()
+    {
     }
 }

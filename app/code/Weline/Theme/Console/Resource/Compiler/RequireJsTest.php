@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,7 +16,8 @@ use Weline\Framework\UnitTest\TestCore;
 
 class RequireJsTest extends TestCore
 {
-    function testCompiler(){
+    public function testCompiler()
+    {
         /**@var RequireJs $compile*/
         $compile = ObjectManager::getInstance(RequireJs::class);
         p($compile->compile());

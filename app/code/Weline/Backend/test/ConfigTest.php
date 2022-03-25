@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,7 +19,7 @@ class ConfigTest extends TestCore
 {
     protected Config $config;
 
-    function setUp(): void
+    public function setUp(): void
     {
         $this->config = ObjectManager::getInstance(Config::class);
     }

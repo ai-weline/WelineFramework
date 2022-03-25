@@ -16,7 +16,7 @@ use Weline\Framework\Manager\Cache\ObjectCache;
 
 class ObjectManager implements ManagerInterface
 {
-    const unserializable_class = [
+    public const unserializable_class = [
         \PDO::class,
         \WeakMap::class
     ];
@@ -31,12 +31,12 @@ class ObjectManager implements ManagerInterface
     {
     }
 
-    function __init()
+    public function __init()
     {
         self::getCache();
     }
 
-    function __construct()
+    public function __construct()
     {
         self::getCache();
     }
@@ -55,7 +55,9 @@ class ObjectManager implements ManagerInterface
             if (str_ends_with($class, 'Factory')) {
                 $class = substr($class, 0, strrpos($class, 'Factory'));
             }
-            if (!class_exists($class)) throw new Exception(__("工厂类：{$class} 不存在！"));
+            if (!class_exists($class)) {
+                throw new Exception(__("工厂类：{$class} 不存在！"));
+            }
         }
         return $class;
     }
@@ -225,17 +227,17 @@ class ObjectManager implements ManagerInterface
         return true;
     }
 
-    static function addInstance($class, &$object)
+    public static function addInstance($class, &$object)
     {
         self::$instances[$class] = $object;
     }
 
-    static function _getInstance($class)
+    public static function _getInstance($class)
     {
         return self::$instances[$class];
     }
 
-    static function getIs()
+    public static function getIs()
     {
         return self::$instances;
     }

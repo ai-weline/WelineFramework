@@ -32,25 +32,25 @@ require_once 'PEAR/Command/Common.php';
  */
 class PEAR_Command_Mirror extends PEAR_Command_Common
 {
-    var $commands = array(
-        'download-all' => array(
+    public $commands = [
+        'download-all' => [
             'summary' => 'Downloads each available package from the default channel',
             'function' => 'doDownloadAll',
             'shortcut' => 'da',
-            'options' => array(
+            'options' => [
                 'channel' =>
-                    array(
+                    [
                     'shortopt' => 'c',
                     'doc' => 'specify a channel other than the default channel',
                     'arg' => 'CHAN',
-                    ),
-                ),
+                    ],
+                ],
             'doc' => '
 Requests a list of available packages from the default channel ({config default_channel})
 and downloads them to current working directory.  Note: only
 packages within preferred_state ({config preferred_state}) will be downloaded'
-            ),
-        );
+            ],
+        ];
 
     /**
      * PEAR_Command_Mirror constructor.
@@ -59,7 +59,7 @@ packages within preferred_state ({config preferred_state}) will be downloaded'
      * @param object PEAR_Frontend a reference to an frontend
      * @param object PEAR_Config a reference to the configuration data
      */
-    function __construct(&$ui, &$config)
+    public function __construct(&$ui, &$config)
     {
         parent::__construct($ui, $config);
     }
@@ -67,7 +67,7 @@ packages within preferred_state ({config preferred_state}) will be downloaded'
     /**
      * For unit-testing
      */
-    function &factory($a)
+    public function &factory($a)
     {
         $a = &PEAR_Command::factory($a, $this->config);
         return $a;
@@ -84,7 +84,7 @@ packages within preferred_state ({config preferred_state}) will be downloaded'
     * @return bool true if successful
     * @throw PEAR_Error
     */
-    function doDownloadAll($command, $options, $params)
+    public function doDownloadAll($command, $options, $params)
     {
         $savechannel = $this->config->get('default_channel');
         $reg = &$this->config->getRegistry();
@@ -104,7 +104,7 @@ packages within preferred_state ({config preferred_state}) will be downloaded'
 
         if ($chan->supportsREST($this->config->get('preferred_mirror')) &&
               $base = $chan->getBaseURL('REST1.0', $this->config->get('preferred_mirror'))) {
-            $rest = &$this->config->getREST('1.0', array());
+            $rest = &$this->config->getREST('1.0', []);
             $remoteInfo = array_flip($rest->listPackages($base, $channel));
         }
 
@@ -126,7 +126,7 @@ packages within preferred_state ({config preferred_state}) will be downloaded'
          * the download command
          */
         PEAR::staticPushErrorHandling(PEAR_ERROR_RETURN);
-        $err = $cmd->run('download', array('downloadonly' => true), array_keys($remoteInfo));
+        $err = $cmd->run('download', ['downloadonly' => true], array_keys($remoteInfo));
         PEAR::staticPopErrorHandling();
         $this->config->set('default_channel', $savechannel);
         if (PEAR::isError($err)) {

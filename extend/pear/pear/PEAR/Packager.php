@@ -39,9 +39,9 @@ class PEAR_Packager extends PEAR_Common
     /**
      * @var PEAR_Registry
      */
-    var $_registry;
+    public $_registry;
 
-    function package($pkgfile = null, $compress = true, $pkg2 = null)
+    public function package($pkgfile = null, $compress = true, $pkg2 = null)
     {
         // {{{ validate supplied package.xml file
         if (empty($pkgfile)) {

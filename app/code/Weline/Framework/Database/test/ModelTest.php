@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,27 +18,27 @@ use Weline\Framework\UnitTest\TestCore;
 class ModelTest extends TestCore
 {
     private WelineModel $model;
-    function setUp(): void
+    public function setUp(): void
     {
         $this->model = ObjectManager::getInstance(WelineModel::class);
     }
 
-    function testProcessTable()
+    public function testProcessTable()
     {
         p(data: $this->model->processTable());
     }
 
-    function testLoad()
+    public function testLoad()
     {
         p($this->model->find(1));
-        p($this->model->load('id',1));
+        p($this->model->load('id', 1));
     }
 
     /**
      * @throws \ReflectionException
      * @throws \Weline\Framework\Exception\Core
      */
-    function testSave()
+    public function testSave()
     {
         # 模型不存在数据时自动插入
 //        p($this->model->save(['id'=>6,'stores'=>441114]));
@@ -47,21 +48,20 @@ class ModelTest extends TestCore
 //        p($this->model->where('id',8)->find()->fetch());
         p($this->model->getData());
 //        $this->model->setId(8);
-        $this->model->setData('stores',8888)->setData('id',7);
+        $this->model->setData('stores', 8888)->setData('id', 7);
         p($this->model->save());// 处理id字符串时不更新问题
 
         p($this->model->save(['stores'=>8818]));
         p($this->model->save(['id'=>8,'stores'=>8818]));
     }
-    function testWhere()
+    public function testWhere()
     {
         p($this->model->where([['id',6],['stores',666]])->find()->fetch());
     }
-    function testUpdate()
+    public function testUpdate()
     {
         $this->model->load('6');
-        p($this->model->getData(),true);
+        p($this->model->getData(), true);
         p($this->model->save(['stores'=>777]));
     }
-
 }

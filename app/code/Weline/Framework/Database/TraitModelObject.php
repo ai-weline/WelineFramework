@@ -77,7 +77,7 @@ trait TraitModelObject
         } else {
             $this->_data[$key] = $value;
         }
-        if($this->_data){
+        if ($this->_data) {
             $this->data($this->_data);
             $this->exists(true);
         }

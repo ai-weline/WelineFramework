@@ -7,9 +7,9 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQname()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
-        );
+        ];
         $expected = "<foo:bar />";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -19,10 +19,10 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndNamespace()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-        );
+        ];
         $expected = "<foo:bar xmlns:foo=\"http://foo.com\" />";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -32,11 +32,11 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributes()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
-        );
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
+        ];
         $expected = "<foo:bar argh=\"fruit&amp;vegetable\" key=\"value\" xmlns:foo=\"http://foo.com\" />";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -46,12 +46,12 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContent()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $expected = "<foo:bar argh=\"fruit&amp;vegetable\" key=\"value\" xmlns:foo=\"http://foo.com\">I&apos;m inside the tag</foo:bar>";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -61,11 +61,11 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndAttributesAndContent()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $expected = "<foo:bar argh=\"fruit&amp;vegetable\" key=\"value\">I&apos;m inside the tag</foo:bar>";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -75,11 +75,11 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndContent()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
             "content"      => "I'm inside the tag",
-        );
+        ];
         $expected = "<foo:bar xmlns:foo=\"http://foo.com\">I&apos;m inside the tag</foo:bar>";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -89,12 +89,12 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContentWithEntitiesNone()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $expected = "<foo:bar argh=\"fruit&amp;vegetable\" key=\"value\" xmlns:foo=\"http://foo.com\">I'm inside the tag</foo:bar>";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original, XML_UTIL_ENTITIES_NONE));
     }
@@ -104,12 +104,12 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContentWithReplaceEntities()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $expected = "<foo:bar argh=\"fruit&amp;vegetable\" key=\"value\" xmlns:foo=\"http://foo.com\">I&apos;m inside the tag</foo:bar>";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original, XML_UTIL_REPLACE_ENTITIES));
     }
@@ -119,12 +119,12 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContentWithReplaceEntitiesAndMultilineFalse()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $multiline = false;
         $expected = "<foo:bar argh=\"fruit&amp;vegetable\" key=\"value\" xmlns:foo=\"http://foo.com\">I&apos;m inside the tag</foo:bar>";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original, XML_UTIL_REPLACE_ENTITIES, $multiline));
@@ -135,12 +135,12 @@ class CreateTagFromArrayTests extends AbstractUnitTests
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContentWithReplaceEntitiesAndMultilineTrue()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $multiline = true;
         $expected =
 <<< EOF
@@ -156,12 +156,12 @@ EOF;
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContentWithReplaceEntitiesAndMultilineTrueAndIndent()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $multiline = true;
         $indent = "  ";
         $expected =
@@ -178,12 +178,12 @@ EOF;
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContentWithReplaceEntitiesAndMultilineTrueAndIndentAndLinebreak()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $multiline = true;
         $indent = "  ";
         $linebreak = "^";
@@ -196,12 +196,12 @@ EOF;
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContentWithReplaceEntitiesAndMultilineTrueAndIndentAndLinebreakAndSortAttributesTrue()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $multiline = true;
         $indent = "  ";
         $linebreak = "^";
@@ -215,12 +215,12 @@ EOF;
      */
     public function testCreateTagFromArrayWithQnameAndNamespaceAndAttributesAndContentWithReplaceEntitiesAndMultilineTrueAndIndentAndLinebreakAndSortAttributesFalse()
     {
-        $original = array(
+        $original = [
             "qname" => "foo:bar",
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $multiline = true;
         $indent = "  ";
         $linebreak = "^";
@@ -234,9 +234,9 @@ EOF;
      */
     public function testCreateTagFromArrayWithInvalidArray()
     {
-        $badArray = array(
+        $badArray = [
             "foo" => "bar",
-        );
+        ];
         $expectedError = "You must either supply a qualified name (qname) or local tag name (localPart).";
         $this->assertEquals($expectedError, XML_Util::createTagFromArray($badArray));
     }
@@ -246,11 +246,11 @@ EOF;
      */
     public function testCreateTagFromArrayWithNamespaceAndAttributesAndContentButWithoutQname()
     {
-        $original = array(
+        $original = [
             "namespaceUri" => "http://foo.com",
-            "attributes"   => array( "key" => "value", "argh" => "fruit&vegetable" ),
+            "attributes"   => [ "key" => "value", "argh" => "fruit&vegetable" ],
             "content"      => "I'm inside the tag",
-        );
+        ];
         $expectedError = "You must either supply a qualified name (qname) or local tag name (localPart).";
         $this->assertEquals($expectedError, XML_Util::createTagFromArray($original));
     }
@@ -260,9 +260,9 @@ EOF;
      */
     public function testCreateTagFromArrayWithNonScalarContent()
     {
-        $badArray = array(
-            'content' => array('foo', 'bar'),
-        );
+        $badArray = [
+            'content' => ['foo', 'bar'],
+        ];
         $expectedError = "Supplied non-scalar value as tag content";
         $this->assertEquals($expectedError, XML_Util::createTagFromArray($badArray));
     }
@@ -272,10 +272,10 @@ EOF;
      */
     public function testCreateTagFromArrayWithArrayOfNamespaces()
     {
-        $original = array(
+        $original = [
             'qname'        => 'foo:bar',
-            'namespaces'   => array('ns1' => 'uri1', 'ns2' => 'uri2'),
-        );
+            'namespaces'   => ['ns1' => 'uri1', 'ns2' => 'uri2'],
+        ];
         $expected = "<foo:bar xmlns:ns1=\"uri1\" xmlns:ns2=\"uri2\" />";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -285,10 +285,10 @@ EOF;
      */
     public function testCreateTagFromArrayWithQnameDerivedFromNamespaceUriAndLocalPart()
     {
-        $original = array(
+        $original = [
             'namespaceUri' => 'http://bar.org',
             'localPart'    => 'foo'
-        );
+        ];
         $expected = "<foo xmlns=\"http://bar.org\" />";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -298,10 +298,10 @@ EOF;
      */
     public function testCreateTagFromArrayWithQnameDerivedFromNamespaceAndLocalPart()
     {
-        $original = array(
+        $original = [
             'namespace'    => 'http://foo.org',
             'localPart'    => 'bar'
-        );
+        ];
         $expected = "<http://foo.org:bar />";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -311,10 +311,10 @@ EOF;
      */
     public function testCreateTagFromArrayWithQnameDerivedFromLocalPart()
     {
-        $original = array(
+        $original = [
             'namespace'    => '',
             'localPart'    => 'bar'
-        );
+        ];
         $expected = "<bar />";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original));
     }
@@ -324,7 +324,7 @@ EOF;
      */
     public function testCreateTagFromArrayWithImplicitlyEmptyContentAndCollapseNoneDoesNotCollapseTag()
     {
-        $original = array('qname' => 'tag1');
+        $original = ['qname' => 'tag1'];
         $expected = "<tag1></tag1>";
         $actual = XML_Util::createTagFromArray(
             $original,
@@ -343,7 +343,7 @@ EOF;
      */
     public function testCreateTagFromArrayForCdataWithExplicitlyEmptyContentDoesNotCollapseTag()
     {
-        $original = array('qname' => 'tag1', 'content' => '');
+        $original = ['qname' => 'tag1', 'content' => ''];
         $expected = "<tag1><![CDATA[]]></tag1>";
         $this->assertEquals($expected, XML_Util::createTagFromArray($original, XML_UTIL_CDATA_SECTION));
     }

@@ -174,29 +174,31 @@ class XML_Util
      * @see    reverseEntities()
      */
     public static function replaceEntities(
-        $string, $replaceEntities = XML_UTIL_ENTITIES_XML, $encoding = 'ISO-8859-1'
+        $string,
+        $replaceEntities = XML_UTIL_ENTITIES_XML,
+        $encoding = 'ISO-8859-1'
     ) {
         switch ($replaceEntities) {
         case XML_UTIL_ENTITIES_XML:
             return strtr(
                 $string,
-                array(
+                [
                     '&'  => '&amp;',
                     '>'  => '&gt;',
                     '<'  => '&lt;',
                     '"'  => '&quot;',
                     '\'' => '&apos;'
-                )
+                ]
             );
             break;
         case XML_UTIL_ENTITIES_XML_REQUIRED:
             return strtr(
                 $string,
-                array(
+                [
                     '&' => '&amp;',
                     '<' => '&lt;',
                     '"' => '&quot;'
-                )
+                ]
             );
             break;
         case XML_UTIL_ENTITIES_HTML:
@@ -246,29 +248,31 @@ class XML_Util
      * @see    replaceEntities()
      */
     public static function reverseEntities(
-        $string, $replaceEntities = XML_UTIL_ENTITIES_XML, $encoding = 'ISO-8859-1'
+        $string,
+        $replaceEntities = XML_UTIL_ENTITIES_XML,
+        $encoding = 'ISO-8859-1'
     ) {
         switch ($replaceEntities) {
         case XML_UTIL_ENTITIES_XML:
             return strtr(
                 $string,
-                array(
+                [
                     '&amp;'  => '&',
                     '&gt;'   => '>',
                     '&lt;'   => '<',
                     '&quot;' => '"',
                     '&apos;' => '\''
-                )
+                ]
             );
             break;
         case XML_UTIL_ENTITIES_XML_REQUIRED:
             return strtr(
                 $string,
-                array(
+                [
                     '&amp;'  => '&',
                     '&lt;'   => '<',
                     '&quot;' => '"'
-                )
+                ]
             );
             break;
         case XML_UTIL_ENTITIES_HTML:
@@ -297,11 +301,13 @@ class XML_Util
      *         XML declaration
      */
     public static function getXMLDeclaration(
-        $version = '1.0', $encoding = null, $standalone = null
+        $version = '1.0',
+        $encoding = null,
+        $standalone = null
     ) {
-        $attributes = array(
+        $attributes = [
             'version' => $version,
-        );
+        ];
         // add encoding
         if ($encoding !== null) {
             $attributes['encoding'] = $encoding;
@@ -336,7 +342,9 @@ class XML_Util
      * @since  0.2
      */
     public static function getDocTypeDeclaration(
-        $root, $uri = null, $internalDtd = null
+        $root,
+        $uri = null,
+        $internalDtd = null
     ) {
         if (is_array($uri)) {
             $ref = sprintf(' PUBLIC "%s" "%s"', $uri['id'], $uri['uri']);
@@ -390,8 +398,12 @@ class XML_Util
      * @todo   allow sort also to be an options array
      */
     public static function attributesToString(
-        $attributes, $sort = true, $multiline = false,
-        $indent = '    ', $linebreak = "\n", $entities = XML_UTIL_ENTITIES_XML
+        $attributes,
+        $sort = true,
+        $multiline = false,
+        $indent = '    ',
+        $linebreak = "\n",
+        $entities = XML_UTIL_ENTITIES_XML
     ) {
         /*
          * second parameter may be an array
@@ -483,7 +495,7 @@ class XML_Util
                         '${4}' .            // attributes
                     ' />'
                 ;
-                return (preg_replace($preg1, $preg2, $xml)?:$xml);
+                return (preg_replace($preg1, $preg2, $xml) ?: $xml);
                 break;
             case XML_UTIL_COLLAPSE_XHTML_ONLY:
                 return (
@@ -539,15 +551,21 @@ class XML_Util
      * @uses   createTagFromArray() to create the tag
      */
     public static function createTag(
-        $qname, $attributes = array(), $content = null,
-        $namespaceUri = null, $replaceEntities = XML_UTIL_REPLACE_ENTITIES,
-        $multiline = false, $indent = '_auto', $linebreak = "\n",
-        $sortAttributes = true, $collapseTagMode = XML_UTIL_COLLAPSE_ALL
+        $qname,
+        $attributes = [],
+        $content = null,
+        $namespaceUri = null,
+        $replaceEntities = XML_UTIL_REPLACE_ENTITIES,
+        $multiline = false,
+        $indent = '_auto',
+        $linebreak = "\n",
+        $sortAttributes = true,
+        $collapseTagMode = XML_UTIL_COLLAPSE_ALL
     ) {
-        $tag = array(
+        $tag = [
             'qname'      => $qname,
             'attributes' => $attributes
-        );
+        ];
 
         // add tag content
         if ($content !== null) {
@@ -560,8 +578,12 @@ class XML_Util
         }
 
         return XML_Util::createTagFromArray(
-            $tag, $replaceEntities, $multiline,
-            $indent, $linebreak, $sortAttributes,
+            $tag,
+            $replaceEntities,
+            $multiline,
+            $indent,
+            $linebreak,
+            $sortAttributes,
             $collapseTagMode
         );
     }
@@ -627,9 +649,13 @@ class XML_Util
      * @uses raiseError()
      */
     public static function createTagFromArray(
-        $tag, $replaceEntities = XML_UTIL_REPLACE_ENTITIES,
-        $multiline = false, $indent = '_auto', $linebreak = "\n",
-        $sortAttributes = true, $collapseTagMode = XML_UTIL_COLLAPSE_ALL
+        $tag,
+        $replaceEntities = XML_UTIL_REPLACE_ENTITIES,
+        $multiline = false,
+        $indent = '_auto',
+        $linebreak = "\n",
+        $sortAttributes = true,
+        $collapseTagMode = XML_UTIL_COLLAPSE_ALL
     ) {
         if (isset($tag['content']) && !is_scalar($tag['content'])) {
             return XML_Util::raiseError(
@@ -648,7 +674,7 @@ class XML_Util
 
         // if no attributes hav been set, use empty attributes
         if (!isset($tag['attributes']) || !is_array($tag['attributes'])) {
-            $tag['attributes'] = array();
+            $tag['attributes'] = [];
         }
 
         if (isset($tag['namespaces'])) {
@@ -702,7 +728,10 @@ class XML_Util
         // create attribute list
         $attList = XML_Util::attributesToString(
             $tag['attributes'],
-            $sortAttributes, $multiline, $indent, $linebreak
+            $sortAttributes,
+            $multiline,
+            $indent,
+            $linebreak
         );
 
         switch ($replaceEntities) {
@@ -713,12 +742,16 @@ class XML_Util
             break;
         default:
             $tag['content'] = XML_Util::replaceEntities(
-                $tag['content'], $replaceEntities
+                $tag['content'],
+                $replaceEntities
             );
             break;
         }
         $tag = sprintf(
-            '<%s%s>%s</%s>', $tag['qname'], $attList, $tag['content'],
+            '<%s%s>%s</%s>',
+            $tag['qname'],
+            $attList,
+            $tag['content'],
             $tag['qname']
         );
 
@@ -750,13 +783,17 @@ class XML_Util
      * @see    createEndElement(), createTag()
      */
     public static function createStartElement(
-        $qname, $attributes = array(), $namespaceUri = null,
-        $multiline = false, $indent = '_auto', $linebreak = "\n",
+        $qname,
+        $attributes = [],
+        $namespaceUri = null,
+        $multiline = false,
+        $indent = '_auto',
+        $linebreak = "\n",
         $sortAttributes = true
     ) {
         // if no attributes hav been set, use empty attributes
         if (!isset($attributes) || !is_array($attributes)) {
-            $attributes = array();
+            $attributes = [];
         }
 
         if ($namespaceUri != null) {
@@ -782,8 +819,11 @@ class XML_Util
 
         // create attribute list
         $attList = XML_Util::attributesToString(
-            $attributes, $sortAttributes,
-            $multiline, $indent, $linebreak
+            $attributes,
+            $sortAttributes,
+            $multiline,
+            $indent,
+            $linebreak
         );
         $element = sprintf('<%s%s>', $qname, $attList);
         return  $element;
@@ -878,15 +918,15 @@ class XML_Util
     {
         if (strstr($qname, ':')) {
             $tmp = explode(':', $qname);
-            return array(
+            return [
                 'namespace' => $tmp[0],
                 'localPart' => $tmp[1]
-            );
+            ];
         }
-        return array(
+        return [
             'namespace' => $defaultNs,
             'localPart' => $qname
-        );
+        ];
     }
 
     /**
@@ -960,4 +1000,3 @@ class XML_Util
         return PEAR::raiseError($msg, $code);
     }
 }
-?>

@@ -35,7 +35,7 @@ class Index extends FrontendController
      */
     public function index()
     {
-       return $this->fetch();
+        return $this->fetch();
     }
 
     /**
@@ -47,7 +47,8 @@ class Index extends FrontendController
      * 参数区：
      * @return bool|void
      */
-    function moduleTemplateFetch(){
+    public function moduleTemplateFetch()
+    {
         return $this->fetch('Aiweline_HelloWorld::templates/HelloWorld/demo.phtml');
     }
 
@@ -60,7 +61,8 @@ class Index extends FrontendController
      * 参数区：
      * @return bool|void
      */
-    function getComposerVendorModuleTemplate(){
+    public function getComposerVendorModuleTemplate()
+    {
         return $this->fetch('Aiweline_WebsiteMonitoring::templates/Index/index.phtml');
     }
 }

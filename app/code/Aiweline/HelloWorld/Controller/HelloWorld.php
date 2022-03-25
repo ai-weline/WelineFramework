@@ -94,12 +94,12 @@ class HelloWorld extends FrontendController
         p('链接名：' . $this->aiwelineHelloWorld->getConnection()->getConfigProvider()->getConnectionName(), 1);
         p('链接类型：' . $this->aiwelineHelloWorld->getConnection()->getConfigProvider()->getDbType(), 1);
         $data = $this->aiwelineHelloWorld->query("select * from {$this->aiwelineHelloWorld->getTable()}")->fetch();
-        p($data,1);
-       if(empty($data)){
-           p($this->aiwelineHelloWorld->insert([
+        p($data, 1);
+        if (empty($data)) {
+            p($this->aiwelineHelloWorld->insert([
                'demo' => 1,
            ])->fetch());
-       }
+        }
     }
 
     public function demo()
@@ -136,7 +136,7 @@ class HelloWorld extends FrontendController
     {
         $cache = ObjectManager::getInstance(Cache::class)->cache();
         $cache->set('111', 8888);
-        p('缓存引擎：'.$cache::class,true);
+        p('缓存引擎：' . $cache::class, true);
         p($cache->get('111'));
     }
 

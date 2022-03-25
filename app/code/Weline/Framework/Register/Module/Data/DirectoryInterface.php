@@ -24,25 +24,25 @@ interface DirectoryInterface
     /**
      * 配置目录
      */
-    const etc = 'etc';
+    public const etc = 'etc';
 
     /**
      * Api目录
      */
-    const api = 'Api';
+    public const api = 'Api';
 
     /**
      * 控制器目录
      */
-    const controller = 'Controller';
+    public const controller = 'Controller';
 
     /**
      * 帮助目录
      */
-    const helper = 'Helper';
+    public const helper = 'Helper';
 
     /**
      * 视图模板目录
      */
-    const view = 'view';
+    public const view = 'view';
 }

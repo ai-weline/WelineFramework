@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,10 +11,8 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database\Exception;
 
-
 use Weline\Framework\App\Exception;
 
 class ModelException extends Exception
 {
-
 }

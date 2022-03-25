@@ -13,7 +13,6 @@ class Redis extends AbstractSessionDriverHandlerDriverHandle implements DriverIn
 {
     public function __construct(array $config)
     {
-
     }
 
     public function set($name, $value)
@@ -21,7 +20,7 @@ class Redis extends AbstractSessionDriverHandlerDriverHandle implements DriverIn
         // TODO: Implement set() method.
     }
 
-    public function get($name):mixed
+    public function get($name): mixed
     {
         // TODO: Implement get() method.
     }

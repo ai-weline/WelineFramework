@@ -85,7 +85,7 @@ class PEAR_Frontend extends PEAR
         }
 
         if (class_exists($uiclass)) {
-            $obj = new $uiclass;
+            $obj = new $uiclass();
             // quick test to see if this class implements a few of the most
             // important frontend methods
             if (is_a($obj, 'PEAR_Frontend')) {
@@ -149,7 +149,7 @@ class PEAR_Frontend extends PEAR
     /**
      * @param PEAR_Config
      */
-    function setConfig(&$config)
+    public function setConfig(&$config)
     {
     }
 
@@ -160,7 +160,7 @@ class PEAR_Frontend extends PEAR
      * needs to be able to sustain a list over many sessions in order to support
      * user interaction with install scripts
      */
-    static function addTempFile($file)
+    public static function addTempFile($file)
     {
         $GLOBALS['_PEAR_Common_tempfiles'][] = $file;
     }
@@ -173,7 +173,7 @@ class PEAR_Frontend extends PEAR
      * @return boolean true
      * @abstract
      */
-    function log($msg, $append_crlf = true)
+    public function log($msg, $append_crlf = true)
     {
     }
 
@@ -183,7 +183,7 @@ class PEAR_Frontend extends PEAR
      * @param array $scripts array of post-install scripts
      * @abstract
      */
-    function runPostinstallScripts(&$scripts)
+    public function runPostinstallScripts(&$scripts)
     {
     }
 
@@ -196,7 +196,7 @@ class PEAR_Frontend extends PEAR
      * @param string $command command from which this method was called
      * @abstract
      */
-    function outputData($data, $command = '_default')
+    public function outputData($data, $command = '_default')
     {
     }
 
@@ -217,7 +217,7 @@ class PEAR_Frontend extends PEAR
      * @return array input sent by the user
      * @abstract
      */
-    function userDialog($command, $prompts, $types = array(), $defaults = array())
+    public function userDialog($command, $prompts, $types = [], $defaults = [])
     {
     }
 }

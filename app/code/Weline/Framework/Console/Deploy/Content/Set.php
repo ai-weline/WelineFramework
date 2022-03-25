@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,14 +16,11 @@ use Weline\Framework\Output\Cli\Printing;
 
 class Set implements \Weline\Framework\Console\CommandInterface
 {
-
     private Printing $printing;
 
-    function __construct(
+    public function __construct(
         Printing $printing
-    )
-    {
-
+    ) {
         $this->printing = $printing;
     }
 
@@ -66,10 +64,9 @@ class Set implements \Weline\Framework\Console\CommandInterface
 
         Env::getInstance()->setConfig($type, $value);
         $this->printing->success(__('类型 %1 设置为：%1', [$type, $type]));
-
     }
 
-    function getTypes(): array
+    public function getTypes(): array
     {
         return [
             'static_file_rand_version' => __('设置静态文件是否末尾添加随机字符，以保证浏览器不缓存文件而得到实时响应修改。接受值：0或1')

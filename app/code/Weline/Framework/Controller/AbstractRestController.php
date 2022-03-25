@@ -11,11 +11,11 @@ namespace Weline\Framework\Controller;
 
 abstract class AbstractRestController extends Core
 {
-    const fetch_JSON = 'json';
+    public const fetch_JSON = 'json';
 
-    const fetch_XML = 'xml';
+    public const fetch_XML = 'xml';
 
-    const fetch_STRING = 'string';
+    public const fetch_STRING = 'string';
 
     /**
      * @DESC         |方法描述

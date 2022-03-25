@@ -26,8 +26,8 @@ define('PEAR_IGNORE_BACKTRACE', 1);
  */
 //the space is needed for windows include paths with trailing backslash
 // http://pear.php.net/bugs/bug.php?id=19482
-if ('E:\WelineFramework\extend\pear\\pear ' != '@'.'include_path'.'@ ') {
-    ini_set('include_path', trim('E:\WelineFramework\extend\pear\\pear '). PATH_SEPARATOR .  get_include_path());
+if ('E:\WelineFramework\extend\pear\\pear ' != '@' . 'include_path' . '@ ') {
+    ini_set('include_path', trim('E:\WelineFramework\extend\pear\\pear ') . PATH_SEPARATOR . get_include_path());
     $raw = false;
 } else {
     // this is a raw, uninstalled pear, either a cvs checkout, or php distro
@@ -128,10 +128,10 @@ if (PEAR::isError($config)) {
 // this is used in the error handler to retrieve a relative path
 $_PEAR_PHPDIR = $config->get('php_dir');
 $ui->setConfig($config);
-PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, array($ui, "displayFatalError"));
+PEAR::setErrorHandling(PEAR_ERROR_CALLBACK, [$ui, "displayFatalError"]);
 
 $verbose = $config->get("verbose");
-$cmdopts = array();
+$cmdopts = [];
 
 if ($raw) {
     if (!$config->isDefinedLayer('user') && !$config->isDefinedLayer('system')) {
@@ -154,10 +154,10 @@ if ($raw) {
                 $pearbase = $parent;
             }
             if (file_exists($packagexml)) {
-                $options[1] = array(
+                $options[1] = [
                     'install',
                     $packagexml
-                );
+                ];
                 $config->set('php_dir', $pearbase . DIRECTORY_SEPARATOR . 'php');
                 $config->set('data_dir', $pearbase . DIRECTORY_SEPARATOR . 'data');
                 $config->set('doc_dir', $pearbase . DIRECTORY_SEPARATOR . 'docs');
@@ -228,6 +228,7 @@ foreach ($opts as $opt) {
         break;
     case 'V':
         usage(null, 'version');
+        // no break
     case 'c':
     case 'C':
         break;
@@ -293,7 +294,7 @@ if ($fetype == 'Gtk2') {
         }
 
         list($tmpopt, $params) = $tmp;
-        $opts = array();
+        $opts = [];
         foreach ($tmpopt as $foo => $tmp2) {
             list($opt, $value) = $tmp2;
             if ($value === null) {
@@ -321,7 +322,8 @@ if ($fetype == 'Gtk2') {
 
         if (PEAR::isError($ok)) {
             PEAR::setErrorHandling(
-                PEAR_ERROR_CALLBACK, array($ui, "displayFatalError")
+                PEAR_ERROR_CALLBACK,
+                [$ui, "displayFatalError"]
             );
             PEAR::raiseError($ok);
         }
@@ -359,12 +361,12 @@ function usage($error = null, $helpsubject = null)
             $put .= sprintf($formatstr, $cmd, PEAR_Command::getDescription($cmd));
         }
         $put .=
-            "Usage: $progname [options] command [command-options] <parameters>\n".
-            "Type \"$progname help options\" to list all options.\n".
-            "Type \"$progname help shortcuts\" to list all command shortcuts.\n".
-            "Type \"$progname help version\" or ".
-            "\"$progname version\" to list version information.\n".
-            "Type \"$progname help <command>\" to get the help ".
+            "Usage: $progname [options] command [command-options] <parameters>\n" .
+            "Type \"$progname help options\" to list all options.\n" .
+            "Type \"$progname help shortcuts\" to list all command shortcuts.\n" .
+            "Type \"$progname help version\" or " .
+            "\"$progname version\" to list version information.\n" .
+            "Type \"$progname help <command>\" to get the help " .
             "for the specified command.";
     }
     fputs($stdout, "$put\n");
@@ -388,18 +390,18 @@ function cmdHelp($command)
     global $progname, $all_commands, $config;
     if ($command == "options") {
         return
-        "Options:\n".
-        "     -v         increase verbosity level (default 1)\n".
-        "     -q         be quiet, decrease verbosity level\n".
-        "     -c file    find user configuration in `file'\n".
-        "     -C file    find system configuration in `file'\n".
-        "     -d foo=bar set user config variable `foo' to `bar'\n".
-        "     -D foo=bar set system config variable `foo' to `bar'\n".
-        "     -G         start in graphical (Gtk) mode\n".
-        "     -s         store user configuration\n".
-        "     -S         store system configuration\n".
-        "     -u foo     unset `foo' in the user configuration\n".
-        "     -h, -?     display help/usage (this message)\n".
+        "Options:\n" .
+        "     -v         increase verbosity level (default 1)\n" .
+        "     -q         be quiet, decrease verbosity level\n" .
+        "     -c file    find user configuration in `file'\n" .
+        "     -C file    find system configuration in `file'\n" .
+        "     -d foo=bar set user config variable `foo' to `bar'\n" .
+        "     -D foo=bar set system config variable `foo' to `bar'\n" .
+        "     -G         start in graphical (Gtk) mode\n" .
+        "     -s         store user configuration\n" .
+        "     -S         store system configuration\n" .
+        "     -u foo     unset `foo' in the user configuration\n" .
+        "     -h, -?     display help/usage (this message)\n" .
         "     -V         version information\n";
     } elseif ($command == "shortcuts") {
         $sc = PEAR_Command::getShortcuts();
@@ -408,13 +410,11 @@ function cmdHelp($command)
             $ret .= sprintf("     %-8s %s\n", $s, $c);
         }
         return $ret;
-
     } elseif ($command == "version") {
-        return "PEAR Version: ".$GLOBALS['pear_package_version'].
-               "\nPHP Version: ".phpversion().
-               "\nZend Engine Version: ".zend_version().
-               "\nRunning on: ".php_uname();
-
+        return "PEAR Version: " . $GLOBALS['pear_package_version'] .
+               "\nPHP Version: " . phpversion() .
+               "\nZend Engine Version: " . zend_version() .
+               "\nRunning on: " . php_uname();
     } elseif ($help = PEAR_Command::getHelp($command)) {
         if (is_string($help)) {
             return "$progname $command [options] $help\n";
@@ -457,7 +457,7 @@ function error_handler($errno, $errmsg, $file, $line)
     ) {
         return false; // @silenced error, show all if debug is high enough
     }
-    $errortype = array (
+    $errortype = [
         E_DEPRECATED  => 'Deprecated Warning',
         E_ERROR   =>  "Error",
         E_WARNING   =>  "Warning",
@@ -471,7 +471,7 @@ function error_handler($errno, $errmsg, $file, $line)
         E_USER_ERROR =>  "User Error",
         E_USER_WARNING =>  "User Warning",
         E_USER_NOTICE =>  "User Notice"
-    );
+    ];
     $prefix = $errortype[$errno];
     global $_PEAR_PHPDIR;
     if (stristr($file, $_PEAR_PHPDIR)) {

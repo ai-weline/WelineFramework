@@ -1,4 +1,5 @@
 <?php
+
 require_once dirname(__FILE__) . '/helper.inc';
 require_once 'Structures/Graph/Manipulator/TopologicalSorter.php';
 
@@ -56,4 +57,3 @@ class TopologicalSorterTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('node121', $nodes[2][0]->getData());
     }
 }
-?>

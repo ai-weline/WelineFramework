@@ -9,7 +9,6 @@
 
 use Weline\Framework\App\Exception;
 
-
 if (!defined('BP')) {
     define('BP', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 }

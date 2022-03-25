@@ -40,7 +40,7 @@ class InstallConfig
             if (CLI) {
                 $this->printer->error($msg, 'ERROR');
             }
-            $tmp['-------  数据库配置安装...  -------'] = $msg.'【✖】';
+            $tmp['-------  数据库配置安装...  -------'] = $msg . '【✖】';
         }
         unset($params['action']);
         $params['type'] = 'mysql';
@@ -59,7 +59,7 @@ class InstallConfig
                     $this->printer->error($msg, '系统');
                     exit();
                 }
-                $tmp['缺少参数'] = $msg.'【✖】';
+                $tmp['缺少参数'] = $msg . '【✖】';
             }
         }
         // 数据库链接检测
@@ -82,14 +82,14 @@ class InstallConfig
             $tmp['PDO数据库链接检测通过'] = '【✔】';
             $dbh = null;
         } catch (PDOException $e) {
-            if(CLI){
+            if (CLI) {
                 $this->printer->error('PDO数据库链接检测失败!' . 'Error: ' . $e->getMessage(), 'ERROR');
                 exit();
             };
             $hasErr = true;
             $msg = 'PDO数据库链接检测失败!' . 'Error: ' . $e->getMessage();
-            $tmp['PDO数据库链接检测失败!'] = $msg.'【✖】';
-            return ['data' =>$tmp, 'hasErr' => $hasErr, 'msg' => $msg.'【✖】'];
+            $tmp['PDO数据库链接检测失败!'] = $msg . '【✖】';
+            return ['data' =>$tmp, 'hasErr' => $hasErr, 'msg' => $msg . '【✖】'];
         }
         // 数据库信息安装
         if (CLI) {
@@ -105,7 +105,7 @@ class InstallConfig
             $tmp['初始化保存'] = $msg;
         } catch (Exception $exception) {
             $hasErr = true;
-            $msg    = '数据库安装初始化失败'.'【✖】';
+            $msg    = '数据库安装初始化失败' . '【✖】';
             if (CLI) {
                 $this->printer->error($msg, 'ERROR');
                 exit();

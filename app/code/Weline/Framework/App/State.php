@@ -13,11 +13,11 @@ use Weline\Framework\Http\Request;
 
 class State
 {
-    const area_backend = 'backend';
+    public const area_backend = 'backend';
 
-    const area_frontend = 'frontend';
+    public const area_frontend = 'frontend';
 
-    const area_base = 'base';
+    public const area_base = 'base';
 
     /**
      * @var Request

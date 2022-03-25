@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -30,17 +31,17 @@ abstract class CacheDriverAbstract implements \Weline\Framework\Cache\CacheDrive
         }
     }
 
-    function getIdentify(): string
+    public function getIdentify(): string
     {
         return $this->identity;
     }
 
-    function getStatus(): bool
+    public function getStatus(): bool
     {
         return $this->status;
     }
 
-    function tip(): string
+    public function tip(): string
     {
         return $this->tip;
     }

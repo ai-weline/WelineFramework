@@ -90,7 +90,9 @@ class App
             define('APP_CODE_PATH', BP . 'app' . DIRECTORY_SEPARATOR . 'code' . DIRECTORY_SEPARATOR);
         }
         // 应用配置文件
-        if (is_file(APP_CODE_PATH . 'config.php')) require APP_CODE_PATH . 'config.php';
+        if (is_file(APP_CODE_PATH . 'config.php')) {
+            require APP_CODE_PATH . 'config.php';
+        }
         // 主题 目录
         if (!defined('APP_DESIGN_PATH')) {
             define('APP_DESIGN_PATH', APP_CODE_PATH . 'design' . DIRECTORY_SEPARATOR);
@@ -163,7 +165,6 @@ class App
                 }
             });
         }
-
     }
 
     /**
@@ -188,12 +189,12 @@ class App
 //                /**@var ObjectManager $container */
 //                if (!DEV && $container = $cache->get($cache_key)) {
 //                    $result = $container::getInstance(\Weline\Framework\Router\Core::class)->start();
-////                    p();
+                ////                    p();
 //                } else {
 //                    $container = ObjectManager::getInstance();
 //                    $result    = $container::getInstance(\Weline\Framework\Router\Core::class)->start();
 //                    $cache->set($cache_key, $container);
-////                    p();
+                ////                    p();
 //                }
                 exit($result);
             } catch (\ReflectionException | App\Exception $e) {

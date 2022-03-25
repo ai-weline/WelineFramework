@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -9,7 +10,6 @@ declare(strict_types=1);
  */
 
 namespace Weline\Framework\Database\Connection\Query;
-
 
 use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\Database\Exception\QueryException;
@@ -48,20 +48,20 @@ trait QueryTrait
 //        $this->db_name = $connection->getConfigProvider()->getDatabase();
 //        $this->cache = $cache->create();
 //    }
-    function __init()
+    public function __init()
     {
         $this->connection = ObjectManager::getInstance(ConnectionFactory::class);
         $this->db_name = $this->connection->getConfigProvider()->getDatabase();
         $this->cache = ObjectManager::getInstance(DbCache::class)->create();
     }
 
-    function __sleep()
+    public function __sleep()
     {
-        return array('db_name', 'connection');
+        return ['db_name', 'connection'];
     }
 
 
-    function getTable($table_name): string
+    public function getTable($table_name): string
     {
         return "`{$this->db_name}`.`{$table_name}`";
     }
@@ -109,7 +109,6 @@ trait QueryTrait
      */
     private function checkWhereArray(array $where_array, mixed $f_key)
     {
-
         foreach ($where_array as $f_item_key => $f_item_value) {
             if (!is_numeric($f_item_key)) {
                 $this->$this->exceptionHandle(__('Where查询异常：%1,%2,%3', ["第{$f_key}个条件数组错误", '出错的数组：["' . implode('","', $where_array) . '"]', "示例：where([['name','like','%张三%','or'],['name','like','%李四%']])"]));
@@ -149,7 +148,9 @@ trait QueryTrait
      */
     private function prepareSql($action)
     {
-        if ($this->table == '') $this->exceptionHandle(__('没有指定table表名！'));
+        if ($this->table == '') {
+            $this->exceptionHandle(__('没有指定table表名！'));
+        }
         # 处理 joins
         $joins = '';
         foreach ($this->joins as $join) {
@@ -189,7 +190,6 @@ trait QueryTrait
                             $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
                         }
                 }
-
             }
             $wheres = rtrim($wheres, $logic);
         }
@@ -199,11 +199,13 @@ trait QueryTrait
             $order .= "$field $dir,";
         }
         $order = rtrim($order, ',');
-        if ($order) $order = 'ORDER BY ' . $order;
+        if ($order) {
+            $order = 'ORDER BY ' . $order;
+        }
 
         # 匹配sql
         switch ($action) {
-            case 'insert' :
+            case 'insert':
                 $values = '';
                 foreach ($this->insert as $insert_key => $insert) {
                     $insert_key += 1;
@@ -219,10 +221,10 @@ trait QueryTrait
                 $values = rtrim($values, ',');
                 $sql = "INSERT INTO {$this->table} {$this->fields} VALUES {$values}";
                 break;
-            case 'delete' :
+            case 'delete':
                 $sql = "DELETE FROM {$this->table} {$wheres} {$this->additional_sql}";
                 break;
-            case 'update' :
+            case 'update':
                 # 设置where条件
                 $identity_values = array_column($this->updates, $this->identity_field);
                 if ($identity_values) {
@@ -272,7 +274,7 @@ trait QueryTrait
                             $updates .= "$update_field = $update_key,";
                         }
                     }
-                } else if ($this->single_updates) {
+                } elseif ($this->single_updates) {
                     foreach ($this->single_updates as $update_field => $update_value) {
                         $update_field = $this->parserFiled($update_field);
                         $updates .= "$update_field=$update_value,";
@@ -285,8 +287,8 @@ trait QueryTrait
                 $sql = "UPDATE {$this->table} {$this->table_alias} SET {$updates} {$wheres} {$this->additional_sql} ";
                 break;
             case 'find':
-            case 'select' :
-            default :
+            case 'select':
+            default:
                 $sql = "SELECT {$this->fields} FROM {$this->table} {$this->table_alias} {$joins} {$wheres} {$order} {$this->additional_sql} {$this->limit}";
                 break;
         };
@@ -305,7 +307,7 @@ trait QueryTrait
      * @param string|array $field 解析数据：一维数组值 或者 二维数组值
      * @return string|array
      */
-    function parserFiled(string|array &$field): string|array
+    public function parserFiled(string|array &$field): string|array
     {
         if (is_array($field)) {
             foreach ($field as $field_key => $value) {

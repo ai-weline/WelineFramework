@@ -37,21 +37,21 @@ require_once 'PEAR/Validator/PECL.php';
  */
 class PEAR_Validate
 {
-    var $packageregex = _PEAR_COMMON_PACKAGE_NAME_PREG;
+    public $packageregex = _PEAR_COMMON_PACKAGE_NAME_PREG;
     /**
      * @var PEAR_PackageFile_v1|PEAR_PackageFile_v2
      */
-    var $_packagexml;
+    public $_packagexml;
     /**
      * @var int one of the PEAR_VALIDATE_* constants
      */
-    var $_state = PEAR_VALIDATE_NORMAL;
+    public $_state = PEAR_VALIDATE_NORMAL;
     /**
      * Format: ('error' => array('field' => name, 'reason' => reason), 'warning' => same)
      * @var array
      * @access private
      */
-    var $_failures = array('error' => array(), 'warning' => array());
+    public $_failures = ['error' => [], 'warning' => []];
 
     /**
      * Override this method to handle validation of normal package names
@@ -59,7 +59,7 @@ class PEAR_Validate
      * @return bool
      * @access protected
      */
-    function _validPackageName($name)
+    public function _validPackageName($name)
     {
         return (bool) preg_match('/^' . $this->packageregex . '\\z/', $name);
     }
@@ -69,7 +69,7 @@ class PEAR_Validate
      * @param string name of channel-specific validation package
      * @final
      */
-    function validPackageName($name, $validatepackagename = false)
+    public function validPackageName($name, $validatepackagename = false)
     {
         if ($validatepackagename) {
             if (strtolower($name) == strtolower($validatepackagename)) {
@@ -98,7 +98,7 @@ class PEAR_Validate
      */
     public static function validState($state)
     {
-        return in_array($state, array('snapshot', 'devel', 'alpha', 'beta', 'stable'));
+        return in_array($state, ['snapshot', 'devel', 'alpha', 'beta', 'stable']);
     }
 
     /**
@@ -108,7 +108,7 @@ class PEAR_Validate
      */
     public static function getValidStates()
     {
-        return array('snapshot', 'devel', 'alpha', 'beta', 'stable');
+        return ['snapshot', 'devel', 'alpha', 'beta', 'stable'];
     }
 
     /**
@@ -126,7 +126,7 @@ class PEAR_Validate
     /**
      * @param PEAR_PackageFile_v1|PEAR_PackageFile_v2
      */
-    function setPackageFile(&$pf)
+    public function setPackageFile(&$pf)
     {
         $this->_packagexml = &$pf;
     }
@@ -134,30 +134,30 @@ class PEAR_Validate
     /**
      * @access private
      */
-    function _addFailure($field, $reason)
+    public function _addFailure($field, $reason)
     {
-        $this->_failures['errors'][] = array('field' => $field, 'reason' => $reason);
+        $this->_failures['errors'][] = ['field' => $field, 'reason' => $reason];
     }
 
     /**
      * @access private
      */
-    function _addWarning($field, $reason)
+    public function _addWarning($field, $reason)
     {
-        $this->_failures['warnings'][] = array('field' => $field, 'reason' => $reason);
+        $this->_failures['warnings'][] = ['field' => $field, 'reason' => $reason];
     }
 
-    function getFailures()
+    public function getFailures()
     {
         $failures = $this->_failures;
-        $this->_failures = array('warnings' => array(), 'errors' => array());
+        $this->_failures = ['warnings' => [], 'errors' => []];
         return $failures;
     }
 
     /**
      * @param int one of the PEAR_VALIDATE_* constants
      */
-    function validate($state = null)
+    public function validate($state = null)
     {
         if (!isset($this->_packagexml)) {
             return false;
@@ -165,7 +165,7 @@ class PEAR_Validate
         if ($state !== null) {
             $this->_state = $state;
         }
-        $this->_failures = array('warnings' => array(), 'errors' => array());
+        $this->_failures = ['warnings' => [], 'errors' => []];
         $this->validatePackageName();
         $this->validateVersion();
         $this->validateMaintainers();
@@ -193,7 +193,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validatePackageName()
+    public function validatePackageName()
     {
         if ($this->_state == PEAR_VALIDATE_PACKAGING ||
               $this->_state == PEAR_VALIDATE_NORMAL) {
@@ -238,44 +238,52 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateVersion()
+    public function validateVersion()
     {
         if ($this->_state != PEAR_VALIDATE_PACKAGING) {
             if (!$this->validVersion($this->_packagexml->getVersion())) {
-                $this->_addFailure('version',
-                    'Invalid version number "' . $this->_packagexml->getVersion() . '"');
+                $this->_addFailure(
+                    'version',
+                    'Invalid version number "' . $this->_packagexml->getVersion() . '"'
+                );
             }
             return false;
         }
         $version = $this->_packagexml->getVersion();
         $versioncomponents = explode('.', $version);
         if (count($versioncomponents) != 3) {
-            $this->_addWarning('version',
-                'A version number should have 3 decimals (x.y.z)');
+            $this->_addWarning(
+                'version',
+                'A version number should have 3 decimals (x.y.z)'
+            );
             return true;
         }
         $name = $this->_packagexml->getPackage();
         // version must be based upon state
         switch ($this->_packagexml->getState()) {
-            case 'snapshot' :
+            case 'snapshot':
                 return true;
-            case 'devel' :
+            case 'devel':
                 if ($versioncomponents[0] . 'a' == '0a') {
                     return true;
                 }
                 if ($versioncomponents[0] == 0) {
                     $versioncomponents[0] = '0';
-                    $this->_addWarning('version',
+                    $this->_addWarning(
+                        'version',
                         'version "' . $version . '" should be "' .
-                        implode('.' ,$versioncomponents) . '"');
+                        implode('.', $versioncomponents) . '"'
+                    );
                 } else {
-                    $this->_addWarning('version',
-                        'packages with devel stability must be < version 1.0.0');
+                    $this->_addWarning(
+                        'version',
+                        'packages with devel stability must be < version 1.0.0'
+                    );
                 }
                 return true;
             break;
-            case 'alpha' :
-            case 'beta' :
+            case 'alpha':
+            case 'beta':
                 // check for a package that extends a package,
                 // like Foo and Foo2
                 if ($this->_state == PEAR_VALIDATE_PACKAGING) {
@@ -290,30 +298,38 @@ class PEAR_Validate
                         if ($versioncomponents[2][0] == '0') {
                             if ($versioncomponents[2] == '0') {
                                 // version 1.*.0000
-                                $this->_addWarning('version',
+                                $this->_addWarning(
+                                    'version',
                                     'version 1.' . $versioncomponents[1] .
-                                        '.0 probably should not be alpha or beta');
+                                        '.0 probably should not be alpha or beta'
+                                );
                                 return true;
                             } elseif (strlen($versioncomponents[2]) > 1) {
                                 // version 1.*.0RC1 or 1.*.0beta24 etc.
                                 return true;
                             } else {
                                 // version 1.*.0
-                                $this->_addWarning('version',
+                                $this->_addWarning(
+                                    'version',
                                     'version 1.' . $versioncomponents[1] .
-                                        '.0 probably should not be alpha or beta');
+                                        '.0 probably should not be alpha or beta'
+                                );
                                 return true;
                             }
                         } else {
-                            $this->_addWarning('version',
+                            $this->_addWarning(
+                                'version',
                                 'bugfix versions (1.3.x where x > 0) probably should ' .
-                                'not be alpha or beta');
+                                'not be alpha or beta'
+                            );
                             return true;
                         }
                     } elseif ($versioncomponents[0] != '0') {
-                        $this->_addWarning('version',
+                        $this->_addWarning(
+                            'version',
                             'major versions greater than 1 are not allowed for packages ' .
-                            'without an <extends> tag or an identical postfix (foo2 v2.0.0)');
+                            'without an <extends> tag or an identical postfix (foo2 v2.0.0)'
+                        );
                         return true;
                     }
                     if ($versioncomponents[0] . 'a' == '0a') {
@@ -321,9 +337,11 @@ class PEAR_Validate
                     }
                     if ($versioncomponents[0] == 0) {
                         $versioncomponents[0] = '0';
-                        $this->_addWarning('version',
+                        $this->_addWarning(
+                            'version',
                             'version "' . $version . '" should be "' .
-                            implode('.' ,$versioncomponents) . '"');
+                            implode('.', $versioncomponents) . '"'
+                        );
                     }
                 } else {
                     $vlen = strlen($versioncomponents[0] . '');
@@ -342,29 +360,37 @@ class PEAR_Validate
                         if ($versioncomponents[2][0] == '0') {
                             if ($versioncomponents[2] == '0') {
                                 // version 2.*.0000
-                                $this->_addWarning('version',
+                                $this->_addWarning(
+                                    'version',
                                     "version $majver." . $versioncomponents[1] .
-                                        '.0 probably should not be alpha or beta');
+                                        '.0 probably should not be alpha or beta'
+                                );
                                 return false;
                             } elseif (strlen($versioncomponents[2]) > 1) {
                                 // version 2.*.0RC1 or 2.*.0beta24 etc.
                                 return true;
                             } else {
                                 // version 2.*.0
-                                $this->_addWarning('version',
+                                $this->_addWarning(
+                                    'version',
                                     "version $majver." . $versioncomponents[1] .
-                                        '.0 cannot be alpha or beta');
+                                        '.0 cannot be alpha or beta'
+                                );
                                 return true;
                             }
                         } else {
-                            $this->_addWarning('version',
+                            $this->_addWarning(
+                                'version',
                                 "bugfix versions ($majver.x.y where y > 0) should " .
-                                'not be alpha or beta');
+                                'not be alpha or beta'
+                            );
                             return true;
                         }
                     } elseif ($versioncomponents[0] != '0') {
-                        $this->_addWarning('version',
-                            "only versions 0.x.y and $majver.x.y are allowed for alpha/beta releases");
+                        $this->_addWarning(
+                            'version',
+                            "only versions 0.x.y and $majver.x.y are allowed for alpha/beta releases"
+                        );
                         return true;
                     }
                     if ($versioncomponents[0] . 'a' == '0a') {
@@ -372,22 +398,26 @@ class PEAR_Validate
                     }
                     if ($versioncomponents[0] == 0) {
                         $versioncomponents[0] = '0';
-                        $this->_addWarning('version',
+                        $this->_addWarning(
+                            'version',
                             'version "' . $version . '" should be "' .
-                            implode('.' ,$versioncomponents) . '"');
+                            implode('.', $versioncomponents) . '"'
+                        );
                     }
                 }
                 return true;
             break;
-            case 'stable' :
+            case 'stable':
                 if ($versioncomponents[0] == '0') {
                     $this->_addWarning('version', 'versions less than 1.0.0 cannot ' .
                     'be stable');
                     return true;
                 }
                 if (!is_numeric($versioncomponents[2])) {
-                    if (preg_match('/\d+(rc|a|alpha|b|beta)\d*/i',
-                          $versioncomponents[2])) {
+                    if (preg_match(
+                        '/\d+(rc|a|alpha|b|beta)\d*/i',
+                        $versioncomponents[2]
+                    )) {
                         $this->_addWarning('version', 'version "' . $version . '" or any ' .
                             'RC/beta/alpha version cannot be stable');
                         return true;
@@ -414,7 +444,7 @@ class PEAR_Validate
                 }
                 return true;
             break;
-            default :
+            default:
                 return false;
             break;
         }
@@ -423,7 +453,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateMaintainers()
+    public function validateMaintainers()
     {
         // maintainers can only be truly validated server-side for most channels
         // but allow this customization for those who wish it
@@ -433,13 +463,15 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateDate()
+    public function validateDate()
     {
         if ($this->_state == PEAR_VALIDATE_NORMAL ||
               $this->_state == PEAR_VALIDATE_PACKAGING) {
-
-            if (!preg_match('/(\d\d\d\d)\-(\d\d)\-(\d\d)/',
-                  $this->_packagexml->getDate(), $res) ||
+            if (!preg_match(
+                '/(\d\d\d\d)\-(\d\d)\-(\d\d)/',
+                $this->_packagexml->getDate(),
+                $res
+            ) ||
                   count($res) < 4
                   || !checkdate($res[2], $res[3], $res[1])
                 ) {
@@ -460,7 +492,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateTime()
+    public function validateTime()
     {
         if (!$this->_packagexml->getTime()) {
             // default of no time value set
@@ -469,8 +501,10 @@ class PEAR_Validate
 
         // packager automatically sets time, so only validate if pear validate is called
         if ($this->_state = PEAR_VALIDATE_NORMAL) {
-            if (!preg_match('/\d\d:\d\d:\d\d/',
-                  $this->_packagexml->getTime())) {
+            if (!preg_match(
+                '/\d\d:\d\d:\d\d/',
+                $this->_packagexml->getTime()
+            )) {
                 $this->_addFailure('time', 'invalid release time "' .
                     $this->_packagexml->getTime() . '"');
                 return false;
@@ -490,7 +524,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateState()
+    public function validateState()
     {
         // this is the closest to "final" php4 can get
         if (!PEAR_Validate::validState($this->_packagexml->getState())) {
@@ -509,7 +543,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateStability()
+    public function validateStability()
     {
         $ret = true;
         $packagestability = $this->_packagexml->getState();
@@ -534,7 +568,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateSummary()
+    public function validateSummary()
     {
         return true;
     }
@@ -542,7 +576,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateDescription()
+    public function validateDescription()
     {
         return true;
     }
@@ -550,7 +584,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateLicense()
+    public function validateLicense()
     {
         return true;
     }
@@ -558,7 +592,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateNotes()
+    public function validateNotes()
     {
         return true;
     }
@@ -567,7 +601,7 @@ class PEAR_Validate
      * for package.xml 2.0 only - channels can't use package.xml 1.0
      * @access protected
      */
-    function validateDependencies()
+    public function validateDependencies()
     {
         return true;
     }
@@ -576,7 +610,7 @@ class PEAR_Validate
      * for package.xml 1.0 only
      * @access private
      */
-    function _validateFilelist()
+    public function _validateFilelist()
     {
         return true; // placeholder for now
     }
@@ -585,7 +619,7 @@ class PEAR_Validate
      * for package.xml 2.0 only
      * @access protected
      */
-    function validateMainFilelist()
+    public function validateMainFilelist()
     {
         return true; // placeholder for now
     }
@@ -594,7 +628,7 @@ class PEAR_Validate
      * for package.xml 2.0 only
      * @access protected
      */
-    function validateReleaseFilelist()
+    public function validateReleaseFilelist()
     {
         return true; // placeholder for now
     }
@@ -602,7 +636,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateChangelog()
+    public function validateChangelog()
     {
         return true;
     }
@@ -610,7 +644,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateFilelist()
+    public function validateFilelist()
     {
         return true;
     }
@@ -618,7 +652,7 @@ class PEAR_Validate
     /**
      * @access protected
      */
-    function validateDeps()
+    public function validateDeps()
     {
         return true;
     }

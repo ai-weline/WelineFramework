@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -20,7 +21,6 @@ class Connection
 
     private function __clone()
     {
-
     }
 
     private function __construct($host, $port, $time_out, array $options = [])
@@ -32,7 +32,7 @@ class Connection
         }
     }
 
-    static function getInstance(string $host, int $port, int $time_out, array $options): Connection
+    public static function getInstance(string $host, int $port, int $time_out, array $options): Connection
     {
         if (!isset(self::$connection)) {
             self::$connection = new self($host, $port, $time_out, $options);
@@ -40,18 +40,18 @@ class Connection
         return self::$connection;
     }
 
-    function setData($key, $var): static
+    public function setData($key, $var): static
     {
         $this->memcached->set($key, $var);
         return $this;
     }
 
-    function getData($key)
+    public function getData($key)
     {
         return $this->memcached->get($key);
     }
 
-    function getMemcached(): ?Memcached
+    public function getMemcached(): ?Memcached
     {
         return $this->memcached;
     }

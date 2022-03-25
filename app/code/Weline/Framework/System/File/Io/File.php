@@ -14,21 +14,21 @@ use Weline\Framework\Console\ConsoleException;
 
 class File
 {
-    const mode_r = 'r';//只读。在文件的开头开始。
+    public const mode_r = 'r';//只读。在文件的开头开始。
 
-    const mode_r_add = 'r+';//只读。在文件的开头开始。
+    public const mode_r_add = 'r+';//只读。在文件的开头开始。
 
-    const mode_w = 'w';//只写。打开并清空文件的内容；如果文件不存在，则创建新文件。
+    public const mode_w = 'w';//只写。打开并清空文件的内容；如果文件不存在，则创建新文件。
 
-    const mode_w_add = 'w+';//读/写。打开并清空文件的内容；如果文件不存在，则创建新文件。
+    public const mode_w_add = 'w+';//读/写。打开并清空文件的内容；如果文件不存在，则创建新文件。
 
-    const mode_a = 'a';//追加。打开并向文件文件的末端进行写操作，如果文件不存在，则创建新文件。
+    public const mode_a = 'a';//追加。打开并向文件文件的末端进行写操作，如果文件不存在，则创建新文件。
 
-    const mode_a_add = 'a+';//读/追加。通过向文件末端写内容，来保持文件内容。
+    public const mode_a_add = 'a+';//读/追加。通过向文件末端写内容，来保持文件内容。
 
-    const mode_x = 'x';//只写。创建新文件。如果文件以存在，则返回 FALSE。
+    public const mode_x = 'x';//只写。创建新文件。如果文件以存在，则返回 FALSE。
 
-    const mode_x_add = 'x+';//读/写。创建新文件。如果文件已存在，则返回 FALSE 和一个错误。
+    public const mode_x_add = 'x+';//读/写。创建新文件。如果文件已存在，则返回 FALSE 和一个错误。
 
     /**
      * @var false|resource

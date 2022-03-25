@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,13 +17,15 @@ use Weline\Framework\System\File\Uploader;
 
 class Document extends \Weline\Framework\App\Controller\BackendController
 {
-    function index()
+    public function index()
     {
         /**@var Catalog $catalog */
         $catalog  = ObjectManager::getInstance(Catalog::class);
-        $catalogs = $catalog->pagination(intval($this->_request->getParam('page', 1)),
-                                         intval($this->_request->getParam('pageSize', 10)),
-                                         $this->_request->getParams())
+        $catalogs = $catalog->pagination(
+            intval($this->_request->getParam('page', 1)),
+            intval($this->_request->getParam('pageSize', 10)),
+            $this->_request->getParams()
+        )
                             ->select()
                             ->fetch();
         $this->assign('catalogs', $catalogs);
@@ -30,17 +33,18 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch();
     }
 
-    function add()
+    public function add()
     {
+        $this->assign('a',1);
         return $this->fetch();
     }
 
-    function postPost()
+    public function postPost()
     {
         p($this->_request->getPost());// TODO 等待完成文章录入
     }
 
-    function upload()
+    public function upload()
     {
         $uploader = new Uploader();
         p($_FILES);

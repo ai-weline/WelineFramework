@@ -11,15 +11,15 @@ namespace Weline\Framework\Output;
 
 interface PrintInterface
 {
-    const WARNING = 'WARNING';
+    public const WARNING = 'WARNING';
 
-    const SUCCESS = 'SUCCESS';
+    public const SUCCESS = 'SUCCESS';
 
-    const NOTE = 'NOTE';
+    public const NOTE = 'NOTE';
 
-    const FAILURE = 'FAILURE';
+    public const FAILURE = 'FAILURE';
 
-    const ERROR = 'ERROR';
+    public const ERROR = 'ERROR';
 
     /**
      * @DESC         |错误打印

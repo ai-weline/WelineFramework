@@ -13,9 +13,9 @@ use Weline\Framework\Session\Session;
 
 class BackendApiSession extends Session
 {
-    const login_KEY = 'WL_BACKEND_API';
+    public const login_KEY = 'WL_BACKEND_API';
 
-    function __init()
+    public function __init()
     {
         parent::__init();
         $this->setType('backend_api');

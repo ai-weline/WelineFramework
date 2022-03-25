@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,17 +17,17 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Document extends \Weline\Framework\Database\Model
 {
-    const fields_ID          = 'id';
-    const fields_TITLE       = 'title';
-    const fields_AUTHOR_ID   = 'author_id';
-    const fields_CATEGORY_ID = 'category_id';
-    const fields_TAG_ID      = 'tag_id';
-    const fields_CONTEND     = 'content';
+    public const fields_ID          = 'id';
+    public const fields_TITLE       = 'title';
+    public const fields_AUTHOR_ID   = 'author_id';
+    public const fields_CATEGORY_ID = 'category_id';
+    public const fields_TAG_ID      = 'tag_id';
+    public const fields_CONTEND     = 'content';
 
     /**
      * @inheritDoc
      */
-    function setup(ModelSetup $setup, Context $context): void
+    public function setup(ModelSetup $setup, Context $context): void
     {
         $this->install($setup, $context);
     }
@@ -34,7 +35,7 @@ class Document extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function upgrade(ModelSetup $setup, Context $context): void
+    public function upgrade(ModelSetup $setup, Context $context): void
     {
         // TODO: Implement upgrade() method.
     }
@@ -42,7 +43,7 @@ class Document extends \Weline\Framework\Database\Model
     /**
      * @inheritDoc
      */
-    function install(ModelSetup $setup, Context $context): void
+    public function install(ModelSetup $setup, Context $context): void
     {
         $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
         if (!$setup->tableExist()) {
@@ -59,52 +60,52 @@ class Document extends \Weline\Framework\Database\Model
         }
     }
 
-    function getTitle()
+    public function getTitle()
     {
         return $this->getData(self::fields_TITLE);
     }
 
-    function setTitle(string $title): Document
+    public function setTitle(string $title): Document
     {
         return $this->setData(self::fields_TITLE, $title);
     }
 
-    function getAuthorId()
+    public function getAuthorId()
     {
         return $this->getData(self::fields_AUTHOR_ID);
     }
 
-    function setAuthorID(string|int $author_id): Document
+    public function setAuthorID(string|int $author_id): Document
     {
         return $this->setData(self::fields_AUTHOR_ID, $author_id);
     }
 
-    function getTagId()
+    public function getTagId()
     {
         return $this->getData(self::fields_TAG_ID);
     }
 
-    function setTagID(string|int $tag_id): Document
+    public function setTagID(string|int $tag_id): Document
     {
         return $this->setData(self::fields_TAG_ID, $tag_id);
     }
 
-    function getContent()
+    public function getContent()
     {
         return $this->getData(self::fields_CONTEND);
     }
 
-    function setContent(string $content): Document
+    public function setContent(string $content): Document
     {
         return $this->setData(self::fields_CONTEND, $content);
     }
 
-    function setCategoryId(string $category_id): Document
+    public function setCategoryId(string $category_id): Document
     {
         return $this->setData(self::fields_CATEGORY_ID, $category_id);
     }
 
-    function getCategoryId(): Document
+    public function getCategoryId(): Document
     {
         return $this->getData(self::fields_CATEGORY_ID);
     }

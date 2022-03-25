@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,6 @@ use Weline\Framework\View\Block;
 
 class BlockTest extends TestCore
 {
-
     public function testFetch()
     {
         /**@var Block $block*/

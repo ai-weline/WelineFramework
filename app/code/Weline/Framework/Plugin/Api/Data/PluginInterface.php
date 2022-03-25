@@ -11,7 +11,7 @@ namespace Weline\Framework\Plugin\Api\Data;
 
 interface PluginInterface
 {
-    const dir = 'Plugin';
+    public const dir = 'Plugin';
 
     /**
      * @DESC         |设置插件顺序

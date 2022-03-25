@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,7 +15,7 @@ use Weline\Framework\App\Controller\BackendController;
 
 class BaseController extends BackendController
 {
-    function __init()
+    public function __init()
     {
         parent::__init();
         $this->assign('title', __('欢迎使用WelineFramework框架后台系统！'));

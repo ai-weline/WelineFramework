@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,9 +17,9 @@ use Weline\Framework\View\Template;
 
 class Compiler implements \Weline\Framework\Event\ObserverInterface
 {
-    const area = 'backend';
-    const require_js_file = 'base' . DIRECTORY_SEPARATOR . 'require.configs.js';
-    const require_js_type = 'require.config.js';
+    public const area = 'backend';
+    public const require_js_file = 'base' . DIRECTORY_SEPARATOR . 'require.configs.js';
+    public const require_js_type = 'require.config.js';
 
     /**
      * @inheritDoc
@@ -31,31 +32,31 @@ class Compiler implements \Weline\Framework\Event\ObserverInterface
             $type = $eventData->getType();
             switch ($type):
                 case self::require_js_type:
-                    $path = dirname(__DIR__)  . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'statics' . DIRECTORY_SEPARATOR . self::require_js_file;
-                    if (!is_dir(dirname($path))) {
-                        mkdir($path, 755,true);
-                    }
-                    if (!is_file($path)) {
-                        touch($path);
-                    }
-                    file_put_contents($path, JSMin::minify($eventData->getResources()));
-                    break;
-                default;
+                    $path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'statics' . DIRECTORY_SEPARATOR . self::require_js_file;
+            if (!is_dir(dirname($path))) {
+                mkdir($path, 755, true);
+            }
+            if (!is_file($path)) {
+                touch($path);
+            }
+            file_put_contents($path, JSMin::minify($eventData->getResources()));
+            break;
+            default:
             endswitch;
         };
     }
 
     protected string $generate_content = '';
 
-    function generateRequireConfigJsContent(array $resources): string
+    public function generateRequireConfigJsContent(array $resources): string
     {
         p(json_encode($resources));
         foreach ($resources as $key => $resource) {
             if (is_numeric($key)) {
                 $this->generate_content .= '"' . $resource . '",';
-            } else if (is_string($resource)) {
+            } elseif (is_string($resource)) {
                 $this->generate_content .= $key . ':"' . $resource . '",';
-            } else if (is_array($resource)) {
+            } elseif (is_array($resource)) {
                 $this->generate_content .= $key . ':[';
                 $this->generate_content = $this->generateRequireConfigJsContent($resource) . ',';
                 $this->generate_content .= '],';

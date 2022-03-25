@@ -20,9 +20,9 @@ use Weline\Framework\Manager\ObjectManager;
 
 abstract class RequestAbstract extends DataObject
 {
-    const HEADER = 'header';
+    public const HEADER = 'header';
 
-    const MOBILE_DEVICE_HEADERS = [
+    public const MOBILE_DEVICE_HEADERS = [
         'nokia', 'sony', 'ericsson', 'mot', 'samsung', 'htc',
         'sgh', 'lg', 'sharp', 'sie-', 'philips', 'panasonic',
         'alcatel', 'lenovo', 'iphone', 'ipod', 'blackberry',
@@ -47,8 +47,12 @@ abstract class RequestAbstract extends DataObject
     {
         $url_arr = explode('/', trim($this->getModuleUrlPath(), '/'));
         $this->area_router = array_shift($url_arr);
-        if (empty($this->_filter)) $this->_filter = RequestFilter::getInstance();
-        if (empty($this->_response)) $this->_response = $this->getResponse();
+        if (empty($this->_filter)) {
+            $this->_filter = RequestFilter::getInstance();
+        }
+        if (empty($this->_response)) {
+            $this->_response = $this->getResponse();
+        }
     }
 
     /**
@@ -109,16 +113,16 @@ abstract class RequestAbstract extends DataObject
     public function getRequestArea(): string
     {
         switch ($this->area_router) {
-            case Env::getInstance()->getConfig('admin', 'admin') :
+            case Env::getInstance()->getConfig('admin', 'admin'):
                 $area = DataInterface::type_pc_BACKEND;
                 $this->setBackend();
                 break;
-            case Env::getInstance()->getConfig('api_admin', 'api_admin') :
+            case Env::getInstance()->getConfig('api_admin', 'api_admin'):
                 $area = DataInterface::type_api_BACKEND;
                 $this->setBackend();
                 $this->setApiBackend();
                 break;
-            default :
+            default:
                 $area = DataInterface::type_pc_FRONTEND;
                 break;
         };

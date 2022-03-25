@@ -140,7 +140,7 @@ class Scanner extends Scan
                         if (file_exists($vendor_app_module_path . DIRECTORY_SEPARATOR . RegisterInterface::register_file)) {
                             if (is_dir($vendor_app_need_file_or_dir)) {
                                 $modules[$module_name] = $vendor_app_need_file_or_dir;
-                            } else if (is_file($vendor_app_need_file_or_dir)) {
+                            } elseif (is_file($vendor_app_need_file_or_dir)) {
                                 $modules[$module_name] = $vendor_app_need_file_or_dir;
                             } else {
                                 $this->__init();
@@ -158,7 +158,6 @@ class Scanner extends Scan
                             }*/
                         }
                     }
-
                 }
             }
 

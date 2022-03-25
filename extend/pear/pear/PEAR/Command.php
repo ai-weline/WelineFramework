@@ -25,25 +25,25 @@ require_once 'PEAR/XMLParser.php';
  * List of commands and what classes they are implemented in.
  * @var array command => implementing class
  */
-$GLOBALS['_PEAR_Command_commandlist'] = array();
+$GLOBALS['_PEAR_Command_commandlist'] = [];
 
 /**
  * List of commands and their descriptions
  * @var array command => description
  */
-$GLOBALS['_PEAR_Command_commanddesc'] = array();
+$GLOBALS['_PEAR_Command_commanddesc'] = [];
 
 /**
  * List of shortcuts to common commands.
  * @var array shortcut => command
  */
-$GLOBALS['_PEAR_Command_shortcuts'] = array();
+$GLOBALS['_PEAR_Command_shortcuts'] = [];
 
 /**
  * Array of command objects
  * @var array class => object
  */
-$GLOBALS['_PEAR_Command_objects'] = array();
+$GLOBALS['_PEAR_Command_objects'] = [];
 
 /**
  * PEAR command class, a simple factory class for administrative
@@ -217,7 +217,7 @@ class PEAR_Command
      */
     public static function registerCommands($merge = false, $dir = null)
     {
-        $parser = new PEAR_XMLParser;
+        $parser = new PEAR_XMLParser();
         if ($dir === null) {
             $dir = dirname(__FILE__) . '/Command';
         }
@@ -229,7 +229,7 @@ class PEAR_Command
             return PEAR::raiseError("registerCommands: opendir($dir) failed");
         }
         if (!$merge) {
-            $GLOBALS['_PEAR_Command_commandlist'] = array();
+            $GLOBALS['_PEAR_Command_commandlist'] = [];
         }
 
         while ($file = readdir($dp)) {

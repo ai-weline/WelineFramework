@@ -14,7 +14,7 @@ class Generator
     /**
      * 此值用于在格式化xml输出数据时替换数字键。
      */
-    const DEFAULT_ENTITY_ITEM_NAME = 'item';
+    public const DEFAULT_ENTITY_ITEM_NAME = 'item';
 
     /**
      * @var \DOMDocument|null

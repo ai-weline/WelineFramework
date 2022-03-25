@@ -9,12 +9,10 @@
 
 namespace Weline\Theme\Console\Theme;
 
-
 use Weline\Framework\Exception\Core;
 
 class Active extends AbstractConsole
 {
-
     public function execute($args = [])
     {
         $theme_name = isset($args[1]) ? $args[1] : '';

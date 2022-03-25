@@ -14,13 +14,13 @@ class Bug21177Tests extends AbstractUnitTests
     {
         $expected = '<id_mytest_yesorno />';
 
-        return array(
-            array('<idmytestyesorno></idmytestyesorno>',        '<idmytestyesorno />'),
-            array('<idmytestyesorno />',                        '<idmytestyesorno />'),
+        return [
+            ['<idmytestyesorno></idmytestyesorno>',        '<idmytestyesorno />'],
+            ['<idmytestyesorno />',                        '<idmytestyesorno />'],
 
-            array('<id_mytest_yesorno></id_mytest_yesorno>',    '<id_mytest_yesorno />'),
-            array('<id_mytest_yesorno />',                      '<id_mytest_yesorno />'),
-        );
+            ['<id_mytest_yesorno></id_mytest_yesorno>',    '<id_mytest_yesorno />'],
+            ['<id_mytest_yesorno />',                      '<id_mytest_yesorno />'],
+        ];
     }
 
     /**

@@ -43,7 +43,7 @@ class Reader extends \Weline\Framework\Config\Xml\Reader
      * @return mixed
      * @throws Core
      */
-    public function read():array
+    public function read(): array
     {
         if ($event = $this->eventCache->get('event')) {
             return $event;

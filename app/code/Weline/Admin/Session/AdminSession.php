@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,12 +17,12 @@ use Weline\Framework\Manager\ObjectManager;
 
 class AdminSession extends \Weline\Framework\App\Session\BackendSession
 {
-    function loginUser(AdminUser $user): static
+    public function loginUser(AdminUser $user): static
     {
         return parent::login($user->getUsername(), $user->getId());
     }
 
-    function getLoginUser(string $model = AdminUser::class): ?AbstractModel
+    public function getLoginUser(string $model = AdminUser::class): ?AbstractModel
     {
         return parent::getLoginUser($model);
     }

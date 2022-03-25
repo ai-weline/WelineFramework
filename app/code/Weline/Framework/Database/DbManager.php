@@ -35,7 +35,7 @@ class DbManager
         $this->configProvider = $configProvider;
     }
 
-    function __init()
+    public function __init()
     {
         $this->create();
     }
@@ -49,7 +49,7 @@ class DbManager
      */
     public function __sleep()
     {
-        return array('configProvider','connections');
+        return ['configProvider','connections'];
     }
 
     /**
@@ -60,7 +60,7 @@ class DbManager
      * @param ConfigProvider $configProvider
      * @return $this
      */
-    function setConfig(ConfigProvider $configProvider): static
+    public function setConfig(ConfigProvider $configProvider): static
     {
         $this->configProvider = $configProvider;
         return $this;
@@ -73,7 +73,7 @@ class DbManager
      *
      * @return ConfigProvider
      */
-    function getConfig(): ConfigProvider
+    public function getConfig(): ConfigProvider
     {
         return $this->configProvider;
     }
@@ -90,7 +90,7 @@ class DbManager
      * @throws \ReflectionException
      * @throws LinkException|\Weline\Framework\App\Exception
      */
-    function create(string $connection_name = 'default', ConfigProvider $configProvider = null): ConnectionFactory
+    public function create(string $connection_name = 'default', ConfigProvider $configProvider = null): ConnectionFactory
     {
         $connection = $this->getConnection($connection_name);
         // 如果不更新连接配置，且已经存在连接就直接读取
@@ -129,7 +129,7 @@ class DbManager
      * @return ConnectionFactory|null
      * @throws LinkException
      */
-    function getConnection(string $connection_name = 'default'): ?ConnectionFactory
+    public function getConnection(string $connection_name = 'default'): ?ConnectionFactory
     {
         if ('default' === $connection_name) {
             return $this->defaultConnectionFactory;

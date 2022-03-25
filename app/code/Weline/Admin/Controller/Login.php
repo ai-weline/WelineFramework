@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -26,18 +27,17 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     private Data $helper;
     private MessageManager $messageManager;
 
-    function __construct(
+    public function __construct(
         AdminUser      $adminUser,
         MessageManager $messageManager,
         Data           $helper
-    )
-    {
+    ) {
         $this->adminUser      = $adminUser;
         $this->helper         = $helper;
         $this->messageManager = $messageManager;
     }
 
-    function index()
+    public function index()
     {
         if ($this->_session->isLogin()) {
             $this->redirect($this->getUrl('admin'));
@@ -55,7 +55,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch();
     }
 
-    function postPost()
+    public function postPost()
     {
         # 已经登录直接进入后台
 //        $this->_session->logout();
@@ -126,10 +126,9 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         }
         # 跳转首页
         $this->redirect($this->getUrl('admin'));
-
     }
 
-    function logout()
+    public function logout()
     {
         $this->getSession()->logout();
         $this->redirect($this->getUrl('admin/login'));
@@ -144,7 +143,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
      * 参数区：
      * @return bool
      */
-    function verificationCode(): bool
+    public function verificationCode(): bool
     {
         # --1 设置验证码图片的大小
         $image = imagecreatetruecolor(100, 30);

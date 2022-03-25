@@ -1,4 +1,5 @@
 <?php
+
 /* vim: set expandtab tabstop=4 shiftwidth=4 foldmethod=marker: */
 // +-----------------------------------------------------------------------------+
 // | Copyright (c) 2003 Sérgio Gonçalves Carvalho                                |
@@ -24,7 +25,7 @@
 // +-----------------------------------------------------------------------------+
 //
 /**
- * The Graph.php file contains the definition of the Structures_Graph class 
+ * The Graph.php file contains the definition of the Structures_Graph class
  *
  * @package Structures_Graph
  */
@@ -38,14 +39,14 @@ define('STRUCTURES_GRAPH_ERROR_GENERIC', 100);
 
 /* class Structures_Graph {{{ */
 /**
- * The Structures_Graph class represents a graph data structure. 
+ * The Structures_Graph class represents a graph data structure.
  *
  * A Graph is a data structure composed by a set of nodes, connected by arcs.
- * Graphs may either be directed or undirected. In a directed graph, arcs are 
+ * Graphs may either be directed or undirected. In a directed graph, arcs are
  * directional, and can be traveled only one way. In an undirected graph, arcs
  * are bidirectional, and can be traveled both ways.
  *
- * @author    Sérgio Carvalho <sergio.carvalho@portugalmail.com> 
+ * @author    Sérgio Carvalho <sergio.carvalho@portugalmail.com>
  * @copyright (c) 2004 by Sérgio Carvalho
  * @package   Structures_Graph
  */
@@ -56,13 +57,13 @@ class Structures_Graph
      * List of node objects in this graph
      * @access private
      */
-    var $_nodes = array();
+    public $_nodes = [];
 
     /**
      * If the graph is directed or not
      * @access private
      */
-    var $_directed = false;
+    public $_directed = false;
 
 
     /**
@@ -96,7 +97,7 @@ class Structures_Graph
      */
     public function isDirected()
     {
-        return (boolean) $this->_directed;
+        return (bool) $this->_directed;
     }
 
     /**
@@ -173,4 +174,3 @@ class Structures_Graph
         return $this->_nodes;
     }
 }
-?>

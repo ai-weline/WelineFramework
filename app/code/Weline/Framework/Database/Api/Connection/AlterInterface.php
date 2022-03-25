@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -21,5 +22,5 @@ interface AlterInterface
      * 参数区：
      * @return AlterInterface
      */
-    public function alterColumn():AlterInterface;
+    public function alterColumn(): AlterInterface;
 }

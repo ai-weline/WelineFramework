@@ -13,9 +13,9 @@ use Weline\Framework\Session\Session;
 
 class FrontendApiSession extends Session
 {
-    const login_KEY = 'WL_FRONTEND_API';
+    public const login_KEY = 'WL_FRONTEND_API';
 
-    function __init()
+    public function __init()
     {
         parent::__init();
         $this->setType('frontend_api');

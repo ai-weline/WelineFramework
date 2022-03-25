@@ -30,15 +30,16 @@ class Reader extends DataObject
     public function __construct(
         string $path = 'etc' . DIRECTORY_SEPARATOR . 'module.xml',
         array $data = []
-    )
-    {
+    ) {
         $this->path = $path;
         parent::__construct($data);
     }
 
-    function __init()
+    public function __init()
     {
-        if (!isset($this->scanner)) $this->scanner = ObjectManager::getInstance(Scanner::class);
+        if (!isset($this->scanner)) {
+            $this->scanner = ObjectManager::getInstance(Scanner::class);
+        }
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,7 +17,7 @@ class Version extends \Weline\Framework\View\Block
 {
     protected string $_template = 'Weline_Backend::templates/blocks/version.phtml';
 
-    function getVersion(): string
+    public function getVersion(): string
     {
         return Env::getInstance()->getConfig('version') ?: '1.0.1';
     }
