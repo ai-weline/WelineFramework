@@ -413,7 +413,11 @@ abstract class AbstractModel extends DataObject
             $this->getQuery()->commit();
         } catch (\Exception $exception) {
             $this->getQuery()->rollBack();
-            throw new ModelException(__('模型保存数据出错：%1 ', $exception->getMessage()) . __('预编译SQL: %1', $this->getQuery()->getPrepareSql()) . __('执行SQL: %1', $this->getQuery()->getLastSql()));
+            $msg = __('保存数据出错! ');
+            if (DEV) {
+                $msg .= __('预编译SQL: %1', $this->getQuery()->getPrepareSql()) . __('执行SQL: %1', $this->getQuery()->getLastSql());
+            }
+            throw new ModelException($msg);
         }
 
         // save之后事件
@@ -795,7 +799,7 @@ abstract class AbstractModel extends DataObject
             return $_model_fields;
         }
         $module__fields_cache_key = $this::class . '_module__fields_cache_key';
-        if ($_model_fields = $this->_cache->get($module__fields_cache_key)) {
+        if (PROD && $_model_fields = $this->_cache->get($module__fields_cache_key)) {
             return $_model_fields;
         }
         $objClass = new \ReflectionClass($this::class);
@@ -809,7 +813,9 @@ abstract class AbstractModel extends DataObject
         }
         $_fields[]           = $this->_primary_key;
         $this->_model_fields = $_fields;
-        $this->_cache->set($module__fields_cache_key, $_fields);
+        if (PROD) {
+            $this->_cache->set($module__fields_cache_key, $_fields);
+        }
         return $_fields;
     }
 

@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller\Admin;
 
-use Weline\DeveloperWorkspace\Model\Catalog;
+use Weline\DeveloperWorkspace\Model\Document\Catalog;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Uploader;
 
@@ -35,13 +35,14 @@ class Document extends \Weline\Framework\App\Controller\BackendController
 
     public function add()
     {
-        $this->assign('a',1);
+        $this->assign('a', 1);
         return $this->fetch();
     }
 
     public function postPost()
     {
-        p($this->_request->getPost());// TODO 等待完成文章录入
+        /**@var \Weline\DeveloperWorkspace\Model\Document $document*/
+        $document = ObjectManager::getInstance(\Weline\DeveloperWorkspace\Model\Document::class);
     }
 
     public function upload()

@@ -16,6 +16,7 @@ use Weline\Framework\Controller\Cache\ControllerCache;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Request;
+use Weline\Framework\Manager\MessageManager;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Template;
@@ -180,7 +181,7 @@ class PcController extends Core
      */
     protected function fetchJson(array $data): string
     {
-        return json_encode($data);
+        return $this->_request->getResponse()->renderJson($data);
     }
 
     /**
@@ -210,4 +211,30 @@ class PcController extends Core
 
         return $module_dir;
     }
+
+    public function getMessageManager(): MessageManager
+    {
+        return $this->_objectManager::getInstance(MessageManager::class);
+    }
+
+
+//    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
+//    public function success(string $msg = '请求成功！', mixed $data = '', int $code = 200,string $url=''): array
+//    {
+//
+//        return ['msg' => __($msg), 'data' => $data, 'code' => $code];
+//    }
+//
+//    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
+//    public function error(string $msg = '请求失败！', mixed $data = '', int $code = 404): array
+//    {
+//        return ['msg' => __($msg), 'data' => $data, 'code' => $code];
+//    }
+//
+//
+//    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => '\Exception', 'code' => 'int'])]
+//    public function exception(\Exception $exception, int $code = 403): array
+//    {
+//        return ['msg' => '请求异常！', 'data' => DEV ? $exception : $exception->getMessage(), 'code' => $code];
+//    }
 }

@@ -36,6 +36,9 @@ class Core implements Data\DataInterface
 
     public function __init()
     {
+        if (empty($this->_url)) {
+            $this->getUrl();
+        }
         $this->getObjectManager();
         $this->getRequest();
     }
@@ -139,19 +142,21 @@ class Core implements Data\DataInterface
     #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
     public function success(string $msg = '请求成功！', mixed $data = '', int $code = 200): array
     {
-        return ['msg' => __($msg), 'data' => $data, 'code' => $code];
+        return ['msg' => $msg, 'data' => $data, 'code' => $code];
     }
 
     #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
     public function error(string $msg = '请求失败！', mixed $data = '', int $code = 404): array
     {
-        return ['msg' => __($msg), 'data' => $data, 'code' => $code];
+        return ['msg' => $msg, 'data' => $data, 'code' => $code];
     }
 
 
     #[\JetBrains\PhpStorm\ArrayShape(['msg' => "string", 'data' => "\Exception", 'code' => "int"])]
-    public function exception(\Exception $exception, int $code = 403): array
+    public function exception(\Exception $exception, string $msg = '请求失败！', mixed $data = '', int $code = 403): array
     {
-        return ['msg' => '请求异常！', 'data' => DEV ? $exception : $exception->getMessage(), 'code' => $code];
+        $return_data['data']      = $data;
+        $return_data['exception'] = DEV ? $exception : $exception->getMessage();
+        return ['msg' => __('请求异常！'), 'data' => $return_data, 'code' => $code];
     }
 }

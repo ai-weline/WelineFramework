@@ -90,4 +90,10 @@ class Response implements ResponseInterface
         Header("Location:$url");
         exit(0);
     }
+
+    public function renderJson($data): bool|string
+    {
+        Header('Content-Type:application/json; charset=utf-8');
+        return json_encode($data);
+    }
 }

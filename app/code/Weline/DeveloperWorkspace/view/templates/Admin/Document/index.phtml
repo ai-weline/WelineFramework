@@ -26,6 +26,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <body <?= $themeConfig->getLayouts() ?? ''; ?>>
 <!--加载中组件 开始-->
 @template(Weline_Admin::common/page/loading.phtml)
+<!--消息-->
+<template>Weline_Component::message.phtml</template>
 <!-- 开始 页面 -->
 <div id="layout-wrapper">
 
@@ -62,16 +64,16 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                             <div class='col-6 pull-left'>
                                             </div>
                                             <div class='col-6 button-items'>
-                                                <a href="@admin-url('dev/tool/admin/document/catalog')">
-                                                    <button type='button'
-                                                            class='btn btn-info waves-effect waves-light pull-right'>
-                                                        <lang>目录管理</lang>
-                                                    </button>
-                                                </a>
-                                                <a href="@admin-url('dev/tool/admin/document/add')">
+                                                <a href="@admin-url(dev/tool/admin/document/add)">
                                                     <button type='button'
                                                             class='btn btn-success waves-effect waves-light pull-right'>
                                                         <lang>新增文章</lang>
+                                                    </button>
+                                                </a>
+                                                <a href='@admin-url(dev/tool/admin/document/catalog)'>
+                                                    <button type='button'
+                                                            class='btn btn-info waves-effect waves-light pull-right'>
+                                                        <lang>目录管理</lang>
                                                     </button>
                                                 </a>
                                             </div>

@@ -123,7 +123,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <td><var>$cacheObject->isKeep()?__('是'):__("否")</var></td>
                                                     <td style='width: 100px'>
                                                         <input class='form-check form-switch' type='checkbox' alt="@php{echo $cacheObject->isKeep()?__('系统持久缓存无法操作'):'状态开关'}"
-                                                               @php{echo $cacheObject->isKeep()?'disabled':''}
+
+                                                                @php{echo $cacheObject->isKeep()?"disabled":""}
                                                         id='@var($switch_id)' switch='bool' @var($status_checked )>
                                                         <label class='form-label' for='@var($switch_id)'
                                                                data-on-label='<?= __('开启') ?>'

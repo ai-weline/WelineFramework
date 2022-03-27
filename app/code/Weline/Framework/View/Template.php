@@ -350,7 +350,7 @@ class Template extends DataObject
         # 系统自带的
         $template_elements = [
             'php'       => function ($back) {
-                return '<?php ' . trim($back[1]) . '?>';
+                return '<?php ' . $back[1] . '?>';
             },
             'empty'     => function ($back) {
                 switch ($back[0]) {
@@ -452,7 +452,7 @@ FOREACH;
                                            {$this->tmp_replace($condition_content['content'])}
                                     <?php
                                          }?>";
-                    } else if ($key === (count($condition_contents) - 1)) {
+                    } elseif ($key === (count($condition_contents) - 1)) {
                         $if_code = rtrim($if_code, '?>');
                         $if_code .= "else{
                                         ?>
@@ -469,7 +469,6 @@ FOREACH;
                     }
                 }
                 return $if_code;
-
             },
             'template'  => function ($back) {
                 return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
@@ -543,8 +542,8 @@ FOREACH;
             $back[0]         = str_replace($back[1], '', $back[0]);
             $back_arr        = explode('>', $back[1]);
             $back[1]         = ltrim($back[1], '>');
-            $back[1]         = trim($back[1], "'");
-            $back[1]         = trim($back[1], "\"");
+//            $back[1]         = trim($back[1], "'");
+//            $back[1]         = trim($back[1], "\"");
             $attrs           = array_shift($back_arr);
             $content         = $back_arr ? ltrim(implode('>', $back_arr), '>') : $attrs;
             $back['content'] = $content;
@@ -558,7 +557,7 @@ FOREACH;
             $data  = (new DataObject(['back' => $back, 'content' => $re_content, 'object' => $this]));
             $event->dispatch('Framework_Template::after_template_replace', ['data' => $data]);
             return $data->getData('content');
-        },                           $content);
+        }, $content);
     }
 
     public function getUrl(string $path, array $params = [], bool $merge_query = true): string

@@ -17,6 +17,15 @@ class MessageManager
 {
     private Session $session;
 
+    public const keys = [
+        'has-error',
+        'has-exception',
+        'has-success',
+        'has-warning',
+        'has-notes',
+        'system-message',
+    ];
+
     public function __construct(
         Session $session
     ) {
@@ -33,6 +42,19 @@ class MessageManager
     public function hasErrorMessage(): bool
     {
         return (bool)$this->session->getData('has-error');
+    }
+
+    public function addException(\Exception $exception)
+    {
+        $msg = $exception->getMessage();
+        $this->session->addData('system-message', $this->processMessage($msg, 'error'));
+        $this->session->setData('has-exception', '1');
+        return $this;
+    }
+
+    public function hasException(): bool
+    {
+        return (bool)$this->session->getData('has-exception');
     }
 
     public function addSuccess(string $msg)
@@ -74,13 +96,20 @@ class MessageManager
     public function render(): string
     {
         $html = "<div class='system message'>{$this->session->getData('system-message')}</div>";
-        $this->session->delete('system-message');
+        $this->clear();
         return $html;
     }
 
     public function processMessage(string $msg, string $html_class = 'error'): string
     {
         return "<div class='$html_class'>$msg</div>";
+    }
+
+    public function clear()
+    {
+        foreach (self::keys as $key) {
+            $this->session->delete($key);
+        }
     }
 
     public function __toString(): string

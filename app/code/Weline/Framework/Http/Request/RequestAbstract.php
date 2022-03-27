@@ -45,7 +45,7 @@ abstract class RequestAbstract extends DataObject
 
     public function __init()
     {
-        $url_arr = explode('/', trim($this->getModuleUrlPath(), '/'));
+        $url_arr           = explode('/', trim($this->getModuleUrlPath(), '/'));
         $this->area_router = array_shift($url_arr);
         if (empty($this->_filter)) {
             $this->_filter = RequestFilter::getInstance();
@@ -147,7 +147,7 @@ abstract class RequestAbstract extends DataObject
     /**
      * @DESC          # 是否后端请求
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 23:20
      * 参数区：
@@ -161,7 +161,7 @@ abstract class RequestAbstract extends DataObject
     /**
      * @DESC          # 是否后端请求
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 23:20
      * 参数区：
@@ -194,6 +194,7 @@ abstract class RequestAbstract extends DataObject
      * 参数区：
      *
      * @param string|null $key
+     *
      * @return string|array
      */
     public function getServer(string $key = null): string|array
@@ -287,7 +288,7 @@ abstract class RequestAbstract extends DataObject
     /**
      * @DESC          # 获取请求的module路由路径
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/22 20:24
      * 参数区：
@@ -307,21 +308,21 @@ abstract class RequestAbstract extends DataObject
 
     public function getBaseUrl(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', rtrim($uri, '/'));
         return $this->getBaseHost() . array_shift($url_exp);
     }
 
     public function getBaseUri(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
         return $this->getBaseHost() . array_shift($url_exp);
     }
 
     public function getFirstUrlPath(): string
     {
-        $uri = $this->getUri();
+        $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
         return trim(array_shift($url_exp), '/');
     }
@@ -330,6 +331,11 @@ abstract class RequestAbstract extends DataObject
     {
         $port = $this->getServer('SERVER_PORT');
         return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . (($port !== '80' && $port !== '443') ? ':' . $port : '');
+    }
+
+    public function getPrePath(): string
+    {
+        return $this->getBaseHost() . '/' . $this->getAreaRouter() . '/';
     }
 
     /**

@@ -34,6 +34,10 @@
                             <!-- end row -->
                             <h4 class="font-size-18 text-muted mt-2 text-center"><?= __('欢迎回来！') ?></h4>
                             <p class="mb-5 text-center"><?= __('登录 Weline 管理面板') ?>.</p>
+                            <div class='row'>
+                                <!--消息-->
+                                <template>Weline_Component::message.phtml</template>
+                            </div>
                             <form class="form-horizontal" action="<?= $this->getData('post_url') ?>" method="post">
                                 <?= $this->getFormKey($this->getData('post_url')) ?>
                                 <div class="row">

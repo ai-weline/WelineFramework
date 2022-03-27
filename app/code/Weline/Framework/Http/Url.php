@@ -32,13 +32,7 @@ class Url implements UrlInterface
         if (empty($path)) {
             return $this->get_url();
         }
-        $pre = $this->request->getBaseHost() . '/';
-        if ($this->request->isBackend()) {
-            $pre .= Env::getInstance()->getConfig('admin') . '/';
-        } elseif ($this->request->isApiBackend()) {
-            $pre .= Env::getInstance()->getConfig('api_admin') . '/';
-        }
-        $path = rtrim($pre . $path, '/');
+        $path = rtrim($this->request->getPrePath() . $path, '/');
         if (empty($params)) {
             return $path;
         }
