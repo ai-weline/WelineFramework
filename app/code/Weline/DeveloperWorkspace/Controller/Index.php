@@ -14,12 +14,17 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller;
 
+use Weline\DeveloperWorkspace\Helper\Data;
 use Weline\Framework\App\Controller\FrontendController;
 
 class Index extends FrontendController
 {
     public function index()
     {
+        $catalogsModel = \Weline\DeveloperWorkspace\Helper\Data::getCatalogModel();
+        $catalogs      = $catalogsModel->pagination($this->_request->getParam('page', 1), $this->_request->getParam('page', 10))
+                                       ->select()->fetch();
+        $this->assign('catalogs', $catalogs);
         return $this->fetch();
     }
 }

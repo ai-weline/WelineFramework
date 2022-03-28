@@ -40,7 +40,11 @@
         <p>
             码云地址：<a href="https://gitee.com/aiweline/WelineFramework.git">https://gitee.com/aiweline/WelineFramework.git</a>。
         </p>
-        <p>正式版本：<a href="http://m.dev.aiweline.com">http://m.dev.aiweline.com</a>。</p>
+        <p>开发文档：
+            <a href='@url(dev/tool/)'>
+                <url>dev/tool/</url>
+            </a>
+        </p>
     </div>
 </div>
 <div class="sample">
@@ -53,7 +57,8 @@
         <a href="/hello/helloworld/session" target="_blank" onclick="openWindow(this.href,'Session')">Session</a>
         <a href="/hello/helloworld/plugin" target="_blank" onclick="openWindow(this.href,'Plugin')">Plugin</a>
         <a href="/hello/helloworld/observer" target="_blank" onclick="openWindow(this.href,'Observer')">Observer</a>
-        <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('admin', 'admin'); ?>/admin" target="_blank"
+        <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('admin', 'admin'); ?>/admin"
+           target="_blank"
            onclick="openWindow(this.href,this.text)">后台</a>
         <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('api_admin', 'api_admin'); ?>/rest/V1/index"
            target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>

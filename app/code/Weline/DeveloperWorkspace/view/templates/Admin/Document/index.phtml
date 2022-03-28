@@ -26,8 +26,6 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <body <?= $themeConfig->getLayouts() ?? ''; ?>>
 <!--加载中组件 开始-->
 @template(Weline_Admin::common/page/loading.phtml)
-<!--消息-->
-<template>Weline_Component::message.phtml</template>
 <!-- 开始 页面 -->
 <div id="layout-wrapper">
 
@@ -49,6 +47,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
         <div class="page-content" style="min-height: 800px">
             <div class="container-fluid">
                 <div class='row'>
+                    <!--消息-->
+                    <template>Weline_Component::message.phtml</template>
                     <div class='col-12'>
                         <div class='card'>
                             <div class='card-body'>
@@ -93,7 +93,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            <foreach name="catalogs" item="vo">
+                                            <foreach name="documents" item="vo">
                                                 <tr>
                                                     <php>
                                                         foreach($this->getData('columns')??[] as $k=>$v){
@@ -106,6 +106,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                             </foreach>
                                             </tbody>
                                         </table>
+                                        <?php
+                                        $pagination = $this->getData('pagination');
+                                        echo $pagination['html']??'';
+                                        ?>
                                     </div>
 
                                 </div>

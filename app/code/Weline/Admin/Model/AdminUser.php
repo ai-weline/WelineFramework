@@ -81,7 +81,7 @@ class AdminUser extends \Weline\Framework\Database\Model
             # 初始化一个账户
             /**@var AdminUser $adminUser */
             $adminUser = ObjectManager::getInstance(AdminUser::class);
-            $adminUser->setUsername('Admin')->setPassword('admin')->save();
+            $adminUser->setUsername('秋枫雁飞')->setPassword('admin')->save();
         }
     }
 

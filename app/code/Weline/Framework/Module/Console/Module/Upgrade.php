@@ -114,7 +114,7 @@ class Upgrade extends CommandAbstract
 
         /**@var EventsManager $eventsManager */
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
-        $eventsManager->dispatch('Framework_Console::module_upgrade');
+        $eventsManager->dispatch('Framework_Module::module_upgrade');
     }
 
     /**

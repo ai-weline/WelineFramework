@@ -232,9 +232,22 @@ class PcController extends Core
 //    }
 //
 //
-//    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => '\Exception', 'code' => 'int'])]
-//    public function exception(\Exception $exception, int $code = 403): array
-//    {
-//        return ['msg' => '请求异常！', 'data' => DEV ? $exception : $exception->getMessage(), 'code' => $code];
-//    }
+    public function exception(\Exception $exception, string $msg = '请求异常！', mixed $data = '', int $code = 403): mixed
+    {
+        if (PROD) {
+            return $this->getMessageManager()->addException($exception);
+        } else {
+            $return_data['data']      = DEV ? $data : '';
+            $return_data['exception'] = DEV ? $exception : $exception->getMessage();
+            $return_data              = DEV ? json_encode($return_data) : '';
+            $msg                      = DEV ? $exception->getMessage() : __($msg);
+            $msg_title                = __('消息');
+            $data_title               = __('数据');
+            $html                     = <<<HTML
+$msg_title:$msg,
+$data_title:$return_data,
+HTML;
+            exit($html);
+        }
+    }
 }

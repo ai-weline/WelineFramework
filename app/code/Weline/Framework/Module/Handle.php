@@ -69,12 +69,13 @@ class Handle implements HandleInterface, RegisterInterface
 
     /**
      * Handle 初始函数...
-     * @param Data $helper
-     * @param Printing $printer
-     * @param System $system
+     *
+     * @param Data        $helper
+     * @param Printing    $printer
+     * @param System      $system
      * @param SetupHelper $setup_helper
-     * @param SetupData $setup_data
-     * @param Compress $compress
+     * @param SetupData   $setup_data
+     * @param Compress    $compress
      */
     public function __construct(
         Data        $helper,
@@ -84,13 +85,13 @@ class Handle implements HandleInterface, RegisterInterface
         SetupData   $setup_data,
         Compress    $compress
     ) {
-        $this->modules = Env::getInstance()->getModuleList();
-        $this->helper = $helper;
-        $this->system = $system;
-        $this->setup_data = $setup_data;
+        $this->modules      = Env::getInstance()->getModuleList();
+        $this->helper       = $helper;
+        $this->system       = $system;
+        $this->setup_data   = $setup_data;
         $this->setup_helper = $setup_helper;
-        $this->printer = $printer;
-        $this->compress = $compress;
+        $this->printer      = $printer;
+        $this->compress     = $compress;
     }
 
     /**
@@ -98,7 +99,8 @@ class Handle implements HandleInterface, RegisterInterface
      *
      * 参数区：
      *
-     * @param string $module->getName()
+     * @param string $module- >getName()
+     *
      * @throws \Weline\Framework\App\Exception
      */
     public function remove($module)
@@ -110,7 +112,7 @@ class Handle implements HandleInterface, RegisterInterface
         if ($remove_script) {
             $remove_object = ObjectManager::getInstance($remove_script);
 
-            $version = $this->modules[$module]['version'] ?? '1.0.0';
+            $version       = $this->modules[$module]['version'] ?? '1.0.0';
             $setup_context = new \Weline\Framework\Setup\Data\Context($module, $version);
 
             $this->printer->note($remove_object->setup($this->setup_data, $setup_context));
@@ -121,7 +123,7 @@ class Handle implements HandleInterface, RegisterInterface
         $module_path = BP . $this->modules[$module]['base_path'] . DIRECTORY_SEPARATOR;
         if (!is_dir($module_path)) {
             $this->printer->error("模块{$module}:不存在！", 'ERROR');
-            return ;
+            return;
         }
 
         $zip = $this->compress->compression("{$module_path}", APP_CODE_PATH . $module, APP_CODE_PATH);
@@ -187,30 +189,28 @@ class Handle implements HandleInterface, RegisterInterface
         // 模型管理器
         /**@var ModelManager $modelManager */
         $modelManager = ObjectManager::getInstance(ModelManager::class);
-        // 检测文件完整
-        $router = '';
-        foreach (DataInterface::files as $filename) {
-            $filepath = $module->getBasePath() . DIRECTORY_SEPARATOR . $filename;
-            if (is_file($filepath)) {
-                if ($filename === DataInterface::file_etc_Env) {
-                    $env = (array)require $filepath;
-                    if (!isset($env['router'])||empty($env['router'])) {
-                        // 如果文件不存在则读取模块名字作为router
-                        $env['router'] = strtolower($module->getName());
-                        if (DEV) {
-                            $this->printer->note($module->getName() . '：模块没有设定路由别名，因此沿用模块名称作为路由入口！', '开发');
-                            $this->printer->warning('{http://demo.com/' . $module->getName() . '}', '示例');
-                            $this->printer->warning('设置路由别名请到：模块目录下的etc/env.php,修改return ["router"=>"' . $module->getName() . '"];', '提示');
-                        }
-                    }
-                    $router = strtolower($env['router']);// TODO 定义路由区分大小写
-                }
+        // 检测配置文件完整
+        $router   = '';
+        $filepath = $module->getBasePath() . DIRECTORY_SEPARATOR . DataInterface::file_etc_Env;
+        $env      = [];
+        if (is_file($filepath)) {
+            $env = (array)require $filepath;
+            if (!isset($env['router']) || empty($env['router'])) {
+                // 如果文件不存在则读取模块名字作为router
+                $env = $this->getEnv($module, $env);
             }
         }
+//        if ('Weline_Frontend' === $module->getName()) {
+//            p($env['router']);
+//        }
+        if (empty($env)) {
+            $env = $this->getEnv($module, $env);
+        }                                          // 如果文件不存在则读取模块名字作为router
+        $router = strtolower($env['router'] ?? '');// TODO 定义路由区分大小写
         $module->setRouter($router);
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $module->getName(), 'module_version' => $version, 'module_description' => $description], '__construct');
-        $setup_dir = BP . $module->getBasePath() . \Weline\Framework\Setup\Data\DataInterface::dir;
-        $setup_namespace = $module->getNamespacePath() . '\\' . ucfirst(\Weline\Framework\Setup\Data\DataInterface::dir) . '\\';
+        $setup_dir           = BP . $module->getBasePath() . \Weline\Framework\Setup\Data\DataInterface::dir;
+        $setup_namespace     = $module->getNamespacePath() . '\\' . ucfirst(\Weline\Framework\Setup\Data\DataInterface::dir) . '\\';
 
         if (is_dir($setup_dir) && DEV) {
             $this->printer->setup($setup_dir . '：升级目录...', '开发');
@@ -232,7 +232,7 @@ class Handle implements HandleInterface, RegisterInterface
                     foreach (\Weline\Framework\Setup\Data\DataInterface::upgrade_FILES as $upgrade_FILE) {
                         $setup_file = $setup_dir . DIRECTORY_SEPARATOR . $upgrade_FILE . '.php';
                         if (file_exists($setup_file)) {
-                            $setup = ObjectManager::getInstance($setup_namespace . $upgrade_FILE);
+                            $setup  = ObjectManager::getInstance($setup_namespace . $upgrade_FILE);
                             $result = $setup->setup($this->setup_data, $this->setup_context);
                             $this->printer->note("{$result}");
                         }
@@ -293,5 +293,29 @@ class Handle implements HandleInterface, RegisterInterface
 //        // 更新模块
         $this->helper->updateModules($this->modules);
         return $module;
+    }
+
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/3/28 13:56
+     * 参数区：
+     *
+     * @param Module $module
+     * @param array  $env
+     *
+     * @return array
+     */
+    public function getEnv(Module $module, array $env): array
+    {
+        $env['router'] = strtolower($module->getName());
+        if (DEV) {
+            $this->printer->note($module->getName() . '：模块没有设定路由别名，因此沿用模块名称作为路由入口！', '开发');
+            $this->printer->warning('{http://demo.com/' . $module->getName() . '}', '示例');
+            $this->printer->warning('设置路由别名请到：模块目录下的etc/env.php,修改return ["router"=>"' . $module->getName() . '"];', '提示');
+        }
+        return $env;
     }
 }

@@ -322,8 +322,13 @@ class Template extends DataObject
         $comFileName = $this->getFetchFile($fileName);
         ob_start();
         try {
-            extract($dictionary, EXTR_SKIP);
-            $this->setData($dictionary);
+            if ($dictionary) {
+                $this->addData($dictionary);
+            }
+            # 将数组存储的变量散列到当前页内存中，使得变量可在页面中暴露出来（可直接使用）
+            if ($this->getData()) {
+                extract($this->getData(), EXTR_SKIP);
+            }
             include $comFileName;
         } catch (\Exception $exception) {
             ob_end_clean();
@@ -347,7 +352,7 @@ class Template extends DataObject
      */
     private function tmp_replace(string $content): array|string|null
     {
-        # 系统自带的
+        # 系统自带的标签
         $template_elements = [
             'php'       => function ($back) {
                 return '<?php ' . $back[1] . '?>';
@@ -385,11 +390,15 @@ class Template extends DataObject
                     case '<foreach</foreach>':
                         preg_match('/name=[\'|"](.*?)[\'|"]/', $back['attrs'], $name);
                         $name = array_pop($name);
+                        if (empty($name)) {
+                            throw new Exception(__('foreach标签必须指定要循环的变量:name,示例：<foreach name="data" key="k" item="v"><li><var>$v</var></li></foreach>'));
+                        }
                         preg_match('/key=[\'|"](.*?)[\'|"]/', $back['attrs'], $key);
                         $key = array_pop($key);
                         $key = $key ?? 'key';
                         preg_match('/item=[\'|"](.*?)[\'|"]/', $back['attrs'], $item);
                         $item = array_pop($item);
+                        $item = $item ?? 'v';
                         return <<<FOREACH
 <!-- foreach 属性： {$back['attrs']} -->
 <?php
@@ -412,9 +421,9 @@ FOREACH;
                     case '@if()':
                         $content_arr = explode('|', $back[1]);
                         foreach ($content_arr as $item) {
-                            $item_arr = explode('=>', $item);
-                            $condition = array_shift($item_arr);
-                            $condition_contents[] = ['condition' =>$condition,'content'=>implode('=>', $item_arr)];
+                            $item_arr             = explode('=>', $item);
+                            $condition            = array_shift($item_arr);
+                            $condition_contents[] = ['condition' => $condition, 'content' => implode('=>', $item_arr)];
                         }
                         break;
                     case '<w-if</w-if>':
@@ -488,7 +497,8 @@ FOREACH;
             'static'    => function ($back) {
                 return $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
             },
-            'hook',
+            'hook'      => function ($back) {
+            },
             'js'        => function ($back) {
                 $source = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
                 return "<script src='{$source}'></script>";
@@ -542,8 +552,6 @@ FOREACH;
             $back[0]         = str_replace($back[1], '', $back[0]);
             $back_arr        = explode('>', $back[1]);
             $back[1]         = ltrim($back[1], '>');
-//            $back[1]         = trim($back[1], "'");
-//            $back[1]         = trim($back[1], "\"");
             $attrs           = array_shift($back_arr);
             $content         = $back_arr ? ltrim(implode('>', $back_arr), '>') : $attrs;
             $back['content'] = $content;
@@ -554,7 +562,7 @@ FOREACH;
             }
             /**@var EventsManager $event */
             $event = ObjectManager::getInstance(EventsManager::class);
-            $data  = (new DataObject(['back' => $back, 'content' => $re_content, 'object' => $this]));
+            $data  = new DataObject(['back' => $back, 'content' => $re_content, 'object' => $this]);
             $event->dispatch('Framework_Template::after_template_replace', ['data' => $data]);
             return $data->getData('content');
         }, $content);

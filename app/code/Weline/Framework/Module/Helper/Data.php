@@ -99,6 +99,10 @@ class Data extends AbstractHelper
                             $request_method             = null;
                             $rule_method                = $method;
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
+                            if (1===count($request_method_split_array)) {
+                                $request_method_split_array[1] = $request_method_split_array[0];
+                                $request_method_split_array[0] = 'get';
+                            }
                             $first_value                = $request_method_split_array[array_key_first($request_method_split_array)];
                             if (in_array(strtoupper($first_value), RequestInterface::METHODS)) {
                                 $request_method = strtoupper($first_value);
@@ -165,6 +169,10 @@ class Data extends AbstractHelper
                             $request_method             = '';
                             $rule_method                = $method;
                             $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
+                            if (1===count($request_method_split_array)) {
+                                $request_method_split_array[1] = $request_method_split_array[0];
+                                $request_method_split_array[0] = 'get';
+                            }
                             $first_value                = $request_method_split_array[array_key_first($request_method_split_array)];
                             if (in_array(strtoupper($first_value), RequestInterface::METHODS)) {
                                 $request_method = strtoupper($first_value);

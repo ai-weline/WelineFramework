@@ -76,7 +76,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>标题</lang>
                                                 </label>
                                                 <input type='text' name='title' class='form-control' id='title'
-                                                       placeholder='@lang(标题)' value='' required>
+                                                       placeholder='@lang(标题)' value='前言' required>
                                                 <div class='valid-feedback'>
                                                     <lang>请输入标题</lang>
                                                 </div>
@@ -93,22 +93,29 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                         <span class='input-group-text'
                                                               id='authorPrepend'>@</span>
                                                     </div>
-                                                    <input type='text' name='author' class='form-control'
-                                                           id='author' placeholder='@lang(作者名称)'
-                                                           aria-describedby='authorPrepend' required>
+                                                    <select type='text' name='author_id' class='form-control'
+                                                            id='author'
+                                                            aria-describedby='authorPrepend' required>
+                                                        <foreach name="users">
+                                                            <option value="@var{$v->getId()}"><var>$v->getUsername()</var></option>
+                                                        </foreach>
+                                                    </select>
                                                     <div class='valid-feedback'>
                                                         <lang>请输入作者</lang>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class='col-md-3'>
+                                        <div class='col-md-6'>
                                             <div class='mb-3 position-relative'>
-                                                <label class='form-label' for='tag'>
-                                                    <lang>标签</lang>
+                                                <label class='form-label' for='summary'>
+                                                    <lang>摘要</lang>
                                                 </label>
-                                                <input type='text' name='tag' class='form-control' id='tag'
-                                                       placeholder='@lang(标签)' value=''>
+                                                <textarea type='text' name='summary' class='form-control' id='summary'
+                                                          placeholder='@lang(标题)' required>WelineFramework框架前言！</textarea>
+                                                <div class='valid-feedback'>
+                                                    <lang>请输入摘要</lang>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class='col-md-3'>
@@ -116,8 +123,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                 <label class='form-label' for='category'>
                                                     <lang>分类</lang>
                                                 </label>
-                                                <input type='text' name='category' class='form-control' id='category'
-                                                       placeholder='@lang(分类)' value=''>
+                                                <select type='text' name='category_id' class='form-control' id='category'>
+                                                    <foreach name="catalogs" item="v">
+                                                        <option value="@var{$v->id}"><var>$v->getName()</var></option>
+                                                    </foreach>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -128,7 +138,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>文章内容</lang>
                                                 </label>
                                                 <textarea id='elm1' name='content' class='form-control'
-                                                          required></textarea>
+                                                          required>WelineFramework是一款支持PHP8的高性能,高灵活的web快速开发框架！</textarea>
                                                 <div class='invalid-tooltip'>
                                                     <lang>文章内容不能为空</lang>
                                                 </div>

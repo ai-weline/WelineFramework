@@ -62,7 +62,7 @@ abstract class RequestAbstract extends DataObject
      *
      * @param array $router
      */
-    public function setRouter(array $router)
+    public function setRouter(array $router): RequestAbstract
     {
         return $this->setData('router', $router);
     }

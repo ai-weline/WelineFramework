@@ -21,8 +21,6 @@ class Core
 {
     public const dir_static = 'static';
 
-    public const default_index_url = '/index/index';
-
     public const url_path_split = '/';
 
     private ?Env $_etc;
