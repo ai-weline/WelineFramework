@@ -65,7 +65,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
      * @throws Exception
      * @throws Core
      */
-    public function deleteDelete()
+    public function getDelete()
     {
         $catalogModel = $this->getCatalogModel()->load($this->_request->getParam('id'));
         if ($catalogModel->getId()) {

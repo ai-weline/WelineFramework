@@ -95,11 +95,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                             <tbody>
                                             <foreach name="catalogs" item="vo">
                                                 <tr>
-                                                    <th><var>$vo->id</var></th>
-                                                    <th><var>$vo->name</var></th>
-                                                    <th><var>$vo->pid</var></th>
-                                                    <th><var>$vo->create_time</var></th>
-                                                    <th><var>$vo->update_time</var></th>
+                                                    <php>
+                                                        foreach($this->getData('columns')??[] as $k=>$v){
+                                                    </php>
+                                                    <th><var>$vo[$v->Field]</var></th>
+                                                    <php>
+                                                        }
+                                                    </php>
                                                 </tr>
                                             </foreach>
                                             </tbody>

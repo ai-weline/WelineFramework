@@ -52,6 +52,7 @@ class Catalog extends \Weline\Framework\Database\Model
     public function install(ModelSetup $setup, Context $context): void
     {
         $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
+//        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable('目录')
                   ->addColumn('id', TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')

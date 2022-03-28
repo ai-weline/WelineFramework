@@ -1,6 +1,7 @@
 .idea
 vendor/
 app/etc/
+app/*/tpl/*
 app/code/Aiweline/Bbs/
 app/code/Aiweline/NewsSource/
 setup/install.lock
