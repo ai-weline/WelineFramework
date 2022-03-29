@@ -2,6 +2,7 @@
 vendor/
 app/etc/
 app/*/tpl/*
+app/*/node_modules/*
 app/code/Aiweline/Bbs/
 app/code/Aiweline/NewsSource/
 setup/install.lock
