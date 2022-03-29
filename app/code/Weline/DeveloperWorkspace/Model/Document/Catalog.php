@@ -96,21 +96,24 @@ class Catalog extends \Weline\Framework\Database\Model
         $catalogs = $this->where('pid is null or pid=0 ')->select()->fetch();
         /**@var Catalog $catalog*/
         foreach ($catalogs as &$catalog) {
-            $catalog = $catalog->getData();
-            $catalog['text'] = $catalog['name'];
-            $catalog['nodes'] = $this->getSubTree($catalog['id']);
+            $this->getSubTree($catalog);
         }
         return $catalogs;
     }
-    public function getSubTree(int $catalog_id)
+    public function getSubTree(Catalog &$catalog)
     {
-        $catalogs = $this->where('pid', $catalog_id)->select()->fetch();
-        /**@var Catalog $catalog*/
-        foreach ($catalogs as &$catalog) {
-            $catalog = $catalog->getData();
-            $catalog['text'] = $catalog['name'];
-            $catalog['nodes'] = $this->getSubTree($catalog['id']);
+        $catalog['text'] = $catalog['name'];
+        $catalogs = $this->where('pid', $catalog->getId())->select()->fetch();
+        if ($catalogs) {
+            /**@var Catalog $sub_catalog*/
+            foreach ($catalogs as &$sub_catalog) {
+                $this->getSubTree($sub_catalog);
+            }
+            $catalog['nodes']=$catalogs;
+        } else {
+            $catalog['nodes'] = [];
         }
+        $catalog = $catalog->getData();
         return $catalogs;
     }
 }

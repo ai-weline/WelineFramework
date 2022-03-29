@@ -56,7 +56,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                         <div class='card'>
                             <div class='card-body'>
                                 <button type='button'
-                                        onclick='window.location.href="@admin-url(dev/tool/admin/document)"'
+                                        onclick='window.location.href="@admin-url('dev/tool/admin/document')"'
                                         class='btn btn-dark waves-effect waves-light pull-right '>
                                     <lang>返回</lang>
                                 </button>
@@ -73,7 +73,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                         <lang>新建分类</lang>
                                     </h4>
                                     <form class='needs-validation' method='post'
-                                          action='@admin-url(dev/tool/admin/document/catalog/post)' novalidate>
+                                          action="@admin-url('dev/tool/admin/document/catalog/post')" novalidate>
                                         <div class='row col'>
                                             <div class='col-6 pull-left'>
 
@@ -92,7 +92,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                         <lang>目录名</lang>
                                                     </label>
                                                     <input type='text' name='name' class='form-control' id='name'
-                                                           placeholder='@lang(目录名)' required>
+                                                           placeholder='@lang("目录名")' required>
                                                     <div class='valid-feedback'>
                                                         <lang>请输入目录名</lang>
                                                     </div>
@@ -138,7 +138,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>保存</lang>
                                                 </button>
                                                 <button type='button'
-                                                        onclick='window.location.href="@admin-url(dev/tool/admin/document)"'
+                                                        onclick='window.location.href="@admin-url('dev/tool/admin/document')"'
                                                         class='btn btn-default waves-effect waves-light pull-right '>
                                                     <lang>返回</lang>
                                                 </button>
@@ -159,7 +159,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                     <script>
                                         function renderTree() {
                                             $.get({
-                                                url: '<?=$this->getAdminUrl("dev/tool/admin/document/catalog/tree")?>',
+                                                url: '@admin-url("dev/tool/admin/document/catalog/tree")',
                                             }).done(res => {
                                                 console.log(res)
                                                 $('#catalog-tree').treeview({

@@ -19,11 +19,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <link rel="Bookmark" href="@static(Weline_Frontend::img/favicon.png)">
 <!--加载requirejs-->
 <?php if (DEV) : ?>
-    <!--        <script src="@static(Weline_Frontend::backend/lib/requirejs/2.3.6/requirejs.js)"></script>-->
+    <!--        <script src="@static(Weline_Frontend::frontend/lib/requirejs/2.3.6/requirejs.js)"></script>-->
 <?php
 else:
     ?>
-    <!--        <script src="@static(Weline_Frontend::backend/lib/requirejs/2.3.6/requirejs.min.js)"></script>-->
+    <!--        <script src="@static(Weline_Frontend::frontend/lib/requirejs/2.3.6/requirejs.min.js)"></script>-->
 <?php
 endif;
 ?>
@@ -57,9 +57,9 @@ endif;
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Frontend::assets/css/app' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet" type="text/css"/>
 <!--JS-->
-<js>Weline_Frontend::/backend/lib/jquery/3.6.0/jquery.js</js>
+<js>Weline_Frontend::/frontend/lib/jquery/3.6.0/jquery.js</js>
 <?php if (DEV): ?>
-    <!--    <script src="@static(Weline_Frontend::/backend/lib/jquery/3.6.0/jquery.map)"></script>-->
+    <!--    <script src="@static(Weline_Frontend::/frontend/lib/jquery/3.6.0/jquery.map)"></script>-->
 <?php endif; ?>
 <!--加载配置页头-->
 <?php

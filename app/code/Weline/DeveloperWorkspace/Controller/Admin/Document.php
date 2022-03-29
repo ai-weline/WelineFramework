@@ -13,6 +13,7 @@ namespace Weline\DeveloperWorkspace\Controller\Admin;
 
 use Weline\Admin\Model\AdminUser;
 use Weline\DeveloperWorkspace\Model\Document\Catalog;
+use Weline\DeveloperWorkspace\Model\ModelService;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Uploader;
 
@@ -20,8 +21,7 @@ class Document extends \Weline\Framework\App\Controller\BackendController
 {
     public function index()
     {
-        /**@var \Weline\DeveloperWorkspace\Model\Document $documentModel */
-        $documentModel = ObjectManager::getInstance(\Weline\DeveloperWorkspace\Model\Document::class);
+        $documentModel = ModelService::getDocumentModel();
         $documents     = $documentModel->pagination(
             intval($this->_request->getParam('page', 1)),
             intval($this->_request->getParam('pageSize', 10)),
@@ -33,6 +33,22 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         $this->assign('pagination', $documentModel->getPagination());
         $this->assign('columns', $documentModel->columns());
         return $this->fetch();
+    }
+
+    public function postDelete()
+    {
+        $id = $this->_request->getParam('id');
+        try {
+            ModelService::getDocumentModel()->load($id)->delete();
+            return $this->fetchJson($this->success());
+        } catch (\Exception $exception) {
+            return $this->fetchJson($this->exception($exception));
+        }
+    }
+
+    public function edit()
+    {
+        $this->redirect($this->getUrl('dev/tool/admin/document/add', $this->_request->getParams()));
     }
 
     public function add()
@@ -52,6 +68,8 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         /**@var AdminUser $adminUserModel */
         $adminUserModel = ObjectManager::getInstance(AdminUser::class);
         $this->assign('users', $adminUserModel->select()->fetch());
+        # 如果是编辑,不是就返回空 文档
+        $this->assign('document', ModelService::getDocumentModel()->load($this->_request->getParam('id')));
         return $this->fetch();
     }
 

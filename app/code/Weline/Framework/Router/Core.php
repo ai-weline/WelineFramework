@@ -78,7 +78,7 @@ class Core
         # 获取URL
         $origin_url              = $this->processUrl();
         $url                     = str_replace('-', '', $origin_url);
-        $this->_router_cache_key = $this->area_router . $this->request->getUrlPath();
+        $this->_router_cache_key = $this->request->getUrlPath();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
             return $this->route();

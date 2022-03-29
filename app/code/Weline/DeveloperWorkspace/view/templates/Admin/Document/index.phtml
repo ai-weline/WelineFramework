@@ -20,6 +20,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
     <!-- Responsive Table css -->
     <link href='@static(Weline_Admin::assets/libs/admin-resources/rwd-table/rwd-table.min.css)' rel='stylesheet'
           type='text/css'/>
+    <!-- Sweet Alert-->
+    <link href='@static(Weline_Admin::assets/libs/sweetalert2/sweetalert2.min.css)' rel='stylesheet' type='text/css'/>
 </head>
 
 <!--<body data-sidebar="dark" data-topbar='colored' data-layout='horizontal'>-->
@@ -64,13 +66,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                             <div class='col-6 pull-left'>
                                             </div>
                                             <div class='col-6 button-items'>
-                                                <a href="@admin-url(dev/tool/admin/document/add)">
+                                                <a href="@admin-url('dev/tool/admin/document/add')">
                                                     <button type='button'
                                                             class='btn btn-success waves-effect waves-light pull-right'>
                                                         <lang>新增文章</lang>
                                                     </button>
                                                 </a>
-                                                <a href='@admin-url(dev/tool/admin/document/catalog)'>
+                                                <a href="@admin-url('dev/tool/admin/document/catalog')">
                                                     <button type='button'
                                                             class='btn btn-info waves-effect waves-light pull-right'>
                                                         <lang>目录管理</lang>
@@ -90,25 +92,31 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                         data-field="@var{$v->Field}"><var>$v->Comment</var>
                                                     </th>
                                                 </foreach>
+                                                <th>
+                                                    <lang>操作</lang>
+                                                </th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <foreach name="documents" item="vo">
                                                 <tr>
-                                                    <php>
-                                                        foreach($this->getData('columns')??[] as $k=>$v){
-                                                    </php>
-                                                    <th><var>$vo[$v->Field]</var></th>
-                                                    <php>
-                                                        }
-                                                    </php>
+                                                    @foreach{$columns as $k=>$v|<th><var>$vo[$v->Field]</var></th>}
+                                                    <th>
+                                                        <a href="@admin-url{'dev/tool/admin/document/edit',['id'=>$vo->getId()]}">
+                                                            <button class="btn btn-primary">编辑</button>
+                                                        </a>
+                                                        <button data-url="@admin-url{'dev/tool/admin/document/delete',['id'=>$vo->getId()]}"
+                                                                class="btn btn-danger btn waves-effect waves-light document-delete-btn">
+                                                            删除
+                                                        </button>
+                                                    </th>
                                                 </tr>
                                             </foreach>
                                             </tbody>
                                         </table>
                                         <?php
                                         $pagination = $this->getData('pagination');
-                                        echo $pagination['html']??'';
+                                        echo $pagination['html'] ?? '';
                                         ?>
                                     </div>
 
@@ -159,6 +167,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 
 <!-- Init js -->
 <script src='@static(Weline_Admin::assets/js/pages/table-responsive.init.js)'></script>
+<!-- Sweet Alerts js -->
+<script src='@static(Weline_Admin::assets/libs/sweetalert2/sweetalert2.min.js)'></script>
 
 <!--页脚-->
 @template(Weline_Admin::common/footer.phtml)
@@ -166,6 +176,60 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <!-- jquery.vectormap map -->
 <script src="@static(Weline_Admin::assets/libs/jqvmap/jquery.vmap.min.js)"></script>
 <script src="@static(Weline_Admin::assets/libs/jqvmap/maps/jquery.vmap.usa.js)"></script>
+<!--按钮-->
+<script>
+    $('.document-delete-btn').click(function (e) {
+        let target = $(e.target)
+        Swal.fire({
+            title: '@lang("你确定要操作么？")',
+            text: '@lang("操作后你将无法恢复！")',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '@lang("是的，我确定要删除！")',
+            cancelButtonText: '@lang(不要，取消吧！)',
+            confirmButtonClass: 'btn btn-success mt-2',
+            cancelButtonClass: 'btn btn-danger ms-2 mt-2',
+            buttonsStyling: false
+        }).then(function (result) {
+            if (result.value) {
+                showLoading();
+                $.post({
+                    url: target.attr('data-url')
+                }).done(res => {
+                    hideLoading();
+                    console.log(res)
+                    if (200 === res.code) {
+                        Swal.fire({
+                            title: '@lang("已删除！")',
+                            text: '@lang("文章已经被删除了！")',
+                            confirmButtonText: '@lang(好的)',
+                            icon: 'success'
+                        }).then(res => {
+                            if (res.value) window.location.reload()
+                        })
+                    } else {
+                        Swal.fire({
+                            title: '@lang(删除提示！)',
+                            text: '@lang("文章删除失败，请重试！")',
+                            confirmButtonText: '@lang(好的)',
+                            icon: 'error'
+                        })
+                    }
+                })
+            } else if (
+                // Read more about handling dismissals
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                Swal.fire({
+                    title: '@lang("已取消删除！")',
+                    text: '@lang("这篇文章安全的保留下来了！"):)',
+                    confirmButtonText: '@lang(好的)',
+                    icon: 'error'
+                })
+            }
+        });
+    });
+</script>
 </body>
 </html>
 

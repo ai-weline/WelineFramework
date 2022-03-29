@@ -23,7 +23,7 @@ class Document extends \Weline\Framework\Database\Model
     public const fields_AUTHOR_ID   = 'author_id';
     public const fields_CATEGORY_ID = 'category_id';
 //    public const fields_TAG_ID      = 'tag_id';
-    public const fields_CONTEND     = 'content';
+    public const fields_CONTEND = 'content';
 
     /**
      * @inheritDoc
@@ -107,7 +107,7 @@ class Document extends \Weline\Framework\Database\Model
         return $this->setData(self::fields_CATEGORY_ID, $category_id);
     }
 
-    public function getCategoryId(): Document
+    public function getCategoryId()
     {
         return $this->getData(self::fields_CATEGORY_ID);
     }

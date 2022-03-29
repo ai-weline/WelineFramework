@@ -69,12 +69,12 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         # 验证 form 表单
         if (empty($this->getRequest()->getParam('form_key') || ($this->_session->getData('form_key') !== $this->getRequest()->getParam('form_key')))) {
             $this->messageManager->addError(__('异常的登录操作！'));
-            $this->redirect($this->getUrl());
+            $this->redirect($this->getUrl('admin/login'));
         }
         $adminUsernameUser = $this->helper->getRequestAdminUser();
         if (!$adminUsernameUser->getId()) {
             $this->messageManager->addError(__('账户不存在！'));
-            $this->redirect($this->getUrl());
+            $this->redirect($this->getUrl('admin/login'));
         }
         if ($adminUsernameUser->getAttemptTimes() > 6) {
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())->setAttemptIp($this->_request->clientIP())->save();
@@ -83,7 +83,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                 # FIXME 将IP封死，为了不占用服务器资源，将封锁过程提前到框架入口处，此处只作为拉入黑名单处理【设置为Security框架函数处理】
                 $this->noRouter();
             }
-            $this->redirect($this->getUrl());
+            $this->redirect($this->getUrl('admin/login'));
         } else {
             $this->_session->setData('backend_disable_login', false);
         }
@@ -95,7 +95,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                               ->setAttemptIp($this->_request->clientIP())
                               ->save();
             $this->messageManager->addError(__('登录异常！'));
-            $this->redirect($this->getUrl());
+            $this->redirect($this->getUrl('admin/login'));
         }
         # 如果大于2次的尝试登录 验证客户提供的验证码
         if ($adminUsernameUser->getAttemptTimes() > 2) {

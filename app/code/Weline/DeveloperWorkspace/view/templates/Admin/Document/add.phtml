@@ -57,7 +57,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                     <lang>开发文档编辑器 有新的开发文档时可以随时编辑</lang>
                                 </p>
                                 <form class='needs-validation' method="post"
-                                      action="@admin-url(dev/tool/admin/document/post)" novalidate>
+                                      action="@admin-url('dev/tool/admin/document/post')" novalidate>
+                                    <label>
+                                        <input type="text" class="sr-only" name="id" value="@var{$document->getId()}">
+                                    </label>
                                     <div class="row col">
                                         <div class="col-6 pull-left">
 
@@ -76,7 +79,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>标题</lang>
                                                 </label>
                                                 <input type='text' name='title' class='form-control' id='title'
-                                                       placeholder='@lang(标题)' value='前言' required>
+                                                       placeholder='@lang("标题")' value='前言' required>
                                                 <div class='valid-feedback'>
                                                     <lang>请输入标题</lang>
                                                 </div>
@@ -97,10 +100,18 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                             id='author'
                                                             aria-describedby='authorPrepend' required>
                                                         <foreach name="users">
-                                                            <option value="@var{$v->getId()}"><var>$v->getUsername()</var></option>
+                                                            <if condition="$document->getAuthorId() === $v->getId()">
+                                                                <option value="@var{$v->getId()}" selected>
+                                                                    <var>$v->getUsername()</var>
+                                                                </option>
+                                                                <else>
+                                                                    <option value="@var{$v->getId()}">
+                                                                        <var>$v->getUsername()</var>
+                                                                    </option>
+                                                            </if>
                                                         </foreach>
                                                     </select>
-                                                    <div class='valid-feedback'>
+                                                    <div class='invalid-tooltip'>
                                                         <lang>请输入作者</lang>
                                                     </div>
                                                 </div>
@@ -112,8 +123,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>摘要</lang>
                                                 </label>
                                                 <textarea type='text' name='summary' class='form-control' id='summary'
-                                                          placeholder='@lang(标题)' required>WelineFramework框架前言！</textarea>
-                                                <div class='valid-feedback'>
+                                                          placeholder='@lang("标题")'
+                                                          required>@var{$document->getSummary()}</textarea>
+                                                <div class='invalid-tooltip'>
                                                     <lang>请输入摘要</lang>
                                                 </div>
                                             </div>
@@ -123,9 +135,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                 <label class='form-label' for='category'>
                                                     <lang>分类</lang>
                                                 </label>
-                                                <select type='text' name='category_id' class='form-control' id='category'>
+                                                <select type='text' name='category_id' class='form-control'
+                                                        id='category'>
                                                     <foreach name="catalogs" item="v">
-                                                        <option value="@var{$v->id}"><var>$v->getName()</var></option>
+                                                        <if condition="$document->getCategoryId() === $v->getId()">
+                                                            <option value="@var{$v->id}" selected>
+                                                                <var>$v->getName()</var></option>
+                                                            <else>
+                                                                <option value="@var{$v->id}">
+                                                                    <var>$v->getName()</var>
+                                                                </option>
+                                                        </if>
                                                     </foreach>
                                                 </select>
                                             </div>
@@ -138,7 +158,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>文章内容</lang>
                                                 </label>
                                                 <textarea id='elm1' name='content' class='form-control'
-                                                          required>WelineFramework是一款支持PHP8的高性能,高灵活的web快速开发框架！</textarea>
+                                                          required>@var{$document->getContent()}</textarea>
                                                 <div class='invalid-tooltip'>
                                                     <lang>文章内容不能为空</lang>
                                                 </div>
@@ -210,7 +230,7 @@ File: Form editor Js File
                 skin: 'oxide-dark',
                 theme: 'silver',
                 automatic_uploads: false,
-                images_upload_url: '@admin-url(dev/tool/admin/document/upload)',
+                images_upload_url: '@admin-url("dev/tool/admin/document/upload")',
                 plugins: [
                     'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
@@ -218,13 +238,13 @@ File: Form editor Js File
                 ],
                 toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons',
                 style_formats: [
-                    {title: '@lang(粗体)', inline: 'b'},
-                    {title: '@lang(红色文字)', inline: 'span', styles: {color: '#ff0000'}},
-                    {title: '@lang(红色标题)', block: 'h1', styles: {color: '#ff0000'}},
-                    {title: '@lang(示例1)', inline: 'span', classes: 'example1'},
-                    {title: '@lang(示例2)', inline: 'span', classes: 'example2'},
-                    {title: '@lang(表格样式)'},
-                    {title: '@lang(表格行1)', selector: 'tr', classes: 'tablerow1'}
+                    {title: '@lang("粗体")', inline: 'b'},
+                    {title: '@lang("红色文字")', inline: 'span', styles: {color: '#ff0000'}},
+                    {title: '@lang("红色标题")', block: 'h1', styles: {color: '#ff0000'}},
+                    {title: '@lang("示例1")', inline: 'span', classes: 'example1'},
+                    {title: '@lang("示例2")', inline: 'span', classes: 'example2'},
+                    {title: '@lang("表格样式")'},
+                    {title: '@lang("表格行1")', selector: 'tr', classes: 'tablerow1'}
                 ]
             });
         }

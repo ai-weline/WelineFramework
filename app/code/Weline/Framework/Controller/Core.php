@@ -92,15 +92,18 @@ class Core implements Data\DataInterface
      * 参数区：
      *
      * @param string $path
+     * @param array  $params
      *
      * @return string
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
-    public function getUrl(string $path = ''): string
+    public function getUrl(string $path = '', array $params = []): string
     {
         if (!isset($this->_url)) {
             $this->_url = ObjectManager::getInstance(Url::class);
         }
-        return $this->_url->build($path);
+        return $this->_url->build($path, $params);
     }
 
     /**

@@ -483,7 +483,7 @@ FOREACH;
                 return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
             },
             'var'       => function ($back) {
-                return '<?=' . trim($back[1]) . '?>';
+                return "<?= {$back[1]} ?>";
             },
             'pp'        => function ($back) {
                 return "<?php p({$back[1]})?>";
@@ -508,13 +508,14 @@ FOREACH;
                 return "<link href=\"{$source}\" rel=\"stylesheet\" type=\"text/css\"/>";
             },
             'lang'      => function ($back) {
-                return "<?=__(trim('{$back[1]}'))?>";
+                $back[1] = trim($back[1], '\'"');
+                return "<?=__('{$back[1]}')?>";
             },
             'url'       => function ($back) {
                 return "<?=\$this->getUrl('{$back[1]}')?>";
             },
             'admin-url' => function ($back) {
-                return "<?=\$this->getAdminUrl('{$back[1]}')?>";
+                return "<?=\$this->getAdminUrl({$back[1]})?>";
             },
         ];
         /**@var EventsManager $event */

@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Database;
 
+use Weline\Framework\Manager\ObjectManager;
+
 abstract class Model extends AbstractModel implements ModelInterface
 {
     public function __init()
