@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Weline\Frontend\Model;
 
 use Weline\Backend\Model\Config;
-use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
@@ -43,7 +42,6 @@ class UserConfig extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-        $this->setup($setup, $context);
         /**@var Config $config*/
         $config = ObjectManager::getInstance(Config::class);
         $config->setConfig('admin_default_avatar', 'Weline_Admin::/img/logo.png', 'Weline_Admin');

@@ -9,7 +9,7 @@
 
 namespace Weline\Framework\Event\Console\Event;
 
-use Weline\Framework\Event\Config\Reader;
+use Weline\Framework\Event\Config\XmlReader;
 use Weline\Framework\Output\Cli\Printing;
 
 class Data implements \Weline\Framework\Console\CommandInterface
@@ -20,13 +20,13 @@ class Data implements \Weline\Framework\Console\CommandInterface
     private Printing $printing;
 
     /**
-     * @var Reader
+     * @var XmlReader
      */
-    private Reader $reader;
+    private XmlReader $reader;
 
     public function __construct(
-        Reader $reader,
-        Printing $printing
+        XmlReader $reader,
+        Printing  $printing
     ) {
         $this->printing = $printing;
         $this->reader   = $reader;

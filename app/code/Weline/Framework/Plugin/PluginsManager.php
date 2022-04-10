@@ -13,7 +13,7 @@ use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Plugin\Api\Data\InterceptorInterface;
 use Weline\Framework\Plugin\Cache\PluginCache;
-use Weline\Framework\Plugin\Config\Reader;
+use Weline\Framework\Plugin\Config\PluginXmlReader;
 
 class PluginsManager
 {
@@ -22,9 +22,9 @@ class PluginsManager
     protected array $plugins = [];
 
     /**
-     * @var Reader
+     * @var PluginXmlReader
      */
-    private Reader $reader;
+    private PluginXmlReader $reader;
 
     /**
      * @var CacheInterface
@@ -32,8 +32,8 @@ class PluginsManager
     private CacheInterface $pluginCache;
 
     public function __construct(
-        Reader      $reader,
-        PluginCache $pluginCache
+        PluginXmlReader $reader,
+        PluginCache     $pluginCache
     ) {
         $this->reader      = $reader;
         $this->pluginCache = $pluginCache->create();

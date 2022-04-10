@@ -14,10 +14,7 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller;
 
-use Weline\DeveloperWorkspace\Helper\Data;
-use Weline\Framework\App\Controller\FrontendController;
-
-class Index extends FrontendController
+class Index extends BaseController
 {
     public function index()
     {

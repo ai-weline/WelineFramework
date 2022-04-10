@@ -24,34 +24,57 @@ class ModuleFileReader extends DataObject
 
     /**
      * ModuleFileReader 初始函数...
+     *
      * @param Scanner $scanner
-     * @param string $path
+     * @param string  $path
      */
     public function __construct(
         Scanner $scanner,
         string  $path = 'etc' . DIRECTORY_SEPARATOR . 'module.xml'
     ) {
         $this->scanner = $scanner;
-        $this->path = $path;
+        $this->path    = $path;
         parent::__construct();
     }
+
 
     /**
      * @DESC          # 读取文件
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/6 22:55
      * 参数区：
+     *
      * @param \Closure|null $callback
+     *
      * @return array
      */
-    public function getFileList(\Closure $callback=null): array
+    public function getFileList(\Closure $callback = null): array
     {
         return $this->scanner->scanVendorModulesWithFiles($this->path, $callback);
     }
 
     public function getFilePath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return ModuleFileReader
+     */
+    public function setPath(string $path)
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPath(): string
     {
         return $this->path;
     }

@@ -11,18 +11,18 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Observer;
 
-use Weline\Backend\Config\MenuReader;
+use Weline\Backend\Config\MenuXmlReader;
 use Weline\Backend\Model\Menu;
 use Weline\Framework\Event\Event;
 
 class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
 {
     private \Weline\Backend\Model\Menu $menu;
-    private MenuReader $menuReader;
+    private MenuXmlReader $menuReader;
 
     public function __construct(
         \Weline\Backend\Model\Menu $menu,
-        MenuReader                 $menuReader
+        MenuXmlReader $menuReader
     ) {
         $this->menu       = $menu;
         $this->menuReader = $menuReader;
@@ -49,8 +49,11 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                         $parent = $this->menu->where(Menu::fields_SOURCE, $parent)->find()->fetch();
                         if ($pid = $parent->getId()) {
                             $menu[Menu::fields_PID] = $pid;
+                        } else {
+                            $menu[Menu::fields_PID] = 0;
                         }
                     }
+                    $menu[Menu::fields_PID] = $menu[Menu::fields_PID]??0;
                     # 先查询一遍
                     /**@var Menu $menuModel */
                     $this->menu->clearData();
@@ -67,6 +70,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                         foreach ($is_others_parent as $other_menu) {
                             if (empty($other_menu['pid'])) {
                                 $other_menu['pid'] = $this_menu_id;
+
                                 $menuModel->forceCheck(false)->setData(Menu::fields_ID, $other_menu['id'])->save($other_menu);
                             }
                         }
@@ -85,10 +89,13 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 # 1 存在父资源 检查父资源的 ID
                 if (isset($menu[Menu::fields_PARENT_SOURCE]) && $parent = $menu[Menu::fields_PARENT_SOURCE]) {
                     $parent = $this->menu->where(Menu::fields_SOURCE, $parent)->find()->fetch();
-                    if ($pid = $parent->getId()) {
+                    if ($pid = $parent->getData('id')) {
                         $menu[Menu::fields_PID] = $pid;
+                    } else {
+                        $menu[Menu::fields_PID] = 0;
                     }
                 }
+                $menu[Menu::fields_PID] = $menu[Menu::fields_PID]??0;
                 # 先查询一遍
                 /**@var Menu $menuModel */
                 $this->menu->clearData();

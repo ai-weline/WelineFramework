@@ -110,7 +110,7 @@ abstract class AbstractModel extends DataObject
         if (empty($this->table)) {
             $this->table = $this->processTable();
         }
-        if (!empty(self::primary_key)) {
+        if (!empty($this::primary_key)) {
             $this->_primary_key = $this::primary_key;
         }
         if (empty($this->_primary_key)) {

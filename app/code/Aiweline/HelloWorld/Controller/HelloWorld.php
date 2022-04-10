@@ -171,4 +171,9 @@ class HelloWorld extends FrontendController
         p('经过函数__("你好翻译包i18n！");翻译后：' . __('你好翻译包i18n！'), 1);
         p('翻译包的优先级低于模块下i18n定义的翻译，也就是模块下的i18n将覆盖语言包');
     }
+
+    public function hook()
+    {
+        return $this->fetch();
+    }
 }

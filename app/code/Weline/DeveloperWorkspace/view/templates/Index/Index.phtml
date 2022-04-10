@@ -10,32 +10,34 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
  *@Forum        https://bbs.aiweline.com
  *@DESC         后台共用头部
 -->
-<html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?> class='no-js'>
+<html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir='rtl'" : '' ?> class='no-js'>
 <head>
     <title><lang>WelineFramework开发文档</lang></title>
-    <!--模板Weline_Frontend::common/head.phtml-->
-    <w-template>Weline_Frontend::public/head.phtml</w-template>
+    <hook>title</hook>
+    <!--模板Weline_DeveloperWorkspace::common/head.phtml-->
+    <template>Weline_Frontend::public/head.phtml</template>
     <!-- jvectormap -->
-    <w-css>Weline_Frontend::assets/libs/jqvmap/jqvmap.min.css</w-css>
+    <css>Weline_Frontend::assets/libs/jqvmap/jqvmap.min.css</css>
     <!--树形插件-->
     <css>Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.css</css>
-    <js>Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
+    <js a="1">Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
+    <!--测试-->
+    @js(Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js)
 </head>
 
-<!--<body data-sidebar="dark" data-topbar='colored' data-layout='horizontal'>-->
 <body <?= $themeConfig->getLayouts() ?? ''; ?>>
 <!--加载中组件 开始-->
-@template(Weline_Frontend::common/page/loading.phtml)
+@template(Weline_DeveloperWorkspace::common/page/loading.phtml)
 <!-- 开始 页面 -->
 <div id="layout-wrapper">
 
     <!--页头工具条 开始-->
-    @template(Weline_Frontend::common/page/topbar.phtml)
+    @template(Weline_DeveloperWorkspace::common/page/topbar.phtml)
     <!--页头工具条 结束-->
 
     <!-- ========== Left Sidebar Start ========== -->
     <!--左侧菜单栏 开始-->
-    @template(Weline_Frontend::common/left-sidebar.phtml)
+    <block>Weline\DeveloperWorkspace\Block\Catalogs</block>
     <!--左侧菜单栏 结束-->
 
 
@@ -120,6 +122,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                                     <var>$v->getName()</var>
                                                                 </option>
                                                             </foreach>
+                                                            <if condition="$a>$b">
+                                                                <var a="1">$a</var>
+                                                                <elseif condition="$a<$b"/>
+                                                                <var>$b</var>
+                                                                <else/>
+                                                                <var>$a</var>
+                                                                <var>$b</var>
+                                                            </if>
                                                         </select>
                                                         <div class='valid-feedback'>
                                                             <lang>请选择父级分类</lang>
@@ -203,11 +213,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
     </div>
     <!-- end main content-->
 
+
 </div>
 <!-- END layout-wrapper -->
 
 <!--右边栏-->
-@template(Weline_Frontend::common/right-sidebar.phtml)
+@template(Weline_DeveloperWorkspace::common/right-sidebar.phtml)
 <!--tinymce js-->
 <script src='@static(Weline_Frontend::assets/libs/tinymce/tinymce.min.js)'></script>
 
@@ -215,7 +226,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <script src='@static(Weline_Frontend::assets/js/pages/form-editor.init.js)'></script>
 
 <!--页脚-->
-@template(Weline_Frontend::common/footer.phtml)
+@template(Weline_DeveloperWorkspace::common/footer.phtml)
 
 <!-- jquery.vectormap map -->
 <script src="@static(Weline_Frontend::assets/libs/jqvmap/jquery.vmap.min.js)"></script>

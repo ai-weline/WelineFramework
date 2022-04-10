@@ -12,22 +12,24 @@ declare(strict_types=1);
 namespace Weline\DeveloperWorkspace\Model\Document;
 
 use Weline\Framework\Database\Api\Db\TableInterface;
+use Weline\Framework\Http\Url;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class Catalog extends \Weline\Framework\Database\Model
 {
 //    const table       = 'dev_document_catalog';
-    public const fields_ID   = 'id';
-    public const fields_NAME = 'name';
-    public const fields_PID  = 'pid';
-    public const fields_level  = 'level';
-    public const fields_icon  = 'icon';
-    public const fields_selectedIcon  = 'selectedIcon';
-    public const fields_color  = 'color';
-    public const fields_backColor  = 'backColor';
-    public const fields_position  = 'position';
-    public const fields_is_active  = 'is_active';
+    public const fields_ID           = 'id';
+    public const fields_NAME         = 'name';
+    public const fields_PID          = 'pid';
+    public const fields_level        = 'level';
+    public const fields_icon         = 'icon';
+    public const fields_selectedIcon = 'selectedIcon';
+    public const fields_color        = 'color';
+    public const fields_backColor    = 'backColor';
+    public const fields_position     = 'position';
+    public const fields_is_active    = 'is_active';
 
     /**
      * @inheritDoc
@@ -94,26 +96,36 @@ class Catalog extends \Weline\Framework\Database\Model
     public function getTree()
     {
         $catalogs = $this->where('pid is null or pid=0 ')->select()->fetch();
-        /**@var Catalog $catalog*/
+        /**@var Catalog $catalog */
         foreach ($catalogs as &$catalog) {
             $this->getSubTree($catalog);
         }
         return $catalogs;
     }
+
     public function getSubTree(Catalog &$catalog)
     {
-        $catalog['text'] = $catalog['name'];
+        $catalog->setData('href', $this->getUrl(['id' => $catalog['id']]));
+        $catalog->setData('text', $catalog['name']);
         $catalogs = $this->where('pid', $catalog->getId())->select()->fetch();
         if ($catalogs) {
-            /**@var Catalog $sub_catalog*/
+            /**@var Catalog $sub_catalog */
             foreach ($catalogs as &$sub_catalog) {
                 $this->getSubTree($sub_catalog);
             }
-            $catalog['nodes']=$catalogs;
+            $catalog->setData('nodes', $catalogs);
         } else {
-            $catalog['nodes'] = [];
+            $catalog->setData('nodes', []);
         }
-        $catalog = $catalog->getData();
         return $catalogs;
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
+     */
+    private function getUrl(array $param = [])
+    {
+        return ObjectManager::getInstance(Url::class)->build('dev/tool/catalog', $param);
     }
 }

@@ -23,7 +23,7 @@ class MenuReaderTest extends TestCore
      */
     public function test__construct()
     {
-        $menu_xml = ObjectManager::getInstance(MenuReader::class)->read();
+        $menu_xml = ObjectManager::getInstance(MenuXmlReader::class)->read();
         p($menu_xml);
     }
 }

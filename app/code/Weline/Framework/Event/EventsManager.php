@@ -10,7 +10,7 @@
 namespace Weline\Framework\Event;
 
 use Weline\Framework\DataObject\DataObject;
-use Weline\Framework\Event\Config\Reader;
+use Weline\Framework\Event\Config\XmlReader;
 use Weline\Framework\App\Exception;
 
 class EventsManager
@@ -22,12 +22,12 @@ class EventsManager
     protected array $eventsObservers = [];
 
     /**
-     * @var Reader
+     * @var XmlReader
      */
-    private Reader $reader;
+    private XmlReader $reader;
 
     public function __construct(
-        Reader $reader
+        XmlReader $reader
     ) {
         $this->reader = $reader;
     }

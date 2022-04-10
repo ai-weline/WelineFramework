@@ -12,7 +12,7 @@ declare(strict_types=1);
 namespace Weline\Admin\Controller\System;
 
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\Plugin\Config\Reader;
+use Weline\Framework\Plugin\Config\PluginXmlReader;
 
 class Plugins extends \Weline\Admin\Controller\BaseController
 {
@@ -24,10 +24,10 @@ class Plugins extends \Weline\Admin\Controller\BaseController
     }
 
 
-    private function getReader(): Reader
+    private function getReader(): PluginXmlReader
     {
         if (empty($this->reader)) {
-            $this->reader = ObjectManager::getInstance(Reader::class);
+            $this->reader = ObjectManager::getInstance(PluginXmlReader::class);
         }
         return $this->reader;
     }

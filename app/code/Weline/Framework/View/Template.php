@@ -17,6 +17,7 @@ use Weline\Framework\Controller\PcController;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Exception\Core;
+use Weline\Framework\Hook\Hooker;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Module\ModuleInterface;
@@ -26,6 +27,7 @@ use Weline\Framework\Ui\FormKey;
 use Weline\Framework\View\Cache\ViewCache;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Data\HtmlInterface;
+use Weline\Framework\View\Exception\TemplateException;
 use Weline\SystemConfig\Model\SystemConfig;
 
 class Template extends DataObject
@@ -277,14 +279,15 @@ class Template extends DataObject
     }
 
 
-    public function getFetchFile(string $fileName, string $module_name = ''): string
+    public function getFetchFile(string $fileName, string|null $module_name = ''): string
     {
         list($comFileName, $tplFile) = $this->convertFetchFileName($fileName);
         # 检测编译文件，如果不符合条件则重新进行文件编译
         if (DEV || !file_exists($comFileName) || (filemtime($comFileName) < filemtime($tplFile))) {
             //如果缓存文件不存在则 编译 或者文件修改了也编译
-            $repContent = $this->tmp_replace(file_get_contents($tplFile), $fileName);//得到模板文件 并替换占位符 并得到替换后的文件
-            file_put_contents($comFileName, $repContent);                            //将替换后的文件写入定义的缓存文件中
+            $content    = file_get_contents($tplFile);
+            $repContent = $this->tmp_replace($content, $comFileName);                   //得到模板文件 并替换占位符 并得到替换后的文件
+            file_put_contents($comFileName, $repContent);                               //将替换后的文件写入定义的缓存文件中
         }
         return $comFileName;
     }
@@ -320,6 +323,28 @@ class Template extends DataObject
     public function fetchHtml(string $fileName, array $dictionary = [])
     {
         $comFileName = $this->getFetchFile($fileName);
+        return $this->ob_file($comFileName, $dictionary);
+    }
+
+    /**
+     * @DESC         |调用模板显示
+     *
+     * 参数区：
+     *
+     * @param string $fileName   获取的模板名
+     * @param array  $dictionary 参数绑定
+     *
+     * @return bool|void
+     * @throws \Exception
+     */
+    public function fetchTagHtml(string $tag, string $fileName, array $dictionary = [])
+    {
+        $comFileName = $this->fetchTagSource($tag, $fileName);
+        return $this->ob_file($comFileName, $dictionary);
+    }
+
+    public function ob_file(string $filename, array $dictionary = []): string
+    {
         ob_start();
         try {
             if ($dictionary) {
@@ -329,7 +354,7 @@ class Template extends DataObject
             if ($this->getData()) {
                 extract($this->getData(), EXTR_SKIP);
             }
-            include $comFileName;
+            include $filename;
         } catch (\Exception $exception) {
             ob_end_clean();
             throw $exception;
@@ -350,173 +375,550 @@ class Template extends DataObject
      * @return string|string[]|null
      * @throws Core
      */
-    private function tmp_replace(string $content): array|string|null
+    private function tmp_replace(string $content, string $fileName = ''): array|string|null
     {
         # 系统自带的标签
         $template_elements = [
-            'php'       => function ($back) {
-                return '<?php ' . $back[1] . '?>';
-            },
-            'empty'     => function ($back) {
-                switch ($back[0]) {
-                    // @empty{$name|<li>空的</li>}
-                    case '@empty{}':
-                    case '@empty()':
-                        $content_arr = explode('|', $back[1]);
-                        return '<?php if(empty($this->getData(\'' . $content_arr[0] . '\')))echo \'' . $this->tmp_replace(trim($content_arr[1] ?? '')) . '\'?>';
-                    case '<w-empty></w-empty>':
-                    case '<empty></empty>':
-                        preg_match('/name=[\'|"](.*?)[\'|"]/', $back['attrs'], $name);
-                        $name = array_pop($name);
-                        return '<?php if(empty($this->getData(\'' . $name . '\')))echo \'' . $this->tmp_replace(trim($back['content'])) . '\'?>';
-                    default:
+            'php'         => [
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag-start' => "<?php ",
+                            'tag-end'   => "?>",
+                            default     => "<?php {$tag_data[1]} ?>"
+                        };
+                    }
+            ],
+            'w-php'       => [
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag-start' => "<?php ",
+                            'tag-end'   => "?>",
+                            default     => "<?php {$tag_data[1]} ?>"
+                        };
+                    }
+            ],
+            'include'     => [
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag-start' => "<?php include(",
+                            'tag-end'   => ");?>",
+                            default     => "<?php include({$tag_data[1]});?>"
+                        };
+                    }
+            ],
+            'w-include'   => [
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag-start' => "<?php include(",
+                            'tag-end'   => ");?>",
+                            default     => "<?php include({$tag_data[1]});?>"
+                        };
+                    }
+            ],
+            'var'         => [
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag-start' => '<?= ',
+                            'tag-end'   => '?>',
+                            default     => "<?php echo {$tag_data[1]} ?>"
+                        };
+                    }
+            ],
+            'w-var'       => [
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag-start' => '<?= ',
+                            'tag-end'   => '?>',
+                            default     => "<?php echo {$tag_data[1]} ?>"
+                        };
+                    }
+            ],
+            'pp'          => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        switch ($tag_key) {
+                            case '@tag{}':
+                            case '@tag()':
+                                $var_name = $tag_data[1];
+                                if (!str_starts_with($var_name, '$')) {
+                                    $var_name .= '$' . $var_name;
+                                }
+                                return "<?=p({$var_name})?>";
+                            case 'tag-start':
+                                return "<?=p(";
+                            case 'tag-end':
+                                return ")?>";
+                        }
                         return '';
+                    }],
+            'w-pp'        => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        switch ($tag_key) {
+                            case '@tag{}':
+                            case '@tag()':
+                                $var_name = $tag_data[1];
+                                if (!str_starts_with($var_name, '$')) {
+                                    $var_name .= '$' . $var_name;
+                                }
+                                return "<?=p({$var_name})?>";
+                            case 'tag-start':
+                                return "<?=p(";
+                            case 'tag-end':
+                                return ")?>";
+                        }
+                        return '';
+                    }],
+            'if'          => [
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'attr'      => ['condition' => 1],
+                'callback'  => function ($tag_key, $config, $tag_data, $attributes) {
+                    $result = '';
+                    switch ($tag_key) {
+                        // @if{$a === 1=><li><var>$a</var></li>|$a===2=><li><var>$a</var></li>}
+                        case '@tag{}':
+                        case '@tag()':
+                            $content_arr = explode('|', $tag_data[1]);
+                            foreach ($content_arr as &$item) {
+                                $item = explode('=>', $content_arr[0]);
+                            }
+                            if (1 === count($content_arr)) {
+                                $result = "<?php if({$content_arr[0][0]}):{$content_arr[0][1]};endif;?>";
+                            }
+                            if (1 < count($content_arr)) {
+                                $result = "<?php if({$content_arr[0][0]}):{$content_arr[0][1]};endif;?>";
+                            }
+                            foreach ($content_arr as $key => $data) {
+                                if (0 === $key) {
+                                    $result = "<?php if($data[0]):?>" . $data[1];
+                                } else {
+                                    if (count($data) > 1) {
+                                        $result .= "<?php elseif($data[0]):?>" . $data[1];
+                                    } else {
+                                        $result .= "<?php else:?>" . $data[0];
+                                    }
+                                }
+                            }
+                            $result .= '<?php endif;?>';
+                            break;
+                        case 'tag-self-close':
+                            throw new TemplateException(__('if没有自闭合标签。示例：%1', '<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>'));
+                        case 'tag-start':
+                            $condition = $attributes['condition'];
+                            $result    = "<?php if({$condition}):?>";
+                            break;
+                        case 'tag-end':
+                            $result = '<?php endif;?>';
+                            break;
+                        default:
+                    }
+                    return $result;
+                }],
+            'w-if'        => [
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'attr'      => ['condition' => 1],
+                'callback'  => function ($tag_key, $config, $tag_data, $attributes) {
+                    $result = '';
+                    switch ($tag_key) {
+                        // @if{$a === 1=><li><var>$a</var></li>|$a===2=><li><var>$a</var></li>}
+                        case '@tag{}':
+                        case '@tag()':
+                            $content_arr = explode('|', $tag_data[1]);
+                            foreach ($content_arr as &$item) {
+                                $item = explode('=>', $content_arr[0]);
+                            }
+                            if (1 === count($content_arr)) {
+                                $result = "<?php if({$content_arr[0][0]}):{$content_arr[0][1]};endif;?>";
+                            }
+                            if (1 < count($content_arr)) {
+                                $result = "<?php if({$content_arr[0][0]}):{$content_arr[0][1]};endif;?>";
+                            }
+                            foreach ($content_arr as $key => $data) {
+                                if (0 === $key) {
+                                    $result = "<?php if($data[0]):?>" . $data[1];
+                                } else {
+                                    if (count($data) > 1) {
+                                        $result .= "<?php elseif($data[0]):?>" . $data[1];
+                                    } else {
+                                        $result .= "<?php else:?>" . $data[0];
+                                    }
+                                }
+                            }
+                            $result .= '<?php endif;?>';
+                            break;
+                        case 'tag-self-close':
+                            throw new TemplateException(__('if没有自闭合标签。示例：%1', '<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>'));
+                        case 'tag-start':
+                            $condition = $attributes['condition'];
+                            $result    = "<?php if({$condition}):?>";
+                            break;
+                        case 'tag-end':
+                            $result = '<?php endif;?>';
+                            break;
+                        default:
+                    }
+                    return $result;
+                }],
+            'empty'       => [
+                'tag'      => 1,
+                'tag-end'  => 1,
+                'callback' => function ($tag_key, $config, $tag_data, $attributes) {
+                    switch ($tag_key) {
+                        // @empty{$name|<li>空的</li>}
+                        case '@tag{}':
+                        case '@tag()':
+                            $content_arr = explode('|', $tag_data[1]);
+                            return '<?php if(empty($this->getData(\'' . $content_arr[0] . '\')))echo \'' . $this->tmp_replace(trim($content_arr[1] ?? '')) . '\'?>';
+                        case 'tag':
+                            if (isset($attributes['name'])) {
+                                throw new TemplateException(__('empty标签需要设置name属性！例如：<empty name="catalogs"><li>没有数据</li></empty>'));
+                            }
+                            return "<?php if(empty(\$this->getData('{$attributes['name']}'))): ?>";
+                        case 'tag-end':
+                            return "<?php endif; ?>";
+                        default:
+                            return '';
+                    }
                 }
-            },
-            'foreach'   => function ($back) {
-                switch ($back[0]) {
-                    // @foreach{$name as $key=>$v|<li><var>$k</var>:<var>$v</var>}
-                    case '@foreach{}':
-                    case '@foreach()':
-                        $content_arr = explode('|', $back[1]);
-                        return "<?php
+            ],
+            'elseif'      => [
+                'attr'           => ['condition' => 1],
+                'tag-self-close' => 1,
+                'callback'       =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        $result = '';
+                        switch ($tag_key) {
+                            // @if{$a === 1=><li><var>$a</var></li>|$a===2=><li><var>$a</var></li>}
+                            case '@tag{}':
+                            case '@tag()':
+                                throw new TemplateException(__('elseif没有@elseif()和@elseif{}用法。示例：%1', '<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>'));
+                            case 'tag-self-close':
+                                $condition = $attributes['condition'];
+                                $result    = "<?php elseif({$condition}):?>";
+                                break;
+                            default:
+                        }
+                        return $result;
+                    }],
+            'else'        => [
+                'tag-self-close' => 1,
+                'callback'       =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        $result = '';
+                        switch ($tag_key) {
+                            // @if{$a === 1=><li><var>$a</var></li>|$a===2=><li><var>$a</var></li>}
+                            case '@tag{}':
+                            case '@tag()':
+                                throw new TemplateException(__('elseif没有@elseif()和@elseif{}用法。示例：%1', '<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>'));
+                            case 'tag-self-close':
+                                $result = "<?php else:?>";
+                                break;
+                            default:
+                        }
+                        return $result;
+                    }],
+            'block'       => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => ObjectManager::getInstance(trim($tag_data[2])),
+                            default => ObjectManager::getInstance(trim($tag_data[1]))
+                        };
+                    }
+            ],
+            'w-block'     => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => ObjectManager::getInstance(trim($tag_data[2])),
+                            default => ObjectManager::getInstance(trim($tag_data[1]))
+                        };
+                    }
+            ],
+            'foreach'     => [
+                'attr'      => ['name' => 1, 'key' => 0, 'item' => 0],
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  => function ($tag_key, $config, $tag_data, $attributes) {
+                    switch ($tag_key) {
+                        // @foreach{$name as $key=>$v|<li><var>$k</var>:<var>$v</var></li>}
+                        case '@tag{}':
+                        case '@tag()':
+                            $content_arr = explode('|', $tag_data[1]);
+                            return "<?php
                         foreach({$content_arr[0]}){
                         ?>
                             {$this->tmp_replace($content_arr[1]??'')}
                             <?php
                         }
                         ?>";
-                    case '<w-foreach</w-foreach>':
-                    case '<foreach</foreach>':
-                        preg_match('/name=[\'|"](.*?)[\'|"]/', $back['attrs'], $name);
-                        $name = array_pop($name);
-                        if (empty($name)) {
-                            throw new Exception(__('foreach标签必须指定要循环的变量:name,示例：<foreach name="data" key="k" item="v"><li><var>$v</var></li></foreach>'));
-                        }
-                        preg_match('/key=[\'|"](.*?)[\'|"]/', $back['attrs'], $key);
-                        $key = array_pop($key);
-                        $key = $key ?? 'key';
-                        preg_match('/item=[\'|"](.*?)[\'|"]/', $back['attrs'], $item);
-                        $item = array_pop($item);
-                        $item = $item ?? 'v';
-                        return <<<FOREACH
-<!-- foreach 属性： {$back['attrs']} -->
-<?php
-        foreach (\$this->getData('{$name}')??[] as \${$key} => \${$item}) {
-        ?>
-                    {$this->tmp_replace($back['content'])}
-                    <?php
-                }
-?>
-FOREACH;
-                    default:
-                        return '';
-                }
-            },
-            'if'        => function ($back) {
-                $condition_contents = [];
-                switch ($back[0]) {
-                    // @if{$a === 1=><li><var>$a</var></li>|$a===2=><li><var>$a</var></li>}
-                    case '@if{}':
-                    case '@if()':
-                        $content_arr = explode('|', $back[1]);
-                        foreach ($content_arr as $item) {
-                            $item_arr             = explode('=>', $item);
-                            $condition            = array_shift($item_arr);
-                            $condition_contents[] = ['condition' => $condition, 'content' => implode('=>', $item_arr)];
-                        }
-                        break;
-                    case '<w-if</w-if>':
-                    case '<if</if>':
-                        # 分析条件
-                        preg_match_all('/ condition=[\'|"]([\s\S]*?)[\'|"]>/', $back[1], $conditions);
-                        #剥离条件
-                        $content = $back[1];
-                        foreach ($conditions[0] as $mach) {
-                            $content = str_replace($mach, '>', $content);
-                        }
-                        $content     = ltrim($content, '>');
-                        $content     = str_replace('<elseif></elseif>', '<else>', $content);
-                        $content     = str_replace('<else></else>', '<else>', $content);
-                        $content     = str_replace('</else>', '<else>', $content);
-                        $content_arr = explode('<else>', $content);
-                        foreach ($conditions[1] as $key => $condition) {
-                            $condition_contents[] = ['condition' => $condition, 'content' => $content_arr[$key]];
-                            unset($content_arr[$key]);
-                        }
-                        if ($content_arr) {
-                            $condition_contents[] = ['condition' => $condition, 'content' => array_pop($content_arr)];
-                        }
-                        break;
-                    default:
-                        return '';
-                }
-                $if_code = '';
-                foreach ($condition_contents as $key => $condition_content) {
-                    if (0 === $key) {
-                        $if_code .= "<!-- if 属性： {$condition_content['condition']} -->
-                                    <?php
-                                       if ({$condition_content['condition']}) {
-                                            ?>
-                                           {$this->tmp_replace($condition_content['content'])}
-                                    <?php
-                                         }?>";
-                    } elseif ($key === (count($condition_contents) - 1)) {
-                        $if_code = rtrim($if_code, '?>');
-                        $if_code .= "else{
-                                        ?>
-                                            {$this->tmp_replace($condition_content['content'])}
-                                    <?php
-                                    }?>";
-                    } else {
-                        $if_code = rtrim($if_code, '?>');
-                        $if_code .= "elseif({$condition_content['condition']}){
-                                    ?>
-                                        {$this->tmp_replace($condition_content['content'])}
-                                    <?php
-                                    }?>";
+                        case 'tag-self-close':
+                            throw new TemplateException(__('foreach没有自闭合标签。示例：%1', '<foreach name="catalogs" key="key" item="v"><li><var>name</var></li></foreach>'));
+                        case 'tag-start':
+                            if (!isset($attributes['item'])) {
+                                $attributes['item'] = 'v';
+                            }
+                            if (!isset($attributes['name'])) {
+                                throw new TemplateException(__('foreach标签需要指定要循环的变量name属性。例如：需要循环catalogs变量则%1', '<foreach name="catalogs" key="key" item="v"><li><var>name</var></li></foreach>'));
+                            }
+                            foreach ($attributes as $key => $attribute) {
+                                if (!str_starts_with($attribute, '$')) {
+                                    $attributes[$key] = '$' . $attribute;
+                                }
+                            }
+                            $vars = $attributes['name'];
+                            $k_i  = isset($attributes['key']) ? $attributes['key'] . ' => ' . $attributes['item'] : $attributes['item'];
+                            return "<?php foreach($vars as $k_i):?>";
+                        case 'tag-end':
+                            return '<?php endforeach;?>';
+                        default:
+                            return '';
                     }
                 }
-                return $if_code;
-            },
-            'template'  => function ($back) {
-                return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
-            },
-            'var'       => function ($back) {
-                return "<?= {$back[1]} ?>";
-            },
-            'pp'        => function ($back) {
-                return "<?php p({$back[1]})?>";
-            },
-            'include'   => function ($back) {
-                return file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($back[1])));
-            },
-            'block'     => function ($back) {
-                return $this->getBlock(trim($back[1]))->__toString();
-            },
-            'static'    => function ($back) {
-                return $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
-            },
-            'hook'      => function ($back) {
-            },
-            'js'        => function ($back) {
-                $source = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
-                return "<script src='{$source}'></script>";
-            },
-            'css'       => function ($back) {
-                $source = $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($back[1]));
-                return "<link href=\"{$source}\" rel=\"stylesheet\" type=\"text/css\"/>";
-            },
-            'lang'      => function ($back) {
-                $back[1] = trim($back[1], '\'"');
-                return "<?=__('{$back[1]}')?>";
-            },
-            'url'       => function ($back) {
-                return "<?=\$this->getUrl('{$back[1]}')?>";
-            },
-            'admin-url' => function ($back) {
-                return "<?=\$this->getAdminUrl({$back[1]})?>";
-            },
+            ],
+            'w-foreach'   => [
+                'attr'      => ['name' => 1, 'key' => 0, 'item' => 0],
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  => function ($tag_key, $config, $tag_data, $attributes) {
+                    switch ($tag_key) {
+                        // @foreach{$name as $key=>$v|<li><var>$k</var>:<var>$v</var></li>}
+                        case '@tag{}':
+                        case '@tag()':
+                            $content_arr = explode('|', $tag_data[1]);
+                            return "<?php
+                        foreach({$content_arr[0]}){
+                        ?>
+                            {$this->tmp_replace($content_arr[1]??'')}
+                            <?php
+                        }
+                        ?>";
+                        case 'tag-self-close':
+                            throw new TemplateException(__('foreach没有自闭合标签。示例：%1', '<foreach name="catalogs" key="key" item="v"><li><var>name</var></li></foreach>'));
+                        case 'tag-start':
+                            if (!isset($attributes['item'])) {
+                                $attributes['item'] = 'v';
+                            }
+                            if (!isset($attributes['name'])) {
+                                throw new TemplateException(__('foreach标签需要指定要循环的变量name属性。例如：需要循环catalogs变量则%1', '<foreach name="catalogs" key="key" item="v"><li><var>name</var></li></foreach>'));
+                            }
+                            foreach ($attributes as $key => $attribute) {
+                                if (!str_starts_with($attribute, '$')) {
+                                    $attributes[$key] = '$' . $attribute;
+                                }
+                            }
+                            $vars = $attributes['name'];
+                            $k_i  = isset($attributes['key']) ? $attributes['key'] . ' => ' . $attributes['item'] : $attributes['item'];
+                            return "<?php foreach($vars as $k_i):?>";
+                        case 'tag-end':
+                            return '<?php endforeach;?>';
+                        default:
+                            return '';
+                    }
+                }
+            ],
+            'static'      => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2])),
+                            default => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))
+                        };
+                    }
+            ],
+            'w-static'    => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2])),
+                            default => $this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))
+                        };
+                    }
+            ],
+            'template'    => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($tag_data[2]))),
+                            default => file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($tag_data[1])))
+                        };
+                    }
+            ],
+            'w-template'  => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($tag_data[2]))),
+                            default => file_get_contents($this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_TEMPLATE, trim($tag_data[1])))
+                        };
+                    }
+            ],
+            'js'          => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => "<script {$tag_data[1]} src='{$this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2]))}'></script>",
+                            default => "<script src='{$this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))}'></script>"
+                        };
+                    }
+            ],
+            'w-js'        => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => "<script {$tag_data[1]} src='{$this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2]))}'></script>",
+                            default => "<script src='{$this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))}'></script>"
+                        };
+                    }
+            ],
+            'css'         => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => "<link {$tag_data[1]} href='{$this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2]))}'/>",
+                            default => "<link href='{$this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))}'/>"
+                        };
+                    }
+            ],
+            'w-css'       => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => "<link {$tag_data[1]} href='{$this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2]))}'/>",
+                            default => "<link href='{$this->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))}'/>"
+                        };
+                    }
+            ],
+            'lang'        => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'       => "<?=__('{$tag_data[2]}')?>",
+                            'tag-start' => "<?=__('",
+                            'tag-end'   => "')?>",
+                            default     => "<?=__('{$tag_data[1]}')?>"
+                        };
+                    }
+            ],
+            'w-lang'      => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'       => "<?=__('{$tag_data[2]}')?>",
+                            'tag-start' => "<?=__('",
+                            'tag-end'   => "')?>",
+                            default     => "<?=__('{$tag_data[1]}')?>"
+                        };
+                    }
+            ],
+            'url'         => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'       => "<?=\$this->getUrl('{$tag_data[2]}')?>",
+                            'tag-start' => "<?=__('",
+                            'tag-end'   => "')?>",
+                            default     => "<?=\$this->getUrl('{$tag_data[1]}')?>"
+                        };
+                    }
+            ],
+            'w-url'       => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'       => "<?=\$this->getUrl('{$tag_data[2]}')?>",
+                            'tag-start' => "<?=__('",
+                            'tag-end'   => "')?>",
+                            default     => "<?=\$this->getUrl('{$tag_data[1]}')?>"
+                        };
+                    }
+            ],
+            'admin-url'   => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'       => "<?=\$this->getAdminUrl('{$tag_data[2]}')?>",
+                            'tag-start' => "<?=__('",
+                            'tag-end'   => "')?>",
+                            default     => "<?=\$this->getAdminUrl('{$tag_data[1]}')?>"
+                        };
+                    }
+            ],
+            'w-admin-url' => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'       => "<?=\$this->getAdminUrl('{$tag_data[2]}')?>",
+                            'tag-start' => "<?=__('",
+                            'tag-end'   => "')?>",
+                            default     => "<?=\$this->getAdminUrl('{$tag_data[1]}')?>"
+                        };
+                    }
+            ],
+            'hook'        => [
+                'tag'      => 1,
+                'callback' =>
+                    function ($tag_key, $config, $tag_data, $attributes) {
+                        return match ($tag_key) {
+                            'tag'   => "<?=\$this->getHook('".trim($tag_data[2])."')?>",
+                            default => "<?=\$this->getHook('".trim($tag_data[1])."')?>"
+                        };
+                    }
+            ],
         ];
         /**@var EventsManager $event */
         $event = ObjectManager::getInstance(EventsManager::class);
@@ -524,12 +926,94 @@ FOREACH;
         $event->dispatch('Framework_Template::after_template_patterns_callback_map', ['data' => $data]);
         $template_elements = $data->getData('template_elements');
 
+        foreach ($template_elements as $tag => $tag_configs) {
+            $tag_patterns        = [
+                'tag'            => '/<' . $tag . '([\s\S]*?)>([\s\S]*?)<\/' . $tag . '>/m',
+                'tag-start'      => '/<' . $tag . '([\s\S]*?)>/m',
+                'tag-end'        => '/<\/' . $tag . '>/m',
+                'tag-self-close' => '/<' . $tag . '([\s\S]*?)\/>/m',
+                '@tag()'         => '/\@' . $tag . '\(([\s\S]*?)\)/m',
+                '@tag{}'         => '/\@' . $tag . '\{([\s\S]*?)\}/m',
+            ];
+            $tag_config_patterns = [];
+            foreach ($tag_configs as $config_name => $tag_config) {
+                if (str_starts_with($config_name, 'tag') && $tag_config) {
+                    $tag_config_patterns[$config_name] = $tag_patterns[$config_name];
+                }
+            }
+            # 默认匹配@tag()和@tag{}
+            $tag_config_patterns['@tag()'] = $tag_patterns['@tag()'];
+            $tag_config_patterns['@tag{}'] = $tag_patterns['@tag{}'];
+
+            # 标签验证测试
+//            if('var'===$tag){
+//                foreach ($tag_config_patterns as &$tag_config_pattern) {
+//                    $tag_config_pattern = htmlentities($tag_config_pattern);
+//                }
+//                p($tag_config_patterns);
+//            }
+            # 匹配处理
+            $format_function = $tag_configs['callback'];
+            foreach ($tag_config_patterns as $tag_key => $tag_pattern) {
+                preg_match_all($tag_pattern, $content, $customTags, PREG_SET_ORDER);
+                foreach ($customTags as $customTag) {
+                    $originalTag   = $customTag[0];
+                    $rawAttributes = $customTag[1] ?? '';
+                    # 标签支持匹配->
+                    if (!in_array($tag_key, ['@tag()', '@tag{}'])) {
+                        $rawAttributes = rtrim($rawAttributes, '"');
+                        $rawAttributes = rtrim($rawAttributes, '\'');
+                        if (is_int(strrpos($rawAttributes, '\''))) {
+                            $rawAttributes .= '\'';
+                        }
+                        if (is_int(strrpos($rawAttributes, '"'))) {
+                            $rawAttributes .= '"';
+                        }
+                    }
+                    $customTag[1]       = $rawAttributes;
+                    $formatedAttributes = array();
+                    # 兼容：属性值双引号
+                    preg_match_all('/([^=]+)=\"([^\"]+)\"/', $rawAttributes, $attributes, PREG_SET_ORDER);
+                    foreach ($attributes as $attribute) {
+                        if (isset($attribute[2])) {
+                            $formatedAttributes[trim($attribute[1])] = trim($attribute[2]);
+                        }
+                    }
+                    # 兼容：属性值单引号
+                    preg_match_all('/([^=]+)=\'([^\']+)\'/', $rawAttributes, $attributes, PREG_SET_ORDER);
+                    foreach ($attributes as $attribute) {
+                        if (isset($attribute[2])) {
+                            $formatedAttributes[trim($attribute[1])] = trim($attribute[2]);
+                        }
+                    }
+                    # 验证标签属性
+                    $attrs = $tag_configs['attr'] ?? [];
+                    if ($attrs && ('tar-start' === $tag_key || 'tag-self-close' === $tag_key)) {
+                        $attributes_keys = array_keys($formatedAttributes);
+                        foreach ($attrs as $attr => $required) {
+                            if ($required && !in_array($attr, $attributes_keys)) {
+                                $provide_attr = implode(',', $attributes_keys);
+                                throw new TemplateException(__('%1:标签必须设置属性%2, 提供的属性：3% 文件：%4', [$tag, $attr, $provide_attr, $fileName]));
+                            }
+                        }
+                    }
+                    $content = str_replace($originalTag, $format_function($tag_key, $tag_configs, $customTag, $formatedAttributes), $content);
+                }
+            }
+        }
+        return $content;
+
+
         // 替换函数
         $patternsSynonymous     = function (string $template_element, &$replace_call_back) {
             return [
                 'patterns'                   => [
-                    '/<w-' . $template_element . '([\s\S]*?)<\/w-' . $template_element . '>/m',
-                    '/<' . $template_element . '([\s\S]*?)<\/' . $template_element . '>/m',
+                    '/<w-' . $template_element . '\s*([^>]*)\s*\/?<\/w-' . $template_element . '>/m',
+                    //                    '/<w-' . $template_element . '\s*([^>]*)\s*\/?<\/w-' . $template_element . '>/m',
+                    '/<' . $template_element . '\s*([^>]*)\s*\/?<\/' . $template_element . '>/m',
+                    //                    '/<' . $template_element . '\s*([^>]*)\s*\/?<\/' . $template_element . '>/m',
+                    //                    '/<w-' . $template_element . '([\s\S]*?)<\/w-' . $template_element . '>/m',
+                    //                    '/<' . $template_element . '([\s\S]*?)<\/' . $template_element . '>/m',
                     '/\@' . $template_element . '\(([\s\S]*?)\)/m',
                     '/\@' . $template_element . '\{([\s\S]*?)\}/m',
                 ],
@@ -555,6 +1039,7 @@ FOREACH;
             $back[1]         = ltrim($back[1], '>');
             $attrs           = array_shift($back_arr);
             $content         = $back_arr ? ltrim(implode('>', $back_arr), '>') : $attrs;
+            $back['origin']  = $back;
             $back['content'] = $content;
             $back['attrs']   = $attrs;
             $re_content      = '';
@@ -592,6 +1077,23 @@ FOREACH;
             return $path . '?' . http_build_query($params);
         }
         return $path;
+    }
+
+    /**
+     * @throws \ReflectionException
+     * @throws Exception
+     * @throws Core
+     */
+    public function getHook(string $name)
+    {
+        /**@var Hooker $hooker */
+        $hooker         = ObjectManager::getInstance(Hooker::class);
+        $hookers        = $hooker->getHook($name);
+        $hooker_content = '';
+        foreach ($hookers as $module => $hooker_file) {
+            $hooker_content .= "<!-- 来自模组 $module 的钩子实现代码 起-->" . $this->fetchTagHtml('hooks', $hooker_file) . "<!-- 来自模组 $module 的钩子实现代码 止-->";
+        }
+        return $hooker_content;
     }
 
     public function getRequest(): Request

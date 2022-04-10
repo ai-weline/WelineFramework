@@ -1,0 +1,47 @@
+<?php
+/**@var \Weline\Framework\View\Template $this */
+?>
+<div class="vertical-menu">
+
+    <div data-simplebar class="h-100">
+
+        <!--- Sidemenu -->
+        <div id='sidebar-menu'>
+            <!-- Left Menu Start -->
+            <ul class='metismenu list-unstyled' id='side-menu'>
+                <foreach name="catalogs" item="v">
+                    <li class='@if{1===$v->getLevel()=>menu-title}'>
+                        <php>$level = $v->getLevel();</php>
+                        <if condition="1===$level">
+                            <var>$v->getName()</var>
+                        </if>
+                        <php>$nodes = $v->getNodes();</php>
+                        <if condition="$nodes">
+                            <foreach name="nodes" item="node">
+                                <a href="@php{if(3===$node->getLevel()):echo 'javascript: void(0);';else:echo $node->getHref();endif;}"
+                                   class='@if{3===$node->getLevel()=>has-arrow} waves-effect'>
+                                    <i class='mdi mdi-file-document-box-outline'></i>
+                                    <span><var>$node->getName()</var></span>
+                                </a>
+                                <php>
+                                    $sub_level = $node->getLevel();
+                                    $sub_nodes = $node->getNodes();
+                                </php>
+                                <if condition="3===$sub_level and $sub_nodes">
+                                    <ul class='sub-menu' aria-expanded='false'>
+                                        <foreach name="sub_nodes" item="sub_node">
+                                            <li>
+                                                <a href="@var{$sub_node['href']}"><var>$sub_node->getName()</var></a>
+                                            </li>
+                                        </foreach>
+                                    </ul>
+                                </if>
+                            </foreach>
+                        </if>
+                    </li>
+                </foreach>
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>

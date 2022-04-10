@@ -11,12 +11,12 @@ declare(strict_types=1);
 
 namespace Weline\Admin\Controller\System;
 
-use Weline\Framework\Event\Config\Reader;
+use Weline\Framework\Event\Config\XmlReader;
 use Weline\Framework\Manager\ObjectManager;
 
 class Events extends \Weline\Admin\Controller\BaseController
 {
-    public ?Reader $reader;
+    public ?XmlReader $reader;
 
     public function getIndex()
     {
@@ -25,10 +25,10 @@ class Events extends \Weline\Admin\Controller\BaseController
         return $this->fetch();
     }
 
-    private function getReader(): Reader
+    private function getReader(): XmlReader
     {
         if (empty($this->reader)) {
-            $this->reader = ObjectManager::getInstance(Reader::class);
+            $this->reader = ObjectManager::getInstance(XmlReader::class);
         }
         return $this->reader;
     }
