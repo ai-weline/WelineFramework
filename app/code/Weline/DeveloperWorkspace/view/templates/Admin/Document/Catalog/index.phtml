@@ -159,7 +159,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                     <script>
                                         function renderTree() {
                                             $.get({
-                                                url: '@admin-url("dev/tool/admin/document/catalog/tree")',
+                                                url: '@admin-url(dev/tool/admin/document/catalog/tree)',
                                             }).done(res => {
                                                 console.log(res)
                                                 $('#catalog-tree').treeview({

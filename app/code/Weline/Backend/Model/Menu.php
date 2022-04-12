@@ -20,7 +20,7 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Menu extends \Weline\Framework\Database\Model
 {
-    public const table = 'm_backend_menu';
+    public const table       = 'm_backend_menu';
     public const primary_key = 'name';
 
     public const fields_NAME          = 'name';
@@ -224,7 +224,7 @@ class Menu extends \Weline\Framework\Database\Model
         if (PROD && $data = $this->backendCache->get($cache_key)) {
             return $data;
         }
-        $top_menus = $this->where($this::fields_PID . ' is null')->order('order', 'ASC')->select()->fetch();
+        $top_menus = $this->where($this::fields_PID, '0')->order('order', 'ASC')->select()->fetch();
         foreach ($top_menus as &$top_menu) {
             $top_menu = $this->getSubMenus($top_menu);
         }
@@ -251,10 +251,10 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getSubMenus(\Weline\Backend\Model\Menu &$menu): Menu
     {
-        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getId())->order('order', 'ASC')->select()->fetch()) {
+        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getData('id'))->order('order', 'ASC')->select()->fetch()) {
             foreach ($sub_menus as &$sub_menu) {
-                $has_sub_menu = $this->clearData()->where($this::fields_PID, $sub_menu->getID())->find()->fetch();
-                if ($has_sub_menu->getId()) {
+                $has_sub_menu = $this->clearData()->where($this::fields_PID, $sub_menu->getData('id'))->find()->fetch();
+                if ($has_sub_menu->getData('id')) {
                     $sub_menu = $this->getSubMenus($sub_menu);
                 }
             }

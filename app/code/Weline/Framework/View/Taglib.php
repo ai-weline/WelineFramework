@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,7 @@ use Weline\Framework\View\Exception\TemplateException;
 
 class Taglib
 {
-    function getTags(Template $template, string $fileName = ''): array
+    public function getTags(Template $template, string $fileName = ''): array
     {
         return [
             'php'         => [
@@ -93,10 +94,10 @@ class Taglib
                     }
             ],
             'pp'          => [
-                'tag'       => 1,
+                'tag'      => 1,/*
                 'tag-start' => 1,
-                'tag-end'   => 1,
-                'callback'  =>
+                'tag-end'   => 1,*/
+                'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
                         switch ($tag_key) {
                             case '@tag{}':
@@ -110,8 +111,13 @@ class Taglib
                                 return '<?=p(';
                             case 'tag-end':
                                 return ')?>';
+                            default:
+                                $var_name = $tag_data[2];
+                                if (!str_starts_with($var_name, '$')) {
+                                    $var_name .= '$' . $var_name;
+                                }
+                                return "<?=p({$var_name})?>";
                         }
-                        return '';
                     }],
             'w-pp'        => [
                 'tag'       => 1,
@@ -289,7 +295,7 @@ class Taglib
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
                         return match ($tag_key) {
-                            'tag'   => ObjectManager::getInstance(trim($tag_data[2])),
+                            'tag'   => ObjectManager::getInstance(trim($tag_data[2]))->render(),
                             default => ObjectManager::getInstance(trim($tag_data[1]))->render()
                         };
                     }
@@ -299,8 +305,8 @@ class Taglib
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
                         return match ($tag_key) {
-                            'tag'   => ObjectManager::getInstance(trim($tag_data[2])),
-                            default => ObjectManager::getInstance(trim($tag_data[1]))
+                            'tag'   => ObjectManager::getInstance(trim($tag_data[2]))->render(),
+                            default => ObjectManager::getInstance(trim($tag_data[1]))->render()
                         };
                     }
             ],
@@ -451,8 +457,8 @@ class Taglib
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                         return match ($tag_key) {
-                            'tag'   => "<link {$tag_data[1]} href='{$template->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2]))}'/>",
-                            default => "<link href='{$template->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))}'/>"
+                            'tag'   => "<link {$tag_data[1]} href='{$template->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2]))}' rel=\"stylesheet\" type=\"text/css\"/>",
+                            default => "<link href='{$template->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))}' rel=\"stylesheet\" type=\"text/css\"/>"
                         };
                     }
             ],
@@ -461,8 +467,8 @@ class Taglib
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                         return match ($tag_key) {
-                            'tag'   => "<link {$tag_data[1]} href='{$template->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2]))}'/>",
-                            default => "<link href='{$template->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))}'/>"
+                            'tag'   => "<link {$tag_data[1]} href='{$template->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[2]))}' rel=\"stylesheet\" type=\"text/css\"/>",
+                            default => "<link href='{$template->fetchTagSource(\Weline\Framework\View\Data\DataInterface::dir_type_STATICS, trim($tag_data[1]))}' rel=\"stylesheet\" type=\"text/css\"/>"
                         };
                     }
             ],
@@ -500,12 +506,23 @@ class Taglib
                 'tag-end'   => 1,
                 'callback'  =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
-                        return match ($tag_key) {
-                            'tag'       => $template->getUrl($tag_data[2]),
-                            'tag-start' => "<?=\$this->getUrl('",
-                            'tag-end'   => "')?>",
-                            default     => $template->getUrl($tag_data[1])
+                        $result = '';
+                        switch ($tag_key) {
+                            case 'tag'  :
+                                $data   = trim($tag_data[2], '\'"');
+                                $result .= "<?=\$this->getUrl('{$data}')?>";
+                                break;
+                            case  'tag-start':
+                                $result .= "<?=\$this->getUrl('";
+                                break;
+                            case 'tag-end' :
+                                $result .= "')?>";
+                                break;
+                            default   :
+                                $data   = trim($tag_data[1], '\'"');
+                                $result .= "<?=\$this->getUrl('{$data}')?>";
                         };
+                        return $result;
                     }
             ],
             'w-url'       => [
@@ -515,10 +532,10 @@ class Taglib
                 'callback'  =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                         return match ($tag_key) {
-                            'tag'       => $template->getUrl($tag_data[2]),
+                            'tag'       => "<?=\$this->getUrl({$tag_data[2]})?>",
                             'tag-start' => "<?=\$this->getUrl('",
                             'tag-end'   => "')?>",
-                            default     => $template->getAdminUrl($tag_data[1])
+                            default     => "<?=\$this->getUrl({$tag_data[1]})?>"
                         };
                     }
             ],
@@ -529,10 +546,10 @@ class Taglib
                 'callback'  =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                         return match ($tag_key) {
-                            'tag'       => $template->getAdminUrl($tag_data[2]),
+                            'tag'       => "<?=\$this->getAdminUrl({$tag_data[2]})?>",
                             'tag-start' => "<?=\$this->getAdminUrl('",
                             'tag-end'   => "')?>",
-                            default     => $template->getAdminUrl($tag_data[1])
+                            default     => "<?=\$this->getAdminUrl({$tag_data[1]})?>"
                         };
                     }
             ],
@@ -543,10 +560,10 @@ class Taglib
                 'callback'  =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                         return match ($tag_key) {
-                            'tag'       => $template->getAdminUrl($tag_data[2]),
+                            'tag'       => "<?=\$this->getAdminUrl({$tag_data[2]})?>",
                             'tag-start' => "<?=\$this->getAdminUrl('",
                             'tag-end'   => "')?>",
-                            default     => $template->getAdminUrl($tag_data[1])
+                            default     => "<?=\$this->getAdminUrl({$tag_data[1]})?>"
                         };
                     }
             ],
@@ -563,7 +580,7 @@ class Taglib
         ];
     }
 
-    function tagReplace(Template &$template, string &$content, string &$fileName = '')
+    public function tagReplace(Template &$template, string &$content, string &$fileName = '')
     {
         # 系统自带的标签
         $tags = $this->getTags($template, $fileName);

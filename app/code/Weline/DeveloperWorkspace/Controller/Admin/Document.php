@@ -69,7 +69,7 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         $adminUserModel = ObjectManager::getInstance(AdminUser::class);
         $this->assign('users', $adminUserModel->select()->fetch());
         # 如果是编辑,不是就返回空 文档
-        $this->assign('document', ModelService::getDocumentModel()->load($this->_request->getParam('id')));
+        $this->assign('document', ModelService::getDocumentModel()->load($this->_request->getParam('id', 0)));
         return $this->fetch();
     }
 

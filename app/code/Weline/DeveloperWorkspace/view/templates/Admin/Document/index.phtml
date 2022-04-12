@@ -100,7 +100,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                             <tbody>
                                             <foreach name="documents" item="vo">
                                                 <tr>
-                                                    @foreach{$columns as $k=>$v|<th><var>$vo[$v->Field]</var></th>}
+                                                    <foreach name="columns" item="v">
+                                                        <th><var>$vo[$v->Field]</var></th>
+                                                    </foreach>
                                                     <th>
                                                         <a href="@admin-url{'dev/tool/admin/document/edit',['id'=>$vo->getId()]}">
                                                             <button class="btn btn-primary">编辑</button>

@@ -210,7 +210,6 @@ class Template extends DataObject
             $comFileName = $this->viewCache->get($comFileName_cache_key);
             $tplFile     = $this->viewCache->get($tplFile_cache_key);
         }
-
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
@@ -379,7 +378,7 @@ class Template extends DataObject
     private function tmp_replace(string $content, string $fileName = ''): array|string|null
     {
         # 系统自带的标签
-        return $this->getTaglib()->tagReplace($this, $content,$fileName);
+        return $this->getTaglib()->tagReplace($this, $content, $fileName);
     }
 
     public function getUrl(string $path, array $params = [], bool $merge_query = true): string
@@ -429,7 +428,7 @@ class Template extends DataObject
         return ObjectManager::getInstance(Request::class);
     }
 
-    function getTaglib()
+    public function getTaglib()
     {
         if (isset($this->taglib)) {
             return $this->taglib;

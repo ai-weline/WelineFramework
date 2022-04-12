@@ -100,11 +100,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                             id='author'
                                                             aria-describedby='authorPrepend' required>
                                                         <foreach name="users">
-                                                            <if condition="$document->getAuthorId() === $v->getId()">
+                                                            <php>$author_id = $document->getAuthorId();</php>
+                                                            <php>$v_id = $v->getId();</php>
+                                                            <if condition="$author_id === $v_id">
                                                                 <option value="@var{$v->getId()}" selected>
                                                                     <var>$v->getUsername()</var>
                                                                 </option>
-                                                                <else>
+                                                                <else/>
                                                                     <option value="@var{$v->getId()}">
                                                                         <var>$v->getUsername()</var>
                                                                     </option>
@@ -123,7 +125,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>摘要</lang>
                                                 </label>
                                                 <textarea type='text' name='summary' class='form-control' id='summary'
-                                                          placeholder='@lang("标题")'
+                                                          placeholder='@lang(摘要)'
                                                           required>@var{$document->getSummary()}</textarea>
                                                 <div class='invalid-tooltip'>
                                                     <lang>请输入摘要</lang>
@@ -138,10 +140,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                 <select type='text' name='category_id' class='form-control'
                                                         id='category'>
                                                     <foreach name="catalogs" item="v">
-                                                        <if condition="$document->getCategoryId() === $v->getId()">
+                                                        <php>$c_id = $document->getCategoryId();</php>
+                                                        <php>$v_id = $v->getId();</php>
+                                                        <if condition="$c_id === $v_id">
                                                             <option value="@var{$v->id}" selected>
                                                                 <var>$v->getName()</var></option>
-                                                            <else>
+                                                            <else/>
                                                                 <option value="@var{$v->id}">
                                                                     <var>$v->getName()</var>
                                                                 </option>
@@ -230,7 +234,7 @@ File: Form editor Js File
                 skin: 'oxide-dark',
                 theme: 'silver',
                 automatic_uploads: false,
-                images_upload_url: '@admin-url("dev/tool/admin/document/upload")',
+                images_upload_url: '@admin-url(dev/tool/admin/document/upload)',
                 plugins: [
                     'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',

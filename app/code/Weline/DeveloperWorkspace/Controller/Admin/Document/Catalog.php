@@ -53,7 +53,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
             ];
             $tree['tags']       = ['available'];
             $tree['href']       = $this->_url->build('dev/tool/document/catalog', ['id' => $tree['id']]);
-            if ($tree['nodes']) {
+            if (isset($tree['nodes']) and count($tree['nodes'])) {
                 $this->processTrees($tree['nodes']);
             }
         }
@@ -93,7 +93,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         } else {
             $level = 1;
         }
-        $post['name']      = trim($post['name']);
+        $post['name'] = trim($post['name']);
         if (empty($post['name'])) {
             $this->getMessageManager()->addError(__('目录名不能为空！'));
             $this->redirect($this->_url->build('dev/tool/admin/document/catalog'));
