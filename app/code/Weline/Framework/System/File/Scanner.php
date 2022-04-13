@@ -9,9 +9,9 @@
 
 namespace Weline\Framework\System\File;
 
-use Weline\Framework\App\Exception;
 use Weline\Framework\Register\Register;
 use Weline\Framework\Register\RegisterInterface;
+use Weline\Framework\System\File\Data\File;
 
 class Scanner extends Scan
 {
@@ -163,6 +163,98 @@ class Scanner extends Scan
 
             if ($modules) {
                 $vendors_modules[ucfirst($vendor)] = $modules;
+            }
+        }
+
+        # 带有回调处理的方法
+        if ($callback) {
+            $vendors_modules = $callback($vendors_modules);
+        }
+        return $vendors_modules;
+    }
+
+    /**
+     * @DESC          # 扫描规则目录的代码文件
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/4/12 22:55
+     * 参数区：
+     *
+     * @param string        $file_or_dir 示例：*\Framework\*\etc\event.xml
+     * @param \Closure|null $callback
+     *
+     * @return array
+     */
+    public function scanCodeFiles(string $file_or_dir = '', \Closure $callback = null): array
+    {
+        $file_or_dir             = trim($file_or_dir, DIRECTORY_SEPARATOR);
+        $file_or_dir_arr         = explode(DIRECTORY_SEPARATOR, $file_or_dir);
+        $file_or_dir_path_length = count($file_or_dir_arr);# 目录深度
+        $file_or_dir_last        = array_pop($file_or_dir_arr);
+
+
+        $this->__init();
+        $app_modules = $this->scanDirTree(APP_CODE_PATH);
+        $this->__init();
+        $core_modules = $this->scanDirTree(VENDOR_PATH);
+        $modules      = array_merge($core_modules, $app_modules);
+        $vendors_modules = [];
+//        p($modules);
+        /**@var File $file */
+        foreach ($modules as $dir => $files) {
+            foreach ($files as $file) {
+                $file_arr = explode(DIRECTORY_SEPARATOR, $file->getRelate());
+                if ($file_or_dir_path_length === count($file_arr) && $file_or_dir_last === $file->getBasename()) {
+                    $vendor                                                               = array_shift($file_arr);
+                    $vendors_modules[$vendor][implode('_', array_slice($file_arr, 0, 2))] = $file->getOrigin();
+                }
+            }
+        }
+
+        # 带有回调处理的方法
+        if ($callback) {
+            $vendors_modules = $callback($vendors_modules);
+        }
+        return $vendors_modules;
+    }
+
+    /**
+     * @DESC          # 根据匹配规则目录扫描代码文件
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/4/12 22:52
+     * 参数区：
+     *
+     * @param array         $pattern_dirs ['*\Framework\*\etc\event.xml','*\Framework\*\etc\module.xml']
+     * @param \Closure|null $callback
+     *
+     * @return array
+     */
+    public function scanFilesWithPatternDirs(array $pattern_dirs = [], \Closure $callback = null): array
+    {
+        $vendors_modules = [];
+        foreach ($pattern_dirs as $pattern_dir) {
+            $file_or_dir             = trim($pattern_dir, DIRECTORY_SEPARATOR);
+            $file_or_dir_arr         = explode(DIRECTORY_SEPARATOR, $file_or_dir);
+            $file_or_dir_path_length = count($file_or_dir_arr);# 目录深度
+            $file_or_dir_last        = array_pop($file_or_dir_arr);
+
+            $this->__init();
+            $app_modules = $this->scanDirTree(APP_CODE_PATH);
+            $this->__init();
+            $core_modules = $this->scanDirTree(VENDOR_PATH);
+            $modules      = array_merge($core_modules, $app_modules);
+            /**@var File $file */
+            foreach ($modules as $dir => $files) {
+                foreach ($files as $file) {
+                    $file_arr = explode(DIRECTORY_SEPARATOR, $file->getRelate());
+                    if ($file_or_dir_path_length === count($file_arr) && $file_or_dir_last === $file->getBasename()) {
+                        $vendor                                                               = array_shift($file_arr);
+                        $vendors_modules[$vendor][implode('_', array_slice($file_arr, 0, 2))] = $file->getOrigin();
+                    }
+                }
             }
         }
 

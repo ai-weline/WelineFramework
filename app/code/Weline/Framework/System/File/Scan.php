@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\System\File;
 
+use Symfony\Component\Finder\Finder;
 use Weline\Framework\System\File\Data\File;
 
 class Scan
@@ -44,8 +45,8 @@ class Scan
      */
     public function scanDirTree(string $dirPath, int $level = 0): array
     {
-        $dirPath = rtrim($dirPath, DIRECTORY_SEPARATOR);
         $this->keepLevel += 1;
+        $dirPath = rtrim($dirPath, DIRECTORY_SEPARATOR);
         if (is_dir($dirPath) && $file_handler = opendir($dirPath)) {
             while (false !== ($file = readdir($file_handler))) {
                 // 排除"."".."

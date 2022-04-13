@@ -22,6 +22,7 @@ class Fancy extends FrontendController
 
     public function index()
     {
-        return $this->fetch();
+        $method = $this->_request->getParam('method');
+        return $this->fetch($method);
     }
 }

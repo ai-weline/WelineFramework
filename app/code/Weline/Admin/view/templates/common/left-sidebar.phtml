@@ -29,7 +29,7 @@
                             if ('/' === $submenu->getAction()) {
                                 ?>
                                 <li>
-                                    <a href="<?= $this->getAdminUrl($submenu->getAction()) ?>" class="waves-effect">
+                                    <a href="<?= $submenu->getUrl() ?>" class="waves-effect">
                                         <i class="<?= $submenu->getIcon() ?>"></i><span
                                                 class="badge rounded-pill bg-primary float-end">3</span>
                                         <span><?= $submenu->getTitle() ?></span>
@@ -39,7 +39,7 @@
                             } else {
                                 ?>
                                 <li>
-                                    <a href="<?= $this->getAdminUrl($submenu->getAction()) ?>" class=" waves-effect">
+                                    <a href="<?= $submenu->getUrl() ?>" class=" waves-effect">
                                         <i class="<?= $submenu->getIcon() ?>"></i>
                                         <span><?= $submenu->getTitle() ?></span>
                                     </a>
@@ -50,7 +50,7 @@
                             if ('/' === $submenu->getAction()) {
                                 ?>
                                 <li>
-                                    <a href="<?= $this->getAdminUrl($submenu->getAction()) ?>" class="waves-effect">
+                                    <a href="<?= $submenu->getUrl() ?>" class="waves-effect">
                                         <i class="<?= $submenu->getIcon() ?>"></i><span
                                                 class="badge rounded-pill bg-primary float-end">3</span>
                                         <span><?= $submenu->getTitle() ?></span>
@@ -71,7 +71,7 @@
                                         foreach ($level_3_menus as $level_3_menu) {
                                             ?>
                                             <li>
-                                                <a href="<?= $this->getAdminUrl($level_3_menu->getAction()) ?>"><?= $level_3_menu->getTitle() ?>
+                                                <a href="<?= $level_3_menu->getUrl() ?>"><?= $level_3_menu->getTitle() ?>
                                                 </a>
                                             </li>
                                             <?php

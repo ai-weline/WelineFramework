@@ -13,6 +13,8 @@ use JetBrains\PhpStorm\NoReturn;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Router\Cache\RouterCache;
@@ -64,6 +66,11 @@ class Core
         }
     }
 
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
+
 
     /**
      * @DESC         |路由处理
@@ -109,11 +116,25 @@ class Core
     public function processUrl()
     {
         // 读取url
-        $url           = $this->request->getUrlPath();
+        $url = $this->request->getUrlPath();
+
         $url_cache_key = 'url_cache_key_' . $url;
+        # 事件：处理url之前
+        /**@var EventsManager $eventManager */
+        $eventManager = ObjectManager::getInstance(EventsManager::class);
+        $routerData   = new DataObject(['path' => $url]);
+        $eventManager->dispatch('Weline_Framework_Router::process_url_before', ['data' => $routerData, 'router' => $this]);
+        $url = $routerData->getData('path');
         if (/*PROD&&*/ $cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
         } else {
+//            # 事件：处理url之前
+//            /**@var EventsManager $eventManager */
+//            $eventManager = ObjectManager::getInstance(EventsManager::class);
+//            $routerData   = new DataObject(['path' => $url]);
+//            $eventManager->dispatch('Weline_Framework_Router::process_url_before', ['data' => $routerData, 'router' => $this]);
+//            $url = $routerData->getData('path');
+
             if ($this->is_admin) {
                 $url = str_replace($this->area_router, '', $url);
             }
@@ -303,7 +324,7 @@ class Core
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);
-        $result   = call_user_func([$dispatch, $method]/*, ...$this->request->getParams()*/);
+        $result   = call_user_func([$dispatch, $method], /*...$this->request->getParams()*/);
 //        file_put_contents(__DIR__.'/'.$cache_key.'.html', $result);
         /** Get output buffer. */
         # FIXME 是否显示模板路径

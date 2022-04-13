@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Weline\Backend\Model;
 
 use Weline\Backend\Cache\BackendCache;
+use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Http\Url;
@@ -33,6 +34,7 @@ class Menu extends \Weline\Framework\Database\Model
     public const fields_ICON          = 'icon';
     public const fields_ORDER         = 'order';
     public const fields_IS_SYSTEM     = 'is_system';
+    public const fields_IS_BACKEND    = 'is_backend';
 
     private CacheInterface $backendCache;
 
@@ -53,21 +55,8 @@ class Menu extends \Weline\Framework\Database\Model
      */
     public function setup(ModelSetup $setup, Context $context): void
     {
-        /*$setup->dropTable();
-        $setup->getPrinting()->setup('安装数据表...' . self::table);
-        $setup->createTable('后端菜单表')
-              ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', 'ID')
-              ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
-              ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单标题')
-              ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
-              ->addColumn(self::fields_SOURCE, TableInterface::column_type_VARCHAR, 255, '', '资源')
-              ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
-              ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
-              ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
-              ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
-              ->addColumn(self::fields_ORDER, TableInterface::column_type_INTEGER, null, 'not null', '排序')
-              ->addColumn(self::fields_IS_SYSTEM, TableInterface::column_type_INTEGER, 1, 'default 0', '是否系统菜单')
-              ->create();*/
+//        $setup->dropTable();
+//        $this->install($setup, $context);
     }
 
     /**
@@ -97,6 +86,7 @@ class Menu extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
                   ->addColumn(self::fields_ICON, TableInterface::column_type_VARCHAR, 60, 'not null', 'Icon图标类')
                   ->addColumn(self::fields_ORDER, TableInterface::column_type_INTEGER, null, 'not null', '排序')
+                  ->addColumn(self::fields_IS_BACKEND, TableInterface::column_type_INTEGER, 1, 'default 1', '是否后台菜单')
                   ->addColumn(self::fields_IS_SYSTEM, TableInterface::column_type_INTEGER, 1, 'default 0', '是否系统菜单')
                   ->create();
         } else {
@@ -204,10 +194,28 @@ class Menu extends \Weline\Framework\Database\Model
         return $this->setData(self::fields_IS_SYSTEM, $is_system);
     }
 
+    public function isBackend(): bool
+    {
+        return (bool)$this->getData(self::fields_IS_BACKEND);
+    }
+
+    public function setIsBackend(bool $is_backend): static
+    {
+        return $this->setData(self::fields_IS_BACKEND, $is_backend);
+    }
+
     /*----------------------助手函数区-------------------------*/
     public function getUrl(): string
     {
-        return $this->url->build($this->getAction()) ?? '';
+        $pre = '';
+        if ($this->isBackend()) {
+            $pre = Env::getInstance()->getConfig('admin');
+        }
+        $url = $this->url->build($this->getAction());
+        if (empty($pre)) {
+            $url = str_replace(Env::getInstance()->getConfig('admin'), '', $url);
+        }
+        return $url ?? '';
     }
 
     /**

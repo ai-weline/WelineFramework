@@ -54,6 +54,22 @@ class ModuleFileReader extends DataObject
     {
         return $this->scanner->scanVendorModulesWithFiles($this->path, $callback);
     }
+    /**
+     * @DESC          # 读取文件
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/9/6 22:55
+     * 参数区：
+     *
+     * @param \Closure|null $callback
+     *
+     * @return array
+     */
+    public function getFileListWithCodeDir(\Closure $callback = null): array
+    {
+        return $this->scanner->scanCodeFiles($this->path, $callback);
+    }
 
     public function getFilePath(): string
     {

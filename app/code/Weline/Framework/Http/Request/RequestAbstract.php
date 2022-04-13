@@ -303,7 +303,7 @@ abstract class RequestAbstract extends DataObject
     public function getUrlPath(): string
     {
         $url_path = explode('?', $this->getUri());
-        return array_shift($url_path);
+        return str_replace('//', '/', array_shift($url_path));
     }
 
     public function getBaseUrl(): string

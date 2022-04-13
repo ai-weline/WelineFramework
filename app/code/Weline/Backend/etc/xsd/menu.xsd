@@ -28,6 +28,7 @@
         <xs:attribute name="action" type="xs:string" use="required"/>
         <xs:attribute name="parent" type="xs:string" use="optional"/>
         <xs:attribute name="icon" type="xs:string" use="optional"/>
+        <xs:attribute name="is_admin" type="xs:string" use="optional"/>
         <xs:attribute name="order" type="xs:integer" use="required"/>
     </xs:complexType>
 </xs:schema>

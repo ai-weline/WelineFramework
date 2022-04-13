@@ -233,10 +233,9 @@ class Template extends DataObject
 
             # 检测读取别的模块的模板文件
             list($fileName, $file_dir, $view_dir, $template_dir, $compile_dir) = $this->processFileSource($fileName, $file_dir);
-
             // 检测模板文件：如果文件名有后缀 则直接到view下面读取。没有说明是默认
             if ($file_ext) {
-                $tplFile = $view_dir . $fileName;
+                $tplFile = $template_dir . $fileName;
             } else {
                 $tplFile = $template_dir . $fileName . $this->getFileExt();
             }

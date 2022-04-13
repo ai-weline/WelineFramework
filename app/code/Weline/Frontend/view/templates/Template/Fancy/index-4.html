@@ -2,12 +2,12 @@
 <html lang="zxx">
 <head>
     <!-- Title of The Page -->
-    <title>Fancy Shopping E-commerce HTML Template</title>
+    <title>Weline Shopping E-commerce HTML Template</title>
     <!-- Meta Informations -->
     <meta charset="utf-8">
-    <meta name="description" content="Bootstrap Responsive  Fancy Shopping E-commerce HTML Template">
-    <meta name="keywords" content="Fancy Shopping E-commerce HTML Template,template,bootstrap 5,ui template kit,envato templates,fancy shopping html templates,html.css)">
-    <meta name="author" content="Fancy Shopping E-commerce HTML Template">
+    <meta name="description" content="Bootstrap Responsive  Weline Shopping E-commerce HTML Template">
+    <meta name="keywords" content="Weline Shopping E-commerce HTML Template,template,bootstrap 5,ui template kit,envato templates,fancy shopping html templates,html.css)">
+    <meta name="author" content="Weline Shopping E-commerce HTML Template">
     <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- Favicon -->
@@ -94,7 +94,7 @@
                                 <div class="col-4">
                                     <!-- Image -->
                                     <a href="javascript:void(0);">
-                                        <img class="img-fluid border" src="@static(Weline_Frontend::assets/img/product-2.jpg" alt="...">
+                                        <img class="img-fluid border" src="@static(Weline_Frontend::assets/img/product-2.jpg)" alt="...">
                                     </a>
                                 </div>
                                 <div class="col-8">
@@ -124,7 +124,7 @@
                                 <div class="col-4">
                                     <!-- Image -->
                                     <a href="javascript:void(0);">
-                                        <img class="img-fluid border" src="@static(Weline_Frontend::assets/img/product-2.jpg" alt="...">
+                                        <img class="img-fluid border" src="@static(Weline_Frontend::assets/img/product-2.jpg)" alt="...">
                                     </a>
                                 </div>
                                 <div class="col-8">
@@ -178,8 +178,8 @@
                         </div>
                     </div>
                     <div class="pt-4">
-                        <a class="btn btn-block btn-dark w-100 mb-3" href="checkout.html">Continue to Checkout</a>
-                        <a class="btn btn-block btn-outline-dark w-100" href="shopping-cart.html">View Cart</a>
+                        <a class="btn btn-block btn-dark w-100 mb-3" href="@url('frontend/Template/Fancy/checkout.html')">Continue to Checkout</a>
+                        <a class="btn btn-block btn-outline-dark w-100" href="@url('frontend/Template/Fancy/shopping-cart.html')">View Cart</a>
                     </div>
                 </div>
                 <!-- Buttons -->
@@ -196,7 +196,7 @@
                     <div class="row">
                         <!-- Product Gallery -->
                         <div class="col-lg-6 lightbox-gallery product-gallery">
-                            <img src="@static(Weline_Frontend::assets/img/product-1.jpg" class="img-fluid" title="" alt="">
+                            <img src="@static(Weline_Frontend::assets/img/product-1.jpg)" class="img-fluid" title="" alt="">
                         </div>
                         <!-- End Product Gallery -->
                         <!-- Product Details -->
@@ -278,14 +278,14 @@
                                         <div class="inc qty-btn">+</div>
                                     </div>
                                     <div class="cart-button mb-3 d-flex">
-                                       <a href="shopping-cart.html" class="btn btn-dark me-3">
+                                       <a href="@url('frontend/Template/Fancy/shopping-cart.html')" class="btn btn-dark me-3">
                                             <i class="bi bi-cart"></i>
                                             Add to cart
                                         </a>
-                                       <a href="wishlist.html" class="btn btn-outline-primary me-3" >
+                                       <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-outline-primary me-3" >
                                         <i class="bi bi-heart"></i>
                                     </a>
-                                        <a href="shop-compare.html" class="btn btn-outline-primary">
+                                        <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-outline-primary">
                                             <i class="bi bi-arrow-left-right"></i>
                                         </a>
                                     </div>
@@ -529,8 +529,8 @@
                 <div class="row align-items-center">
                     <div class="col-md-6 col-lg-3 text-center text-md-start">
                         <!-- Logo -->
-                        <a class="navbar-brand" href="index.html">
-                            <img src="@static(Weline_Frontend::assets/img/logo/logo.svg" title="" alt="">
+                        <a class="navbar-brand" href="@url('frontend/Template/Fancy/index.html')">
+                            <img src="@static(Weline_Frontend::assets/img/logo/logo.svg)" title="" alt="">
                         </a>
                         <!-- Logo -->
                         <hr class="d-md-none mt-3 mb-2">
@@ -573,15 +573,15 @@
                                     <i class="bi bi-person-circle"> </i>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-hover right shadow" aria-labelledby="dropdown_myaccount">
-                                    <a class="dropdown-item" href="login.html">Login</a>
-                                    <a class="dropdown-item" href="sign-up.html">Register</a>
-                                    <a class="dropdown-item" href="wishlist.html">Wishlist</a>
-                                    <a class="dropdown-item" href="my-account.html">My account</a>
+                                    <a class="dropdown-item" href="@url('frontend/Template/Fancy/login.html')">Login</a>
+                                    <a class="dropdown-item" href="@url('frontend/Template/Fancy/sign-up.html')">Register</a>
+                                    <a class="dropdown-item" href="@url('frontend/Template/Fancy/wishlist.html')">Wishlist</a>
+                                    <a class="dropdown-item" href="@url('frontend/Template/Fancy/my-account.html')">My account</a>
                                 </div>
                             </div>
                             <!-- Wishlist -->
                             <div class="nav-item">
-                                <a class="nav-link" href="wishlist.html">
+                                <a class="nav-link" href="@url('frontend/Template/Fancy/wishlist.html')">
                                     <i class="bi bi-heart"> </i>
                                 </a>
                             </div>
@@ -610,22 +610,22 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mx-auto">
                          <li class="dropdown nav-item">
-                            <a href="index.html" class="nav-link">Home</a>
+                            <a href="@url('frontend/Template/Fancy/index.html')" class="nav-link">Home</a>
                             <label class="px-dropdown-toggle mob-menu"></label>
                             <ul class="dropdown-menu list-unstyled left">
-                 <li><a class="dropdown-item" href="index.html">Home 1</a></li>
-                                <li><a class="dropdown-item" href="index-2.html">Home 2</a></li>
-                                <li><a class="dropdown-item" href="index-3.html">Home 3</a></li>
-                                <li><a class="dropdown-item" href="index-4.html">Home 4</a></li>
+                 <li><a class="dropdown-item" href="@url('frontend/Template/Fancy/index.html')">Home 1</a></li>
+                                <li><a class="dropdown-item" href="@url('frontend/Template/Fancy/index-2.html')">Home 2</a></li>
+                                <li><a class="dropdown-item" href="@url('frontend/Template/Fancy/index-3.html')">Home 3</a></li>
+                                <li><a class="dropdown-item" href="@url('frontend/Template/Fancy/index-4.html')">Home 4</a></li>
                             </ul>
                         </li>
                         <li class="dropdown nav-item">
                             <a href="javascript:void(0);" class="nav-link">Pages</a>
                             <label class="px-dropdown-toggle mob-menu"></label>
                             <ul class="dropdown-menu left list-unstyled">
-                                <li><a class="dropdown-item" href="about.html">About</a></li>
-                                <li><a class="dropdown-item" href="faq.html">FAQ's</a></li>
-                                <li><a class="dropdown-item" href="contact-us.html">Contact Us</a></li>
+                                <li><a class="dropdown-item" href="@url('frontend/Template/Fancy/about.html')">About</a></li>
+                                <li><a class="dropdown-item" href="@url('frontend/Template/Fancy/faq.html')">FAQ's</a></li>
+                                <li><a class="dropdown-item" href="@url('frontend/Template/Fancy/contact-us.html')">Contact Us</a></li>
                             </ul>
                         </li>
                         <li class="dropdown dropdown-full nav-item">
@@ -638,19 +638,19 @@
                                             <h6 class="px-3">Shop Style</h6>
                                             <ul class="list-unstyled">
                                                 <li>
-                                                    <a href="shop.html" class="dropdown-item">Shop Default</a>
+                                                    <a href="@url('frontend/Template/Fancy/shop.html')" class="dropdown-item">Shop Default</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-filter.html" class="dropdown-item">Shop Filter</a>
+                                                    <a href="@url('frontend/Template/Fancy/shop-filter.html')" class="dropdown-item">Shop Filter</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-fw-left.html" class="dropdown-item">Shop Full Width</a>
+                                                    <a href="@url('frontend/Template/Fancy/shop-fw-left.html')" class="dropdown-item">Shop Full Width</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-fw-right.html" class="dropdown-item">Shop Full Width Right</a>
+                                                    <a href="@url('frontend/Template/Fancy/shop-fw-right.html')" class="dropdown-item">Shop Full Width Right</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shop-fw-without-filtres.html" class="dropdown-item">Shop Full Width No Filter</a>
+                                                    <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" class="dropdown-item">Shop Full Width No Filter</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -658,19 +658,19 @@
                                             <h6 class="px-3">Product Pages</h6>
                                             <ul class="list-unstyled">
                                                 <li>
-                                                    <a href="product-details.html" class="dropdown-item">Product Details 01</a>
+                                                    <a href="@url('frontend/Template/Fancy/product-details.html')" class="dropdown-item">Product Details 01</a>
                                                 </li>
                                                 <li>
-                                                    <a href="product-details-2.html" class="dropdown-item">Product Details 02</a>
+                                                    <a href="@url('frontend/Template/Fancy/product-details-2.html')" class="dropdown-item">Product Details 02</a>
                                                 </li>
                                                 <li>
-                                                    <a href="product-details-3.html" class="dropdown-item">Product Details 03</a>
+                                                    <a href="@url('frontend/Template/Fancy/product-details-3.html')" class="dropdown-item">Product Details 03</a>
                                                 </li>
                                                 <li>
-                                                    <a href="product-details-4.html" class="dropdown-item">Product Details 04</a>
+                                                    <a href="@url('frontend/Template/Fancy/product-details-4.html')" class="dropdown-item">Product Details 04</a>
                                                 </li>
                                                 <li>
-                                                    <a href="product-details-5.html" class="dropdown-item">Product Details 05</a>
+                                                    <a href="@url('frontend/Template/Fancy/product-details-5.html')" class="dropdown-item">Product Details 05</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -688,7 +688,7 @@
                                             <div class="hover-scale position-relative mb-3">
                                                 <div class="hover-scale-in">
                                                     <a href="javascript:void(0);">
-                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg" title="" alt="">
+                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg)" title="" alt="">
                                                     </a>
                                                 </div>
                                                 <div class="pt-2 text-center position-absolute bottom-0 start-0 mb-3">
@@ -696,20 +696,20 @@
                                                 </div>
                                             </div>
                                             <ul class="list-unstyled link-style-1">
-                                                <li><a href="shop.html">Scarf</a></li>
-                                                <li><a href="shop.html">Shirt</a></li>
-                                                <li><a href="shop.html">Shoes</a></li>
-                                                <li><a href="shop.html">Shorts</a></li>
-                                                <li><a href="shop.html">Summer</a></li>
-                                                <li><a href="shop.html">Sunglasses</a></li>
-                                                <li><a href="shop.html">Vintage</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Scarf</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shirt</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shoes</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shorts</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Summer</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Sunglasses</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Vintage</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-2">
                                             <div class="hover-scale position-relative mb-3">
                                                 <div class="hover-scale-in">
                                                     <a href="javascript:void(0);">
-                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg" title="" alt="">
+                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg)" title="" alt="">
                                                     </a>
                                                 </div>
                                                 <div class="pt-2 text-center position-absolute bottom-0 start-0 mb-3">
@@ -717,20 +717,20 @@
                                                 </div>
                                             </div>
                                             <ul class="list-unstyled link-style-1">
-                                                <li><a href="shop.html">Scarf</a></li>
-                                                <li><a href="shop.html">Shirt</a></li>
-                                                <li><a href="shop.html">Shoes</a></li>
-                                                <li><a href="shop.html">Shorts</a></li>
-                                                <li><a href="shop.html">Summer</a></li>
-                                                <li><a href="shop.html">Sunglasses</a></li>
-                                                <li><a href="shop.html">Vintage</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Scarf</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shirt</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shoes</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shorts</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Summer</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Sunglasses</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Vintage</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-2">
                                             <div class="hover-scale position-relative mb-3">
                                                 <div class="hover-scale-in">
                                                     <a href="javascript:void(0);">
-                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg" title="" alt="">
+                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg)" title="" alt="">
                                                     </a>
                                                 </div>
                                                 <div class="pt-2 text-center position-absolute bottom-0 start-0 mb-3">
@@ -738,20 +738,20 @@
                                                 </div>
                                             </div>
                                             <ul class="list-unstyled link-style-1">
-                                                <li><a href="shop.html">Scarf</a></li>
-                                                <li><a href="shop.html">Shirt</a></li>
-                                                <li><a href="shop.html">Shoes</a></li>
-                                                <li><a href="shop.html">Shorts</a></li>
-                                                <li><a href="shop.html">Summer</a></li>
-                                                <li><a href="shop.html">Sunglasses</a></li>
-                                                <li><a href="shop.html">Vintage</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Scarf</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shirt</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shoes</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shorts</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Summer</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Sunglasses</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Vintage</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-2">
                                             <div class="hover-scale position-relative mb-3">
                                                 <div class="hover-scale-in">
                                                     <a href="javascript:void(0);">
-                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg" title="" alt="">
+                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg)" title="" alt="">
                                                     </a>
                                                 </div>
                                                 <div class="pt-2 text-center position-absolute bottom-0 start-0 mb-3">
@@ -759,20 +759,20 @@
                                                 </div>
                                             </div>
                                             <ul class="list-unstyled link-style-1">
-                                                <li><a href="shop.html">Scarf</a></li>
-                                                <li><a href="shop.html">Shirt</a></li>
-                                                <li><a href="shop.html">Shoes</a></li>
-                                                <li><a href="shop.html">Shorts</a></li>
-                                                <li><a href="shop.html">Summer</a></li>
-                                                <li><a href="shop.html">Sunglasses</a></li>
-                                                <li><a href="shop.html">Vintage</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Scarf</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shirt</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shoes</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shorts</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Summer</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Sunglasses</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Vintage</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-2">
                                             <div class="hover-scale position-relative mb-3">
                                                 <div class="hover-scale-in">
                                                     <a href="javascript:void(0);">
-                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg" title="" alt="">
+                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg)" title="" alt="">
                                                     </a>
                                                 </div>
                                                 <div class="pt-2 text-center position-absolute bottom-0 start-0 mb-3">
@@ -780,20 +780,20 @@
                                                 </div>
                                             </div>
                                             <ul class="list-unstyled link-style-1">
-                                                <li><a href="shop.html">Scarf</a></li>
-                                                <li><a href="shop.html">Shirt</a></li>
-                                                <li><a href="shop.html">Shoes</a></li>
-                                                <li><a href="shop.html">Shorts</a></li>
-                                                <li><a href="shop.html">Summer</a></li>
-                                                <li><a href="shop.html">Sunglasses</a></li>
-                                                <li><a href="shop.html">Vintage</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Scarf</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shirt</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shoes</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shorts</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Summer</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Sunglasses</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Vintage</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-sm-6 col-md-4 col-lg-2">
                                             <div class="hover-scale position-relative mb-3">
                                                 <div class="hover-scale-in">
                                                     <a href="javascript:void(0);">
-                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg" title="" alt="">
+                                                        <img src="@static(Weline_Frontend::assets/img/shop-banner-11.jpg)" title="" alt="">
                                                     </a>
                                                 </div>
                                                 <div class="pt-2 text-center position-absolute bottom-0 start-0 mb-3">
@@ -801,20 +801,20 @@
                                                 </div>
                                             </div>
                                             <ul class="list-unstyled link-style-1">
-                                                <li><a href="shop.html">Scarf</a></li>
-                                                <li><a href="shop.html">Shirt</a></li>
-                                                <li><a href="shop.html">Shoes</a></li>
-                                                <li><a href="shop.html">Shorts</a></li>
-                                                <li><a href="shop.html">Summer</a></li>
-                                                <li><a href="shop.html">Sunglasses</a></li>
-                                                <li><a href="shop.html">Vintage</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Scarf</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shirt</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shoes</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Shorts</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Summer</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Sunglasses</a></li>
+                                                <li><a href="@url('frontend/Template/Fancy/shop.html')">Vintage</a></li>
                                             </ul>
                                         </div>
                                         <div class="col-12">
-                                            <div class="d-flex rounded w-100 align-items-center justify-content-center mx-2 py-4 position-relative bg-cover bg-center bg-no-repeat" style="background-image: url(@static(Weline_Frontend::assets/img/blog-home-2.jpg);">
+                                            <div class="d-flex rounded w-100 align-items-center justify-content-center mx-2 py-4 position-relative bg-cover bg-center bg-no-repeat" style="background-image: url(@static(Weline_Frontend::assets/img/blog-home-2.jpg));">
                                                 <div class="text-center">
                                                     <h5 class="text-white">Flat 20% Off</h5>
-                                                    <h2 class="text-white h2 m-0"><a class="stretched-link text-reset" href="index.html">Big Sale Offer</a></h2>
+                                                    <h2 class="text-white h2 m-0"><a class="stretched-link text-reset" href="@url('frontend/Template/Fancy/index.html')">Big Sale Offer</a></h2>
                                                 </div>
                                             </div>
                                         </div>
@@ -832,25 +832,25 @@
                                             <h6 class="px-3">Account</h6>
                                             <ul class="list-unstyled">
                                                 <li>
-                                                    <a href="login.html" class="dropdown-item">Login </a>
+                                                    <a href="@url('frontend/Template/Fancy/login.html')" class="dropdown-item">Login </a>
                                                 </li>
                                                 <li>
-                                                    <a href="sign-up.html" class="dropdown-item">Sign up</a>
+                                                    <a href="@url('frontend/Template/Fancy/sign-up.html')" class="dropdown-item">Sign up</a>
                                                 </li>
                                                 <li>
-                                                    <a href="reset-password.html" class="dropdown-item">Forgot Password</a>
+                                                    <a href="@url('frontend/Template/Fancy/reset-password.html')" class="dropdown-item">Forgot Password</a>
                                                 </li>
                                                 <li>
-                                                    <a href="wishlist.html" class="dropdown-item">Wishlist</a>
+                                                    <a href="@url('frontend/Template/Fancy/wishlist.html')" class="dropdown-item">Wishlist</a>
                                                 </li>
                                                 <li>
-                                                    <a href="shopping-cart.html" class="dropdown-item">Shopping Cart </a>
+                                                    <a href="@url('frontend/Template/Fancy/shopping-cart.html')" class="dropdown-item">Shopping Cart </a>
                                                 </li>
                                                 <li>
-                                                    <a href="my-account.html" class="dropdown-item">My Account</a>
+                                                    <a href="@url('frontend/Template/Fancy/my-account.html')" class="dropdown-item">My Account</a>
                                                 </li>
                                                 <li>
-                                                    <a href="checkout.html" class="dropdown-item">Checkout</a>
+                                                    <a href="@url('frontend/Template/Fancy/checkout.html')" class="dropdown-item">Checkout</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -858,22 +858,22 @@
                                             <h6 class="px-3">My Account Option 2 </h6>
                                             <ul class="list-unstyled">
                                                 <li>
-                                                    <a href="account-address.html" class="dropdown-item">Account Address</a>
+                                                    <a href="@url('frontend/Template/Fancy/account-address.html')" class="dropdown-item">Account Address</a>
                                                 </li>
                                                 <li>
-                                                    <a href="account-order.html" class="dropdown-item">Account Order</a>
+                                                    <a href="@url('frontend/Template/Fancy/account-order.html')" class="dropdown-item">Account Order</a>
                                                 </li>
                                                 <li>
-                                                    <a href="account-payment.html" class="dropdown-item">Account Payment</a>
+                                                    <a href="@url('frontend/Template/Fancy/account-payment.html')" class="dropdown-item">Account Payment</a>
                                                 </li>
                                                 <li>
-                                                    <a href="account-profile.html" class="dropdown-item">Account Profile</a>
+                                                    <a href="@url('frontend/Template/Fancy/account-profile.html')" class="dropdown-item">Account Profile</a>
                                                 </li>
                                                 <li>
-                                                    <a href="account-tickets.html" class="dropdown-item">Account Tickets</a>
+                                                    <a href="@url('frontend/Template/Fancy/account-tickets.html')" class="dropdown-item">Account Tickets</a>
                                                 </li>
                                                 <li>
-                                                    <a href="account-wishlist.html" class="dropdown-item">Account Wishlist</a>
+                                                    <a href="@url('frontend/Template/Fancy/account-wishlist.html')" class="dropdown-item">Account Wishlist</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -885,8 +885,8 @@
                             <a href="javascript:void(0);" class="nav-link">Blog</a>
                             <label class="px-dropdown-toggle mob-menu"></label>
                             <div class="dropdown-menu left shadow-lg">
-                                <a class="dropdown-item" href="blog.html">Blog</a>
-                                <a class="dropdown-item" href="blog-single.html">Blog Single</a>
+                                <a class="dropdown-item" href="@url('frontend/Template/Fancy/blog.html')">Blog</a>
+                                <a class="dropdown-item" href="@url('frontend/Template/Fancy/blog-single.html')">Blog Single</a>
                             </div>
                         </li>
                     </ul>
@@ -899,7 +899,7 @@
     <!-- Main -->
     <main>
         <!-- Home Slider -->
-        <section class="bg-cover bg-center bg-no-repeat" style="background-image: url(@static(Weline_Frontend::assets/img/home-banner-9.jpg);">
+        <section class="bg-cover bg-center bg-no-repeat" style="background-image: url(@static(Weline_Frontend::assets/img/home-banner-9.jpg));">
             <div class="container">
                 <div class="row align-items-center min-vh-85 justify-content-center">
                     <div class="col-lg-6 text-center">
@@ -907,7 +907,7 @@
                         <h1 class="display-2 fw-600">Final Clearance Up to 80% Off</h1>
                         <p class="lead text-dark">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.</p>
                         <div class="pt-2">
-                            <a class="btn btn-dark" href="shop-fw-without-filtres.html" tabindex="0">Discover More</a>
+                            <a class="btn btn-dark" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Discover More</a>
                         </div>
                     </div>
                 </div>
@@ -920,13 +920,13 @@
                 <div class="row g-3">
                     <div class="col-lg-3">
                         <div class="position-relative hover-scale">
-                            <a class="stretched-link" href="shop-fw-without-filtres.html"></a>
+                            <a class="stretched-link" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')"></a>
                             <div class="hover-scale-in">
-                                <img class="w-100" src="@static(Weline_Frontend::assets/img/shop-banner-19.jpg" title="" alt="">
+                                <img class="w-100" src="@static(Weline_Frontend::assets/img/shop-banner-19.jpg)" title="" alt="">
                             </div>
                             <div class="px-3 py-3 mx-3 mx-lg-5 bg-white mt-n6 position-relative rounded border">
                                 <h5>
-                                    <a class="text-reset text-center" href="shop-fw-without-filtres.html">
+                                    <a class="text-reset text-center" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">
                                         <h5 class="h6 ">
                                         Day Dresses
                                         </h5>
@@ -938,13 +938,13 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="position-relative hover-scale">
-                            <a class="stretched-link" href="shop-fw-without-filtres.html"></a>
+                            <a class="stretched-link" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')"></a>
                             <div class="hover-scale-in">
-                                <img class="w-100" src="@static(Weline_Frontend::assets/img/shop-banner-20.jpg" title="" alt="">
+                                <img class="w-100" src="@static(Weline_Frontend::assets/img/shop-banner-20.jpg)" title="" alt="">
                             </div>
                             <div class="px-3 py-3 mx-3 mx-lg-5 bg-white mt-n6 position-relative rounded border">
                                 <h5>
-                                    <a class="text-reset text-center" href="shop-fw-without-filtres.html">
+                                    <a class="text-reset text-center" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">
                                         <h5 class="h6 ">
                                         Day Dresses
                                         </h5>
@@ -956,13 +956,13 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="position-relative hover-scale">
-                            <a class="stretched-link" href="shop-fw-without-filtres.html"></a>
+                            <a class="stretched-link" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')"></a>
                             <div class="hover-scale-in">
-                                <img class="w-100" src="@static(Weline_Frontend::assets/img/shop-banner-21.jpg" title="" alt="">
+                                <img class="w-100" src="@static(Weline_Frontend::assets/img/shop-banner-21.jpg)" title="" alt="">
                             </div>
                             <div class="px-3 py-3 mx-3 mx-lg-5 bg-white mt-n6 position-relative rounded border">
                                 <h5>
-                                    <a class="text-reset text-center" href="shop-fw-without-filtres.html">
+                                    <a class="text-reset text-center" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">
                                         <h5 class="h6 ">
                                         Day Dresses
                                         </h5>
@@ -974,13 +974,13 @@
                     </div>
                     <div class="col-lg-3">
                         <div class="position-relative hover-scale">
-                            <a class="stretched-link" href="shop-fw-without-filtres.html"></a>
+                            <a class="stretched-link" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')"></a>
                             <div class="hover-scale-in">
-                                <img class="w-100" src="@static(Weline_Frontend::assets/img/shop-banner-22.jpg" title="" alt="">
+                                <img class="w-100" src="@static(Weline_Frontend::assets/img/shop-banner-22.jpg)" title="" alt="">
                             </div>
                             <div class="px-3 py-3 mx-3 mx-lg-5 bg-white mt-n6 position-relative rounded border">
                                 <h5>
-                                    <a class="text-reset text-center" href="shop-fw-without-filtres.html">
+                                    <a class="text-reset text-center" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">
                                         <h5 class="h6 ">
                                         Day Dresses
                                         </h5>
@@ -1020,12 +1020,12 @@
                                             <span class="badge bg-danger">Sale</span>
                                         </div>
                                         <div class="product-wishlist-btn">
-                                            <a href="wishlist.html" class="btn btn-primary">
+                                            <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                                 <i class="bi bi-heart"></i>
                                             </a>
                                         </div>
                                         <div class="product-action">
-                                           <a href="shop-compare.html" class="btn btn-dark">
+                                           <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                                 <i class="bi bi-arrow-left-right"></i>
                                             </a>
                                             <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1033,22 +1033,22 @@
                                             </a>
                                         </div>
                                            <div class="product-media">
-                                            <a href="product-details.html">
-                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-11.jpg" title="" alt="">
-                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-12.jpg" title="" alt="">
+                                            <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-11.jpg)" title="" alt="">
+                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-12.jpg)" title="" alt="">
                                             </a>
                                         </div>
                                     </div>
                                     <div class="product-card-info">
                                         <h6 class="product-title">
-                                            <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                            <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                         </h6>
                                         <div class="product-price">
                                             <span class="text-primary">$28.<small>50</small></span>
                                             <del class="fs-sm text-muted">$38.<small>50</small></del>
                                         </div>
                                         <div class="product-cart-btn">
-                                            <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                            <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1062,12 +1062,12 @@
                                             <span class="badge bg-danger">Sale</span>
                                         </div>
                                         <div class="product-wishlist-btn">
-                                           <a href="wishlist.html" class="btn btn-primary">
+                                           <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                                 <i class="bi bi-heart"></i>
                                             </a>
                                         </div>
                                         <div class="product-action">
-                                           <a href="shop-compare.html" class="btn btn-dark">
+                                           <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                                 <i class="bi bi-arrow-left-right"></i>
                                             </a>
                                             <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1075,22 +1075,22 @@
                                             </a>
                                         </div>
                                            <div class="product-media">
-                                            <a href="product-details.html">
-                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-13.jpg" title="" alt="">
-                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-14.jpg" title="" alt="">
+                                            <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-13.jpg)" title="" alt="">
+                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-14.jpg)" title="" alt="">
                                             </a>
                                         </div>
                                     </div>
                                     <div class="product-card-info">
                                         <h6 class="product-title">
-                                            <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                            <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                         </h6>
                                         <div class="product-price">
                                             <span class="text-primary">$28.<small>50</small></span>
                                             <del class="fs-sm text-muted">$38.<small>50</small></del>
                                         </div>
                                          <div class="product-cart-btn">
-                                            <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                            <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1104,12 +1104,12 @@
                                             <span class="badge bg-danger">Sale</span>
                                         </div>
                                         <div class="product-wishlist-btn">
-                                           <a href="wishlist.html" class="btn btn-primary">
+                                           <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                                 <i class="bi bi-heart"></i>
                                             </a>
                                         </div>
                                         <div class="product-action">
-                                           <a href="shop-compare.html" class="btn btn-dark">
+                                           <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                                 <i class="bi bi-arrow-left-right"></i>
                                             </a>
                                             <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1117,22 +1117,22 @@
                                             </a>
                                         </div>
                                            <div class="product-media">
-                                            <a href="product-details.html">
-                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-15.jpg" title="" alt="">
-                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-16.jpg" title="" alt="">
+                                            <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-15.jpg)" title="" alt="">
+                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-16.jpg)" title="" alt="">
                                             </a>
                                         </div>
                                     </div>
                                     <div class="product-card-info">
                                         <h6 class="product-title">
-                                            <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                            <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                         </h6>
                                         <div class="product-price">
                                             <span class="text-primary">$28.<small>50</small></span>
                                             <del class="fs-sm text-muted">$38.<small>50</small></del>
                                         </div>
                                          <div class="product-cart-btn">
-                                            <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                            <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1146,12 +1146,12 @@
                                             <span class="badge bg-danger">Sale</span>
                                         </div>
                                         <div class="product-wishlist-btn">
-                                           <a href="wishlist.html" class="btn btn-primary">
+                                           <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                                 <i class="bi bi-heart"></i>
                                             </a>
                                         </div>
                                         <div class="product-action">
-                                           <a href="shop-compare.html" class="btn btn-dark">
+                                           <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                                 <i class="bi bi-arrow-left-right"></i>
                                             </a>
                                             <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1159,22 +1159,22 @@
                                             </a>
                                         </div>
                                            <div class="product-media">
-                                            <a href="product-details.html">
-                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-17.jpg" title="" alt="">
-                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-18.jpg" title="" alt="">
+                                            <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-17.jpg)" title="" alt="">
+                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-18.jpg)" title="" alt="">
                                             </a>
                                         </div>
                                     </div>
                                     <div class="product-card-info">
                                         <h6 class="product-title">
-                                            <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                            <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                         </h6>
                                         <div class="product-price">
                                             <span class="text-primary">$28.<small>50</small></span>
                                             <del class="fs-sm text-muted">$38.<small>50</small></del>
                                         </div>
                                          <div class="product-cart-btn">
-                                            <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                            <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1193,12 +1193,12 @@
                                             <span class="badge bg-danger">Sale</span>
                                         </div>
                                         <div class="product-wishlist-btn">
-                                           <a href="wishlist.html" class="btn btn-primary">
+                                           <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                                 <i class="bi bi-heart"></i>
                                             </a>
                                         </div>
                                         <div class="product-action">
-                                           <a href="shop-compare.html" class="btn btn-dark">
+                                           <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                                 <i class="bi bi-arrow-left-right"></i>
                                             </a>
                                             <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1206,22 +1206,22 @@
                                             </a>
                                         </div>
                                            <div class="product-media">
-                                            <a href="product-details.html">
-                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-12.jpg" title="" alt="">
-                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-11.jpg" title="" alt="">
+                                            <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-12.jpg)" title="" alt="">
+                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-11.jpg)" title="" alt="">
                                             </a>
                                         </div>
                                     </div>
                                     <div class="product-card-info">
                                         <h6 class="product-title">
-                                            <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                            <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                         </h6>
                                         <div class="product-price">
                                             <span class="text-primary">$28.<small>50</small></span>
                                             <del class="fs-sm text-muted">$38.<small>50</small></del>
                                         </div>
                                          <div class="product-cart-btn">
-                                            <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                            <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1235,12 +1235,12 @@
                                             <span class="badge bg-danger">Sale</span>
                                         </div>
                                         <div class="product-wishlist-btn">
-                                           <a href="wishlist.html" class="btn btn-primary">
+                                           <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                                 <i class="bi bi-heart"></i>
                                             </a>
                                         </div>
                                         <div class="product-action">
-                                           <a href="shop-compare.html" class="btn btn-dark">
+                                           <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                                 <i class="bi bi-arrow-left-right"></i>
                                             </a>
                                             <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1248,22 +1248,22 @@
                                             </a>
                                         </div>
                                            <div class="product-media">
-                                            <a href="product-details.html">
-                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-14.jpg" title="" alt="">
-                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-13.jpg" title="" alt="">
+                                            <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-14.jpg)" title="" alt="">
+                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-13.jpg)" title="" alt="">
                                             </a>
                                         </div>
                                     </div>
                                     <div class="product-card-info">
                                         <h6 class="product-title">
-                                            <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                            <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                         </h6>
                                         <div class="product-price">
                                             <span class="text-primary">$28.<small>50</small></span>
                                             <del class="fs-sm text-muted">$38.<small>50</small></del>
                                         </div>
                                          <div class="product-cart-btn">
-                                            <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                            <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1277,12 +1277,12 @@
                                             <span class="badge bg-danger">Sale</span>
                                         </div>
                                         <div class="product-wishlist-btn">
-                                           <a href="wishlist.html" class="btn btn-primary">
+                                           <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                                 <i class="bi bi-heart"></i>
                                             </a>
                                         </div>
                                         <div class="product-action">
-                                           <a href="shop-compare.html" class="btn btn-dark">
+                                           <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                                 <i class="bi bi-arrow-left-right"></i>
                                             </a>
                                             <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1290,22 +1290,22 @@
                                             </a>
                                         </div>
                                            <div class="product-media">
-                                            <a href="product-details.html">
-                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-16.jpg" title="" alt="">
-                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-15.jpg" title="" alt="">
+                                            <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-16.jpg)" title="" alt="">
+                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-15.jpg)" title="" alt="">
                                             </a>
                                         </div>
                                     </div>
                                     <div class="product-card-info">
                                         <h6 class="product-title">
-                                            <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                            <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                         </h6>
                                         <div class="product-price">
                                             <span class="text-primary">$28.<small>50</small></span>
                                             <del class="fs-sm text-muted">$38.<small>50</small></del>
                                         </div>
                                          <div class="product-cart-btn">
-                                            <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                            <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1319,12 +1319,12 @@
                                             <span class="badge bg-danger">Sale</span>
                                         </div>
                                         <div class="product-wishlist-btn">
-                                           <a href="wishlist.html" class="btn btn-primary">
+                                           <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                                 <i class="bi bi-heart"></i>
                                             </a>
                                         </div>
                                         <div class="product-action">
-                                           <a href="shop-compare.html" class="btn btn-dark">
+                                           <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                                 <i class="bi bi-arrow-left-right"></i>
                                             </a>
                                             <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1332,22 +1332,22 @@
                                             </a>
                                         </div>
                                            <div class="product-media">
-                                            <a href="product-details.html">
-                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-17.jpg" title="" alt="">
-                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-15.jpg" title="" alt="">
+                                            <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                                <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-17.jpg)" title="" alt="">
+                                                <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-15.jpg)" title="" alt="">
                                             </a>
                                         </div>
                                     </div>
                                     <div class="product-card-info">
                                         <h6 class="product-title">
-                                            <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                            <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                         </h6>
                                         <div class="product-price">
                                             <span class="text-primary">$28.<small>50</small></span>
                                             <del class="fs-sm text-muted">$38.<small>50</small></del>
                                         </div>
                                          <div class="product-cart-btn">
-                                            <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                            <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                         </div>
                                     </div>
                                 </div>
@@ -1361,7 +1361,7 @@
         </section>
         <!-- End Product section -->
         <!-- section -->
-        <section class="section" style="background-image: url(@static(Weline_Frontend::assets/img/bg-banner-4.jpg);">
+        <section class="section" style="background-image: url(@static(Weline_Frontend::assets/img/bg-banner-4.jpg));">
             <div class="container">
                 <div class="row justify-content-center py-10">
                     <div class="col-lg-6 text-center">
@@ -1369,7 +1369,7 @@
                         <h3 class="display-3 fw-500">Nw Exclusive 2021 Collection</h3>
                         <p class="lead text-dark">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                         <div class="pt-3">
-                            <a class="btn btn-outline-dark" href="shop-fw-without-filtres.html">Discover More</a>
+                            <a class="btn btn-outline-dark" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Discover More</a>
                         </div>
                     </div>
                 </div>
@@ -1396,36 +1396,36 @@
                                     "asNavFor": ".product-thumb"
                                 }'>
                                 <div>
-                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-11.jpg"><i class="bi bi-arrows-fullscreen"></i></a>
-                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg" class="img-fluid" title="" alt="">
+                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-11.jpg)"><i class="bi bi-arrows-fullscreen"></i></a>
+                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div>
-                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-12.jpg"><i class="bi bi-arrows-fullscreen"></i></a>
-                                    <img src="@static(Weline_Frontend::assets/img/product-12.jpg" class="img-fluid" title="" alt="">
+                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-12.jpg)"><i class="bi bi-arrows-fullscreen"></i></a>
+                                    <img src="@static(Weline_Frontend::assets/img/product-12.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div>
-                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-13.jpg"><i class="bi bi-arrows-fullscreen"></i></a>
-                                    <img src="@static(Weline_Frontend::assets/img/product-13.jpg" class="img-fluid" title="" alt="">
+                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-13.jpg)"><i class="bi bi-arrows-fullscreen"></i></a>
+                                    <img src="@static(Weline_Frontend::assets/img/product-13.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div>
-                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-14.jpg"><i class="bi bi-arrows-fullscreen"></i></a>
-                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg" class="img-fluid" title="" alt="">
+                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-14.jpg)"><i class="bi bi-arrows-fullscreen"></i></a>
+                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div>
-                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-15.jpg"><i class="bi bi-arrows-fullscreen"></i></a>
-                                    <img src="@static(Weline_Frontend::assets/img/product-15.jpg" class="img-fluid" title="" alt="">
+                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-15.jpg)"><i class="bi bi-arrows-fullscreen"></i></a>
+                                    <img src="@static(Weline_Frontend::assets/img/product-15.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div>
-                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-16.jpg"><i class="bi bi-arrows-fullscreen"></i></a>
-                                    <img src="@static(Weline_Frontend::assets/img/product-16.jpg" class="img-fluid" title="" alt="">
+                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-16.jpg)"><i class="bi bi-arrows-fullscreen"></i></a>
+                                    <img src="@static(Weline_Frontend::assets/img/product-16.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div>
-                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-11.jpg"><i class="bi bi-arrows-fullscreen"></i></a>
-                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg" class="img-fluid" title="" alt="">
+                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-11.jpg)"><i class="bi bi-arrows-fullscreen"></i></a>
+                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div>
-                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-14.jpg"><i class="bi bi-arrows-fullscreen"></i></a>
-                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg" class="img-fluid" title="" alt="">
+                                    <a class="gallery-link" href="@static(Weline_Frontend::assets/img/product-14.jpg)"><i class="bi bi-arrows-fullscreen"></i></a>
+                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                             </div>
                             <div class="slick-carousel product-thumb mt-3" data-slick='{
@@ -1463,28 +1463,28 @@
                                     ]
                                 }'>
                                 <div class="pe-2">
-                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg" class="img-fluid" title="" alt="">
+                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div class="pe-2">
-                                    <img src="@static(Weline_Frontend::assets/img/product-12.jpg" class="img-fluid" title="" alt="">
+                                    <img src="@static(Weline_Frontend::assets/img/product-12.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div class="pe-2">
-                                    <img src="@static(Weline_Frontend::assets/img/product-13.jpg" class="img-fluid" title="" alt="">
+                                    <img src="@static(Weline_Frontend::assets/img/product-13.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div class="pe-2">
-                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg" class="img-fluid" title="" alt="">
+                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div class="pe-2">
-                                    <img src="@static(Weline_Frontend::assets/img/product-15.jpg" class="img-fluid" title="" alt="">
+                                    <img src="@static(Weline_Frontend::assets/img/product-15.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div class="pe-2">
-                                    <img src="@static(Weline_Frontend::assets/img/product-16.jpg" class="img-fluid" title="" alt="">
+                                    <img src="@static(Weline_Frontend::assets/img/product-16.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div class="pe-2">
-                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg" class="img-fluid" title="" alt="">
+                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                                 <div class="pe-2">
-                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg" class="img-fluid" title="" alt="">
+                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg)" class="img-fluid" title="" alt="">
                                 </div>
                             </div>
                         </div>
@@ -1569,14 +1569,14 @@
                                         <div class="inc qty-btn">+</div>
                                     </div>
                                     <div class="cart-button mb-3 d-flex">
-                                       <a href="shopping-cart.html" class="btn btn-dark me-3">
+                                       <a href="@url('frontend/Template/Fancy/shopping-cart.html')" class="btn btn-dark me-3">
                                             <i class="bi bi-cart"></i>
                                             Add to cart
                                         </a>
-                                         <a href="wishlist.html" class="btn btn-outline-dark me-3">
+                                         <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-outline-dark me-3">
                                             <i class="bi bi-heart"></i>
                                         </a>
-                                        <a href="shop-compare.html" class="btn btn-outline-dark">
+                                        <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-outline-dark">
                                             <i class="bi bi-arrow-left-right"></i>
                                         </a>
                                     </div>
@@ -1643,12 +1643,12 @@
                                     <span class="badge bg-danger">Sale</span>
                                 </div>
                                 <div class="product-wishlist-btn">
-                                    <a href="wishlist.html" class="btn btn-primary">
+                                    <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                         <i class="bi bi-heart"></i>
                                     </a>
                                 </div>
                                 <div class="product-action">
-                                    <a href="shop-compare.html" class="btn btn-dark">
+                                    <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                         <i class="bi bi-arrow-left-right"></i>
                                     </a>
                                     <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1656,22 +1656,22 @@
                                     </a>
                                 </div>
                                 <div class="product-media">
-                                    <a href="product-details.html">
-                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-11.jpg" title="" alt="">
-                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-12.jpg" title="" alt="">
+                                    <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-11.jpg)" title="" alt="">
+                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-12.jpg)" title="" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                    <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                    <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="product-cart-btn">
-                                    <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                    <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -1683,12 +1683,12 @@
                                     <span class="badge bg-danger">Sale</span>
                                 </div>
                                 <div class="product-wishlist-btn">
-                                    <a href="wishlist.html" class="btn btn-primary">
+                                    <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                         <i class="bi bi-heart"></i>
                                     </a>
                                 </div>
                                 <div class="product-action">
-                                    <a href="shop-compare.html" class="btn btn-dark">
+                                    <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                         <i class="bi bi-arrow-left-right"></i>
                                     </a>
                                     <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1696,22 +1696,22 @@
                                     </a>
                                 </div>
                                 <div class="product-media">
-                                    <a href="product-details.html">
-                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-13.jpg" title="" alt="">
-                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-14.jpg" title="" alt="">
+                                    <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-13.jpg)" title="" alt="">
+                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-14.jpg)" title="" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                    <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                    <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="product-cart-btn">
-                                    <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                    <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -1723,12 +1723,12 @@
                                     <span class="badge bg-danger">Sale</span>
                                 </div>
                                 <div class="product-wishlist-btn">
-                                    <a href="wishlist.html" class="btn btn-primary">
+                                    <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                         <i class="bi bi-heart"></i>
                                     </a>
                                 </div>
                                 <div class="product-action">
-                                    <a href="shop-compare.html" class="btn btn-dark">
+                                    <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                         <i class="bi bi-arrow-left-right"></i>
                                     </a>
                                     <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1736,22 +1736,22 @@
                                     </a>
                                 </div>
                                 <div class="product-media">
-                                    <a href="product-details.html">
-                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-15.jpg" title="" alt="">
-                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-16.jpg" title="" alt="">
+                                    <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-15.jpg)" title="" alt="">
+                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-16.jpg)" title="" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                    <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                    <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="product-cart-btn">
-                                    <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                    <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -1763,12 +1763,12 @@
                                     <span class="badge bg-danger">Sale</span>
                                 </div>
                                 <div class="product-wishlist-btn">
-                                    <a href="wishlist.html" class="btn btn-primary">
+                                    <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                         <i class="bi bi-heart"></i>
                                     </a>
                                 </div>
                                 <div class="product-action">
-                                    <a href="shop-compare.html" class="btn btn-dark">
+                                    <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                         <i class="bi bi-arrow-left-right"></i>
                                     </a>
                                     <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1776,22 +1776,22 @@
                                     </a>
                                 </div>
                                 <div class="product-media">
-                                    <a href="product-details.html">
-                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-17.jpg" title="" alt="">
-                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-18.jpg" title="" alt="">
+                                    <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-17.jpg)" title="" alt="">
+                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-18.jpg)" title="" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                    <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                    <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="product-cart-btn">
-                                    <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                    <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -1803,12 +1803,12 @@
                                     <span class="badge bg-danger">Sale</span>
                                 </div>
                                 <div class="product-wishlist-btn">
-                                    <a href="wishlist.html" class="btn btn-primary">
+                                    <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                         <i class="bi bi-heart"></i>
                                     </a>
                                 </div>
                                 <div class="product-action">
-                                    <a href="shop-compare.html" class="btn btn-dark">
+                                    <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                         <i class="bi bi-arrow-left-right"></i>
                                     </a>
                                     <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1816,22 +1816,22 @@
                                     </a>
                                 </div>
                                 <div class="product-media">
-                                    <a href="product-details.html">
-                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-12.jpg" title="" alt="">
-                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-11.jpg" title="" alt="">
+                                    <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-12.jpg)" title="" alt="">
+                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-11.jpg)" title="" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                    <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                    <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="product-cart-btn">
-                                    <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                    <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -1843,12 +1843,12 @@
                                     <span class="badge bg-danger">Sale</span>
                                 </div>
                                 <div class="product-wishlist-btn">
-                                    <a href="wishlist.html" class="btn btn-primary">
+                                    <a href="@url('frontend/Template/Fancy/wishlist.html')" class="btn btn-primary">
                                         <i class="bi bi-heart"></i>
                                     </a>
                                 </div>
                                 <div class="product-action">
-                                    <a href="shop-compare.html" class="btn btn-dark">
+                                    <a href="@url('frontend/Template/Fancy/shop-compare.html')" class="btn btn-dark">
                                         <i class="bi bi-arrow-left-right"></i>
                                     </a>
                                     <a data-bs-toggle="modal" data-bs-target="#px-quick-view" href="javascript:void(0)" class="btn btn-dark">
@@ -1856,22 +1856,22 @@
                                     </a>
                                 </div>
                                 <div class="product-media">
-                                    <a href="product-details.html">
-                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-14.jpg" title="" alt="">
-                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-13.jpg" title="" alt="">
+                                    <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                        <img class="img-fluid" src="@static(Weline_Frontend::assets/img/product-14.jpg)" title="" alt="">
+                                        <img class="product-hover-img" src="@static(Weline_Frontend::assets/img/product-13.jpg)" title="" alt="">
                                     </a>
                                 </div>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                    <a href="shop-fw-without-filtres.html">Fine-knit sweater</a>
+                                    <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="product-cart-btn">
-                                    <a class="btn btn-dark btn-sm" href="shopping-cart.html"><i class="bi bi-cart"></i> Add to cart</a>
+                                    <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shopping-cart.html')"><i class="bi bi-cart"></i> Add to cart</a>
                                 </div>
                             </div>
                         </div>
@@ -1881,7 +1881,7 @@
         </section>
         <!-- End Product section -->
         <!-- Count Down -->
-        <section class="bg-cover bg-no-repeat" style="background-image: url(@static(Weline_Frontend::assets/img/bg-banner-5.jpg);">
+        <section class="bg-cover bg-no-repeat" style="background-image: url(@static(Weline_Frontend::assets/img/bg-banner-5.jpg));">
             <div class="container">
                 <div class="row justify-content-end py-10 justify-content-center">
                     <div class="col-10 col-md-8 col-lg-6 col-xxl-5 py-lg-8">
@@ -1890,7 +1890,7 @@
                             <h6>Hurry up! Limited time offer</h6>
                             <div class="count-down count-down-01 justify-content-center py-4" data-countdown="January 01, 2022 15:00:00"></div>
                             <div>
-                                <a class="btn btn-primary" href="shop-fw-without-filtres.html">Shop Now</a>
+                                <a class="btn btn-primary" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Shop Now</a>
                             </div>
                         </div>
                     </div>
@@ -1906,58 +1906,58 @@
                         <h5 class="mb-4"><a class="link-dark" href="javascript:void(0);">New Arrivals</a></h5>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-11.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                    <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                    <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                    <a class="link-effect" href="product-details.html">Buy Now</a>
+                                    <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-12.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-12.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                     <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                     <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                     <a class="link-effect" href="product-details.html">Buy Now</a>
+                                     <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-13.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-13.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                     <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                     <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                     <a class="link-effect" href="product-details.html">Buy Now</a>
+                                     <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
@@ -1966,58 +1966,58 @@
                         <h5 class="mb-4"><a class="link-dark" href="javascript:void(0);">Upcoming</a></h5>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-14.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                     <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                     <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                     <a class="link-effect" href="product-details.html">Buy Now</a>
+                                     <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-15.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-15.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                     <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                     <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                     <a class="link-effect" href="product-details.html">Buy Now</a>
+                                     <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-16.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-16.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                     <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                     <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                     <a class="link-effect" href="product-details.html">Buy Now</a>
+                                     <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
@@ -2026,58 +2026,58 @@
                         <h5 class="mb-4"><a class="link-dark" href="javascript:void(0);">Best Seller</a></h5>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-17.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-17.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                     <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                     <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                     <a class="link-effect" href="product-details.html">Buy Now</a>
+                                     <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-18.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-18.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                     <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                     <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                     <a class="link-effect" href="product-details.html">Buy Now</a>
+                                     <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
                         <div class="product-card-4">
                             <div class="product-card-image">
-                                <a href="product-details.html">
-                                    <img src="@static(Weline_Frontend::assets/img/product-13.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/product-details.html')">
+                                    <img src="@static(Weline_Frontend::assets/img/product-13.jpg)" title="" alt="">
                                 </a>
                             </div>
                             <div class="product-card-info">
                                 <h6 class="product-title">
-                                     <a href="shop-fw-without-filtres.html" tabindex="0">Fine-knit sweater</a>
+                                     <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')" tabindex="0">Fine-knit sweater</a>
                                 </h6>
                                 <div class="product-price">
                                     <span class="text-primary">$28.<small>50</small></span>
                                     <del class="fs-sm text-muted">$38.<small>50</small></del>
                                 </div>
                                 <div class="produc-card-cart">
-                                     <a class="link-effect" href="product-details.html">Buy Now</a>
+                                     <a class="link-effect" href="@url('frontend/Template/Fancy/product-details.html')">Buy Now</a>
                                 </div>
                             </div>
                         </div>
@@ -2092,13 +2092,13 @@
                 <div class="row g-3">
                     <div class="col-lg-6">
                         <div class="position-relative">
-                            <img class="w-100 rounded" src="@static(Weline_Frontend::assets/img/shop-banner-23.jpg" title="" alt="">
+                            <img class="w-100 rounded" src="@static(Weline_Frontend::assets/img/shop-banner-23.jpg)" title="" alt="">
                             <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-end px-4 top-0 left-0">
                                 <div class="p-5 text-end">
                                     <h6 class="text-uppercase fw-lighten mb-3">NEW IN</h6>
                                     <h3 class="fw-lighten h3">Latest connector</h3>
                                     <div class="pt-2">
-                                        <a class="btn btn-dark btn-sm" href="shop-fw-without-filtres.html">Shop Now</a>
+                                        <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -2106,13 +2106,13 @@
                     </div>
                     <div class="col-lg-6">
                         <div class="position-relative">
-                            <img class="w-100 rounded" src="@static(Weline_Frontend::assets/img/shop-banner-24.jpg" title="" alt="">
+                            <img class="w-100 rounded" src="@static(Weline_Frontend::assets/img/shop-banner-24.jpg)" title="" alt="">
                             <div class="position-absolute w-100 h-100 d-flex align-items-center justify-content-start px-4 top-0 left-0">
                                 <div class="p-5 text-start">
                                     <h6 class="text-uppercase fw-lighten mb-3">NEW IN</h6>
                                     <h3 class="fw-lighten h3">Latest connector</h3>
                                     <div class="pt-2">
-                                        <a class="btn btn-dark btn-sm" href="shop-fw-without-filtres.html">Shop Now</a>
+                                        <a class="btn btn-dark btn-sm" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -2134,8 +2134,8 @@
                     <div class="col-lg-4 my-3">
                         <div class="hover-scale text-center">
                              <div class="hover-scale-in position-relative">
-                                <a href="shop-fw-without-filtres.html">
-                                    <img class="img-fluid" src="@static(Weline_Frontend::assets/img/blog-home-4.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">
+                                    <img class="img-fluid" src="@static(Weline_Frontend::assets/img/blog-home-4.jpg)" title="" alt="">
                                 </a>
                                 <div class="position-absolute top-0 start-0 mt-3 ms-3 bg-white d-flex flex-column align-items-center px-3 py-2">
                                     <span class="h4 m-0">25</span>
@@ -2144,7 +2144,7 @@
                             </div>
                             <div class="px-3 py-3 mx-3 mx-lg-5 bg-white mt-n6 position-relative rounded border>
                                 <h5>
-                                    <a class="text-reset" href="shop-fw-without-filtres.html">Make your Marketing website</a>
+                                    <a class="text-reset" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Make your Marketing website</a>
                                 </h5>
                                 <p class="m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
                             </div>
@@ -2153,8 +2153,8 @@
                     <div class="col-lg-4 my-3">
                         <div class="hover-scale text-center">
                              <div class="hover-scale-in position-relative">
-                                <a href="shop-fw-without-filtres.html">
-                                    <img class="img-fluid" src="@static(Weline_Frontend::assets/img/blog-1.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">
+                                    <img class="img-fluid" src="@static(Weline_Frontend::assets/img/blog-1.jpg)" title="" alt="">
                                 </a>
                                 <div class="position-absolute top-0 start-0 mt-3 ms-3 bg-white d-flex flex-column align-items-center px-3 py-2">
                                     <span class="h4 m-0">25</span>
@@ -2163,7 +2163,7 @@
                             </div>
                             <div class="px-3 py-3 mx-3 mx-lg-5 bg-white mt-n6 position-relative rounded border>
                                 <h5>
-                                    <a class="text-reset" href="shop-fw-without-filtres.html">Make your Marketing website</a>
+                                    <a class="text-reset" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Make your Marketing website</a>
                                 </h5>
                                 <p class="m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
                             </div>
@@ -2172,8 +2172,8 @@
                     <div class="col-lg-4 my-3">
                         <div class="hover-scale text-center">
                              <div class="hover-scale-in position-relative">
-                                <a href="shop-fw-without-filtres.html">
-                                    <img class="img-fluid" src="@static(Weline_Frontend::assets/img/blog-3.jpg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">
+                                    <img class="img-fluid" src="@static(Weline_Frontend::assets/img/blog-3.jpg)" title="" alt="">
                                 </a>
                                 <div class="position-absolute top-0 start-0 mt-3 ms-3 bg-white d-flex flex-column align-items-center px-3 py-2">
                                     <span class="h4 m-0">25</span>
@@ -2182,7 +2182,7 @@
                             </div>
                             <div class="px-3 py-3 mx-3 mx-lg-5 bg-white mt-n6 position-relative rounded border>
                                 <h5>
-                                    <a class="text-reset" href="shop-fw-without-filtres.html">Make your Marketing website</a>
+                                    <a class="text-reset" href="@url('frontend/Template/Fancy/shop-fw-without-filtres.html')">Make your Marketing website</a>
                                 </h5>
                                 <p class="m-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod</p>
                             </div>
@@ -2253,8 +2253,8 @@
                     <div class="row">
                         <div class="col-sm-6 col-lg-4 my-3">
                             <div class="pb-3">
-                                <a href="index.html">
-                                <img src="@static(Weline_Frontend::assets/img/logo/logo-light.svg" title="" alt="">
+                                <a href="@url('frontend/Template/Fancy/index.html')">
+                                <img src="@static(Weline_Frontend::assets/img/logo/logo-light.svg)" title="" alt="">
                                 </a>
                             </div>
                             <address class="white-link mb-4">
@@ -2283,19 +2283,19 @@
                             </h6>
                             <ul class="list-unstyled white-link footer-link-1 m-0">
                                 <li class="pb-2">
-                                    <a href="login.html">Login</a>
+                                    <a href="@url('frontend/Template/Fancy/login.html')">Login</a>
                                 </li>
                                 <li class="pb-2">
-                                    <a href="sign-up.html">Sing Up</a>
+                                    <a href="@url('frontend/Template/Fancy/sign-up.html')">Sing Up</a>
                                 </li>
                                 <li class="pb-2">
-                                    <a href="my-account.html">My Account</a>
+                                    <a href="@url('frontend/Template/Fancy/my-account.html')">My Account</a>
                                 </li>
                                 <li class="pb-2">
-                                    <a href="shop.html">Shopping</a>
+                                    <a href="@url('frontend/Template/Fancy/shop.html')">Shopping</a>
                                 </li>
                                 <li class="pb-2">
-                                    <a href="blog.html">Blog</a>
+                                    <a href="@url('frontend/Template/Fancy/blog.html')">Blog</a>
                                 </li>
                             </ul>
                         </div>
@@ -2305,19 +2305,19 @@
                         </h6>
                         <ul class="list-unstyled white-link footer-link-1 m-0">
                             <li class="pb-2">
-                                <a href="login.html">Login</a>
+                                <a href="@url('frontend/Template/Fancy/login.html')">Login</a>
                             </li>
                             <li class="pb-2">
-                                <a href="sign-up.html">Sing Up</a>
+                                <a href="@url('frontend/Template/Fancy/sign-up.html')">Sing Up</a>
                             </li>
                             <li class="pb-2">
-                                <a href="my-account.html">My Account</a>
+                                <a href="@url('frontend/Template/Fancy/my-account.html')">My Account</a>
                             </li>
                             <li class="pb-2">
-                                <a href="shop.html">Shopping</a>
+                                <a href="@url('frontend/Template/Fancy/shop.html')">Shopping</a>
                             </li>
                             <li class="pb-2">
-                                <a href="blog.html">Blog</a>
+                                <a href="@url('frontend/Template/Fancy/blog.html')">Blog</a>
                             </li>
                             </ul>
                         </div>
@@ -2325,7 +2325,7 @@
                             <h6 class="text-white text-uppercase mb-5">
                                 Stay up to date
                             </h6>
-                             <p class="text-white-85">Fancy Shopping  trademark,Model.</p>
+                             <p class="text-white-85">Weline Shopping  trademark,Model.</p>
                             <form>
                                 <div class="d-flex flex-column flex-md-row mb-2">
                                     <input type="email" class="form-control me-md-2 mb-2 mb-md-0" placeholder="Enter your username">
@@ -2341,10 +2341,10 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-6 text-center text-md-start py-1">
-                           <p class="m-0 text-white-85">Copyright, 2021 © Fancy Shopping - HTML Ecommerce Template, <br/> Powered by <a href="http://www.bootstrapmb.com" target="_blank" class="text-reset">AVS Technolabs</a></p>
+                           <p class="m-0 text-white-85">Copyright, 2021 © Weline Shopping - HTML Ecommerce Template, <br/> Powered by <a href="http://www.aiweline.com" target="_blank" class="text-reset">AVS Technolabs</a></p>
                         </div>
                         <div class="col-md-6 text-center text-md-end py-1">
-                            <img src="@static(Weline_Frontend::assets/img/payments.png" title="" alt="">
+                            <img src="@static(Weline_Frontend::assets/img/payments.png)" title="" alt="">
                         </div>
                     </div>
                 </div>
@@ -2352,21 +2352,21 @@
         </footer>
         <!-- footer End -->
     <!-- jquery -->
-    <script src="@static(Weline_Frontend::assets/js/jquery-3.5.1.min.js"></script>
+    <script src="@static(Weline_Frontend::assets/js/jquery-3.5.1.min.js)"></script>
     <!-- appear -->
-    <script src="@static(Weline_Frontend::assets/vendor/appear/jquery.appear.js"></script>
+    <script src="@static(Weline_Frontend::assets/vendor/appear/jquery.appear.js)"></script>
     <!--bootstrap-->
-    <script src="@static(Weline_Frontend::assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="@static(Weline_Frontend::assets/vendor/bootstrap/js/bootstrap.bundle.min.js)"></script>
     <!-- slick carousel -->
-    <script src="@static(Weline_Frontend::assets/vendor/slick/slick.min.js"></script>
+    <script src="@static(Weline_Frontend::assets/vendor/slick/slick.min.js)"></script>
     <!-- magnific -->
-    <script src="@static(Weline_Frontend::assets/vendor/magnific/jquery.magnific-popup.min.js"></script>
+    <script src="@static(Weline_Frontend::assets/vendor/magnific/jquery.magnific-popup.min.js)"></script>
     <!-- isotope -->
-    <script src="@static(Weline_Frontend::assets/vendor/isotope/isotope.pkgd.min.js"></script>
+    <script src="@static(Weline_Frontend::assets/vendor/isotope/isotope.pkgd.min.js)"></script>
     <!-- count-down -->
-    <script src="@static(Weline_Frontend::assets/vendor/count-down/jquery.countdown.min.js"></script>
+    <script src="@static(Weline_Frontend::assets/vendor/count-down/jquery.countdown.min.js)"></script>
     <!-- Theme Js -->
-    <script src="@static(Weline_Frontend::assets/js/custom.js"></script>
+    <script src="@static(Weline_Frontend::assets/js/custom.js)"></script>
 </body>
 <!-- end body -->
 </html>

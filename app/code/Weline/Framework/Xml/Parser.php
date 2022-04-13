@@ -173,7 +173,7 @@ class Parser
      * @param string $file
      * @return $this
      */
-    public function load(string $file)
+    public function load(string $file): static
     {
         $this->getDom()->load($file);
 
@@ -189,7 +189,7 @@ class Parser
      * @throws \Weline\Framework\Exception\Core
      * @return $this
      */
-    public function loadXML($string)
+    public function loadXML($string): static
     {
         if ($this->errorHandlerIsActive) {
             set_error_handler([$this, 'errorHandler']);

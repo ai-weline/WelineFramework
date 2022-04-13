@@ -508,17 +508,17 @@ class Taglib
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                         $result = '';
                         switch ($tag_key) {
-                            case 'tag'  :
+                            case 'tag':
                                 $data   = trim($tag_data[2], '\'"');
                                 $result .= "<?=\$this->getUrl('{$data}')?>";
                                 break;
                             case  'tag-start':
                                 $result .= "<?=\$this->getUrl('";
                                 break;
-                            case 'tag-end' :
+                            case 'tag-end':
                                 $result .= "')?>";
                                 break;
-                            default   :
+                            default:
                                 $data   = trim($tag_data[1], '\'"');
                                 $result .= "<?=\$this->getUrl('{$data}')?>";
                         };

@@ -47,9 +47,20 @@ class XmlReader extends \Weline\Framework\Config\Reader\XmlReader
     {
         if ($event = $this->eventCache->get('event')) {
             return $event;
+        } else {
+            # 模块配置文件
+            $configs = parent::read();
+//            # 框架配置文件 FIXME 搜索范围太广 时间太长 改为模块处理
+//            $this->setPath('*'. DIRECTORY_SEPARATOR .'Framework'. DIRECTORY_SEPARATOR .'*'. DIRECTORY_SEPARATOR .$this->getPath());
+//            foreach ($this->getFileListWithCodeDir() as $vendor => $module_files) {
+//                foreach ($module_files as $module_name => $module_file) {
+//                    if ($module_file) {
+//                        $event_xml_data = $this->parser->load($module_file)->xmlToArray();
+//                        $configs[$module_name . '::' . $module_file] = $event_xml_data;
+//                    }
+//                }
+//            }
         }
-        $configs = parent::read();
-
         // 合并掉所有相同名字的事件的观察者，方便获取
         $event_observers_list = [];
         foreach ($configs as $module_and_file => $config) {

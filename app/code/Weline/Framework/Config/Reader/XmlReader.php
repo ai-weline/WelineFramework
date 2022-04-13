@@ -39,7 +39,7 @@ class XmlReader extends ModuleFileReader
     }
 
     /**
-     * @DESC         |读取配置信息
+     * @DESC         |读取给定的匹配path的配置信息
      *
      * 参数区：
      * @return array

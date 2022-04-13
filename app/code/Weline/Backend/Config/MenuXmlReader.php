@@ -89,8 +89,15 @@ class MenuXmlReader extends XmlReader
                                     throw new \Exception(__('菜单排序值 %1 重复,请重新设置order排序值.错误所在文件：%2', [$menu['add']['_attribute']['order'], $module_menu_file]));
                                 }
                                 $has_orders[] = $menu_data['_attribute']['order'];*/
-                                $menu_data['_attribute']['is_system'] = 1;
-                                $module_menus[$module]['data'][]      = $menu_data['_attribute'];
+                                # 默认属性
+                                if (!isset($menu_data['_attribute']['is_system']) || '0' !== $menu_data['_attribute']['is_system']) {
+                                    $menu_data['_attribute']['is_system'] = 1;
+                                }
+                                if (!isset($menu_data['_attribute']['is_backend']) || '0' !== $menu_data['_attribute']['is_backend']) {
+                                    $menu_data['_attribute']['is_backend'] = 1;
+                                }
+
+                                $module_menus[$module]['data'][] = $menu_data['_attribute'];
                             }
                         }
                     } else {
