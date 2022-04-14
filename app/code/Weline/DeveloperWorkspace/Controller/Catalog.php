@@ -15,6 +15,7 @@ class Catalog extends BaseController
 {
     public function index()
     {
-        p($id = $this->_request->getParam('id'));
+        $id = $this->_request->getParam('id');
+        return $this->fetch();
     }
 }

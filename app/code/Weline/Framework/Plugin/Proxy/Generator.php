@@ -39,7 +39,7 @@ ${functionList}
     // 代理类关系:多次加载时减少重复
     private static array $classProxyMap = [];
 
-    public static function createInterceptor(string $class)
+    public static function createInterceptor(string $class): array
     {
         return self::getProxyInterceptor($class);
     }
@@ -72,15 +72,17 @@ ${functionList}
         }
         $functionList = [];
         $methods      = $classRef->getMethods(\ReflectionMethod::IS_PUBLIC);
+
         // 仅监听被监听的函数
         /**@var PluginsManager $pluginsManager */
         $pluginsManager               = ObjectManager::getInstance(PluginsManager::class);
         $type_plugin                  = $pluginsManager->getClassPluginInstanceList($class);
+
         $plugin_listen_type_methods   = $type_plugin['listen_methods'] ?? [];
         $plugin_listen_type_methods[] = '__construct';
         // 排除当前类尚未代理的函数
         foreach ($methods as $key => $method) {
-            if ($class !== $method->class || ! in_array($method->name, $plugin_listen_type_methods, true)) {
+            if ($class !== $method->class || !in_array($method->name, $plugin_listen_type_methods, true)) {
                 unset($methods[$key]);
             }
         }
@@ -95,7 +97,7 @@ ${functionList}
             if ($methodReturnType === null) {
                 $methodReturnType = '';
             } else {
-                $methodReturnType = ': \\' . $methodReturnType->getName();
+                $methodReturnType = ': ' . $methodReturnType->getName();
             }
             // 方法参数
             $args       = [];
@@ -118,7 +120,7 @@ ${functionList}
             $params_tpl = implode(',' . PHP_EOL . '        ', $parameters);
 
             // 方法模板
-            $func_tpl = '
+            $func_tpl           = '
     ${func_doc}
     public function ${methodName}(
         ${arguments}
@@ -140,13 +142,13 @@ ${functionList}
     {
         ${construct_content}
     }';
-            $construct_content = '';
+            $construct_content  = '';
             if ('__construct' === $method->name) {
                 $construct_content = '
 //        $this->__init();
         parent::__construct(' . $params_tpl . ');
                     ';
-                $func_tpl = $construct_func_tpl;
+                $func_tpl          = $construct_func_tpl;
             }
             $functionList[$method->name] = '    ' . str_replace(
                 [
@@ -178,25 +180,28 @@ ${functionList}
 //            $functionList['__construct'] = $construct_func_tpl;
 //        }
         $replaceMap = [
-            '${DATE}'      => date('Y-m-d'),
-            '${TIME}'      => date('H:m:s'),
-            '${namespace}' => $class,
-            '${className}' => /*$classRef->getShortName().*/
+            '${DATE}'         => date('Y-m-d'),
+            '${TIME}'         => date('H:m:s'),
+            '${namespace}'    => $class,
+            '${className}'    => /*$classRef->getShortName().*/
                 'Interceptor',
             '${targetClass}'  => '\\' . $class,
             '${functionList}' => join(PHP_EOL, $functionList),
         ];
-        $classBody = str_replace(array_keys($replaceMap), array_values($replaceMap), self::$proxyClassTemplate);
+        $classBody  = str_replace(array_keys($replaceMap), array_values($replaceMap), self::$proxyClassTemplate);
 
         // 写入代理文件
         $class_name       = $replaceMap['${namespace}'] . '\\' . $replaceMap['${className}'];
         $interceptor_path = Env::path_framework_generated_code . str_replace('\\', DIRECTORY_SEPARATOR, $class_name) . '.php';
 
+//       if('Weline\Framework\Http\Request\Interceptor'===$class_name) {
+//           p(array_values($replaceMap) );
+//       };
         /**@var \Weline\Framework\System\File\Io\File $file */
         $file = ObjectManager::getInstance(\Weline\Framework\System\File\Io\File::class);
         $file->open($interceptor_path, \Weline\Framework\System\File\Io\File::mode_w)
-            ->write($classBody)
-            ->close();
+             ->write($classBody)
+             ->close();
 
         return [
             'name' => '\\' . $class_name,
@@ -209,6 +214,7 @@ ${functionList}
      * 获取方法参数类型
      *
      * @param \ReflectionParameter $parameter
+     *
      * @return null|string
      */
     public static function extractParameterType(
@@ -246,6 +252,7 @@ ${functionList}
 
     /**
      * 设置
+     *
      * @param array $classProxyMap
      */
     public static function setClassProxyMap(array $classProxyMap): void

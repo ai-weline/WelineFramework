@@ -32,7 +32,7 @@ class Url implements UrlInterface
         if (empty($path)) {
             return $this->get_url();
         }
-        $path = rtrim($this->request->getPrePath() . $path, '/');
+        $path = rtrim(($this->request->isBackend() ? $this->request->getPrePath() : ''). $path, '/');
         if (empty($params)) {
             return $path;
         }

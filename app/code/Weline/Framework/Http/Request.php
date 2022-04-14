@@ -32,6 +32,12 @@ class Request extends Request\RequestAbstract implements RequestInterface
         }
     }
 
+    public function getUrlPath(): string
+    {
+        $url_path = explode('?', $this->getUri());
+        return str_replace('//', '/', array_shift($url_path));
+    }
+
     /**
      * @return string
      */

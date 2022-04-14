@@ -10,8 +10,12 @@
 namespace Weline\Framework\Plugin\Console\Plugin\Di;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\App\System;
+use Weline\Framework\Exception\Core;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Cli\Printing;
+use Weline\Framework\Plugin\Console\Plugin\Cache\Clear;
 use Weline\Framework\Plugin\PluginsManager;
 
 class Compile implements \Weline\Framework\Console\CommandInterface
@@ -49,7 +53,11 @@ class Compile implements \Weline\Framework\Console\CommandInterface
         $this->printing->printing(__('编译开始...'));
         $this->printing->printing(__('清除旧编译内容...'));
         $this->system->exec('rm ' . Env::path_framework_generated_code . ' -rf');
-        $generator    = $this->pluginsManager->generatorInterceptor('', false);
+        $this->printing->printing(__('清除编译缓存...'));
+        /**@var Clear $clear*/
+        $clear = ObjectManager::getInstance(Clear::class);
+        $clear->execute();
+        $generator = $this->pluginsManager->generatorInterceptor('', false);
         $printer_list = [];
         foreach ($generator::getClassProxyMap() as $key=>$item) {
             unset($item['body']);

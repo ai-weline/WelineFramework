@@ -12,14 +12,13 @@
                 <foreach name="catalogs" item="v">
                     <li class='menu-title'>
                         <var>$v['name']</var>
-
                     </li>
                     <php>$nodes = $v['nodes'];</php>
                     <if condition="$nodes">
                         <foreach name='nodes' item='node'>
                             <li>
                                 <a href="@php{if(3===$node['level']):echo 'javascript: void(0);';else:echo $node['href'];endif;}"
-                                   class='@if{3===$node[' level']=>has-arrow} waves-effect'>
+                                   class='@if{3===$node["level"]=>has-arrow} waves-effect'>
                                 <i class='mdi mdi-file-document-box-outline'></i>
                                 <span><var>$node['name']</var></span>
                                 </a>

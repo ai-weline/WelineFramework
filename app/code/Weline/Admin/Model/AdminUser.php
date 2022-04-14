@@ -21,14 +21,14 @@ use Weline\Framework\View\Template;
 
 class AdminUser extends \Weline\Framework\Database\Model
 {
-    public const fields_ID = 'user_id';
-    public const fields_username = 'username';
-    public const fields_password = 'password';
-    public const fields_avatar = 'avatar';
-    public const fields_login_ip = 'login_ip';
-    public const fields_attempt_ip = 'attempt_ip';
+    public const fields_ID            = 'user_id';
+    public const fields_username      = 'username';
+    public const fields_password      = 'password';
+    public const fields_avatar        = 'avatar';
+    public const fields_login_ip      = 'login_ip';
+    public const fields_attempt_ip    = 'attempt_ip';
     public const fields_attempt_times = 'attempt_times';
-    public const fields_sess_id = 'sess_id';
+    public const fields_sess_id       = 'sess_id';
 
     /**
      * @inheritDoc
@@ -68,15 +68,15 @@ class AdminUser extends \Weline\Framework\Database\Model
     {
         if (!$setup->tableExist()) {
             $setup->createTable('管理员表')
-                ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
-                ->addColumn(self::fields_username, TableInterface::column_type_VARCHAR, 60, '', '用户名')
-                ->addColumn(self::fields_password, TableInterface::column_type_VARCHAR, 255, '', '密码')
-                ->addColumn(self::fields_avatar, TableInterface::column_type_VARCHAR, 255, '', '头像')
-                ->addColumn(self::fields_login_ip, TableInterface::column_type_VARCHAR, 16, '', '登录IP')
-                ->addColumn(self::fields_sess_id, TableInterface::column_type_VARCHAR, 32, '', '管理员Session ID')
-                ->addColumn(self::fields_attempt_times, TableInterface::column_type_INTEGER, 0, '', '尝试登录次数')
-                ->addColumn(self::fields_attempt_ip, TableInterface::column_type_VARCHAR, 16, '', '尝试登录IP')
-                ->create();
+                  ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
+                  ->addColumn(self::fields_username, TableInterface::column_type_VARCHAR, 60, '', '用户名')
+                  ->addColumn(self::fields_password, TableInterface::column_type_VARCHAR, 255, '', '密码')
+                  ->addColumn(self::fields_avatar, TableInterface::column_type_VARCHAR, 255, '', '头像')
+                  ->addColumn(self::fields_login_ip, TableInterface::column_type_VARCHAR, 16, '', '登录IP')
+                  ->addColumn(self::fields_sess_id, TableInterface::column_type_VARCHAR, 32, '', '管理员Session ID')
+                  ->addColumn(self::fields_attempt_times, TableInterface::column_type_INTEGER, 0, '', '尝试登录次数')
+                  ->addColumn(self::fields_attempt_ip, TableInterface::column_type_VARCHAR, 16, '', '尝试登录IP')
+                  ->create();
 
             # 初始化一个账户
             /**@var AdminUser $adminUser */
