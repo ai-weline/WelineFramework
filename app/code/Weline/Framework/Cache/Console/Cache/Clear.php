@@ -10,6 +10,7 @@
 namespace Weline\Framework\Cache\Console\Cache;
 
 use Weline\Framework\Cache\CacheFactory;
+use Weline\Framework\Cache\CacheFactoryInterface;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Cache\Scanner;
 use Weline\Framework\Manager\ObjectManager;
@@ -31,8 +32,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     public function __construct(
         Scanner  $scanner,
         Printing $printing
-    )
-    {
+    ) {
         $this->scanner  = $scanner;
         $this->printing = $printing;
     }
@@ -51,10 +51,12 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                         $this->printing->printing(__($app_cache['class'] . '...'));
                         /**@var CacheFactory $cacheObjectManager */
                         $cacheObjectManager = ObjectManager::getInstance($this->reductionFactoryClass($app_cache['class']));
-                        if (isInstanceOf(CacheFactory::class) && !$cacheObjectManager->isKeep()) {
-                            $cacheObjectManager->create()->clear();
-                        }else{
-                            /**@var CacheInterface $cacheObjectManager*/
+                        if ($cacheObjectManager instanceof CacheFactoryInterface) {
+                            if (!$cacheObjectManager->isKeep()) {
+                                $cacheObjectManager->create()->clear();
+                            }
+                        } else {
+                            /**@var CacheInterface $cacheObjectManager */
                             $cacheObjectManager->clear();
                         }
                     }
@@ -66,10 +68,12 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                         $this->printing->printing(__($framework_cache['class'] . '...'));
                         /**@var CacheFactory $cacheObjectManager */
                         $cacheObjectManager = ObjectManager::getInstance($this->reductionFactoryClass($framework_cache['class']));
-                        if (isInstanceOf(CacheFactory::class) && !$cacheObjectManager->isKeep()) {
-                            $cacheObjectManager->create()->clear();
-                        }else{
-                            /**@var CacheInterface $cacheObjectManager*/
+                        if ($cacheObjectManager instanceof CacheFactoryInterface) {
+                            if (!$cacheObjectManager->isKeep()) {
+                                $cacheObjectManager->create()->clear();
+                            }
+                        } else {
+                            /**@var CacheInterface $cacheObjectManager */
                             $cacheObjectManager->clear();
                         }
                     }
@@ -94,7 +98,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
      *
      * @return string
      */
-    function reductionFactoryClass(string $class): string
+    public function reductionFactoryClass(string $class): string
     {
         if (!class_exists($class) && str_ends_with($class, 'Factory')) {
             if (str_ends_with($class, "Factory")) {

@@ -56,7 +56,7 @@ abstract class RequestAbstract extends DataObject
         }
     }
 
-    function parse_url(): bool|int|array|string|null
+    public function parse_url(): bool|int|array|string|null
     {
         if (empty($this->parse_url)) {
             $this->parse_url = parse_url($this->getUri());
