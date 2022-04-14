@@ -10,7 +10,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
  *@Forum        https://bbs.aiweline.com
  *@DESC         后台共用头部
 -->
-<html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir='rtl'" : '' ?> class='no-js'>
+<html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir='rtl'" : '' ?>>
 <head>
     <title><lang>WelineFramework开发文档</lang></title>
     <hook>title</hook>
@@ -169,7 +169,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                     <script>
                                         function renderTree() {
                                             $.get({
-                                                url: '<?=$this->getAdminUrl('dev/tool/admin/document/catalog/tree')?>',
+                                                url: '@admin-url("dev/tool/admin/document/catalog/tree")',
                                             }).done(res => {
                                                 console.log(res)
                                                 $('#catalog-tree').treeview({

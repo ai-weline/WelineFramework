@@ -11,11 +11,23 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller;
 
+use Weline\Framework\Manager\ObjectManager;
+
 class Catalog extends BaseController
 {
+    private \Weline\DeveloperWorkspace\Model\Document\Catalog $catalog;
+
+    public function __construct(
+        \Weline\DeveloperWorkspace\Model\Document\Catalog $catalog
+    ) {
+        parent::__construct();
+        $this->catalog = $catalog;
+    }
+
     public function index()
     {
         $id = $this->_request->getParam('id');
+        $this->assign('catalog', $this->catalog->load($id));
         return $this->fetch();
     }
 }

@@ -77,7 +77,7 @@ class Taglib
                         return match ($tag_key) {
                             'tag-start' => '<?= ',
                             'tag-end'   => '?>',
-                            default     => "<?php echo {$tag_data[1]} ?>"
+                            default     => "<?={$tag_data[1]}?>"
                         };
                     }
             ],
@@ -89,7 +89,7 @@ class Taglib
                         return match ($tag_key) {
                             'tag-start' => '<?= ',
                             'tag-end'   => '?>',
-                            default     => "<?php echo {$tag_data[1]} ?>"
+                            default     => "<?={$tag_data[1]}?>"
                         };
                     }
             ],

@@ -19,7 +19,7 @@
                             <li>
                                 <a href="@php{if(3===$node['level']):echo 'javascript: void(0);';else:echo $node['href'];endif;}"
                                    class='@if{3===$node["level"]=>has-arrow} waves-effect'>
-                                <i class='mdi mdi-file-document-box-outline'></i>
+                                <i class='@var{$node["icon"]}'></i>
                                 <span><var>$node['name']</var></span>
                                 </a>
                                 <php>

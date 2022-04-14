@@ -22,6 +22,7 @@ class Catalog extends \Weline\Framework\Database\Model
 //    const table       = 'dev_document_catalog';
     public const fields_ID           = 'id';
     public const fields_NAME         = 'name';
+    public const fields_DESCRIPTION  = 'description';
     public const fields_PID          = 'pid';
     public const fields_level        = 'level';
     public const fields_icon         = 'icon';
@@ -59,6 +60,7 @@ class Catalog extends \Weline\Framework\Database\Model
             $setup->createTable('目录')
                   ->addColumn('id', TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
                   ->addColumn('name', TableInterface::column_type_VARCHAR, 60, 'not null unique ', '目录名')
+                  ->addColumn(self::fields_DESCRIPTION, TableInterface::column_type_TEXT, 0, 'not null', '简介')
                   ->addColumn('level', TableInterface::column_type_INTEGER, null, 'not null default 0', '目录层级')
                   ->addColumn('icon', TableInterface::column_type_VARCHAR, 60, '', 'icon 图标')
                   ->addColumn('selectedIcon', TableInterface::column_type_VARCHAR, 60, '', 'icon 选中图标')
@@ -93,6 +95,16 @@ class Catalog extends \Weline\Framework\Database\Model
         return $this->setData(self::fields_PID, $pid);
     }
 
+    public function setDescription(string $description): Catalog
+    {
+        return $this->setData(self::fields_DESCRIPTION, $description);
+    }
+
+    public function getDescription(): string
+    {
+        return $this->getData(self::fields_DESCRIPTION);
+    }
+
     public function getTree()
     {
         $catalogs = $this->where('pid=0 ')->select()->fetchOrigin();
@@ -105,17 +117,17 @@ class Catalog extends \Weline\Framework\Database\Model
 
     public function getSubTree(&$catalog)
     {
-        $catalog['href']=$this->getUrl(['id' => $catalog['id']]);
-        $catalog['text']=$catalog['name'];
-        $catalogs = $this->where('pid', $catalog['id'])->select()->fetchOrigin();
+        $catalog['href'] = $this->getUrl(['id' => $catalog['id']]);
+        $catalog['text'] = $catalog['name'];
+        $catalogs        = $this->where('pid', $catalog['id'])->select()->fetchOrigin();
         if ($catalogs) {
             /**@var Catalog $sub_catalog */
             foreach ($catalogs as &$sub_catalog) {
                 $this->getSubTree($sub_catalog);
             }
-            $catalog['nodes']=$catalogs;
+            $catalog['nodes'] = $catalogs;
         } else {
-            $catalog['nodes']=[];
+            $catalog['nodes'] = [];
         }
         return $catalog;
     }

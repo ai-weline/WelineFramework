@@ -12,11 +12,17 @@ declare(strict_types=1);
 namespace Weline\DeveloperWorkspace\Controller;
 
 use Weline\Framework\App\Controller\FrontendController;
+use Weline\Framework\Manager\ObjectManager;
 
 class BaseController extends FrontendController
 {
     public function __construct()
     {
         $this->assign('title', __('WelineFramework开发文档'));
+    }
+
+    public function getModel(string $model)
+    {
+        return ObjectManager::getInstance($model);
     }
 }
