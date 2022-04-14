@@ -132,14 +132,8 @@ class Handle implements RegisterInterface
                     $routers[ $param['router']] = $router;
                     // 写入路由文件
                     $this->helper->updatePcRouters($path, $routers);
-                } else {
-                    $this->printing->error('未知的路由区域！文件:' . $param['class']);
-                    if (DEV) {
-                        throw new Exception(__('未知的路由区域！文件:') . $param['class']);
-                    }
                 }
                 return $routers;
-                break;
             default:
                 throw new ConsoleException('未知的路由类型：' . $param['type']);
         }

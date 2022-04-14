@@ -114,7 +114,7 @@ class Taglib
                             default:
                                 $var_name = $tag_data[2];
                                 if (!str_starts_with($var_name, '$')) {
-                                    $var_name .= '$' . $var_name;
+                                    $var_name = '$' . $var_name;
                                 }
                                 return "<?=p({$var_name})?>";
                         }

@@ -228,18 +228,22 @@ class Template extends DataObject
                     $file_dir .= DIRECTORY_SEPARATOR;
                 }
             }
-            // 判断文件后缀
-            $file_ext = substr(strrchr($fileName, '.'), 1);
 
             # 检测读取别的模块的模板文件
             list($fileName, $file_dir, $view_dir, $template_dir, $compile_dir) = $this->processFileSource($fileName, $file_dir);
+
+            // 判断文件后缀
+            $file_ext = substr(strrchr($fileName, '.'), 1);
+
             // 检测模板文件：如果文件名有后缀 则直接到view下面读取。没有说明是默认
             if ($file_ext) {
-                $tplFile = $template_dir . $fileName;
+                $tplFile = $view_dir . $fileName;
             } else {
                 $tplFile = $template_dir . $fileName . $this->getFileExt();
             }
+//            p($tplFile,1);
             $tplFile = $this->fetchFile($tplFile);
+//            p($tplFile);
 
             if (!file_exists($tplFile)) {
                 throw new Exception(__('获取操作：%1，模板文件：%2 不存在！源文件：%3', [$fileName, $tplFile, $tplFile]));
