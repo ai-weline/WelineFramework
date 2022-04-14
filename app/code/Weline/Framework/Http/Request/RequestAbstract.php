@@ -14,7 +14,6 @@ use Weline\Framework\App\State;
 use Weline\Framework\Controller\Data\DataInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
-use Weline\Framework\Http\Cookie;
 use Weline\Framework\Http\Response;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -36,12 +35,14 @@ abstract class RequestAbstract extends DataObject
     /**
      * @var RequestFilter
      */
-    private RequestFilter $_filter;
+    public RequestFilter $_filter;
+
+    private array $parse_url = [];
 
     /**
      * @var \Weline\Framework\Http\Response
      */
-    private ?\Weline\Framework\Http\Response $_response = null;
+    public ?\Weline\Framework\Http\Response $_response = null;
 
     public function __init()
     {
@@ -53,6 +54,14 @@ abstract class RequestAbstract extends DataObject
         if (empty($this->_response)) {
             $this->_response = $this->getResponse();
         }
+    }
+
+    function parse_url(): bool|int|array|string|null
+    {
+        if (empty($this->parse_url)) {
+            $this->parse_url = parse_url($this->getUri());
+        }
+        return $this->parse_url;
     }
 
     /**
@@ -283,7 +292,6 @@ abstract class RequestAbstract extends DataObject
     {
         return $this->getServer('REQUEST_URI');
     }
-
 
     /**
      * @DESC          # 获取请求的module路由路径

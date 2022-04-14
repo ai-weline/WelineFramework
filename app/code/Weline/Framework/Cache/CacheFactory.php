@@ -38,11 +38,11 @@ class CacheFactory
      */
     public function __construct(string $identity = 'cache_system', string $tip = '', bool $permanently = false)
     {
-        $this->config      = App::Env('cache');
-        $this->identity    = $identity;
-        $this->tip         = $tip;
-        $this->keep = $permanently;
-        $this->status      = $permanently;
+        $this->config   = App::Env('cache');
+        $this->identity = $identity;
+        $this->tip      = $tip;
+        $this->keep     = $permanently;
+        $this->status   = $permanently;
     }
 
     public function isKeep(): bool

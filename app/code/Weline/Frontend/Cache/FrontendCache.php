@@ -13,7 +13,7 @@ namespace Weline\Frontend\Cache;
 
 use Weline\Framework\Cache\CacheInterface;
 
-class CacheFactory extends \Weline\Framework\Cache\CacheFactory
+class FrontendCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'frontend_cache')
     {

@@ -17,11 +17,6 @@ class Request extends Request\RequestAbstract implements RequestInterface
 {
     private static Request $instance;
 
-    /**
-     * @var RequestFilter
-     */
-    protected RequestFilter $_filter;
-
     private string $module_name = '';
 
     public function __init()
@@ -34,8 +29,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getUrlPath(): string
     {
-        $url_path = explode('?', $this->getUri());
-        return str_replace('//', '/', array_shift($url_path));
+        return parse_url($this->getUri())['path'];
     }
 
     /**

@@ -15,21 +15,21 @@ use Weline\Backend\Config\KeysInterface;
 use Weline\Backend\Model\Config;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Frontend\Cache\CacheFactory;
+use Weline\Frontend\Cache\FrontendCache;
 
 class StarPage
 {
     private CacheInterface $cache;
 
     public function __construct(
-        CacheFactory $cacheFactory
+        FrontendCache $cacheFactory
     ) {
         $this->cache = $cacheFactory->create();
     }
 
-    public function beforeGetUrlPath(\Weline\Framework\Http\Request $request, $result)
+    public function beforeGetUrlPath(\Weline\Framework\Http\Request $request)
     {
-        p($request);
+        $result = $request->parse_url()['path']??'';
         if (empty($result)) {
             $result = $this->cache->get(KeysInterface::cache_start_page_path);
             if (empty($result)) {

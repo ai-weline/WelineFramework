@@ -9,9 +9,12 @@
 
 namespace Weline\Framework\Cache\Console\Cache;
 
+use Weline\Framework\Cache\CacheFactory;
+use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Cache\Scanner;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Cli\Printing;
+use function PHPUnit\Framework\isInstanceOf;
 
 class Clear implements \Weline\Framework\Console\CommandInterface
 {
@@ -26,9 +29,10 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     private Printing $printing;
 
     public function __construct(
-        Scanner $scanner,
+        Scanner  $scanner,
         Printing $printing
-    ) {
+    )
+    {
         $this->scanner  = $scanner;
         $this->printing = $printing;
     }
@@ -45,8 +49,14 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                     $this->printing->note(__('模块缓存清理中...'));
                     foreach ($cache as $app_cache) {
                         $this->printing->printing(__($app_cache['class'] . '...'));
-                        ObjectManager::getInstance(str_ends_with($app_cache['class'], 'Factory') ? $app_cache['class'] : $app_cache['class'] . 'Factory')->clear();
-                        # TODO 清理tpl全页缓存 FIXME存在一个tpl缓存存到了vendor目录的问题
+                        /**@var CacheFactory $cacheObjectManager */
+                        $cacheObjectManager = ObjectManager::getInstance($this->reductionFactoryClass($app_cache['class']));
+                        if (isInstanceOf(CacheFactory::class) && !$cacheObjectManager->isKeep()) {
+                            $cacheObjectManager->create()->clear();
+                        }else{
+                            /**@var CacheInterface $cacheObjectManager*/
+                            $cacheObjectManager->clear();
+                        }
                     }
 
                     break;
@@ -54,8 +64,14 @@ class Clear implements \Weline\Framework\Console\CommandInterface
                     $this->printing->note(__('框架缓存清理中...'));
                     foreach ($cache as $framework_cache) {
                         $this->printing->printing(__($framework_cache['class'] . '...'));
-                        ObjectManager::getInstance(str_ends_with($framework_cache['class'], 'Factory') ? $framework_cache['class'] : $framework_cache['class'] . 'Factory')->clear();
-                        # TODO 清理tpl全页缓存 FIXME存在一个tpl缓存存到了vendor目录的问题
+                        /**@var CacheFactory $cacheObjectManager */
+                        $cacheObjectManager = ObjectManager::getInstance($this->reductionFactoryClass($framework_cache['class']));
+                        if (isInstanceOf(CacheFactory::class) && !$cacheObjectManager->isKeep()) {
+                            $cacheObjectManager->create()->clear();
+                        }else{
+                            /**@var CacheInterface $cacheObjectManager*/
+                            $cacheObjectManager->clear();
+                        }
                     }
 
                     break;
@@ -64,6 +80,28 @@ class Clear implements \Weline\Framework\Console\CommandInterface
             }
         }
         $this->printing->success(__('缓存已清理！'));
+    }
+
+    /**
+     * @DESC          # 还原工厂类
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/4/14 22:54
+     * 参数区：
+     *
+     * @param string $class
+     *
+     * @return string
+     */
+    function reductionFactoryClass(string $class): string
+    {
+        if (!class_exists($class) && str_ends_with($class, 'Factory')) {
+            if (str_ends_with($class, "Factory")) {
+                $class = rtrim($class, 'Factory');
+            }
+        }
+        return $class;
     }
 
     /**
