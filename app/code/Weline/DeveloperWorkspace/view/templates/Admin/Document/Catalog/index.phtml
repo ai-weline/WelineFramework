@@ -58,7 +58,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                         <div class='card'>
                             <div class='card-body'>
                                 <button type='button'
-                                        onclick='window.location.href="@admin-url('dev
+                                        onclick='window.location.href="@admin-url(' dev
                                 /tool/admin/document')"'
                                 class='btn btn-dark waves-effect waves-light pull-right '>
                                 <lang>返回</lang>
@@ -97,13 +97,15 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                         </div>
                                         <div class='row'>
                                             <div class='col-md-6'>
-                                                <input type='text' name='id' class='form-control sr-only' value="@var{$catalog->getId()}">
+                                                <input type='text' name='id' class='form-control sr-only'
+                                                       value="@var{$catalog->getId()}">
                                                 <div class='mb-3 position-relative'>
                                                     <label class='form-label' for='name'>
                                                         <lang>目录名</lang>
                                                     </label>
                                                     <input type='text' name='name' class='form-control' id='name'
-                                                           placeholder='@lang(目录名)' value="@var{$catalog->getName()}" required>
+                                                           placeholder='@lang(目录名)' value="@var{$catalog->getName()}"
+                                                           required>
                                                     <div class='valid-feedback'>
                                                         <lang>请输入目录名</lang>
                                                     </div>
@@ -124,11 +126,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                                 id='pid'
                                                                 aria-describedby='pid-prepend' required>
                                                             <option value="0-0">
-                                                                <lang>请选择</lang>
+                                                                <lang>顶级分类</lang>
                                                             </option>
                                                             <foreach name="catalogs" item="v">
-                                                                <php>$selected = ($catalog->getId()===$v->getId()?'selected':'');</php>
-                                                                <option value="@var{$v->getId()}-@var{$v->getLevel()}" @var($selected)>
+                                                                <php>$selected =
+                                                                    ($catalog->getId()===$v->getPId()?'selected':'');
+                                                                </php>
+                                                                <option value="@var{$v->getId()}-@var{$v->getLevel()}"
+                                                                        @var($selected)>
                                                                     <var>$v->getName()</var>
                                                                 </option>
                                                             </foreach>
@@ -272,7 +277,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
         inverse: false,//方向反转
         radioAllOff: false,
         onColor: 'primary',//开启颜色 primary、info，primary，warning，warning，default
-        offColor: 'default',//关闭颜色 primary、info，primary，warning，warning，default
+        offColor: 'warning',//关闭颜色 primary、info，primary，warning，warning，default
         onText: '@lang(启用)',//开启时展示的文本
         offText: '@lang(关闭)',//关闭时展示的文本
         labelText: '&nbsp',//空白区域的文本
@@ -280,9 +285,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
         labelWidth: 'auto',
         baseClass: 'bootstrap-switch',
         wrapperClass: 'wrapper',
-        onInit: function onInit() { },
-        onSwitchChange: function onSwitchChange(event,state) {
+        onInit: function onInit() {
+            let ele = $('#isActive')
+            if ('on' === ele.val()) {
+                ele.val(1)
+            } else {
+                ele.val(0)
+            }
+        },
+        onSwitchChange: function onSwitchChange(event, state) {
             //切换时的回调 state
+            $('#isActive').val(state ? 1 : 0)
         }
     })
 </script>

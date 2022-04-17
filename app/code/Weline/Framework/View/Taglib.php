@@ -631,7 +631,18 @@ class Taglib
                 preg_match_all($tag_pattern, $content, $customTags, PREG_SET_ORDER);
                 foreach ($customTags as $customTag) {
                     $originalTag   = $customTag[0];
+                    if(isset($customTag[1])){
+                        $customTag[1] = str_replace(' ', '', $customTag[1]);
+                        $customTag[1] = str_replace(PHP_EOL, '', $customTag[1]);
+                        $customTag[1] = str_replace(array("\r\n", "\r", "\n","\t"), '', $customTag[1]);
+                    }
                     $rawAttributes = $customTag[1] ?? '';
+
+                    if(isset($customTag[2])){
+                        $customTag[2] = str_replace(' ', '', $customTag[2]);
+                        $customTag[2] = str_replace(PHP_EOL, '', $customTag[2]);
+                        $customTag[2] = str_replace(array("\r\n", "\r", "\n","\t"), '', $customTag[2]);
+                    }
                     # 标签支持匹配->
                     if (!in_array($tag_key, ['@tag()', '@tag{}'])) {
                         $rawAttributes = rtrim($rawAttributes, '"');

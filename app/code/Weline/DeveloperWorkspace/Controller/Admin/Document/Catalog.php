@@ -18,18 +18,20 @@ class Catalog extends \Weline\Admin\Controller\BaseController
 {
     public function index()
     {
-        $catalog  = $this->getCatalogModel();
-        $catalogs = $catalog->select()->fetch();
+        $catalogModel = $this->getCatalogModel();
+        $catalogs     = $catalogModel->select()->fetch();
         foreach ($catalogs as $catalog) {
             $level     = $catalog['level'] - 1;
             $level_str = $level ? str_repeat('-', $level) : '';
             $catalog->setName($level_str . $catalog['name']);
         }
         $this->assign('catalogs', $catalogs);
+        # 清理模型
+        $catalogModel->clearData();
         if ($id = $this->_request->getParam('id')) {
-            $catalog = $catalog->load($id);
+            $catalog = $catalogModel->load($id);
         } else {
-            $catalog = $catalog->clearData();
+            $catalog = $catalogModel;
         }
         $this->assign('catalog', $catalog);
         return $this->fetch();
@@ -94,6 +96,10 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         $pid       = array_shift($pid_arr);
         $pid_level = (int)array_shift($pid_arr);
         $level     = $pid_level;
+        if ($pid === $post['id']) {
+            $this->getMessageManager()->addError(__('不能自己选择自己作为父类！'));
+            $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id' => $post['id']]));
+        }
         if ($level) {
             $level += 1;
         } else {
@@ -104,9 +110,8 @@ class Catalog extends \Weline\Admin\Controller\BaseController
             $this->getMessageManager()->addError(__('目录名不能为空！'));
             $this->redirect($this->_url->build('dev/tool/admin/document/catalog'));
         }
-        $post['pid']       = $pid;
-        $post['level']     = $level;
-
+        $post['pid']   = $pid;
+        $post['level'] = $level;
         # 检查是新增还是修改
         if ($id = $this->_request->getParam('id')) {
             $catalog = $catalog->load($id);
@@ -117,7 +122,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
             $catalog->save($post);
 
             $this->getMessageManager()->addSuccess(__('修改成功！'));
-            $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id'=>$id]));
+            $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id' => $id]));
         }
         # 新增
         unset($post['id']);
@@ -127,7 +132,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         } catch (\Exception $exception) {
             $this->getMessageManager()->addException($exception);
         }
-        $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id'=>$catalog->getId()]));
+        $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id' => $catalog->getId()]));
     }
 
     private function getCatalogModel(): \Weline\DeveloperWorkspace\Model\Document\Catalog

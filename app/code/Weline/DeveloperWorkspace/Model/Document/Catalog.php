@@ -107,7 +107,7 @@ class Catalog extends \Weline\Framework\Database\Model
 
     public function getTree()
     {
-        $catalogs = $this->where('pid=0 ')->select()->fetchOrigin();
+        $catalogs = $this->where('pid=0')->select()->fetchOrigin();
         /**@var Catalog $catalog */
         foreach ($catalogs as &$catalog) {
             $this->getSubTree($catalog);

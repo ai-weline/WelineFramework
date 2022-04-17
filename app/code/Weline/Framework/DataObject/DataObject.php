@@ -31,7 +31,7 @@ class DataObject implements \ArrayAccess
      *
      * @var array
      */
-    protected array $_data = [];
+    private array $_data = [];
 
     /**
      * Setter/Getter转换缓存
@@ -124,7 +124,7 @@ class DataObject implements \ArrayAccess
         return $this;
     }
 
-    function setObjectData(array $data): static
+    public function setObjectData(array $data): static
     {
         $this->_data = $data;
         return $this;
@@ -167,7 +167,7 @@ class DataObject implements \ArrayAccess
      */
     public function clearDataObject(): DataObject
     {
-        $this->_data = [];
+        $this->_data=[];
         return $this;
     }
 
@@ -214,9 +214,9 @@ class DataObject implements \ArrayAccess
             }
         }
         # 尝试加载类本身的属性
-        if (isset($this->$key) && null === $data && is_string($key)) {
-            $data = $this->$key;
-        }
+//        if (isset($this->$key) && null === $data && is_string($key)) {
+//            $data = $this->$key;
+//        }
 
         return $data;
     }
@@ -434,8 +434,7 @@ class DataObject implements \ArrayAccess
         string $rootName = 'item',
         bool   $addOpenTag = false,
         bool   $addCdata = true
-    ): string
-    {
+    ): string {
         return $this->toXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
     }
 

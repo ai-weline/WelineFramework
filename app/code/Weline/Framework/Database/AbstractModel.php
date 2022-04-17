@@ -53,7 +53,6 @@ use Weline\Framework\Manager\ObjectManager;
  */
 abstract class AbstractModel extends DataObject
 {
-    protected array $_data;
     public const table       = '';
     public const primary_key = '';
     /**
@@ -65,8 +64,8 @@ abstract class AbstractModel extends DataObject
     public const fields_CREATE_TIME = 'create_time';
 
     public const fields_UPDATE_TIME = 'update_time';
-    protected string $table = '';
-    protected string $origin_table_name = '';
+    public string $table = '';
+    public string $origin_table_name = '';
     private ?ConnectionFactory $connection = null;
     public string $_suffix = '';
     public string $_primary_key = '';
@@ -84,6 +83,11 @@ abstract class AbstractModel extends DataObject
     private array $_fetch_data = [];
     private mixed $_query_data = null;
     public array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
+
+    public function __sleep()
+    {
+        return array('table', 'origin_table_name');
+    }
 
     public function __wakeup()
     {
@@ -132,14 +136,22 @@ abstract class AbstractModel extends DataObject
         if (empty($this->_fields)) {
             $this->_fields = $this->getModelFields();
         }
-        # 动态属性字段
-        if ($this->_data) {
-            foreach ($this->_data as $key => $data) {
-                if (is_string($key)) {
-                    $this->$key = $data;
-                }
-            }
-        }
+//        # 动态属性字段
+//        if ($this->getData()) {
+//            foreach ($this->getData() as $key => $data) {
+//                if (is_string($key)) {
+//                    $field_name = 'model_field_'.$key;
+//                    $this->$field_name = $data;
+//                }
+//            }
+//        }else{
+//            foreach ($this->_fields as $key => $filed) {
+//                if (is_string($filed)) {
+//                    $field_name = 'model_field_'.$filed;
+//                    $this->$field_name = '';
+//                }
+//            }
+//        }
     }
 
     public function getConnection()
@@ -184,13 +196,10 @@ abstract class AbstractModel extends DataObject
     public function getData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
-            if ($this->_data) {
-                return $this->_data;
+            if ($data = parent::getData($key, $index)) {
+                return $data;
             }
             return $this->getFetchData();
-        }
-        if (isset($this->_data[$key]) && $data = $this->_data[$key]) {
-            return $data;
         }
         return parent::getData($key, $index);
     }
@@ -198,9 +207,10 @@ abstract class AbstractModel extends DataObject
     public function getOriginData(string $key = '', $index = null): mixed
     {
         if (empty($key)) {
-            $data = [];
-            if (is_int(array_key_first($this->_data)) && ($this->_data[0] instanceof DataObject)) {
-                foreach ($this->_data as $datum) {
+            $dataObjectData = $this->getData();
+            $data           = [];
+            if (is_int(array_key_first($dataObjectData)) && ($dataObjectData[0] instanceof DataObject)) {
+                foreach ($dataObjectData as $datum) {
                     $data[] = $datum->getData();
                 }
                 return $data;
@@ -516,6 +526,7 @@ abstract class AbstractModel extends DataObject
         $this->_bind_query = null;
         $this->clearQuery();
         $this->clearDataObject();
+        $this->setFetchData([]);
         return $this;
     }
 
@@ -861,6 +872,9 @@ abstract class AbstractModel extends DataObject
         if ($field && isset($this->_model_fields_data[$field]) && $field_data = $this->_model_fields_data[$field]) {
             return $field_data;
         }
+        if($field){
+            return '';
+        }
         return $this->_model_fields_data;
     }
 
@@ -873,18 +887,18 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      *
      * @param array|string $key
-     * @param mixed       $value
+     * @param mixed        $value
      *
      * @return array|string
      */
-    public function setModelData(array|string $key,mixed $value = ''): array|string
+    public function setModelData(array|string $key, mixed $value = ''): array|string
     {
         if (is_array($key)) {
             $this->_model_fields_data = $key;
             $this->setData($key);
         } else {
             $this->_model_fields_data[$key] = $value;
-            $this->setData($key,$value);
+            $this->setData($key, $value);
         }
         return $this;
     }
