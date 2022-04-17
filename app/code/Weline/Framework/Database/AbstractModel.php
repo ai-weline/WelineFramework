@@ -841,9 +841,12 @@ abstract class AbstractModel extends DataObject
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/16 17:09
      * 参数区：
-     * @return array
+     *
+     * @param string $field
+     *
+     * @return array|string
      */
-    public function getModelData(string $field): array
+    public function getModelData(string $field): array|string
     {
         if (empty($this->_model_fields_data)) {
             foreach ($this->getModelFields() as $key => $val) {
