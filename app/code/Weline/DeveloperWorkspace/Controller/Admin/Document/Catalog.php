@@ -115,6 +115,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
                 $this->redirect($this->_url->build('dev/tool/admin/document/catalog'));
             }
             $catalog->save($post);
+
             $this->getMessageManager()->addSuccess(__('修改成功！'));
             $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id'=>$id]));
         }

@@ -17,9 +17,9 @@ namespace Weline\Framework\DataObject;
  * 时间：   18:44
  * 网站：   https://bbs.aiweline.com
  * Email：  aiweline@qq.com
- * @DESC:    此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
+ * @DESC    :    此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  * @SuppressWarnings(PHPMD.NumberOfChildren)
- * @since 1.2
+ * @since   1.2
  *
  * 具有数组访问实现的通用数据容器
  * @package Weline\Framework
@@ -43,6 +43,7 @@ class DataObject implements \ArrayAccess
     /**
      * DataObject 初始函数...
      * # 默认情况下，查找第一个参数作为数组，并将其指定为对象属性
+     *
      * @param array $data
      */
     public function __construct(array $data = [])
@@ -59,6 +60,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param array $arr
+     *
      * @return $this
      */
     public function addData(array $arr): static
@@ -73,12 +75,14 @@ class DataObject implements \ArrayAccess
     /**
      * @DESC          # 添加累计类型的数据
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/10 20:02
      * 参数区：
+     *
      * @param string $index
-     * @param $data
+     * @param        $data
+     *
      * @return DataObject
      */
     public function addToIndex(string $index, $data): static
@@ -104,8 +108,9 @@ class DataObject implements \ArrayAccess
      *
      * 参数区：
      *
-     * @param $key
+     * @param      $key
      * @param null $value
+     *
      * @return $this
      */
     public function setData($key, $value = null): static
@@ -119,12 +124,19 @@ class DataObject implements \ArrayAccess
         return $this;
     }
 
+    function setObjectData(array $data): static
+    {
+        $this->_data = $data;
+        return $this;
+    }
+
     /**
      * @DESC         |卸载数据
      *
      * 参数区：
      *
      * @param null $key
+     *
      * @return $this
      */
     public function unsetData($key = null): DataObject
@@ -147,7 +159,7 @@ class DataObject implements \ArrayAccess
     /**
      * @DESC          # 清空数据
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/1 22:52
      * 参数区：
@@ -172,7 +184,8 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param string $key
-     * @param null $index
+     * @param null   $index
+     *
      * @return mixed
      */
     public function getData(string $key = '', $index = null): mixed
@@ -216,6 +229,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param $path
+     *
      * @return mixed
      */
     public function getDataByPath($path): mixed
@@ -242,6 +256,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param $key
+     *
      * @return mixed
      */
     public function getDataByKey($key): mixed
@@ -255,6 +270,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param $key
+     *
      * @return mixed
      */
     protected function _getData($key): mixed
@@ -271,8 +287,9 @@ class DataObject implements \ArrayAccess
      *
      * 参数区：
      *
-     * @param $key
+     * @param       $key
      * @param array $args
+     *
      * @return $this
      */
     public function setDataUsingMethod($key, array $args = []): static
@@ -288,8 +305,9 @@ class DataObject implements \ArrayAccess
      *
      * 参数区：
      *
-     * @param $key
+     * @param      $key
      * @param null $args
+     *
      * @return mixed
      */
     public function getDataUsingMethod($key, $args = null): mixed
@@ -308,6 +326,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param string $key
+     *
      * @return bool
      */
     public function hasData(string $key = ''): bool
@@ -325,6 +344,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param array $keys
+     *
      * @return array
      */
     public function toArray(array $keys = []): array
@@ -351,6 +371,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param array $keys
+     *
      * @return array
      */
     public function convertToArray(array $keys = []): array
@@ -363,15 +384,16 @@ class DataObject implements \ArrayAccess
      *
      * 参数区：
      *
-     * @param array $keys 必须表示的键数组
-     * @param string $rootName 根节点名称
-     * @param bool $addOpenTag 允许添加初始xml节点的标志
-     * @param bool $addCdata 需要在CDATA中包装所有值的标志
+     * @param array  $keys       必须表示的键数组
+     * @param string $rootName   根节点名称
+     * @param bool   $addOpenTag 允许添加初始xml节点的标志
+     * @param bool   $addCdata   需要在CDATA中包装所有值的标志
+     *
      * @return string
      */
     public function toXml(array $keys = [], string $rootName = 'item', bool $addOpenTag = false, bool $addCdata = true): string
     {
-        $xml = '';
+        $xml  = '';
         $data = $this->toArray($keys);
         foreach ($data as $fieldName => $fieldValue) {
             if ($addCdata === true) {
@@ -400,10 +422,11 @@ class DataObject implements \ArrayAccess
      *
      * 参数区：
      *
-     * @param array $arrAttributes 必须表示的键数组
-     * @param string $rootName 根节点名称
-     * @param bool $addOpenTag 允许添加初始xml节点的标志
-     * @param bool $addCdata 需要在CDATA中包装所有值的标志
+     * @param array  $arrAttributes 必须表示的键数组
+     * @param string $rootName      根节点名称
+     * @param bool   $addOpenTag    允许添加初始xml节点的标志
+     * @param bool   $addCdata      需要在CDATA中包装所有值的标志
+     *
      * @return string
      */
     public function convertToXml(
@@ -411,7 +434,8 @@ class DataObject implements \ArrayAccess
         string $rootName = 'item',
         bool   $addOpenTag = false,
         bool   $addCdata = true
-    ): string {
+    ): string
+    {
         return $this->toXml($arrAttributes, $rootName, $addOpenTag, $addCdata);
     }
 
@@ -421,6 +445,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param array $keys 需要转化的keys
+     *
      * @return mixed
      */
     public function toJson(array $keys = []): string
@@ -436,6 +461,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param array $keys
+     *
      * @return mixed
      */
     public function convertToJson(array $keys = []): string
@@ -449,6 +475,7 @@ class DataObject implements \ArrayAccess
      * Will use $format as a template and substitute {{key}} for attributes
      *
      * @param string $format
+     *
      * @return string
      */
 
@@ -458,6 +485,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param string $format
+     *
      * @return string|string[]
      */
     public function toString(string $format = ''): array|string
@@ -482,17 +510,18 @@ class DataObject implements \ArrayAccess
      *
      * @param $method
      * @param $args
+     *
      * @return $this|array|bool|mixed|string|null
      */
     public function __call($method, $args)
     {
         switch (substr($method, 0, 3)) {
             case 'get':
-                $key = $this->_underscore(substr($method, 3));
+                $key   = $this->_underscore(substr($method, 3));
                 $index = $args[0] ?? null;
                 return $this->getData($key, $index);
             case 'set':
-                $key = $this->_underscore(substr($method, 3));
+                $key   = $this->_underscore(substr($method, 3));
                 $value = $args[0] ?? null;
 
                 return $this->setData($key, $value);
@@ -533,6 +562,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param $name
+     *
      * @return mixed
      */
     protected function _underscore($name): mixed
@@ -540,7 +570,7 @@ class DataObject implements \ArrayAccess
         if (isset(self::$_underscoreCache[$name])) {
             return self::$_underscoreCache[$name];
         }
-        $result = strtolower(trim(preg_replace('/([A-Z]|[0-9]+)/', '_$1', $name), '_'));
+        $result                        = strtolower(trim(preg_replace('/([A-Z]|[0-9]+)/', '_$1', $name), '_'));
         self::$_underscoreCache[$name] = $result;
 
         return $result;
@@ -555,10 +585,11 @@ class DataObject implements \ArrayAccess
      *
      * 参数区：
      *
-     * @param array $keys 允许转化的键
+     * @param array  $keys           允许转化的键
      * @param string $valueSeparator 键和值之间的分隔符
      * @param string $fieldSeparator 键/值对之间的分隔符
-     * @param string $quote 引用标志
+     * @param string $quote          引用标志
+     *
      * @return string
      */
     public function serialize(array $keys = [], string $valueSeparator = '=', string $fieldSeparator = ' ', string $quote = '"'): string
@@ -582,8 +613,9 @@ class DataObject implements \ArrayAccess
      *
      * 参数区：
      *
-     * @param null $data
+     * @param null  $data
      * @param array $objects
+     *
      * @return array|string
      */
     public function debug($data = null, array &$objects = []): array|string
@@ -594,7 +626,7 @@ class DataObject implements \ArrayAccess
                 return '*** RECURSION ***';
             }
             $objects[$hash] = true;
-            $data = $this->getData();
+            $data           = $this->getData();
         }
         $debug = [];
         foreach ($data as $key => $value) {
@@ -617,6 +649,7 @@ class DataObject implements \ArrayAccess
      *
      * @param mixed $offset
      * @param mixed $value
+     *
      * @link http://www.php.net/manual/en/arrayaccess.offsetset.php
      */
     public function offsetSet($offset, $value): void
@@ -630,6 +663,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param mixed $offset
+     *
      * @return bool
      * @link http://www.php.net/manual/en/arrayaccess.offsetexists.php
      */
@@ -644,6 +678,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param mixed $offset
+     *
      * @link http://www.php.net/manual/en/arrayaccess.offsetunset.php
      */
     public function offsetUnset($offset): void
@@ -657,6 +692,7 @@ class DataObject implements \ArrayAccess
      * 参数区：
      *
      * @param mixed $offset
+     *
      * @return mixed
      * @link http://www.php.net/manual/en/arrayaccess.offsetget.php
      */
@@ -672,7 +708,7 @@ class DataObject implements \ArrayAccess
     /**
      * @DESC          # 默认打印输出
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/11 17:04
      * 参数区：

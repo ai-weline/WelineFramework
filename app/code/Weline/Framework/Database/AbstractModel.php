@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Database;
 
+use MongoDB\Driver\Manager;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
@@ -335,7 +336,7 @@ abstract class AbstractModel extends DataObject
             $data = $this->getQuery()->where($field_or_pk_value, $value)->find()->fetch();
         }
         if (is_array($data)) {
-            $this->setData($data);
+            $this->setModelData($data);
         }
         // load之之后事件
         $this->getEvenManager()->dispatch($this->getOriginTableName() . '_model_load_after', ['model' => $this]);
@@ -381,7 +382,7 @@ abstract class AbstractModel extends DataObject
             $this->force_check_flag = $data;
         }
         if ($data) {
-            $this->setData($data);
+            $this->setModelData($data);
         }
         // 保存前
         $this->save_before();
@@ -848,19 +849,44 @@ abstract class AbstractModel extends DataObject
      */
     public function getModelData(string $field = ''): array|string
     {
-        if (empty($this->_model_fields_data) && $this->getData()) {
+        if (empty($this->_model_fields_data) && $data = $this->getData()) {
             foreach ($this->getModelFields() as $key => $val) {
-                $field_data = $this->getData($val);
+                $field_data = $data[$val] ?? '';
                 if (($val === self::fields_CREATE_TIME || $val === self::fields_UPDATE_TIME) && empty($field_data)) {
                     $field_data = date('Y-m-d H:i:s');
                 }
                 $this->_model_fields_data[$val] = $field_data;
             }
         }
-        if ($field && isset($this->_model_fields_data[$field])&&$field_data = $this->_model_fields_data[$field]) {
+        if ($field && isset($this->_model_fields_data[$field]) && $field_data = $this->_model_fields_data[$field]) {
             return $field_data;
         }
         return $this->_model_fields_data;
+    }
+
+    /**
+     * @DESC          # 设置模型数据
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/16 17:09
+     * 参数区：
+     *
+     * @param array|string $key
+     * @param mixed       $value
+     *
+     * @return array|string
+     */
+    public function setModelData(array|string $key,mixed $value = ''): array|string
+    {
+        if (is_array($key)) {
+            $this->_model_fields_data = $key;
+            $this->setData($key);
+        } else {
+            $this->_model_fields_data[$key] = $value;
+            $this->setData($key,$value);
+        }
+        return $this;
     }
 
     public function pagination(int $page = 1, int $pageSize = 20, array $params = []): AbstractModel|static
