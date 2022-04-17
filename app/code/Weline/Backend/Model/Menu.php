@@ -207,13 +207,10 @@ class Menu extends \Weline\Framework\Database\Model
     /*----------------------助手函数区-------------------------*/
     public function getUrl(): string
     {
-        $pre = '';
-        if ($this->isBackend()) {
-            $pre = Env::getInstance()->getConfig('admin');
-        }
-        $url = $this->url->build($this->getAction());
-        if (empty($pre)) {
-            $url = str_replace(Env::getInstance()->getConfig('admin'), '', $url);
+        if (!$this->isBackend()) {
+            $url ='/'.trim($this->getAction(),'/');
+        }else{
+            $url = $this->url->build(trim($this->getAction(), '/'));
         }
         return $url ?? '';
     }

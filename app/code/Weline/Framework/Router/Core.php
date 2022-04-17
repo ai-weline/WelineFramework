@@ -119,21 +119,16 @@ class Core
         $url = $this->request->getUrlPath();
 
         $url_cache_key = 'url_cache_key_' . $url;
-        # 事件：处理url之前
-        /**@var EventsManager $eventManager */
-        $eventManager = ObjectManager::getInstance(EventsManager::class);
-        $routerData   = new DataObject(['path' => $url]);
-        $eventManager->dispatch('Weline_Framework_Router::process_url_before', ['data' => $routerData, 'router' => $this]);
-        $url = $routerData->getData('path');
+
         if (/*PROD&&*/ $cached_url = $this->cache->get($url_cache_key)) {
             $url = $cached_url;
         } else {
-//            # 事件：处理url之前
-//            /**@var EventsManager $eventManager */
-//            $eventManager = ObjectManager::getInstance(EventsManager::class);
-//            $routerData   = new DataObject(['path' => $url]);
-//            $eventManager->dispatch('Weline_Framework_Router::process_url_before', ['data' => $routerData, 'router' => $this]);
-//            $url = $routerData->getData('path');
+            # 事件：处理url之前
+            /**@var EventsManager $eventManager */
+            $eventManager = ObjectManager::getInstance(EventsManager::class);
+            $routerData   = new DataObject(['path' => $url]);
+            $eventManager->dispatch('Weline_Framework_Router::process_url_before', ['data' => $routerData, 'router' => $this]);
+            $url = $routerData->getData('path');
 
             if ($this->is_admin) {
                 $url = str_replace($this->area_router, '', $url);

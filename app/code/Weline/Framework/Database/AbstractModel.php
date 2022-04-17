@@ -872,7 +872,7 @@ abstract class AbstractModel extends DataObject
         if ($field && isset($this->_model_fields_data[$field]) && $field_data = $this->_model_fields_data[$field]) {
             return $field_data;
         }
-        if($field){
+        if ($field) {
             return '';
         }
         return $this->_model_fields_data;
