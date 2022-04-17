@@ -132,8 +132,7 @@ class WelineTheme extends Model
 
     public function setIsActive(bool $value): static
     {
-        $this->setData(self::fields_IS_ACTIVE, $value);
-
+        $this->setData(self::fields_IS_ACTIVE, (int)$value);
         return $this;
     }
 

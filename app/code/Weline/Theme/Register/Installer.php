@@ -10,6 +10,7 @@
 namespace Weline\Theme\Register;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\Console\ConsoleException;
 use Weline\Framework\Output\Cli\Printing;
 use Weline\Framework\Register\RegisterInterface;
@@ -62,8 +63,18 @@ class Installer implements RegisterInterface
         if (!isset($param['name']) || !isset($param['path'])) {
             throw new ConsoleException('注册文件参数params必须包含：name和path。 样例：["name"=>"default主题"，"path"=>__DIR__]');
         }
+        // 检测是否有父主题
+        $parent_id = 0;
+        if(isset($param['parent'])&&$parent =$param['parent'] ){
+            $parent = $this->welineTheme->load('name',$parent);
+            if(!$parent->getId()){
+                throw new Exception(__('父主题：%1 不存在！',$parent));
+            }
+            $parent_id = $parent->getId();
+        }
 
         // 检查主题是否已经安装
+        $this->welineTheme->clearData();
         $this->welineTheme->load('name', $param['name']);
 
         $action_string = __('安装');
@@ -81,6 +92,8 @@ class Installer implements RegisterInterface
         $this->welineTheme
             ->setName($param['name'])
             ->setModuleName($module_name)
+            ->setParentId( $parent_id)
+            ->setIsActive(false)
             ->setPath($theme_path);
         // 开始主题注册 save 方法自带事务
         try {
@@ -90,7 +103,8 @@ class Installer implements RegisterInterface
             } else {
                 // 新安装
                 $this->welineTheme->clearQuery();
-                $this->welineTheme->setIsActive(1)->save();
+                $this->welineTheme->setId(0);
+                $this->welineTheme->setIsActive(true)->save( $this->welineTheme->getData());
             }
             $this->printing->success($param['name'] . __(" 主题{$action_string}完成!"));
         } catch (\Exception $exception) {

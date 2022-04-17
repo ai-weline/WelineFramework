@@ -14,6 +14,7 @@ Register::register(
     'Weline_test',
     [
         'name' => 'test',
+        'parent' => 'default',
         'path' => __DIR__,
     ],
     '1.0.1',

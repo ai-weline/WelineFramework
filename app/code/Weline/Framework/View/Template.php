@@ -238,9 +238,9 @@ class Template extends DataObject
             // 检测模板文件：如果文件名有后缀 则直接到view下面读取。没有说明是默认
             if ($file_ext) {
                 $view_dir =  $this->getFileExt()?$template_dir:$view_dir;
-                $tplFile = $view_dir . $fileName;
+                $tplFile = $view_dir . ltrim($fileName,'templates');
             } else {
-                $tplFile = $template_dir . $fileName . $this->getFileExt();
+                $tplFile = $template_dir . ltrim($fileName,'templates') . $this->getFileExt();
             }
 //            p($tplFile,1);
             $tplFile = $this->fetchFile($tplFile);
