@@ -26,10 +26,12 @@ class Catalog extends \Weline\Admin\Controller\BaseController
             $catalog->setName($level_str . $catalog['name']);
         }
         $this->assign('catalogs', $catalogs);
-        $catalog = $catalog->clearData();
         if ($id = $this->_request->getParam('id')) {
             $catalog = $catalog->load($id);
+        }else{
+            $catalog = $catalog->clearData();
         }
+        p($catalog->getId());
         $this->assign('catalog', $catalog);
         return $this->fetch();
     }
@@ -105,15 +107,27 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         }
         $post['pid']       = $pid;
         $post['level']     = $level;
-        $post['is_active'] = 1;
 
+        # 检查是新增还是修改
+        if ($id = $this->_request->getParam('id')) {
+            $catalog = $catalog->load($id);
+            if (!$catalog->getId()) {
+                $this->getMessageManager()->addError(__('该记录已不存在！'));
+                $this->redirect($this->_url->build('dev/tool/admin/document/catalog'));
+            }
+            $catalog->save($post);
+            $this->getMessageManager()->addSuccess(__('修改成功！'));
+            $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id'=>$id]));
+        }
+        # 新增
+        unset($post['id']);
         try {
             $catalog->save($post);
             $this->getMessageManager()->addSuccess(__('添加成功！'));
         } catch (\Exception $exception) {
             $this->getMessageManager()->addException($exception);
         }
-        $this->redirect($this->_url->build('dev/tool/admin/document/catalog'));
+        $this->redirect($this->_url->build('dev/tool/admin/document/catalog',['id'=>$catalog->getId()]));
     }
 
     private function getCatalogModel(): \Weline\DeveloperWorkspace\Model\Document\Catalog

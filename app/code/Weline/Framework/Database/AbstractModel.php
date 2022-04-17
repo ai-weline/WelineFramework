@@ -72,6 +72,7 @@ abstract class AbstractModel extends DataObject
     public array $_fields = [];
     public array $_joins = [];
     private array $_model_fields = [];
+    private array $_model_fields_data = [];
 
     private bool $force_check_flag = false;
 
@@ -186,6 +187,9 @@ abstract class AbstractModel extends DataObject
                 return $this->_data;
             }
             return $this->getFetchData();
+        }
+        if (isset($this->_data[$key]) && $data = $this->_data[$key]) {
+            return $data;
         }
         return parent::getData($key, $index);
     }
@@ -415,7 +419,7 @@ abstract class AbstractModel extends DataObject
             $this->getQuery()->rollBack();
             $msg = __('保存数据出错! ');
             if (DEV) {
-                $msg .= __('消息: %1', $exception->getMessage()) .PHP_EOL.__('预编译SQL: %1', $this->getQuery()->getPrepareSql()) .PHP_EOL. __('执行SQL: %1', $this->getQuery()->getLastSql());
+                $msg .= __('消息: %1', $exception->getMessage()) . PHP_EOL . __('预编译SQL: %1', $this->getQuery()->getPrepareSql()) . PHP_EOL . __('执行SQL: %1', $this->getQuery()->getLastSql());
             }
             throw new ModelException($msg);
         }
@@ -757,7 +761,7 @@ abstract class AbstractModel extends DataObject
      */
     public function getId()
     {
-        return $this->getData($this->_primary_key);
+        return $this->getModelData($this->_primary_key);
     }
 
     /**
@@ -839,17 +843,21 @@ abstract class AbstractModel extends DataObject
      * 参数区：
      * @return array
      */
-    public function getModelData(): array
+    public function getModelData(string $field): array
     {
-        $data = [];
-        foreach ($this->getModelFields() as $key => $val) {
-            $field_data = $this->getData($val);
-            if (($val === self::fields_CREATE_TIME || $val === self::fields_UPDATE_TIME) && empty($field_data)) {
-                $field_data = date('Y-m-d H:i:s');
+        if (empty($this->_model_fields_data)) {
+            foreach ($this->getModelFields() as $key => $val) {
+                $field_data = $this->getData($val);
+                if (($val === self::fields_CREATE_TIME || $val === self::fields_UPDATE_TIME) && empty($field_data)) {
+                    $field_data = date('Y-m-d H:i:s');
+                }
+                $this->_model_fields_data[$val] = $field_data;
             }
-            $data[$val] = $field_data;
         }
-        return $data;
+        if ($field && $field_data = $this->_model_fields_data[$field]) {
+            return $field_data;
+        }
+        return $this->_model_fields_data;
     }
 
     public function pagination(int $page = 1, int $pageSize = 20, array $params = []): AbstractModel|static

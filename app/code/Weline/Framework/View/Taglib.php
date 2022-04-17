@@ -18,6 +18,15 @@ use Weline\Framework\View\Exception\TemplateException;
 
 class Taglib
 {
+
+    public function checkVar(string $name): string
+    {
+        if (str_starts_with($name, '$')) {
+            return $name;
+        }
+        return '$' . $name;
+    }
+
     public function getTags(Template $template, string $fileName = ''): array
     {
         return [
@@ -244,9 +253,10 @@ class Taglib
                             return '<?php if(empty($template->getData(\'' . $content_arr[0] . '\')))echo \'' . $template->tmp_replace(trim($content_arr[1] ?? '')) . '\'?>';
                         case 'tag':
                             if (!isset($attributes['name'])) {
-                                throw new TemplateException(__('empty标签需要设置name属性！例如：%1',htmlspecialchars('<empty name="catalogs"><li>没有数据</li></empty>')));
+                                throw new TemplateException(__('empty标签需要设置name属性！例如：%1', htmlspecialchars('<empty name="catalogs"><li>没有数据</li></empty>')));
                             }
-                            return "<?php if(!\$this->getData('{$attributes['name']}')||empty(\$this->getData('{$attributes['name']}'))): ?>". $template->tmp_replace(trim($tag_data[2] ?? '')) ."<?php endif;?>";
+                            $name = $this->checkVar($attributes['name']);
+                            return "<?php if(empty(" . $name . ")): ?>" . $tag_data[2] . "<?php endif;?>";
                         case 'tag-end':
                             return '<?php endif; ?>';
                         default:

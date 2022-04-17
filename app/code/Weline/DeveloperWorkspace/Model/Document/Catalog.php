@@ -67,7 +67,7 @@ class Catalog extends \Weline\Framework\Database\Model
                   ->addColumn('color', TableInterface::column_type_VARCHAR, 60, '', '颜色')
                   ->addColumn('backColor', TableInterface::column_type_VARCHAR, 60, '', '背景色')
                   ->addColumn('position', TableInterface::column_type_INTEGER, null, 'default 0', '排序')
-                  ->addColumn('is_active', TableInterface::column_type_BOOLEAN, null, 'default true', '是否激活')
+                  ->addColumn('is_active', TableInterface::column_type_INTEGER, 1, 'default 0', '是否激活')
                   ->addColumn('pid', TableInterface::column_type_INTEGER, 0, '', '父目录')
                   ->create();
         } else {
@@ -102,7 +102,7 @@ class Catalog extends \Weline\Framework\Database\Model
 
     public function getDescription(): string
     {
-        return $this->getData(self::fields_DESCRIPTION);
+        return $this->getData(self::fields_DESCRIPTION)??'';
     }
 
     public function getTree()
@@ -139,5 +139,15 @@ class Catalog extends \Weline\Framework\Database\Model
     private function getUrl(array $param = [])
     {
         return ObjectManager::getInstance(Url::class)->build('/dev/tool/catalog/', $param);
+    }
+
+    public function isActive(): bool
+    {
+        return $this->getData(self::fields_is_active) === 1;
+    }
+
+    public function setIsActive(bool $state): static
+    {
+        return $this->setData(self::fields_is_active, $state);
     }
 }
