@@ -52,6 +52,7 @@ use Weline\Framework\Manager\ObjectManager;
  */
 abstract class AbstractModel extends DataObject
 {
+    protected array $_data;
     public const table       = '';
     public const primary_key = '';
     /**
@@ -82,6 +83,11 @@ abstract class AbstractModel extends DataObject
     private array $_fetch_data = [];
     private mixed $_query_data = null;
     public array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
+
+    public function __wakeup()
+    {
+        $this->__init();
+    }
 
     /**
      * @DESC         |初始化连接、缓存、表前缀 读取模型自身表名字等
@@ -147,12 +153,6 @@ abstract class AbstractModel extends DataObject
     {
         return $this->_primary_key;
     }
-
-    public function __wakeup()
-    {
-        $this->__init();
-    }
-
 
     /**
      * @DESC          # 处理表名 存在表名则不处理
@@ -846,9 +846,9 @@ abstract class AbstractModel extends DataObject
      *
      * @return array|string
      */
-    public function getModelData(string $field=''): array|string
+    public function getModelData(string $field = ''): array|string
     {
-        if (empty($this->_model_fields_data)) {
+        if (empty($this->_model_fields_data) && $this->getData()) {
             foreach ($this->getModelFields() as $key => $val) {
                 $field_data = $this->getData($val);
                 if (($val === self::fields_CREATE_TIME || $val === self::fields_UPDATE_TIME) && empty($field_data)) {
@@ -857,7 +857,7 @@ abstract class AbstractModel extends DataObject
                 $this->_model_fields_data[$val] = $field_data;
             }
         }
-        if ($field && $field_data = $this->_model_fields_data[$field]) {
+        if ($field && isset($this->_model_fields_data[$field])&&$field_data = $this->_model_fields_data[$field]) {
             return $field_data;
         }
         return $this->_model_fields_data;

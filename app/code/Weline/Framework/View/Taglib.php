@@ -18,7 +18,6 @@ use Weline\Framework\View\Exception\TemplateException;
 
 class Taglib
 {
-
     public function checkVar(string $name): string
     {
         if (str_starts_with($name, '$')) {

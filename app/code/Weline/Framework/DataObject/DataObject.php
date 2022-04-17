@@ -31,7 +31,7 @@ class DataObject implements \ArrayAccess
      *
      * @var array
      */
-    public array $_data = [];
+    protected array $_data = [];
 
     /**
      * Setter/Getter转换缓存

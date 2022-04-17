@@ -28,10 +28,9 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         $this->assign('catalogs', $catalogs);
         if ($id = $this->_request->getParam('id')) {
             $catalog = $catalog->load($id);
-        }else{
+        } else {
             $catalog = $catalog->clearData();
         }
-        p($catalog->getId());
         $this->assign('catalog', $catalog);
         return $this->fetch();
     }
@@ -127,7 +126,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         } catch (\Exception $exception) {
             $this->getMessageManager()->addException($exception);
         }
-        $this->redirect($this->_url->build('dev/tool/admin/document/catalog',['id'=>$catalog->getId()]));
+        $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id'=>$catalog->getId()]));
     }
 
     private function getCatalogModel(): \Weline\DeveloperWorkspace\Model\Document\Catalog
