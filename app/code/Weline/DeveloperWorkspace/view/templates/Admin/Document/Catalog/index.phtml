@@ -56,9 +56,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                         <div class='card'>
                             <div class='card-body'>
                                 <button type='button'
-                                        onclick='window.location.href="@admin-url('dev/tool/admin/document')"'
-                                        class='btn btn-dark waves-effect waves-light pull-right '>
-                                    <lang>返回</lang>
+                                        onclick='window.location.href="@admin-url(' dev
+                                /tool/admin/document')"'
+                                class='btn btn-dark waves-effect waves-light pull-right '>
+                                <lang>返回</lang>
                                 </button>
                             </div>
                         </div>
@@ -69,9 +70,15 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                         <div class='card'>
                             <div class='card-body'>
                                 <div class="panel">
-                                    <h4>
-                                        <lang>新建分类</lang>
-                                    </h4>
+                                    <empty name="catalog">
+                                        <h4 class="text-info">
+                                            <lang>新建分类</lang>
+                                        </h4>
+                                        <else/>
+                                        <h4 class="text-warning">
+                                            <lang>修改分类</lang>
+                                        </h4>
+                                    </empty>
                                     <form class='needs-validation' method='post'
                                           action="@admin-url('dev/tool/admin/document/catalog/post')" novalidate>
                                         <div class='row col'>
@@ -132,7 +139,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <label class='form-label' for='description'>
                                                         <lang>简介</lang>
                                                     </label>
-                                                    <textarea rows="5" type='text' name='description' class='form-control' id='description'
+                                                    <textarea rows="5" type='text' name='description'
+                                                              class='form-control' id='description'
                                                               placeholder='@lang(分类简介)' required></textarea>
                                                     <div class='valid-feedback'>
                                                         <lang>请输入分类简介</lang>
@@ -150,9 +158,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>保存</lang>
                                                 </button>
                                                 <button type='button'
-                                                        onclick='window.location.href="@admin-url('dev/tool/admin/document')"'
-                                                        class='btn btn-default waves-effect waves-light pull-right '>
-                                                    <lang>返回</lang>
+                                                        onclick='window.location.href="@admin-url(' dev
+                                                /tool/admin/document')"'
+                                                class='btn btn-default waves-effect waves-light pull-right '>
+                                                <lang>返回</lang>
                                                 </button>
                                             </div>
                                         </div>
@@ -181,6 +190,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                 });
                                             })
                                         }
+
                                         renderTree();
                                     </script>
                                 </div>

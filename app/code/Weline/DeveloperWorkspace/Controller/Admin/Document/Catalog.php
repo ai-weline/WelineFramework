@@ -26,6 +26,11 @@ class Catalog extends \Weline\Admin\Controller\BaseController
             $catalog->setName($level_str . $catalog['name']);
         }
         $this->assign('catalogs', $catalogs);
+        $catalog = $catalog->clearData();
+        if ($id = $this->_request->getParam('id')) {
+            $catalog = $catalog->load($id);
+        }
+        $this->assign('catalog', $catalog);
         return $this->fetch();
     }
 

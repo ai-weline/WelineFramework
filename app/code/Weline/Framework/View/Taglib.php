@@ -243,10 +243,10 @@ class Taglib
                             $content_arr = explode('|', $tag_data[1]);
                             return '<?php if(empty($template->getData(\'' . $content_arr[0] . '\')))echo \'' . $template->tmp_replace(trim($content_arr[1] ?? '')) . '\'?>';
                         case 'tag':
-                            if (isset($attributes['name'])) {
-                                throw new TemplateException(__('empty标签需要设置name属性！例如：<empty name="catalogs"><li>没有数据</li></empty>'));
+                            if (!isset($attributes['name'])) {
+                                throw new TemplateException(__('empty标签需要设置name属性！例如：%1',htmlspecialchars('<empty name="catalogs"><li>没有数据</li></empty>')));
                             }
-                            return "<?php if(empty(\$template->getData('{$attributes['name']}'))): ?>";
+                            return "<?php if(!\$this->getData('{$attributes['name']}')||empty(\$this->getData('{$attributes['name']}'))): ?>". $template->tmp_replace(trim($tag_data[2] ?? '')) ."<?php endif;?>";
                         case 'tag-end':
                             return '<?php endif; ?>';
                         default:

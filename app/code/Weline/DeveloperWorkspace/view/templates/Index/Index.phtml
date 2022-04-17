@@ -13,14 +13,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <html lang="en" <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir='rtl'" : '' ?>>
 <head>
     <title><lang>WelineFramework开发文档</lang></title>
-    <hook>title</hook>
     <!--模板Weline_DeveloperWorkspace::common/head.phtml-->
     <template>Weline_Frontend::public/head.phtml</template>
     <!-- jvectormap -->
     <css>Weline_Frontend::assets/libs/jqvmap/jqvmap.min.css</css>
     <!--树形插件-->
     <css>Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.css</css>
-    <js a="1">Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
+    <js>Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
     <!--测试-->
     @js(Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js)
 </head>
@@ -122,14 +121,6 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                                     <var>$v->getName()</var>
                                                                 </option>
                                                             </foreach>
-                                                            <if condition="$a>$b">
-                                                                <var a="1">$a</var>
-                                                                <elseif condition="$a<$b"/>
-                                                                <var>$b</var>
-                                                                <else/>
-                                                                <var>$a</var>
-                                                                <var>$b</var>
-                                                            </if>
                                                         </select>
                                                         <div class='valid-feedback'>
                                                             <lang>请选择父级分类</lang>
