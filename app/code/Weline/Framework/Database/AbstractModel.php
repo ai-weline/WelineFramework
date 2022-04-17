@@ -846,7 +846,7 @@ abstract class AbstractModel extends DataObject
      *
      * @return array|string
      */
-    public function getModelData(string $field): array|string
+    public function getModelData(string $field=''): array|string
     {
         if (empty($this->_model_fields_data)) {
             foreach ($this->getModelFields() as $key => $val) {
