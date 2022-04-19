@@ -10,9 +10,15 @@
 namespace Weline\Framework\UnitTest;
 
 use PHPUnit\Framework\TestCase;
+use Weline\Framework\Manager\ObjectManager;
 
 require __DIR__ . '/../../../../../index.php';
+
 class TestCore extends TestCase
 {
 //    use Boot;
+    static function getInstance(string $class)
+    {
+        return ObjectManager::getInstance($class);
+    }
 }

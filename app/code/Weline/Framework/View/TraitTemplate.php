@@ -177,6 +177,7 @@ trait TraitTemplate
     public function fetchTagSource(string $type, string $source)
     {
         $source = trim($source);
+        $source = trim($source,DIRECTORY_SEPARATOR);
         $cache_key = $type . '_' . $source;
         if (PROD && $data = $this->viewCache->get($cache_key)) {
             return $data;

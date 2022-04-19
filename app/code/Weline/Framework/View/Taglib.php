@@ -632,14 +632,12 @@ class Taglib
                 foreach ($customTags as $customTag) {
                     $originalTag   = $customTag[0];
                     if (isset($customTag[1])) {
-                        $customTag[1] = str_replace(' ', '', $customTag[1]);
                         $customTag[1] = str_replace(PHP_EOL, '', $customTag[1]);
                         $customTag[1] = str_replace(array("\r\n", "\r", "\n","\t"), '', $customTag[1]);
                     }
                     $rawAttributes = $customTag[1] ?? '';
 
                     if (isset($customTag[2])) {
-                        $customTag[2] = str_replace(' ', '', $customTag[2]);
                         $customTag[2] = str_replace(PHP_EOL, '', $customTag[2]);
                         $customTag[2] = str_replace(array("\r\n", "\r", "\n","\t"), '', $customTag[2]);
                     }
