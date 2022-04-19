@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Weline\DeveloperWorkspace\Model;
 
 use Weline\Framework\Database\Api\Db\TableInterface;
+use Weline\Framework\Http\Url;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
@@ -110,5 +112,29 @@ class Document extends \Weline\Framework\Database\Model
     public function getCategoryId()
     {
         return $this->getData(self::fields_CATEGORY_ID);
+    }
+
+    public function getUrl()
+    {
+        /**@var Url $url */
+        $url = ObjectManager::getInstance(Url::class);
+        return $url->build('/dev/tool/document', ['id' => $this->getId()]);
+    }
+
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/4/19 22:36
+     * 参数区：
+     *
+     * @param int $id
+     *
+     * @return Document[]
+     */
+    function loadByCatalogId(int $id): array
+    {
+        return $this->where(self::fields_CATEGORY_ID, $id)->select()->fetch();
     }
 }

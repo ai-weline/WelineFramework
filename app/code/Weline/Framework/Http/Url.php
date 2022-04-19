@@ -38,7 +38,7 @@ class Url implements UrlInterface
             return $path;
         }
         if (is_array($params)) {
-            return $path . '?' . http_build_query($params);
+            return '/'.$path . '?' . http_build_query($params);
         }
         return $path;
     }

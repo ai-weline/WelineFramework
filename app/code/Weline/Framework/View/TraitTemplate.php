@@ -26,7 +26,7 @@ trait TraitTemplate
     /**
      * @DESC          # 读取页头代码
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 23:24
      * 参数区：
@@ -40,7 +40,7 @@ trait TraitTemplate
     /**
      * @DESC          # 读取页脚代码
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 23:26
      * 参数区：
@@ -54,7 +54,7 @@ trait TraitTemplate
     private function fetchClassObject(string $position)
     {
         $is_backend = $this->_request->isBackend();
-        $cache_key = ($is_backend ? 'backend' : 'frontend') . "_{$position}_object";
+        $cache_key  = ($is_backend ? 'backend' : 'frontend') . "_{$position}_object";
         if (PROD && $object = $this->viewCache->get($cache_key)) {
             return $object;
         }
@@ -74,9 +74,9 @@ trait TraitTemplate
 
     public function processFileSource(string $fileName, string $file_dir): array
     {
-        $view_dir = $this->view_dir;
+        $view_dir     = $this->view_dir;
         $template_dir = $this->template_dir;
-        $compile_dir = $this->compile_dir;
+        $compile_dir  = $this->compile_dir;
         if (is_int(strpos($fileName, '::'))) {
             $pre_module_name = substr($fileName, 0, strpos($fileName, '::'));
             # 到模块配置中获取模块的模板文件路径
@@ -86,8 +86,8 @@ trait TraitTemplate
             }
             $fileName = str_replace($pre_module_name . '::', '', $fileName);
             # 替换掉当前模块的视图目录
-            $view_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
-            $template_dir =  $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
+            $view_dir     = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR;
+            $template_dir = $module_lists[$pre_module_name]['base_path'] . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
             if (PROD) {
                 $compile_dir = str_replace(APP_CODE_PATH, Env::path_framework_generated_complicate . DIRECTORY_SEPARATOR, $module_lists[$pre_module_name]['base_path']) . Data\DataInterface::dir . DIRECTORY_SEPARATOR . Data\DataInterface::dir_type_TEMPLATE . DIRECTORY_SEPARATOR;
             } else {
@@ -101,15 +101,19 @@ trait TraitTemplate
 
     public function processModuleSourceFilePath(string $type, string $source): array
     {
-        $t_f = $type . DIRECTORY_SEPARATOR . $source;
+        $t_f     = $type . DIRECTORY_SEPARATOR . $source;
         $t_f_arr = [];
+        if ('/' !== DIRECTORY_SEPARATOR) {
+            $source = str_replace('/', DIRECTORY_SEPARATOR, $source);
+        }
         # 如果存在向别的模块调用模板的情况
         if (is_int(strpos($source, "::"))) {
             $t_f_arr = explode("::", $source);
             if (count($t_f_arr) > 1) {
-                if (strpos($t_f_arr[1], $type)) {
+                $t_f_arr[1] = trim($t_f_arr[1], DIRECTORY_SEPARATOR);
+                if (is_int(strpos($t_f_arr[1], $type))) {
                     $t_f_arr[2] = $t_f_arr[1];
-                    $t_f_arr[1] = "::" . DIRECTORY_SEPARATOR;
+                    $t_f_arr[1] = "::";
                 } else {
                     $t_f_arr[2] = $t_f_arr[1];
                     $t_f_arr[1] = "::" . $type . DIRECTORY_SEPARATOR;
@@ -122,9 +126,9 @@ trait TraitTemplate
 
     public function fetchTagSourceFile(string $type, string $source)
     {
-        $source = trim($source);
+        $source    = trim($source);
         $cache_key = $type . '_' . $source;
-        $data = '';
+        $data      = '';
         switch ($type) {
             case DataInterface::dir_type_TEMPLATE:
                 if ($t_f = $this->viewCache->get($cache_key)) {
@@ -146,8 +150,8 @@ trait TraitTemplate
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
                         $module_view_dir_path = $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
-                        $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
-                        $t_f = str_replace($module_name . '::', '', $t_f);
+                        $base_url_path        = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
+                        $t_f                  = str_replace($module_name . '::', '', $t_f);
                     }
                 }
                 $data = rtrim($this->getUrlPath($base_url_path), DataInterface::dir_type_STATICS) . DIRECTORY_SEPARATOR . $t_f;
@@ -165,19 +169,21 @@ trait TraitTemplate
     /**
      * @DESC          # 读取模板标签资源
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/13 20:45
      * 参数区：
+     *
      * @param string $type
      * @param string $source
+     *
      * @return bool|string|void
      * @throws Core
      */
     public function fetchTagSource(string $type, string $source)
     {
-        $source = trim($source);
-        $source = trim($source,DIRECTORY_SEPARATOR);
+        $source    = trim($source);
+        $source    = trim($source, DIRECTORY_SEPARATOR);
         $cache_key = $type . '_' . $source;
         if (PROD && $data = $this->viewCache->get($cache_key)) {
             return $data;
@@ -185,17 +191,18 @@ trait TraitTemplate
         switch ($type) {
             case DataInterface::dir_type_STATICS:
                 list($t_f, $module_name) = $this->processModuleSourceFilePath($type, $source);
-                $base_url_path = rtrim($this->statics_dir, DataInterface::dir_type_STATICS);
                 # 第三方模组
                 if ($module_name) {
                     $modules = Env::getInstance()->getModuleList();
                     if (isset($modules[$module_name]) && $module = $modules[$module_name]) {
-                        $module_view_dir_path =  $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
-                        $base_url_path = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
-                        $t_f = str_replace($module_name . '::', '', $t_f);
+                        $module_view_dir_path = $module['base_path'] . DataInterface::dir . DIRECTORY_SEPARATOR;
+                        $base_url_path        = $this->getModuleViewDir($module_view_dir_path, DataInterface::view_STATICS_DIR);
+                        $t_f                  = str_replace($module_name . '::', '', $t_f);
                     } else {
                         throw new Exception(__('资源不存在：%1，模组：%2', [$source, $module_name]));
                     }
+                } else {
+                    $base_url_path = rtrim($this->statics_dir, DataInterface::dir_type_STATICS);
                 }
                 $data = rtrim($this->getUrlPath($base_url_path), DataInterface::dir_type_STATICS) . DIRECTORY_SEPARATOR . $t_f;
                 break;
@@ -211,7 +218,7 @@ trait TraitTemplate
         # 是否静态文件添加
         if ($type === 'statics' && Env::getInstance()->getConfig('static_file_rand_version')) {
             $version = random_int(10000, 100000);
-            $data .= '?v=' . $version;
+            $data    .= '?v=' . $version;
         }
         $this->viewCache->set($cache_key, $data);
         return $data;
@@ -223,6 +230,7 @@ trait TraitTemplate
      * 参数区：
      *
      * @param string $type
+     *
      * @return string
      */
     private function getViewDir(string $type = ''): string
@@ -235,7 +243,6 @@ trait TraitTemplate
         switch ($type) {
             case DataInterface::dir_type_TEMPLATE:
                 $path = $module_view_dir_path . DataInterface::view_TEMPLATE_DIR;
-
                 break;
             case DataInterface::dir_type_TEMPLATE_COMPILE:
                 if (PROD) {
@@ -277,6 +284,7 @@ trait TraitTemplate
      * 参数区：
      *
      * @param string $real_path
+     *
      * @return string
      */
     private function getUrlPath(string $real_path): string
@@ -299,7 +307,9 @@ trait TraitTemplate
      * @DESC         | 取得对应的文件
      *
      * 参数区：
+     *
      * @param string $filename
+     *
      * @return array|mixed|string|null
      * @throws Core
      */

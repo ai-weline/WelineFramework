@@ -208,8 +208,8 @@ class Menu extends \Weline\Framework\Database\Model
     public function getUrl(): string
     {
         if (!$this->isBackend()) {
-            $url ='/'.trim($this->getAction(),'/');
-        }else{
+            $url ='/'.trim($this->getAction(), '/');
+        } else {
             $url = $this->url->build(trim($this->getAction(), '/'));
         }
         return $url ?? '';

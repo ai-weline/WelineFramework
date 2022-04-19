@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Helper;
 
+use Weline\DeveloperWorkspace\Model\Document;
 use Weline\Framework\Manager\ObjectManager;
 
 class Data extends \Weline\Framework\App\Helper
@@ -18,5 +19,19 @@ class Data extends \Weline\Framework\App\Helper
     public static function getCatalogModel(): \Weline\DeveloperWorkspace\Model\Document\Catalog
     {
         return ObjectManager::getInstance(\Weline\DeveloperWorkspace\Model\Document\Catalog::class);
+    }
+
+    public static function getDocuments()
+    {
+        /**@var Document $document */
+        $document = ObjectManager::getInstance(Document::class);
+        return $document->select()->fetch();
+    }
+
+    public static function getDocumentsByCategoryId(int $id)
+    {
+        /**@var Document $document */
+        $document = ObjectManager::getInstance(Document::class);
+        return $document->loadByCatalogId($id);
     }
 }

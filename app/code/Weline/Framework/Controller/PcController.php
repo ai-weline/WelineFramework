@@ -169,7 +169,7 @@ class PcController extends Core
         } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
             $fileName = $controller_class_name . DIRECTORY_SEPARATOR . $fileName;
         }
-        return $this->getTemplate()->fetch($fileName);
+        return $this->getTemplate()->fetch('templates' . DIRECTORY_SEPARATOR . $fileName);
     }
 
     /**

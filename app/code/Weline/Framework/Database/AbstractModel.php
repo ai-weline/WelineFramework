@@ -406,7 +406,9 @@ abstract class AbstractModel extends DataObject
                     if ($data = $this->getQuery()->where($this->_primary_key, $this->getId())->find()->fetch()) {
                         # 数据库中数据存在则更新
                         if (isset($data[$this->_primary_key]) && $data[$this->_primary_key]) {
-                            $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
+                            $update_data = $this->getModelData();
+                            unset($update_data[$this->_primary_key]);
+                            $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($update_data)->fetch();
                         } else {
                             $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
                             $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
@@ -421,6 +423,7 @@ abstract class AbstractModel extends DataObject
                     $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
                 }
             } else {
+                $this->setData($this->_primary_key, 0);
                 $save_result = $this->getQuery()->insert($this->getModelData())->fetch();
                 $save_result = array_shift($save_result)['LAST_INSERT_ID()'];
                 $this->setData($this->_primary_key, $save_result);
@@ -747,6 +750,11 @@ abstract class AbstractModel extends DataObject
     public function setData($key, $value = null): static
     {
         $this->set_data_before($key, $value);
+        if (is_array($key)) {
+            $this->_model_fields_data = $key;
+        } else {
+            $this->_model_fields_data[$key] = $value;
+        }
         parent::setData($key, $value);
         $this->set_data_after($key, $value);
         return $this;
@@ -773,7 +781,7 @@ abstract class AbstractModel extends DataObject
      */
     public function getId()
     {
-        return $this->getModelData($this->_primary_key);
+        return $this->getData($this->_primary_key);
     }
 
     /**

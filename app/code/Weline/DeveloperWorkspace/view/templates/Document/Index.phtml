@@ -49,18 +49,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
             <div class="container-fluid">
                 <div class='row'>
                     <h4 class='card-title'>
-                        <var>$catalog->getName()</var>-<lang>开发文档</lang>
+                        <var>$document->getName()</var>
                     </h4>
                     <p class='card-title-desc'>
-                        <var>$catalog->getName()</var>
+                        <var>$document->getSummary()</var>
                     </p>
                     <div class="col-lg-12">
-                        <!--文章列表-->
-                        <ul>
-                        <foreach name="documents">
-                            <li><a href="@var{$v->getUrl()}"><var>$v->getTitle()</var></a></li>
-                        </foreach>
-                        </ul>
+                        <!--文章内容-->
+                       <var>$document->getContent()</var>
                     </div>
                 </div> <!-- end row -->
             </div>

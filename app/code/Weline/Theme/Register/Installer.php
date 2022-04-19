@@ -65,10 +65,10 @@ class Installer implements RegisterInterface
         }
         // 检测是否有父主题
         $parent_id = 0;
-        if(isset($param['parent'])&&$parent =$param['parent'] ){
-            $parent = $this->welineTheme->load('name',$parent);
-            if(!$parent->getId()){
-                throw new Exception(__('父主题：%1 不存在！',$parent));
+        if (isset($param['parent'])&&$parent =$param['parent']) {
+            $parent = $this->welineTheme->load('name', $parent);
+            if (!$parent->getId()) {
+                throw new Exception(__('父主题：%1 不存在！', $parent));
             }
             $parent_id = $parent->getId();
         }
@@ -92,7 +92,7 @@ class Installer implements RegisterInterface
         $this->welineTheme
             ->setName($param['name'])
             ->setModuleName($module_name)
-            ->setParentId( $parent_id)
+            ->setParentId($parent_id)
             ->setIsActive(false)
             ->setPath($theme_path);
         // 开始主题注册 save 方法自带事务
@@ -104,7 +104,7 @@ class Installer implements RegisterInterface
                 // 新安装
                 $this->welineTheme->clearQuery();
                 $this->welineTheme->setId(0);
-                $this->welineTheme->setIsActive(true)->save( $this->welineTheme->getData());
+                $this->welineTheme->setIsActive(true)->save($this->welineTheme->getData());
             }
             $this->printing->success($param['name'] . __(" 主题{$action_string}完成!"));
         } catch (\Exception $exception) {

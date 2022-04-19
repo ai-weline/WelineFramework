@@ -14,6 +14,9 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller;
 
+use Weline\DeveloperWorkspace\Helper\Data;
+use Weline\DeveloperWorkspace\Model\Document;
+
 class Index extends BaseController
 {
     public function index()
@@ -22,6 +25,8 @@ class Index extends BaseController
         $catalogs      = $catalogsModel->pagination($this->_request->getParam('page', 1), $this->_request->getParam('page', 10))
                                        ->select()->fetch();
         $this->assign('catalogs', $catalogs);
+        # 文章列表
+        $this->assign('documents', Data::getDocuments());
         return $this->fetch();
     }
 }

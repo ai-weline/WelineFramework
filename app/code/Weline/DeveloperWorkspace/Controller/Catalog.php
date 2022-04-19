@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller;
 
+use Weline\DeveloperWorkspace\Helper\Data;
 use Weline\Framework\Manager\ObjectManager;
 
 class Catalog extends BaseController
@@ -28,6 +29,7 @@ class Catalog extends BaseController
     {
         $id = $this->_request->getParam('id');
         $this->assign('catalog', $this->catalog->load($id));
+        $this->assign('documents', Data::getDocumentsByCategoryId(intval($id)));
         return $this->fetch();
     }
 }

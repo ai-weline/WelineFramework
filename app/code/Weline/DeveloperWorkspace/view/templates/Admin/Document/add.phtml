@@ -79,7 +79,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>标题</lang>
                                                 </label>
                                                 <input type='text' name='title' class='form-control' id='title'
-                                                       placeholder='@lang("标题")' value='前言' required>
+                                                       placeholder='@lang(标题)' value='' required>
                                                 <div class='valid-feedback'>
                                                     <lang>请输入标题</lang>
                                                 </div>
@@ -143,10 +143,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                         <php>$c_id = $document->getCategoryId();</php>
                                                         <php>$v_id = $v->getId();</php>
                                                         <if condition="$c_id === $v_id">
-                                                            <option value="@var{$v->id}" selected>
+                                                            <option value="@var{$v->getId()}" selected>
                                                                 <var>$v->getName()</var></option>
                                                             <else/>
-                                                                <option value="@var{$v->id}">
+                                                                <option value="@var{$v->getId()}">
                                                                     <var>$v->getName()</var>
                                                                 </option>
                                                         </if>

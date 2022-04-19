@@ -96,15 +96,6 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                     }
                 }
                 $menu[Menu::fields_PID] = $menu[Menu::fields_PID]??0;
-                # 先查询一遍
-                /**@var Menu $menuModel */
-                $this->menu->clearData();
-                $menuModel = $this->menu->where(Menu::fields_NAME, $menu[Menu::fields_NAME])->find()->fetch();
-                # 保存时检测查询数据，存在则更新
-                if ($menuModel->getId()) {
-                    $menu[Menu::fields_ID] = $menuModel->getId();
-                }
-                $menuModel->clearData();
                 $result = $menuModel->setData($menu)->forceCheck(true)->save();
                 # 2 检查自身是否被别的模块作为父分类
                 $menuModel->clearData();

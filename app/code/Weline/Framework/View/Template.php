@@ -38,7 +38,7 @@ class Template extends DataObject
 
     protected Request $_request;
     private Session $session;
-    private ?Taglib $taglib=null;
+    private ?Taglib $taglib = null;
 
     /**
      * @var PcController
@@ -215,7 +215,9 @@ class Template extends DataObject
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
         if (empty($comFileName) || empty($tplFile)) {
             // 解析模板路由
-            $fileName          = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+            if ('/' !== DIRECTORY_SEPARATOR) {
+                $fileName = str_replace('/', DIRECTORY_SEPARATOR, $fileName);
+            }
             $file_name_dir_arr = explode(DIRECTORY_SEPARATOR, $fileName);
             $file_dir          = '';
             $file_name         = '';
@@ -228,20 +230,19 @@ class Template extends DataObject
                     $file_dir .= DIRECTORY_SEPARATOR;
                 }
             }
-
             # 检测读取别的模块的模板文件
             list($fileName, $file_dir, $view_dir, $template_dir, $compile_dir) = $this->processFileSource($fileName, $file_dir);
 
-            // 判断文件后缀
+//            // 判断文件后缀
             $file_ext = substr(strrchr($fileName, '.'), 1);
-
-            // 检测模板文件：如果文件名有后缀 则直接到view下面读取。没有说明是默认
+//
+//            // 检测模板文件：如果文件名有后缀 则直接到view下面读取。没有说明是默认
             if ($file_ext) {
-                $view_dir =  $this->getFileExt()?$template_dir:$view_dir;
-                $tplFile = $view_dir . ltrim($fileName,'templates');
+                $tplFile = $view_dir . $fileName;
             } else {
-                $tplFile = $template_dir . ltrim($fileName,'templates') . $this->getFileExt();
+                $tplFile = $view_dir . $fileName . $this->getFileExt();
             }
+
 //            p($tplFile,1);
             $tplFile = $this->fetchFile($tplFile);
 //            p($tplFile);
