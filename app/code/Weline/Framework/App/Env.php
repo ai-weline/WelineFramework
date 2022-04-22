@@ -33,6 +33,8 @@ class Env extends DataObject
 
     public const path_MODULES_FILE = APP_ETC_PATH . 'modules.php';
 
+    public const path_MODULE_DEPENDENCIES_FILE = APP_ETC_PATH . 'module_dependencies.php';
+
     public const path_COMMANDS_FILE = self::path_framework_generated . 'commands.php';
 
     // 注册register路径
@@ -367,5 +369,37 @@ class Env extends DataObject
             $commands = (array)require self::path_COMMANDS_FILE;
         }
         return $commands;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function write(string $filename, string $content): bool
+    {
+        try {
+            $file = new File();
+            $file->open($filename, $file::mode_w);
+            $file->write($content);
+            $file->close();
+            return true;
+        } catch (Exception $exception) {
+            if (DEV) {
+                throw $exception;
+            }
+            return false;
+        }
+    }
+
+    public static function open(string $filename, string $content): bool
+    {
+        try {
+            $file = new File();
+            $file->open($filename, $file::mode_w);
+            $file->write($content);
+            $file->close();
+            return true;
+        } catch (Exception $exception) {
+            return false;
+        }
     }
 }

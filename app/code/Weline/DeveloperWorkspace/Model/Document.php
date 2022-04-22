@@ -133,7 +133,7 @@ class Document extends \Weline\Framework\Database\Model
      *
      * @return Document[]
      */
-    function loadByCatalogId(int $id): array
+    public function loadByCatalogId(int $id): array
     {
         return $this->where(self::fields_CATEGORY_ID, $id)->select()->fetch();
     }

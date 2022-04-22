@@ -10,6 +10,8 @@
 namespace Weline\Framework\System\File\App;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Module\Dependency\Sort;
 use Weline\Framework\Register\Register;
 use Weline\Framework\System\File\Scan;
 use Weline\Framework\Register\RegisterInterface;
@@ -29,21 +31,39 @@ class Scanner extends Scan
      */
     public function scanAppModules()
     {
-        $vendors = $this->scanAllAppVendors();
+        $vendors           = $this->scanAllAppVendors();
+        $module_dependency = [];
         foreach ($vendors as $key => $vendor) {
             unset($vendors[$key]);
             // 常规模块
             if ($vendor_module_register_files = $this->scanVendorModules($vendor)) {
-                if (isset($vendors[Register::parserModuleName($vendor)])&&$modules = $vendors[Register::parserModuleName($vendor)]) {
+                if (isset($vendors[Register::parserModuleName($vendor)]) && $modules = $vendors[Register::parserModuleName($vendor)]) {
                     $modules = array_merge($modules, $vendor_module_register_files);
                 } else {
                     $modules = $vendor_module_register_files;
                 }
-                $vendors[Register::parserModuleName($vendor)] = $modules;
+                $vendor_name           = Register::parserModuleName($vendor);
+                $vendors[$vendor_name] = $modules;
+
+                foreach ($vendor_module_register_files as $module_name => $vendor_module_register_file) {
+                    $module_dependency[] = [
+                        'id'        => $vendor_name . '_' . $module_name,
+                        'parent'    => $vendor_module_register_file['env']['dependencies'] ?? [],
+                        'register'  => $vendor_module_register_file['register'],
+                        'env_file'  => $vendor_module_register_file['env_file'],
+                        'base_path' => $vendor_module_register_file['base_path'],
+                        'env'       => $vendor_module_register_file['env']
+                    ];
+                }
             }
             //
         }
-        return $vendors;
+        # 依赖排序
+        /**@var Sort $sort */
+        $sort = ObjectManager::getInstance(Sort::class);
+        $module_dependencies = $sort->dependenciesSort($module_dependency);
+        Env::write(Env::path_MODULE_DEPENDENCIES_FILE, '<?php return ' . var_export($module_dependencies, true) . ';?>');
+        return [$vendors,$module_dependencies];
     }
 
     /**
@@ -135,12 +155,14 @@ class Scanner extends Scan
 //                    $modules[$module] = $vendor . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
 //                }
 //            }
-            foreach (Env::register_FILE_PATHS as $type=>$register_FILE_PATH) {
-                $app_module_path = $register_FILE_PATH . $vendor . DIRECTORY_SEPARATOR . $module ;
+            foreach (Env::register_FILE_PATHS as $type => $register_FILE_PATH) {
+                $app_module_path = $register_FILE_PATH . $vendor . DIRECTORY_SEPARATOR . $module;
                 if (is_dir($app_module_path)) {
                     $register = $app_module_path . DIRECTORY_SEPARATOR . RegisterInterface::register_file;
                     if (is_file($register)) {
-                        $modules[Register::parserModuleName($module)] = $register;
+                        $env_file                                     = $app_module_path . DIRECTORY_SEPARATOR . 'etc' . DIRECTORY_SEPARATOR . 'env.php';
+                        $env_data                                     = is_file($env_file) ? require $env_file : [];
+                        $modules[Register::parserModuleName($module)] = ['register' => $register, 'env' => $env_data, 'env_file' => $env_file, 'base_path' => $app_module_path];
                     }
                 }
             }

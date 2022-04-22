@@ -37,10 +37,11 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
      */
     public function scanAppCaches()
     {
-        $apps       = $this->scanAppModules();
+        list($apps)       = $this->scanAppModules();
         $app_caches = [];
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $module_name => $register_file) {
+                $register_file = $register_file['register'];
                 $relate_scan_path = str_replace(DataInterface::file_Register, '', $register_file);
                 $scan_path        = $relate_scan_path . 'Cache' . DIRECTORY_SEPARATOR;
                 if (is_file($register_file) && is_dir($scan_path) && $cacheManagers = $this->scanDir($scan_path)) {

@@ -31,42 +31,7 @@ class SystemNotification extends \Weline\Framework\Database\Model
     public function setup(ModelSetup $setup, Context $context): void
     {
 //        $setup->dropTable();
-//        $setup->createTable()
-//            ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', '通知ID')
-//            ->addColumn(self::fields_title, TableInterface::column_type_VARCHAR, 120, 'not null', '标题')
-//            ->addColumn(self::fields_content, TableInterface::column_type_TEXT, null, 'not null', '内容')
-//            ->addColumn(self::fields_is_img, TableInterface::column_type_SMALLINT, 1, 'not null default 0', '图片头像')
-//            ->addColumn(self::fields_is_icon, TableInterface::column_type_SMALLINT, 1, 'not null default 0', 'icon图标头像')
-//            ->addColumn(self::fields_avatar, TableInterface::column_type_VARCHAR, 255, 'not null', '头像内容')
-//            ->addColumn(self::fields_is_read, TableInterface::column_type_SMALLINT, 1, 'not null', '是否已读')
-//            ->create();
-//        $this->setTitle('欢迎来到 WelineFramework 后端！')
-//            ->setContent('WelineFramework框架是
-//一个极度灵活的集多应用的快速的互联网框架。
-//
-//1、代码可移植性。
-//
-//2、自定义高可用高灵活性对象ORM。
-//
-//3、前后端集成到一个module中，做到一个需求一个module。
-//
-//4、代码模块化，接口以及传统路由分前后台。包括接口，具有后台接口入口，后台url入口。
-//
-//5、配置文件统一化。文件位置：app/etc/env.php
-//等等...')
-//            ->setIsRead()
-//            ->setIsIcon(1)
-//            ->setIsImg(0)
-//            ->setAvatar('ri-checkbox-circle-line')
-//            ->save();
-//        $this->unsetData(self::fields_ID);
-//        $this->setTitle('框架开发理念！')
-//            ->setContent('灵活适应性强，高性能的基于PHP8的互联网快速开发框架...')
-//            ->setIsRead()
-//            ->setIsIcon(0)
-//            ->setIsImg(1)
-//            ->setAvatar('assets/images/users/avatar-3.jpg')
-//            ->save();
+//        $this->install($setup, $context);
     }
 
     /**

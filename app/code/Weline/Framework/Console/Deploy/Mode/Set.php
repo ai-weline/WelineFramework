@@ -86,7 +86,7 @@ class Set extends CommandAbstract
     {
         // 扫描代码
         $scanner = new AppScanner();
-        $apps    = $scanner->scanAppModules();
+        list($apps)    = $scanner->scanAppModules();
         // 注册模块
         foreach ($apps as $vendor => $modules) {
             foreach ($modules as $name => $register) {

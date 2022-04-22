@@ -30,12 +30,15 @@ class Register implements RegisterDataInterface
      * @param string       $type        注册类型
      * @param string       $module_name 模组名
      * @param array|string $param       参数[模组类型:此处传输目录__DIR__,主题类型：['name' => 'demo','path' => __DIR__,]]
+     * @param array        $dependencies     依赖定义【例如:['Weline_Theme','Weline_Backend']】
      * @param string       $version     版本
      * @param string       $description 描述
      *
      * @return mixed
+     * @throws App\Exception
+     * @throws \ReflectionException
      */
-    public static function register(string $type, string $module_name, array|string $param, string $version = '', string $description = ''): mixed
+    public static function register(string $type, string $module_name, array|string $param, string $version = '', string $description = '', array $dependencies = []): mixed
     {
         $install_params = func_get_args();
         switch ($type) {

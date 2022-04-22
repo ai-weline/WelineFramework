@@ -38,7 +38,7 @@ class Upgrade extends CommandAbstract
     public function execute($args = [])
     {
         // 扫描代码
-        $registers = $this->scanner->scanAppModules();
+        list($registers, $_) = $this->scanner->scanAppModules();
         // 注册模块
         foreach ($registers as $vendor => $modules) {
             foreach ($modules as $name => $register) {

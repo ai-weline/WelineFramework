@@ -124,8 +124,9 @@ class SystemConfig extends \Weline\Framework\Database\Model
      */
     public function setup(ModelSetup $setup, Context $context): void
     {
-        /* $setup->dropTable();
-         $setup->createTable('系统配置表')
+        $setup->dropTable();
+        $this->install($setup, $context);
+        /* $setup->createTable('系统配置表')
              ->addColumn(self::field_KEY, TableInterface::column_type_VARCHAR, 120, 'primary key', '键')
              ->addColumn(self::field_VALUE, TableInterface::column_type_TEXT, 0, '', '值')
              ->addColumn(self::field_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')

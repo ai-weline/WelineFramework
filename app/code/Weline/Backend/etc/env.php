@@ -9,5 +9,10 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 return [
-    'router'=>'backend',
+    // 路由
+    'router'       => 'backend',
+    // 依赖
+    'dependencies' => [
+        'Weline_SystemConfig'
+    ]
 ];

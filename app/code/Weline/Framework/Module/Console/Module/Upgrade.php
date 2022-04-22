@@ -95,12 +95,11 @@ class Upgrade extends CommandAbstract
         // 注册模块
         $all_modules = [];
         // 扫描代码
-        $registers = $this->scanner->scanAppModules();
-        foreach ($registers as $vendor => $modules) {
-            foreach ($modules as $name => $register) {
-                if (is_file($register)) {
-                    require $register;
-                }
+        list($vendor, $dependencies) = $this->scanner->scanAppModules();
+        foreach ($dependencies as $module_name => $module) {
+            $register = $module['register'];
+            if (is_file($register)) {
+                require $register;
             }
         }
         $this->printer->note('模块更新完毕！');

@@ -7,4 +7,8 @@
  * 论坛：https://bbs.aiweline.com
  */
 
-return ['router' => 'index'];
+return [
+    'router'       => 'index',//路由
+    'dependencies' => [
+    ]
+];
