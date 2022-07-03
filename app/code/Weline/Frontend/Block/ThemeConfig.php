@@ -53,7 +53,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
             }
             $data = $this->userConfig->getOriginThemeConfig();
             # 保存配置 (更新session配置)
-            $this->setThemeConfig($data);
+            if($data)$this->setThemeConfig($data);
         }
         return $data;
     }
