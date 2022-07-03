@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>欢迎加入 Weline Framework 的世界! 发现不一样的世界！</title>
+    <link rel="Shortcut Icon" href="@static(/img/favicon.png)">
+    <link rel="Shortcut Icon" href="@static(/img/favicon.png)">
+    <link rel="Bookmark" href="@static(/img/favicon.png)">
+    <?php
+    /**
+     * @var $this \Weline\Framework\View\Template
+     */
+    ?>
+    <link href="@static(/css/index.css)" type="text/css" rel="stylesheet">
+    <script src="@static(/js/demo.js)"></script>
+</head>
+<?php
+//include $this->getViewFile('public/header.phtml');
+?>
+<body>
+<div class="header">
+    <h1>欢迎加入 Weline Framework 的世界! 真挚邀请你，我们共筑一个不一样的世界！</h1>
+    <div class="img-box"><img src="@static/img/logo.png" alt=""></div>
+    <p class="official-p-sign">人生总要做点有意义的事儿，非是一定要成功，却是一定是在做，方可安心。[模块的index.phtml]</p>
+    <p class="official-p">开发者：秋枫雁飞&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;论坛：<a href="http://bbs.aiweline.com" target="_blank">bbs.aiweline.com</a></p>
+</div>
+<div class="feature">
+    <div class="feature-detail">
+        <h3>特色：</h3>
+        <p>1、功能代码可移植安装。</p>
+        <p>2、一个需求一个App应用，一个应用涵盖前后端源码。</p>
+        <p>3、无插件等复杂影响性能构建，源码可直接修改。</p>
+        <p>4、使用国内TP6 ORM无缝封装，更加符合国人数据库操作习惯。</p>
+        <p>5、更加灵活严谨的API开发体验。</p>
+        <p>码云地址：<a href="https://gitee.com/Aiweline_admin/WelineFramework.git">https://gitee.com/Aiweline_admin/WelineFramework.git。</a></p>
+    </div>
+</div>
+<div class="sample">
+
+    <div class="debug">
+        <a href="/helloworld/p" target="_blank" onclick="openWindow(this.href,this.text)">调试样式</a>
+        <a href="/helloworld/ex" target="_blank" onclick="openWindow(this.href,this.text)">异常调试</a>
+        <a href="/helloworld/demo" target="_blank" onclick="openWindow(this.href,this.text)">Demo</a>
+        <a href="/helloworld/model" target="_blank" onclick="openWindow(this.href,this.text)">model</a>
+        <a href="/helloworld/cache" target="_blank" onclick="openWindow(this.href,this.text)">Cache</a>
+        <a href="/helloworld/session" target="_blank" onclick="openWindow(this.href,this.text)">Session</a>
+        <a href="/helloworld/i18n" target="_blank" onclick="openWindow(this.href,this.text)">i18n国际化</a>
+        <a href="/admin123" target="_blank" onclick="openWindow(this.href,this.text)">后台</a>
+        <a href="/rest_admin" target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>
+        <a href="/rest/v1/index" target="_blank" onclick="openWindow(this.href,this.text)">前台api</a>
+        <a href="/dev-docs/index/index" target="_blank" onclick="openWindow(this.href,this.text)">开发文档</a>
+        <a href="/index/moduleTemplateFetch" target="_blank" onclick="openWindow(this.href,'调用其他Module模板文件')">调用其他Module模板文件</a>
+        <a href="/index/getComposerVendorModuleTemplate" target="_blank" onclick="openWindow(this.href,'调用其他Module模板文件')">调用composer安装的第三方Module模板文件</a>
+    </div>
+</div>
+<?php
+
+//include $this->getViewFile('public/footer.phtml');
+?>
+</body>
+</html>
