@@ -12,7 +12,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         base_router: '<?=$this->_request->getRouterData('router')?>',
         i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
         buildUrl: (path) => {
-            return window.site.base_host + '/' + path;
+            return window.site.base_host + path;
         },
         themeConfig:<?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
     }

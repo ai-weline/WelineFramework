@@ -11,10 +11,6 @@ app/etc/
 app/*/tpl/*
 app/*/node_modules/*
 
-# 个人应用
-/app/code/Aiweline/Bbs/
-/app/code/Aiweline/NewsSource/
-
 # 安装锁文件
 setup/install.lock
 

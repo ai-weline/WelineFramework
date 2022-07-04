@@ -25,6 +25,16 @@ class Taglib
     {
     }
 
+    public function checkFilter(string $name, string $filter = '|', $default = ''): array
+    {
+        if (str_contains($name, $filter)) {
+            $name_arr = explode('|', $name);
+            $name     = $name_arr[0];
+            $default  = $name_arr[1];
+        }
+        return [$name, $default];
+    }
+
     public function checkVar(string $name): string
     {
         if (str_starts_with($name, '$')) {
@@ -36,10 +46,14 @@ class Taglib
     public function varParser(string $name): string
     {
         $name_str = '';
+        # 处理过滤器
+        list($name, $default) = $this->checkFilter($name);
         # 去除空白以及空格
         $names = explode(' ', $this->checkVar($name));
+
         foreach ($names as $var) {
             $pieces = explode('.', $var);
+            $has_piece = false;
             foreach ($pieces as $key => $piece) {
                 if (0 !== $key) {
                     if (str_contains($piece, '$')) {
@@ -49,11 +63,16 @@ class Taglib
                     } else {
                         $piece = '[\'' . $piece . '\']';
                     }
+                    $has_piece = true;
                 }
                 $name_str .= $piece;
                 unset($pieces[$key]);
             }
-            $name_str .= ' ';
+            # 开发环境真实获取数据不设置默认空且不抑制错误
+            if(DEV){
+                $has_piece = false;
+            }
+            $name_str .= $default?"?? {$default} ":($has_piece?"??'' ":' ');
         }
 
         return $name_str;
@@ -93,11 +112,11 @@ class Taglib
                         switch ($tag_key) {
                             case '@tag()':
                             case '@tag{}':
-                                $var_name = $this->varParser($this->checkVar($tag_data[1]));
-                                return "<?=$var_name??''?>";
+                                $var_name = $this->varParser($tag_data[1]);
+                                return "<?=$var_name?>";
                             default:
                                 $var_name = $this->varParser($this->checkVar($tag_data[2]));
-                                return "<?=$var_name??''?>";
+                                return "<?=$var_name?>";
                         }
                     }
             ],
@@ -140,20 +159,20 @@ class Taglib
                             if (1 === count($content_arr)) {
                                 $condition = $this->varParser($content_arr[0][0]);
                                 $result    = "<?php if({$condition}):echo {$content_arr[0][1]};endif;?>";
-                            }else {
+                            } else {
                                 foreach ($content_arr as $key => $data) {
                                     if (0 === $key) {
                                         $condition = $this->varParser($data[0]);
-                                        $result    = "<?php if($condition):echo " . $data[1].';';
+                                        $result    = "<?php if($condition):echo " . $data[1] . ';';
                                     } else {
                                         if (count($data) > 1) {
                                             $condition = $this->varParser($data[0]);
-                                            $result    .= " elseif($condition):echo " . $data[1].';';
+                                            $result    .= " elseif($condition):echo " . $data[1] . ';';
                                         } else {
-                                            $result .= ' else: echo ' . $data[0].';';
+                                            $result .= ' else: echo ' . $data[0] . ';';
                                         }
                                     }
-                                    if(end($content_arr)===$data){
+                                    if (end($content_arr) === $data) {
                                         $result .= ' endif;?>';
                                     }
                                 }
@@ -163,7 +182,7 @@ class Taglib
                             throw new TemplateException(__('if没有自闭合标签。示例：%1', '<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>'));
                         case 'tag-start':
                             # 排除非if和属性标签的情况
-                            if(!str_starts_with($tag_data[0], '<if ')) {
+                            if (!str_starts_with($tag_data[0], '<if ')) {
                                 $result = $tag_data[0];
                                 break;
                             }
@@ -394,12 +413,12 @@ class Taglib
                     }
             ],
             'lang'      => [
-                'tag'       => 1,
-                'callback'  =>
+                'tag'      => 1,
+                'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
                         return match ($tag_key) {
-                            'tag'       => __($tag_data[2]),
-                            default     => __($tag_data[1])
+                            'tag'   => __($tag_data[2]),
+                            default => __($tag_data[1])
                         };
                     }
             ],
