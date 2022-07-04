@@ -69,9 +69,9 @@ class Taglib
                 unset($pieces[$key]);
             }
             # 开发环境真实获取数据不设置默认空且不抑制错误
-            if(DEV){
-                $has_piece = false;
-            }
+//            if(DEV){
+//                $has_piece = false;
+//            }
             $name_str .= $default?"?? {$default} ":($has_piece?"??'' ":' ');
         }
 
