@@ -156,8 +156,6 @@ class PcController extends Core
      * @param string|null $fileName
      *
      * @return mixed
-     * @throws Exception
-     * @throws \ReflectionException
      */
     protected function fetch(string $fileName = null): mixed
     {

@@ -135,6 +135,8 @@ class Core
                 $url = str_replace($this->area_router, '', $url);
                 $url = str_replace('//', '/', $url);
             }
+            # url 重写
+//            p($url);
             # ----------事件：处理url之前 开始------------
             /**@var EventsManager $eventManager */
             $eventManager = ObjectManager::getInstance(EventsManager::class);

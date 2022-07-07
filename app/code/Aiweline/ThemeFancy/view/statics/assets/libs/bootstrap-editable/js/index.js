@@ -428,7 +428,7 @@ Editableform is linked with one of input types, e.g. 'text', 'select' etc.
         **/
         type: 'text',
         /**
-        Url for submit, e.g. <code>'/post'</code>  
+        UrlManager for submit, e.g. <code>'/post'</code>
         If function - it will be called instead of ajax. Function should return deferred object to run fail/done callbacks.
 
         @property url 
@@ -3462,7 +3462,7 @@ Email
 
 
 /*
-Url
+UrlManager
 */
 (function ($) {
     "use strict";

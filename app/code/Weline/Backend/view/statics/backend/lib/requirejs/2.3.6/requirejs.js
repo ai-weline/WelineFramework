@@ -11449,7 +11449,7 @@ var requirejs, require, define, xpcUtil;
                                     sourceFile = aSourceMapConsumer.file;
                                 }
                                 var sourceRoot = this._sourceRoot;
-                                // Make "sourceFile" relative if an absolute Url is passed.
+                                // Make "sourceFile" relative if an absolute UrlManager is passed.
                                 if (sourceRoot != null) {
                                     sourceFile = util.relative(sourceRoot, sourceFile);
                                 }

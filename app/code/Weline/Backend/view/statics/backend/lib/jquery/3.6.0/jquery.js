@@ -9398,7 +9398,7 @@
                 // timeout handle
                 timeoutTimer,
 
-                // Url cleanup var
+                // UrlManager cleanup var
                 urlAnchor,
 
                 // Request state (becomes false upon send and true upon completion)

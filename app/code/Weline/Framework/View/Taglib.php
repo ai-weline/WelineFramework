@@ -304,7 +304,9 @@ class Taglib
 //                                        ]
 //                                    )
 //                                );
-                                $result = '<?php echo framework_view_process_block(' . w_var_export($attributes, true) . ');?>';
+                                $data = explode('|', $tag_data[2]);
+                                $data = array_merge($data,$attributes);
+                                $result = '<?php echo framework_view_process_block(' . w_var_export($data, true) . ');?>';
                                 break;
                             // @block{Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml}
                             case '@tag{}':

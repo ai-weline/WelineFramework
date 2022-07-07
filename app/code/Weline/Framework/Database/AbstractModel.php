@@ -502,9 +502,9 @@ abstract class AbstractModel extends DataObject
                     $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
                 }
             } else {
-                $insert_data                      = $this->getModelData();
+                $insert_data = $this->getModelData();
                 unset($insert_data[$this->_primary_key]);
-                $save_result                      = $this->getQuery()->insert($insert_data)->fetch();
+                $save_result = $this->getQuery()->insert($insert_data)->fetch();
                 if (!$this->getId()) {
                     $this->setData($this->_primary_key, $save_result);
                 }
@@ -1026,6 +1026,23 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
+    /**
+     * @DESC          # 处理分页
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/7/7 22:22
+     * 参数区：
+     *
+     * @param int   $page     页码
+     * @param int   $pageSize 页大小
+     * @param array $params   请求参数
+     *
+     * @return AbstractModel|$this
+     * @throws Exception
+     * @throws \ReflectionException
+     *
+     */
     public function pagination(int $page = 1, int $pageSize = 20, array $params = []): AbstractModel|static
     {
         $this->setQuery($this->getQuery()->pagination($page, $pageSize, $params));
@@ -1066,7 +1083,7 @@ abstract class AbstractModel extends DataObject
             $this->pagination = $data;
             return $data;
         }
-        $currentUrl     = $request->isBackend()?$request->getAdminUrl($url_path):$request->getUrl($url_path);
+        $currentUrl     = $request->isBackend() ? $request->getAdminUrl($url_path) : $request->getUrl($url_path);
         $currentUrlPath = substr($currentUrl, 0, strpos($currentUrl, '?'));
 
         $prePageName = __('上一页');
