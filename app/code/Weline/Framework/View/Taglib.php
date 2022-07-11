@@ -108,7 +108,8 @@ class Taglib
 //            if(DEV){
 //                $has_piece = false;
 //            }
-            $name_str .= $default ? "?? {$default} " : ($has_piece ? "??'' " : ' ');
+            $name_str = $default ? "({$name_str}?? {$default}) " : ($has_piece ? "({$name_str}??'') " : $name_str.' ');
+//            $name_str = $default ? "{$name_str}?? {$default} " : ($has_piece ? "{$name_str}??'' " : $name_str.' ');
         }
 
         return $name_str;

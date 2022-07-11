@@ -54,7 +54,11 @@ class ModelManager
             foreach ($model_files as $model_file) {
                 if (class_exists($model_file->getNamespace() . '\\' . $model_file->getFilename())) {
                     /**@var ModelInterface|AbstractModel $model */
-                    $model = ObjectManager::getInstance($model_file->getNamespace() . '\\' . $model_file->getFilename());
+                    $class = $model_file->getNamespace() . '\\' . $model_file->getFilename();
+//                    if(str_ends_with($class, 'Test')){
+//                        continue;
+//                    }
+                    $model = ObjectManager::getInstance($class);
                     if ($model instanceof AbstractModel) {
                         if (PROD) {
                             $this->printing->printing($model::class);

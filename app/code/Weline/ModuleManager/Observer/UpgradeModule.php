@@ -33,6 +33,7 @@ class UpgradeModule implements \Weline\Framework\Event\ObserverInterface
         foreach ($modules as $module) {
             $module['base_path'] = str_replace(BP, '',$module['base_path']);
             $module['description'] = htmlspecialchars($module['description']);
+            $module['status'] = $module['status']?1:0;
             $moduleModel->clearData()
                         ->setData($module)
                         ->save();

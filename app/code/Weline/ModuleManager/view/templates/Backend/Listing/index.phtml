@@ -133,7 +133,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </thead>
                                         <tbody>
                                         <foreach name="modules" item="module">
-                                            <tr @if{$module->getPermanently()=>"style='background:#2a334d'"}>
+                                            <tr @if{$module->getPosition() ==='system'=>"style='background:#2a334d'"}>
                                                 <td><var>$module->getId()</var></td>
                                                 <td><var>$module->getName()</var></td>
                                                 <td>
@@ -147,7 +147,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                         </b>
                                                     </if>
                                                 </td>
-                                                <td><var>$module->getDescription()|20</var></td>
+                                                <td><string>$module->getDescription()|50</string></td>
                                                 <td>
                                                     <if condition="module.position === 'app'">
                                                         <lang>第三方</lang>
@@ -167,7 +167,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <td style='width: 100px'>
                                                     <input class='form-check form-switch' type='checkbox'
                                                            alt="@var{$module->getStatus()?__('开启'):__('关闭')}"
-                                                           id='@var{$module->getName()}' switch='bool' @if{$module->getStatus()=>'checked'}>
+                                                           id='@var{$module->getName()}' switch='bool' @if{$module->getStatus()=>'checked'} @if{$module->getPosition()==='system'=>'disabled'}>
                                                     <label class='form-label' for='@var{$module->getName()}'
                                                            data-on-label='<?= __('开启') ?>'
                                                            data-off-label='<?= __('关闭') ?>'>
@@ -229,10 +229,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         let input = $(e.target);
         let id = input.attr('id');
         let value = input.is(':checked');
-        let url = '@admin-url("admin/system/module/status")';
+        let url = '@admin-url("module-manager/backend/module/status")';
         let data = {
-            identity: id,
-            module: value
+            module: id,
+            status: value
         };
         $.post(url, data, (res) => {
             if (res.code === 200) {
@@ -240,8 +240,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                 //SweetAlert 提示 成功 自动关闭
                 Swal.fire({
                     title: '操作成功',
-                    text: '模组状态已更新',
-                    type: 'success'
+                    text: res.msg,
+                    type: 'success',
+                }).then(() => {
+                    window.location.reload();
                 });
             } else {
                 input.prop('checked', !res.data);

@@ -45,9 +45,9 @@ class XmlReader extends \Weline\Framework\Config\Reader\XmlReader
      */
     public function read(): array
     {
-        if ($event = $this->eventCache->get('event')) {
-            return $event;
-        }
+//        if ($event = $this->eventCache->get('event')) {
+//            return $event;
+//        }
         # 模块配置文件
         $configs = parent::read();
         // 合并掉所有相同名字的事件的观察者，方便获取

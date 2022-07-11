@@ -176,6 +176,12 @@ class Handle implements HandleInterface, RegisterInterface
         if (str_contains($base_path, VENDOR_PATH . DS . 'weline' . DS . 'framework' . DS) || str_contains($base_path, APP_CODE_PATH . DS . 'Weline' . DS . 'Framework' . DS)) {
             $position = 'framework';
         }
+        if (str_contains($base_path, APP_CODE_PATH.'Weline'. DS)) {
+            $position = 'system';
+        }
+        if (str_contains($base_path, VENDOR_PATH.'weline'. DS)) {
+            $position = 'system';
+        }
         # 模块数据
         $module = new Module();
         $module->setStatus(true);
