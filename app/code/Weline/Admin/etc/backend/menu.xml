@@ -18,12 +18,6 @@
     <!--插件管理-->
     <add source="Weline_Admin::system_plugins" name="system_plugins" title="插件管理" action="admin/system/plugins"
          parent="Weline_Backend::system_configuration" icon="ri-plug-2-line" order="10200"/>
-    <!--模组管理-->
-    <add source="Weline_Admin::system_modules" name="system_modules" title="模组" action="admin/system/modules"
-         parent="Weline_Backend::system_configuration" icon="ri-sound-module-line" order="10300"/>
-    <!--模组管理-->
-    <add source="Weline_Admin::system_modules_listing" name="system_modules_listing" title="模组管理" action="admin/system/modules"
-         parent="Weline_Admin::system_modules" icon="" order="10400"/>
     <!--路由管理-->
     <add source="Weline_Admin::system_modules_router" name="system_modules_router" title="路由管理" action="admin/system/modules/router"
          parent="Weline_Admin::system_modules" icon="" order="10500"/>

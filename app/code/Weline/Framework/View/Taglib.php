@@ -21,9 +21,33 @@ use Weline\Framework\View\Exception\TemplateException;
 
 class Taglib
 {
-    public function __construct()
-    {
-    }
+    const operators_symbol = [
+        # 比较
+        '>',
+        '<',
+        '==',
+        '===',
+        '!=',
+        '<>',
+        '!==',
+        '>=',
+        '<=',
+        '<=>',
+        # 逻辑
+        '&&',
+        '||',
+        '!',
+        ' and ',
+        ' or ',
+        ' xor ',
+        # 算数运算
+        '**',
+        '%',
+        '/',
+        '*',
+        '-',
+        '+',
+    ];
 
     public function checkFilter(string $name, string $filter = '|', $default = ''): array
     {
@@ -49,10 +73,22 @@ class Taglib
         # 处理过滤器
         list($name, $default) = $this->checkFilter($name);
         # 去除空白以及空格
-        $names = explode(' ', $this->checkVar($name));
-
+        $name = $this->checkVar($name);
+        $names = explode(' ', $name);
+        # 就近原则操作符
+//        $near = [];
+//        foreach (self::operators_symbol as $symbol) {
+//            if ($position = strpos($name, $symbol)) {
+//                $near[$position] = $symbol;
+//            }
+//        }
+//        # 数组排序
+//        $names = [];
+//        foreach ($near as $symbol){
+//            $names = array_merge($names,explode($symbol, $name));
+//        }
         foreach ($names as $var) {
-            $pieces = explode('.', $var);
+            $pieces    = explode('.', $var);
             $has_piece = false;
             foreach ($pieces as $key => $piece) {
                 if (0 !== $key) {
@@ -72,7 +108,7 @@ class Taglib
 //            if(DEV){
 //                $has_piece = false;
 //            }
-            $name_str .= $default?"?? {$default} ":($has_piece?"??'' ":' ');
+            $name_str .= $default ? "?? {$default} " : ($has_piece ? "??'' " : ' ');
         }
 
         return $name_str;
@@ -304,8 +340,8 @@ class Taglib
 //                                        ]
 //                                    )
 //                                );
-                                $data = explode('|', $tag_data[2]);
-                                $data = array_merge($data,$attributes);
+                                $data   = explode('|', $tag_data[2]);
+                                $data   = array_merge($data, $attributes);
                                 $result = '<?php echo framework_view_process_block(' . w_var_export($data, true) . ');?>';
                                 break;
                             // @block{Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml}
@@ -608,16 +644,24 @@ class Taglib
                     $formatedAttributes     = array();
                     $formatedAttribute_keys = [];
                     # 兼容：属性值单双引号
-                    preg_match_all('/([^ ][^=]+)=[\'"]([\s\S]*?)[\'"]/', $rawAttributes, $attributes, PREG_SET_ORDER);
+                    preg_match_all('/([^ ][^=]+)=\'([\s\S]*?)\'/', $rawAttributes, $attributes, PREG_SET_ORDER);
                     foreach ($attributes as $attribute) {
                         if (isset($attribute[2])) {
                             $attr                      = trim($attribute[1]);
                             $formatedAttributes[$attr] = trim($attribute[2]);
                         }
                     }
-//                    if($tag_key==='tag-self-close-with-attrs'){
+                    preg_match_all('/([^ ][^=]+)="([\s\S]*?)"/', $rawAttributes, $attributes, PREG_SET_ORDER);
+                    foreach ($attributes as $attribute) {
+                        if (isset($attribute[2])) {
+                            $attr                      = trim($attribute[1]);
+                            $formatedAttributes[$attr] = trim($attribute[2]);
+                        }
+                    }
+//                    if($tag_key==='tag-start'&&$tag==='if') {
 //                        p( $rawAttributes,1);
-//                        if(str_contains($rawAttributes, 'Weline\Admin\Block\Page\Topnav')){
+//                        if(str_contains($rawAttributes, 'module.p')){
+//                            p( $attributes);
 //                            p( $formatedAttributes);
 //                        };
 //                    }
