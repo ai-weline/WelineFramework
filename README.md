@@ -4,6 +4,7 @@
 #### 介绍
 
 微蓝WelineFramework框架！
+~~~
 ├── app                 # 应用目录
 │   ├── code            # -代码
 │   ├── design          # -主题
@@ -29,6 +30,7 @@
 │   ├── log             # -日志目录
 │   └── session         # -Session存放目录【仅文件session使用】
 └── vendor              # Composer第三方拓展目录
+~~~
 
 测试环境：http://weline-framework-dev.aiweline.com/ 随时在开发测试，有可能会访问不了
 
