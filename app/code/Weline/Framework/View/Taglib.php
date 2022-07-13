@@ -582,9 +582,9 @@ class Taglib
 
         foreach ($tags as $tag => $tag_configs) {
             $tag_patterns = [
-                'tag-self-close-with-attrs' => '/<' . $tag . '([\s\S]*?)\/>/m',
-                'tag'                       => '/<' . $tag . '([\s\S]*?)>([\s\S]*?)<\/' . $tag . '>/m',
-                'tag-start'                 => '/<' . $tag . '([\s\S]*?)>/m',
+                'tag-self-close-with-attrs' => '/<' . $tag . '([ |>][\s\S]*?)\/>/m',
+                'tag'                       => '/<' . $tag . '([ |>][\s\S]*?)>([\s\S]*?)<\/' . $tag . '>/m',
+                'tag-start'                 => '/<' . $tag . '([ |>][\s\S]*?)>/m',
                 'tag-end'                   => '/<\/' . $tag . '>/m',
                 'tag-self-close'            => '/<' . $tag . '\/>/m',
                 '@tag()'                    => '/\@' . $tag . '\(([\s\S]*?)\)/m',
