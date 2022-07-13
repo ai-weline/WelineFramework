@@ -4,6 +4,31 @@
 #### 介绍
 
 微蓝WelineFramework框架！
+├── app                 # 应用目录
+│   ├── code            # -代码
+│   ├── design          # -主题
+│   ├── etc             # -配置
+│   └── i18n            # -语言包
+├── bin                 # 命令目录
+├── dev                 # 开发目录
+├── extend              # 拓展
+├── generated           # 系统自动生成目录
+│   ├── code            # -代码
+│   ├── language        # -语言
+│   └── routers         # -路由
+├── pub                 # 公共
+│   ├── errors          # -错误文件存放目录
+│   ├── readme          # -关于
+│   └── static          # -静态文件
+├── setup               # 升级安装
+│   ├── readme          # -关于
+│   ├── static          # -升级安装时的静态目录
+│   └── step            # -升级代码
+├── var                 # 数据存放目录
+│   ├── cache           # -缓存目录【仅文件缓存使用】
+│   ├── log             # -日志目录
+│   └── session         # -Session存放目录【仅文件session使用】
+└── vendor              # Composer第三方拓展目录
 
 测试环境：http://weline-framework-dev.aiweline.com/ 随时在开发测试，有可能会访问不了
 
