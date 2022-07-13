@@ -631,39 +631,43 @@ class Taglib
                         $customTag[2] = str_replace(array("\r\n", "\r", "\n", "\t"), '', $customTag[2]);
                     }
                     # 标签支持匹配->
-                    if (!in_array($tag_key, ['@tag()', '@tag{}'])) {
-                        $rawAttributes = rtrim($rawAttributes, '"');
-                        $rawAttributes = rtrim($rawAttributes, '\'');
-                        if (is_int(strrpos($rawAttributes, '\''))) {
-                            $rawAttributes .= '\'';
-                        }
-                        if (is_int(strrpos($rawAttributes, '"'))) {
-                            $rawAttributes .= '"';
-                        }
-                    }
+//                    if (!in_array($tag_key, ['@tag()', '@tag{}'])) {
+//                        $rawAttributes = rtrim($rawAttributes, '"');
+//                        $rawAttributes = rtrim($rawAttributes, '\'');
+//                        if (is_int(strrpos($rawAttributes, '\''))) {
+//                            $rawAttributes .= '\'';
+//                        }
+//                        if (is_int(strrpos($rawAttributes, '"'))) {
+//                            $rawAttributes .= '"';
+//                        }
+//                    }
                     $customTag[1]           = $rawAttributes;
                     $formatedAttributes     = array();
                     $formatedAttribute_keys = [];
                     # 兼容：属性值单双引号
-                    preg_match_all('/([^ ][^=]+)=\'([\s\S]*?)\'/', $rawAttributes, $attributes, PREG_SET_ORDER);
+                    preg_match_all("/(\S*?)='([\s\S]*?)'/", $rawAttributes, $attributes, PREG_SET_ORDER);
                     foreach ($attributes as $attribute) {
                         if (isset($attribute[2])) {
                             $attr                      = trim($attribute[1]);
                             $formatedAttributes[$attr] = trim($attribute[2]);
                         }
                     }
-                    preg_match_all('/([^ ][^=]+)="([\s\S]*?)"/', $rawAttributes, $attributes, PREG_SET_ORDER);
-                    foreach ($attributes as $attribute) {
-                        if (isset($attribute[2])) {
-                            $attr                      = trim($attribute[1]);
-                            $formatedAttributes[$attr] = trim($attribute[2]);
-                        }
-                    }
-//                    if($tag_key==='tag-start'&&$tag==='if') {
-//                        p( $rawAttributes,1);
-//                        if(str_contains($rawAttributes, 'module.p')){
+//                    if($tag_key==='tag-start'&&$tag==='foreach') {
+//                        if(str_contains($rawAttributes, "item='sub_menu'")){
 //                            p( $attributes);
-//                            p( $formatedAttributes);
+//                        };
+//                    }
+                    preg_match_all('/(\S*?)="([\s\S]*?)"/', $rawAttributes, $attributes, PREG_SET_ORDER);
+                    foreach ($attributes as $attribute) {
+                        if (isset($attribute[2])) {
+                            $attr                      = trim($attribute[1]);
+                            $formatedAttributes[$attr] = trim($attribute[2]);
+                        }
+                    }
+//                    if($tag_key==='tag-start'&&$tag==='foreach') {
+//                        if(str_contains($rawAttributes, "item='sub_menu'")){
+//                            p( $formatedAttributes,1);
+//                            p( $attributes);
 //                        };
 //                    }
 
