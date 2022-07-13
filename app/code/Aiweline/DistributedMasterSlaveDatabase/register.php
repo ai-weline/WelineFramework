@@ -12,7 +12,7 @@ use Weline\Framework\Register\RegisterDataInterface;
 
 Register::register(
     RegisterDataInterface::MODULE,
-    'Aiweline_TestDatabase',
+    'Aiweline_DistributedMasterSlaveDatabase',
     __DIR__,
     '1.0.0',
     '测试读写分离和应用级别数据库'

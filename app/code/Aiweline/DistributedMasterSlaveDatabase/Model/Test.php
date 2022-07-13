@@ -9,7 +9,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Aiweline\TestDatabase\Model;
+namespace Aiweline\DistributedMasterSlaveDatabase\Model;
 
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Setup\Data\Context;

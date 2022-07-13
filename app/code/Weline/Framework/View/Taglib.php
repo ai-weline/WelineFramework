@@ -577,19 +577,26 @@ class Taglib
 
     public function tagReplace(Template &$template, string &$content, string &$fileName = '')
     {
+        # FIXME 可以将所有标签相对应的正则一次性存到属性，节省循环调用多次处理的时间
         # 系统自带的标签
         $tags = $this->getTags($template, $fileName, $content);
 
         foreach ($tags as $tag => $tag_configs) {
             $tag_patterns = [
-                'tag-self-close-with-attrs' => '/<' . $tag . '([ |>][\s\S]*?)\/>/m',
-                'tag'                       => '/<' . $tag . '([ |>][\s\S]*?)>([\s\S]*?)<\/' . $tag . '>/m',
-                'tag-start'                 => '/<' . $tag . '([ |>][\s\S]*?)>/m',
+                'tag-self-close-with-attrs' => '/<' . $tag . '([\s\S]*?)\/>/m',
+                'tag'                       => '/<' . $tag . '([\s\S]*?)>([\s\S]*?)<\/' . $tag . '>/m',
+                'tag-start'                 => '/<' . $tag . '([\s\S]*?)>/m',
                 'tag-end'                   => '/<\/' . $tag . '>/m',
                 'tag-self-close'            => '/<' . $tag . '\/>/m',
                 '@tag()'                    => '/\@' . $tag . '\(([\s\S]*?)\)/m',
                 '@tag{}'                    => '/\@' . $tag . '\{([\s\S]*?)\}/m',
             ];
+            # 检测标签所需要的元素，不需要的就跳过
+            foreach ($tag_patterns as $tag_key=>$tag_pattern) {
+                if(str_starts_with($tag_key, 'tag')&&!isset($tag_configs[$tag_key])){
+                    unset($tag_patterns[$tag_key]);
+                }
+            }
             # 匹配标签所需处理的tag
             $tag_config_patterns = [];
             foreach ($tag_configs as $config_name => $tag_config) {
@@ -631,19 +638,8 @@ class Taglib
                         $customTag[2] = str_replace(array("\r\n", "\r", "\n", "\t"), '', $customTag[2]);
                     }
                     # 标签支持匹配->
-//                    if (!in_array($tag_key, ['@tag()', '@tag{}'])) {
-//                        $rawAttributes = rtrim($rawAttributes, '"');
-//                        $rawAttributes = rtrim($rawAttributes, '\'');
-//                        if (is_int(strrpos($rawAttributes, '\''))) {
-//                            $rawAttributes .= '\'';
-//                        }
-//                        if (is_int(strrpos($rawAttributes, '"'))) {
-//                            $rawAttributes .= '"';
-//                        }
-//                    }
                     $customTag[1]           = $rawAttributes;
                     $formatedAttributes     = array();
-                    $formatedAttribute_keys = [];
                     # 兼容：属性值单双引号
                     preg_match_all("/(\S*?)='([\s\S]*?)'/", $rawAttributes, $attributes, PREG_SET_ORDER);
                     foreach ($attributes as $attribute) {
@@ -652,11 +648,6 @@ class Taglib
                             $formatedAttributes[$attr] = trim($attribute[2]);
                         }
                     }
-//                    if($tag_key==='tag-start'&&$tag==='foreach') {
-//                        if(str_contains($rawAttributes, "item='sub_menu'")){
-//                            p( $attributes);
-//                        };
-//                    }
                     preg_match_all('/(\S*?)="([\s\S]*?)"/', $rawAttributes, $attributes, PREG_SET_ORDER);
                     foreach ($attributes as $attribute) {
                         if (isset($attribute[2])) {
@@ -664,7 +655,10 @@ class Taglib
                             $formatedAttributes[$attr] = trim($attribute[2]);
                         }
                     }
-//                    if($tag_key==='tag-start'&&$tag==='foreach') {
+                    # TODO 处理block标签和blockquote标签的问题
+//                    if($tag_key==='tag-self-close-with-attrs'&&$tag==='block') {
+//                        p( $formatedAttributes,1);
+//                        p( $attributes);
 //                        if(str_contains($rawAttributes, "item='sub_menu'")){
 //                            p( $formatedAttributes,1);
 //                            p( $attributes);
