@@ -7,7 +7,9 @@
     "framework",
     "web",
     "ORM",
-    "app"
+    "app",
+    "php",
+    "php8"
   ],
   "type": "project",
   "minimum-stability": "stable",
@@ -48,7 +50,8 @@
         "generated/code/",
         "vendor/"
       ]
-    }
+    },
+    "classmap": ["extend/"]
   }
 
 }
