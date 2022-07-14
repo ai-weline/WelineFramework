@@ -73,7 +73,7 @@ class Taglib
         # 处理过滤器
         list($name, $default) = $this->checkFilter($name);
         # 去除空白以及空格
-        $name = $this->checkVar($name);
+        $name  = $this->checkVar($name);
         $names = explode(' ', $name);
         # 就近原则操作符
 //        $near = [];
@@ -108,7 +108,7 @@ class Taglib
 //            if(DEV){
 //                $has_piece = false;
 //            }
-            $name_str = $default ? "({$name_str}?? {$default}) " : ($has_piece ? "({$name_str}??'') " : $name_str.' ');
+            $name_str = $default ? "({$name_str}?? {$default}) " : ($has_piece ? "({$name_str}??'') " : $name_str . ' ');
 //            $name_str = $default ? "{$name_str}?? {$default} " : ($has_piece ? "{$name_str}??'' " : $name_str.' ');
         }
 
@@ -592,8 +592,8 @@ class Taglib
                 '@tag{}'                    => '/\@' . $tag . '\{([\s\S]*?)\}/m',
             ];
             # 检测标签所需要的元素，不需要的就跳过
-            foreach ($tag_patterns as $tag_key=>$tag_pattern) {
-                if(str_starts_with($tag_key, 'tag')&&!isset($tag_configs[$tag_key])){
+            foreach ($tag_patterns as $tag_key => $tag_pattern) {
+                if (str_starts_with($tag_key, 'tag') && !isset($tag_configs[$tag_key])) {
                     unset($tag_patterns[$tag_key]);
                 }
             }
@@ -632,14 +632,23 @@ class Taglib
                         $customTag[1] = str_replace(array("\r\n", "\r", "\n", "\t"), '', $customTag[1]);
                     }
                     $rawAttributes = $customTag[1] ?? '';
+                    # 如果有属性接下来的字母就不会和标签紧贴着，而如果没有属性那么应该是>括号和标签紧贴着，如果都不是说明并非tag标签
+                    if ($rawAttributes && (
+                            'tag' === $tag_key ||
+                            'tar-start' === $tag_key ||
+                            'tag-self-close-with-attrs' === $tag_key ||
+                            'tag-self-close' === $tag_key
+                        ) && !str_starts_with($rawAttributes, ' ')) {
+                        continue;
+                    }
 
                     if (isset($customTag[2])) {
                         $customTag[2] = str_replace(PHP_EOL, '', $customTag[2]);
                         $customTag[2] = str_replace(array("\r\n", "\r", "\n", "\t"), '', $customTag[2]);
                     }
                     # 标签支持匹配->
-                    $customTag[1]           = $rawAttributes;
-                    $formatedAttributes     = array();
+                    $customTag[1]       = $rawAttributes;
+                    $formatedAttributes = array();
                     # 兼容：属性值单双引号
                     preg_match_all("/(\S*?)='([\s\S]*?)'/", $rawAttributes, $attributes, PREG_SET_ORDER);
                     foreach ($attributes as $attribute) {
@@ -655,16 +664,15 @@ class Taglib
                             $formatedAttributes[$attr] = trim($attribute[2]);
                         }
                     }
-                    # TODO 处理block标签和blockquote标签的问题
+
 //                    if($tag_key==='tag-self-close-with-attrs'&&$tag==='block') {
-//                        p( $formatedAttributes,1);
+//                        p( $rawAttributes,1);
 //                        p( $attributes);
 //                        if(str_contains($rawAttributes, "item='sub_menu'")){
 //                            p( $formatedAttributes,1);
 //                            p( $attributes);
 //                        };
 //                    }
-
                     # 验证标签属性
                     $attrs = $tag_configs['attr'] ?? [];
                     if ($attrs && ('tar-start' === $tag_key || 'tag-self-close-with-attrs' === $tag_key)) {
