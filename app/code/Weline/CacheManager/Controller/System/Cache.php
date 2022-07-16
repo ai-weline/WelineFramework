@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace Weline\CacheManager\Controller\System;
 
 use Weline\Framework\App\Env;
-use Weline\Framework\Cache\Scanner;
 use Weline\Framework\Manager\ObjectManager;
 
 class Cache extends \Weline\Admin\Controller\BaseController
