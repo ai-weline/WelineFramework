@@ -31,12 +31,14 @@ class TemplateFetchFile implements ObserverInterface
 
     /**
      * TemplateFetchBefore 初始函数...
-     * @param WelineTheme $welineTheme
+     *
+     * @param WelineTheme    $welineTheme
      * @param CacheInterface $themeCache
      */
     public function __construct(
         WelineTheme $welineTheme
-    ) {
+    )
+    {
         $this->welineTheme = $welineTheme;
     }
 
@@ -59,12 +61,15 @@ class TemplateFetchFile implements ObserverInterface
         } catch (\Exception $exception) {
             throw  new Exception(__('主题异常：') . $exception->getMessage());
         }
-
-        if (! isset($theme)) {
+        # 主题不存在且非开发环境
+        if (PROD && !isset($theme)) {
             $theme = $this->welineTheme->setData(Env::default_theme_DATA);
         }
         // 组织主题文件位置
-        $theme_file_path = str_replace(BP, $theme->getPath(), $module_file_path);
+        $theme_file_path = str_replace(APP_CODE_PATH, $theme->getPath(), $module_file_path);
+        if($theme_file_path===$module_file_path){
+            $theme_file_path = str_replace(VENDOR_PATH, $theme->getPath(), $theme_file_path);
+        }
         // 如果未被继承则还原为原Module模板文件
         if (!is_file($theme_file_path)) {
             $theme_file_path = $module_file_path;
