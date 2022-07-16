@@ -38,20 +38,24 @@
     "ext-gd": "*",
     "wikimedia/less.php": "^3.1",
     "mrclay/jsmin-php": "^2.4",
-    "aiweline/website-monitoring": "dev-master",
     "guzzlehttp/guzzle": "^7.4",
-    "friendsofphp/php-cs-fixer": "^3.8"
+    "friendsofphp/php-cs-fixer": "^3.8",
+    "weline/framework": "1.0.0",
+    "weline/module-website-monitoring": "1.0.0",
+    "weline/module-theme-fancy": "^1.0"
   },
   "autoload": {
     "psr-4": {
-      "Weline\\": "app/code/Weline",
+      "Weline\\": "app/code/"
+    },
+    "psr-0": {
       "": [
         "app/code/",
-        "generated/code/",
-        "vendor/"
+        "generated/code/"
       ]
     },
-    "classmap": ["extend/"]
+    "classmap": [
+      "extend/"
+    ]
   }
-
 }
