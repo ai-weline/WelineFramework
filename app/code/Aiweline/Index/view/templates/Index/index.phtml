@@ -51,14 +51,9 @@
         <a href="/hello/helloworld/observer" target="_blank" onclick="openWindow(this.href,'Observer')">Observer</a>
         <a href="/hello/helloworld/i18n" target="_blank" onclick="openWindow(this.href,'I18n')">I18n</a>
         <a href="/hello/helloworld/hook" target="_blank" onclick="openWindow(this.href,'Hook')">前端Hook钩子</a>
-        <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('admin', 'admin'); ?>/admin"
-           target="_blank"
-           onclick="openWindow(this.href,this.text)">后台</a>
-
-        <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('api_admin', 'api_admin'); ?>/admin/rest/V1/index"
-           target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>
-
-        <a href="hello/rest/v1/index/index" target="_blank" onclick="openWindow(this.href,'前台api')">前台api</a>
+        <a href="@admin-url('admin')" target='_blank' onclick='openWindow(this.href,this.text)'>后台</a>
+        <a href="@backend-api('admin/rest/V1/index')" target='_blank' onclick='openWindow(this.href,this.text)'>后台api</a>
+        <a href="@api('hello/rest/v1/index/index')" target='_blank' onclick="openWindow(this.href,'前台api')">前台api</a>
         <a href="index/upload" target="_blank" onclick="openWindow(this.href,'演示传输文件')">上传</a>
         <a href='/index/index/moduleTemplateFetch' target='_blank' onclick="openWindow(this.href,'调用其他Module模板文件')">调用其他Module模板文件</a>
         <a href='/index/index/ComposerVendorModuleTemplate' target='_blank'

@@ -133,7 +133,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </thead>
                                         <tbody>
                                         <foreach name="modules" item="module">
-                                            <tr @if{$module->getPosition() ==='system'=>"style='background:#2a334d'"}>
+                                            <tr @if{$module->getPosition() ==='system'=>"class='disabled text-danger'"}>
                                                 <td><var>$module->getId()</var></td>
                                                 <td><var>$module->getName()</var></td>
                                                 <td>
