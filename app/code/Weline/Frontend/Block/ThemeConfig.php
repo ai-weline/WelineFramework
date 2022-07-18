@@ -47,15 +47,8 @@ class ThemeConfig extends \Weline\Framework\View\Block
         $themeConfig = $this->getOriginThemeConfig();
         if ($key) {
             return $themeConfig[$key] ?? '';
-        } else {
-            if ($data = $this->userSession->getData(self::area . 'theme_config')) {
-                return $data;
-            }
-            $data = $this->userConfig->getOriginThemeConfig();
-            # 保存配置 (更新session配置)
-            if($data)$this->setThemeConfig($data);
         }
-        return $data;
+        return $themeConfig;
     }
 
     public function getThemeModel()
@@ -73,13 +66,14 @@ class ThemeConfig extends \Weline\Framework\View\Block
 
     public function setThemeConfig(string|array $key, mixed $value = ''): static
     {
+        $theme_Config = $this->getOriginThemeConfig();
         if (is_array($key)) {
+            $key = array_merge($theme_Config, $key);
             $this->userSession->setData(self::theme_Session_Config, $key);
             if ($this->userSession->isLogin()) {
                 $this->userConfig->addConfig(self::theme_Session_Config, $value)->forceCheck()->save();
             }
         } else {
-            $theme_Config = $this->getOriginThemeConfig();
             $theme_Config[$key] = $value;
             $this->userSession->setData(self::theme_Session_Config, $theme_Config);
             if ($this->userSession->isLogin()) {
@@ -95,7 +89,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
     {
         $body_attributes = $this->userSession->getData(self::theme_Session_Config)['layouts'] ?? [];
         if (empty($body_attributes)) {
-            $body_attributes = json_decode($this->userConfig->getData(self::theme_Session_Config)??'')['layouts']??[];
+            $body_attributes = json_decode($this->userConfig->getData(self::theme_Session_Config)?:'')['layouts']??[];
         }
         $body_attributes_str = '';
         foreach ($body_attributes as $attribute => $value) {

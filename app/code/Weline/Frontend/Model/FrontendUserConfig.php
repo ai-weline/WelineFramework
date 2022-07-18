@@ -13,8 +13,6 @@ namespace Weline\Frontend\Model;
 
 use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
-use Weline\Frontend\Model\Config;
-use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
