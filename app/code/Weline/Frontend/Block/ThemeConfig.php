@@ -39,7 +39,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
         if (empty($themeConfig) and $this->userSession->isLogin()) {
             $themeConfig = $this->userConfig->getData(self::theme_Session_Config);
         }
-        return $key?($themeConfig[$key]??''):$themeConfig;
+        return $key?($themeConfig[$key]??''):($themeConfig?:[]);
     }
 
     public function getThemeConfig(string $key = '')
