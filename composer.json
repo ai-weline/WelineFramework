@@ -45,6 +45,8 @@
     "weline/module-website-monitoring": "^1.0.0",
     "weline/module-theme-fancy": "^1.0"
   },
+  "opcache-autoloader": true,
+  "apcu-autoloader": true,
   "optimize-autoloader": true,
   "classmap-authoritative": true,
   "autoload": {
