@@ -9,10 +9,10 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Admin\Block\Page;
+namespace Weline\Admin\Block\Backend\Page;
 
-use Weline\Backend\Model\BackendUser;
 use Weline\Admin\Session\AdminSession;
+use Weline\Backend\Model\BackendUser;
 use Weline\Backend\Model\Config;
 use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\View\Data\DataInterface;
@@ -20,7 +20,7 @@ use Weline\Framework\View\Template;
 
 class Topbar extends \Weline\Framework\View\Block
 {
-    public string $_template = 'Weline_Admin::templates/common/page/topbar.phtml';
+    public string $_template = 'Weline_Admin::templates/blocks/backend/public/topbar.phtml';
     private Config $config;
     private AdminSession $session;
     private ?BackendUser $user = null;

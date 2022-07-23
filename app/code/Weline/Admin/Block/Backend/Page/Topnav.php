@@ -9,11 +9,11 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Admin\Block\Page;
+namespace Weline\Admin\Block\Backend\Page;
 
 class Topnav extends \Weline\Framework\View\Block
 {
-    public string $_template = 'Weline_Admin::templates/blocks/header/topnav.phtml';
+    public string $_template = 'Weline_Admin::templates/blocks/backend/public/topnav.phtml';
     private \Weline\Backend\Model\Menu $menu;
     private \Weline\Backend\Block\ThemeConfig $themeConfig;
 
