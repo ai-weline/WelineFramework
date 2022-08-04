@@ -31,6 +31,28 @@
 │   └── session         # -Session存放目录【仅文件session使用】
 └── vendor              # Composer第三方拓展目录
 ~~~
+#### 软件架构
+
+    PHP>=8.1
+    composer
+    nginx/apache
+
+#### 安装教程
+composer下载源码
+~~~
+composer create-project aiweline/weline-framework WelineFramework --prefer-dist
+~~~
+###一、项目安装
+
+    1.  WEB项目部署
+    2.  无需设置繁杂的nginx（项目中有样例设置，include到配置中就可以）或者Apache设置（针对Apache项目中编写有伪静态），仅设置项目目录为部署目录即可。
+
+###二、框架命令
+
+    1.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
+    2.  模块安装命令 bin/m module:disable <module_name> 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
+    3.  模块卸载命令 bin/m module:remove <module_name> 此命令备份模块并删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
+    4.  其他命令 php bin/m 回车可见
 
 ### 框架目的
 
@@ -72,29 +94,6 @@
     16、前端组件化。（Component模块等待开发）
     17、CMS支持直接使用前端模板标签语言。（CMS模块等待开发）
 ```
-
-#### 软件架构
-
-    PHP>=8.1
-    composer
-    nginx/apache
-
-#### 安装教程
-composer下载源码
-~~~
-composer create-project aiweline/weline-framework WelineFramework --prefer-dist
-~~~
-###一、项目安装
-
-    1.  WEB项目部署
-    2.  无需设置繁杂的nginx（项目中有样例设置，include到配置中就可以）或者Apache设置（针对Apache项目中编写有伪静态），仅设置项目目录为部署目录即可。
-
-###二、框架命令
-
-    1.  模块安装命令 bin/m module:upgrade 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
-    2.  模块安装命令 bin/m module:disable <module_name> 此命令更新安装模块，以及模块数据。（将执行模块中的Setup\Install.php卸载脚本）
-    3.  模块卸载命令 bin/m module:remove <module_name> 此命令备份模块并删除模块。（将执行模块中的Setup\Remove.php卸载脚本）
-    4.  其他命令 php bin/m 回车可见
 
 #### 使用说明
 
