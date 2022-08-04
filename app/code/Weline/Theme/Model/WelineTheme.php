@@ -93,7 +93,7 @@ class WelineTheme extends Model
         if ($this->getData(self::fields_PATH)) {
             return Env::path_THEME_DESIGN_DIR . str_replace('\\', DS, $this->getData(self::fields_PATH)) . DS;
         }
-        return App::Env('theme')['path'] ?: '';
+        return App::Env('theme')['path'] ?? '';
     }
 
     public function getOriginPath(): string
