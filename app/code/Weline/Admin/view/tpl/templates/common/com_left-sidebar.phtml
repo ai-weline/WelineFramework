@@ -1,0 +1,101 @@
+<?php
+/**@var \Weline\Framework\View\Template $this */
+
+use Weline\Framework\Manager\ObjectManager;
+
+?>
+<?php
+$themeConfig = ObjectManager::getInstance('\Weline\Backend\Block\ThemeConfig');
+if (!$themeConfig->getThemeConfig('topnav')):
+?>
+<div class="vertical-menu">
+
+    <div data-simplebar class="h-100">
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <!-- Left Menu Start -->
+            <ul class="metismenu list-unstyled" id="side-menu">
+                <?php
+                /**@var \Weline\Backend\Model\Menu $menuModel */
+                $menuModel = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Model\Menu::class);
+                $menus     = $menuModel->getMenuTree();
+                /**@var \Weline\Backend\Model\Menu $menu */
+                foreach ($menus as $menu) {
+                    if (empty($menu->getAction()) && empty($menu->getParentSource()) && empty($menu->getPid())) {
+                        ?>
+                        <li class="menu-title"><i
+                                    class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getTitle()) ?></span></li>
+                        <?php
+                    }
+                    $submenus = $menu->getSubMenu();
+                    /**@var \Weline\Backend\Model\Menu $submenu */
+                    foreach ($submenus as $submenu) {
+                        $level_3_menus = $submenu->getSubMenu();
+                        if (empty($level_3_menus)) {
+                            if ('/' === $submenu->getAction()) {
+                                ?>
+                                <li>
+                                    <a href="<?= $submenu->getUrl() ?>" class="waves-effect">
+                                        <i class="<?= $submenu->getIcon() ?>"></i><span
+                                                class="badge rounded-pill bg-primary float-end">3</span>
+                                        <span><?= $submenu->getTitle() ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            } else {
+                                ?>
+                                <li>
+                                    <a href="<?= $submenu->getUrl() ?>" class=" waves-effect">
+                                        <i class="<?= $submenu->getIcon() ?>"></i>
+                                        <span><?= $submenu->getTitle() ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            }
+                        } else {
+                            if ('/' === $submenu->getAction()) {
+                                ?>
+                                <li>
+                                    <a href="<?= $submenu->getUrl() ?>" class="waves-effect">
+                                        <i class="<?= $submenu->getIcon() ?>"></i><span
+                                                class="badge rounded-pill bg-primary float-end">3</span>
+                                        <span><?= $submenu->getTitle() ?></span>
+                                    </a>
+                                </li>
+                                <?php
+                            } else {
+                                ?>
+                                <li>
+                                    <a href="javascript: void(0);"
+                                       class="has-arrow waves-effect">
+                                        <i class="<?= $submenu->getIcon() ?>"></i>
+                                        <span><?= $submenu->getTitle() ?></span>
+                                    </a>
+                                    <ul class="sub-menu" aria-expanded="false">
+                                        <?php
+                                        /**@var \Weline\Backend\Model\Menu $level_3_menu */
+                                        foreach ($level_3_menus as $level_3_menu) {
+                                            ?>
+                                            <li>
+                                                <a href="<?= $level_3_menu->getUrl() ?>"><i
+                                                            class="<?= $level_3_menu->getIcon() ?>"></i><?= $level_3_menu->getTitle() ?>
+                                                </a>
+                                            </li>
+                                            <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                </li>
+                                <?php
+                            }
+                        }
+                    }
+                }
+                ?>
+            </ul>
+        </div>
+        <!-- Sidebar -->
+    </div>
+</div>
+<?php endif; ?>
