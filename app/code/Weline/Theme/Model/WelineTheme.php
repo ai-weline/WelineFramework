@@ -91,7 +91,7 @@ class WelineTheme extends Model
     public function getPath(): string
     {
         if ($this->getData(self::fields_PATH)) {
-            return Env::path_THEME_DESIGN_DIR . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::fields_PATH)) . DIRECTORY_SEPARATOR;
+            return Env::path_THEME_DESIGN_DIR . str_replace('\\', DS, $this->getData(self::fields_PATH)) . DS;
         }
         return App::Env('theme')['path'] ?? '';
     }
@@ -103,7 +103,7 @@ class WelineTheme extends Model
 
     public function getRelatePath(): string
     {
-        return str_replace(BP, '', Env::path_THEME_DESIGN_DIR) . str_replace('\\', DIRECTORY_SEPARATOR, $this->getData(self::fields_PATH)) . DIRECTORY_SEPARATOR;
+        return str_replace(BP, '', Env::path_THEME_DESIGN_DIR) . str_replace('\\', DS, $this->getData(self::fields_PATH)) . DS;
     }
 
     public function setPath($value): static
@@ -164,72 +164,16 @@ class WelineTheme extends Model
                  ->where(self::fields_ID, $this->getId(), '!=')
                  ->update(self::fields_IS_ACTIVE, 0)
                  ->fetch();
+            Env::getInstance()->setConfig('theme', $this->getData());
         }
     }
 
     public function setup(ModelSetup $setup, Context $context): void
     {
-        if ($setup->tableExist()) {
-            $setup->dropTable();
-        }
-        if (!$setup->tableExist()) {
-            $setup->getPrinting()->warning('安装数据库表：' . $this->getTable());
-            $setup->createTable(
-                '主题表'
-            )->addColumn(
-                'id',
-                Create::column_type_INTEGER,
-                11,
-                'primary key NOT NULL AUTO_INCREMENT',
-                'ID'
-            )->addColumn(
-                'module_name',
-                Create::column_type_VARCHAR,
-                '60',
-                'UNIQUE NOT NULL ',
-                '主题模块名'
-            )->addColumn(
-                'name',
-                Create::column_type_VARCHAR,
-                '60',
-                'UNIQUE NOT NULL ',
-                '主题名'
-            )->addColumn(
-                'path',
-                Create::column_type_VARCHAR,
-                '128',
-                'UNIQUE NOT NULL ',
-                '主题路径'
-            )->addColumn(
-                'parent_id',
-                Create::column_type_INTEGER,
-                11,
-                '',
-                '父级主题'
-            )->addColumn(
-                'is_active',
-                Create::column_type_INTEGER,
-                11,
-                '',
-                '是否激活'
-            )->addColumn(
-                'create_time',
-                Create::column_type_DATETIME,
-                null,
-                'NOT NULL DEFAULT CURRENT_TIMESTAMP',
-                '安装时间'
-            )->addColumn(
-                'update_time',
-                Create::column_type_DATETIME,
-                null,
-                'NOT NULL DEFAULT CURRENT_TIMESTAMP',
-                '更新时间'
-            )->addIndex(
-                Create::index_type_DEFAULT,
-                'parent_id',
-                'parent_id'
-            )->create();
-        }
+//        if ($setup->tableExist()) {
+//            $setup->dropTable();
+//        }
+        $this->install($setup, $context);
     }
 
     public function upgrade(ModelSetup $setup, Context $context): void

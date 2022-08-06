@@ -16,6 +16,7 @@ use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Http\Url;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
@@ -36,18 +37,14 @@ class Menu extends \Weline\Framework\Database\Model
     public const fields_IS_SYSTEM     = 'is_system';
     public const fields_IS_BACKEND    = 'is_backend';
 
-    private CacheInterface $backendCache;
-
     private Url $url;
 
-    public function __construct(
-        Url          $url,
-        BackendCache $backendCache,
-        array        $data = []
-    ) {
-        parent::__construct($data);
-        $this->url          = $url;
-        $this->backendCache = $backendCache->create();
+    public function __init()
+    {
+        parent::__init();
+        if (!isset($this->url)) {
+            $this->url = ObjectManager::getInstance(Url::class);
+        }
     }
 
     /**
@@ -56,7 +53,7 @@ class Menu extends \Weline\Framework\Database\Model
     public function setup(ModelSetup $setup, Context $context): void
     {
 //        $setup->dropTable();
-//        $this->install($setup, $context);
+        $this->install($setup, $context);
     }
 
     /**
@@ -208,7 +205,7 @@ class Menu extends \Weline\Framework\Database\Model
     public function getUrl(): string
     {
         if (!$this->isBackend()) {
-            $url ='/'.trim($this->getAction(), '/');
+            $url = '/' . trim($this->getAction(), '/');
         } else {
             $url = $this->url->build(trim($this->getAction(), '/'));
         }
@@ -225,17 +222,9 @@ class Menu extends \Weline\Framework\Database\Model
      */
     public function getMenuTree(): mixed
     {
-        $cache_key = 'backend_menu_cache';
-        if (PROD && $data = $this->backendCache->get($cache_key)) {
-            return $data;
-        }
-        $top_menus = $this->where($this::fields_PID, '0')->order('order', 'ASC')->select()->fetch();
+        $top_menus = $this->clearData()->where($this::fields_PID, 0)->order('order', 'ASC')->select()->fetch()->getItems();
         foreach ($top_menus as &$top_menu) {
             $top_menu = $this->getSubMenus($top_menu);
-        }
-        $top_menus = $top_menus ?? [];
-        if ($top_menus) {
-            $this->backendCache->set($cache_key, $top_menus, 60);
         }
         return $top_menus;
     }
@@ -256,7 +245,7 @@ class Menu extends \Weline\Framework\Database\Model
 
     public function getSubMenus(\Weline\Backend\Model\Menu &$menu): Menu
     {
-        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getData('id'))->order('order', 'ASC')->select()->fetch()) {
+        if ($sub_menus = $this->clearData()->where($this::fields_PID, $menu->getData('id'))->order('order', 'ASC')->select()->fetch()->getItems()) {
             foreach ($sub_menus as &$sub_menu) {
                 $has_sub_menu = $this->clearData()->where($this::fields_PID, $sub_menu->getData('id'))->find()->fetch();
                 if ($has_sub_menu->getData('id')) {

@@ -70,7 +70,7 @@ class Less extends ResourceReader
             $content = file_get_contents($less_file['origin']);
             # 替换模块的路径
             foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
-                $related_file_path = str_replace(trim($module_info['base_path'], DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . 'view', '/', $less_file['dir']);
+                $related_file_path = str_replace(trim($module_info['base_path'], DS) . DS . 'view', '/', $less_file['dir']);
                 $related_file_path = str_replace('//', '/', $related_file_path);
                 $related_file_path = str_replace('//', '/', $related_file_path);
                 $file_path = $this->fetchFile($module_name . '::' . $related_file_path);

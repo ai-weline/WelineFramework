@@ -19,12 +19,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
     public function index()
     {
         $catalogModel = $this->getCatalogModel();
-        $catalogs     = $catalogModel->select()->fetch();
-        foreach ($catalogs as $catalog) {
-            $level     = $catalog['level'] - 1;
-            $level_str = $level ? str_repeat('-', $level) : '';
-            $catalog->setName($level_str . $catalog['name']);
-        }
+        $catalogs     = $catalogModel->getTree();
         $this->assign('catalogs', $catalogs);
         # 清理模型
         $catalogModel->clearData();
@@ -48,9 +43,9 @@ class Catalog extends \Weline\Admin\Controller\BaseController
     private function processTrees(array &$trees)
     {
         foreach ($trees as &$tree) {
-            $tree['text']       = '<a class="btn" href="' . $this->_url->build('dev/tool/admin/document/catalog', ['id' => $tree['id']]) . '">' . $tree['text'] . '</a>
-<a class="btn btn-info pull-right" href="' . $this->_url->build('dev/tool/admin/document/catalog', ['id' => $tree['id']]) . '">修改</a>
-<a class="btn btn-danger pull-right" href="' . $this->_url->build('dev/tool/admin/document/catalog/delete', ['id' => $tree['id']]) . '">' . __('删除') . '</a>
+            $tree['text']       = '<a class="btn" href="' . $this->_url->build('/dev/tool/admin/document/catalog', ['id' => $tree['id']]) . '">' . $tree['text'] . '</a>
+<a class="btn btn-info pull-right" href="' . $this->_url->build('/dev/tool/admin/document/catalog', ['id' => $tree['id']]) . '">修改</a>
+<a class="btn btn-danger pull-right" href="' . $this->_url->build('/dev/tool/admin/document/catalog/delete', ['id' => $tree['id']]) . '">' . __('删除') . '</a>
 ';
             $tree['selectable'] = true;
             $tree['state']      = [
@@ -60,7 +55,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
                 'selected' => false
             ];
             $tree['tags']       = ['available'];
-            $tree['href']       = $this->_url->build('dev/tool/document/catalog', ['id' => $tree['id']]);
+            $tree['href']       = $this->_url->build('/dev/tool/document/catalog', ['id' => $tree['id']]);
             if (isset($tree['nodes']) and count($tree['nodes'])) {
                 $this->processTrees($tree['nodes']);
             }

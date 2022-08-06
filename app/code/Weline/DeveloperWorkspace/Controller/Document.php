@@ -11,7 +11,6 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller;
 
-use Weline\DeveloperWorkspace\Helper\Data;
 use Weline\Framework\Manager\ObjectManager;
 
 class Document extends \Weline\Framework\App\Controller\FrontendController

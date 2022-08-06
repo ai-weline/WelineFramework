@@ -1,0 +1,38 @@
+<?php
+/**@var \Weline\Framework\View\Template $this */
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
+?>
+<!--加载require常用js模块-->
+<!--<script src='/Weline/Frontend/view/statics/base/require.configs.js?v=89578'></script>-->
+<script>
+    window.site = {
+        host: '<?=$this->_request->getBaseHost()?>',
+        base_host: '<?=$this->_request->getPrePath()?>',
+        base_router: '<?=$this->_request->getRouterData('router')?>',
+        i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
+        buildUrl: (path) => {
+            return window.site.host + path;
+        },
+        themeConfig:<?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
+    }
+    /**
+     * 通用打印函数
+     * @param data
+     */
+    function p(data) {
+        console.log(data)
+    }
+    /**
+     * 翻译函数
+     * @param phrase
+     * @returns {*}
+     * @private
+     */
+    function __(phrase) {
+        if (window.site.i18n[phrase] !== undefined) {
+            phrase = window.site.i18n[phrase]
+        }
+        return phrase
+    }
+</script>

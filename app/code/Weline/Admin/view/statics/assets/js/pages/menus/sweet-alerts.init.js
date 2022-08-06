@@ -21,14 +21,14 @@ File: Sweetalert Js File
         //菜单删除警告
         $('.menu-delete').click(function (e) {
             Swal.fire({
-                title: "你确定？",
-                text: "您将无法还原此内容!",
+                title: __('确定删除该菜单吗？'),
+                text: __('删除后不可恢复！'),
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#1cbb8c",
                 cancelButtonColor: "#ff3d60",
-                cancelButtonText: "取消",
-                confirmButtonText: "是的, 删除它!"
+                cancelButtonText: __('取消'),
+                confirmButtonText: __('确定'),
             }).then(function (result) {
                 if (result.value) {
                     let id = $(e.target).attr('data-id')
@@ -44,19 +44,19 @@ File: Sweetalert Js File
                                     res = JSON.parse(res)
                                     if (200 === res.code) {
                                         Swal.fire({
-                                            title: "删除!",
+                                            title: __("删除!"),
                                             text: res.msg,
                                             icon: "success",
                                             confirmButtonColor: "#1cbb8c",
-                                            confirmButtonText: "知道了"
+                                            confirmButtonText: __("知道了")
                                         })
                                     } else {
                                         Swal.fire({
-                                            title: "删除!",
+                                            title: __("删除!"),
                                             text: res.msg,
                                             icon: "error",
                                             confirmButtonColor: "rgba(255,69,0,0.76)",
-                                            confirmButtonText: "知道了"
+                                            confirmButtonText: __("知道了")
                                         })
                                     }
                                     window.location.reload()
@@ -64,11 +64,11 @@ File: Sweetalert Js File
                                 error: function (res) {
                                     res = JSON.parse(res)
                                     Swal.fire({
-                                        title: "删除!",
+                                        title: __("删除!"),
                                         text: res.msg,
                                         icon: "error",
                                         confirmButtonColor: "rgba(255,69,0,0.76)",
-                                        confirmButtonText: "知道了"
+                                        confirmButtonText: __("知道了")
                                     })
                                 }
                             }

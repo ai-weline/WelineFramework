@@ -12,6 +12,10 @@ img {
     padding: 25px;
     text-align: center;
 }
+.header>h3{
+    padding: 25px;
+    text-align: center;
+}
 
 .img-box {
     text-align: center;

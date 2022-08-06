@@ -7,4 +7,6 @@
          parent="Weline_Backend::system_dev_configuration" icon="ri-code-box-line" order="20001"/>
     <add source="Weline_DeveloperWorkspace::dev-document-manager" name="dev-document-manager" title="开发文档管理器" action="dev/tool/admin/document"
          parent="Weline_DeveloperWorkspace::dev-tool" icon="mdi mdi-file-document-multiple" order="20002"/>
+    <add source="Weline_DeveloperWorkspace::dev-document-frontend" name="dev-document-frontend" title="开发文档前端" action="dev/tool/" is_backend="0"
+         parent="Weline_DeveloperWorkspace::dev-tool" icon="mdi mdi-file-document-multiple" order="20003"/>
 </menus>

@@ -1,7 +1,7 @@
 <?php
 /**@var \Weline\Framework\View\Template $this */
-/**@var \Weline\Admin\Block\ThemeConfig $themeConfig */
-$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\ThemeConfig::class);
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
 ?>
 <!DOCTYPE html>
 <!--
@@ -14,14 +14,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <head>
     <title><lang>WelineFramework开发文档</lang></title>
     <!--模板Weline_DeveloperWorkspace::common/head.phtml-->
-    <template>Weline_Frontend::public/head.phtml</template>
-    <!-- jvectormap -->
-    <css>Weline_Frontend::assets/libs/jqvmap/jqvmap.min.css</css>
+    <w:template>Weline_Admin::common/head.phtml</w:template>
     <!--树形插件-->
-    <css>Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.css</css>
-    <js>Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
+    <w:css>Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.css</w:css>
+    <w:js>Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</w:js>
     <!--测试-->
-    @js(Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js)
+    @js(Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js)
 </head>
 
 <body <?= $themeConfig->getLayouts() ?? ''; ?>>
@@ -33,10 +31,16 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
     <!--页头工具条 开始-->
     @template(Weline_DeveloperWorkspace::common/page/topbar.phtml)
     <!--页头工具条 结束-->
+    <!-- ========== Topnav Start ========== -->
+    <!--页头菜单栏 开始-->
+    <w:block class='Weline\Admin\Block\Page\Topnav' cache='300'/>
+    <!--页头菜单栏 结束-->
 
     <!-- ========== Left Sidebar Start ========== -->
     <!--左侧菜单栏 开始-->
-    <block>Weline\DeveloperWorkspace\Block\Catalogs</block>
+    <w:block>
+        Weline\DeveloperWorkspace\Block\Catalogs|cache=300
+    </w:block>
     <!--左侧菜单栏 结束-->
 
 
@@ -48,19 +52,16 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
             <div class="container-fluid">
                 <div class='row'>
                     <h4 class='card-title'>
-                        <lang>开发文档->目录分类管理</lang>
+                        <lang>开发文档->欢迎页</lang>
                     </h4>
                     <p class='card-title-desc'>
-                        <lang>开发文档目录分类管理</lang>
+                        <lang>欢迎使用框架开发文档！</lang>
                     </p>
+                    @template(Weline_DeveloperWorkspace::common/page/back_home.phtml)
                     <div class="col-12">
                         <div class='card'>
                             <div class='card-body'>
-                                <button type='button'
-                                        onclick='window.location.href="@url('dev/tool/admin/document')"'
-                                        class='btn btn-dark waves-effect waves-light pull-right '>
-                                    <lang>返回</lang>
-                                </button>
+                                <div class="sweet"></div>
                             </div>
                         </div>
                     </div>
@@ -69,98 +70,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                         <template>Weline_Component::message.phtml</template>
                         <div class='card'>
                             <div class='card-body'>
-                                <div class="panel">
-                                    <h4>
-                                        <lang>新建分类</lang>
-                                    </h4>
-                                    <form class='needs-validation' method='post'
-                                          action='@url("dev/tool/admin/document/catalog/post")' novalidate>
-                                        <div class='row col'>
-                                            <div class='col-6 pull-left'>
-
-                                            </div>
-                                            <div class='col-6 pull-right button-items'>
-                                                <button type='submit'
-                                                        class='btn btn-primary waves-effect waves-light pull-right'>
-                                                    <lang>保存</lang>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class='row'>
-                                            <div class='col-md-6'>
-                                                <div class='mb-3 position-relative'>
-                                                    <label class='form-label' for='name'>
-                                                        <lang>目录名</lang>
-                                                    </label>
-                                                    <input type='text' name='name' class='form-control' id='name'
-                                                           placeholder='@lang(目录名)' required>
-                                                    <div class='valid-feedback'>
-                                                        <lang>请输入目录名</lang>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class='col-md-3'>
-                                                <div class='mb-3 position-relative'>
-                                                    <label class='form-label'
-                                                           for='pid'>
-                                                        <lang>父级分类</lang>
-                                                    </label>
-                                                    <div class='input-group'>
-                                                        <div class='input-group-prepend'>
-                                                        <span class='input-group-text'
-                                                              id='pid-prepend'>@</span>
-                                                        </div>
-                                                        <select name='pid' class='form-control'
-                                                                id='pid'
-                                                                aria-describedby='pid-prepend' required>
-                                                            <option value="0-0">
-                                                                <lang>请选择</lang>
-                                                            </option>
-                                                            <foreach name="catalogs" item="v">
-                                                                <option value="@var{$v->getId()}-@var{$v->getLevel()}">
-                                                                    <var>$v->getName()</var>
-                                                                </option>
-                                                            </foreach>
-                                                        </select>
-                                                        <div class='valid-feedback'>
-                                                            <lang>请选择父级分类</lang>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class='row col'>
-                                            <div class='col-6 pull-left'>
-
-                                            </div>
-                                            <div class='col-6 pull-right button-items'>
-                                                <button type='submit'
-                                                        class='btn btn-primary waves-effect waves-light pull-right'>
-                                                    <lang>保存</lang>
-                                                </button>
-                                                <button type='button'
-                                                        onclick='window.location.href="@url('dev/tool/admin/document')"'
-                                                        class='btn btn-default waves-effect waves-light pull-right '>
-                                                    <lang>返回</lang>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- end col -->
-                    <div class='col-6'>
-                        <div class='card'>
-                            <div class='card-body'>
-                                <div class="panel">
-                                    <h4>分类管理</h4>
-                                    <div id="catalog-tree">
+                                <div class='panel'>
+                                    <h4>文档分类目录</h4>
+                                    <div id='catalog-tree'>
                                     </div>
                                     <script>
                                         function renderTree() {
                                             $.get({
-                                                url: '@admin-url("dev/tool/admin/document/catalog/tree")',
+                                                url: '@url("dev/tool/index/tree")',
                                             }).done(res => {
                                                 console.log(res)
                                                 $('#catalog-tree').treeview({
@@ -173,6 +90,19 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 
                                         renderTree();
                                     </script>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                    <div class='col-6'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <div class='panel'>
+                                    <h4>
+                                        <lang>框架目录</lang>
+                                    </h4>
+                                    等待循环框架目录
                                 </div>
                             </div>
                         </div>
@@ -211,17 +141,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <!--右边栏-->
 @template(Weline_DeveloperWorkspace::common/right-sidebar.phtml)
 <!--tinymce js-->
-<script src='@static(Weline_Frontend::assets/libs/tinymce/tinymce.min.js)'></script>
+<script src='@static(Weline_Admin::assets/libs/tinymce/tinymce.min.js)'></script>
 
 <!-- init js -->
-<script src='@static(Weline_Frontend::assets/js/pages/form-editor.init.js)'></script>
+<script src='@static(Weline_Admin::assets/js/pages/form-editor.init.js)'></script>
 
 <!--页脚-->
 @template(Weline_DeveloperWorkspace::common/footer.phtml)
 
 <!-- jquery.vectormap map -->
-<script src="@static(Weline_Frontend::assets/libs/jqvmap/jquery.vmap.min.js)"></script>
-<script src="@static(Weline_Frontend::assets/libs/jqvmap/maps/jquery.vmap.usa.js)"></script>
+<script src="@static(Weline_Admin::assets/libs/jqvmap/jquery.vmap.min.js)"></script>
+<script src="@static(Weline_Admin::assets/libs/jqvmap/maps/jquery.vmap.usa.js)"></script>
 </body>
 </html>
 

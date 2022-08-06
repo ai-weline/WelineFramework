@@ -1,18 +1,24 @@
+# 编辑器配置文件
 .idea
+# 流水线文件
+/.workflow
+
+# 第三方
 vendor/
+
+# 配置文件
 app/etc/
 app/*/tpl/*
 app/*/node_modules/*
-app/code/Aiweline/Bbs/
-app/code/Aiweline/NewsSource/
-setup/install.lock
-pub/static/
-var/cache/
-var/log/
-var/session/
-generated
-.user.ini
 
+# 安装锁文件
+setup/install.lock
+
+# 系统自动生成，无需提交
+pub/static/
+/var
+/generated
+.user.ini
 .phpunit.result.cache
 .php_cs.cache
 composer.lock

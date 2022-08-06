@@ -19,6 +19,7 @@ class Footer implements HtmlInterface
     public const key = 'footer';
     public const module = 'Weline_Frontend';
     private Config $backendConfig;
+    private string $_html='';
 
     public function __construct(
         Config $backendConfig
@@ -37,20 +38,31 @@ class Footer implements HtmlInterface
      */
     public function getHtml(): string
     {
-        return $this->backendConfig->getConfig(self::key, self::module)??'';
+        return ($this->backendConfig->getConfig(self::key, self::module) ?? '').$this->_html;
+
     }
 
     /**
      * @DESC          # 设置头部Html代码
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 21:52
      * 参数区：
+     *
      * @param string $html
+     *
+     * @return Footer
      */
-    public function setHtml(string $html)
+    public function setHtml(string $html):static
     {
+        $this->_html = $html;
         $this->backendConfig->setConfig(self::key, $html, self::module);
+        return $this;
+    }
+    function addHtml(string $html): static
+    {
+        $this->_html .= $html;
+        return $this;
     }
 }

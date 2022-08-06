@@ -14,8 +14,8 @@ use Weline\Framework\Setup\RemoveInterface;
 
 class Remove implements RemoveInterface
 {
-    public function setup(Data\Setup $setup, Data\Context $context)
+    public function setup(Data\Setup $setup, Data\Context $context): void
     {
-        return 'Remove OK!';
+        $setup->getPrinter()->setup('Remove OK!');
     }
 }

@@ -16,14 +16,33 @@ namespace Weline\Maintenance\Plugin;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Http\Request;
+use Weline\Framework\Manager\ObjectManager;
 
 class Init
 {
     public function beforeStart(
         \Weline\Framework\Router\Core $router
-    ) {
+    )
+    {
         if (Env::getInstance()->getConfig('maintenance', false)) {
-            throw new Exception(__('程序维护中...'));
+            /**@var Request $req */
+            $req = ObjectManager::getInstance(Request::class);
+            /**@var EventsManager $event */
+            $event = ObjectManager::getInstance(EventsManager::class);
+            $data  = new DataObject(['white_urls' => []]);
+            $event->dispatch('Weline_Framework::maintenance', ['data' => $data]);
+            $white_urls = $data->getData('white_urls');
+            $white         = false;
+            foreach ($white_urls as $white_url_string) {
+                if (str_contains($req->getUri(), $white_url_string)) {
+                    $white = true;
+                    break;
+                }
+            }
+            if (!$white) throw new Exception(__('程序维护中...'));
         }
     }
 }

@@ -180,6 +180,70 @@ File: Main Js File
         $("#light-mode-switch, #dark-mode-switch, #rtl-mode-switch").on("change", function (e) {
             updateThemeSetting(e.target.id);
         });
+        // 元素控制
+        // 顶部栏
+        let data_topbar = $('input[name="data-topbar"]')
+        data_topbar.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {'data-topbar': $(e.target).val()}, 'data-topbar': $(e.target).val()}
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 侧边栏
+        let data_sidebar = $('input[name="data-sidebar"]')
+        data_sidebar.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {'data-sidebar': $(e.target).val()}, 'data-sidebar': $(e.target).val()}
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 侧边栏尺寸
+        let data_sidebar_size = $('input[name="data-sidebar-size"]')
+        data_sidebar_size.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {'data-sidebar-size': $(e.target).val()}, 'data-sidebar-size': $(e.target).val()}
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 侧边栏尺寸
+        let data_layout_size = $('input[name="data-layout-size"]')
+        data_layout_size.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {'data-layout-size': $(e.target).val()}, 'data-layout-size': $(e.target).val()}
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 布局
+        let data_layout = $('#data-layout')
+        data_layout.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {'data-layout': ""}, 'data-layout': false}
+            if ($(e.target).prop('checked')) {
+                layout = {layouts: {'data-layout': "horizontal"}, 'data-layout': true};
+            }
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 3、保持最大化
+        let data_keep_enlarged = $('#data-keep-enlarged')
+        data_keep_enlarged.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {'data-layout': "false"}, 'data-keep-enlarged': false}
+            if ($(e.target).prop('checked')) {
+                layout = {layouts: {'data-keep-enlarged': "true"}, 'data-keep-enlarged': true};
+            }
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 4、class
+        let layout_class = $('input[name="layout-class"]')
+        layout_class.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {'class': $(e.target).val()}, 'layout-class': $(e.target).val()}
+            setThemeConfig(layout)
+            hideLoading()
+        });
+
 
         // 菜单布局
         // 1、明亮
@@ -189,9 +253,9 @@ File: Main Js File
         }
         light_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-topbar': "dark", 'data-sidebar': 'dark'}, 'light-sidebar': false}
+            let layout = {layouts: {'data-topbar': "dark", 'data-sidebar': 'dark'}, 'light-sidebar': false,'data-topbar': "dark", 'data-sidebar': 'dark'}
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-topbar': "colored", 'data-sidebar': 'light'}, 'light-sidebar': true};
+                layout = {layouts: {'data-topbar': "colored", 'data-sidebar': 'light'}, 'light-sidebar': true,'data-topbar': "colored", 'data-sidebar': 'light'};
             }
             setThemeConfig(layout)
             hideLoading()
@@ -203,9 +267,9 @@ File: Main Js File
         }
         icon_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-keep-enlarged': "false", class: ""}, 'icon-sidebar': false}
+            let layout = {layouts: {'data-keep-enlarged': "false", class: ""}, 'icon-sidebar': false,'layout-class': "",'data-keep-enlarged': "false"}
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-keep-enlarged': "true", class: "vertical-collpsed"}, 'icon-sidebar': true};
+                layout = {layouts: {'data-keep-enlarged': "true", class: "vertical-collpsed"}, 'icon-sidebar': true,'data-keep-enlarged': "true", 'layout-class': "vertical-collpsed"};
             }
             setThemeConfig(layout)
             hideLoading()
@@ -217,24 +281,39 @@ File: Main Js File
         }
         layouts_compact_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-sidebar-size': ""}, 'layouts-compact-sidebar': false};
+            let layout = {layouts: {'data-sidebar-size': ""}, 'layouts-compact-sidebar': false,'data-sidebar-size': ""};
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-sidebar-size': "small"}, 'layouts-compact-sidebar': true}
+                layout = {layouts: {'data-sidebar-size': "small"}, 'layouts-compact-sidebar': true,'data-sidebar-size': "small"}
             }
             setThemeConfig(layout)
             hideLoading()
         });
+        // 4、页顶菜单
+        let topnav = $('#topnav')
+        if ('checked' === topnav.attr('checked')) {
+            topnav.prop('checked', true);
+        }
+        topnav.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {}, 'topnav': false};
+            if ($(e.target).prop('checked')) {
+                layout = {layouts: {}, 'topnav': true}
+            }
+            setThemeConfig(layout)
+            hideLoading()
+        });
+
         // 布局
         // 1、水平布局
-        let layouts_horizontal = $('#layouts-horizontal')
-        if ('checked' === layouts_horizontal.attr('checked')) {
-            layouts_horizontal.prop('checked', true);
+        let horizontal = $('#horizontal')
+        if ('checked' === horizontal.attr('checked')) {
+            horizontal.prop('checked', true);
         }
-        layouts_horizontal.on("change", function (e) {
+        horizontal.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-layout': ""}, 'layouts-horizontal': false};
+            let layout = {layouts: {'data-layout': ""}, 'horizontal': false,'data-layout': ""};
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-layout': "horizontal"}, 'layouts-horizontal': true}
+                layout = {layouts: {'data-layout': "horizontal"}, 'horizontal': true,'data-layout': "horizontal"}
             }
             setThemeConfig(layout)
             hideLoading()
@@ -246,11 +325,13 @@ File: Main Js File
         }
         layouts_hori_topbar_dark.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-layout': ""}, 'layouts-hori-topbar-dark': false};
+            let layout = {layouts: {'data-layout': ""}, 'layouts-hori-topbar-dark': false,'data-layout': ""};
             if ($(e.target).prop('checked')) {
                 layout = {
                     layouts: {'data-layout': "horizontal", 'data-topbar': 'dark'},
-                    'layouts-hori-topbar-dark': true
+                    'layouts-hori-topbar-dark': true,
+                    'data-topbar': 'dark',
+                    'data-layout': "horizontal",
                 }
             }
             setThemeConfig(layout)
@@ -263,11 +344,114 @@ File: Main Js File
         }
         layouts_hori_boxed_width.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-layout': "", 'data-layout-size': ""}, 'layouts-hori-boxed-width': false};
+            let layout = {layouts: {'data-layout': "", 'data-layout-size': ""},'data-layout': "", 'layouts-hori-boxed-width': false,'data-layout-size': "",};
             if ($(e.target).prop('checked')) {
                 layout = {
                     layouts: {'data-layout': "horizontal", 'data-layout-size': "boxed"},
-                    'layouts-hori-boxed-width': true
+                    'layouts-hori-boxed-width': true,
+                    'data-layout-size': "boxed",
+                    'data-layout': "horizontal"
+                }
+            }
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 4、水平盒子顶黑
+        let vertical_collpsed_boxed = $('#vertical-collpsed-boxed')
+        if ('checked' === vertical_collpsed_boxed.attr('checked')) {
+            vertical_collpsed_boxed.prop('checked', true);
+        }
+        vertical_collpsed_boxed.on("change", function (e) {
+            showLoading()
+            let layout = {
+                layouts: {'data-layout': "", 'data-layout-size': ""},
+                'vertical-collpsed-boxed': false,
+                'topnav': false
+            };
+            if ($(e.target).prop('checked')) {
+                layout = {
+                    layouts: {
+                        'data-layout': "",
+                        'data-layout-size': "boxed",
+                        'data-keep-enlarged': "true",
+                        class: "vertical-collpsed",
+                    },
+                    'vertical-collpsed-boxed': true,
+                    'topnav': true,
+                    'data-layout-size': "boxed",
+                    'data-keep-enlarged': true,
+                    'layout-class': "vertical-collpsed",
+                    'data-layout': "",
+                }
+            }
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 5、水平盒子菜单置顶
+        let horizontal_menu_top = $('#horizontal_menu_top')
+        if ('checked' === horizontal_menu_top.attr('checked')) {
+            horizontal_menu_top.prop('checked', true);
+        }
+        horizontal_menu_top.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {'data-layout': "", 'data-layout-size': ""}, 'horizontal_menu_top': false};
+            if ($(e.target).prop('checked')) {
+                layout = {
+                    layouts: {
+                        'data-topbar': "dark",
+                        'data-layout': "horizontal"
+                    },
+                    'horizontal_menu_top': true,
+                    'data-layout': "horizontal",
+                    'data-topbar': "dark",
+                }
+            }
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 6、紧凑布局
+        let boxed = $('#boxed')
+        if ('checked' === boxed.attr('checked')) {
+            boxed.prop('checked', true);
+        }
+        boxed.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {}, 'boxed': false};
+            if ($(e.target).prop('checked')) {
+                layout = {
+                    layouts: {
+                        'data-topbar': "dark",
+                        'data-sidebar': "dark",
+                        'data-keep-enlarged': "true",
+                        class: "vertical-collpsed",
+                        'data-layout-size': "boxed"
+                    },
+                    'boxed': true,
+                    'data-layout-size': "boxed",
+                    'layout-class': "vertical-collpsed",
+                    'data-keep-enlarged': true,
+                    'data-sidebar': "dark",
+                    'data-topbar': "dark",
+                }
+            }
+            setThemeConfig(layout)
+            hideLoading()
+        });
+        // 7、水平紧凑布局
+        let horizontal_boxed = $('#horizontal-boxed')
+        if ('checked' === horizontal_boxed.attr('checked')) {
+            horizontal_boxed.prop('checked', true);
+        }
+        horizontal_boxed.on("change", function (e) {
+            showLoading()
+            let layout = {layouts: {}, 'horizontal-boxed': false};
+            if ($(e.target).prop('checked')) {
+                layout = {
+                    layouts: {
+                        'data-layout': "horizontal", 'data-layout-size': "boxed"
+                    },
+                    'horizontal-boxed': true,
+                    'data-layout-size': "boxed",
                 }
             }
             setThemeConfig(layout)
@@ -277,7 +461,7 @@ File: Main Js File
 
     async function setThemeConfig(layout, reload = true) {
         $.ajax({
-            url: window.site.buildUrl('admin/ThemeConfig/Set'),
+            url: window.site.buildUrl('backend/ThemeConfig/Set'),
             data: JSON.stringify(layout),
             dataType: 'json',
             type: 'post',

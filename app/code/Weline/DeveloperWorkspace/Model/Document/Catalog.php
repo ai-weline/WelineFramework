@@ -54,9 +54,8 @@ class Catalog extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-        $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
-//        $setup->dropTable();
         if (!$setup->tableExist()) {
+            $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
             $setup->createTable('目录')
                   ->addColumn('id', TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
                   ->addColumn('name', TableInterface::column_type_VARCHAR, 60, 'not null unique ', '目录名')
@@ -70,8 +69,6 @@ class Catalog extends \Weline\Framework\Database\Model
                   ->addColumn('is_active', TableInterface::column_type_INTEGER, 1, 'default 0', '是否激活')
                   ->addColumn('pid', TableInterface::column_type_INTEGER, 0, '', '父目录')
                   ->create();
-        } else {
-            $setup->getPrinting()->warning('跳过安装数据表...', $setup->getTable());
         }
     }
 
@@ -105,7 +102,7 @@ class Catalog extends \Weline\Framework\Database\Model
         return $this->getData(self::fields_DESCRIPTION)??'';
     }
 
-    public function getTree()
+    public function getTree(string $main_field='',string $parent_id_field='parent_id',string $order_field='position',string $order_sort='ASC'):array
     {
         $catalogs = $this->where('pid=0')->select()->fetchOrigin();
         /**@var Catalog $catalog */

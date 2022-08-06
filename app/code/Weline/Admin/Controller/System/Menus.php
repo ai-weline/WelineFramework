@@ -27,7 +27,7 @@ class Menus extends BaseController
             intval($this->_request->getParam('pageSize', 10)),
             $this->_request->getParams()
         )->select();
-        $this->assign('menus', $menu->fetch());
+        $this->assign('menus', $menu->fetch()->getItems());
         $this->assign('pagination', $menu->getPagination());
         return $this->fetch();
     }

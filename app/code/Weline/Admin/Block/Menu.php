@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Weline\Admin\Block;
 
-use Weline\Admin\Model\AdminUser;
+use Weline\Backend\Model\BackendUser;
 use Weline\Backend\Model\Config;
 use Weline\Framework\App\Session\BackendSession;
 use Weline\Framework\View\Block;

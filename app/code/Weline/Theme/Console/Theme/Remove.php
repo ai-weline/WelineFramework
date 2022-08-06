@@ -30,7 +30,7 @@ class Remove extends AbstractConsole
     /**
      * @inheritDoc
      */
-    public function execute($args = [])
+    public function execute(array $args = [])
     {
         $theme_name = isset($args[1]) ? $args[1] : '';
         if ($theme_name) {

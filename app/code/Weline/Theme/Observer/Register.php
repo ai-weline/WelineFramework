@@ -9,6 +9,7 @@
 
 namespace Weline\Theme\Observer;
 
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\Event;
 use Weline\Framework\Event\ObserverInterface;
 use Weline\Framework\Register\RegisterInterface;
@@ -18,6 +19,7 @@ class Register implements ObserverInterface
 {
     public function execute(Event $event)
     {
+        /**@var DataObject $data*/
         $data           = $event->getData('data');
         $func_arguments = $data->getData('register_arguments');
         $type           = $func_arguments[0];

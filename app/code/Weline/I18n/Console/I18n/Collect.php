@@ -30,7 +30,7 @@ class Collect implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute($args = [])
+    public function execute(array $args = [])
     {
         $frontend_routers = (array)(require Env::path_FRONTEND_PC_ROUTER_FILE);
         $this->printing->warning(__('前台词组收集：'));

@@ -104,6 +104,7 @@ class HelloWorld extends FrontendController
 
     public function demo()
     {
+//        p("select * from {$this->aiwelineHelloWorld->getTable()}");
         $data = $this->aiwelineHelloWorld->query("select * from {$this->aiwelineHelloWorld->getTable()}")->fetch();
         if (empty($data)) {
             $this->aiwelineHelloWorld->insert([

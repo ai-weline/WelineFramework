@@ -12,23 +12,17 @@ declare(strict_types=1);
 namespace Weline\Admin\Controller;
 
 use Weline\Admin\Helper\Data;
-use Weline\Admin\Model\AdminUser;
-use Weline\Admin\Session\AdminSession;
-use Weline\Framework\App\Session\BackendSession;
+use Weline\Backend\Model\BackendUser;
 use Weline\Framework\Manager\MessageManager;
-use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\Session\SessionInterface;
-use Weline\Framework\System\Security\Encrypt;
-use Weline\Framework\Xml\Security;
 
 class Login extends \Weline\Framework\App\Controller\BackendController
 {
-    protected AdminUser $adminUser;
+    protected BackendUser $adminUser;
     private Data $helper;
     private MessageManager $messageManager;
 
     public function __construct(
-        AdminUser      $adminUser,
+        BackendUser      $adminUser,
         MessageManager $messageManager,
         Data           $helper
     ) {
@@ -69,12 +63,12 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         # 验证 form 表单
         if (empty($this->getRequest()->getParam('form_key') || ($this->_session->getData('form_key') !== $this->getRequest()->getParam('form_key')))) {
             $this->messageManager->addError(__('异常的登录操作！'));
-            $this->redirect($this->getUrl('admin/login'));
+            $this->redirect($this->getUrl('/admin/login'));
         }
-        $adminUsernameUser = $this->helper->getRequestAdminUser();
+        $adminUsernameUser = $this->helper->getRequestBackendUser();
         if (!$adminUsernameUser->getId()) {
             $this->messageManager->addError(__('账户不存在！'));
-            $this->redirect($this->getUrl('admin/login'));
+            $this->redirect($this->getUrl('/admin/login'));
         }
         if ($adminUsernameUser->getAttemptTimes() > 6) {
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())->setAttemptIp($this->_request->clientIP())->save();
@@ -83,7 +77,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                 # FIXME 将IP封死，为了不占用服务器资源，将封锁过程提前到框架入口处，此处只作为拉入黑名单处理【设置为Security框架函数处理】
                 $this->noRouter();
             }
-            $this->redirect($this->getUrl('admin/login'));
+            $this->redirect($this->getUrl('/admin/login'));
         } else {
             $this->_session->setData('backend_disable_login', false);
         }
@@ -95,7 +89,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                               ->setAttemptIp($this->_request->clientIP())
                               ->save();
             $this->messageManager->addError(__('登录异常！'));
-            $this->redirect($this->getUrl('admin/login'));
+            $this->redirect($this->getUrl('/admin/login'));
         }
         # 如果大于2次的尝试登录 验证客户提供的验证码
         if ($adminUsernameUser->getAttemptTimes() > 2) {
@@ -107,7 +101,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $adminUsernameUser->setSessionId($this->getSession()->getSessionId())
                               ->setAttemptIp($this->_request->clientIP())
                               ->save();
-            $this->redirect($this->getUrl('admin/login'));
+            $this->redirect($this->getUrl('/admin/login'));
         }
         # 尝试登录
         $password = trim($this->_request->getParam('password'));
@@ -125,7 +119,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $this->messageManager->addError(__('登录凭据错误！'));
         }
         # 跳转首页
-        $this->redirect($this->getUrl('admin'));
+        $this->redirect($this->getUrl('/admin'));
     }
 
     public function logout()

@@ -1,7 +1,7 @@
 <?php
 /**@var \Weline\Framework\View\Template $this */
-/**@var \Weline\Admin\Block\ThemeConfig $themeConfig */
-$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\ThemeConfig::class);
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
 ?>
 <!DOCTYPE html>
 <!--
@@ -14,14 +14,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <head>
     <title><lang>WelineFramework开发文档</lang></title>
     <!--模板Weline_DeveloperWorkspace::common/head.phtml-->
-    <template>Weline_Frontend::public/head.phtml</template>
-    <!-- jvectormap -->
-    <css>Weline_Frontend::assets/libs/jqvmap/jqvmap.min.css</css>
+    <template>Weline_Admin::common/head.phtml</template>
     <!--树形插件-->
-    <css>Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.css</css>
-    <js a="1">Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
+    <css>Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.css</css>
+    <js a="1">Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
     <!--测试-->
-    @js(Weline_Frontend::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js)
+    @js(Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js)
 </head>
 
 <body <?= $themeConfig->getLayouts() ?? ''; ?>>
@@ -30,9 +28,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <!-- 开始 页面 -->
 <div id="layout-wrapper">
 
+
     <!--页头工具条 开始-->
     @template(Weline_DeveloperWorkspace::common/page/topbar.phtml)
     <!--页头工具条 结束-->
+    <!-- ========== Topnav Start ========== -->
+    <!--页头菜单栏 开始-->
+    <w:block class='Weline\Admin\Block\Page\Topnav' cache='300'/>
+    <!--页头菜单栏 结束-->
 
     <!-- ========== Left Sidebar Start ========== -->
     <!--左侧菜单栏 开始-->
@@ -54,6 +57,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                     <p class='card-title-desc'>
                         <var>$catalog->getName()</var>
                     </p>
+                    @template(Weline_DeveloperWorkspace::common/page/back_home.phtml)
                     <div class="col-lg-12">
                         <!--文章列表-->
                         <ul>
@@ -95,17 +99,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <!--右边栏-->
 @template(Weline_DeveloperWorkspace::common/right-sidebar.phtml)
 <!--tinymce js-->
-<script src='@static(Weline_Frontend::assets/libs/tinymce/tinymce.min.js)'></script>
+<script src='@static(Weline_Admin::assets/libs/tinymce/tinymce.min.js)'></script>
 
 <!-- init js -->
-<script src='@static(Weline_Frontend::assets/js/pages/form-editor.init.js)'></script>
+<script src='@static(Weline_Admin::assets/js/pages/form-editor.init.js)'></script>
 
 <!--页脚-->
 @template(Weline_DeveloperWorkspace::common/footer.phtml)
 
 <!-- jquery.vectormap map -->
-<script src="@static(Weline_Frontend::assets/libs/jqvmap/jquery.vmap.min.js)"></script>
-<script src="@static(Weline_Frontend::assets/libs/jqvmap/maps/jquery.vmap.usa.js)"></script>
+<script src="@static(Weline_Admin::assets/libs/jqvmap/jquery.vmap.min.js)"></script>
+<script src="@static(Weline_Admin::assets/libs/jqvmap/maps/jquery.vmap.usa.js)"></script>
 </body>
 </html>
 

@@ -14,7 +14,7 @@ use Weline\Framework\Setup\UpgradeInterface;
 
 class Upgrade implements UpgradeInterface
 {
-    public function setup(Data\Setup $setup, Data\Context $context)
+    public function setup(Data\Setup $setup, Data\Context $context): void
     {
         $setup->getPrinter()->error('升级操作中...');
     }

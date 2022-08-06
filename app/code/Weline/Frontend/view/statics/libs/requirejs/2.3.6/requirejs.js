@@ -11449,7 +11449,7 @@ var requirejs, require, define, xpcUtil;
                                     sourceFile = aSourceMapConsumer.file;
                                 }
                                 var sourceRoot = this._sourceRoot;
-                                // Make "sourceFile" relative if an absolute Url is passed.
+                                // Make "sourceFile" relative if an absolute UrlManager is passed.
                                 if (sourceRoot != null) {
                                     sourceFile = util.relative(sourceRoot, sourceFile);
                                 }
@@ -30346,7 +30346,7 @@ var requirejs, require, define, xpcUtil;
         createRjsApi();
         return;
     } else if ((env === 'rhino' || env === 'xpconnect') &&
-        //User sets up requirejsAsLib variable to indicate it is loaded
+        //FrontendUser sets up requirejsAsLib variable to indicate it is loaded
         //via load() to be used as a library.
         typeof requirejsAsLib !== 'undefined' && requirejsAsLib) {
         //This script is loaded via rhino's load() method, expose the

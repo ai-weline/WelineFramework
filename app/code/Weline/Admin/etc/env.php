@@ -9,4 +9,7 @@
 
 return [
     'router' => 'admin',
+    'dependencies'=>[
+        'Weline_SystemConfig'
+    ]
 ];

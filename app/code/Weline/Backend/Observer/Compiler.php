@@ -18,7 +18,7 @@ use Weline\Framework\View\Template;
 class Compiler implements \Weline\Framework\Event\ObserverInterface
 {
     public const area = 'backend';
-    public const require_js_file = 'base' . DIRECTORY_SEPARATOR . 'require.configs.js';
+    public const require_js_file = 'base' . DS . 'require.configs.js';
     public const require_js_type = 'require.config.js';
 
     /**
@@ -32,7 +32,7 @@ class Compiler implements \Weline\Framework\Event\ObserverInterface
             $type = $eventData->getType();
             switch ($type):
                 case self::require_js_type:
-                    $path = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'view' . DIRECTORY_SEPARATOR . 'statics' . DIRECTORY_SEPARATOR . self::require_js_file;
+                    $path = dirname(__DIR__) . DS . 'view' . DS . 'statics' . DS . self::require_js_file;
             if (!is_dir(dirname($path))) {
                 mkdir($path, 755, true);
             }

@@ -32,29 +32,12 @@ class SystemConfig extends \Weline\Framework\Database\Model
     public const area_BACKEND  = 'backend';
     public const area_FRONTEND = 'frontend';
 
-    private CacheInterface $cache;
-    private array $cache_data;
-
-    public function __construct(
-        BackendCache $cache,
-        array        $data = []
-    ) {
-        $this->cache = $cache->create();
-        parent::__construct($data);
-    }
-
     public function __init()
     {
         parent::__init();
-        if (!isset($this->cache)) {
-            $this->cache = ObjectManager::getInstance(BackendCache::class);
+        if (!isset($this->_cache)) {
+            $this->_cache = ObjectManager::getInstance(BackendCache::class);
         }
-    }
-
-    public function __sleep()
-    {
-        $parent_vars[] = 'cache';
-        return $parent_vars;
     }
 
     /**
@@ -75,7 +58,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
     {
         $cache_key = 'system_config_cache_' . $key . '_' . $area . '_' . $module;
 
-        if ($cache_data = $this->cache->get($cache_key)) {
+        if ($cache_data = $this->_cache->get($cache_key)) {
             return $cache_data;
         }
 
@@ -84,7 +67,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
         if (isset($config_value['v'])) {
             $result = $config_value['v'];
         }
-        $this->cache->set($cache_key, $result);
+        $this->_cache->set($cache_key, $result);
         return $result;
     }
 
@@ -112,7 +95,7 @@ class SystemConfig extends \Weline\Framework\Database\Model
                  ->forceCheck()
                  ->save();
             # 设置配置缓存
-            $this->cache->set($cache_key, $value, );
+            $this->_cache->set($cache_key, $value, );
             return true;
         } catch (\ReflectionException | Core $e) {
             throw new Exception($e->getMessage());
@@ -124,14 +107,8 @@ class SystemConfig extends \Weline\Framework\Database\Model
      */
     public function setup(ModelSetup $setup, Context $context): void
     {
-        $setup->dropTable();
+//        $setup->dropTable();
         $this->install($setup, $context);
-        /* $setup->createTable('系统配置表')
-             ->addColumn(self::field_KEY, TableInterface::column_type_VARCHAR, 120, 'primary key', '键')
-             ->addColumn(self::field_VALUE, TableInterface::column_type_TEXT, 0, '', '值')
-             ->addColumn(self::field_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')
-             ->addColumn(self::field_AREA, TableInterface::column_type_VARCHAR, 120, "NOT NULL DEFAULT 'frontend'", '区域：backend/frontend')
-             ->create();*/
     }
 
     /**
@@ -155,8 +132,6 @@ class SystemConfig extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 120, 'not null', '模块')
                   ->addColumn(self::fields_AREA, TableInterface::column_type_VARCHAR, 120, "NOT NULL DEFAULT 'frontend'", '区域：backend/frontend')
                   ->create();
-        } else {
-            $setup->getPrinting()->printing('已存在，跳过', $setup->getTable());
         }
     }
 }

@@ -26,7 +26,7 @@ class Notification extends \Weline\Framework\View\Block
         parent::__construct($data);
     }
 
-    public string $_template = 'Weline_Admin::templates/block/system/notification.phtml';
+    public string $_template = 'Weline_Admin::templates/blocks/system/notification.phtml';
 
     /**
      * @DESC          # 方法描述
@@ -46,7 +46,7 @@ class Notification extends \Weline\Framework\View\Block
         /**@var SystemNotification $notificationsModel */
         $notificationsModel = ObjectManager::getInstance(SystemNotification::class);
         //        $this->cache->set($cache_key, $notices);
-        return $notificationsModel->where(SystemNotification::fields_is_read, false)->select()->fetch();
+        return $notificationsModel->where(SystemNotification::fields_is_read, false)->select()->fetch()->getItems();
     }
 //
 //    function getTotals()

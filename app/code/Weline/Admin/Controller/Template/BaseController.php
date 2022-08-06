@@ -16,7 +16,7 @@ class BaseController extends \Weline\Admin\Controller\BaseController
     public function __init()
     {
         # 设置模板文件为html
-        $this->getTemplate()->setFileExt('html');
         parent::__init();
+        $this->getTemplate()->setFileExt('html');
     }
 }

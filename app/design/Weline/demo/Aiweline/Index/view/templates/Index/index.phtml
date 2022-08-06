@@ -38,7 +38,7 @@
         <p>码云地址：<a href="https://gitee.com/aiweline/WelineFramework.git">https://gitee.com/aiweline/WelineFramework.git</a>。
         </p>
         <p>开发文档：
-            <a href='@url(dev/tool/)'>
+            <a href='@url("dev/tool/")'>
                 <url>dev/tool/</url>
             </a>
         </p>
@@ -46,6 +46,7 @@
 </div>
 <div class="sample">
     <div class="debug">
+        <hook>add_link</hook>
         <a href="<?=$this->getUrl('/hello/helloworld/p')?>" target="_blank" onclick="openWindow(this.href,this.text)">调试样式</a>
         <a href="/hello/helloworld/ex" target="_blank" onclick="openWindow(this.href,'异常调试')">异常调试</a>
         <a href="/hello/helloworld/demo" target="_blank" onclick="openWindow(this.href,'Demo')">Demo</a>
@@ -56,9 +57,9 @@
         <a href="/hello/helloworld/plugin" target="_blank" onclick="openWindow(this.href,'Plugin')">Plugin</a>
         <a href="/hello/helloworld/observer" target="_blank" onclick="openWindow(this.href,'Observer')">Observer</a>
         <a href='/hello/helloworld/hook' target='_blank' onclick="openWindow(this.href,'Hook')">前端Hook钩子</a>
-        <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('admin','admin');?>/admin" target="_blank" onclick="openWindow(this.href,this.text)">后台</a>
-        <a href="/<?php echo \Weline\Framework\App\Env::getInstance()->getConfig('api_admin','api_admin');?>/rest/V1/index" target="_blank" onclick="openWindow(this.href,this.text)">后台api</a>
-        <a href="hello/rest/v1/index/index" target="_blank" onclick="openWindow(this.href,'前台api')">前台api</a>
+        <a href="@admin-url('admin')" target="_blank" onclick="openWindow(this.href,this.text)">后台</a>
+        <a href="@backend-api('admin/rest/V1/index')" target='_blank' onclick='openWindow(this.href,this.text)'>后台api</a>
+        <a href="@api('hello/rest/v1/index/index')" target="_blank" onclick="openWindow(this.href,'前台api')">前台api</a>
         <a href='/index/index/moduleTemplateFetch' target='_blank' onclick="openWindow(this.href,'调用其他Module模板文件')">调用其他Module模板文件</a>
         <a href='/index/index/getComposerVendorModuleTemplate' target='_blank'
            onclick="openWindow(this.href,'调用其他Module模板文件')">调用composer安装的第三方Module模板文件</a>

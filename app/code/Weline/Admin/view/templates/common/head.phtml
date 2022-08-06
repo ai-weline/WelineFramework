@@ -1,7 +1,7 @@
 <?php
 /**@var \Weline\Framework\View\Template $this */
-/**@var \Weline\Admin\Block\ThemeConfig $themeConfig */
-$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\ThemeConfig::class);
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
 ?>
 <?php
 /**@var \Weline\Framework\View\Template $this */
@@ -29,18 +29,7 @@ endif;
 ?>
 <!--加载require常用js模块-->
 <!--<script src="@static(Weline_Backend::base/require.configs.js)"></script>-->
-<script>
-    window.site = {
-        host: '<?=$this->_request->getBaseHost()?>',
-        base_host: '<?=$this->_request->getPrePath()?>',
-        base_router: '<?=$this->_request->getRouterData('router')?>',
-        i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
-        buildUrl: (path) => {
-            return window.site.base_host + '/' + path;
-        },
-        themeConfig: <?=$themeConfig->getThemeConfig() ?? '{}';?>
-    }
-</script>
+<w:block class='Weline\Backend\Block\Header\Base' template='Weline_Admin::blocks/header/base.phtml'/>
 
 <!--css-->
 <!--loading-->

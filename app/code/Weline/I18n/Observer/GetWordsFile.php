@@ -14,6 +14,7 @@ namespace Weline\I18n\Observer;
 use Weline\Framework\App\Env;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\Event;
+use Weline\Framework\Http\Cookie;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Debug\Printing;
 use Weline\I18n\Model\I18n;
@@ -44,12 +45,8 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
         /**@var DataObject $words_file_data */
         $words_file_data = $event->getData('file_data');
 //        $words_file      = $words_file_data->getData('file_path');
-        // 默认网站语言
-        $lang = $_COOKIE['WELINE-WEBSITE-LANG'] ?? null;
         // 用户语言优先
-        if (isset($_COOKIE['WELINE-USER-LANG'])) {
-            $lang = $_COOKIE['WELINE-USER-LANG'];
-        }
+        $lang = Cookie::getLang();
         // 翻译收集
         $translate_mode = Env::getInstance()->getConfig('translate_mode');
         if ($translate_mode === 'online') {

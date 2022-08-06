@@ -37,7 +37,7 @@ class Enable implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute($args = [])
+    public function execute(array $args = [])
     {
         Env::getInstance()->setConfig('maintenance', true);
         $this->printing->success(__('维护模式已开启！'));

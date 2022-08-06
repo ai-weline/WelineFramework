@@ -79,6 +79,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 }
             }
         }
+        # 子菜单
         foreach ($modules_xml_menus as $module => $menus) {
             foreach ($menus['data'] as $menu) {
                 # 清空查询条件
@@ -106,6 +107,20 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                             $menuModel->forceCheck(false)->setData(Menu::fields_ID, $other_menu['id'])->save($other_menu);
                         }
                     }
+                }
+            }
+        }
+        # 再次处理父菜单
+        $this->menu->clearData();
+        $menus = $this->menu->where(Menu::fields_PID, 0)->select()->fetch();
+        foreach ($menus->getItems() as $menu) {
+            # 如果存在父菜单，则更新父菜单的id到当前子菜单【pid】
+            if ($menu[Menu::fields_PARENT_SOURCE]) {
+                # 查找父菜单，获取父菜单的id
+                $parent = $this->menu->where(Menu::fields_SOURCE, $menu[Menu::fields_PARENT_SOURCE])->find()->fetch();
+                if ($pid = $parent->getData('id')) {
+                    $menu[Menu::fields_PID] = $pid;
+                    $this->menu->save($menu);
                 }
             }
         }

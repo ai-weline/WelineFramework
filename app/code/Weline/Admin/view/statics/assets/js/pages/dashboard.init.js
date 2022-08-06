@@ -7,48 +7,6 @@ File: Dashboard chart Int js
 
 // Radialchart 1
 
-var radialoptions = {
-    series: [72],
-    chart: {
-        type: 'radialBar',
-        width: 72,
-        height: 72,
-        sparkline: {
-            enabled: true
-        }
-    },
-    dataLabels: {
-        enabled: false
-    },
-    colors: ['#0ab39c'],
-    stroke: {
-        lineCap: 'round'
-    },
-    plotOptions: {
-        radialBar: {
-            hollow: {
-                margin: 0,
-                size: '70%'
-            },
-            track: {
-                margin: 0,
-            },
-
-            dataLabels: {
-                name: {
-                    show: false
-                },
-                value: {
-                    offsetY: 5,
-                    show: true
-                }
-            }
-        }
-    }
-};
-
-var radialchart = new ApexCharts(document.querySelector("#radialchart-1"), radialoptions);
-radialchart.render();
 
 
 // Radialchart 2

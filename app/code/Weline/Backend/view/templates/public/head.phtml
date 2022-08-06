@@ -7,6 +7,8 @@
 <link rel="Shortcut Icon" href="@static(Weline_Backend::img/favicon.png)">
 <link rel="Shortcut Icon" href="@static(Weline_Backend::img/favicon.png)">
 <link rel="Bookmark" href="@static(Weline_Backend::img/favicon.png)">
+<!--加载基础JS-->
+<w:block class='Weline\Backend\Block\Header\Base' template='Weline_Backend::blocks/header/base.phtml'/>
 <!--加载requirejs-->
 <?php if (DEV) : ?>
     <!--    <script src="@static(Weline_Backend::backend/lib/requirejs/2.3.6/requirejs.js)"></script>-->
@@ -23,15 +25,4 @@ endif;
 <?php
 echo $this->getHeader()->getHtml();
 ?>
-<script>
-    window.site = {
-        host: '<?=$this->_request->getBaseHost()?>',
-        base_host: '<?=$this->_request->isBackend() ? $this->_request->getAdminUrl('/') : $this->_request->getBaseHost()?>',
-        base_router: '<?=$this->_request->getRouterData('router')?>',
-        i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
-        buildUrl: (path) => {
-            return window.site.base_host + '/' + path;
-        },
-    };
-</script>
 

@@ -8,4 +8,7 @@
     <event name="Framework_Router::backend_no_login_redirect_url">
         <observer name="Framework_Admin::backend_no_login_redirect_url" instance="Weline\Admin\Observer\BackendNoLoginRedirectUrl" disabled="false" shared="true"/>
     </event>
+    <event name="Weline_Framework::maintenance">
+        <observer name="Framework_Admin::maintenance" instance="Weline\Admin\Observer\Maintenance" disabled="false" shared="true"/>
+    </event>
 </config>

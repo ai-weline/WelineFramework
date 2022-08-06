@@ -18,20 +18,22 @@ use Weline\Framework\View\Data\HtmlInterface;
 
 class Header implements HtmlInterface
 {
-    public const key = 'header';
+    public const key    = 'header';
     public const module = 'Weline_Frontend';
     private Config $backendConfig;
+    private string $_html = '';
 
     public function __construct(
         Config $backendConfig
-    ) {
+    )
+    {
         $this->backendConfig = $backendConfig;
     }
 
     /**
      * @DESC          # 返回Html头部配置
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 21:51
      * 参数区：
@@ -39,20 +41,31 @@ class Header implements HtmlInterface
      */
     public function getHtml(): string
     {
-        return $this->backendConfig->getConfig(self::key, self::module)??'';
+        return ($this->backendConfig->getConfig(self::key, self::module) ?? '').$this->_html;
     }
 
     /**
      * @DESC          # 设置头部Html代码
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 21:52
      * 参数区：
+     *
      * @param string $html
+     *
+     * @return Header
      */
-    public function setHtml(string $html)
+    public function setHtml(string $html): static
     {
+        $this->_html = $html;
         $this->backendConfig->setConfig(self::key, $html, self::module);
+        return $this;
+    }
+
+    function addHtml(string $html): static
+    {
+        $this->_html .= $html;
+        return $this;
     }
 }

@@ -14,24 +14,25 @@ namespace Weline\DeveloperWorkspace\Controller\Admin;
 use Weline\Admin\Model\AdminUser;
 use Weline\DeveloperWorkspace\Model\Document\Catalog;
 use Weline\DeveloperWorkspace\Model\ModelService;
+use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Uploader;
+use function PHPUnit\Framework\matches;
 
 class Document extends \Weline\Framework\App\Controller\BackendController
 {
     public function index()
     {
         $documentModel = ModelService::getDocumentModel();
-        $documents     = $documentModel->pagination(
-            intval($this->_request->getParam('page', 1)),
-            intval($this->_request->getParam('pageSize', 10)),
-            $this->_request->getParams()
-        )
-                                       ->select()
-                                       ->fetch();
-        $this->assign('documents', $documents);
+        $documents     = $documentModel->joinModel(Catalog::class, 'catalog', 'main_table.category_id=catalog.id')
+                                       ->fields('main_table.*,main_table.id as doc_id,catalog.*,catalog.id as c_id,catalog.name as c_name')
+                                       ->pagination(
+                                           intval($this->_request->getParam('page', 1)),
+                                           intval($this->_request->getParam('pageSize', 10)),
+                                           $this->_request->getParams()
+                                       )->order('doc_id', 'desc')->select()->fetch();
+        $this->assign('documents', $documents->getItems());
         $this->assign('pagination', $documentModel->getPagination());
-        $this->assign('columns', $documentModel->columns());
         return $this->fetch();
     }
 
@@ -56,18 +57,12 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         // 分类
         /**@var Catalog $catalogModel */
         $catalogModel = ObjectManager::getInstance(Catalog::class);
-        $catalogs     = $catalogModel->select()->fetch();
-        foreach ($catalogs as &$catalog) {
-            $name    = $catalog->getName();
-            $level   = (int)$catalog->getLevel() - 1;
-            $name    = ($level ? str_repeat('-', $level) : '') . $name;
-            $catalog = $catalog->setData('name', $name);
-        }
+        $catalogs     = $catalogModel->getTree();
         $this->assign('catalogs', $catalogs);
         # 作者
         /**@var AdminUser $adminUserModel */
         $adminUserModel = ObjectManager::getInstance(AdminUser::class);
-        $this->assign('users', $adminUserModel->select()->fetch());
+        $this->assign('users', $adminUserModel->select()->fetch()->getItems());
         # 如果是编辑,不是就返回空 文档
         $this->assign('document', ModelService::getDocumentModel()->load($this->_request->getParam('id', 0)));
         return $this->fetch();
@@ -79,20 +74,27 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         /**@var \Weline\DeveloperWorkspace\Model\Document $documentModel */
         $documentModel = ObjectManager::getInstance(\Weline\DeveloperWorkspace\Model\Document::class);
         try {
-            $documentModel->save($this->_request->getPost());
-            $this->getMessageManager()->addSuccess('添加文档成功！ID:' . $documentModel->getId());
+            $pre_msg = __('添加');
+            if ($this->_request->getPost('id')) {
+                $pre_msg = __('修改');
+            }
+            $data = $this->_request->getPost();
+            $data['content'] = htmlspecialchars($data['content']);
+            $documentModel->save($data);
+            $this->getMessageManager()->addSuccess($pre_msg . '文档成功！ID:' . $documentModel->getId());
         } catch (\Exception $exception) {
             $this->exception($exception);
         }
         $this->redirect($this->_url->build('dev/tool/admin/document'));
     }
 
-    public function upload()
+    public function postUpload()
     {
         $uploader = new Uploader();
-        p($_FILES);
-//        $filename =$_FILES[];
-//        $uploader->setModuleName('Weline_DeveloperWorkspace')
-//        ->saveFile($file_tmp, $filename);
+        $paths    = $uploader->saveFiles('Weline_DeveloperWorkspace', 'document', 'wyswyg');
+        if (!isset($paths[0])) {
+            throw new Exception(__('文件上传失败！'));
+        }
+        return $this->fetchJson(['location' => $paths[0]]);
     }
 }

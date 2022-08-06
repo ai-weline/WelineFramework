@@ -24,13 +24,39 @@ class I18n
 
     /**
      * I18n 初始函数...
+     *
      * @param Reader $reader
-     * @param array $data
+     * @param array  $data
      */
     public function __construct(
         Reader $reader
-    ) {
+    )
+    {
         $this->reader = $reader;
+    }
+
+    /**
+     * @DESC          # 返回Local代码
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/6/24 23:01
+     * 参数区：
+     *
+     * @param string $locale_code
+     *
+     * @return string
+     */
+    public function getLocalByCode(string $locale_code): string
+    {
+        $locales = Locales::getLocales();
+        foreach ($locales as $locale) {
+            $locale = strtolower($locale);
+            if (strtolower($locale_code) === $locale) {
+                return $locale;
+            }
+        }
+        return 'zh_cn';
     }
 
     /**
@@ -59,8 +85,8 @@ class I18n
      *
      * 参数区：
      *
-     * @throws Exception
      * @return array
+     * @throws Exception
      */
     public function getLocalsWords()
     {
@@ -80,15 +106,15 @@ class I18n
                         $is_utf8 = false;
                         $line    = 1;
                         while (($data = fgetcsv($handle)) !== false) {
-                            if (! isset($data[0])) {
+                            if (!isset($data[0])) {
                                 throw new Exception(PHP_EOL . 'i18n翻译文件格式错误：' . $i18n_file->getOrigin() . '错误行号：' . $line . '  错误消息：没有翻译原文' . PHP_EOL . '读取内容：' . PHP_EOL . var_export($data, true));
                             }
                             $data[0] = trim($data[0]);
-                            if (! isset($data[1])) {
+                            if (!isset($data[1])) {
                                 throw new Exception(PHP_EOL . 'i18n翻译文件格式错误：' . $i18n_file->getOrigin() . '错误行号：' . $line . '  错误消息：没有翻译内容' . PHP_EOL . '读取内容：' . PHP_EOL . var_export($data, true));
                             }
                             $data[1] = trim($data[1]);
-                            if (! $is_utf8) {
+                            if (!$is_utf8) {
                                 if (md5(mb_convert_encoding($data[0], 'utf-8', 'utf-8')) === md5($data[0])) {
                                     $is_utf8 = true;
                                 } else {
@@ -96,7 +122,7 @@ class I18n
                                 }
                             }
                             $locals_words[$local_filename][$data[0]] = $data[1];
-                            $line += 1;
+                            $line                                    += 1;
                         }
 
                         fclose($handle);
@@ -114,8 +140,9 @@ class I18n
      * 参数区：
      *
      * @param string $local_code
-     * @throws Exception
+     *
      * @return array|mixed
+     * @throws Exception
      */
     public function getLocalWords(string $local_code = 'zh_Hans_CN')
     {

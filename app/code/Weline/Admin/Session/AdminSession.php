@@ -11,19 +11,6 @@ declare(strict_types=1);
 
 namespace Weline\Admin\Session;
 
-use Weline\Admin\Model\AdminUser;
-use Weline\Framework\Database\AbstractModel;
-use Weline\Framework\Manager\ObjectManager;
-
-class AdminSession extends \Weline\Framework\App\Session\BackendSession
+class AdminSession extends \Weline\Backend\Session\BackendSession
 {
-    public function loginUser(AdminUser $user): static
-    {
-        return parent::login($user->getUsername(), $user->getId());
-    }
-
-    public function getLoginUser(string $model = AdminUser::class): ?AbstractModel
-    {
-        return parent::getLoginUser($model);
-    }
 }

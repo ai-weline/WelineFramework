@@ -14,19 +14,20 @@
                         <var>$v['name']</var>
                     </li>
                     <php>$nodes = $v['nodes'];</php>
-                    <if condition="$nodes">
+                    <notempty name="nodes">
                         <foreach name='nodes' item='node'>
                             <li>
-                                <a href="@php{if(3===$node['level']):echo 'javascript: void(0);';else:echo $node['href'];endif;}"
-                                   class='@if{3===$node["level"]=>has-arrow} waves-effect'>
-                                <i class='@var{$node["icon"]}'></i>
-                                <span><var>$node['name']</var></span>
-                                </a>
                                 <php>
-                                    $sub_level = $node['level'];
-                                    $sub_nodes = $node['nodes'];
+                                    $sub_level = $node['level']??1;
+                                    $sub_nodes = $node['nodes']??[];
                                 </php>
-                                <if condition="3===$sub_level and $sub_nodes">
+                                <a href="@php{if($sub_nodes):echo 'javascript: void(0);';else:echo $node['href'];endif;}"
+                                   class='@if{$sub_nodes=>"has-arrow"} waves-effect'>
+                                    <i class='@var{$node["icon"]}'></i>
+                                    <span><var>$node['name']</var></span>
+                                </a>
+
+                                <if condition="$sub_nodes">
                                     <ul class='sub-menu' aria-expanded='false'>
                                         <foreach name='sub_nodes' item='sub_node'>
                                             <li>
@@ -37,7 +38,7 @@
                                 </if>
                             </li>
                         </foreach>
-                    </if>
+                    </notempty>
                 </foreach>
             </ul>
         </div>

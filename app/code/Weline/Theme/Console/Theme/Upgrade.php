@@ -40,7 +40,7 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute($args = [])
+    public function execute(array $args = [])
     {
         array_shift($args);
 
@@ -73,7 +73,7 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
         if ($modules) {
             foreach ($modules as $module) {
                 $this->printing->note($module);
-                $module_path = str_replace('_', DIRECTORY_SEPARATOR, $module);
+                $module_path = str_replace('_', DS, $module);
                 $themes_files_data = array_merge($themes_files_data, $this->fetchThemeFiles($theme, $theme->getPath() . $module_path));
             }
         } else {
@@ -105,8 +105,8 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
             foreach ($theme_extend_file as $file) {
                 $file_path = $file->getOrigin();
                 if (!strpos($file_path, 'templates') && !strpos($file_path, 'register.php')) {
-                    $new_file_path = str_replace($theme->getPath(), APP_STATIC_PATH . $theme->getOriginPath() . DIRECTORY_SEPARATOR, $file_path);
-                    $themes_files_data[$file_path] = dirname($new_file_path) . DIRECTORY_SEPARATOR;
+                    $new_file_path = str_replace($theme->getPath(), APP_STATIC_PATH . $theme->getOriginPath() . DS, $file_path);
+                    $themes_files_data[$file_path] = dirname($new_file_path) . DS;
                 }
             }
         }

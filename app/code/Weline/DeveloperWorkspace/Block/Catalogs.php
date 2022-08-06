@@ -11,21 +11,31 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Block;
 
+use Weline\DeveloperWorkspace\Model\Document;
 use Weline\DeveloperWorkspace\Model\Document\Catalog;
 use Weline\Framework\Manager\ObjectManager;
 
 class Catalogs extends \Weline\Framework\View\Block
 {
-    protected string $_template = 'Weline_DeveloperWorkspace::templates/common/left-sidebar.phtml';
+    protected string $_template = 'Weline_DeveloperWorkspace::/common/left-sidebar.phtml';
 
     public function __init()
     {
+        parent::__init();
         $this->setCatalogs($this->getCatalogs());
     }
 
     public function getCatalogs()
     {
-        return $this->getCatalog()->getTree();
+        $trees = $this->getCatalog()->getTree();
+        return [
+            [
+                'text'=>__('开发文档'),
+                'name'=>__('开发文档'),
+                'nodes'=>$trees,
+                'href'=>''
+            ]
+        ];
     }
 
     private function getCatalog(): Catalog

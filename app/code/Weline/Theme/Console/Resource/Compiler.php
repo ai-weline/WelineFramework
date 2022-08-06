@@ -11,7 +11,7 @@ declare(strict_types=1);
 
 namespace Weline\Theme\Console\Resource;
 
-use Weline\Framework\Cache\Console\Cache\Clear;
+use Weline\CacheManager\Console\Cache\Clear;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Cli\Printing;
 use Weline\Framework\Resource\CompilerInterface;
@@ -29,7 +29,7 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute($args = [])
+    public function execute(array $args = [])
     {
         $source_types = [];
         array_shift($args);

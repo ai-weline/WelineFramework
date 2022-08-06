@@ -70,6 +70,10 @@ class Reader extends ModuleFileReader
         /**@var LanguagePackReader $lang_pack_reader */
         $lang_pack_reader = ObjectManager::getInstance(LanguagePackReader::class);
         $lang_packs       = $lang_pack_reader->getLanguagePack();
+        $cache_key = 'cache_i18n_lang_packs';
+        if ($data = $this->i18nCache->get($cache_key)) {
+            return $data;
+        }
         // 模块翻译
         $vendor_module_i18ns = [];
         foreach ($this->getFileList() as $vendor => $module_files) {
@@ -84,6 +88,10 @@ class Reader extends ModuleFileReader
                 }
             }
         }
-        return array_merge($lang_packs, $vendor_module_i18ns);
+//                                file_put_contents(__DIR__ . 'test.txt', var_export($vendor_module_i18ns, true));
+//                        die;
+        $data = array_merge($lang_packs, $vendor_module_i18ns);
+        $this->i18nCache->set($cache_key, $data);
+        return $data;
     }
 }

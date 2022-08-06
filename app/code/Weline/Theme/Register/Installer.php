@@ -79,7 +79,7 @@ class Installer implements RegisterInterface
 
         $action_string = __('安装');
         if ($this->welineTheme->getId()) {
-            if ($this->welineTheme->getPath() !== $param['path'] . DIRECTORY_SEPARATOR) {
+            if ($this->welineTheme->getPath() !== $param['path'] . DS) {
                 $this->printing->setup($param['name'] . __(' 主题更新...'));
                 $action_string = __('更新');
             } else {
@@ -103,8 +103,12 @@ class Installer implements RegisterInterface
             } else {
                 // 新安装
                 $this->welineTheme->clearQuery();
-                $this->welineTheme->setId(0);
-                $this->welineTheme->setIsActive(true)->save($this->welineTheme->getData());
+                $res = $this->welineTheme->setId(0)
+                                  ->setIsActive(true)
+                                  ->save();
+                if (!$res) {
+                    throw new Exception(__('主题注册失败！'));
+                }
             }
             $this->printing->success($param['name'] . __(" 主题{$action_string}完成!"));
         } catch (\Exception $exception) {

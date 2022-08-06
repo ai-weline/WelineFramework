@@ -11,7 +11,9 @@ declare(strict_types=1);
 
 namespace Weline\ModuleRouter\Config;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Register\Register;
 use Weline\Framework\System\File\Scanner;
 use Weline\ModuleRouter\Cache\ModuleRouterCache;
 use function p;
@@ -20,7 +22,7 @@ class ModuleRouterReader extends \Weline\Framework\System\ModuleFileReader
 {
     private CacheInterface $moduleRouterCache;
 
-    public function __construct(Scanner $scanner, ModuleRouterCache $moduleRouterCache, string $path = 'Controller' . DIRECTORY_SEPARATOR . 'Router.php')
+    public function __construct(Scanner $scanner, ModuleRouterCache $moduleRouterCache, string $path = 'Controller' . DS . 'Router.php')
     {
         parent::__construct($scanner, $path);
         $this->moduleRouterCache = $moduleRouterCache->create();
@@ -33,28 +35,22 @@ class ModuleRouterReader extends \Weline\Framework\System\ModuleFileReader
             return $router_rules;
         }
         $callback = function ($vendors_modules) {
-            foreach ($vendors_modules as $vendor => &$modules) {
-                foreach ($modules as $module => &$router_file) {
-                    if (empty($router_file)) {
-                        unset($modules[$module]);
-                    } else {
-                        $module_path = str_replace('_', '\\', $module);
-                        $namespace = str_replace(VENDOR_PATH, '', $router_file);
-                        $namespace = str_replace(APP_CODE_PATH, '', $namespace);
-                        $namespace_arr = explode(DIRECTORY_SEPARATOR, $namespace);
-                        array_shift($namespace_arr);
-                        array_shift($namespace_arr);
-                        $namespace = $module_path.'\\'.implode('\\', $namespace_arr);
-                        $namespace = str_replace('.php', '', $namespace);
-                        $router_file = [
-                            'origin'=>$router_file,
-                            'class'=>$namespace,
-                        ];
-                    }
+            $modules = Env::getInstance()->getActiveModules();
+            foreach ($vendors_modules as $module => $router_file) {
+                # 跳过不存在的模块
+                if(!isset($modules[$module])){
+                    unset($vendors_modules[$module]);
+                    continue;
                 }
-                if (empty($modules)) {
-                    unset($vendors_modules[$vendor]);
-                }
+                # 兼容composer的路由文件
+                $base_namespace = $modules[$module]['namespace_path'].'\\';
+                $namespace = str_replace($modules[$module]['base_path'], $base_namespace, $router_file);
+                $namespace = str_replace(['.php',DS], ['','\\'], $namespace);
+                $router_file = [
+                    'origin'=>$router_file,
+                    'class'=>$namespace,
+                ];
+                $vendors_modules[$module] = $router_file;
             }
             return $vendors_modules;
         };

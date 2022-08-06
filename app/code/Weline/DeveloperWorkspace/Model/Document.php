@@ -32,6 +32,7 @@ class Document extends \Weline\Framework\Database\Model
      */
     public function setup(ModelSetup $setup, Context $context): void
     {
+//        $setup->dropTable();
         $this->install($setup, $context);
     }
 
@@ -48,9 +49,8 @@ class Document extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-        $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
-//        $setup->dropTable();
         if (!$setup->tableExist()) {
+            $setup->getPrinting()->setup('安装数据表...', $setup->getTable());
             $setup->createTable('开发文章')
                   ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment ', 'ID')
                   ->addColumn(self::fields_CATEGORY_ID, TableInterface::column_type_INTEGER, 0, 'not null ', '分类ID')
@@ -59,8 +59,6 @@ class Document extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_AUTHOR_ID, TableInterface::column_type_INTEGER, 0, 'default 0', '作者ID')
                   ->addColumn(self::fields_CONTEND, TableInterface::column_type_TEXT, 0, 'not null', '内容')
                   ->create();
-        } else {
-            $setup->getPrinting()->setup('跳过安装数据表...', $setup->getTable());
         }
     }
 
@@ -97,6 +95,10 @@ class Document extends \Weline\Framework\Database\Model
     public function getContent()
     {
         return $this->getData(self::fields_CONTEND);
+    }
+    public function getDecodeContent()
+    {
+        return htmlspecialchars_decode($this->getContent());
     }
 
     public function setContent(string $content): Document

@@ -13,14 +13,16 @@ namespace Weline\Admin\Block;
 
 class LeftSiderbarMenu extends \Weline\Framework\View\Block
 {
-    private \Weline\Backend\Block\Menu $menu;
-    public function __construct(\Weline\Backend\Block\Menu $menu, array $data = [])
+    private \Weline\Backend\Model\Menu $menu;
+
+    public function __construct(\Weline\Backend\Model\Menu $menu, array $data = [])
     {
+        $this->menu = $menu;
         parent::__construct($data);
     }
 
     public function getMenuTree()
     {
-        $menus = $this->menu->getMenuTree();
+        return $this->menu->getMenuTree();
     }
 }

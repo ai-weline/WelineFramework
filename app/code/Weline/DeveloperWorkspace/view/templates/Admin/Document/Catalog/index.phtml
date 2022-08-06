@@ -1,7 +1,7 @@
 ﻿<?php
 /**@var \Weline\Framework\View\Template $this */
-/**@var \Weline\Admin\Block\ThemeConfig $themeConfig */
-$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\ThemeConfig::class);
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
 ?>
 <!DOCTYPE html>
 <!--
@@ -14,9 +14,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <head>
     <title><lang>Weline Admin 管理面板</lang></title>
     <!--模板Weline_Admin::common/head.phtml-->
-    <w-template>Weline_Admin::common/head.phtml</w-template>
+    <w:template>Weline_Admin::common/head.phtml</w:template>
     <!-- jvectormap -->
-    <w-css>Weline_Admin::assets/libs/jqvmap/jqvmap.min.css</w-css>
+    <w:css>Weline_Admin::assets/libs/jqvmap/jqvmap.min.css</w:css>
     <!--树形插件-->
     <css>Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.css</css>
     <js>Weline_Admin::/libs/bootstrap-treeview-master/dist/bootstrap-treeview.min.js</js>
@@ -32,8 +32,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <div id="layout-wrapper">
 
     <!--页头工具条 开始-->
-    @template(Weline_Admin::common/page/topbar.phtml)
+    <w:block class='Weline\Admin\Block\Page\Topbar'/>
     <!--页头工具条 结束-->
+    <!-- ========== Topnav Start ========== -->
+    <!--页头菜单栏 开始-->
+    <w:block class='Weline\Admin\Block\Page\Topnav' cache='300'/>
+    <!--页头菜单栏 结束-->
 
     <!-- ========== Left Sidebar Start ========== -->
     <!--左侧菜单栏 开始-->
@@ -57,12 +61,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                     <div class="col-12">
                         <div class='card'>
                             <div class='card-body'>
-                                <button type='button'
-                                        onclick='window.location.href="@admin-url(' dev
-                                /tool/admin/document')"'
-                                class='btn btn-dark waves-effect waves-light pull-right '>
-                                <lang>返回</lang>
-                                </button>
+                                <div class="btn-group pull-right">
+                                    <a href="@admin-url('dev/tool/admin/document/catalog')"
+                                       class='btn btn-warning waves-effect waves-light'>
+                                        <lang>继续添加</lang>
+                                    </a>
+                                    <button type='button'
+                                            onclick='window.location.href="@admin-url('dev/tool/admin/document')"' class='btn btn-dark waves-effect waves-light '>
+                                    <lang>返回</lang>
+                                    </button>
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -129,13 +138,31 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                                 <lang>顶级分类</lang>
                                                             </option>
                                                             <foreach name="catalogs" item="v">
-                                                                <php>$selected =
-                                                                    ($catalog->getId()===$v->getPId()?'selected':'');
-                                                                </php>
-                                                                <option value="@var{$v->getId()}-@var{$v->getLevel()}"
-                                                                        @var($selected)>
-                                                                    <var>$v->getName()</var>
-                                                                </option>
+                                                                <if condition="$catalog.pid === $v.id">
+                                                                    <option value="@var{$v.id}-@var{$v.level}" selected>
+                                                                        <var>$v.name</var>
+                                                                    </option>
+                                                                    <else/>
+                                                                    <option value="@var{$v.id}-@var{$v.level}">
+                                                                        <var>$v.name</var>
+                                                                    </option>
+                                                                </if>
+                                                                <notempty name="$v.nodes">
+                                                                    <foreach name="$v.nodes" item="node">
+                                                                        <if condition="$catalog.id === $node.pid">
+                                                                            <option value="@var{$node.id}-@var{$node.level}"
+                                                                                    selected>
+                                                                                <php>echo str_pad('-',$node['level']);</php>
+                                                                                <var>$node.name</var>
+                                                                            </option>
+                                                                            <else/>
+                                                                            <option value="@var{$node.id}-@var{$node.level}">
+                                                                                <php>echo str_pad('-',$node['level']);</php>
+                                                                                <var>$node.name</var>
+                                                                            </option>
+                                                                        </if>
+                                                                    </foreach>
+                                                                </notempty>
                                                             </foreach>
                                                         </select>
                                                         <div class='valid-feedback'>
@@ -151,7 +178,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                         <lang>是否启用</lang>
                                                     </label>
                                                     <div class='input-group'>
-                                                        <php>$checked = $catalog->isActive()?'checked':'';</php>
+                                                        <php>
+                                                            if(empty($catalog)){
+                                                            $checked = '';
+                                                            }else{
+                                                            $checked = $catalog->isActive()?'checked':'';
+                                                            }
+                                                        </php>
                                                         <input type='checkbox' name='is_active' id="isActive"
                                                                class='form-control is-active' @var($checked)/>
                                                     </div>
@@ -266,9 +299,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <script src="@static(Weline_Admin::assets/libs/jqvmap/maps/jquery.vmap.usa.js)"></script>
 <!--switch开关-->
 <js>Weline_Admin::/libs/bootstrap-switch/3.3.4/js/bootstrap-switch.min.js</js>
+<php>
+    if(empty($catalog->getId())){
+    $checked = 'false';
+    }else{
+    $checked = $catalog->isActive()?'true':'false';
+    }
+</php>
 <script>
+
     $('#isActive').bootstrapSwitch({
-        // state: true,//开关状态
+        state: @var{$checked},//开关状态
         size: null,//尺寸 mini small large
         animate: true,//开启动画效果
         disabled: false,//禁用

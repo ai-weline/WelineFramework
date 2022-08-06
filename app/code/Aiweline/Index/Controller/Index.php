@@ -10,7 +10,10 @@
 namespace Aiweline\Index\Controller;
 
 use Weline\Framework\App\Controller\FrontendController;
+use Weline\Framework\App\Env;
 use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Manager\ObjectManager;
+use Weline\Theme\Model\WelineTheme;
 
 class Index extends FrontendController
 {
@@ -30,11 +33,14 @@ class Index extends FrontendController
      *
      * 参数区：
      *
-     * @param int $a
-     * @throws \Weline\Framework\App\Exception
      */
     public function index()
     {
+        /**
+         * @var WelineTheme $theme
+         */
+        $theme = ObjectManager::getInstance(WelineTheme::class);
+        $this->assign('theme',$theme->getActiveTheme());
         return $this->fetch();
     }
 

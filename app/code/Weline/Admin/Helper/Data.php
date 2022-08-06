@@ -11,18 +11,17 @@ declare(strict_types=1);
 
 namespace Weline\Admin\Helper;
 
-use Weline\Admin\Model\AdminUser;
-use Weline\Framework\App\Session\BackendSession;
+use Weline\Backend\Model\BackendUser;
 use Weline\Framework\Http\Request;
 
 class Data extends \Weline\Framework\App\Helper
 {
     protected Request $_request;
-    private AdminUser $adminUser;
+    private BackendUser $adminUser;
 
     public function __construct(
         Request   $_request,
-        AdminUser $adminUser
+        BackendUser $adminUser
     ) {
         $this->_request = $_request;
         $this->adminUser = $adminUser;
@@ -35,9 +34,9 @@ class Data extends \Weline\Framework\App\Helper
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/9 14:06
      * 参数区：
-     * @return AdminUser
+     * @return BackendUser
      */
-    public function getRequestAdminUser(): AdminUser
+    public function getRequestBackendUser(): BackendUser
     {
         $username = $this->_request->getParam('username');
         try {

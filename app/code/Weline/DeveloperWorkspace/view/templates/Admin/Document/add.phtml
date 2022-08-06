@@ -1,7 +1,7 @@
 ﻿<?php
 /**@var \Weline\Framework\View\Template $this */
-/**@var \Weline\Admin\Block\ThemeConfig $themeConfig */
-$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admin\Block\ThemeConfig::class);
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
 ?>
 <!DOCTYPE html>
 <!--
@@ -14,9 +14,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <head>
     <title><lang>Weline Admin 管理面板</lang></title>
     <!--模板Weline_Admin::common/head.phtml-->
-    <w-template>Weline_Admin::common/head.phtml</w-template>
+    <w:template>Weline_Admin::common/head.phtml</w:template>
     <!-- jvectormap -->
-    <w-css>Weline_Admin::assets/libs/jqvmap/jqvmap.min.css</w-css>
+    <w:css>Weline_Admin::assets/libs/jqvmap/jqvmap.min.css</w:css>
     <!-- Responsive Table css -->
     <link href='@static(Weline_Admin::assets/libs/admin-resources/rwd-table/rwd-table.min.css)' rel='stylesheet'
           type='text/css'/>
@@ -30,8 +30,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
 <div id="layout-wrapper">
 
     <!--页头工具条 开始-->
-    @template(Weline_Admin::common/page/topbar.phtml)
+    <w:block class='Weline\Admin\Block\Page\Topbar'/>
     <!--页头工具条 结束-->
+    <!-- ========== Topnav Start ========== -->
+    <!--页头菜单栏 开始-->
+    <w:block class='Weline\Admin\Block\Page\Topnav' cache='300'/>
+    <!--页头菜单栏 结束-->
 
     <!-- ========== Left Sidebar Start ========== -->
     <!--左侧菜单栏 开始-->
@@ -59,7 +63,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                 <form class='needs-validation' method="post"
                                       action="@admin-url('dev/tool/admin/document/post')" novalidate>
                                     <label>
-                                        <input type="text" class="sr-only" name="id" value="@var{$document->getId()}">
+                                        <input type="text" class="sr-only" name="id" value="@var{$document['id']}">
                                     </label>
                                     <div class="row col">
                                         <div class="col-6 pull-left">
@@ -70,6 +74,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     class='btn btn-primary waves-effect waves-light pull-right'>
                                                 <lang>保存</lang>
                                             </button>
+                                            <a href="javascript:window.history.back();"
+                                               class='btn btn-default waves-effect waves-light pull-right'>
+                                                <lang>返回</lang>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class='row'>
@@ -79,7 +87,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                     <lang>标题</lang>
                                                 </label>
                                                 <input type='text' name='title' class='form-control' id='title'
-                                                       placeholder='@lang(标题)' value='' required>
+                                                       placeholder='@lang(标题)' value='@var($document.title)' required>
                                                 <div class='valid-feedback'>
                                                     <lang>请输入标题</lang>
                                                 </div>
@@ -101,15 +109,15 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                             aria-describedby='authorPrepend' required>
                                                         <foreach name="users">
                                                             <php>$author_id = $document->getAuthorId();</php>
-                                                            <php>$v_id = $v->getId();</php>
+                                                            <php>$v_id = $v['id'];</php>
                                                             <if condition="$author_id === $v_id">
-                                                                <option value="@var{$v->getId()}" selected>
+                                                                <option value="@var{$v.id}" selected>
                                                                     <var>$v->getUsername()</var>
                                                                 </option>
                                                                 <else/>
-                                                                    <option value="@var{$v->getId()}">
-                                                                        <var>$v->getUsername()</var>
-                                                                    </option>
+                                                                <option value="@var{$v.id}">
+                                                                    <var>$v->getUsername()</var>
+                                                                </option>
                                                             </if>
                                                         </foreach>
                                                     </select>
@@ -139,18 +147,33 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Admi
                                                 </label>
                                                 <select type='text' name='category_id' class='form-control'
                                                         id='category'>
-                                                    <foreach name="catalogs" item="v">
-                                                        <php>$c_id = $document->getCategoryId();</php>
-                                                        <php>$v_id = $v->getId();</php>
-                                                        <if condition="$c_id === $v_id">
-                                                            <option value="@var{$v->getId()}" selected>
-                                                                <var>$v->getName()</var></option>
+                                                    <w:foreach name='catalogs' item='v'>
+                                                        <if condition="$document.category_id === $v.id">
+                                                            <option value="@var{$v.id}" selected>
+                                                                <var>$v.name</var>
+                                                            </option>
                                                             <else/>
-                                                                <option value="@var{$v->getId()}">
-                                                                    <var>$v->getName()</var>
-                                                                </option>
+                                                            <option value="@var{$v.id}">
+                                                                <var>$v.name</var>
+                                                            </option>
                                                         </if>
-                                                    </foreach>
+                                                        <w:notempty name="$v.nodes">
+                                                            <w:foreach name="$v.nodes" item="node">
+                                                                <w:if condition="$document.category_id === $node.id">
+                                                                    <option value="@var{$node.id}"
+                                                                            selected>
+                                                                        <w:php>echo str_pad('-',$node['level']);</w:php>
+                                                                        <w:var>$node.name</w:var>
+                                                                    </option>
+                                                                    <w:else/>
+                                                                    <option value="@var{$node.id}">
+                                                                        <w:php>echo str_pad('-',$node['level']);</w:php>
+                                                                        <w:var>$node.name</w:var>
+                                                                    </option>
+                                                                </w:if>
+                                                            </w:foreach>
+                                                        </w:notempty>
+                                                    </w:foreach>
                                                 </select>
                                             </div>
                                         </div>
@@ -233,8 +256,33 @@ File: Form editor Js File
                 draggable_modal: true,
                 skin: 'oxide-dark',
                 theme: 'silver',
-                automatic_uploads: false,
+                automatic_uploads: true,
+                images_reuse_filename:true,//不用每次都上传，同一个文件不上传
                 images_upload_url: '@admin-url("dev/tool/admin/document/upload")',
+                /*images_upload_handler: function (blobInfo, succFun, failFun) {
+                    var xhr, formData;
+                    var file = blobInfo.blob();//转化为易于理解的file对象
+                    xhr = new XMLHttpRequest();
+                    xhr.withCredentials = false;
+                    xhr.open('POST', window.site.host+'@admin-url("dev/tool/admin/document/upload")');
+                    xhr.onload = function() {
+                        var json;
+                        if (xhr.status !== 200) {
+                            failFun('HTTP Error: ' + xhr.status);
+                            return;
+                        }
+                        json = JSON.parse(xhr.responseText);
+                        if (!json || typeof json.location != 'string') {
+                            failFun('Invalid JSON: ' + xhr.responseText);
+                            return;
+                        }
+                        succFun(json.location);
+                    };
+                    formData = new FormData();
+                    formData.append('file', file, file.name );//此处与源文档不一样
+                    xhr.send(formData);
+                },*/
+                images_upload_base_path: '/',
                 plugins: [
                     'advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
                     'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
