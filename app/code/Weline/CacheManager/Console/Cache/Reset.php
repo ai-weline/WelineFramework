@@ -12,7 +12,6 @@ namespace Weline\CacheManager\Console\Cache;
 use Weline\Framework\App\System;
 use Weline\Framework\Cache\Scanner;
 use Weline\Framework\Output\Cli\Printing;
-use const Weline\Framework\Cache\Console\Cache\BP;
 
 class Reset implements \Weline\Framework\Console\CommandInterface
 {

@@ -43,7 +43,8 @@
     "friendsofphp/php-cs-fixer": "^3.8",
     "weline/framework": "^1.0.0",
     "weline/module-website-monitoring": "^1.0.0",
-    "weline/module-theme-fancy": "^1.0"
+    "weline/module-theme-fancy": "^1.0",
+    "rinvex/countries": "^8.1"
   },
   "opcache-autoloader": true,
   "apcu-autoloader": true,
@@ -51,7 +52,8 @@
   "classmap-authoritative": true,
   "autoload": {
     "psr-4": {
-      "Weline\\": "app/code/Weline/"
+      "Weline\\": "app/code/Weline/",
+      "Weline\\Framework\\":"vendor/weline/framework"
     },
     "psr-0": {
       "": [

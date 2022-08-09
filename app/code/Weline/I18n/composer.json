@@ -10,6 +10,7 @@
     }
   ],
   "require": {
-    "symfony/intl": "^5.2"
+    "symfony/intl": "^5.2",
+    "rinvex/countries": "^8"
   }
 }

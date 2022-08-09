@@ -21,7 +21,7 @@ class Parser
 //        p($request);
         // 只缓存 收集来的 翻译文件 以及翻译包
         /**@var $cache \Weline\Framework\Cache\CacheInterface */
-        $cache = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\I18n\Cache\I18nCache::class)->create();
+        $cache = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\I18n\Cache\I18nCacheFactory::class)->create();
         if (! CLI && ! DEV && $cache_words = $cache->get($words)) {
             $words = $cache_words;
         } else {
