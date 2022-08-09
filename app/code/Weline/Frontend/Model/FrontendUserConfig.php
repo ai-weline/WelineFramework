@@ -11,8 +11,10 @@ declare(strict_types=1);
 
 namespace Weline\Frontend\Model;
 
+use Weline\Backend\Model\Config;
 use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
@@ -48,6 +50,10 @@ class FrontendUserConfig extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key', '用户ID')
                   ->addColumn(self::fields_config, TableInterface::column_type_TEXT, null, '', '配置')
                   ->create();
+            /**@var Config $config */
+            $config = ObjectManager::getInstance(Config::class);
+            $config->setConfig('frontend_default_avatar', 'Weline_Frontend::/img/logo.png', 'Weline_Frontend');
+            $setup->getPrinting()->printing('frontend_default_avatar', 'Weline_Frontend::/img/logo.png');
         }
     }
 
