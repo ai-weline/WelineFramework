@@ -12,7 +12,7 @@ namespace Weline\I18n\Config;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\I18n\Cache\I18NCache;
+use Weline\I18n\Cache\I18nCache;
 use Weline\I18n\Parser;
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\System\ModuleFileReader;
@@ -50,7 +50,7 @@ class Reader extends ModuleFileReader
     public function __construct(
         Scanner   $scanner,
         Request   $request,
-        I18NCache $cache,
+        I18nCache $cache,
         Parser    $parser
     ) {
         $this->request   = $request;
