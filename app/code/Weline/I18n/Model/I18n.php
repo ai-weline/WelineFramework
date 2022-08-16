@@ -12,7 +12,10 @@ namespace Weline\I18n\Model;
 use Symfony\Component\Intl\Locales;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Http\Cookie;
 use Weline\Framework\System\File\Data\File;
+use Weline\I18n\Cache\I18NCache;
 use Weline\I18n\Config\Reader;
 
 class I18n
@@ -22,6 +25,8 @@ class I18n
      */
     private Reader $reader;
 
+    private CacheInterface $i18nCache;
+
     /**
      * I18n 初始函数...
      *
@@ -29,10 +34,12 @@ class I18n
      * @param array  $data
      */
     public function __construct(
-        Reader $reader
+        Reader           $reader,
+        I18NCache $i18nCache
     )
     {
-        $this->reader = $reader;
+        $this->reader    = $reader;
+        $this->i18nCache = $i18nCache->create();
     }
 
     /**
@@ -49,13 +56,18 @@ class I18n
      */
     public function getLocalByCode(string $locale_code): string
     {
+        if ($data = $this->i18nCache->get($locale_code)) {
+            return $data;
+        }
         $locales = Locales::getLocales();
         foreach ($locales as $locale) {
             $locale = strtolower($locale);
             if (strtolower($locale_code) === $locale) {
+                $this->i18nCache->set($locale_code, $locale);
                 return $locale;
             }
         }
+        $this->i18nCache->set($locale_code, 'zh_cn');
         return 'zh_cn';
     }
 
@@ -64,19 +76,61 @@ class I18n
      *
      * 参数区：
      *
+     * @param string $lang_code
+     *
      * @return string[]
+     * @throws Exception
+     * @throws \ReflectionException
      */
-    public function getLocals()
+    public function getLocals(string $lang_code = 'zh_hans_cn'): array
     {
-        $locals = [];
-        foreach (Locales::getLocales() as $index => $locale) {
-            foreach (Locales::getNames() as $local => $name) {
-                if ($locale === $local) {
-                    $locals[$index] = str_pad($local, 15, ' ') . $name;
+        $cache_key = 'getLocals' . $lang_code;
+        if ($data = $this->i18nCache->get($cache_key)) {
+            return $data;
+        }
+        $locals = Locales::getNames($lang_code);
+        $this->i18nCache->set($cache_key, $locals);
+        return $locals;
+    }
+
+    function getLocalesWithFlags(int $width = 42, int $height = 0, string $lang_code = 'zh_hans_cn')
+    {
+        $cache_key = 'getLocalesWithFlags' . $lang_code . $width . $height;
+        if ($data = $this->i18nCache->get($cache_key)) {
+            return $data;
+        }
+        # TODO 排除非启用的语言包
+        $no_scale = false;
+        if($width == 0 && $height == 0) {
+            $no_scale = true;
+        }
+        $locals      = [];
+        $lang_locals = $this->getLocals($lang_code);
+        foreach (countries() as $code => $country) {
+            $country = country($code);
+            foreach ($country->getLocales() as $locale) {
+                $svg = $country->getFlag();
+                $svg_xml = simplexml_load_string($svg);
+                $o_width = $svg_xml->attributes()->width??42;
+                $o_height = $svg_xml->attributes()->height??32;
+                if(!$no_scale){
+                    if($width===0){
+                        $scale = intval($o_height)/$height;
+                        $width = intval($o_width)/$scale;
+                    }
+                    if($height===0){
+                        $scale = intval($o_width)/$width;
+                        $height = intval($o_height)/$scale;
+                    }
                 }
+
+                $svg_xml->attributes()->width = $width;
+                $svg_xml->attributes()->height = $height;
+                $svg = $svg_xml->asXML();
+                if (isset($lang_locals[$locale])) $locals[$locale] = ['name' => $lang_locals[$locale], 'flag' => $svg];
             }
         }
-
+        $this->i18nCache->set($cache_key, $locals);
         return $locals;
     }
 

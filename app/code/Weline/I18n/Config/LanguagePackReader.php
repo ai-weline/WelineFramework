@@ -11,6 +11,8 @@ declare(strict_types=1);
 
 namespace Weline\I18n\Config;
 
+use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\System\File\App\Scanner;
 use Weline\Framework\System\File\Data\File;
 
@@ -31,11 +33,30 @@ class LanguagePackReader
         $this->scanner = $scanner;
     }
 
-    public function getLanguagePack()
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/8/12 21:40
+     * 参数区：
+     * @return array
+     * @throws \ReflectionException
+     * @throws Exception
+     */
+    public function getLanguagePack(): array
     {
         // 所有语言包
         $all_lan_pack = [];
-        // 扫描代码
+//        // 模块中的i18n包
+//        $modules = Env::getInstance()->getActiveModules();
+//        $module_packs = [];
+//        foreach ($modules as $module) {
+//            $pattern_dir = $module['base_path'].'i18n'.DS.'*.csv';
+//            $module_packs = array_merge($module_packs,glob($pattern_dir));
+//        }
+//        p($module_packs);
+//        $this->scanner->globFile($pattern_dir)
         $registers = $this->scanner->scanAppModules();
         foreach ($registers as $index => $modules) {
             foreach ($modules as $vendor => $vendor_modules) {
