@@ -14,7 +14,9 @@ use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Http\Cookie;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Data\File;
+use Weline\Framework\System\File\Scan;
 use Weline\I18n\Cache\I18NCache;
 use Weline\I18n\Config\Reader;
 
@@ -97,9 +99,16 @@ class I18n
     {
         $cache_key = 'getLocalesWithFlags' . $lang_code . $width . $height;
         if ($data = $this->i18nCache->get($cache_key)) {
-            return $data;
+//            return $data;
         }
         # TODO 排除非启用的语言包
+        /**@var Scan $scan*/
+        $install_packs_path = glob(Env::path_LANGUAGE_PACK.'*'.DS.'*',GLOB_ONLYDIR);
+        $install_packs = [];
+        foreach ($install_packs_path as $path){
+            $path_arr = explode(DS, $path);
+            $install_packs[] = array_pop($path_arr);
+        }
         $no_scale = false;
         if($width == 0 && $height == 0) {
             $no_scale = true;
@@ -109,6 +118,7 @@ class I18n
         foreach (countries() as $code => $country) {
             $country = country($code);
             foreach ($country->getLocales() as $locale) {
+                if(!in_array($locale, $install_packs))continue;
                 $svg = $country->getFlag();
                 $svg_xml = simplexml_load_string($svg);
                 $o_width = $svg_xml->attributes()->width??42;
