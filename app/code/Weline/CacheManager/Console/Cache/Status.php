@@ -83,7 +83,8 @@ class Status implements \Weline\Framework\Console\CommandInterface
                                 $set_data[$identify] = $status;
                             }
                             $cache_config['status'] = $set_data;
-                            Env::getInstance()->setData('cache', $cache_config);
+                            Env::getInstance()->setConfig('cache', $cache_config);
+//                            ObjectManager::getInstance(Clear::class)->execute(['-f']);
                             $this->printAll();
                         }
                         break;
