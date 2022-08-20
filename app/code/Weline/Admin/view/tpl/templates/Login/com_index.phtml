@@ -26,21 +26,21 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <meta name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no'>
 <meta content="<?php echo $this->getData('title'); ?>" name='author'/>
 <meta content="<?php echo $this->getData('description'); ?>" name='description'/>
-<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=65586">
-<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=65586">
-<link rel="Bookmark" href="/Weline/Backend/view/statics/img/favicon.png?v=65586">
+<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=82494">
+<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=82494">
+<link rel="Bookmark" href="/Weline/Backend/view/statics/img/favicon.png?v=82494">
 <!--加载requirejs-->
 <?php if (DEV) : ?>
-    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=11626"></script>-->
+    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=78001"></script>-->
 <?php
 else:
     ?>
-    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=21928"></script>-->
+    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=59853"></script>-->
 <?php
 endif;
 ?>
 <!--加载require常用js模块-->
-<!--<script src="/Weline/Backend/view/statics/base/require.configs.js?v=26492"></script>-->
+<!--<script src="/Weline/Backend/view/statics/base/require.configs.js?v=41608"></script>-->
 <?php echo framework_view_process_block([
     'class' => 'Weline\\Backend\\Block\\Header\\Base',
     'template' => 'Weline_Admin::blocks/header/base.phtml',
@@ -48,22 +48,22 @@ endif;
 
 <!--css-->
 <!--loading-->
-<link  href='/Weline/Admin/view/statics/libs/loading/loading.css?v=76440' rel="stylesheet" type="text/css"/>
-<link  href='/Weline/Admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=70090' rel="stylesheet" type="text/css"/>
-<link  href='/Weline/Admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=81023' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/libs/loading/loading.css?v=11137' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=24169' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=12390' rel="stylesheet" type="text/css"/>
 <!-- Bootstrap Css -->
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/bootstrap' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet"
       type="text/css"/>
 <!-- Icons Css -->
-<link  href='/Weline/Admin/view/statics/assets/css/icons.min.css?v=18236' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/assets/css/icons.min.css?v=25253' rel="stylesheet" type="text/css"/>
 <!-- App Css-->
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/app' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet" type="text/css"/>
 <!--JS-->
-<script  src='/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=66453'></script>
+<script  src='/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=18552'></script>
 <?php if (DEV): ?>
-    <!--    <script src="/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=93345"></script>-->
+    <!--    <script src="/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=73863"></script>-->
 <?php endif; ?>
 <!--加载配置页头-->
 <?php
@@ -84,9 +84,9 @@ echo $this->getHeader()->getHtml();
                         <div class="">
                             <div class="text-center">
                                 <a href="../../../../../../../index.html" class="">
-                                    <img src="/Weline/Backend/view/statics/img/logo.png?v=10267" alt="" height="24"
+                                    <img src="/Weline/Backend/view/statics/img/logo.png?v=23923" alt="" height="24"
                                          class="weline-logo auth-logo logo-dark mx-auto">
-                                    <img src="/Weline/Backend/view/statics/img/logo.png?v=10267" alt="" height="24"
+                                    <img src="/Weline/Backend/view/statics/img/logo.png?v=23923" alt="" height="24"
                                          class="weline-logo auth-logo logo-light mx-auto">
                                 </a>
                             </div>
@@ -192,13 +192,13 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
 <!-- end Account pages -->
 
 <!-- JAVASCRIPT -->
-<!--<script src="/Weline/Admin/view/statics/assets/libs/jquery/jquery.min.js?v=29720"></script>-->
-<script src="/Weline/Admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=37883"></script>
-<script src="/Weline/Admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=60289"></script>
-<script src="/Weline/Admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=56247"></script>
-<script src="/Weline/Admin/view/statics/assets/libs/node-waves/waves.min.js?v=22764"></script>
+<!--<script src="/Weline/Admin/view/statics/assets/libs/jquery/jquery.min.js?v=42207"></script>-->
+<script src="/Weline/Admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=42939"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=64853"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=86831"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/node-waves/waves.min.js?v=91581"></script>
 
-<script src="/Weline/Admin/view/statics/assets/js/app.js?v=52594"></script>
+<script src="/Weline/Admin/view/statics/assets/js/app.js?v=33365"></script>
 <!--加载配置页脚-->
 <?php
 /**@var \Weline\Framework\View\Template $this */

@@ -25,9 +25,4 @@ class FrontendUserSession extends \Weline\Framework\App\Session\FrontendSession
     {
         return parent::getLoginUser($model);
     }
-
-    public function logout(): bool
-    {
-        return parent::logout();
-    }
 }
