@@ -28,21 +28,21 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <meta name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no'>
 <meta content="<?php echo $this->getData('title'); ?>" name='author'/>
 <meta content="<?php echo $this->getData('description'); ?>" name='description'/>
-<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=45557">
-<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=45557">
-<link rel="Bookmark" href="/Weline/Backend/view/statics/img/favicon.png?v=45557">
+<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=84025">
+<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=84025">
+<link rel="Bookmark" href="/Weline/Backend/view/statics/img/favicon.png?v=84025">
 <!--加载requirejs-->
 <?php if (DEV) : ?>
-    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=97510"></script>-->
+    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=86990"></script>-->
 <?php
 else:
     ?>
-    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=18795"></script>-->
+    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=70508"></script>-->
 <?php
 endif;
 ?>
 <!--加载require常用js模块-->
-<!--<script src="/Weline/Backend/view/statics/base/require.configs.js?v=83264"></script>-->
+<!--<script src="/Weline/Backend/view/statics/base/require.configs.js?v=52076"></script>-->
 <?php echo framework_view_process_block([
     'class' => 'Weline\\Backend\\Block\\Header\\Base',
     'template' => 'Weline_Admin::blocks/header/base.phtml',
@@ -50,22 +50,22 @@ endif;
 
 <!--css-->
 <!--loading-->
-<link  href='/Weline/Admin/view/statics/libs/loading/loading.css?v=69994' rel="stylesheet" type="text/css"/>
-<link  href='/Weline/Admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=98023' rel="stylesheet" type="text/css"/>
-<link  href='/Weline/Admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=44424' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/libs/loading/loading.css?v=60551' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=26472' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=18732' rel="stylesheet" type="text/css"/>
 <!-- Bootstrap Css -->
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/bootstrap' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet"
       type="text/css"/>
 <!-- Icons Css -->
-<link  href='/Weline/Admin/view/statics/assets/css/icons.min.css?v=10014' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/assets/css/icons.min.css?v=44678' rel="stylesheet" type="text/css"/>
 <!-- App Css-->
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/app' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet" type="text/css"/>
 <!--JS-->
-<script  src='/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=86730'></script>
+<script  src='/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=72749'></script>
 <?php if (DEV): ?>
-    <!--    <script src="/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=33269"></script>-->
+    <!--    <script src="/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=44084"></script>-->
 <?php endif; ?>
 <!--加载配置页头-->
 <?php
@@ -73,7 +73,7 @@ echo $this->getHeader()->getHtml();
 ?>
 
     <!-- jvectormap -->
-    <link href="/Weline/Admin/view/statics/assets/libs/jqvmap/jqvmap.min.css?v=26858" rel="stylesheet"/>
+    <link href="/Weline/Admin/view/statics/assets/libs/jqvmap/jqvmap.min.css?v=84028" rel="stylesheet"/>
     <title>Weline Admin 管理面板</title>
 </head>
 
@@ -629,7 +629,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                     <div class='d-flex py-3'>
                                         <div class='flex-shrink-0 me-3 align-self-center'>
                                             <img class='rounded-circle avatar-xs' alt=''
-                                                 src='/Weline/Admin/view/statics/assets/images/users/avatar-2.jpg?v=59412'>
+                                                 src='/Weline/Admin/view/statics/assets/images/users/avatar-2.jpg?v=58967'>
                                         </div>
 
                                         <div class='flex-grow-1 overflow-hidden'>
@@ -667,7 +667,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                     <div class='d-flex py-3'>
                                         <div class='flex-shrink-0 me-3 align-self-center'>
                                             <img class='rounded-circle avatar-xs' alt=''
-                                                 src='/Weline/Admin/view/statics/assets/images/users/avatar-3.jpg?v=83525'>
+                                                 src='/Weline/Admin/view/statics/assets/images/users/avatar-3.jpg?v=62136'>
                                         </div>
                                         <div class='flex-grow-1 overflow-hidden'>
                                             <h5 class='font-size-14 mb-1'>Frank Martin</h5>
@@ -705,7 +705,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                     <div class='d-flex py-3'>
                                         <div class='flex-shrink-0 me-3 align-self-center'>
                                             <img class='rounded-circle avatar-xs' alt=''
-                                                 src='/Weline/Admin/view/statics/assets/images/users/avatar-4.jpg?v=16229'>
+                                                 src='/Weline/Admin/view/statics/assets/images/users/avatar-4.jpg?v=37383'>
                                         </div>
                                         <div class='flex-grow-1 overflow-hidden'>
                                             <h5 class='font-size-14 mb-1'>Terry Garrick</h5>
@@ -789,7 +789,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                             </div>
                                         </td>
                                         <td>
-                                            <img src='/Weline/Admin/view/statics/assets/images/users/avatar-2.jpg?v=59412' alt='user'
+                                            <img src='/Weline/Admin/view/statics/assets/images/users/avatar-2.jpg?v=58967' alt='user'
                                                  class='avatar-xs rounded-circle'/>
                                         </td>
                                         <td>
@@ -856,7 +856,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                             </div>
                                         </td>
                                         <td>
-                                            <img src='/Weline/Admin/view/statics/assets/images/users/avatar-3.jpg?v=83525' alt='user'
+                                            <img src='/Weline/Admin/view/statics/assets/images/users/avatar-3.jpg?v=62136' alt='user'
                                                  class='avatar-xs rounded-circle'/>
                                         </td>
                                         <td>
@@ -888,7 +888,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                             </div>
                                         </td>
                                         <td>
-                                            <img src='/Weline/Admin/view/statics/assets/images/users/avatar-6.jpg?v=63369' alt='user'
+                                            <img src='/Weline/Admin/view/statics/assets/images/users/avatar-6.jpg?v=37231' alt='user'
                                                  class='avatar-xs rounded-circle'/>
                                         </td>
                                         <td>
@@ -1213,7 +1213,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
         <div class="p-4">
             <div class="mb-2">
-                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-1.png?v=83784" class="img-thumbnail"
+                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-1.png?v=48508" class="img-thumbnail"
                      alt="layout-1">
             </div>
             <div class="form-check form-switch mb-3">
@@ -1223,7 +1223,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             </div>
 
             <div class="mb-2">
-                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-2.png?v=41615" class="img-thumbnail"
+                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-2.png?v=25065" class="img-thumbnail"
                      alt="layout-2">
             </div>
             <div class="form-check form-switch mb-3">
@@ -1233,7 +1233,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             </div>
 
             <div class="mb-2">
-                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-3.png?v=25033" class="img-thumbnail"
+                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-3.png?v=18481" class="img-thumbnail"
                      alt="layout-3">
             </div>
             <div class="form-check form-switch mb-5">
@@ -1251,14 +1251,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <div class="rightbar-overlay"></div>
 
 <!-- apexcharts js -->
-<script  src='/Weline/Admin/view/statics/assets/libs/apexcharts/apexcharts.min.js?v=46829'></script>
+<script  src='/Weline/Admin/view/statics/assets/libs/apexcharts/apexcharts.min.js?v=56748'></script>
 
 <!-- jquery.vectormap map -->
-<script  src='/Weline/Admin/view/statics/assets/libs/jqvmap/jquery.vmap.min.js?v=91705'></script>
-<script  src='/Weline/Admin/view/statics/assets/libs/jqvmap/maps/jquery.vmap.usa.js?v=12886'></script>
-<script  src='/Weline/Admin/view/statics/assets/libs/jqvmap/maps/jquery.vmap.usa.js?v=12886'></script>
+<script  src='/Weline/Admin/view/statics/assets/libs/jqvmap/jquery.vmap.min.js?v=42843'></script>
+<script  src='/Weline/Admin/view/statics/assets/libs/jqvmap/maps/jquery.vmap.usa.js?v=54592'></script>
+<script  src='/Weline/Admin/view/statics/assets/libs/jqvmap/maps/jquery.vmap.usa.js?v=54592'></script>
 
-<script  src='/Weline/Admin/view/statics/assets/js/pages/dashboard.init.js?v=37540'></script>
+<script  src='/Weline/Admin/view/statics/assets/js/pages/dashboard.init.js?v=21550'></script>
 <!--页脚-->
 <?php
 /**@var \Weline\Framework\View\Template $this*/
@@ -1277,13 +1277,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!-- end Account pages -->
 
 <!-- JAVASCRIPT -->
-<!--<script src="/Weline/Admin/view/statics/assets/libs/jquery/jquery.min.js?v=81836"></script>-->
-<script src="/Weline/Admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=63414"></script>
-<script src="/Weline/Admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=82275"></script>
-<script src="/Weline/Admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=93141"></script>
-<script src="/Weline/Admin/view/statics/assets/libs/node-waves/waves.min.js?v=29790"></script>
+<!--<script src="/Weline/Admin/view/statics/assets/libs/jquery/jquery.min.js?v=26114"></script>-->
+<script src="/Weline/Admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=88317"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=54274"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=71064"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/node-waves/waves.min.js?v=99866"></script>
 
-<script src="/Weline/Admin/view/statics/assets/js/app.js?v=48976"></script>
+<script src="/Weline/Admin/view/statics/assets/js/app.js?v=62965"></script>
 <!--加载配置页脚-->
 <?php
 /**@var \Weline\Framework\View\Template $this */
