@@ -41,10 +41,10 @@
     "mrclay/jsmin-php": "^2.4",
     "guzzlehttp/guzzle": "^7.4",
     "friendsofphp/php-cs-fixer": "^3.8",
-    "weline/framework": "^v1.2.8",
     "weline/module-website-monitoring": "^1.0.0",
     "weline/module-theme-fancy": "^1.0",
-    "rinvex/countries": "^8.1"
+    "rinvex/countries": "^8.1",
+    "weline/framework": "^1.2"
   },
   "opcache-autoloader": true,
   "apcu-autoloader": true,
