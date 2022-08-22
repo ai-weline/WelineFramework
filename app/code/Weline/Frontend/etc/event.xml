@@ -8,4 +8,7 @@
     <event name="Framework_View::footer">
         <observer name="Weline_Frontend::footer" instance="Weline\Frontend\Observer\Footer" disabled="false" shared="true"/>
     </event>
+    <event name="Weline_Framework::maintenance">
+        <observer name="Weline_Frontend::maintenance" instance="Weline\Frontend\Observer\Maintenance" disabled="false" shared="true"/>
+    </event>
 </config>

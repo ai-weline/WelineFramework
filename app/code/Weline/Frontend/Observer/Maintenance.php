@@ -8,7 +8,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Admin\Observer;
+namespace Weline\Frontend\Observer;
 
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\Event;
@@ -30,10 +30,15 @@ class Maintenance implements \Weline\Framework\Event\ObserverInterface
         /**@var DataObject $data */
         $data         = $event->getData('data');
         $white_urls   = $data->getData('white_urls');
-        $white_urls[] = 'assets/images/favicon.ico';
+        $white_urls[] = 'img/favicon.png';
         $white_urls[] = 'assets/css/bootstrap.min.css';
         $white_urls[] = 'assets/css/icons.min.css';
         $white_urls[] = 'assets/css/app.min.css';
+
+        $white_urls[] = 'assets/fonts/remixicon.ttf';
+        $white_urls[] = 'assets/fonts/remixicon.woff';
+        $white_urls[] = 'assets/fonts/remixicon.woff2';
+
         $white_urls[] = 'assets/images/logo-dark.png';
         $white_urls[] = 'assets/images/logo-light.png';
 
@@ -50,6 +55,6 @@ class Maintenance implements \Weline\Framework\Event\ObserverInterface
             }
         }
         $data->setData('white_urls',$white_urls);
-        if (!$white) die($block->fetchHtml('Weline_Admin::templates/maintenance.phtml'));
+        if (!$white) die($block->fetchHtml('Weline_Frontend::templates/maintenance.phtml'));
     }
 }
