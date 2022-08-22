@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -8,12 +9,14 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace Weline\Admin\Controller;
+namespace Weline\Frontend\Controller;
 
-class Maintenance extends BaseController
+use Weline\Framework\App\Controller\FrontendController;
+
+class Maintenance extends FrontendController
 {
-    function index()
+    function get()
     {
-        return $this->fetch('maintenance');
+        return $this->fetch();
     }
 }

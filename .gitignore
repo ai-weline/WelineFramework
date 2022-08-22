@@ -4,20 +4,19 @@
 /.workflow
 
 # 第三方
-vendor/
+/vendor/*
 
 # 配置文件
-app/etc/
-app/*/tpl/*
-app/*/node_modules/*
+/app/etc/
 
 # 安装锁文件
-setup/install.lock
+/setup/install.lock
 
 # 系统自动生成，无需提交
-pub/static/
-/var
-/generated
+/app/*/*/view/tpl/*
+/pub/static/*
+/var/*
+/generated/*
 .user.ini
 .phpunit.result.cache
 .php_cs.cache
