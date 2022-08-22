@@ -33,15 +33,15 @@ class Compiler implements \Weline\Framework\Event\ObserverInterface
             switch ($type):
                 case self::require_js_type:
                     $path = dirname(__DIR__) . DS . 'view' . DS . 'statics' . DS . self::require_js_file;
-            if (!is_dir(dirname($path))) {
-                mkdir($path, 755, true);
-            }
-            if (!is_file($path)) {
-                touch($path);
-            }
-            file_put_contents($path, JSMin::minify($eventData->getResources()));
-            break;
-            default:
+                    if (!is_dir(dirname($path))) {
+                        mkdir($path, 755, true);
+                    }
+                    if (!is_file($path)) {
+                        touch($path);
+                    }
+                    file_put_contents($path, JSMin::minify($eventData->getResources()));
+                    break;
+                default:
             endswitch;
         };
     }

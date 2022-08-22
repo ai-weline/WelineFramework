@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,11 +17,10 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class UrlRewrite extends \Weline\Framework\Database\Model
 {
-
-    const fields_ID      = 'rewrite_id';
-    const fields_URL_ID  = 'url_id';
-    const fields_PATH    = 'path';
-    const fields_REWRITE = 'rewrite';
+    public const fields_ID      = 'rewrite_id';
+    public const fields_URL_ID  = 'url_id';
+    public const fields_PATH    = 'path';
+    public const fields_REWRITE = 'rewrite';
 
     /**
      * @inheritDoc

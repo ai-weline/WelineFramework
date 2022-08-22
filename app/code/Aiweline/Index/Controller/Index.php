@@ -40,7 +40,7 @@ class Index extends FrontendController
          * @var WelineTheme $theme
          */
         $theme = ObjectManager::getInstance(WelineTheme::class);
-        $this->assign('theme',$theme->getActiveTheme());
+        $this->assign('theme', $theme->getActiveTheme());
         return $this->fetch();
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,7 @@ namespace Weline\Admin\Controller;
 
 class Maintenance extends BaseController
 {
-    function index()
+    public function index()
     {
         return $this->fetch('maintenance');
     }

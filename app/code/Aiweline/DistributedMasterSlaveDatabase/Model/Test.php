@@ -17,7 +17,7 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Test extends \Weline\Framework\Database\Model
 {
-    const fields_NAME = 'name';
+    public const fields_NAME = 'name';
 
     /**
      * @inheritDoc
@@ -41,7 +41,7 @@ class Test extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-        if($setup->tableExist()){
+        if ($setup->tableExist()) {
             return;
         }
         $setup->createTable()

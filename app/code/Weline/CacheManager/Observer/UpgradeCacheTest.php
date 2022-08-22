@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,13 +11,12 @@ declare(strict_types=1);
 
 namespace Weline\CacheManager\Observer;
 
-
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 
 class UpgradeCacheTest extends TestCore
 {
-    function testExecute()
+    public function testExecute()
     {
         $event = ObjectManager::getInstance('Weline\Framework\Event\Event');
         $event->setData([]);
@@ -24,5 +24,4 @@ class UpgradeCacheTest extends TestCore
         $cache->execute($event);
         $this->assertTrue(true);
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,20 +16,21 @@ use Weline\UrlManager\Model\UrlManager;
 
 class Listing extends \Weline\Framework\App\Controller\BackendController
 {
-    function index(){
+    public function index()
+    {
         /**@var UrlManager $urlManager */
         $urlManager = ObjectManager::getInstance(UrlManager::class);
         # 搜索词
         $q = $this->_request->getParam('q');
-        if($q){
-            $urlManager->where('path',"%{$q}%",'like');
+        if ($q) {
+            $urlManager->where('path', "%{$q}%", 'like');
         }
         $urlManager->pagination(
-            $this->_request->getParam('page',1),
+            $this->_request->getParam('page', 1),
             $this->_request->getParam('pageSize', 10),
             $this->_request->getParams()
         )->select()->fetch();
-        $this->assign('rewrites',$urlManager->getItems());
+        $this->assign('rewrites', $urlManager->getItems());
         return $this->fetch();
     }
 }

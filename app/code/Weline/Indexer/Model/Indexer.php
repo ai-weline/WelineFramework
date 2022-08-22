@@ -32,7 +32,7 @@ class Indexer extends Model
     public function setup(ModelSetup $setup, Context $context): void
     {
 //         $setup->dropTable();
-         $this->install($setup, $context);
+        $this->install($setup, $context);
     }
 
     public function upgrade(ModelSetup $setup, Context $context): void
@@ -42,7 +42,7 @@ class Indexer extends Model
 
     public function install(ModelSetup $setup, Context $context): void
     {
-        if(!$setup->tableExist()) {
+        if (!$setup->tableExist()) {
             # 创建索引表
             $setup->createTable()
                   ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', '索引ID')

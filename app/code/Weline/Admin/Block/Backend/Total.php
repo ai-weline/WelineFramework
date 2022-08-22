@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,7 @@ class Total extends \Weline\Framework\View\Block
     /**
      * @throws Exception
      */
-    function __init()
+    public function __init()
     {
         parent::__init();
         # 如果没有模板，则使用默认模板
@@ -61,7 +62,7 @@ class Total extends \Weline\Framework\View\Block
             $rate = (($now_period_total - $last_period_total) / $last_period_total) * 100;
         }
         $rate = number_format($rate, 2);
-        $this->assign('up_down', $rate>0?'up':'down');
+        $this->assign('up_down', $rate>0 ? 'up' : 'down');
         $this->assign('rate', $rate.'%');
         $id = 'id'.md5(json_encode($this->getData()));
         $this->assign('id', $id);

@@ -16,6 +16,7 @@ use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Register\Register;
 use Weline\Framework\System\File\Scanner;
 use Weline\ModuleRouter\Cache\ModuleRouterCache;
+
 use function p;
 
 class ModuleRouterReader extends \Weline\Framework\System\ModuleFileReader
@@ -38,7 +39,7 @@ class ModuleRouterReader extends \Weline\Framework\System\ModuleFileReader
             $modules = Env::getInstance()->getActiveModules();
             foreach ($vendors_modules as $module => $router_file) {
                 # 跳过不存在的模块
-                if(!isset($modules[$module])){
+                if (!isset($modules[$module])) {
                     unset($vendors_modules[$module]);
                     continue;
                 }

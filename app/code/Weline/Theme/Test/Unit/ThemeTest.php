@@ -28,7 +28,6 @@ class ThemeTest extends TestCore
 
     public function testGetMode()
     {
-
 //        $theme       = $this->theme->load(1);
         p($this->theme->getActiveTheme());
         $save_result = $this->theme->setData(Env::default_theme_DATA)->save();

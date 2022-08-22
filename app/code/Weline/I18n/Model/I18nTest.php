@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -10,13 +11,13 @@ declare(strict_types=1);
 
 namespace Weline\I18n\Model;
 
-
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 
 class I18nTest extends TestCore
 {
-    function testGetLocalByCode(){
+    public function testGetLocalByCode()
+    {
         /**@var I18n $i18n*/
         $i18n = ObjectManager::getInstance(I18n::class);
 //        p($i18n->getLocalByCode('zh_Hans_CN'));

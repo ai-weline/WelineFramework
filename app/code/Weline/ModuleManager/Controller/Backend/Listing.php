@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,7 +16,8 @@ use Weline\ModuleManager\Model\Module;
 
 class Listing extends \Weline\Framework\App\Controller\BackendController
 {
-    function index(){
+    public function index()
+    {
         /**@var Module $module */
         $module = ObjectManager::getInstance(Module::class);
         $module->pagination(

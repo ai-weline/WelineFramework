@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,10 +17,9 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class UrlManager extends \Weline\Framework\Database\Model
 {
-
-    const fields_ID      = 'url_id';
-    const fields_PATH    = 'path';
-    const fields_MODULE_ID = 'module_id';
+    public const fields_ID      = 'url_id';
+    public const fields_PATH    = 'path';
+    public const fields_MODULE_ID = 'module_id';
 
     /**
      * @inheritDoc

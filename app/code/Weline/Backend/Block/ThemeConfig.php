@@ -16,8 +16,8 @@ use Weline\Backend\Session\BackendSession;
 
 class ThemeConfig extends \Weline\Framework\View\Block
 {
-    const        area                 = 'frontend_';
-    const        theme_Session_Config = 'frontend_theme_config';
+    public const        area                 = 'frontend_';
+    public const        theme_Session_Config = 'frontend_theme_config';
     private BackendSession $userSession;
     private BackendUserConfig $userConfig;
 
@@ -34,13 +34,13 @@ class ThemeConfig extends \Weline\Framework\View\Block
         $this->userConfig->setId($this->userSession->getLoginUserID());
     }
 
-    function getOriginThemeConfig($key='')
+    public function getOriginThemeConfig($key='')
     {
         $themeConfig = $this->userSession->getData(self::theme_Session_Config);
         if (empty($themeConfig) and $this->userSession->isLogin()) {
             $themeConfig = $this->userConfig->getData(self::theme_Session_Config);
         }
-        return $key?($themeConfig[$key]??''):$themeConfig;
+        return $key ? ($themeConfig[$key]??'') : $themeConfig;
     }
 
     public function getThemeConfig(string $key = '')
@@ -54,7 +54,9 @@ class ThemeConfig extends \Weline\Framework\View\Block
             }
             $data = $this->userConfig->getOriginThemeConfig();
             # 保存配置 (更新session配置)
-            if($data)$this->setThemeConfig($data);
+            if ($data) {
+                $this->setThemeConfig($data);
+            }
         }
         return $data;
     }

@@ -24,8 +24,7 @@ class Header implements HtmlInterface
 
     public function __construct(
         Config $backendConfig
-    )
-    {
+    ) {
         $this->backendConfig = $backendConfig;
     }
 
@@ -62,7 +61,7 @@ class Header implements HtmlInterface
         return $this;
     }
 
-    function addHtml(string $html): static
+    public function addHtml(string $html): static
     {
         $this->_html .= $html;
         return $this;

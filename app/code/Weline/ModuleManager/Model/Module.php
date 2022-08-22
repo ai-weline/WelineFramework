@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,17 +17,17 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Module extends \Weline\Framework\Database\Model
 {
-    const fields_ID             = 'module_id';
-    const fields_NAME           = 'name';
-    const fields_STATUS         = 'status';
-    const fields_DESCRIPTION    = 'description';
-    const fields_POSITION       = 'position';
-    const fields_NAMESPACE_PATH = 'namespace_path';
-    const fields_BASE_PATH      = 'base_path';
-    const fields_PATH           = 'path';
-    const fields_VERSION        = 'version';
-    const fields_LAST_VERSION   = 'last_version';
-    const fields_ROUTER         = 'router';
+    public const fields_ID             = 'module_id';
+    public const fields_NAME           = 'name';
+    public const fields_STATUS         = 'status';
+    public const fields_DESCRIPTION    = 'description';
+    public const fields_POSITION       = 'position';
+    public const fields_NAMESPACE_PATH = 'namespace_path';
+    public const fields_BASE_PATH      = 'base_path';
+    public const fields_PATH           = 'path';
+    public const fields_VERSION        = 'version';
+    public const fields_LAST_VERSION   = 'last_version';
+    public const fields_ROUTER         = 'router';
 
     /**
      * @inheritDoc

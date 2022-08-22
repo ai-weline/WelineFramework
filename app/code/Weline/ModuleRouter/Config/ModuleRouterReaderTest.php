@@ -13,6 +13,7 @@ namespace Weline\ModuleRouter\Config;
 
 use PHPUnit\Framework\TestCase;
 use Weline\Framework\Manager\ObjectManager;
+
 use function p;
 
 class ModuleRouterReaderTest extends TestCase

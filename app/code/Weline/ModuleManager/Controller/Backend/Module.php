@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,7 +19,7 @@ use Weline\Framework\System\File\Io\File;
 
 class Module extends \Weline\Framework\App\Controller\BackendController
 {
-    function postStatus()
+    public function postStatus()
     {
         $module = $this->_request->getParam('module');
         $status = $this->_request->getParam('status') === 'true';

@@ -21,25 +21,24 @@ class Topnav extends \Weline\Framework\View\Block
         \Weline\Backend\Model\Menu $menu,
         \Weline\Backend\Block\ThemeConfig $themeConfig,
         array $data = []
-    )
-    {
+    ) {
         $this->menu = $menu;
         $this->themeConfig = $themeConfig;
         parent::__construct($data);
     }
 
-    function __init()
+    public function __init()
     {
         parent::__init();
         # 检测主题配置
-        if($this->themeConfig->getThemeConfig('topnav')){
+        if ($this->themeConfig->getThemeConfig('topnav')) {
             $this->processMenu();
         }
     }
 
-    function render()
+    public function render()
     {
-        if($this->themeConfig->getThemeConfig('topnav')){
+        if ($this->themeConfig->getThemeConfig('topnav')) {
             return parent::render();
         }
         return '';

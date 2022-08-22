@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,7 +16,7 @@ use Aiweline\DistributedMasterSlaveDatabase\Model\Test as TestModel;
 
 class Test extends \Weline\Framework\App\Controller\FrontendController
 {
-    function index()
+    public function index()
     {
         /**@var TestModel $testModel */
         $testModel = ObjectManager::getInstance(TestModel::class);

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,7 +16,8 @@ use Weline\Framework\UnitTest\TestCore;
 
 class UpgradeModuleTest extends TestCore
 {
-    function testT(){
+    public function testT()
+    {
         $upgradeModule = ObjectManager::getInstance(UpgradeModule::class);
         $upgradeModule->t();
     }

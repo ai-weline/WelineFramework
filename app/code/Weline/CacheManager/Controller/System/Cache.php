@@ -31,10 +31,10 @@ class Cache extends \Weline\Admin\Controller\BaseController
         return $this->fetch();
     }
 
-    function postStatus()
+    public function postStatus()
     {
         $identity       = $this->_request->getParam('identity');
-        $cache      = ($this->_request->getParam('cache') === 'false')?0:1;
+        $cache      = ($this->_request->getParam('cache') === 'false') ? 0 : 1;
         /**@var \Weline\CacheManager\Model\Cache $cacheModel*/
         $cacheModel = ObjectManager::getInstance(\Weline\CacheManager\Model\Cache::class);
         try {
@@ -44,7 +44,7 @@ class Cache extends \Weline\Admin\Controller\BaseController
             $status[$identity] = $cache;
             $cacheEnv['status'] = $status;
             Env::getInstance()->setConfig('cache', $cacheEnv);
-        }catch (\Exception $exception){
+        } catch (\Exception $exception) {
             return $this->fetchJson(['code' => 403, 'msg' => $exception->getMessage(), 'data' => $cache]);
         }
         return $this->fetchJson(['code' => 200, 'msg' => __('操作成功！'), 'data' => $cache]);

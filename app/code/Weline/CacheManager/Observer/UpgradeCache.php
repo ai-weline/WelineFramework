@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -21,10 +22,9 @@ class UpgradeCache implements \Weline\Framework\Event\ObserverInterface
     private Scanner $scanner;
     private array $data;
 
-    function __construct(
+    public function __construct(
         Scanner $scanner
-    )
-    {
+    ) {
         $this->scanner   = $scanner;
         $frameworkCaches = $this->scanner->scanFrameworkCaches();
         $appCaches       = $this->scanner->scanAppCaches();
@@ -44,7 +44,7 @@ class UpgradeCache implements \Weline\Framework\Event\ObserverInterface
         $framework_cache = $this->data['framework'];
         foreach ($framework_cache as $cache) {
             $cache['type'] = 0;
-            $this->processCache($model, (array)$cache, $modules,'Weline_Framework');
+            $this->processCache($model, (array)$cache, $modules, 'Weline_Framework');
         }
         # 更新系统缓存
         $app_cache = $this->data['app'];
@@ -70,7 +70,7 @@ class UpgradeCache implements \Weline\Framework\Event\ObserverInterface
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      */
-    function processCache(\Weline\CacheManager\Model\Cache $model, array $cache, array $modules,$default_module_name='')
+    public function processCache(\Weline\CacheManager\Model\Cache $model, array $cache, array $modules, $default_module_name='')
     {
         /**@var CacheFactory $cache */
         $cacheObj = ObjectManager::make($cache['class']);

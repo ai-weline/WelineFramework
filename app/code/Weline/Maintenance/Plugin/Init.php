@@ -25,8 +25,7 @@ class Init
 {
     public function beforeStart(
         \Weline\Framework\Router\Core $router
-    )
-    {
+    ) {
         if (Env::getInstance()->getConfig('maintenance', false)) {
             /**@var Request $req */
             $req = ObjectManager::getInstance(Request::class);
@@ -42,7 +41,9 @@ class Init
                     break;
                 }
             }
-            if (!$white) throw new Exception(__('程序维护中...'));
+            if (!$white) {
+                throw new Exception(__('程序维护中...'));
+            }
         }
     }
 }

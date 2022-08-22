@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,6 @@ use Weline\ModuleManager\Model\Module;
 
 class UpgradeModule implements \Weline\Framework\Event\ObserverInterface
 {
-
     /**
      * @inheritDoc
      */
@@ -31,9 +31,9 @@ class UpgradeModule implements \Weline\Framework\Event\ObserverInterface
         $moduleModel->query("truncate table {$moduleModel->getTable()}");
         # 写入数据库
         foreach ($modules as $module) {
-            $module['base_path'] = str_replace(BP, '',$module['base_path']);
+            $module['base_path'] = str_replace(BP, '', $module['base_path']);
             $module['description'] = htmlspecialchars($module['description']);
-            $module['status'] = $module['status']?1:0;
+            $module['status'] = $module['status'] ? 1 : 0;
             $moduleModel->clearData()
                         ->setData($module)
                         ->save();
