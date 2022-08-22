@@ -10,6 +10,4 @@ declare(strict_types=1);
  /**@var \Weline\Backend\Block\Version $block */
  $block = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\Version::class);
  ?>
- <div class="version">
- <p><?php echo $block->getVersion()?></p>
- </div>
+<?php echo $block->getVersion()?>
