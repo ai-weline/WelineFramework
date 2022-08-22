@@ -8,13 +8,12 @@
 
 # 配置文件
 /app/etc/
-/app/*/node_modules/*
 
 # 安装锁文件
 /setup/install.lock
 
 # 系统自动生成，无需提交
-/app/*/tpl/*
+/app/*/*/view/tpl/*
 /pub/static/*
 /var/*
 /generated/*
