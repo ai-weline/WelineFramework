@@ -18,14 +18,6 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Notification extends \Weline\Framework\View\Block
 {
-    private CacheInterface $cache;
-
-    public function __construct(BackendCache $backendCache, array $data = [])
-    {
-        $this->cache = $backendCache->create();
-        parent::__construct($data);
-    }
-
     public string $_template = 'Weline_Admin::system/notification.phtml';
 
     /**
