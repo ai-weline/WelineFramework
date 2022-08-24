@@ -43,8 +43,7 @@
     "friendsofphp/php-cs-fixer": "^3.8",
     "weline/module-website-monitoring": "^1.0.0",
     "weline/module-theme-fancy": "^1.0",
-    "rinvex/countries": "^8.1",
-    "weline/framework": "^1.0.0"
+    "rinvex/countries": "^8.1"
   },
   "opcache-autoloader": true,
   "apcu-autoloader": true,

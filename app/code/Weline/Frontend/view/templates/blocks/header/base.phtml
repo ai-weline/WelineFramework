@@ -14,6 +14,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         buildUrl: (path) => {
             return window.site.host + path;
         },
+        buildApi: (path) => { return window.site.host + path; },
         buildFrontendApiUrl: (path) => {
             return window.site.host + path;
         },
@@ -52,6 +53,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         }
         return '';
     }
+
     /**
      * 通用打印函数
      * @param data

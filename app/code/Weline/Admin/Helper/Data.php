@@ -16,7 +16,7 @@ use Weline\Framework\Http\Request;
 
 class Data extends \Weline\Framework\App\Helper
 {
-    protected Request $_request;
+    protected Request $request;
     private BackendUser $adminUser;
 
     public function __construct(

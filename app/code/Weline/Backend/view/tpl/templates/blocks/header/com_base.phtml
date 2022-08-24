@@ -27,7 +27,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         buildFrontendApiUrl: (path) => {
             return window.site.host + path;
         },
-
+        selectLanguage: (lang) => {
+            setCookie('WELINE-USER-LANG', lang);
+            window.location.reload();
+        },
         themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
     }
 
