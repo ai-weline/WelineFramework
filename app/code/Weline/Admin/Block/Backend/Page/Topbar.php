@@ -20,7 +20,7 @@ use Weline\Framework\View\Template;
 
 class Topbar extends \Weline\Framework\View\Block
 {
-    public string $_template = 'Weline_Admin::templates/blocks/backend/public/topbar.phtml';
+    public string $_template = 'Weline_Admin::backend/public/topbar.phtml';
     private Config $config;
     private AdminSession $session;
     private ?BackendUser $user = null;

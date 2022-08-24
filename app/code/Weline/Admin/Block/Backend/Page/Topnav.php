@@ -13,7 +13,7 @@ namespace Weline\Admin\Block\Backend\Page;
 
 class Topnav extends \Weline\Framework\View\Block
 {
-    public string $_template = 'Weline_Admin::templates/blocks/backend/public/topnav.phtml';
+    public string $_template = 'Weline_Admin::backend/public/topnav.phtml';
     private \Weline\Backend\Model\Menu $menu;
     private \Weline\Backend\Block\ThemeConfig $themeConfig;
 

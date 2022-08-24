@@ -15,5 +15,5 @@ use Weline\Framework\View\Block;
 
 class Base extends Block
 {
-    protected string $_template = 'Weline_Backend::templates/blocks/header/base.phtml';
+    protected string $_template = 'Weline_Backend::header/base.phtml';
 }

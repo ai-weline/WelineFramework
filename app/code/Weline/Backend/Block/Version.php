@@ -15,7 +15,7 @@ use Weline\Framework\App\Env;
 
 class Version extends \Weline\Framework\View\Block
 {
-    protected string $_template = 'Weline_Backend::templates/blocks/version.phtml';
+    protected string $_template = 'Weline_Backend::version.phtml';
 
     public function getVersion(): string
     {

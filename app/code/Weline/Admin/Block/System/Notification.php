@@ -26,7 +26,7 @@ class Notification extends \Weline\Framework\View\Block
         parent::__construct($data);
     }
 
-    public string $_template = 'Weline_Admin::templates/blocks/system/notification.phtml';
+    public string $_template = 'Weline_Admin::system/notification.phtml';
 
     /**
      * @DESC          # 方法描述

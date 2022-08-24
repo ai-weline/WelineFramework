@@ -23,7 +23,7 @@ class Total extends \Weline\Framework\View\Block
         parent::__init();
         # 如果没有模板，则使用默认模板
         if (!$this->getTemplate()) {
-            $this->setTemplate('Weline_Admin::blocks/backend/total-cart.phtml');
+            $this->setTemplate('Weline_Admin::backend/total-cart.phtml');
         }
         # 检测模型是否提供
         if (!$this->getData('model')) {
