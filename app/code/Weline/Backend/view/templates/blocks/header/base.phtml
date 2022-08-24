@@ -7,10 +7,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!--<script src='@static(Weline_Backend::base/require.configs.js)'></script>-->
 <script>
     window.site = {
-        host: '<?=$this->_request->getBaseHost()?>',
-        base_host: '<?=$this->_request->getPrePath()?>',
-        base_backend_api_host: '<?=$this->_request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('api_admin')?>',
-        base_router: '<?=$this->_request->getRouterData('router')?>',
+        host: '<?=$this->request->getBaseHost()?>',
+        base_host: '<?=$this->request->getPrePath()?>',
+        base_backend_api_host: '<?=$this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('api_admin')?>',
+        base_router: '<?=$this->request->getRouterData('router')?>',
         i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
         buildUrl: (path) => {
             return window.site.base_host + path;
@@ -27,7 +27,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         buildFrontendApiUrl: (path) => {
             return window.site.host + path;
         },
-
+        selectLanguage: (lang) => {
+            setCookie('WELINE-USER-LANG', lang);
+            window.location.reload();
+        },
         themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
     }
 

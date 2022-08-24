@@ -21,8 +21,8 @@ class Module extends \Weline\Framework\App\Controller\BackendController
 {
     public function postStatus()
     {
-        $module = $this->_request->getParam('module');
-        $status = $this->_request->getParam('status') === 'true';
+        $module = $this->request->getParam('module');
+        $status = $this->request->getParam('status') === 'true';
         # 更新数据库
         /**@var \Weline\ModuleManager\Model\Module $moduleModel */
         $moduleModel = ObjectManager::getInstance(\Weline\ModuleManager\Model\Module::class);

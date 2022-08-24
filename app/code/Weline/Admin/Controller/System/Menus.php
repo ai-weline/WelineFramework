@@ -23,9 +23,9 @@ class Menus extends BaseController
     {
         $menu = $this->getMenu();
         $menu->pagination(
-            intval($this->_request->getParam('page', 1)),
-            intval($this->_request->getParam('pageSize', 10)),
-            $this->_request->getParams()
+            intval($this->request->getParam('page', 1)),
+            intval($this->request->getParam('pageSize', 10)),
+            $this->request->getParams()
         )->select();
         $this->assign('menus', $menu->fetch()->getItems());
         $this->assign('pagination', $menu->getPagination());
@@ -35,7 +35,7 @@ class Menus extends BaseController
     public function postDelete()
     {
         try {
-            if ($id = $this->_request->getPost('id', 0)) {
+            if ($id = $this->request->getPost('id', 0)) {
                 /**@var Menu $menu */
                 $menu = ObjectManager::getInstance(Menu::class)->load($id);
                 if ($menu->isSystem()) {
@@ -54,7 +54,7 @@ class Menus extends BaseController
     public function postSave()
     {
         try {
-            $data = json_decode($this->_request->getBodyParams(), true);
+            $data = json_decode($this->request->getBodyParams(), true);
             if ($data) {
                 $this->getMenu()->save($data);
             }

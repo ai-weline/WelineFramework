@@ -25,7 +25,7 @@ class Set extends \Weline\Admin\Controller\BaseController
 
     public function postIndex(): bool|string
     {
-        $data = json_decode($this->_request->getBodyParams(), true);
+        $data = json_decode($this->request->getBodyParams(), true);
         try {
             $old_layout = $this->themeConfig->getThemeConfig('layouts');
             if (isset($data['layouts']) && is_array($data['layouts']) && is_array($old_layout)) {

@@ -15,7 +15,7 @@ class Index extends BackendRestController
 {
     public function index(): bool|string
     {
-        $data = ['name' => '后台rest接口！', 'params' => $this->_request->getParams()];
+        $data = ['name' => '后台rest接口！', 'params' => $this->request->getParams()];
 
         return $this->fetch($data, self::fetch_XML);
     }

@@ -19,7 +19,7 @@ class Document extends \Weline\Framework\App\Controller\FrontendController
     {
         /**@var \Weline\DeveloperWorkspace\Model\Document $document*/
         $document = ObjectManager::getInstance(\Weline\DeveloperWorkspace\Model\Document::class);
-        $this->assign('document', $document->load($this->_request->getParam('id')));
+        $this->assign('document', $document->load($this->request->getParam('id')));
         return $this->fetch();
     }
 }

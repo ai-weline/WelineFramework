@@ -23,7 +23,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         $this->assign('catalogs', $catalogs);
         # 清理模型
         $catalogModel->clearData();
-        if ($id = $this->_request->getParam('id')) {
+        if ($id = $this->request->getParam('id')) {
             $catalog = $catalogModel->load($id);
         } else {
             $catalog = $catalogModel;
@@ -70,7 +70,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
      */
     public function delete()
     {
-        $catalogModel = $this->getCatalogModel()->load($this->_request->getParam('id'));
+        $catalogModel = $this->getCatalogModel()->load($this->request->getParam('id'));
         if ($catalogModel->getId()) {
             try {
                 $catalogModel->delete();
@@ -85,7 +85,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
 
     public function postPost()
     {
-        $post      = $this->_request->getPost();
+        $post      = $this->request->getPost();
         $catalog   = $this->getCatalogModel();
         $pid_arr   = explode('-', $post['pid']);
         $pid       = array_shift($pid_arr);
@@ -108,7 +108,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         $post['pid']   = $pid;
         $post['level'] = $level;
         # 检查是新增还是修改
-        if ($id = $this->_request->getParam('id')) {
+        if ($id = $this->request->getParam('id')) {
             $catalog = $catalog->load($id);
             if (!$catalog->getId()) {
                 $this->getMessageManager()->addError(__('该记录已不存在！'));

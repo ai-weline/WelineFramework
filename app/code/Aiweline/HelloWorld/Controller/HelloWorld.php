@@ -54,13 +54,13 @@ class HelloWorld extends FrontendController
      */
     public function index()
     {
-        $method = $this->_request->getMethod();
+        $method = $this->request->getMethod();
         $assign = [
             'core'   => 'M Framework',
             'method' => $method,
             'module' => [
-                'name' => $this->_request->getModuleName(),
-                'path' => $this->_request->getModulePath(),
+                'name' => $this->request->getModuleName(),
+                'path' => $this->request->getModulePath(),
             ],
         ];
         $this->assign($assign);

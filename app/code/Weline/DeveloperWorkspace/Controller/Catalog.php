@@ -27,7 +27,7 @@ class Catalog extends BaseController
 
     public function index()
     {
-        $id = $this->_request->getParam('id');
+        $id = $this->request->getParam('id');
         $this->assign('catalog', $this->catalog->load($id));
         $this->assign('documents', Data::getDocumentsByCategoryId(intval($id)));
         return $this->fetch();

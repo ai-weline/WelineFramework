@@ -22,7 +22,7 @@ class Index extends BaseController
     public function index()
     {
         $catalogsModel = \Weline\DeveloperWorkspace\Helper\Data::getCatalogModel();
-        $catalogs      = $catalogsModel->pagination($this->_request->getParam('page', 1), $this->_request->getParam('page', 10))
+        $catalogs      = $catalogsModel->pagination($this->request->getParam('page', 1), $this->request->getParam('page', 10))
                                        ->select()->fetch();
         $this->assign('catalogs', $catalogs);
         # 文章列表

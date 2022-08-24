@@ -21,9 +21,9 @@ class Listing extends \Weline\Framework\App\Controller\BackendController
         /**@var Module $module */
         $module = ObjectManager::getInstance(Module::class);
         $module->pagination(
-            $this->_request->getParam('page', 1),
-            $this->_request->getParam('pageSize', 10),
-            $this->_request->getParams()
+            $this->request->getParam('page', 1),
+            $this->request->getParam('pageSize', 10),
+            $this->request->getParams()
         )->select()->fetch();
         $this->assign('modules', $module->getItems());
         $this->assign('pagination', $module->getPagination());

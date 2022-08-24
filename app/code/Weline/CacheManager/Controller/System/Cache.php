@@ -21,9 +21,9 @@ class Cache extends \Weline\Admin\Controller\BaseController
         /**@var \Weline\CacheManager\Model\Cache $cacheModel */
         $cacheModel = ObjectManager::getInstance(\Weline\CacheManager\Model\Cache::class);
         $caches     = $cacheModel->pagination(
-            $this->_request->getParam('page', 1),
-            $this->_request->getParam('pageSize', 10),
-            $this->_request->getParams()
+            $this->request->getParam('page', 1),
+            $this->request->getParam('pageSize', 10),
+            $this->request->getParams()
         )->select()->fetch();
         $this->assign('caches', $caches->getItems());
         $this->assign('pagination', $caches->getPagination());
@@ -33,8 +33,8 @@ class Cache extends \Weline\Admin\Controller\BaseController
 
     public function postStatus()
     {
-        $identity       = $this->_request->getParam('identity');
-        $cache      = ($this->_request->getParam('cache') === 'false') ? 0 : 1;
+        $identity       = $this->request->getParam('identity');
+        $cache      = ($this->request->getParam('cache') === 'false') ? 0 : 1;
         /**@var \Weline\CacheManager\Model\Cache $cacheModel*/
         $cacheModel = ObjectManager::getInstance(\Weline\CacheManager\Model\Cache::class);
         try {

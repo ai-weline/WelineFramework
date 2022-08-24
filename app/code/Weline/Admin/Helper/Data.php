@@ -23,7 +23,7 @@ class Data extends \Weline\Framework\App\Helper
         Request   $_request,
         BackendUser $adminUser
     ) {
-        $this->_request = $_request;
+        $this->request = $_request;
         $this->adminUser = $adminUser;
     }
 
@@ -38,7 +38,7 @@ class Data extends \Weline\Framework\App\Helper
      */
     public function getRequestBackendUser(): BackendUser
     {
-        $username = $this->_request->getParam('username');
+        $username = $this->request->getParam('username');
         try {
             return $this->adminUser->load('username', $username);
         } catch (\Exception $exception) {

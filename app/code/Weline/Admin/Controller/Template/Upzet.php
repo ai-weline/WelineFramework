@@ -15,6 +15,6 @@ class Upzet extends BaseController
 {
     public function index()
     {
-        return $this->fetch($this->_request->getRule('template'));
+        return $this->fetch($this->request->getRule('template'));
     }
 }

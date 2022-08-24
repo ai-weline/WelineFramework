@@ -28,9 +28,9 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         $documents     = $documentModel->joinModel(Catalog::class, 'catalog', 'main_table.category_id=catalog.id')
                                        ->fields('main_table.*,main_table.id as doc_id,catalog.*,catalog.id as c_id,catalog.name as c_name')
                                        ->pagination(
-                                           intval($this->_request->getParam('page', 1)),
-                                           intval($this->_request->getParam('pageSize', 10)),
-                                           $this->_request->getParams()
+                                           intval($this->request->getParam('page', 1)),
+                                           intval($this->request->getParam('pageSize', 10)),
+                                           $this->request->getParams()
                                        )->order('doc_id', 'desc')->select()->fetch();
         $this->assign('documents', $documents->getItems());
         $this->assign('pagination', $documentModel->getPagination());
@@ -39,7 +39,7 @@ class Document extends \Weline\Framework\App\Controller\BackendController
 
     public function postDelete()
     {
-        $id = $this->_request->getParam('id');
+        $id = $this->request->getParam('id');
         try {
             ModelService::getDocumentModel()->load($id)->delete();
             return $this->fetchJson($this->success());
@@ -50,7 +50,7 @@ class Document extends \Weline\Framework\App\Controller\BackendController
 
     public function edit()
     {
-        $this->redirect($this->getUrl('dev/tool/admin/document/add', $this->_request->getParams()));
+        $this->redirect($this->getUrl('dev/tool/admin/document/add', $this->request->getParams()));
     }
 
     public function add()
@@ -65,7 +65,7 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         $adminUserModel = ObjectManager::getInstance(AdminUser::class);
         $this->assign('users', $adminUserModel->select()->fetch()->getItems());
         # 如果是编辑,不是就返回空 文档
-        $this->assign('document', ModelService::getDocumentModel()->load($this->_request->getParam('id', 0)));
+        $this->assign('document', ModelService::getDocumentModel()->load($this->request->getParam('id', 0)));
         return $this->fetch();
     }
 
@@ -76,10 +76,10 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         $documentModel = ObjectManager::getInstance(\Weline\DeveloperWorkspace\Model\Document::class);
         try {
             $pre_msg = __('添加');
-            if ($this->_request->getPost('id')) {
+            if ($this->request->getPost('id')) {
                 $pre_msg = __('修改');
             }
-            $data = $this->_request->getPost();
+            $data = $this->request->getPost();
             $data['content'] = htmlspecialchars($data['content']);
             $documentModel->save($data);
             $this->getMessageManager()->addSuccess($pre_msg . '文档成功！ID:' . $documentModel->getId());

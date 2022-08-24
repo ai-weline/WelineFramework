@@ -4,12 +4,12 @@
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
 ?>
 <!--加载require常用js模块-->
-<!--<script src='/Weline/Frontend/view/statics/base/require.configs.js?v=77343'></script>-->
+<!--<script src='/Weline/Frontend/view/statics/base/require.configs.js'></script>-->
 <script>
     window.site = {
-        host: '<?=$this->_request->getBaseHost()?>',
-        base_host: '<?=$this->_request->getPrePath()?>',
-        base_router: '<?=$this->_request->getRouterData('router')?>',
+        host: '<?=$this->request->getBaseHost()?>',
+        base_host: '<?=$this->request->getPrePath()?>',
+        base_router: '<?=$this->request->getRouterData('router')?>',
         i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
         buildUrl: (path) => {
             return window.site.base_host + '/' + path;

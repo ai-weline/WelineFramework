@@ -114,7 +114,7 @@ class SystemNotification extends \Weline\Framework\Database\Model
         return $this->getData(self::fields_is_read);
     }
 
-    public function setIsRead(bool $is_read = false): static
+    public function setIsRead(bool $is_read = true): static
     {
         $this->setData(self::fields_is_read, (int)$is_read);
         return $this;

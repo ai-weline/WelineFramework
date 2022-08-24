@@ -21,14 +21,14 @@ class Listing extends \Weline\Framework\App\Controller\BackendController
         /**@var UrlManager $urlManager */
         $urlManager = ObjectManager::getInstance(UrlManager::class);
         # 搜索词
-        $q = $this->_request->getParam('q');
+        $q = $this->request->getParam('q');
         if ($q) {
             $urlManager->where('path', "%{$q}%", 'like');
         }
         $urlManager->pagination(
-            $this->_request->getParam('page', 1),
-            $this->_request->getParam('pageSize', 10),
-            $this->_request->getParams()
+            $this->request->getParam('page', 1),
+            $this->request->getParam('pageSize', 10),
+            $this->request->getParams()
         )->select()->fetch();
         $this->assign('rewrites', $urlManager->getItems());
         return $this->fetch();
