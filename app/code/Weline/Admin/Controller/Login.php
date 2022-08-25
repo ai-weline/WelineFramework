@@ -23,10 +23,11 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     private MessageManager $messageManager;
 
     public function __construct(
-        BackendUser      $adminUser,
+        BackendUser    $adminUser,
         MessageManager $messageManager,
         Data           $helper
-    ) {
+    )
+    {
         $this->adminUser      = $adminUser;
         $this->helper         = $helper;
         $this->messageManager = $messageManager;
@@ -37,6 +38,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         if ($this->session->isLogin()) {
             $this->redirect($this->getUrl('admin'));
         }
+        $this->session->setData('referer', $this->request->getServer('HTTP_REFERER'));
 //        $this->session->delete('backend_disable_login');
         $this->assign('post_url', $this->getUrl('admin/login/post'));
         # 检测验证码
@@ -120,6 +122,9 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $this->messageManager->addError(__('登录凭据错误！'));
         }
         # 跳转首页
+        if ($referer = $this->session->get('referer')) {
+            $this->redirect($referer);
+        }
         $this->redirect($this->getUrl('/admin'));
     }
 
