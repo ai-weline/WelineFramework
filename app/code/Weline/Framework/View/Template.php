@@ -207,7 +207,7 @@ class Template extends DataObject
     }
 
     /**
-     * @param string $fileName 文件名
+     * @param string $fileName 文件名转换查找
      *
      * @throws Core
      * @throws Exception

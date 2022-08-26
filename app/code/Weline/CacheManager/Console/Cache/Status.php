@@ -38,59 +38,57 @@ class Status implements \Weline\Framework\Console\CommandInterface
      */
     public function execute(array $args = [])
     {
-        # 处理缓存状态默认查看
-        if (empty($args)) {
-            $this->printAll();
-        } else {
-            # 操作符
-            if (isset($args[1]) && $op = $args[1]) {
-                $caches = array_merge($this->scanner->scanFrameworkCaches(), $this->scanner->scanAppCaches());
-                foreach ($caches as &$cache) {
-                    $cache = ObjectManager::getInstance((rtrim($cache['class'], "Factory") . 'Factory'));
-                }
-                /**@var CacheInterface $cacheObj */
-                switch ($op) {
-                    case 'enable':
-                    case 'disable':
-                        $status = $op == 'enable' ? 1 : 0;
-                        $cache_config = Env::getInstance()->getData('cache');
-                        $identify_s   = array_slice($args, 2, count($args));
-                        $no_has_data  = [];
-                        $set_data     = [];
-                        if ($identify_s) {
-                            foreach ($identify_s as $identify) {
-                                $no_has = true;
-                                foreach ($caches as $cacheObj) {
-                                    if ($identify === $cacheObj->getIdentify()) {
-                                        $set_data[$identify] = $status;
-                                        $no_has              = false;
-                                    }
-                                }
-                                if ($no_has) {
-                                    $no_has_data[] = $identify;
-                                }
-                            }
-                            # 配置缓存
-                            $cache_config['status'] = $set_data;
-                            Env::getInstance()->setData('cache', $cache_config);
-                            $this->printAll();
-                            $this->printing->error(__('不存在的缓存标识：'));
-                            $this->printing->printList($no_has_data);
-                        } else {
-                            foreach ($caches as $cacheObj) {
-                                $identify            = $cacheObj->getIdentify();
-                                $set_data[$identify] = $status;
-                            }
-                            $cache_config['status'] = $set_data;
-                            Env::getInstance()->setConfig('cache', $cache_config);
-//                            ObjectManager::getInstance(Clear::class)->execute(['-f']);
-                            $this->printAll();
-                        }
-                        break;
-                    default:
-                        $this->printing->error(__('错误的操作,正确示例：%1', 'php bin/m cache:status [enable/disable] [identify...]'));
-                }
+        # 操作符
+        if (isset($args[1]) && $op = $args[1]) {
+            $caches = array_merge($this->scanner->scanFrameworkCaches(), $this->scanner->scanAppCaches());
+            foreach ($caches as &$cache) {
+                $cache = ObjectManager::getInstance((rtrim($cache['class'], 'Factory') . 'Factory'));
             }
+            /**@var CacheInterface $cacheObj */
+            switch ($op) {
+                case 'enable':
+                case 'disable':
+                    $status       = $op == 'enable' ? 1 : 0;
+                    $cache_config = Env::getInstance()->getData('cache');
+                    $identify_s   = array_slice($args, 2, count($args));
+                    $no_has_data  = [];
+                    $set_data     = [];
+                    if ($identify_s) {
+                        foreach ($identify_s as $identify) {
+                            $no_has = true;
+                            foreach ($caches as $cacheObj) {
+                                if ($identify === $cacheObj->getIdentify()) {
+                                    $set_data[$identify] = $status;
+                                    $no_has              = false;
+                                }
+                            }
+                            if ($no_has) {
+                                $no_has_data[] = $identify;
+                            }
+                        }
+                        # 配置缓存
+                        $cache_config['status'] = $set_data;
+                        Env::getInstance()->setData('cache', $cache_config);
+                        $this->printAll();
+                        $this->printing->error(__('不存在的缓存标识：'));
+                        $this->printing->printList($no_has_data);
+                    } else {
+                        foreach ($caches as $cacheObj) {
+                            $identify            = $cacheObj->getIdentify();
+                            $set_data[$identify] = $status;
+                        }
+                        $cache_config['status'] = $set_data;
+                        Env::getInstance()->setConfig('cache', $cache_config);
+//                            ObjectManager::getInstance(Clear::class)->execute(['-f']);
+                        $this->printAll();
+                    }
+                    break;
+                default:
+                    $this->printing->error(__('错误的操作,正确示例：%1', 'php bin/m cache:status [enable/disable] [identify...]'));
+            }
+        } else {
+            # 处理缓存状态默认查看 所有缓存状态
+            $this->printAll();
         }
     }
 
