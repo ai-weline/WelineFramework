@@ -36,9 +36,10 @@ class I18n
      * @param array  $data
      */
     public function __construct(
-        Reader           $reader,
+        Reader    $reader,
         I18NCache $i18nCache
-    ) {
+    )
+    {
         $this->reader    = $reader;
         $this->i18nCache = $i18nCache->create();
     }
@@ -101,11 +102,11 @@ class I18n
 //            return $data;
         }
         # TODO 排除非启用的语言包
-        /**@var Scan $scan*/
-        $install_packs_path = glob(Env::path_LANGUAGE_PACK.'*'.DS.'*', GLOB_ONLYDIR);
-        $install_packs = [];
+        /**@var Scan $scan */
+        $install_packs_path = glob(Env::path_LANGUAGE_PACK . '*' . DS . '*', GLOB_ONLYDIR);
+        $install_packs      = [];
         foreach ($install_packs_path as $path) {
-            $path_arr = explode(DS, $path);
+            $path_arr        = explode(DS, $path);
             $install_packs[] = array_pop($path_arr);
         }
         $no_scale = false;
@@ -120,24 +121,24 @@ class I18n
                 if (!in_array($locale, $install_packs)) {
                     continue;
                 }
-                $svg = $country->getFlag();
-                $svg_xml = simplexml_load_string($svg);
-                $o_width = $svg_xml->attributes()->width??42;
-                $o_height = $svg_xml->attributes()->height??32;
+                $svg      = $country->getFlag();
+                $svg_xml  = simplexml_load_string($svg);
+                $o_width  = $svg_xml->attributes()->width ?? 42;
+                $o_height = $svg_xml->attributes()->height ?? 32;
                 if (!$no_scale) {
-                    if ($width===0) {
-                        $scale = intval($o_height)/$height;
-                        $width = intval($o_width)/$scale;
+                    if ($width === 0) {
+                        $scale = intval($o_height) / $height;
+                        $width = intval($o_width) / $scale;
                     }
-                    if ($height===0) {
-                        $scale = intval($o_width)/$width;
-                        $height = intval($o_height)/$scale;
+                    if ($height === 0) {
+                        $scale  = intval($o_width) / $width;
+                        $height = intval($o_height) / $scale;
                     }
                 }
 
-                $svg_xml->attributes()->width = $width;
+                $svg_xml->attributes()->width  = $width;
                 $svg_xml->attributes()->height = $height;
-                $svg = $svg_xml->asXML();
+                $svg                           = $svg_xml->asXML();
                 if (isset($lang_locals[$locale])) {
                     $locals[$locale] = ['name' => $lang_locals[$locale], 'flag' => $svg];
                 }
@@ -163,37 +164,38 @@ class I18n
         $locals_words = [];
         // 模块翻译覆盖语言包翻译
         $all_i18ns = $this->reader->getAllI18ns();
-        foreach ($all_i18ns as $vendor => $all_i18n) {
-            foreach ($all_i18n as $module => $i18ns) {
-                /**@var $i18n_file File */
-                foreach ($i18ns as $i18n_file) {
-                    $local_filename = $i18n_file->getFilename();
-                    if (isset($locals_names[$local_filename])) {
-                        $handle  = fopen($i18n_file->getOrigin(), 'r');
-                        $is_utf8 = false;
-                        $line    = 1;
-                        while (($data = fgetcsv($handle)) !== false) {
-                            if (!isset($data[0])) {
-                                throw new Exception(PHP_EOL . 'i18n翻译文件格式错误：' . $i18n_file->getOrigin() . '错误行号：' . $line . '  错误消息：没有翻译原文' . PHP_EOL . '读取内容：' . PHP_EOL . var_export($data, true));
-                            }
-                            $data[0] = trim($data[0]);
-                            if (!isset($data[1])) {
-                                throw new Exception(PHP_EOL . 'i18n翻译文件格式错误：' . $i18n_file->getOrigin() . '错误行号：' . $line . '  错误消息：没有翻译内容' . PHP_EOL . '读取内容：' . PHP_EOL . var_export($data, true));
-                            }
-                            $data[1] = trim($data[1]);
-                            if (!$is_utf8) {
-                                if (md5(mb_convert_encoding($data[0], 'utf-8', 'utf-8')) === md5($data[0])) {
-                                    $is_utf8 = true;
-                                } else {
-                                    throw new Exception('i18n翻译文件仅支持utf-8编码：' . $i18n_file->getOrigin());
-                                }
-                            }
-                            $locals_words[$local_filename][$data[0]] = $data[1];
-                            $line                                    += 1;
+        foreach ($all_i18ns as $module_name => $i18n_files) {
+            /**@var $i18n_file File */
+            foreach ($i18n_files as $local => $i18n_file) {
+                if (isset($locals_names[$local])) {
+                    $handle  = fopen($i18n_file, 'r');
+                    $is_utf8 = false;
+                    $line    = 1;
+                    while (($data = fgetcsv($handle)) !== false) {
+                        if (!isset($data[0])) {
+                            throw new Exception(PHP_EOL . 'i18n翻译文件格式错误：' . $i18n_file . '错误行号：' . $line . '  错误消息：没有翻译原文' . PHP_EOL . '读取内容：' .
+                                                PHP_EOL . w_var_export($data, true));
                         }
-
-                        fclose($handle);
+                        $data[0] = trim($data[0]);
+                        if (!isset($data[1])) {
+                            throw new Exception(PHP_EOL . 'i18n翻译文件格式错误：' . $i18n_file . '错误行号：' . $line . '  错误消息：没有翻译内容' . PHP_EOL .
+                                                '读取内容：' . PHP_EOL . w_var_export($data, true));
+                        }
+                        $data[1] = trim($data[1]);
+                        if (!$is_utf8) {
+                            if (md5(mb_convert_encoding($data[0], 'utf-8', 'utf-8')) === md5($data[0])) {
+                                $is_utf8 = true;
+                            } else {
+                                throw new Exception('i18n翻译文件名未匹配到任何local代码：支持的local代码[' . w_var_export($locals_names, true) . ']');
+                            }
+                        }
+                        $locals_words[$local][$data[0]] = $data[1];
+                        $line                           += 1;
                     }
+
+                    fclose($handle);
+                } else {
+                    if (DEV) throw new Exception('i18n翻译文件仅支持utf-8编码：' . $i18n_file);
                 }
             }
         }

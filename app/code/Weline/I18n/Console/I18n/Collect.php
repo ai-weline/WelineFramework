@@ -32,24 +32,9 @@ class Collect implements \Weline\Framework\Console\CommandInterface
      */
     public function execute(array $args = [])
     {
-        $frontend_routers = (array)(require Env::path_FRONTEND_PC_ROUTER_FILE);
-        $this->printing->warning(__('前台词组收集：'));
-        foreach ($frontend_routers as $frontend_router => $router_data) {
-            $url = 'http://' . Env::getInstance()->getConfig('domain') . '/' . $frontend_router;
-            $this->printing->note($url);
-            $this->client->get($url);
-        }
-        $this->printing->warning(__('后台词组收集：'));
-        $backend_routers = (array)(require Env::path_BACKEND_PC_ROUTER_FILE);
-        foreach ($backend_routers as $backend_router => $router_data) {
-            $url = 'http://' . Env::getInstance()->getConfig('domain') . '/' . Env::getInstance()->getConfig('admin') . '/' . $backend_router;
-            $this->printing->note($url);
-            try {
-                $this->client->get($url);
-            } catch (\Exception) {
-            }
-        }
-        $this->printing->success('收集完成！');
+        # 设置语言翻译收集配置
+
+        # 查找所有已激活模块的模板文件，进行模板生成
     }
 
 

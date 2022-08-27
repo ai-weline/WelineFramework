@@ -9,6 +9,7 @@
 
 namespace Weline\I18n\Config;
 
+use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
@@ -52,7 +53,8 @@ class Reader extends ModuleFileReader
         Request   $request,
         I18nCache $cache,
         Parser    $parser
-    ) {
+    )
+    {
         $this->request   = $request;
         $this->i18nCache = $cache->create();
         $this->scanner   = $scanner;
@@ -67,31 +69,28 @@ class Reader extends ModuleFileReader
      */
     public function getAllI18ns()
     {
+        $cache_key    = 'cache_i18n_lang_packs';
+        $all_lan_pack = $this->i18nCache->get($cache_key);
+        if ($all_lan_pack && ('online' !== Env::getInstance()->getConfig('translate_mode'))) {
+            return $all_lan_pack;
+        }
+        $all_lan_pack = [];
         /**@var LanguagePackReader $lang_pack_reader */
-        $lang_pack_reader = ObjectManager::getInstance(LanguagePackReader::class);
-        $lang_packs       = $lang_pack_reader->getLanguagePack();
-        $cache_key = 'cache_i18n_lang_packs';
-        if ($data = $this->i18nCache->get($cache_key)) {
-            return $data;
-        }
-        // 模块翻译
-        $vendor_module_i18ns = [];
-        foreach ($this->getFileList() as $vendor => $module_files) {
-            foreach ($module_files as $module => $item) {
-                /**@var $i File*/
-                foreach ($item as $ims) {
-                    foreach ($ims as $im) {
-                        if ($im->getExtension() === 'csv') {
-                            $vendor_module_i18ns[$vendor][$module][]=$im;
-                        }
-                    }
-                }
+        $lang_pack_reader          = ObjectManager::getInstance(LanguagePackReader::class);
+        $all_lan_pack['I18n_Pack'] = $lang_pack_reader->getLanguagePack();
+        // 模块中的i18n包
+        $modules = Env::getInstance()->getActiveModules();
+        foreach ($modules as $module) {
+            $files = [];
+            $this->scanner->globFile($module['base_path'] . 'i18n', $files, '.csv');
+            foreach ($files as $key => $file) {
+                $filename = pathinfo($file, PATHINFO_FILENAME);
+                unset($files[$key]);
+                $files[$filename] = $file;
             }
+            if ($files) $all_lan_pack[$module['name']] = $files;
         }
-//                                file_put_contents(__DIR__ . 'test.txt', var_export($vendor_module_i18ns, true));
-//                        die;
-        $data = array_merge($lang_packs, $vendor_module_i18ns);
-        $this->i18nCache->set($cache_key, $data);
-        return $data;
+        $this->i18nCache->set($cache_key, $all_lan_pack);
+        return $all_lan_pack;
     }
 }
