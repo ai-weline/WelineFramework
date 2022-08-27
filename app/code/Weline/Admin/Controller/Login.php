@@ -122,7 +122,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $this->messageManager->addError(__('登录凭据错误！'));
         }
         # 跳转首页
-        if ($referer = $this->session->get('referer')) {
+        if ($referer = $this->session->getData('referer')) {
             $this->redirect($referer);
         }
         $this->redirect($this->getUrl('/admin'));
