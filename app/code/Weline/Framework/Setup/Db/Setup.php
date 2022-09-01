@@ -19,6 +19,7 @@ use Weline\Framework\Database\Db\DdlFactory;
 use Weline\Framework\Database\DbManager;
 use Weline\Framework\Database\DbManager\ConfigProvider;
 use Weline\Framework\Database\DbManagerFactory;
+use Weline\Framework\Database\Exception\LinkException;
 use Weline\Framework\Manager\ObjectManager;
 
 class Setup
@@ -104,11 +105,13 @@ class Setup
      * @DESC         |方法描述
      *
      * 参数区：
+     *
      * @param string $table
+     *
      * @return bool
      * @throws Exception
      * @throws \ReflectionException
-     * @throws \Weline\Framework\Database\Exception\LinkException
+     * @throws LinkException
      */
     public function tableExist(string $table): bool
     {

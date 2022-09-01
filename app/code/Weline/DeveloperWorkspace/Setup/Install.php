@@ -26,18 +26,12 @@ class Install implements \Weline\Framework\Setup\InstallInterface
     public const table_DEV_DOCUMENT = 'weline_dev_tool_document_catalog';
     public const table_DEV_DOCUMENT_CONTENT = 'weline_dev_tool_document_catalog_content';
 
-    /**
-     * @var SqlFile
-     */
-    private SqlFile $sqlFile;
     private Scan $scan;
 
     public function __construct(
-        SqlFile $sqlFile,
         Scan        $scan
     )
     {
-        $this->sqlFile = $sqlFile;
         $this->scan = $scan;
     }
     public function setup(Data\Setup $setup, Data\Context $context): void
