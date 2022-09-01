@@ -36,7 +36,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
         $modules_xml_menus = $this->menuReader->read();
         $this->menu->query('TRUNCATE TABLE ' . $this->menu->getTable());
         # 先更新顶层菜单
-        foreach ($modules_xml_menus as $module => $menus) {
+        foreach ($modules_xml_menus as $module => &$menus) {
             foreach ($menus['data'] as $key => $menu) {
                 if (empty($menu['parent'])) {
                     # 清空查询条件
@@ -80,8 +80,8 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
             }
         }
         # 子菜单
-        foreach ($modules_xml_menus as $module => $menus) {
-            foreach ($menus['data'] as $menu) {
+        foreach ($modules_xml_menus as $module => $sub_menus) {
+            foreach ($sub_menus['data'] as $menu) {
                 # 清空查询条件
                 $this->menu->clearData();
                 $menu[Menu::fields_MODULE]        = $module;
@@ -112,8 +112,8 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
         }
         # 再次处理父菜单
         $this->menu->clearData();
-        $menus = $this->menu->where(Menu::fields_PID, 0)->select()->fetch();
-        foreach ($menus->getItems() as $menu) {
+        $top_menus = $this->menu->where(Menu::fields_PID, 0)->select()->fetch();
+        foreach ($top_menus->getItems() as $menu) {
             # 如果存在父菜单，则更新父菜单的id到当前子菜单【pid】
             if ($menu[Menu::fields_PARENT_SOURCE]) {
                 # 查找父菜单，获取父菜单的id
