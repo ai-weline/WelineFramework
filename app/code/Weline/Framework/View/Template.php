@@ -402,6 +402,10 @@ class Template extends DataObject
     {
         return $this->request->getUrl($path, $params, $merge_query);
     }
+    public function getApi(string $path, array $params = [], bool $merge_query = false): string
+    {
+        return $this->request->getUrl($path, $params, $merge_query);
+    }
 
     public function getAdminUrl(string $path, array|bool $params = []): string
     {
