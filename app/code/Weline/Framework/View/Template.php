@@ -423,6 +423,26 @@ class Template extends DataObject
         return $path;
     }
 
+    public function getBackendApi(string $path, array|bool $params = []): string
+    {
+        if (empty($path)) {
+            return $this->request->getUrl($path);
+        }
+        $pre = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('api_admin') . '/';
+//        $pre = $this->request->getBaseHost() . '/';
+//        if ($this->request->isBackend()) {
+//            $pre .= Env::getInstance()->getConfig('admin') . '/';
+//        }
+        $path = rtrim($pre . $path, '/');
+        if (empty($params)) {
+            return $path;
+        }
+        if (is_array($params)) {
+            return $path . '?' . http_build_query($params);
+        }
+        return $path;
+    }
+
     /**
      * @throws \ReflectionException
      * @throws Exception
