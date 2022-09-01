@@ -19,7 +19,7 @@ use Weline\Framework\System\File\Io\File;
 
 class Module extends \Weline\Framework\App\Controller\BackendController
 {
-    public function postStatus()
+    public function postStatus(): string
     {
         $module = $this->request->getParam('module');
         $status = $this->request->getParam('status') === 'true';
@@ -40,7 +40,7 @@ class Module extends \Weline\Framework\App\Controller\BackendController
                 $file->write('<?php return ' . w_var_export($modules, true) . ';');
                 $file->close();
             }
-            return $this->fetchJson(['code' => 200, 'msg' => __('操作成功！请使用CLI命令行模式执行：php bin/m module:upgrade 才能生效'), 'data' => $status]);
+            return $this->fetchJson(['code' => 200, 'msg' => __('操作成功！'), 'data' => $status]);
         } catch (\Exception $exception) {
             return $this->fetchJson(['code' => 403, 'msg' => $exception->getMessage(), 'data' => $status]);
         }
