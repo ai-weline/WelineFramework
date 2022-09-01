@@ -9,7 +9,9 @@
 
 namespace Weline\Framework\Database\Helper\Importer;
 
+use Weline\Framework\App\Exception;
 use Weline\Framework\Database\DbManager;
+use Weline\Framework\Database\Exception\LinkException;
 
 class SqlFile
 {
@@ -38,14 +40,18 @@ class SqlFile
      * @param string $dbfile_table_pre
      * @return array
      */
-    public function import_data(string $db_filepath, string $dbfile_table_pre = 'zq_')
+    public function import_data(string $db_filepath, string $db_file_table_pre = 'w_'): array
     {
         if (! file_exists($db_filepath)) {
             return ['status' => false, 'info' => '数据库文件不存在'];
         }
         $sql    = file_get_contents($db_filepath);
-        if ($this->_sql_execute($sql)) {
-            return ['status' => true, 'file' => str_replace(APP_CODE_PATH, '', $db_filepath), 'info' => '导入数据库失败'];
+        try {
+            if ($this->_sql_execute($sql, $db_file_table_pre)) {
+                return ['status' => true, 'file' => str_replace(APP_CODE_PATH, '', $db_filepath), 'info' => '导入数据库失败'];
+            }
+        } catch (\ReflectionException|LinkException|Exception $e) {
+            exit($e->getMessage());
         }
         return ['status' => true, 'file' => str_replace(APP_CODE_PATH, '', $db_filepath), 'info' => '导入数据库成功'];
     }
@@ -55,14 +61,17 @@ class SqlFile
      *
      * 参数区：
      *
-     * @param $link
-     * @param $sql
-     * @param $dbfile_table_pre
+     * @param        $sql
+     * @param string $dbfile_table_pre
+     *
      * @return bool
+     * @throws LinkException
+     * @throws \ReflectionException
+     * @throws Exception
      */
-    protected function _sql_execute($sql, $dbfile_table_pre='')
+    protected function _sql_execute($sql, $db_file_table_pre='w_'): bool
     {
-        $sqls = $this->_sql_split($sql, $dbfile_table_pre);
+        $sqls = $this->_sql_split($sql, $db_file_table_pre);
         if (is_array($sqls)) {
             foreach ($sqls as $sql) {
                 if (trim($sql) !== '') {
@@ -81,19 +90,20 @@ class SqlFile
      *
      * 参数区：
      *
-     * @param $link
      * @param $sql
-     * @param $dbfile_table_pre
+     * @param $db_file_table_pre
+     *
      * @return array
+     * @throws LinkException
      */
-    protected function _sql_split($sql, $dbfile_table_pre)
+    protected function _sql_split($sql, $db_file_table_pre): array
     {
         if ($this->connection->getLink()->query('select version()')->fetchColumn() > '4.1' && $db_charset = $this->configProvider->getCharset()) {
             $sql = preg_replace('/TYPE=(InnoDB|MyISAM|MEMORY)( DEFAULT CHARSET=[^; ]+)?/', 'ENGINE=\\1 DEFAULT CHARSET=' . $db_charset, $sql);
         }
         //如果有表前缀就替换现有的前缀
         if ($db_table_prefix = $this->configProvider->getPrefix()) {
-            $sql = str_replace($dbfile_table_pre, $db_table_prefix, $sql);
+            $sql = str_replace($db_file_table_pre, $db_table_prefix, $sql);
         }
         $sql          = str_replace("\r", "\n", $sql);
         $ret          = [];
@@ -125,7 +135,7 @@ class SqlFile
      * 参数区：
      * @return \Weline\Framework\Database\ConnectionFactory
      */
-    public function getLink()
+    public function getLink(): \Weline\Framework\Database\ConnectionFactory
     {
         return $this->connection;
     }
@@ -140,7 +150,7 @@ class SqlFile
      * @param \Weline\Framework\Database\ConnectionFactory $connectionFactory
      * @return $this
      */
-    public function setLink(\Weline\Framework\Database\ConnectionFactory $connectionFactory)
+    public function setLink(\Weline\Framework\Database\ConnectionFactory $connectionFactory): static
     {
         $this->connection = $connectionFactory;
         return $this;
