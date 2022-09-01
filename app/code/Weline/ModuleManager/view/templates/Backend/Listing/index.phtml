@@ -47,7 +47,6 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     @template(Weline_Admin::common/left-sidebar.phtml)
     <!--左侧菜单栏 结束-->
 
-
     <!-- ============================================================== -->
     <!-- Start right Content here -->
     <!-- ============================================================== -->
@@ -133,22 +132,22 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </thead>
                                         <tbody>
                                         <foreach name="modules" item="module">
-                                            <tr @if{$module->getPosition() ==='system'=>"class='disabled text-danger'"}>
+                                            <tr>
                                                 <td><var>$module->getId()</var></td>
                                                 <td><var>$module->getName()</var></td>
                                                 <td>
                                                     <if condition="module.status">
-                                                        <b style="color: #0a5f03">
+                                                        <b class="text-success">
                                                             <lang>启用</lang>
                                                         </b>
                                                         <else/>
-                                                        <b style="color: red">
+                                                        <b class="text-danger">
                                                             <lang>禁用</lang>
                                                         </b>
                                                     </if>
                                                 </td>
                                                 <td><string>$module->getDescription()|50</string></td>
-                                                <td>
+                                                <td @if{$module->getPosition() ==='system'=>"class='disabled text-danger'"}>
                                                     <if condition="module.position === 'app'">
                                                         <lang>第三方</lang>
                                                         <elseif condition="module.position === 'composer'"/>
@@ -163,7 +162,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <td><var>$module->getVersion()</var></td>
                                                 <td><var>$module->getRouter()</var></td>
                                                 <td><var>$module->getCreateTime()</var></td>
-                                                <td><var>$module->getUpdateTime()</var></td>
+                                                <td>{{$module->getUpdateTime()}}</td>
                                                 <td style='width: 100px'>
                                                     <input class='form-check form-switch' type='checkbox'
                                                            alt="@var{$module->getStatus()?__('开启'):__('关闭')}"
