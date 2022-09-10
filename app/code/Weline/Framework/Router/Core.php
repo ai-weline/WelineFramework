@@ -34,7 +34,7 @@ class Core
     private string $area_router;
 
     private bool $is_admin;
-    private bool $is_match=false;
+    private bool $is_match = false;
 
     private CacheInterface $cache;
 
@@ -89,17 +89,17 @@ class Core
         # 获取URL
         $url = $this->processUrl();
 //        $url                     = str_replace('-', '', $origin_url);
-        $this->_router_cache_key = 'router_start_cache_key_' . $this->request->getUri().$this->request->getMethod();
+        $this->_router_cache_key = 'router_start_cache_key_' . $this->request->getUri() . $this->request->getMethod();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
             return $this->route();
         }
 
-        if (($pc_result = $this->Pc($url))||$this->is_match) {
+        if (($pc_result = $this->Pc($url)) || $this->is_match) {
             return $pc_result;
         }
         // API
-        if (($api_result = $this->Api($url))||$this->is_match) {
+        if (($api_result = $this->Api($url)) || $this->is_match) {
             return $api_result;
         }
         // 非开发模式（匹配不到任何路由将报错）
@@ -120,8 +120,8 @@ class Core
     public function processUrl()
     {
         // 读取url
-        $url_cache_key  = 'url_cache_key_' . $this->request->getUri().$this->request->getMethod();
-        $rule_cache_key = 'rule_data_cache_key_' . $this->request->getUri().$this->request->getMethod();
+        $url_cache_key  = 'url_cache_key_' . $this->request->getUri() . $this->request->getMethod();
+        $rule_cache_key = 'rule_data_cache_key_' . $this->request->getUri() . $this->request->getMethod();
         $cached_url     = $this->cache->get($url_cache_key);
         $rule           = $this->cache->get($rule_cache_key);
 
@@ -194,8 +194,10 @@ class Core
         if (file_exists($router_filepath)) {
             $routers = include $router_filepath;
             $method  = '::' . strtoupper($this->request->getMethod());
-            if (isset($routers[$url . $method])) {
-                $this->router = $routers[$url . $method];
+            if (
+                isset($routers[$url]) || isset($routers[$url . $method]) || (empty($url) && (isset($routers['index/index']) || isset($routers['index/index' . $method])))
+            ) {
+                $this->router = $routers[$url] ?? $routers[$url . $method] ?? $routers['index/index'] ?? $routers['index/index' . $method];
                 # 缓存路由结果
                 $this->router['type'] = 'api';
                 $this->cache->set($this->_router_cache_key, $this->router);
@@ -222,7 +224,7 @@ class Core
      */
     public function Pc(string $url)
     {
-        $in = false;
+        $in          = false;
         $url         = strtolower($url);
         $is_pc_admin = $this->request_area === \Weline\Framework\Controller\Data\DataInterface::type_pc_BACKEND;
         // 检测api路由区域
@@ -231,15 +233,13 @@ class Core
         } else {
             $router_filepath = Env::path_FRONTEND_PC_ROUTER_FILE;
         }
-        $url_class_method_cache_key = 'url_class_method_cache_key';
-        $class_method               = $this->cache->get($url_class_method_cache_key);
         if (is_file($router_filepath)) {
             $routers = include $router_filepath;
             $method  = '::' . strtoupper($this->request->getMethod());
             if (
-                isset($routers[$url]) || isset($routers[$url . $method])
+                isset($routers[$url]) || isset($routers[$url . $method]) || (empty($url) && (isset($routers['index/index']) || isset($routers['index/index' . $method])))
             ) {
-                $this->router = $routers[$url] ?? $routers[$url . $method];
+                $this->router = $routers[$url] ?? $routers[$url . $method] ?? $routers['index/index'] ?? $routers['index/index' . $method];
                 # 缓存路由结果
                 $this->router['type'] = 'pc';
                 $this->cache->set($this->_router_cache_key, $this->router);
@@ -274,7 +274,7 @@ class Core
         if (is_bool(strpos($filename, \Weline\Framework\View\Data\DataInterface::dir))) {
             $this->request->getResponse()->noRouter();
         }
-        if(!is_file($filename)){
+        if (!is_file($filename)) {
             # 检测vendor目录的组件文件
             $filename = VENDOR_PATH . trim($url, DS);
             $filename = str_replace('/', DS, $filename);
@@ -331,11 +331,11 @@ class Core
     {
         # 检测模块状态
         $module = $this->router['module'];
-        if(!Env::getInstance()->getModuleStatus($module)){
+        if (!Env::getInstance()->getModuleStatus($module)) {
             $this->request->getResponse()->noRouter();
         }
         # 全页缓存
-        $cache_key =  $this->cache->buildWithRequestKey('router_route_fpc_cache_key_');
+        $cache_key = $this->cache->buildWithRequestKey('router_route_fpc_cache_key_');
         if (PROD && $html = $this->cache->get($cache_key)) {
             return $html;
         }
