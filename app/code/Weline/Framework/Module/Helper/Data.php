@@ -112,7 +112,7 @@ class Data extends AbstractHelper
                         }
                         # 删除index后缀
                         $rule_router = strtolower($baseRouter . '/' . $rule_method);
-                        $rule_rule_arr = explode('/', $rule_router);
+                        $rule_rule_arr = explode('/', trim($rule_router,'/'));
                         $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
                         while ('index' === array_pop($rule_rule_arr)) {
                             $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
@@ -184,7 +184,7 @@ class Data extends AbstractHelper
                         }
                         # 删除index后缀
                         $rule_router = strtolower($baseRouter . '/' . $rule_method);
-                        $rule_rule_arr = explode('/', $rule_router);
+                        $rule_rule_arr = explode('/', trim($rule_router,'/'));
                         $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
                         while ('index' === array_pop($rule_rule_arr)) {
                             $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
