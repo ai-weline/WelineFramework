@@ -81,17 +81,9 @@ class Set extends CommandAbstract
     protected function cleanTplComDir()
     {
         // 扫描代码
-        $scanner = new AppScanner();
-        list($apps)    = $scanner->scanAppModules();
-        // 注册模块
-        foreach ($apps as $vendor => $modules) {
-            foreach ($modules as $name => $register) {
-                $module_view_tpl_com_dir = APP_CODE_PATH . $vendor . DS . $name . DS . DataInterface::dir . DS . DataInterface::view_TEMPLATE_COMPILE_DIR . DS;
-                if (is_dir($module_view_tpl_com_dir)) {
-                    $this->printer->note($vendor . '_' . $name . '...');
-                    $this->system->exec("rm -rf $module_view_tpl_com_dir");
-                }
-            }
+        $modules = Env::getInstance()->getModuleList();
+        foreach ($modules as $module) {
+            $this->system->exec("rm -rf {$module['base_path']}".DS."view".DS."tpl");
         }
     }
 

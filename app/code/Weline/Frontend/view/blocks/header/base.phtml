@@ -8,13 +8,20 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <script>
     window.site = {
         host: '<?=$this->request->getBaseHost()?>',
+        env_model: '<?=\Weline\Framework\App\Env::getInstance()->getConfig('deploy')?>',
+        env_model_media_base_path_template: <?php if(DEV):echo '{module}/view/statics/{path}'; else:echo '';endif;?>,
         base_host: '<?=$this->request->getPrePath()?>',
         base_router: '<?=$this->request->getRouterData('router')?>',
         i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
         buildUrl: (path) => {
             return window.site.host + path;
         },
-        buildApi: (path) => { return window.site.host + path; },
+        buildStaticMediaUrl: (path) => {
+            return '<?=$this->fetchTagSource('statics', '/', false)?>' + path;
+        },
+        buildApi: (path) => {
+            return window.site.host + path;
+        },
         buildFrontendApiUrl: (path) => {
             return window.site.host + path;
         },

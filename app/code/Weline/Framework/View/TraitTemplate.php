@@ -186,11 +186,12 @@ trait TraitTemplate
      *
      * @param string $type
      * @param string $source
+     * @param bool   $rand_version
      *
      * @return bool|string|void
-     * @throws Core
+     * @throws Exception
      */
-    public function fetchTagSource(string $type, string $source)
+    public function fetchTagSource(string $type, string $source, bool $rand_version_with_system = true)
     {
         $source    = trim($source);
         $source    = trim($source, DS);
@@ -226,7 +227,7 @@ trait TraitTemplate
         $data = str_replace('\\', '/', $data);
         $data = str_replace('//', '/', $data);
         # 是否静态文件添加
-        if ($type === 'statics' && Env::getInstance()->getConfig('static_file_rand_version')) {
+        if ($rand_version_with_system and ($type === 'statics' && Env::getInstance()->getConfig('static_file_rand_version'))) {
             $version = random_int(10000, 100000);
             $data    .= '?v=' . $version;
         }

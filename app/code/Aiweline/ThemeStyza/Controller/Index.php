@@ -16,11 +16,12 @@ class Index extends \Weline\Framework\App\Controller\FrontendController
 {
     function __construct()
     {
-        $this->getTemplate()->setFileExt('.html');
+        $this->getTemplate()->setFileExt('html');
     }
 
-    function get()
+    function index()
     {
-        p();
+        $template = $this->request->getRule('template');
+        return $this->fetch($template);
     }
 }

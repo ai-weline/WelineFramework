@@ -160,9 +160,9 @@ class PcController extends Core
      *
      * @return mixed
      */
-    protected function fetch(string $fileName = null,array $data = []): mixed
+    protected function fetch(string $fileName = null, array $data = []): mixed
     {
-        if($data){
+        if ($data) {
             $this->assign($data);
         }
         # 如果指定了模板就直接读取
