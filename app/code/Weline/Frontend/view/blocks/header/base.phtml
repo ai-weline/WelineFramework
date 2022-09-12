@@ -9,30 +9,30 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     window.site = {
         host: '<?=$this->request->getBaseHost()?>',
         env_model: '<?=\Weline\Framework\App\Env::getInstance()->getConfig('deploy')?>',
-        env_model_media_base_path_template: '<?=$this->request->getBaseHost()?>'+'<?php if(DEV):echo '/{module}/view/statics/{path}'; else:echo
-        '/static/'.\Weline\Framework\App\Env::getInstance()->getTheme()['path'].'/{module}/view/statics/{path}';endif;?>',
+        env_model_media_base_path_template: '<?=$this->request->getBaseHost()?>' + '<?php if (DEV):echo '/{module}/view/statics/{path}';
+        else:echo
+            '/static/' . \Weline\Framework\App\Env::getInstance()->getTheme()['path'] . '/{module}/view/statics/{path}';endif;?>',
         base_host: '<?=$this->request->getPrePath()?>',
         base_router: '<?=$this->request->getRouterData('router')?>',
         i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
-        buildUrl: (path) => {
-            return window.site.host + path;
-        },
-        buildStaticMediaUrl: (path,module='<?=$this->request->getModuleName()?>') => {
-            module = module.replace('_','/')
-            return window.site.env_model_media_base_path_template.replace('{path}',path).replace('{module}',module)
-        },
-        buildApi: (path) => {
-            return window.site.host + path;
-        },
-        buildFrontendApiUrl: (path) => {
-            return window.site.host + path;
-        },
         themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>,
-        selectLanguage: (lang) => {
-            setCookie('WELINE-USER-LANG', lang);
-            window.location.reload();
-        },
-
+    }
+    window.media = (path, module = '<?=$this->request->getModuleName()?>') => {
+        module = module.replace('_', '/')
+        return window.site.env_model_media_base_path_template.replace('{path}', path).replace('{module}', module)
+    }
+    window.lang = (lang) => {
+        setCookie('WELINE-USER-LANG', lang);
+        window.location.reload();
+    }
+    window.url = (path) => {
+        return window.site.host + path;
+    }
+    window.api = (path) => {
+        return window.site.host + path;
+    }
+    window.frontend_api = (path) => {
+        return window.site.host + path;
     }
 
     /**

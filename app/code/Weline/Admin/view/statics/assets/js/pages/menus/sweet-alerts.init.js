@@ -35,7 +35,7 @@ File: Sweetalert Js File
                     if (id) {
                         $.ajax(
                             {
-                                url: window.site.buildUrl('/menus/delete'),
+                                url: window.url('/menus/delete'),
                                 type: 'post',
                                 data: {
                                     id: id

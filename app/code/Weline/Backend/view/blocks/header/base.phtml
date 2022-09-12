@@ -9,29 +9,37 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     window.site = {
         host: '<?=$this->request->getBaseHost()?>',
         base_host: '<?=$this->request->getPrePath()?>',
+        env_model: '<?=\Weline\Framework\App\Env::getInstance()->getConfig('deploy')?>',
+        env_model_media_base_path_template: '<?=$this->request->getBaseHost()?>' + '<?php if (DEV):echo '/{module}/view/statics/{path}';
+        else:echo
+            '/static/' . \Weline\Framework\App\Env::getInstance()->getTheme()['path'] . '/{module}/view/statics/{path}';endif;?>',
         base_backend_api_host: '<?=$this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('api_admin')?>',
         base_router: '<?=$this->request->getRouterData('router')?>',
         i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
-        buildUrl: (path) => {
-            return window.site.base_host + path;
-        },
-        buildFrontendUrl: (path) => {
-            return window.site.host + path;
-        },
-        buildBackendApiUrl: (path) => {
-            if (path.indexOf('/') !== 0) {
-                path = path + '/'
-            }
-            return window.site.base_backend_api_host + path;
-        },
-        buildFrontendApiUrl: (path) => {
-            return window.site.host + path;
-        },
-        selectLanguage: (lang) => {
-            setCookie('WELINE-USER-LANG', lang);
-            window.location.reload();
-        },
         themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
+    }
+    window.media = (path, module = '<?=$this->request->getModuleName()?>') => {
+        module = module.replace('_', '/')
+        return window.site.env_model_media_base_path_template.replace('{path}', path).replace('{module}', module)
+    }
+    window.lang = (lang) => {
+        setCookie('WELINE-USER-LANG', lang);
+        window.location.reload();
+    }
+    window.url = (path) => {
+        return window.site.host + path;
+    }
+    window.api = (path) => {
+        return window.site.host + path;
+    }
+    window.frontend_api = (path) => {
+        return window.site.host + path;
+    }
+    window.backend_api = (path) => {
+        if (path.indexOf('/') !== 0) {
+            path = path + '/'
+        }
+        return window.site.base_backend_api_host + path;
     }
 
     /**

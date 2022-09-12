@@ -52,7 +52,7 @@ function toggleSwitcher() {
 }
 
 function setColor(theme) {
-  document.getElementById("color-opt").href = window.site.buildStaticMediaUrl("/css/colors/" + theme + ".css");
+  document.getElementById("color-opt").href = window.media("/css/colors/" + theme + ".css");
   toggleSwitcher(false);
 }
 

@@ -461,7 +461,7 @@ File: Main Js File
 
     async function setThemeConfig(layout, reload = true) {
         $.ajax({
-            url: window.site.buildUrl('backend/ThemeConfig/Set'),
+            url: window.url('backend/ThemeConfig/Set'),
             data: JSON.stringify(layout),
             dataType: 'json',
             type: 'post',
