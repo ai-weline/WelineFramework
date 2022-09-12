@@ -270,6 +270,11 @@ class Env extends DataObject
         return isset($this->config[$name]) ? $this->config[$name] : $default;
     }
 
+    public function getTheme()
+    {
+        return $this->getConfig('theme', self::default_theme_DATA);
+    }
+
     /**
      * @DESC         |设置环境参数
      *

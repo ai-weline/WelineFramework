@@ -9,15 +9,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     window.site = {
         host: '<?=$this->request->getBaseHost()?>',
         env_model: '<?=\Weline\Framework\App\Env::getInstance()->getConfig('deploy')?>',
-        env_model_media_base_path_template: <?php if(DEV):echo '{module}/view/statics/{path}'; else:echo '';endif;?>,
+        env_model_media_base_path_template: '<?=$this->request->getBaseHost()?>'+'<?php if(DEV):echo '/{module}/view/statics/{path}'; else:echo
+        '/static/'.\Weline\Framework\App\Env::getInstance()->getTheme()['path'].'/{module}/view/statics/{path}';endif;?>',
         base_host: '<?=$this->request->getPrePath()?>',
         base_router: '<?=$this->request->getRouterData('router')?>',
         i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
         buildUrl: (path) => {
             return window.site.host + path;
         },
-        buildStaticMediaUrl: (path) => {
-            return '<?=$this->fetchTagSource('statics', '/', false)?>' + path;
+        buildStaticMediaUrl: (path,module='<?=$this->request->getModuleName()?>') => {
+            module = module.replace('_','/')
+            return window.site.env_model_media_base_path_template.replace('{path}',path).replace('{module}',module)
         },
         buildApi: (path) => {
             return window.site.host + path;
