@@ -1,0 +1,20 @@
+.sample div.debug{
+    padding: 25px;
+}
+.sample div.debug a{
+    color: #F4606C;
+    border: 1px solid #03A9F4;
+    background-color: aliceblue;
+    padding: 15px;
+    float: left;
+    margin: 1%;
+    text-decoration: none;
+}
+.sample div.debug a:hover{
+    color: #151d1c;
+    transition: color;
+    border: 1px solid red;
+}
+code{
+    background: black;
+}

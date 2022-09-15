@@ -63,5 +63,8 @@
     "classmap": [
       "extend/"
     ]
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^6.1"
   }
 }
