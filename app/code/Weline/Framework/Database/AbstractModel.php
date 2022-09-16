@@ -86,6 +86,8 @@ abstract class AbstractModel extends DataObject
     private array $_model_fields_data = [];
 
     private bool $force_check_flag = false;
+    private array $force_check_fields = [];
+    private bool $remove_force_check_field = false;
 
     private DbManager|null $dbManager = null;
     private ?QueryInterface $_bind_query = null;
@@ -463,11 +465,13 @@ abstract class AbstractModel extends DataObject
      *
      * 参数区：
      *
-     * @param array       $data
-     * @param string|null $sequence
+     * @param array|bool|AbstractModel $data
+     * @param string|null              $sequence
+     * @param bool                     $remove_force_check_field [如果遇到unique类型，请使用此参数去除不存在则更新时unique导致重复字段值的问题]
      *
      * @return bool
-     * @throws \Weline\Framework\Exception\Core
+     * @throws Exception
+     * @throws ModelException
      * @throws \ReflectionException
      */
     public function save(array|bool|AbstractModel $data = [], string $sequence = null): bool
@@ -477,6 +481,9 @@ abstract class AbstractModel extends DataObject
         }
         if (is_bool($data)) {
             $this->force_check_flag = $data;
+            if ($sequence) {
+                $this->force_check_fields[] = $sequence;
+            }
         }
         if (is_array($data)) {
             $this->setModelData($data);
@@ -494,16 +501,24 @@ abstract class AbstractModel extends DataObject
                 }
                 # 是否强制检查
                 if ($this->force_check_flag) {
-                    $save_result = $this->getQuery()->insert($this->getModelData(), $this->getModelFields(true))->fetch();
+                    $save_result = $this->getQuery()
+                                        ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
+                                        ->fetch();
                 } else {
-                    $save_result = $this->getQuery()->where($this->_primary_key, $this->getId())->update($this->getModelData())->fetch();
+                    $save_result = $this->getQuery()
+                                        ->where($this->_primary_key, $this->getId())
+                                        ->update($this->getModelData())
+                                        ->fetch();
                 }
             } else {
                 $insert_data = $this->getModelData();
-                unset($insert_data[$this->_primary_key]);
+                # 是否强制检查
                 if ($this->force_check_flag) {
-                    $save_result = $this->getQuery()->insert($this->getModelData(), $this->getModelFields(true))->fetch();
+                    $save_result = $this->getQuery()
+                                        ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
+                                        ->fetch();
                 } else {
+                    unset($insert_data[$this->_primary_key]);
                     $save_result = $this->getQuery()->insert($insert_data)->fetch();
                 }
                 if (!$this->getId()) {
@@ -541,13 +556,23 @@ abstract class AbstractModel extends DataObject
      * @DateTime: 2021/9/14 22:49
      * 参数区：
      *
-     * @param bool $force_check_flag
+     * @param bool         $force_check_flag
+     * @param string|array $check_field
      *
      * @return AbstractModel
      */
-    public function forceCheck(bool $force_check_flag = true): AbstractModel
+    public function forceCheck(bool $force_check_flag = true, string|array $check_field = ''): AbstractModel
     {
         $this->force_check_flag = $force_check_flag;
+        if ($check_field) {
+            if (is_string($check_field)) {
+                $this->force_check_fields[$check_field] = $check_field;
+            } else {
+                $this->force_check_fields = $check_field;
+            }
+        } else {
+            $this->force_check_fields[$this->_primary_key] = $this->_primary_key;
+        }
         return $this;
     }
 
@@ -864,8 +889,12 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    public function setData($key, $value = null): static
+    public function setData($key, $value = null, bool $is_unique = false): static
     {
+        if ($is_unique) {
+            $this->forceCheck(true, $key);
+            $this->remove_force_check_field = true;
+        }
         $this->set_data_before($key, $value);
         if (is_array($key)) {
             $this->_model_fields_data = $key;
@@ -934,9 +963,9 @@ abstract class AbstractModel extends DataObject
         return $this->setData(self::fields_CREATE_TIME, $update_time);
     }
 
-    public function getModelFields(bool $remove_primary_key = false): array
+    public function getModelFields(bool $remove_primary_key = false, bool $remove_force_check_fields = false): array
     {
-        if ($_model_fields = $this->_model_fields) {
+        if (!$remove_force_check_fields && $_model_fields = $this->_model_fields) {
             return $_model_fields;
         }
         $module__fields_cache_key = $this::class . '_module__fields_cache_key';
@@ -953,7 +982,15 @@ abstract class AbstractModel extends DataObject
             }
         }
         if (!$remove_primary_key) $_fields[] = $this->_primary_key;
-        $_fields             = array_unique($_fields);
+        $_fields = array_unique($_fields);
+        # 是否移除强制检测的字段
+        if ($remove_force_check_fields && $this->force_check_flag && $this->force_check_fields) {
+            foreach ($_fields as $key => $field) {
+                if (in_array($field, $this->force_check_fields)) {
+                    unset($_fields[$key]);
+                }
+            }
+        }
         $this->_model_fields = $_fields;
         if (PROD) {
             $this->_cache->set($module__fields_cache_key, $_fields);

@@ -100,7 +100,7 @@ if (!function_exists('pp')) {
      *
      * @param $data
      */
-    function pp($data)
+    function pp($data): void
     {
         p($data, 1);
     }
@@ -183,7 +183,43 @@ if (!function_exists('pp')) {
 //        }
 //    }
 //}
-if (!function_exists('dd')) {
+if (function_exists('dump') && !function_exists('d')) {
+    function d($data, $trace_deep = 2): void
+    {
+        // 执行时间
+        $exe_time = microtime(true) - START_TIME;
+
+        $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $trace_deep);
+        $isCli            = (PHP_SAPI === 'cli');
+        $var_string       = '';
+        if (!$isCli) {
+            $var_string .= '<div style="color: #180808;padding: 2% 5%;border: 2px gray dashed "><pre style="font-size: 20px"><div>';
+            $var_string .= "<h3 style=\"color: chocolate\">调试位置：（深度：{$trace_deep}）</h3>";
+            $var_string .= '<style>body{background-color:#9e9e9e42 }</style>';
+        }
+        $parent_call_info = array_reverse($parent_call_info);
+        foreach ($parent_call_info as $key => $item) {
+            if (is_array($item)) {
+                foreach ($item as $k => $i) {
+                    $k          = str_pad($k, 12, '-', STR_PAD_BOTH);
+                    $i_str      = is_string($i) ? $i : json_encode($i);
+                    $var_string .= !$isCli ? "<b style='color: dodgerblue'>{$k}</b>  :  <b style='color: darkred'>{$i_str}</b>" . PHP_EOL
+                        : "{$k}   {$i}" . PHP_EOL;
+                }
+                $var_string .= !$isCli ? '---------------------------------------------------------<br>' : print_r('---------------------------------------------------------' . PHP_EOL);
+            } else {
+                $key        = str_pad($key, 12, '-', STR_PAD_BOTH);
+                $item_str   = is_string($item) ? $item : json_encode($item);
+                $var_string .= !$isCli ? "<b style='color: dodgerblue'>{$key}</b>  :  <b style='color: darkred'>{$item_str}</b>" . PHP_EOL
+                    : "{$key}   {$item}" . PHP_EOL;
+            }
+        }
+        $var_string .= !$isCli ? '<h3 style="color: chocolate">调试信息：</h3><div style="border: #0a464e solid 1px;padding: 2% 2%">' : '调试信息：';
+        dump($var_string);
+        dump($data);
+    }
+}
+if (!function_exists('d')) {
     /**
      * @DESC         |打印调试
      *
@@ -229,7 +265,8 @@ if (!function_exists('dd')) {
         }
         return $str;
     }
-
+}
+if (!function_exists('dd')) {
     function dnl($data)
     {
         return d($data) . "<br>\n";

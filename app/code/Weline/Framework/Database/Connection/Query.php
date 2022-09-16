@@ -350,6 +350,7 @@ abstract class Query implements QueryInterface
         foreach (self::init_vars as $init_field => $init_var) {
             $this->$init_field = $init_var;
         }
+        $this->PDOStatement = null;
         return $this;
     }
 

@@ -54,6 +54,7 @@ class Create extends TableAbstract implements CreateInterface
     {
         $comment = $comment?"COMMENT '{$comment}'": '';
         $index_method = $index_method?"USING {$index_method}": '';
+        $type = strtoupper($type);
         switch ($type) {
             case self::index_type_DEFAULT:
                 $this->indexes[] = "INDEX `{$name}`(`{$column}`) {$index_method} {$comment}," . PHP_EOL;
