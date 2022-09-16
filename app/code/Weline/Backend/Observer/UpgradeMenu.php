@@ -70,7 +70,6 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                         foreach ($is_others_parent as $other_menu) {
                             if (empty($other_menu['pid'])) {
                                 $other_menu['pid'] = $this_menu_id;
-
                                 $menuModel->forceCheck(false)->setData(Menu::fields_ID, $other_menu['id'])->save($other_menu);
                             }
                         }

@@ -137,11 +137,19 @@ abstract class Query implements QueryInterface
 //        }
         if (is_array($field)) {
             foreach ($field as $f_key => $where_array) {
-                # 处理两个元素数组
-                if (2 === count($where_array)) {
+                if(is_string($where_array)){
+                    $value = $where_array;
+                    $where_array = [];
+                    $where_array[0] = $f_key;
+                    $where_array[1] = '=';
+                    $where_array[2] = $value;
+                    $where_array[3] = $where_logic;
+                }elseif (2 === count($where_array)) {# 处理两个元素数组
                     $where_array[2] = $where_array[1];
                     $where_array[1] = '=';
                 }
+
+
                 # 检测条件数组 下角标 必须为数字
                 $this->checkWhereArray($where_array, $f_key);
                 # 检测条件数组 检测第二个元素必须是限定的 条件操作符

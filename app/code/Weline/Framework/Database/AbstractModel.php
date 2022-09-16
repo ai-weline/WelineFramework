@@ -88,6 +88,7 @@ abstract class AbstractModel extends DataObject
     private bool $force_check_flag = false;
     private array $force_check_fields = [];
     private bool $remove_force_check_field = false;
+    private array $unique_data = [];
 
     private DbManager|null $dbManager = null;
     private ?QueryInterface $_bind_query = null;
@@ -501,9 +502,25 @@ abstract class AbstractModel extends DataObject
                 }
                 # 是否强制检查
                 if ($this->force_check_flag) {
-                    $save_result = $this->getQuery()
-                                        ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
-                                        ->fetch();
+                    if ($this->unique_data) {
+                        $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
+                        # 存在更新
+                        if (isset($check_result[$this->_primary_key])) {
+                            $this->setId($check_result[$this->_primary_key]);
+                            $save_result = $this->getQuery()->where($this->unique_data)
+                                                ->update($this->getModelData())
+                                                ->fetch();
+                        } else {
+                            $save_result = $this->getQuery()
+                                                ->insert($this->getModelData(), $this->getModelFields())
+                                                ->fetch();
+                        }
+
+                    } else {
+                        $save_result = $this->getQuery()
+                                            ->insert($this->getModelData(), $this->getModelFields(true,$this->remove_force_check_field))
+                                            ->fetch();
+                    }
                 } else {
                     $save_result = $this->getQuery()
                                         ->where($this->_primary_key, $this->getId())
@@ -514,9 +531,25 @@ abstract class AbstractModel extends DataObject
                 $insert_data = $this->getModelData();
                 # 是否强制检查
                 if ($this->force_check_flag) {
-                    $save_result = $this->getQuery()
-                                        ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
-                                        ->fetch();
+                    if ($this->unique_data) {
+                        $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
+                        # 存在更新
+                        if (isset($check_result[$this->_primary_key])) {
+                            $this->setId($check_result[$this->_primary_key]);
+                            $save_result = $this->getQuery()->where($this->unique_data)
+                                                ->update($this->getModelData())
+                                                ->fetch();
+                        } else {
+                            $save_result = $this->getQuery()
+                                                ->insert($this->getModelData(), $this->getModelFields())
+                                                ->fetch();
+                        }
+
+                    } else {
+                        $save_result = $this->getQuery()
+                                            ->insert($this->getModelData(), $this->getModelFields())
+                                            ->fetch();
+                    }
                 } else {
                     unset($insert_data[$this->_primary_key]);
                     $save_result = $this->getQuery()->insert($insert_data)->fetch();
@@ -893,6 +926,7 @@ abstract class AbstractModel extends DataObject
     {
         if ($is_unique) {
             $this->forceCheck(true, $key);
+            $this->unique_data[$key]        = $value;
             $this->remove_force_check_field = true;
         }
         $this->set_data_before($key, $value);

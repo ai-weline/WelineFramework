@@ -51,7 +51,7 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
                 ->setData('path', $path,true)
                 ->setData('data', json_encode($frontend_pc_url))
                 ->setData('type', 'frontend_pc')
-                ->save(true,'path',true);
+                ->save();
         }
 
         # 读取前端REST api存放位置更新到数据库中
@@ -63,10 +63,10 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
             $this->urlManager->clearData();
             $this->urlManager
                 ->setData('module_id', $module_id)
-                ->setData('path', $path)
+                ->setData('path', $path,true)
                 ->setData('data', json_encode($frontend_api_url))
                 ->setData('type', 'frontend_rest')
-                ->save(true);
+                ->save();
         }
         # 读取后端PC url存放位置更新到数据库中
         $backend_pc_urls = include Env::path_BACKEND_PC_ROUTER_FILE;
@@ -77,10 +77,10 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
             $this->urlManager->clearData();
             $this->urlManager
                 ->setData('module_id', $module_id)
-                ->setData('path', $path)
+                ->setData('path', $path,true)
                 ->setData('data', json_encode($backend_pc_url))
                 ->setData('type', 'backend_pc')
-                ->save(true);
+                ->save();
         }
         # 读取后端REST api存放位置更新到数据库中
         $backend_api_urls = include Env::path_BACKEND_PC_ROUTER_FILE;
@@ -91,10 +91,10 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
             $this->urlManager->clearData();
             $this->urlManager
                 ->setData('module_id', $module_id)
-                ->setData('path', $path)
+                ->setData('path', $path,true)
                 ->setData('data', json_encode($backend_api_url))
                 ->setData('type', 'frontend_rest')
-                ->save(true,'path');
+                ->save();
         }
     }
 }
