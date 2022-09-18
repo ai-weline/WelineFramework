@@ -518,7 +518,7 @@ abstract class AbstractModel extends DataObject
 
                     } else {
                         $save_result = $this->getQuery()
-                                            ->insert($this->getModelData(), $this->getModelFields(true,$this->remove_force_check_field))
+                                            ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
                                             ->fetch();
                     }
                 } else {
@@ -1060,8 +1060,9 @@ abstract class AbstractModel extends DataObject
         if (empty($this->_model_fields_data) && $data = $this->getData()) {
             $need_fill_fields = [];
             foreach ($this->getModelFields() as $key => $val) {
-                $field_data = $data[$val] ?? null;
-                # 设置沿用主模型的数据
+                if(isset($data[$val])){
+                    $field_data = $data[$val];
+                    # 设置沿用主模型的数据
 //                if ($val !== $this->_primary_key && $field_data && $datas = $this->getId()) {
 //                    if (!isset($datas[0][$val])) {
 //                        foreach ($datas as &$data_val) {
@@ -1070,11 +1071,11 @@ abstract class AbstractModel extends DataObject
 //                        $this->setData($this->_primary_key, $datas);
 //                    }
 //                }
-                if (($val === $this::fields_CREATE_TIME || $val === $this::fields_UPDATE_TIME) && empty($field_data)) {
-                    $field_data = date('Y-m-d H:i:s');
+                    if (($val === $this::fields_CREATE_TIME || $val === $this::fields_UPDATE_TIME) && empty($field_data)) {
+                        $field_data = date('Y-m-d H:i:s');
+                    }
+                    $this->_model_fields_data[$val] = $field_data;
                 }
-                $this->_model_fields_data[$val] = $field_data;
-
             }
         }
         if ($field && isset($this->_model_fields_data[$field]) && $field_data = $this->_model_fields_data[$field]) {
@@ -1199,11 +1200,29 @@ abstract class AbstractModel extends DataObject
         $prePageClassStatus = $hasPrePage ? '' : 'disabled';
         $prePageUrl         = $hasPrePage ? "{$currentUrlPath}?page={$this->pagination['prePage']}&pageSize={$this->pagination['pageSize']}" : '#';
 
-        $page_list_html = '';
-        for ($i = 1; $i <= intval($this->pagination['lastPage']); $i++) {
-            $pageActiveStatus = ($this->pagination['page'] === $i) ? 'active' : '';
+        $page_list_html  = '';
+        $page            = intval($this->pagination['page']);
+        $lastPage        = intval($this->pagination['lastPage']);
+        $have_after_more = false;
+        $have_pre_more   = false;
+        for ($i = 1; $i <= $lastPage; $i++) {
+            if ($i < $page - 3) {
+                if (!$have_pre_more) {
+                    $page_list_html .= "<li class='page-item'><a class='page-link' href='#' >...</a> </li>";
+                    $have_pre_more  = true;
+                }
+                continue;
+            }
+            $pageActiveStatus = ($page === $i) ? 'active' : '';
             $pageUrl          = "{$currentUrlPath}?page={$i}&pageSize={$this->pagination['pageSize']}";
-            $page_list_html   .= <<<PAGELISTHTML
+            if ($i > $page + 3) {
+                if (!$have_after_more) {
+                    $page_list_html  .= "<li class='page-item'><a class='page-link' href='#' >...</a> </li>";
+                    $have_after_more = true;
+                }
+                continue;
+            }
+            $page_list_html .= <<<PAGELISTHTML
 <li class='page-item {$pageActiveStatus}'><a
                     class='page-link'
                     href='{$pageUrl}'>{$i}</a>
@@ -1213,11 +1232,23 @@ PAGELISTHTML;
 
         $nextPageName = __('下一页');
 
+        $firstPageUrl             = "{$currentUrlPath}?page=1&pageSize={$this->pagination['pageSize']}";
+        $firstPageName            = __('首页');
         $nextPageClassStatus      = $hasNextPage ? '' : 'disabled';
         $nextPageUrl              = $hasNextPage ? "{$currentUrlPath}?page={$this->pagination['nextPage']}&pageSize={$this->pagination['pageSize']}" : '#';
+        $lastPageUrl              = "{$currentUrlPath}?page={$lastPage}&pageSize={$this->pagination['pageSize']}";
+        $lastPageName             = __('最后一页');
+        $total_page               = __('一共 %1 页', $lastPage);
+        $please_input_page_number = __('请输入页码');
+        $turn_to_page             = __('跳转页');
+        $form_url = "{$currentUrlPath}?page=&pageSize={$this->pagination['pageSize']}";
         $this->pagination['html'] = <<<PAGINATION
 <nav aria-label='...'>
                             <ul class='pagination pagination-lg'>
+                                <li class='page-item'>
+                                    <a class='page-link'
+                                       href='{$firstPageUrl}'>{$firstPageName}</a>
+                                </li>
                                 <li class='page-item {$prePageClassStatus}'>
                                     <a class='page-link'
                                        href='{$prePageUrl}'
@@ -1227,6 +1258,20 @@ PAGELISTHTML;
                                 <li class='page-item {$nextPageClassStatus}'>
                                     <a class='page-link'
                                        href='{$nextPageUrl}'>{$nextPageName}</a>
+                                </li>
+                                <li class='page-item'>
+                                    <a class='page-link'
+                                       href='{$lastPageUrl}'>{$lastPageName}</a>
+                                </li>
+                                <li class='page-item disabled'>
+                                    <a class='page-link'
+                                       href='#'>{$total_page}</a>
+                                </li>
+                                <li class='page-item'>
+                                      <form action="{$form_url}" method="get" class="btn-group">
+                                        <input type="text" class="page-link" name="page" placeholder="{$please_input_page_number}">
+                                        <button type="submit" class="btn btn-primary">{$turn_to_page}</button>
+                                      </form>
                                 </li>
                             </ul>
                         </nav>

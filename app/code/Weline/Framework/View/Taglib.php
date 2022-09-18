@@ -131,7 +131,7 @@ class Taglib
     public function getTags(Template $template, string $fileName = '', $content = ''): array
     {
         $tags = [
-            'php'       => [
+            'php'         => [
                 'tag-start' => 1,
                 'tag-end'   => 1,
                 'callback'  =>
@@ -143,7 +143,7 @@ class Taglib
                         };
                     }
             ],
-            'include'   => [
+            'include'     => [
                 'tag-start' => 1,
                 'tag-end'   => 1,
                 'callback'  =>
@@ -155,7 +155,7 @@ class Taglib
                         };
                     }
             ],
-            'var'       => [
+            'var'         => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
@@ -170,7 +170,7 @@ class Taglib
                         }
                     }
             ],
-            'pp'        => [
+            'pp'          => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
@@ -193,7 +193,7 @@ class Taglib
                         }
                     }
             ],
-            'dd'        => [
+            'dd'          => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
@@ -216,7 +216,7 @@ class Taglib
                         }
                     }
             ],
-            'if'        => [
+            'if'          => [
                 'tag-start' => 1,
                 'tag-end'   => 1,
                 'attr'      => ['condition' => 1],
@@ -278,7 +278,7 @@ class Taglib
                     return $result;
                 }
             ],
-            'empty'     => [
+            'empty'       => [
                 'tag'      => 1,
                 'tag-end'  => 1,
                 'callback' => function ($tag_key, $config, $tag_data, $attributes) use ($template) {
@@ -303,7 +303,7 @@ class Taglib
                     }
                 }
             ],
-            'notempty'  => [
+            'notempty'    => [
                 'tag'      => 1,
                 'tag-end'  => 1,
                 'callback' => function ($tag_key, $config, $tag_data, $attributes) use ($template) {
@@ -328,7 +328,7 @@ class Taglib
                     }
                 }
             ],
-            'elseif'    => [
+            'elseif'      => [
                 'attr'                      => ['condition' => 1],
                 'tag-self-close-with-attrs' => 1,
                 'callback'                  =>
@@ -348,7 +348,7 @@ class Taglib
                         }
                         return $result;
                     }],
-            'else'      => [
+            'else'        => [
                 'tag-self-close' => 1,
                 'callback'       =>
                     function ($tag_key, $config, $tag_data, $attributes) {
@@ -367,14 +367,13 @@ class Taglib
                         }
                         return $result;
                     }],
-            'block'     => [
+            'block'       => [
                 'doc'                       => '@block{Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml}或者@block(Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml)或者' . htmlentities('<block class="Weline\Admin\Block\Demo" template="Weline_Admin::block/demo.phtml"/>') . '或者' . htmlentities('<block>Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml</block>'),
                 'tag'                       => 1,
                 'attr'                      => ['class' => 0, 'template' => 0, 'cache' => 0],
                 'tag-self-close-with-attrs' => 1,
                 'callback'                  =>
                     function ($tag_key, $config, $tag_data, $attributes) {
-                        $result = '';
                         switch ($tag_key) {
                             //<block>Weline\Admin\Block\Demo|template=Weline_Admin::block/demo.phtml|cache=300</block>
                             case 'tag':
@@ -410,7 +409,7 @@ class Taglib
                         return $result;
                     }
             ],
-            'foreach'   => [
+            'foreach'     => [
                 'attr'      => ['name' => 1, 'key' => 0, 'item' => 0],
                 'tag-start' => 1,
                 'tag-end'   => 1,
@@ -452,7 +451,7 @@ class Taglib
                     }
                 }
             ],
-            'static'    => [
+            'static'      => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
@@ -462,7 +461,7 @@ class Taglib
                         };
                     }
             ],
-            'template'  => [
+            'template'    => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
@@ -472,7 +471,7 @@ class Taglib
                         };
                     }
             ],
-            'js'        => [
+            'js'          => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
@@ -482,7 +481,7 @@ class Taglib
                         };
                     }
             ],
-            'css'       => [
+            'css'         => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) use ($template) {
@@ -492,7 +491,7 @@ class Taglib
                         };
                     }
             ],
-            'lang'      => [
+            'lang'        => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
@@ -502,7 +501,7 @@ class Taglib
                         };
                     }
             ],
-            'url'       => [
+            'url'         => [
                 'tag'       => 1,
                 'tag-start' => 1,
                 'tag-end'   => 1,
@@ -534,7 +533,7 @@ class Taglib
                         return $result;
                     }
             ],
-            'api'       => [
+            'api'         => [
                 'tag'       => 1,
                 'tag-start' => 1,
                 'tag-end'   => 1,
@@ -566,7 +565,7 @@ class Taglib
                         return $result;
                     }
             ],
-            'admin-url' => [
+            'admin-url'   => [
                 'tag'       => 1,
                 'tag-start' => 1,
                 'tag-end'   => 1,
@@ -622,7 +621,7 @@ class Taglib
                         }
                     }
             ],
-            'hook'      => [
+            'hook'        => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
@@ -632,7 +631,7 @@ class Taglib
                         };
                     }
             ],
-            'string'    => [
+            'string'      => [
                 'tag'      => 1,
                 'callback' =>
                     function ($tag_key, $config, $tag_data, $attributes) {
@@ -684,7 +683,7 @@ class Taglib
             $content = str_replace($value[0], "<?={$this->varParser(trim($value[1]))}??'';?>", $content);
         }
         # 非开发环境清除所有注释
-        if(PROD){
+        if (PROD) {
             preg_match_all('/\<!--([\s\S]*?)-->/', $content, $matches, PREG_SET_ORDER);
             foreach ($matches as $key => $value) {
                 $content = str_replace($value[0], '', $content);
@@ -791,13 +790,18 @@ class Taglib
                         $attributes_keys = array_keys($formatedAttributes);
                         foreach ($attrs as $attr => $required) {
                             if ($required && !in_array($attr, $attributes_keys)) {
-                                $provide_attr = implode(',', $attributes_keys);
+                                $provide_attr  = implode(',', $attributes_keys);
                                 $template_html = htmlentities($attr);
                                 throw new TemplateException(__("代码：[{$template_html}] %1:标签必须设置属性%2, 提供的属性：3% 文件：%4", [$tag, $attr, $provide_attr, $fileName]));
                             }
                         }
                     }
-                    $content = str_replace($originalTag, $format_function($tag_key, $tag_configs, $customTag, $formatedAttributes), $content);
+                    $result = $format_function($tag_key, $tag_configs, $customTag, $formatedAttributes);
+//                    if (DEV) {
+//                        $origin_tag = htmlspecialchars($customTag[0]) ?? '';
+//                        $result    = "<!-- {$origin_tag} START -->" . $result . "<!-- {$origin_tag} -->";
+//                    }
+                    $content = str_replace($originalTag, $result, $content);
                 }
             }
         }

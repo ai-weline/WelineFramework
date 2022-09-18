@@ -27,8 +27,8 @@ class Create extends TableAbstract implements CreateInterface
     public function addColumn(string $field_name, string $type, ?int $length, string $options, string $comment): CreateInterface
     {
         # 数字字段
-        if ($type === TableInterface::column_type_INTEGER) {
-            if ($length === 0) {
+        if ($type === TableInterface::column_type_INTEGER || $type === TableInterface::column_type_SMALLINT) {
+            if (!$length) {
                 $length = 11;
             }
             if (is_int($length)) {
@@ -50,11 +50,11 @@ class Create extends TableAbstract implements CreateInterface
     }
 
 
-    public function addIndex(string $type, string $name, array|string $column, string $comment='', string $index_method = ''): CreateInterface
+    public function addIndex(string $type, string $name, array|string $column, string $comment = '', string $index_method = ''): CreateInterface
     {
-        $comment = $comment?"COMMENT '{$comment}'": '';
-        $index_method = $index_method?"USING {$index_method}": '';
-        $type = strtoupper($type);
+        $comment      = $comment ? "COMMENT '{$comment}'" : '';
+        $index_method = $index_method ? "USING {$index_method}" : '';
+        $type         = strtoupper($type);
         switch ($type) {
             case self::index_type_DEFAULT:
                 $this->indexes[] = "INDEX `{$name}`(`{$column}`) {$index_method} {$comment}," . PHP_EOL;

@@ -19,7 +19,9 @@ class UrlManager extends \Weline\Framework\Database\Model
 {
     public const fields_ID        = 'url_id';
     public const fields_PATH      = 'path';
+    public const fields_IDENTIFY  = 'identify';
     public const fields_MODULE_ID = 'module_id';
+    public const fields_IS_DELETE = 'is_deleted';
     public const fields_TYPE      = 'type';
     public const fields_DATA      = 'data';
 
@@ -49,10 +51,12 @@ class UrlManager extends \Weline\Framework\Database\Model
             $setup->createTable()
                   ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', 'URL ID')
                   ->addColumn(self::fields_PATH, TableInterface::column_type_VARCHAR, 255, 'not null', 'URL路径')
+                  ->addColumn(self::fields_IDENTIFY, TableInterface::column_type_VARCHAR, 255, 'not null', 'URI指纹')
                   ->addColumn(self::fields_MODULE_ID, TableInterface::column_type_INTEGER, null, 'not null', '所属模块ID')
                   ->addColumn(self::fields_TYPE, TableInterface::column_type_VARCHAR, 20, 'not null', '路由类型')
+                  ->addColumn(self::fields_IS_DELETE, TableInterface::column_type_SMALLINT, 1, 'default 0 not null ', '是否已删除')
                   ->addColumn(self::fields_DATA, TableInterface::column_type_TEXT, null, '', '路由数据')
-                  ->addIndex(TableInterface::index_type_UNIQUE, self::fields_PATH, self::fields_PATH,'path路径不能重复')
+                  ->addIndex(TableInterface::index_type_UNIQUE, self::fields_IDENTIFY, self::fields_IDENTIFY, 'path路径指纹不能重复')
                   ->create();
         }
     }

@@ -2,37 +2,44 @@
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
+$host = $this->request->getBaseHost();
+$base_host = $this->request->getPrePath();
+$base_router = $this->request->getRouterData('router');
+$current_module = $this->request->getModuleName();
+$base_backend_url_host = $this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('admin') . '/';
+$base_backend_api_host = $this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('api_admin') . '/';
+$env_model = \Weline\Framework\App\Env::getInstance()->getConfig('deploy');
+$theme_path = \Weline\Framework\App\Env::getInstance()->getTheme()['path'];
+$env_model_media_base_path_template = $host.(DEV?'/{module}/view/statics/{path}':'/static/' . $theme_path . '/{module}/view/statics/{path}');
 ?>
 <!--加载require常用js模块-->
 <!--<script src='@static(Weline_Frontend::base/require.configs.js)'></script>-->
 <script>
     window.site = {
-        host: '<?=$this->request->getBaseHost()?>',
-        env_model: '<?=\Weline\Framework\App\Env::getInstance()->getConfig('deploy')?>',
-        env_model_media_base_path_template: '<?=$this->request->getBaseHost()?>' + '<?php if (DEV):echo '/{module}/view/statics/{path}';
-        else:echo
-            '/static/' . \Weline\Framework\App\Env::getInstance()->getTheme()['path'] . '/{module}/view/statics/{path}';endif;?>',
-        base_host: '<?=$this->request->getPrePath()?>',
-        base_router: '<?=$this->request->getRouterData('router')?>',
+        host: '{{host}}',
+        env_model: '{{env_model}}',
+        env_model_media_base_path_template: '{{env_model_media_base_path_template}}',
+        base_host: '{{base_host}}',
+        base_router: '{{base_router}}',
         i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
         themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>,
     }
-    window.media = (path, module = '<?=$this->request->getModuleName()?>') => {
+    window.media = (path, module = '{{current_module}}') => {
         module = module.replace('_', '/')
-        return window.site.env_model_media_base_path_template.replace('{path}', path).replace('{module}', module)
+        return '{{env_model_media_base_path_template}}'.replace('{path}', path).replace('{module}', module)
     }
     window.lang = (lang) => {
         setCookie('WELINE-USER-LANG', lang);
         window.location.reload();
     }
     window.url = (path) => {
-        return window.site.host + path;
+        return '{{host}}' + path;
     }
     window.api = (path) => {
-        return window.site.host + path;
+        return '{{host}}' + path;
     }
     window.frontend_api = (path) => {
-        return window.site.host + path;
+        return '{{host}}' + path;
     }
 
     /**
@@ -70,7 +77,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     function p(data) {
         console.log(data)
     }
-
+    /**
+     * 通用打印函数
+     * @param data
+     */
+    function d(data) {
+        console.log(data)
+    }
     /**
      * 翻译函数
      * @param phrase
