@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Weline\UrlManager\Controller\Backend;
 
+use Weline\Framework\App\Exception;
+use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\UrlManager\Model\UrlManager;
 use Weline\UrlManager\Model\UrlRewrite;
@@ -25,7 +27,21 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
 
     function post()
     {
-
+        $data = $this->request->getPost();
+        if (!isset($data['path'])) {
+            $data['path'] = $data['origin_path'];
+        }
+        /**@var UrlRewrite $urlRewriter */
+        $urlRewriter = ObjectManager::getInstance(UrlRewrite::class);
+        $urlRewriter->setData($data);
+        try {
+            $urlRewriter->save();
+        } catch (\ReflectionException|Exception|ModelException $e) {
+            $this->getMessageManager()->addError($e->getMessage());
+        }
+        $this->getMessageManager()->addSuccess(__('重写成功！'));
+        $this->redirect($this->request->getAdminUrl('/url-manager/backend/url/listing'));
+//        $this->redirect($this->_url->build('url-manager/backend/url/rewriter'));
     }
 
     function getForm()
@@ -34,10 +50,9 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
         /**@var UrlManager $urlManager */
         $urlManager = ObjectManager::getInstance(UrlManager::class);
         $url        = $urlManager->where($urlManager::fields_IDENTIFY, $uri_identify)
-                                 ->fields('main_table.*,ur.path as rewrite_path')
+                                 ->fields('main_table.*,ur.rewrite as rewrite_path')
                                  ->joinModel(UrlRewrite::class, 'ur', 'main_table.identify=ur.url_identify', 'left')
                                  ->find()->fetch();
-        d($url);
         $this->assign('url', $url);
         return $this->fetch();
     }

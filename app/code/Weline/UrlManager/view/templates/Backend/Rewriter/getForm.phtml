@@ -67,13 +67,16 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                 <p class='card-title-desc'>
                                     <lang>静态路由管理：可定制属于自己的静态url来提升seo。</lang>
                                 </p>
-                                <form class='needs-validation' method="post" action="@admin-url('url-manager/backend/url/rewriter')" novalidate>
+                                <form class='needs-validation' method="post" action="@admin-url('url-manager/backend/rewriter')" novalidate>
+                                    <input type="hidden" name="url_identify" value="{{url.identify}}">
+                                    <input type="hidden" name="url_id" value="{{url.url_id}}">
+                                    <input type="hidden" name="origin_path" value="{{url.path}}">
                                     <div class='row'>
                                         <div class='col-md-4'>
                                             <div class='mb-3 position-relative'>
                                                 <label class='form-label' for='path'><lang>路径</lang></label>
-                                                <input type='text' class='form-control' id='path'
-                                                       placeholder='@lang{输入路径}' value='{{url.path}}' required>
+                                                <input type='text' class='form-control disabled' id='path' name="path"
+                                                       placeholder='@lang{输入路径}' value='{{url.path}}' required @if{url.path=>'disabled'}>
                                                 <div class='valid-tooltip'>
                                                     <lang>输入路径正确</lang>
                                                 </div>
@@ -84,8 +87,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </div>
                                         <div class='col-md-4'>
                                             <div class='mb-3 position-relative'>
-                                                <label class='form-label' for='validationTooltip02'><lang>重写路径</lang></label>
-                                                <input type='text' class='form-control' id='validationTooltip02'
+                                                <label class='form-label' for='rewrite'><lang>重写路径</lang></label>
+                                                <input type='text' class='form-control' id='rewrite' name="rewrite"
                                                        placeholder='@lang{输入路径}' value='{{url.rewrite_path}}' required>
                                                 <div class='valid-tooltip'>
                                                     <lang>输入路径正确</lang>

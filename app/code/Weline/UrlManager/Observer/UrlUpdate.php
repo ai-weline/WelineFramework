@@ -102,7 +102,7 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
                 ->setData('identify',md5($path.$type) , true)
                 ->setData('data', json_encode($backend_api_url))
                 ->setData('type', $type)
-                ->save(true);
+                ->save();
         }
     }
 }
