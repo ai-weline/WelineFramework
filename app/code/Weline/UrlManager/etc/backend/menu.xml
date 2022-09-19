@@ -7,6 +7,6 @@
          parent="Weline_Backend::system_configuration" icon="mdi mdi-router" order="20001" is_backend="1"/>
     <add source="Weline_UrlManager::url-manager-listing" name="url-manager-listing" title="URL路由列表" action="url-manager/backend/url/listing"
          parent="Weline_UrlManager::url-manager" icon="mdi mdi-router" order="1"  is_backend="1"/>
-    <add source="Weline_UrlManager::url-manager-rewrite" name="url-manager-rewrite" title="URL路由重写" action="url-manager/backend/url/rewriter"
+    <add source="Weline_UrlManager::url-manager-rewrite" name="url-manager-rewrite" title="URL路由重写" action="url-manager/backend/rewriter"
          parent="Weline_UrlManager::url-manager" icon="mdi mdi-lock-reset" order="2"  is_backend="1"/>
 </menus>

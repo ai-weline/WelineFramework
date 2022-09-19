@@ -44,11 +44,11 @@ class UrlRewrite extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-//        $setup->dropTable();
+        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable()
                   ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'primary key auto_increment', '重写ID')
-                  ->addColumn(self::fields_URL_ID, TableInterface::column_type_INTEGER, null, '', 'URL ID')
+                  ->addColumn(self::fields_URL_ID, TableInterface::column_type_VARCHAR, 255, '', 'URL ID')
                   ->addColumn(self::fields_URL_IDENTIFY, TableInterface::column_type_VARCHAR, 255, '', 'URL 指纹')
                   ->addColumn(self::fields_PATH, TableInterface::column_type_TEXT, null, 'not null', 'URL路径')
                   ->addColumn(self::fields_REWRITE, TableInterface::column_type_TEXT, null, 'not null', 'URL重写路径')

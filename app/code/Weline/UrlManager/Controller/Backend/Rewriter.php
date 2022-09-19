@@ -22,6 +22,11 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
 {
     function get()
     {
+        /**@var UrlRewrite $urlRewriteModel*/
+        $urlRewriteModel = ObjectManager::getInstance(UrlRewrite::class);
+        $rewrites = $urlRewriteModel->pagination()->select()->fetch();
+        $this->assign('rewrites',$rewrites->getItems());
+        $this->assign('pagination',$rewrites->getPagination());
         return $this->fetch();
     }
 
@@ -40,8 +45,8 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
             $this->getMessageManager()->addError($e->getMessage());
         }
         $this->getMessageManager()->addSuccess(__('重写成功！'));
-        $this->redirect($this->request->getAdminUrl('/url-manager/backend/url/listing'));
-//        $this->redirect($this->_url->build('url-manager/backend/url/rewriter'));
+//        $this->redirect($this->request->getAdminUrl('/url-manager/backend/url/listing'));
+        $this->redirect($this->_url->build('url-manager/backend/url/rewriter'));
     }
 
     function getForm()
