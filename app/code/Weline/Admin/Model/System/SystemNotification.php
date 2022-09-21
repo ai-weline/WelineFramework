@@ -31,7 +31,7 @@ class SystemNotification extends \Weline\Framework\Database\Model
     public function setup(ModelSetup $setup, Context $context): void
     {
 //        $setup->dropTable();
-//        $this->install($setup, $context);
+        $this->install($setup, $context);
     }
 
     /**
@@ -60,15 +60,10 @@ class SystemNotification extends \Weline\Framework\Database\Model
             $this->setTitle('欢迎来到 WelineFramework 后端！')
                 ->setContent('WelineFramework框架是
 一个极度灵活的集多应用的快速的互联网框架。
-
 1、代码可移植性。
-
 2、自定义高可用高灵活性对象ORM。
-
 3、前后端集成到一个module中，做到一个需求一个module。
-
 4、代码模块化，接口以及传统路由分前后台。包括接口，具有后台接口入口，后台url入口。
-
 5、配置文件统一化。文件位置：app/etc/env.php
 等等...')
                 ->setIsRead()

@@ -49,7 +49,7 @@ class Session implements SessionInterface
                     session_id($sess_id);
                 }
                 session_set_cookie_params(3600, $identity_path);
-                session_set_cookie_params(['samesite' => 'Strict', 'Secure' => true]);
+                session_set_cookie_params(['samesite' => 'Strict', 'Secure' => false]);
             }
             $this->session = SessionManager::getInstance()->create();
             $this->setType($type)->setData('path', $identity_path);

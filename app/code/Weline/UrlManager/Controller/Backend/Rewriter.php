@@ -22,11 +22,14 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
 {
     function get()
     {
-        /**@var UrlRewrite $urlRewriteModel*/
+        /**@var UrlRewrite $urlRewriteModel */
         $urlRewriteModel = ObjectManager::getInstance(UrlRewrite::class);
-        $rewrites = $urlRewriteModel->pagination()->select()->fetch();
-        $this->assign('rewrites',$rewrites->getItems());
-        $this->assign('pagination',$rewrites->getPagination());
+        $rewrites        = $urlRewriteModel->fields('main_table.*,main_table.path as rewrite_path,um.url_id,um.path,um.is_deleted')->joinModel(UrlManager::class, 'um', 'main_table.url_id=um.url_id')
+                                           ->pagination()
+                                           ->select()
+                                           ->fetch();
+        $this->assign('rewrites', $rewrites->getItems());
+        $this->assign('pagination', $rewrites->getPagination());
         return $this->fetch();
     }
 
@@ -35,6 +38,8 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
         $data = $this->request->getPost();
         if (!isset($data['path'])) {
             $data['path'] = $data['origin_path'];
+        } else {
+            $data['url_identify'] = md5($data['path']);
         }
         /**@var UrlRewrite $urlRewriter */
         $urlRewriter = ObjectManager::getInstance(UrlRewrite::class);
@@ -46,12 +51,12 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
         }
         $this->getMessageManager()->addSuccess(__('重写成功！'));
 //        $this->redirect($this->request->getAdminUrl('/url-manager/backend/url/listing'));
-        $this->redirect($this->_url->build('url-manager/backend/url/rewriter'));
+        $this->redirect($this->_url->build('url-manager/backend/rewriter'));
     }
 
     function getForm()
     {
-        $uri_identify = $this->request->getGet('identify');
+        $uri_identify = $this->request->getGet('identify', '');
         /**@var UrlManager $urlManager */
         $urlManager = ObjectManager::getInstance(UrlManager::class);
         $url        = $urlManager->where($urlManager::fields_IDENTIFY, $uri_identify)

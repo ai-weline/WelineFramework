@@ -136,7 +136,7 @@ trait QueryTrait
      * @throws SqlParserException
      * @throws DbException
      */
-    private function prepareSql($action)
+    private function prepareSql($action): void
     {
         if ($this->table == '') {
             $this->exceptionHandle(__('没有指定table表名！'));
