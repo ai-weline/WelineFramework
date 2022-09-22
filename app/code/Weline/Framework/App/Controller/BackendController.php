@@ -15,6 +15,7 @@ use Weline\Framework\Controller\PcController;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Url;
+use Weline\Framework\Http\UrlInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Session\Session;
 
@@ -46,7 +47,7 @@ class BackendController extends PcController
                 $whitelist_url = $whitelistUrlData->getData('whitelist_url');
                 $this->cache->set($whitelist_url_cache_key, $whitelist_url);
             }
-            if (!in_array($this->request->getUrl(), $whitelist_url)) {
+            if (!in_array($this->_url->getUrl(), $whitelist_url)) {
                 $no_login_url_cache_key = 'no_login_redirect_url';
                 $no_login_redirect_url  = $this->cache->get($no_login_url_cache_key);
                 if (!$no_login_redirect_url) {

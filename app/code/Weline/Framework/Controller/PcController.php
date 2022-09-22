@@ -16,6 +16,7 @@ use Weline\Framework\Controller\Cache\ControllerCache;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Request;
+use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\MessageManager;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Session\Session;
@@ -28,12 +29,16 @@ class PcController extends Core
 {
     private Template $_template;
     private EventsManager $_eventManager;
+    protected ?Url $_url = null;
 
     private CacheInterface $controllerCache;
 
     public function __init()
     {
         parent::__init();
+        if (!isset($this->_url)) {
+            $this->_url = ObjectManager::getInstance(Url::class);
+        }
         $this->isAllowed();
         $this->assign($this->request->getParams());
         if (empty($this->controllerCache)) {
@@ -54,9 +59,9 @@ class PcController extends Core
     public function redirect(string|int $url)
     {
         if (is_string($url)) {
-            $this->getRequest()->getResponse()->redirect($url);
+            $this->request->getResponse()->redirect($url);
         } elseif ($url = 404) {
-            $this->getRequest()->getResponse()->responseHttpCode($url);
+            $this->request->getResponse()->responseHttpCode($url);
         }
     }
 
@@ -66,7 +71,7 @@ class PcController extends Core
         $session = ObjectManager::getInstance(Session::class);
         if (!empty($form_key_paths_str = $session->getData('form_key_paths')) && !empty($form_key = $session->getData('form_key'))) {
             $form_key_paths = explode(',', $form_key_paths_str);
-            if (in_array($this->getRequest()->getUrl(), $form_key_paths) && ($form_key !== $this->getRequest()->getParam('form_key'))) {
+            if (in_array($this->_url->getUrl(), $form_key_paths) && ($form_key !== $this->request->getParam('form_key'))) {
                 $this->noRouter();
             }
         }

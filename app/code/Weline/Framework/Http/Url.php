@@ -20,36 +20,66 @@ class Url implements UrlInterface
 
     public function __construct(
         Request $request
-    ) {
+    )
+    {
         $this->request = $request;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function build(string $path = '', array $params = [], bool $backend = false): string
+    public function getBackendApiUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
-        if (empty($path)) {
-            return $this->get_url();
+        if ($path) {
+            $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('api_admin') . '/' . $path;
+        } else {
+            $url = $this->request->getBaseUrl();
         }
-        $path = ($this->request->isBackend() ? $this->request->getAreaRouter() : '') . '/' . $path;
-        $path = str_replace('//', '/', trim($path, '/'));
-        $path = $this->request->getBaseHost() . '/' . $path;
-        if (empty($params)) {
-            return $path;
-        }
-        if (is_array($params)) {
-            return $path . '?' . http_build_query($params);
-        }
-        return $path;
+        return $this->extractedUrl($params, $merge_params, $url);
     }
 
-    public function get_url()
+    public function getUrl(string $path = '', array $params = [], bool $merge_params = false): string
     {
-        $sys_protocal = isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == '443' ? 'https://' : 'http://';
-        $php_self     = $_SERVER['PHP_SELF'] ? $_SERVER['PHP_SELF'] : $_SERVER['SCRIPT_NAME'];
-        $path_info    = $_SERVER['PATH_INFO'] ?? '';
-        $relate_url   = $_SERVER['REQUEST_URI'] ?? $php_self . (isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : $path_info);
-        return $sys_protocal . ($_SERVER['HTTP_HOST'] ?? '') . $relate_url;
+        if ($path) {
+            $url = $this->request->getBaseHost() . '/' . ltrim($path, '/');
+        } else {
+            $url = $this->request->getBaseUrl();
+        }
+        return $this->extractedUrl($params, $merge_params, $url);
+    }
+
+    function getBackendUrl(string $path = '', array $params = [], bool $merge_params = true): string
+    {
+        if ($path) {
+            $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . $path);
+        } else {
+            $url = $this->request->getBaseUrl();
+        }
+        return $this->extractedUrl($params, $merge_params, $url);
+    }
+
+    /**
+     * @DESC          # 提取Url
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/8 23:27
+     * 参数区：
+     *
+     * @param array  $params
+     * @param bool   $merge_params
+     * @param string $url
+     *
+     * @return string
+     */
+    public function extractedUrl(array $params, bool $merge_params, string $url): string
+    {
+        if ($params) {
+            if ($merge_params) {
+                $url .= '?' . http_build_query(array_merge($this->request->getGet(), $params));
+            } else {
+                $url .= '?' . http_build_query($params);
+            }
+        } else {
+            $url .= ($this->request->getGet() && $merge_params) ? '?' . http_build_query($this->request->getGet()) : '';
+        }
+        return $url;
     }
 }

@@ -20,6 +20,7 @@ use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Http\Request;
+use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
 
 /**
@@ -1144,10 +1145,10 @@ abstract class AbstractModel extends DataObject
     public function pagination(int $page = 0, int $pageSize = 0, array $params = []): AbstractModel|static
     {
         if (empty($page)) {
-            $page = ObjectManager::getInstance(Request::class)->getGet('page', 1);
+            $page = ObjectManager::getInstance(Request::class)->getGet('page', 1)?:1;
         }
         if (empty($pageSize)) {
-            $pageSize = ObjectManager::getInstance(Request::class)->getGet('pageSize', 20);
+            $pageSize = ObjectManager::getInstance(Request::class)->getGet('pageSize', 20)?:20;
         }
         if (empty($params)) {
             $params = ObjectManager::getInstance(Request::class)->getGet();
@@ -1192,7 +1193,9 @@ abstract class AbstractModel extends DataObject
             $this->pagination = $data;
             return $data;
         }
-        $currentUrl     = $request->isBackend() ? $request->getAdminUrl($url_path) : $request->getUrl($url_path);
+        /**@var Url $url_builder*/
+        $url_builder = ObjectManager::getInstance(Url::class);
+        $currentUrl     = $request->isBackend() ? $url_builder->getBackendUrl($url_path) : $url_builder->getUrl($url_path);
         $currentUrlPath = substr($currentUrl, 0, strpos($currentUrl, '?'));
 
         $prePageName = __('上一页');

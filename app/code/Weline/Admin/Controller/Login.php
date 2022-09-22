@@ -36,15 +36,15 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     public function index()
     {
         if ($this->session->isLogin()) {
-            $this->redirect($this->getUrl('admin'));
+            $this->redirect($this->_url->getBackendUrl('admin'));
         }
         $this->session->setData('referer', $this->request->getServer('HTTP_REFERER'));
 //        $this->session->delete('backend_disable_login');
-        $this->assign('post_url', $this->getUrl('admin/login/post'));
+        $this->assign('post_url', $this->_url->getBackendUrl('admin/login/post'));
         # 检测验证码
         if ($this->session->getData('need_backend_verification_code')) {
             $this->assign('need_backend_verification_code', true);
-            $this->assign('backend_verification_code_url', $this->getUrl('admin/login/verificationCode'));
+            $this->assign('backend_verification_code_url', $this->_url->getBackendUrl('admin/login/verificationCode'));
         }
         if ($this->session->getData('backend_disable_login')) {
             $this->messageManager->addError(__('你的账户因尝试多次登录，已被锁定！请联系其他管理员开通。'));
@@ -57,21 +57,21 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         # 已经登录直接进入后台
 //        $this->session->logout();
         if ($this->session->isLogin()) {
-            $this->redirect($this->getUrl('admin'));
+            $this->redirect($this->_url->getBackendUrl('admin'));
         }
         if (!$this->request->isPost()) {
             # get请求404
             $this->request->getResponse()->noRouter();
         }
         # 验证 form 表单
-        if (empty($this->getRequest()->getParam('form_key') || ($this->session->getData('form_key') !== $this->getRequest()->getParam('form_key')))) {
+        if (empty($this->request->getParam('form_key') || ($this->session->getData('form_key') !== $this->request->getParam('form_key')))) {
             $this->messageManager->addError(__('异常的登录操作！'));
-            $this->redirect($this->getUrl('/admin/login'));
+            $this->redirect($this->_url->getBackendUrl('/admin/login'));
         }
         $adminUsernameUser = $this->helper->getRequestBackendUser();
         if (!$adminUsernameUser->getId()) {
             $this->messageManager->addError(__('账户不存在！'));
-            $this->redirect($this->getUrl('/admin/login'));
+            $this->redirect($this->_url->getBackendUrl('/admin/login'));
         }
         if ($adminUsernameUser->getAttemptTimes() > 6) {
             $adminUsernameUser->setSessionId($this->session->getSessionId())->setAttemptIp($this->request->clientIP())->save();
@@ -80,7 +80,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                 # FIXME 将IP封死，为了不占用服务器资源，将封锁过程提前到框架入口处，此处只作为拉入黑名单处理【设置为Security框架函数处理】
                 $this->noRouter();
             }
-            $this->redirect($this->getUrl('/admin/login'));
+            $this->redirect($this->_url->getBackendUrl('/admin/login'));
         } else {
             $this->session->setData('backend_disable_login', false);
         }
@@ -92,7 +92,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                               ->setAttemptIp($this->request->clientIP())
                               ->save();
             $this->messageManager->addError(__('登录异常！'));
-            $this->redirect($this->getUrl('/admin/login'));
+            $this->redirect($this->_url->getBackendUrl('/admin/login'));
         }
         # 如果大于2次的尝试登录 验证客户提供的验证码
         if ($adminUsernameUser->getAttemptTimes() > 2) {
@@ -104,7 +104,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $adminUsernameUser->setSessionId($this->session->getSessionId())
                               ->setAttemptIp($this->request->clientIP())
                               ->save();
-            $this->redirect($this->getUrl('/admin/login'));
+            $this->redirect($this->_url->getBackendUrl('/admin/login'));
         }
         # 尝试登录
         $password = trim($this->request->getParam('password'));
@@ -125,13 +125,13 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         if ($referer = $this->session->getData('referer')) {
             $this->redirect($referer);
         }
-        $this->redirect($this->getUrl('/admin'));
+        $this->redirect($this->_url->getBackendUrl('admin'));
     }
 
     public function logout()
     {
         $this->session->logout();
-        $this->redirect($this->getUrl('admin/login'));
+        $this->redirect($this->_url->getBackendUrl('admin/login'));
     }
 
     /**

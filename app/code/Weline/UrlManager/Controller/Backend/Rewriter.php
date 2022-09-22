@@ -14,6 +14,7 @@ namespace Weline\UrlManager\Controller\Backend;
 
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Exception\ModelException;
+use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\UrlManager\Model\UrlManager;
 use Weline\UrlManager\Model\UrlRewrite;
@@ -24,7 +25,8 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
     {
         /**@var UrlRewrite $urlRewriteModel */
         $urlRewriteModel = ObjectManager::getInstance(UrlRewrite::class);
-        $rewrites        = $urlRewriteModel->fields('main_table.*,main_table.path as rewrite_path,um.url_id,um.path,um.is_deleted')->joinModel(UrlManager::class, 'um', 'main_table.url_id=um.url_id')
+        $rewrites        = $urlRewriteModel->fields('main_table.*,main_table.path as rewrite_path,um.url_id,um.path,um.is_deleted')
+                                           ->joinModel(UrlManager::class, 'um', 'main_table.url_id=um.url_id')
                                            ->pagination()
                                            ->select()
                                            ->fetch();
@@ -51,10 +53,10 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
         }
         $this->getMessageManager()->addSuccess(__('重写成功！'));
 //        $this->redirect($this->request->getAdminUrl('/url-manager/backend/url/listing'));
-        $this->redirect($this->_url->build('url-manager/backend/rewriter'));
+        $this->redirect($this->_url->getBackendUrl('url-manager/backend/rewriter'));
     }
 
-    function getForm()
+    function form()
     {
         $uri_identify = $this->request->getGet('identify', '');
         /**@var UrlManager $urlManager */
@@ -65,5 +67,24 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
                                  ->find()->fetch();
         $this->assign('url', $url);
         return $this->fetch();
+    }
+
+    /**
+     * @throws Exception
+     * @throws \ReflectionException
+     * @throws Core
+     */
+    function getDelete()
+    {
+        $rewrite_id = $this->request->getGet('rewrite_id', '');
+        /**@var UrlRewrite $urlRewrite */
+        $urlRewrite = ObjectManager::getInstance(UrlRewrite::class);
+        try {
+            $urlRewrite->where($urlRewrite::fields_ID, $rewrite_id)->delete();
+            $this->getMessageManager()->addError(__('删除成功！'));
+        } catch (Exception $exception) {
+            $this->getMessageManager()->addError(__('删除失败！') . (DEV ? $exception->getMessage() : ''));
+        }
+        $this->redirect($this->_url->getBackendUrl('url-manager/backend/rewrite'));
     }
 }

@@ -17,7 +17,8 @@ use Weline\UrlManager\Model\UrlManager;
 
 class Url extends \Weline\Framework\App\Controller\BackendController
 {
-    function listing(){
+    function listing()
+    {
 
         /**@var UrlManager $urlManager */
         $urlManager = ObjectManager::getInstance(UrlManager::class);
@@ -36,7 +37,8 @@ class Url extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch();
     }
 
-    function delete(){
+    function delete()
+    {
 
     }
 }

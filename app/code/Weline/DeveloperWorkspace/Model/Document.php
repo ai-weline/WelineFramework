@@ -120,7 +120,7 @@ class Document extends \Weline\Framework\Database\Model
     {
         /**@var Url $url */
         $url = ObjectManager::getInstance(Url::class);
-        return $url->build('/dev/tool/document', ['id' => $this->getId()]);
+        return $url->getUrl('/dev/tool/document', ['id' => $this->getId()]);
     }
 
     /**

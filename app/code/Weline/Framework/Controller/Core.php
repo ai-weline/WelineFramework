@@ -9,12 +9,10 @@
 
 namespace Weline\Framework\Controller;
 
+use Weline\Framework\App\Exception;
 use Weline\Framework\Http\Request;
-use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Debug\Printing;
-use Weline\Framework\Session\SessionInterface;
-use Weline\Framework\Session\Session;
 
 class Core implements Data\DataInterface
 {
@@ -23,7 +21,6 @@ class Core implements Data\DataInterface
     protected Request $request;
 
     protected Printing $_debug;
-    protected ?Url $_url = null;
 
     private mixed $_module;
 
@@ -35,11 +32,10 @@ class Core implements Data\DataInterface
 
     public function __init()
     {
-        if (empty($this->_url)) {
-            $this->getUrl();
+        if (!isset($this->request)) {
+            $this->request = ObjectManager::getInstance(Request::class);
         }
         $this->getObjectManager();
-        $this->getRequest();
     }
 
 
@@ -75,42 +71,11 @@ class Core implements Data\DataInterface
         return $this->_module;
     }
 
+
     /**
-     * @DESC          # 获取URL
-     *
-     * @AUTH    秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/11/6 21:25
-     * 参数区：
-     *
-     * @param string $path
-     * @param array  $params
-     *
-     * @return string
+     * @return ObjectManager
+     * @throws Exception
      * @throws \ReflectionException
-     * @throws \Weline\Framework\App\Exception
-     */
-    public function getUrl(string $path = '', array $params = []): string
-    {
-        if (!isset($this->_url)) {
-            $this->_url = ObjectManager::getInstance(Url::class);
-        }
-        return $this->_url->build($path, $params);
-    }
-
-    /**
-     * @return Request
-     */
-    public function getRequest(): Request
-    {
-        if (!isset($this->request)) {
-            $this->request = ObjectManager::getInstance(Request::class);
-        }
-        return $this->request;
-    }
-
-    /**
-     * @return Request
      */
     public function getObjectManager(): ObjectManager
     {

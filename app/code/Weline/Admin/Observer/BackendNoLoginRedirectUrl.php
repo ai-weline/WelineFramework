@@ -32,6 +32,6 @@ class BackendNoLoginRedirectUrl implements \Weline\Framework\Event\ObserverInter
     {
         /**@var DataObject $data */
         $data = $event->getData('data');
-        $data->setData('no_login_redirect_url', $this->url->build('admin/login'));
+        $data->setData('no_login_redirect_url', $this->url->getBackendUrl('admin/login'));
     }
 }

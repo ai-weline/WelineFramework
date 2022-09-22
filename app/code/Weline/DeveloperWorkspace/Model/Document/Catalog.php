@@ -135,7 +135,7 @@ class Catalog extends \Weline\Framework\Database\Model
      */
     private function getUrl(array $param = [])
     {
-        return ObjectManager::getInstance(Url::class)->build('dev/tool/catalog', $param);
+        return ObjectManager::getInstance(Url::class)->getUrl('dev/tool/catalog', $param);
     }
 
     public function isActive(): bool

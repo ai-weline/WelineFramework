@@ -207,7 +207,7 @@ class Menu extends \Weline\Framework\Database\Model
         if (!$this->isBackend()) {
             $url = '/' . trim($this->getAction(), '/');
         } else {
-            $url = $this->url->build(trim($this->getAction(), '/'));
+            $url = $this->url->getBackendUrl(trim($this->getAction(), '/'));
         }
         return $url ?? '';
     }

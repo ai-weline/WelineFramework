@@ -20,6 +20,7 @@ use Weline\Framework\Exception\Core;
 use Weline\Framework\Hook\Hooker;
 use Weline\Framework\Http\Cookie;
 use Weline\Framework\Http\Request;
+use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Module\ModuleInterface;
 use Weline\Framework\Output\Debug\Printing;
@@ -398,55 +399,32 @@ class Template extends DataObject
         return $this->getTaglib()->tagReplace($this, $content, $fileName);
     }
 
+    /*_______________URL____________*/
+    private function getUrlObject(): Url
+    {
+        return ObjectManager::getInstance(Url::class);
+    }
+
     public function getUrl(string $path, array $params = [], bool $merge_query = false): string
     {
-        return $this->request->getUrl($path, $params, $merge_query);
+        return $this->getUrlObject()->getUrl($path, $params, $merge_query);
     }
+
     public function getApi(string $path, array $params = [], bool $merge_query = false): string
     {
-        return $this->request->getUrl($path, $params, $merge_query);
+        return $this->getUrlObject()->getUrl($path, $params, $merge_query);
     }
 
     public function getAdminUrl(string $path, array|bool $params = []): string
     {
-        if (empty($path)) {
-            return $this->request->getUrl($path);
-        }
-        $pre = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . '/';
-//        $pre = $this->request->getBaseHost() . '/';
-//        if ($this->request->isBackend()) {
-//            $pre .= Env::getInstance()->getConfig('admin') . '/';
-//        }
-        $path = rtrim($pre . $path, '/');
-        if (empty($params)) {
-            return $path;
-        }
-        if (is_array($params)) {
-            return $path . '?' . http_build_query($params);
-        }
-        return $path;
+        return $this->getUrlObject()->getBackendUrl($path, $params);
     }
 
     public function getBackendApi(string $path, array|bool $params = []): string
     {
-        if (empty($path)) {
-            return $this->request->getUrl($path);
-        }
-        $pre = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('api_admin') . '/';
-//        $pre = $this->request->getBaseHost() . '/';
-//        if ($this->request->isBackend()) {
-//            $pre .= Env::getInstance()->getConfig('admin') . '/';
-//        }
-        $path = rtrim($pre . $path, '/');
-        if (empty($params)) {
-            return $path;
-        }
-        if (is_array($params)) {
-            return $path . '?' . http_build_query($params);
-        }
-        return $path;
+        return $this->getUrlObject()->getBackendApiUrl($path, $params);
     }
-
+    /*_______________URL____________*/
     /**
      * @throws \ReflectionException
      * @throws Exception

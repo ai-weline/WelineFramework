@@ -203,64 +203,6 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $realip;
     }
 
-    public function getUrl(string $path = '', array $params = [], bool $merge_params = false): string
-    {
-        if ($path) {
-            $url = $this->getBaseHost() . '/' . ltrim($path, '/');
-        } else {
-            $url = $this->getBaseUrl();
-        }
-        return $this->extractedUrl($params, $merge_params, $url);
-    }
-
-    public function getAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
-    {
-        if ($path) {
-            $url = $this->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . $path);
-        } else {
-            $url = $this->getBaseUrl();
-        }
-        return $this->extractedUrl($params, $merge_params, $url);
-    }
-
-    public function getApiAdminUrl(string $path = '', array $params = [], bool $merge_params = true): string
-    {
-        if ($path) {
-            $url = $this->getBaseHost() . '/' . Env::getInstance()->getConfig('api_admin') . '/' . $path;
-        } else {
-            $url = $this->getBaseUrl();
-        }
-        return $this->extractedUrl($params, $merge_params, $url);
-    }
-
-    /**
-     * @DESC          # 提取Url
-     *
-     * @AUTH    秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2022/2/8 23:27
-     * 参数区：
-     *
-     * @param array  $params
-     * @param bool   $merge_params
-     * @param string $url
-     *
-     * @return string
-     */
-    public function extractedUrl(array $params, bool $merge_params, string $url): string
-    {
-        if ($params) {
-            if ($merge_params) {
-                $url .= '?' . http_build_query(array_merge($this->getGet(), $params));
-            } else {
-                $url .= '?' . http_build_query($params);
-            }
-        } else {
-            $url .= ($this->getGet() && $merge_params) ? '?' . http_build_query($this->getGet()) : '';
-        }
-        return $url;
-    }
-
     /**
      * @DESC          # 设置规则数据
      *
@@ -305,5 +247,21 @@ class Request extends Request\RequestAbstract implements RequestInterface
         } else {
             return $this->getData('rule');
         }
+    }
+
+    /**
+     * @DESC          # 获取Url构建器
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/9/21 22:15
+     * 参数区：
+     * @return Url
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
+     */
+    public function getUrlBuilder(): Url
+    {
+        return ObjectManager::getInstance(Url::class);
     }
 }

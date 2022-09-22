@@ -197,18 +197,6 @@ interface RequestInterface
     public function getBaseHost(): string;
 
     /**
-     * @DESC          # 获取URL链接
-     *
-     * @AUTH  秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2021/9/21 19:33
-     * 参数区：
-     * @param string $path
-     * @return string
-     */
-    public function getUrl(string $path=''): string;
-
-    /**
      * @DESC          # 获取模组名字
      *
      * @AUTH  秋枫雁飞
