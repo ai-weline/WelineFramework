@@ -98,7 +98,7 @@ class Status implements \Weline\Framework\Console\CommandInterface
         $caches = $this->scanner->scanAppCaches();
         /**@var CacheInterface $cache */
         foreach ($caches as $cache_data) {
-            $cache = ObjectManager::getInstance(rtrim($cache_data['class'], 'Factory') . 'Factory');
+            $cache = ObjectManager::make(rtrim($cache_data['class'], 'Factory') . 'Factory');
             $this->printing->note(
                 str_pad($cache->getIdentify(), 45) .
                 '=>' . ($cache->getStatus() ? 1 : 0) . '   ' . $cache->tip()

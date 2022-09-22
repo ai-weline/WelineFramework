@@ -351,7 +351,7 @@ class ObjectManager implements ManagerInterface
             $paramArr = self::getMethodParams($instance, $method);
             $instance = $instance->{$method}(...array_merge($paramArr, $params));
         }
-        return $instance;
+        return self::initClassInstance($class, $instance);
     }
 
     /**

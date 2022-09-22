@@ -15,7 +15,7 @@ use Weline\Framework\Cache\CacheFactory;
 
 class HookCacheFactory extends CacheFactory
 {
-    public function __construct(string $identity = 'cache_hooks', string $tip = '', bool $permanently = false)
+    public function __construct(string $identity = 'framework_hooks', string $tip = '', bool $permanently = false)
     {
         parent::__construct($identity, $tip, $permanently);
     }

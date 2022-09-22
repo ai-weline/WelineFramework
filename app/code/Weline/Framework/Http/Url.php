@@ -56,6 +56,26 @@ class Url implements UrlInterface
     }
 
     /**
+     * @DESC          # 获取URL
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/9/22 22:33
+     * 参数区：
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getUri(string $path = ''):string
+    {
+        if (!$path) {
+            return $this->request->getUri();
+        }
+        return substr($path, 0, strpos($path, '?'));
+    }
+
+    /**
      * @DESC          # 提取Url
      *
      * @AUTH    秋枫雁飞

@@ -13,7 +13,7 @@ namespace Weline\Framework\Router\Cache;
 
 class RouterCache extends \Weline\Framework\Cache\CacheFactory
 {
-    public function __construct(string $identity = 'router_cache')
+    public function __construct(string $identity = 'framework_router')
     {
         parent::__construct($identity, '路由缓存');
     }

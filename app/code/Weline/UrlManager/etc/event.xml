@@ -5,4 +5,7 @@
     <event name="Framework_Module::module_upgrade">
         <observer name="Weline_Frontend::menu_upgrade" instance="Weline\UrlManager\Observer\UrlUpdate" disabled="false" shared="true"/>
     </event>
+    <event name="Weline_Framework_Router::router_start">
+        <observer name="Weline_Frontend::menu_upgrade" instance="Weline\UrlManager\Observer\UrlUpdate" disabled="false" shared="true"/>
+    </event>
 </config>

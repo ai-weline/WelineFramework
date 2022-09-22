@@ -94,7 +94,11 @@ class Core
             $this->router = $router;
             return $this->route();
         }
-
+        /**@var EventsManager $event */
+        $event = ObjectManager::getInstance(EventsManager::class);
+        $data  = new DataObject(['url' => $url]);
+        $event->dispatch('Weline_Framework_Router::router_start', ['data' => $data]);
+        $url = $data->getData('url');
         if (($pc_result = $this->Pc($url)) || $this->is_match) {
             return $pc_result;
         }

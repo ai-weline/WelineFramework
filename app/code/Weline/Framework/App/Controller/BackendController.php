@@ -22,6 +22,7 @@ use Weline\Framework\Session\Session;
 class BackendController extends PcController
 {
     protected CacheInterface $cache;
+    protected Session $session;
 
     public function __init()
     {
@@ -56,7 +57,7 @@ class BackendController extends PcController
                     $noLoginRedirectUrl = new DataObject(['no_login_redirect_url' => []]);
                     $evenManager->dispatch('Framework_Router::backend_no_login_redirect_url', ['data' => $noLoginRedirectUrl]);
                     $no_login_redirect_url = $noLoginRedirectUrl->getData('no_login_redirect_url');
-                    $this->cache->set($no_login_url_cache_key, $no_login_redirect_url);
+                    $this->cache->set($no_login_url_cache_key, $this->_url->getUri($no_login_redirect_url));
                 }
                 if ($no_login_redirect_url) {
                     $this->redirect($no_login_redirect_url);

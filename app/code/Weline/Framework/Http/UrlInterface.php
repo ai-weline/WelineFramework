@@ -60,4 +60,18 @@ interface UrlInterface
      * @return string
      */
     public function getBackendUrl(string $path = '', array $params = [], bool $merge_params = true): string;
+
+    /**
+     * @DESC          # 获取URI
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/9/22 22:30
+     * 参数区：
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public function getUri(string $path = ''):string;
 }
