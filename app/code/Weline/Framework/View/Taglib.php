@@ -257,18 +257,18 @@ class Taglib
                             throw new TemplateException(__("if没有自闭合标签:[{$template_html}]。示例：%1", htmlentities('<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>')));
                         case 'tag-start':
                             # 排除非if和属性标签的情况
-                            if (!str_starts_with($tag_data[0], '<if ')) {
-                                $result = $tag_data[0];
+                            if (str_starts_with($tag_data[0], '<if ')||str_starts_with($tag_data[0], '<w:if ')) {
+                                if (!isset($attributes['condition'])) {
+                                    if (str_starts_with($tag_data[0], '<if ')) {
+                                        $template_html = htmlentities($tag_data[0]);
+                                        throw new TemplateException(__("if标签缺少condition条件属性:[{$template_html}]，示例：%1", htmlentities('<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>')));
+                                    }
+                                }
+                                $condition = $this->varParser($attributes['condition']);
+                                $result    = "<?php if({$condition}):?>";
                                 break;
                             }
-                            if (!isset($attributes['condition'])) {
-                                if (str_starts_with($tag_data[0], '<if ')) {
-                                    $template_html = htmlentities($tag_data[0]);
-                                    throw new TemplateException(__("if标签缺少condition条件属性:[{$template_html}]，示例：%1", htmlentities('<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>')));
-                                }
-                            }
-                            $condition = $this->varParser($attributes['condition']);
-                            $result    = "<?php if({$condition}):?>";
+                            $result = $tag_data[0];
                             break;
                         case 'tag-end':
                             $result = '<?php endif;?>';
@@ -279,7 +279,7 @@ class Taglib
                 }
             ],
             'empty'       => [
-                'tag'      => 1,
+                'tag-start'  => 1,
                 'tag-end'  => 1,
                 'callback' => function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                     switch ($tag_key) {
@@ -289,13 +289,13 @@ class Taglib
                             $content_arr = explode('|', $tag_data[1]);
                             $name        = $this->varParser($this->checkVar($content_arr[0]));
                             return "<?php if(empty({$name}))echo '" . $template->tmp_replace(trim($content_arr[1] ?? '')) . "'?>";
-                        case 'tag':
+                        case 'tag-start':
                             if (!isset($attributes['name'])) {
                                 $template_html = htmlentities($tag_data[0]);
                                 throw new TemplateException(__("empty标签需要设置name属性:[{$template_html}] 例如：%1", htmlentities('<empty name="catalogs"><li>没有数据</li></empty>')));
                             }
                             $name = $this->varParser($this->checkVar($attributes['name']));
-                            return '<?php if(empty(' . $name . ')): ?>' . $tag_data[2] . '<?php endif;?>';
+                            return '<?php if(empty(' . $name . ')): ?>';
                         case 'tag-end':
                             return '<?php endif; ?>';
                         default:
@@ -304,7 +304,7 @@ class Taglib
                 }
             ],
             'notempty'    => [
-                'tag'      => 1,
+                'tag-start'      => 1,
                 'tag-end'  => 1,
                 'callback' => function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                     switch ($tag_key) {
@@ -314,13 +314,13 @@ class Taglib
                             $content_arr = explode('|', $tag_data[1]);
                             $name        = $this->varParser($this->checkVar($content_arr[0]));
                             return "<?php if(isset($name) && !empty({$name}))echo '" . $template->tmp_replace(trim($content_arr[1] ?? '')) . "'?>";
-                        case 'tag':
+                        case 'tag-start':
                             if (!isset($attributes['name'])) {
                                 $template_html = htmlentities($tag_data[0]);
                                 throw new TemplateException(__("empty标签需要设置name属性:[$template_html]例如：%1", htmlentities('<empty name="catalogs"><li>没有数据</li></empty>')));
                             }
                             $name = $this->varParser($this->checkVar($attributes['name']));
-                            return '<?php if(isset($name) && !empty(' . $name . ')): ?>' . $tag_data[2] . '<?php endif;?>';
+                            return '<?php if(isset($name) && !empty(' . $name . ')): ?>';
                         case 'tag-end':
                             return '<?php endif; ?>';
                         default:
@@ -675,7 +675,7 @@ class Taglib
         return $tags;
     }
 
-    public function tagReplace(Template &$template, string &$content, string &$fileName = '')
+    public function tagReplace(Template &$template, string &$content, string &$fileName = ''): array|string
     {
         # 替换{{key}}标签
         preg_match_all("/\{\{([\s\S]*?)\}\}/", $content, $matches, PREG_SET_ORDER);

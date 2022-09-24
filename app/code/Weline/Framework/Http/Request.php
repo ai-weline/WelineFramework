@@ -29,7 +29,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getUrlPath(): string
     {
-        return $this->parse_url()['path'];
+        return $this->parse_url()['path']??"";
     }
 
     /**

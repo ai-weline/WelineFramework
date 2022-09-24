@@ -126,7 +126,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <td scope='row'>{{v.create_time}}</td>
                                                 <td scope='row'>{{v.update_time}}</td>
                                                 <td scope='row'>
-                                                    <a href="@admin-url('url-manager/backend/rewriter/form')?identify={{v.identify}}">重写</a>
+                                                    <if condition="v.can_rewrite">
+                                                        <a href="@admin-url('url-manager/backend/rewriter/form')?identify={{v.identify}}">重写</a>
+                                                    </if>
                                                 </td>
                                             </tr>
                                         </foreach>

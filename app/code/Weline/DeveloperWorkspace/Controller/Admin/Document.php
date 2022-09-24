@@ -11,10 +11,11 @@ declare(strict_types=1);
 
 namespace Weline\DeveloperWorkspace\Controller\Admin;
 
-use Weline\Admin\Model\AdminUser;
+use Weline\Backend\Model\BackendUser;
 use Weline\DeveloperWorkspace\Model\Document\Catalog;
 use Weline\DeveloperWorkspace\Model\ModelService;
 use Weline\Framework\App\Exception;
+use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\System\File\Uploader;
 
@@ -22,6 +23,15 @@ use function PHPUnit\Framework\matches;
 
 class Document extends \Weline\Framework\App\Controller\BackendController
 {
+    private Url $url;
+
+    function __construct(
+        Url $url
+    )
+    {
+        $this->url = $url;
+    }
+
     public function index()
     {
         $documentModel = ModelService::getDocumentModel();
@@ -50,7 +60,7 @@ class Document extends \Weline\Framework\App\Controller\BackendController
 
     public function edit()
     {
-        $this->redirect($this->getUrl('dev/tool/admin/document/add', $this->request->getParams()));
+        $this->redirect($this->url->getBackendUrl('dev/tool/admin/document/add', $this->request->getParams()));
     }
 
     public function add()
@@ -61,8 +71,8 @@ class Document extends \Weline\Framework\App\Controller\BackendController
         $catalogs     = $catalogModel->getTree();
         $this->assign('catalogs', $catalogs);
         # 作者
-        /**@var AdminUser $adminUserModel */
-        $adminUserModel = ObjectManager::getInstance(AdminUser::class);
+        /**@var BackendUser $adminUserModel */
+        $adminUserModel = ObjectManager::getInstance(BackendUser::class);
         $this->assign('users', $adminUserModel->select()->fetch()->getItems());
         # 如果是编辑,不是就返回空 文档
         $this->assign('document', ModelService::getDocumentModel()->load($this->request->getParam('id', 0)));
@@ -79,14 +89,14 @@ class Document extends \Weline\Framework\App\Controller\BackendController
             if ($this->request->getPost('id')) {
                 $pre_msg = __('修改');
             }
-            $data = $this->request->getPost();
+            $data            = $this->request->getPost();
             $data['content'] = htmlspecialchars($data['content']);
             $documentModel->save($data);
             $this->getMessageManager()->addSuccess($pre_msg . '文档成功！ID:' . $documentModel->getId());
         } catch (\Exception $exception) {
             $this->exception($exception);
         }
-        $this->redirect($this->_url->build('dev/tool/admin/document'));
+        $this->redirect($this->_url->getBackendUrl('dev/tool/admin/document'));
     }
 
     public function postUpload()

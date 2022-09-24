@@ -36,7 +36,7 @@ class BackendController extends PcController
     public function isAllowed(): void
     {
         parent::isAllowed();
-        # 验证除了登录页面以外的所有地址需要登录 FIXME 处理无限跳转问题
+        # 验证除了登录页面以外的所有地址需要登录
         if (!CLI and !$this->session->isLogin()) {
             $whitelist_url_cache_key = 'whitelist_url_cache_key';
             $whitelist_url           = $this->cache->get($whitelist_url_cache_key);

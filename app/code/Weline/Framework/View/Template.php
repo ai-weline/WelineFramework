@@ -415,14 +415,14 @@ class Template extends DataObject
         return $this->getUrlObject()->getUrl($path, $params, $merge_query);
     }
 
-    public function getAdminUrl(string $path, array|bool $params = []): string
+    public function getAdminUrl(string $path, array|bool $params = [], bool $merge_query = false): string
     {
-        return $this->getUrlObject()->getBackendUrl($path, $params);
+        return $this->getUrlObject()->getBackendUrl($path, $params,$merge_query);
     }
 
-    public function getBackendApi(string $path, array|bool $params = []): string
+    public function getBackendApi(string $path, array|bool $params = [], bool $merge_query = false): string
     {
-        return $this->getUrlObject()->getBackendApiUrl($path, $params);
+        return $this->getUrlObject()->getBackendApiUrl($path, $params,$merge_query);
     }
     /*_______________URL____________*/
     /**

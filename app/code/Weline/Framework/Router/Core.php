@@ -94,11 +94,6 @@ class Core
             $this->router = $router;
             return $this->route();
         }
-        /**@var EventsManager $event */
-        $event = ObjectManager::getInstance(EventsManager::class);
-        $data  = new DataObject(['url' => $url]);
-        $event->dispatch('Weline_Framework_Router::router_start', ['data' => $data]);
-        $url = $data->getData('url');
         if (($pc_result = $this->Pc($url)) || $this->is_match) {
             return $pc_result;
         }
@@ -124,12 +119,12 @@ class Core
     public function processUrl()
     {
         // 读取url
-        $url_cache_key  = 'url_cache_key_' . $this->request->getUri() . $this->request->getMethod();
-        $rule_cache_key = 'rule_data_cache_key_' . $this->request->getUri() . $this->request->getMethod();
-        $cached_url     = $this->cache->get($url_cache_key);
-        $rule           = $this->cache->get($rule_cache_key);
+        $url_cache_key   = 'url_cache_key_' . $this->request->getUri() . $this->request->getMethod();
+        $rule_cache_key  = 'rule_data_cache_key_' . $this->request->getUri() . $this->request->getMethod();
+        $cached_url      = $this->cache->get($url_cache_key);
+        $rule            = $this->cache->get($rule_cache_key);
 
-        if (/*PROD&&*/ false !== $cached_url) {
+        if (PROD && $cached_url) {
             $url = $cached_url;
             # 将规则设置到请求类
             $this->request->setRule($rule);
@@ -140,13 +135,11 @@ class Core
                 $url = str_replace($this->area_router, '', $url);
                 $url = str_replace('//', '/', $url);
             }
-            # url 重写
-//            p($url);
             # ----------事件：处理url之前 开始------------
             /**@var EventsManager $eventManager */
             $eventManager = ObjectManager::getInstance(EventsManager::class);
             $routerData   = new DataObject(['path' => $url, 'rule' => []]);
-            $eventManager->dispatch('Weline_Framework_Router::process_url_before', ['data' => $routerData]);
+            $eventManager->dispatch('Weline_Framework_Router::process_uri_before', ['data' => $routerData]);
             $url  = $routerData->getData('path');
             $rule = $routerData->getData('rule');
             $this->cache->set($rule_cache_key, $rule);

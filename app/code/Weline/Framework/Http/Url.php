@@ -45,7 +45,7 @@ class Url implements UrlInterface
         return $this->extractedUrl($params, $merge_params, $url);
     }
 
-    function getBackendUrl(string $path = '', array $params = [], bool $merge_params = true): string
+    function getBackendUrl(string $path = '', array $params = [], bool $merge_params = false): string
     {
         if ($path) {
             $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . $path);
@@ -67,12 +67,15 @@ class Url implements UrlInterface
      *
      * @return string
      */
-    public function getUri(string $path = ''):string
+    public function getUri(string $path = ''): string
     {
         if (!$path) {
             return $this->request->getUri();
         }
-        return substr($path, 0, strpos($path, '?'));
+        if ($position = strpos($path, '?')) {
+            $path = substr($path, 0, $position);
+        }
+        return $path;
     }
 
     /**

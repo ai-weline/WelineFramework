@@ -12,8 +12,7 @@ declare(strict_types=1);
 namespace Weline\Framework\Hook\Config;
 
 use Weline\Framework\Cache\CacheInterface;
-use Weline\Framework\Hook\Cache\HookCacheFactory;
-use Weline\Framework\Register\Register;
+use Weline\Framework\Hook\Cache\HookCache;
 use Weline\Framework\System\File\Scanner;
 use Weline\Framework\System\ModuleFileReader;
 
@@ -22,9 +21,9 @@ class HookReader extends ModuleFileReader
     private CacheInterface $hookCache;
     protected string $path = 'hooks';
 
-    public function __construct(HookCacheFactory $cacheFactory, Scanner $scanner, string $path = 'view'. DS .'hooks')
+    public function __construct(HookCache $cache, Scanner $scanner, string $path = 'view'. DS .'hooks')
     {
-        $this->hookCache = $cacheFactory->create();
+        $this->hookCache = $cache->create();
         parent::__construct($scanner, $path);
     }
 

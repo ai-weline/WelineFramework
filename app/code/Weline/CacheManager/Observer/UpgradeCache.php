@@ -73,7 +73,7 @@ class UpgradeCache implements \Weline\Framework\Event\ObserverInterface
     public function processCache(\Weline\CacheManager\Model\Cache $model, array $cache, array $modules, $default_module_name='')
     {
         /**@var CacheFactory $cache */
-        $cacheObj = ObjectManager::make($cache['class']);
+        $cacheObj = ObjectManager::getInstance($cache['class']);
         # 查找是否存在缓存记录
         $model = $model->clearData()->where($model::fields_IDENTITY, $cacheObj->getIdentity())->find()->fetch();
         # 查找缓存文件所在module

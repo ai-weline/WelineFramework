@@ -148,15 +148,15 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <select type='text' name='category_id' class='form-control'
                                                         id='category'>
                                                     <w:foreach name='catalogs' item='v'>
-                                                        <if condition="$document.category_id === $v.id">
+                                                        <w:if condition="document.category_id === v.id">
                                                             <option value="@var{$v.id}" selected>
                                                                 <var>$v.name</var>
                                                             </option>
-                                                            <else/>
+                                                            <w:else/>
                                                             <option value="@var{$v.id}">
                                                                 <var>$v.name</var>
                                                             </option>
-                                                        </if>
+                                                        </w:if>
                                                         <w:notempty name="$v.nodes">
                                                             <w:foreach name="$v.nodes" item="node">
                                                                 <w:if condition="$document.category_id === $node.id">

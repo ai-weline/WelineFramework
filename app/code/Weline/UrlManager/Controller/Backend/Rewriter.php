@@ -14,6 +14,7 @@ namespace Weline\UrlManager\Controller\Backend;
 
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Exception\ModelException;
+use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\UrlManager\Model\UrlManager;
@@ -39,7 +40,8 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
     {
         $data = $this->request->getPost();
         if (!isset($data['path'])) {
-            $data['path'] = $data['origin_path'];
+            $origin_path_arr = explode('::', $data['origin_path']);
+            $data['path']    = array_shift($origin_path_arr);
         } else {
             $data['url_identify'] = md5($data['path']);
         }
@@ -85,6 +87,6 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
         } catch (Exception $exception) {
             $this->getMessageManager()->addError(__('删除失败！') . (DEV ? $exception->getMessage() : ''));
         }
-        $this->redirect($this->_url->getBackendUrl('url-manager/backend/rewrite'));
+        $this->redirect($this->_url->getBackendUrl('url-manager/backend/rewriter'));
     }
 }

@@ -14,6 +14,7 @@ namespace Weline\UrlManager\Controller\Backend;
 
 use Weline\Framework\Manager\ObjectManager;
 use Weline\UrlManager\Model\UrlManager;
+use Weline\UrlManager\Model\UrlRewrite;
 
 class Url extends \Weline\Framework\App\Controller\BackendController
 {
@@ -32,7 +33,12 @@ class Url extends \Weline\Framework\App\Controller\BackendController
             $this->request->getParam('pageSize', 10),
             $this->request->getParams()
         )->select()->fetch();
-        $this->assign('urls', $urlManager->getItems());
+        /**@var UrlRewrite $item */
+        $items = $urlManager->getItems();
+        foreach ($items as &$item) {
+            $item->setData('can_rewrite',str_ends_with($item['path'], '::GET'));
+        }
+        $this->assign('urls', $items);
         $this->assign('pagination', $urlManager->getPagination());
         return $this->fetch();
     }
