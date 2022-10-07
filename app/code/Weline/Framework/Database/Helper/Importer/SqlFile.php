@@ -47,13 +47,11 @@ class SqlFile
         }
         $sql    = file_get_contents($db_filepath);
         try {
-            if ($this->_sql_execute($sql, $db_file_table_pre)) {
-                return ['status' => true, 'file' => str_replace(APP_CODE_PATH, '', $db_filepath), 'info' => '导入数据库失败'];
-            }
+            $this->_sql_execute($sql, $db_file_table_pre);
         } catch (\ReflectionException|LinkException|Exception $e) {
-            exit($e->getMessage());
+            return ['status' => false, 'file' => $db_filepath, 'info' => '导入数据库失败','e'=>$e->getMessage()];
         }
-        return ['status' => true, 'file' => str_replace(APP_CODE_PATH, '', $db_filepath), 'info' => '导入数据库成功'];
+        return ['status' => true, 'file' => $db_filepath, 'info' => '导入数据库成功'];
     }
 
     /**
