@@ -293,6 +293,7 @@ class ObjectManager implements ManagerInterface
      *
      * @param string $class
      * @param        $new_object
+     * @param bool   $init_factory
      *
      * @return mixed
      */

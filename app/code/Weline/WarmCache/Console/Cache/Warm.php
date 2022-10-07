@@ -8,7 +8,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace WarmCache\Console\Cache;
+namespace Weline\WarmCache\Console\Cache;
 
 use GuzzleHttp\Client;
 use Weline\Framework\App\Env;

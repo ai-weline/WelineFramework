@@ -146,6 +146,10 @@ class Upgrade extends CommandAbstract
                 // 排除非框架系统命令类
                 if (class_exists($class)) {
                     try {
+                        $classRef = ObjectManager::getReflectionInstance($class);
+                        if($classRef->isAbstract()){
+                            continue;
+                        }
                         $command_class = ObjectManager::getInstance($class);
                         if ($command_class instanceof CommandInterface) {
                             $file_array = explode('\\', $file);
@@ -194,6 +198,10 @@ class Upgrade extends CommandAbstract
             // 排除非框架系统命令类
             if (class_exists($class)) {
                 try {
+                    $classRef = ObjectManager::getReflectionInstance($class);
+                    if($classRef->isAbstract()){
+                        continue;
+                    }
                     $command_class = ObjectManager::getInstance($class);
                     if ($command_class instanceof CommandInterface) {
                         $class_array = explode('\\', $class);

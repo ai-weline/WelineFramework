@@ -34,6 +34,7 @@ class RouterRewrite implements \Weline\Framework\Event\ObserverInterface
      */
     public function execute(Event $event)
     {
+        # TODO 检测为何多次执行，并且报错USER_ID字段不存在问题
         /**@@var DataObject $data */
         $data    = $event->getData('data');
         $rewrite = $this->urlRewrite->load(UrlRewrite::fields_REWRITE, $data->getData('uri'));
