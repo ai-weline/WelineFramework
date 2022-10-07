@@ -1286,9 +1286,9 @@ PAGINATION;
         return $this->pagination;
     }
 
-    public function getPagination(string $url_path = '', string $pagination_style = 'pagination-rounded'): string
+    public function getPagination(string $pagination_style = 'pagination-rounded', string $url_path = ''): string
     {
-        return $this->getPaginationData('', $pagination_style)['html'] ?? '';
+        return $this->getPaginationData($url_path, $pagination_style)['html'] ?? '';
     }
 
     /**----------链接查询--------------*/

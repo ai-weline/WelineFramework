@@ -20,8 +20,7 @@ class Url implements UrlInterface
 
     public function __construct(
         Request $request
-    )
-    {
+    ) {
         $this->request = $request;
     }
 
@@ -45,7 +44,7 @@ class Url implements UrlInterface
         return $this->extractedUrl($params, $merge_params, $url);
     }
 
-    function getBackendUrl(string $path = '', array $params = [], bool $merge_params = false): string
+    public function getBackendUrl(string $path = '', array $params = [], bool $merge_params = false): string
     {
         if ($path) {
             $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . $path);
@@ -94,6 +93,11 @@ class Url implements UrlInterface
      */
     public function extractedUrl(array $params, bool $merge_params, string $url): string
     {
+        $router = $this->request->getRouterData('router');
+        # URL自带星号处理
+        if (str_contains($url, '*')) {
+            $url = str_replace('//', '/', str_replace('*', ($router === 'index' ? '' : $router), $url));
+        }
         if ($params) {
             if ($merge_params) {
                 $url .= '?' . http_build_query(array_merge($this->request->getGet(), $params));
