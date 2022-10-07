@@ -20,7 +20,8 @@ class Url implements UrlInterface
 
     public function __construct(
         Request $request
-    ) {
+    )
+    {
         $this->request = $request;
     }
 
@@ -47,7 +48,7 @@ class Url implements UrlInterface
     public function getBackendUrl(string $path = '', array $params = [], bool $merge_params = false): string
     {
         if ($path) {
-            $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . $path);
+            $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . ltrim($path, '/'));
         } else {
             $url = $this->request->getBaseUrl();
         }
