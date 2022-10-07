@@ -96,7 +96,7 @@ class Url implements UrlInterface
         $router = $this->request->getRouterData('router');
         # URL自带星号处理
         if (str_contains($url, '*')) {
-            $url = str_replace('//', '/', str_replace('*', ($router === 'index' ? '' : $router), $url));
+            $url = str_replace('*', ($router === 'index' ? '' : $router), $url);
         }
         if ($params) {
             if ($merge_params) {
