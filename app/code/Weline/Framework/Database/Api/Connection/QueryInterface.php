@@ -274,7 +274,7 @@ interface QueryInterface
      * 参数区：
      *
      * @param array $data                [数据]
-     * @param bool  $exist_update_fields [存在则更新字段]
+     * @param array $exist_update_fields [数组：存在则更新字段] 检测到这些字段对应的值已经存在则更新
      *
      * @return QueryInterface
      */

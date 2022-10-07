@@ -19,6 +19,8 @@ use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Connection\Query\QueryTrait;
 use Weline\Framework\Manager\ObjectManager;
 
+use function DeepCopy\deep_copy;
+
 abstract class Query implements QueryInterface
 {
     use QueryTrait;
@@ -37,7 +39,7 @@ abstract class Query implements QueryInterface
     public string $limit = '';
     public array $order = [];
 
-    public ?PDOStatement $PDOStatement = null;
+    private ?PDOStatement $PDOStatement = null;
     public string $sql = '';
     public string $additional_sql = '';
 
@@ -73,8 +75,10 @@ abstract class Query implements QueryInterface
             $this->insert = $data;
         }
         $fields = '(';
-        foreach ($this->insert[0] as $field => $value) {
-            $fields .= "`$field`,";
+        if (isset($this->insert[0])) {
+            foreach ($this->insert[0] as $field => $value) {
+                $fields .= "`$field`,";
+            }
         }
         $fields           = rtrim($fields, ',') . ')';
         $origin_fields    = $this->fields;
@@ -137,14 +141,14 @@ abstract class Query implements QueryInterface
 //        }
         if (is_array($field)) {
             foreach ($field as $f_key => $where_array) {
-                if(is_string($where_array)){
-                    $value = $where_array;
-                    $where_array = [];
+                if (is_string($where_array)) {
+                    $value          = $where_array;
+                    $where_array    = [];
                     $where_array[0] = $f_key;
                     $where_array[1] = '=';
                     $where_array[2] = $value;
                     $where_array[3] = $where_logic;
-                }elseif (2 === count($where_array)) {# 处理两个元素数组
+                } elseif (2 === count($where_array)) {# 处理两个元素数组
                     $where_array[2] = $where_array[1];
                     $where_array[1] = '=';
                 }
@@ -204,15 +208,14 @@ abstract class Query implements QueryInterface
         }
         $this->page(intval($this->pagination['page']), $pageSize);
         $query                         = clone $this;
-        $total                         = $this->total();
+        $total                         = $query->total();
         $this->pagination['totalSize'] = $total;
         $lastPage                      = intval($total / $pageSize);
         if ($total % $pageSize) {
             $lastPage += 1;
         }
         $this->pagination['lastPage'] = $lastPage;
-        $query->pagination            = $this->pagination;
-        return $query;
+        return $this;
     }
 
     public function order(string $field, string $sort = 'DESC'): QueryInterface
@@ -309,7 +312,9 @@ abstract class Query implements QueryInterface
                 break;
         }
         $this->fetch_type = '';
+//        $this->clear();
         $this->clearQuery();
+//        $this->reset();
         return $result;
     }
 
@@ -439,7 +444,6 @@ abstract class Query implements QueryInterface
                 $this->where("YEAR({$field})=YEAR(DATE_SUB(NOW(),INTERVAL 1 YEAR))");
                 break;
             default:
-
         }
         return $this;
     }
