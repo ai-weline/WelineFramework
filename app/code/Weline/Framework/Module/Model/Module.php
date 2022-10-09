@@ -44,7 +44,7 @@ class Module extends DataObject
         return $this;
     }
 
-    function getPosition(): string
+    public function getPosition(): string
     {
         return $this->position;
     }
@@ -100,9 +100,9 @@ class Module extends DataObject
      */
     public function setRouter(array|string $router): static
     {
-        if(is_array($router)){
+        if (is_array($router)) {
             $this->setData(self::router, $router);
-        }else{
+        } else {
             $this->addData([self::router=> $router]);
         }
         $this->router = $router;

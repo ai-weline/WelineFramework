@@ -467,7 +467,6 @@ abstract class AbstractModel extends DataObject
      *
      * @param array|bool|AbstractModel $data
      * @param string|null              $sequence
-     * @param bool                     $remove_force_check_field [如果遇到unique类型，请使用此参数去除不存在则更新时unique导致重复字段值的问题]
      *
      * @return bool
      * @throws Exception
@@ -488,6 +487,12 @@ abstract class AbstractModel extends DataObject
         if (is_array($data)) {
             $this->setModelData($data);
         }
+        # 有要检测更新的字段
+        if ($this->force_check_fields) {
+            foreach ($this->force_check_fields as $force_check_field) {
+                $this->unique_data[$force_check_field] = $this->getData($force_check_field);
+            }
+        }
         // 保存前
         $this->save_before();
         // save之前事件
@@ -501,24 +506,14 @@ abstract class AbstractModel extends DataObject
                 }
                 # 是否强制检查
                 if ($this->force_check_flag) {
-                    if ($this->unique_data) {
-                        $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
-                        # 存在更新
-                        if (isset($check_result[$this->_primary_key])) {
-                            $this->setId($check_result[$this->_primary_key]);
-                            $save_result = $this->getQuery()->where($this->unique_data)
-                                                ->update($this->getModelData())
-                                                ->fetch();
-                        } else {
-                            $save_result = $this->getQuery()
-                                                ->insert($this->getModelData(), $this->getModelFields())
-                                                ->fetch();
-                        }
-                    } else {
-                        $save_result = $this->getQuery()
-                                            ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
-                                            ->fetch();
-                    }
+                    $save_result = $this->checkUpdateOrInsert();
+//                    if ($this->unique_data) {
+//                        $save_result = $this->checkUpdateOrInsert();
+//                    } else {
+//                        $save_result = $this->getQuery()
+//                                            ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
+//                                            ->fetch();
+//                    }
                 } else {
                     $save_result = $this->getQuery()
                                         ->where($this->_primary_key, $this->getId())
@@ -529,24 +524,14 @@ abstract class AbstractModel extends DataObject
                 $insert_data = $this->getModelData();
                 # 是否强制检查
                 if ($this->force_check_flag) {
-                    if ($this->unique_data) {
-                        $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
-                        # 存在更新
-                        if (isset($check_result[$this->_primary_key])) {
-                            $this->setId($check_result[$this->_primary_key]);
-                            $save_result = $this->getQuery()->where($this->unique_data)
-                                                ->update($this->getModelData())
-                                                ->fetch();
-                        } else {
-                            $save_result = $this->getQuery()
-                                                ->insert($this->getModelData(), $this->getModelFields())
-                                                ->fetch();
-                        }
-                    } else {
-                        $save_result = $this->getQuery()
-                                            ->insert($this->getModelData(), $this->getModelFields())
-                                            ->fetch();
-                    }
+                    $save_result = $this->checkUpdateOrInsert();
+//                    if ($this->unique_data) {
+//                        $save_result = $this->checkUpdateOrInsert();
+//                    } else {
+//                        $save_result = $this->getQuery()
+//                                            ->insert($this->getModelData(), $this->getModelFields())
+//                                            ->fetch();
+//                    }
                 } else {
                     unset($insert_data[$this->_primary_key]);
                     $save_result = $this->getQuery()->insert($insert_data)->fetch();
@@ -995,7 +980,7 @@ abstract class AbstractModel extends DataObject
     public function getModelFields(bool $remove_primary_key = false, bool $remove_force_check_fields = false): array
     {
         if (!$remove_force_check_fields && $_model_fields = $this->_model_fields) {
-            return $_model_fields;
+            return array_unique(array_merge($_model_fields, array_values($this->force_check_fields)));
         }
         $module__fields_cache_key = $this::class . '_module__fields_cache_key';
         if (PROD && $_model_fields = $this->_cache->get($module__fields_cache_key)) {
@@ -1347,5 +1332,35 @@ PAGINATION;
     public function setCache(string $key, mixed $value, $duration = 1800)
     {
         return $this->_cache->set($key, $value, $duration);
+    }
+
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/10/9 21:14
+     * 参数区：
+     * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    private function checkUpdateOrInsert(): mixed
+    {
+        $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
+        # 存在更新
+        if (isset($check_result[$this->_primary_key])) {
+            $this->setId($check_result[$this->_primary_key]);
+            $data = $this->getModelData();
+            unset($data[$this->_primary_key]);
+            $save_result = $this->getQuery()->where($this->unique_data)
+                                ->update($data)
+                                ->fetch();
+        } else {
+            $save_result = $this->getQuery()
+                                ->insert($this->getModelData())
+                                ->fetch();
+        }
+        return $save_result;
     }
 }
