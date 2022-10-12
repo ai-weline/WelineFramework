@@ -20,14 +20,19 @@ class Url implements UrlInterface
 
     public function __construct(
         Request $request
-    )
-    {
+    ) {
         $this->request = $request;
     }
 
     public function getBackendApiUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
         if ($path) {
+            # URL自带星号处理
+            $router = $this->request->getRouterData('router');
+            if (str_contains($path, '*')) {
+                $path = str_replace('*', $router, $path);
+                $path = str_replace('//', '/', $path);
+            }
             $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('api_admin') . '/' . $path;
         } else {
             $url = $this->request->getBaseUrl();
@@ -38,6 +43,12 @@ class Url implements UrlInterface
     public function getUrl(string $path = '', array $params = [], bool $merge_params = false): string
     {
         if ($path) {
+            # URL自带星号处理
+            $router = $this->request->getRouterData('router');
+            if (str_contains($path, '*')) {
+                $path = str_replace('*', $router, $path);
+                $path = str_replace('//', '/', $path);
+            }
             $url = $this->request->getBaseHost() . '/' . ltrim($path, '/');
         } else {
             $url = $this->request->getBaseUrl();
@@ -48,6 +59,12 @@ class Url implements UrlInterface
     public function getBackendUrl(string $path = '', array $params = [], bool $merge_params = false): string
     {
         if ($path) {
+            # URL自带星号处理
+            $router = $this->request->getRouterData('router');
+            if (str_contains($path, '*')) {
+                $path = str_replace('*', $router, $path);
+                $path = str_replace('//', '/', $path);
+            }
             $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . ltrim($path, '/'));
         } else {
             $url = $this->request->getBaseUrl();
@@ -94,15 +111,6 @@ class Url implements UrlInterface
      */
     public function extractedUrl(array $params, bool $merge_params, string $url): string
     {
-        $router = $this->request->getRouterData('router');
-        # URL自带星号处理
-        if (str_contains($url, '*')) {
-            if ($router === 'index') {
-                $url = str_replace('*/', '', $url);
-            } else {
-                $url = str_replace('*', $router, $url);
-            }
-        }
         if ($params) {
             if ($merge_params) {
                 $url .= '?' . http_build_query(array_merge($this->request->getGet(), $params));

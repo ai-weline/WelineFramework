@@ -28,7 +28,6 @@ use ReflectionObject;
 class PcController extends Core
 {
     private Template $_template;
-    private EventsManager $_eventManager;
     protected ?Url $_url = null;
 
     private CacheInterface $controllerCache;
@@ -44,9 +43,6 @@ class PcController extends Core
         if (empty($this->controllerCache)) {
             $this->controllerCache = $this->getControllerCache();
         }
-        if (empty($this->_eventManager)) {
-            $this->_eventManager = ObjectManager::getInstance(EventsManager::class);
-        }
     }
 
     /**
@@ -56,13 +52,18 @@ class PcController extends Core
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function redirect(string|int $url)
+    public function redirect(string|int $url): void
     {
         if (is_string($url)) {
-            $this->request->getResponse()->redirect($url);
+            $this->request->getResponse()->redirect($this->_url->getUrl($url));
         } elseif ($url = 404) {
             $this->request->getResponse()->responseHttpCode($url);
         }
+    }
+
+    public function getEventManager(): EventsManager
+    {
+        return ObjectManager::getInstance(EventsManager::class);
     }
 
     public function isAllowed(): void
@@ -141,6 +142,8 @@ class PcController extends Core
      * @param array|string|null $value
      *
      * @return PcController
+     * @throws Exception
+     * @throws \ReflectionException
      */
     protected function assign(array|string $tpl_var, mixed $value = null): static
     {
@@ -162,8 +165,11 @@ class PcController extends Core
      * 参数区：
      *
      * @param string|null $fileName
+     * @param array       $data
      *
      * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
      */
     protected function fetch(string $fileName = null, array $data = []): mixed
     {
@@ -184,15 +190,20 @@ class PcController extends Core
         } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
             $fileName = $controller_class_name . DS . $fileName;
         }
+        if ($data = $this->request->getData()) {
+            $this->assign($data);
+        }
         return $this->getTemplate()->fetch('templates' . DS . $fileName);
     }
 
     /**
      * 返回JSON
      *
-     * @param string $data
+     * @param array|bool $data
      *
      * @return string
+     * @throws Exception
+     * @throws \ReflectionException
      */
     protected function fetchJson(array|bool $data): string
     {

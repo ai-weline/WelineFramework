@@ -1182,13 +1182,16 @@ abstract class AbstractModel extends DataObject
         }
         /**@var Url $url_builder */
         $url_builder    = ObjectManager::getInstance(Url::class);
-        $currentUrl     = $request->isBackend() ? $url_builder->getBackendUrl($url_path) : $url_builder->getUrl($url_path);
-        $currentUrlPath = substr($currentUrl, 0, strpos($currentUrl, '?'));
+        $params         = $this->pagination['params'];
+        $queryUrl     = $request->isBackend() ? $url_builder->getBackendUrl($url_path, $params) : $url_builder->getUrl($url_path, $params);
+        $queryUrlPath = substr($queryUrl, 0, strpos($queryUrl, '?'));
 
         $prePageName = __('上一页');
 
         $prePageClassStatus = $hasPrePage ? '' : 'disabled';
-        $prePageUrl         = $hasPrePage ? "{$currentUrlPath}?page={$this->pagination['prePage']}&pageSize={$this->pagination['pageSize']}" : '#';
+        $query_flag         = $params ? '&' : '?';
+        $prePageUrl         = $hasPrePage ? "{$queryUrl}{$query_flag}page={$this->pagination['prePage']}&pageSize={$this->pagination['pageSize']}" :
+            '#';
 
         $page_list_html  = '';
         $page            = intval($this->pagination['page']);
@@ -1204,7 +1207,7 @@ abstract class AbstractModel extends DataObject
                 continue;
             }
             $pageActiveStatus = ($page === $i) ? 'active' : '';
-            $pageUrl          = "{$currentUrlPath}?page={$i}&pageSize={$this->pagination['pageSize']}";
+            $pageUrl          = "{$queryUrl}{$query_flag}page={$i}&pageSize={$this->pagination['pageSize']}";
             if ($i > $page + 3) {
                 if (!$have_after_more) {
                     $page_list_html  .= "<li class='page-item'><a class='page-link' href='#' >...</a> </li>";
@@ -1222,16 +1225,16 @@ PAGELISTHTML;
 
         $nextPageName = __('下一页');
 
-        $firstPageUrl             = "{$currentUrlPath}?page=1&pageSize={$this->pagination['pageSize']}";
+        $firstPageUrl             = "{$queryUrlPath}?page=1&pageSize={$this->pagination['pageSize']}";
         $firstPageName            = __('首页');
         $nextPageClassStatus      = $hasNextPage ? '' : 'disabled';
-        $nextPageUrl              = $hasNextPage ? "{$currentUrlPath}?page={$this->pagination['nextPage']}&pageSize={$this->pagination['pageSize']}" : '#';
-        $lastPageUrl              = "{$currentUrlPath}?page={$lastPage}&pageSize={$this->pagination['pageSize']}";
+        $nextPageUrl              = $hasNextPage ? "{$queryUrlPath}?page={$this->pagination['nextPage']}&pageSize={$this->pagination['pageSize']}" : '#';
+        $lastPageUrl              = "{$queryUrlPath}?page={$lastPage}&pageSize={$this->pagination['pageSize']}";
         $lastPageName             = __('最后一页');
         $total_page               = __('一共 %1 页', $lastPage);
         $please_input_page_number = __('请输入页码');
         $turn_to_page             = __('跳转页');
-        $form_url                 = "{$currentUrlPath}?page=&pageSize={$this->pagination['pageSize']}";
+        $form_url                 = "{$queryUrlPath}?page=&pageSize={$this->pagination['pageSize']}";
         $this->pagination['html'] = <<<PAGINATION
 <nav aria-label='...'>
                             <ul class='pagination {$pagination_style}'>

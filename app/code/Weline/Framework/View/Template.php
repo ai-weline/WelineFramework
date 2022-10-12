@@ -131,6 +131,7 @@ class Template extends DataObject
     public function init()
     {
         $this->request = ObjectManager::getInstance(Request::class);
+        $this->assign($this->request->getData());
         if (empty($this->view_dir)) {
             $this->view_dir = $this->request->getRouterData('module_path') . DataInterface::dir . DS;
         }
@@ -417,12 +418,12 @@ class Template extends DataObject
 
     public function getAdminUrl(string $path, array|bool $params = [], bool $merge_query = false): string
     {
-        return $this->getUrlObject()->getBackendUrl($path, $params,$merge_query);
+        return $this->getUrlObject()->getBackendUrl($path, $params, $merge_query);
     }
 
     public function getBackendApi(string $path, array|bool $params = [], bool $merge_query = false): string
     {
-        return $this->getUrlObject()->getBackendApiUrl($path, $params,$merge_query);
+        return $this->getUrlObject()->getBackendApiUrl($path, $params, $merge_query);
     }
     /*_______________URL____________*/
     /**
@@ -438,7 +439,8 @@ class Template extends DataObject
         $hooker_content = '';
         foreach ($hookers as $module => $hooker_file) {
             if (DEV) {
-                $content = "<!-- 来自模组 $module 的钩子实现{$name}代码 起-->" . $this->fetchTagHtml('hooks', $hooker_file) . "<!-- 来自模组 $module 的钩子实现{$name}代码 止-->";;
+                $content = "<!-- 来自模组 $module 的钩子实现{$name}代码 起-->" . $this->fetchTagHtml('hooks', $hooker_file) . "<!-- 来自模组 $module 的钩子实现{$name}代码 止-->";
+                ;
             } else {
                 $content = $this->fetchTagHtml('hooks', $hooker_file);
             }

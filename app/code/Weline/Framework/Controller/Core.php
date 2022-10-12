@@ -18,7 +18,7 @@ class Core implements Data\DataInterface
 {
     protected ObjectManager $_objectManager;
 
-    protected Request $request;
+    protected ?Request $request=null;
 
     protected Printing $_debug;
 
@@ -26,7 +26,7 @@ class Core implements Data\DataInterface
 
     public function noRouter()
     {
-        $this->getRequest()->getResponse()->noRouter();
+        $this->request->getResponse()->noRouter();
     }
 
 
