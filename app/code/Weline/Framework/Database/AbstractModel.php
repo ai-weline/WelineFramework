@@ -1181,16 +1181,19 @@ abstract class AbstractModel extends DataObject
             return $data;
         }
         /**@var Url $url_builder */
-        $url_builder    = ObjectManager::getInstance(Url::class);
-        $params         = $this->pagination['params'];
-        $queryUrl     = $request->isBackend() ? $url_builder->getBackendUrl($url_path, $params) : $url_builder->getUrl($url_path, $params);
-        $queryUrlPath = substr($queryUrl, 0, strpos($queryUrl, '?'));
-
+        $url_builder = ObjectManager::getInstance(Url::class);
+        $params      = $this->pagination['params'];
+        unset($params['page']);
+        unset($params['pageSize']);
+        $query_flag  = $params ? '&' : '?';
+        $queryUrl    = $request->isBackend() ? $url_builder->getBackendUrl($url_path, $params) : $url_builder->getUrl($url_path, $params);
         $prePageName = __('上一页');
-
+        unset($params);
         $prePageClassStatus = $hasPrePage ? '' : 'disabled';
-        $query_flag         = $params ? '&' : '?';
-        $prePageUrl         = $hasPrePage ? "{$queryUrl}{$query_flag}page={$this->pagination['prePage']}&pageSize={$this->pagination['pageSize']}" :
+        $params['page']     = $this->pagination['prePage'];
+        $params['pageSize'] = $this->pagination['pageSize'];
+        $query              = http_build_query($params);
+        $prePageUrl         = $hasPrePage ? $queryUrl . $query_flag . $query :
             '#';
 
         $page_list_html  = '';
@@ -1206,8 +1209,11 @@ abstract class AbstractModel extends DataObject
                 }
                 continue;
             }
-            $pageActiveStatus = ($page === $i) ? 'active' : '';
-            $pageUrl          = "{$queryUrl}{$query_flag}page={$i}&pageSize={$this->pagination['pageSize']}";
+            $pageActiveStatus   = ($page === $i) ? 'active' : '';
+            $params['page']     = $i;
+            $params['pageSize'] = $this->pagination['pageSize'];
+            $query              = http_build_query($params);
+            $pageUrl            = $queryUrl . $query_flag . $query;
             if ($i > $page + 3) {
                 if (!$have_after_more) {
                     $page_list_html  .= "<li class='page-item'><a class='page-link' href='#' >...</a> </li>";
@@ -1223,18 +1229,29 @@ abstract class AbstractModel extends DataObject
 PAGELISTHTML;
         }
 
-        $nextPageName = __('下一页');
-
-        $firstPageUrl             = "{$queryUrlPath}?page=1&pageSize={$this->pagination['pageSize']}";
+        $nextPageName             = __('下一页');
+        $params['page']           = 1;
+        $params['pageSize']       = $this->pagination['pageSize'];
+        $query                    = http_build_query($params);
+        $firstPageUrl             = $queryUrl . $query_flag . $query;
         $firstPageName            = __('首页');
         $nextPageClassStatus      = $hasNextPage ? '' : 'disabled';
-        $nextPageUrl              = $hasNextPage ? "{$queryUrlPath}?page={$this->pagination['nextPage']}&pageSize={$this->pagination['pageSize']}" : '#';
-        $lastPageUrl              = "{$queryUrlPath}?page={$lastPage}&pageSize={$this->pagination['pageSize']}";
+        $params['page']           = $this->pagination['nextPage'];
+        $params['pageSize']       = $this->pagination['pageSize'];
+        $query                    = http_build_query($params);
+        $nextPageUrl              = $hasNextPage ? $queryUrl . $query_flag . $query : '#';
+        $params['page']           = $lastPage;
+        $params['pageSize']       = $this->pagination['pageSize'];
+        $query                    = http_build_query($params);
+        $lastPageUrl              = $queryUrl . $query_flag . $query;
         $lastPageName             = __('最后一页');
         $total_page               = __('一共 %1 页', $lastPage);
         $please_input_page_number = __('请输入页码');
         $turn_to_page             = __('跳转页');
-        $form_url                 = "{$queryUrlPath}?page=&pageSize={$this->pagination['pageSize']}";
+        $params['page']           = '';
+        $params['pageSize']       = $this->pagination['pageSize'];
+        $query                    = http_build_query($params);
+        $form_url                 = $queryUrl . $query_flag . $query;
         $this->pagination['html'] = <<<PAGINATION
 <nav aria-label='...'>
                             <ul class='pagination {$pagination_style}'>
