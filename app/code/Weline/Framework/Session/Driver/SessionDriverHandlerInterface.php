@@ -32,7 +32,7 @@ interface SessionDriverHandlerInterface
      * @param $name
      * @return mixed
      */
-    public function get($name): mixed;
+    public function get($name=null): mixed;
 
     /**
      * @DESC          # 删除数据

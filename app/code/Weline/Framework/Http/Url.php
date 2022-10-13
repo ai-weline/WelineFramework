@@ -20,20 +20,25 @@ class Url implements UrlInterface
 
     public function __construct(
         Request $request
-    ) {
+    )
+    {
         $this->request = $request;
     }
 
     public function getBackendApiUrl(string $path = '', array $params = [], bool $merge_params = true): string
     {
         if ($path) {
-            # URL自带星号处理
-            $router = $this->request->getRouterData('router');
-            if (str_contains($path, '*')) {
-                $path = str_replace('*', $router, $path);
-                $path = str_replace('//', '/', $path);
+            if (!$this->isLink($path)) {
+                # URL自带星号处理
+                $router = $this->request->getRouterData('router');
+                if (str_contains($path, '*')) {
+                    $path = str_replace('*', $router, $path);
+                    $path = str_replace('//', '/', $path);
+                }
+                $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('api_admin') . '/' . $path;
+            } else {
+                $url = $path;
             }
-            $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('api_admin') . '/' . $path;
         } else {
             $url = $this->request->getBaseUrl();
         }
@@ -43,13 +48,17 @@ class Url implements UrlInterface
     public function getUrl(string $path = '', array $params = [], bool $merge_params = false): string
     {
         if ($path) {
-            # URL自带星号处理
-            $router = $this->request->getRouterData('router');
-            if (str_contains($path, '*')) {
-                $path = str_replace('*', $router, $path);
-                $path = str_replace('//', '/', $path);
+            if (!$this->isLink($path)) {
+                # URL自带星号处理
+                $router = $this->request->getRouterData('router');
+                if (str_contains($path, '*')) {
+                    $path = str_replace('*', $router, $path);
+                    $path = str_replace('//', '/', $path);
+                }
+                $url = $this->request->getBaseHost() . '/' . ltrim($path, '/');
+            } else {
+                $url = $path;
             }
-            $url = $this->request->getBaseHost() . '/' . ltrim($path, '/');
         } else {
             $url = $this->request->getBaseUrl();
         }
@@ -59,13 +68,17 @@ class Url implements UrlInterface
     public function getBackendUrl(string $path = '', array $params = [], bool $merge_params = false): string
     {
         if ($path) {
-            # URL自带星号处理
-            $router = $this->request->getRouterData('router');
-            if (str_contains($path, '*')) {
-                $path = str_replace('*', $router, $path);
-                $path = str_replace('//', '/', $path);
+            if (!$this->isLink($path)) {
+                # URL自带星号处理
+                $router = $this->request->getRouterData('router');
+                if (str_contains($path, '*')) {
+                    $path = str_replace('*', $router, $path);
+                    $path = str_replace('//', '/', $path);
+                }
+                $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . ltrim($path, '/'));
+            } else {
+                $url = $path;
             }
-            $url = $this->request->getBaseHost() . '/' . Env::getInstance()->getConfig('admin') . (('/' === $path) ? '' : '/' . ltrim($path, '/'));
         } else {
             $url = $this->request->getBaseUrl();
         }
@@ -121,5 +134,13 @@ class Url implements UrlInterface
             $url .= ($this->request->getGet() && $merge_params) ? '?' . http_build_query($this->request->getGet()) : '';
         }
         return $url;
+    }
+
+    public function isLink($path): bool
+    {
+        if (str_starts_with($path, 'https://') || str_starts_with($path, 'http://')) {
+            return true;
+        }
+        return false;
     }
 }

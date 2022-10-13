@@ -2,7 +2,7 @@
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig                        = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
-$host                               = $this->request->getBaseHost();
+$host                               = $this->request->getBaseHost() . '/';
 $base_host                          = $this->request->getPrePath();
 $base_router                        = $this->request->getRouterData('router');
 $current_module                     = $this->request->getModuleName();
@@ -13,7 +13,7 @@ $theme_path                         = \Weline\Framework\App\Env::getInstance()->
 $env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{path}' : '/static/' . $theme_path . '/{module}/view/statics/{path}');
 ?>
 <!--加载require常用js模块-->
-<!--<script src='/Weline/Frontend/view/statics/base/require.configs.js?v=10166'></script>-->
+<!--<script src='/Weline/Frontend/view/statics/base/require.configs.js?v=97235'></script>-->
 <script>
     window.site = {
         host: '<?=$host ??'';?>',
@@ -41,13 +41,13 @@ $env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{pa
         window.location.reload();
     }
     window.url = (path) => {
-        return '<?=$host ??'';?>' + window.path(path);
+        return '<?=$host ??'';?>/' + window.path(path);
     }
     window.api = (path) => {
-        return '<?=$host ??'';?>'+ window.path(path);
+        return '<?=$host ??'';?>' + window.path(path);
     }
     window.frontend_api = (path) => {
-        return '<?=$host ??'';?>'+ window.path(path);
+        return '<?=$host ??'';?>' + window.path(path);
     }
 
     /**
