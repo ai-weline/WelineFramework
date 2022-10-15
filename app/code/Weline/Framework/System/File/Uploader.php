@@ -11,8 +11,6 @@ declare(strict_types=1);
 
 namespace Weline\Framework\System\File;
 
-use JetBrains\PhpStorm\Pure;
-use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
@@ -23,10 +21,10 @@ class Uploader
     private string $uploader_dir = 'uploader' . DS;
     private string $module_dir = '';
     private string $module_name = '';
-    private array $accepted_origins = ['http://localhost', 'http://192.168.1.1', 'http://127.0.0.1'];
+    private array $accepted_origins = ['http://localhost', 'http://127.0.0.1'];
     private array $ext = ['gif', 'jpg', 'png', 'jpeg'];
 
-    public function checkDomain()
+    public function checkDomain(): void
     {
         if (isset($_SERVER['HTTP_ORIGIN'])) {
             // 验证来源是否在白名单内
@@ -154,7 +152,7 @@ class Uploader
         return $result;
     }
 
-    public function getUploadFilename(string $filename)
+    public function getUploadFilename(string $filename): string
     {
         $this->checkFilename($filename);
         if (!str_starts_with($filename, BP)) {
@@ -179,7 +177,6 @@ class Uploader
      */
     public function saveFile(string $tmp_file, string $filename): string
     {
-        $this->checkDomain();
         $filename = $this->getUploadFilename($filename);
         $dir      = dirname($filename);
         if (!is_dir($dir)) {
@@ -251,7 +248,7 @@ class Uploader
         $this->module_dir = $module_dir;
     }
 
-    public function delete(string $filepath)
+    public function delete(string $filepath): bool
     {
         $filename = $this->getUploadFilename($filepath);
         if (is_file($filename)) {
