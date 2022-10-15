@@ -38,8 +38,7 @@ class I18n
     public function __construct(
         Reader    $reader,
         I18NCache $i18nCache
-    )
-    {
+    ) {
         $this->reader    = $reader;
         $this->i18nCache = $i18nCache->create();
     }
@@ -195,7 +194,9 @@ class I18n
 
                     fclose($handle);
                 } else {
-                    if (DEV) throw new Exception('i18n翻译文件仅支持utf-8编码：' . $i18n_file);
+                    if (DEV) {
+                        throw new Exception('i18n翻译文件仅支持utf-8编码：' . $i18n_file);
+                    }
                 }
             }
         }

@@ -21,7 +21,7 @@ class Table implements Db\TableInterface
 {
     private ConnectionFactory $connection;
 
-    function setConnection(ConnectionFactory $connection): static
+    public function setConnection(ConnectionFactory $connection): static
     {
         $this->connection = $connection;
         return $this;

@@ -1,0 +1,29 @@
+<?php
+/**@var \Weline\Framework\View\Template $this*/
+?>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="footer-wapper">
+                <?php echo framework_view_process_block([
+    0 => 'Weline\\Backend\\Block\\Version',
+]);?>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Account pages -->
+
+<!-- JAVASCRIPT -->
+<!--<script src="/Weline/Admin/view/statics/assets/libs/jquery/jquery.min.js?v=22797"></script>-->
+<script src="/Weline/Admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=75408"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=87921"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=41044"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/node-waves/waves.min.js?v=38751"></script>
+
+<script src="/Weline/Admin/view/statics/assets/js/app.js?v=38341"></script>
+<!--加载配置页脚-->
+<?php
+/**@var \Weline\Framework\View\Template $this */
+echo $this->getFooter()->getHtml();
+?>

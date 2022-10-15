@@ -34,6 +34,7 @@ abstract class RequestAbstract extends DataObject
     ];
 
     private string $area_router = State::area_frontend;
+    private ?string $uri = null;
 
     /**
      * @var RequestFilter
@@ -321,6 +322,9 @@ abstract class RequestAbstract extends DataObject
 
     public function getUri(): string
     {
+        if (!is_null($this->uri)) {
+            return $this->uri;
+        }
         $uri = trim($this->getServer('REQUEST_URI'), '/');
         $url_path_cache_key = 'url_path_cache_key_' . $uri . $this->getMethod();
         $url_path           = $this->cache->get($url_path_cache_key);
@@ -338,6 +342,7 @@ abstract class RequestAbstract extends DataObject
             $this->setServer('REQUEST_URI', $uri);
             $this->cache->set($url_path_cache_key, $uri);
         }
+        $this->uri = $uri;
         return $uri;
     }
 

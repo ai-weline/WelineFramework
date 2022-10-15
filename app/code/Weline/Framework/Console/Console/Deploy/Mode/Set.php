@@ -48,12 +48,16 @@ class Set extends CommandAbstract
                 ObjectManager::getInstance(Compile::class)->execute();
                 $this->printer->note('正在清除pub目录下生成的静态文件...');
                 $this->cleanThemeDir();
+                $this->printer->note('正在执行清理模板缓存...');
+                $this->cleanTplComDir();
                 $this->printer->note('正在执行静态资源部署...');
                 /**@var $deploy_upgrade Upgrade */
                 $deploy_upgrade = ObjectManager::getInstance(Upgrade::class);
                 $deploy_upgrade->execute();
                 break;
             case 'dev':
+                $this->printer->note('正在执行清理模板缓存...');
+                $this->cleanTplComDir();
                 break;
             default:
                 $this->printer->error(' ╮(๑•́ ₃•̀๑)╭  ：错误的部署模式：' . $param);
@@ -80,10 +84,12 @@ class Set extends CommandAbstract
      */
     protected function cleanTplComDir()
     {
-        // 扫描代码
         $modules = Env::getInstance()->getModuleList();
         foreach ($modules as $module) {
-            $this->system->exec("rm -rf {$module['base_path']}".DS."view".DS."tpl");
+            $tpl_dir = $module['base_path'] . DS . 'view' . DS . 'tpl';
+            if (is_dir($tpl_dir)) {
+                $this->system->exec("rm -rf {$tpl_dir}");
+            }
         }
     }
 

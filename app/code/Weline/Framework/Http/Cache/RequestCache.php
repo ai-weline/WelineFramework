@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,7 +15,7 @@ namespace Weline\Framework\Http\Cache;
 
 class RequestCache extends \Weline\Framework\Cache\CacheFactory
 {
-    function __construct(string $identity = 'request_cache', string $tip = '请求缓存', bool $permanently = true)
+    public function __construct(string $identity = 'request_cache', string $tip = '请求缓存', bool $permanently = true)
     {
         parent::__construct($identity, $tip, $permanently);
     }

@@ -103,9 +103,12 @@ class Session implements SessionInterface
      *
      * @return string
      */
-    public function getData(string $name): mixed
+    public function getData(string $name = null): mixed
     {
-        return $this->session->get($name);
+        if ($name) {
+            return $this->session->get($name);
+        }
+        return $this->session->get();
     }
 
     /**
@@ -168,7 +171,7 @@ class Session implements SessionInterface
         if ($this->user) {
             return $this->user;
         }
-        $this->user = ObjectManager::getInstance($model)->load($this->session->get($this::login_KEY_ID));
+        $this->user = ObjectManager::getInstance($model)->load($this->session->get($this::login_KEY_ID)??'');
         return $this->user;
     }
 

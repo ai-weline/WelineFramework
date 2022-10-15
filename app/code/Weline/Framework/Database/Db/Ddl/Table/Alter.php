@@ -19,7 +19,6 @@ use Weline\Framework\Database\Exception\DbException;
 
 class Alter extends TableAbstract implements AlterInterface
 {
-
     public function forTable(string $table_name, string $primary_key, string $comment = '', string $new_table_name = ''): AlterInterface
     {
         # 开始表操作
@@ -76,7 +75,7 @@ class Alter extends TableAbstract implements AlterInterface
      */
     public function addIndex(string $type, string $name, array|string $column, string $comment='', string $index_method = 'BTREE'): AlterInterface
     {
-        $comment = $comment?"comment '{$comment}'":"";
+        $comment = $comment ? "comment '{$comment}'" : "";
         switch ($type) {
             case self::index_type_DEFAULT:
                 $this->indexes[] = "INDEX {$name}(`{$column}`) USING {$index_method} {$comment}," . PHP_EOL;

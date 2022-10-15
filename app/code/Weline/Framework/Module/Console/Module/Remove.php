@@ -43,8 +43,7 @@ class Remove extends CommandAbstract
         Data    $data,
         Upgrade $upgrade,
         Handle  $handle
-    )
-    {
+    ) {
         $this->system  = $system;
         $this->data    = $data;
         $this->upgrade = $upgrade;
@@ -116,7 +115,6 @@ class Remove extends CommandAbstract
                 $this->printer->warning(__('已取消执行！'));
             }
         }
-
     }
 
     /**

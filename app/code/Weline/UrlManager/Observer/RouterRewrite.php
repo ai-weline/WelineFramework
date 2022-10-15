@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,18 +15,15 @@ namespace Weline\UrlManager\Observer;
 
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\Event;
-use Weline\Framework\Http\Request;
 use Weline\UrlManager\Model\UrlRewrite;
 
 class RouterRewrite implements \Weline\Framework\Event\ObserverInterface
 {
-
     private UrlRewrite $urlRewrite;
 
-    function __construct(
+    public function __construct(
         UrlRewrite $urlRewrite
-    )
-    {
+    ) {
         $this->urlRewrite = $urlRewrite;
     }
 

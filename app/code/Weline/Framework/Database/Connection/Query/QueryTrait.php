@@ -39,7 +39,8 @@ trait QueryTrait
     public CacheInterface $cache;
     public string $db_name = 'default';
 
-    function __construct(ConnectionFactory $connection){
+    public function __construct(ConnectionFactory $connection)
+    {
         $this->connection = $connection;
         $this->cache = ObjectManager::getInstance(DbCache::class)->create();
         $this->db_name = $this->connection->getConfigProvider()->getDatabase();
@@ -162,7 +163,7 @@ trait QueryTrait
                     case 1:
                         $wheres .= $where[0] . " {$logic} ";
                         break;
-                    # 默认where逻辑连接符为AND
+                        # 默认where逻辑连接符为AND
                     default:
                         $param = ':' . trim($where[0], '`');
                         # 是sql的字段不添加字段引号(没有值则是sql)

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,6 +19,7 @@ use Weline\Framework\Event\Event;
 use Weline\Framework\Exception\Core;
 use Weline\ModuleManager\Model\Module;
 use Weline\UrlManager\Model\UrlManager;
+
 use function PHPUnit\Framework\throwException;
 
 class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
@@ -25,11 +27,10 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
     private Module $module;
     private UrlManager $urlManager;
 
-    function __construct(
+    public function __construct(
         Module     $module,
         UrlManager $urlManager
-    )
-    {
+    ) {
         $this->module     = $module;
         $this->urlManager = $urlManager;
     }
@@ -45,12 +46,14 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         foreach ($frontend_pc_urls as $path => $frontend_pc_url) {
             $this->module->clearData();
             $module_id = $this->module->load('name', $frontend_pc_url['module'])->getId();
-            if (!$module_id) throw new \Exception(__('模型不存在！'));
+            if (!$module_id) {
+                throw new \Exception(__('模型不存在！'));
+            }
             $this->urlManager->clearData();
             $this->urlManager
                 ->setData('module_id', $module_id)
                 ->setData('path', $path)
-                ->setData('identify',md5($path.$type) , true)
+                ->setData('identify', md5($path.$type), true)
                 ->setData('data', json_encode($frontend_pc_url))
                 ->setData('type', $type)
                 ->save();
@@ -62,12 +65,14 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         foreach ($frontend_api_urls as $path => $frontend_api_url) {
             $this->module->clearData();
             $module_id = $this->module->load('name', $frontend_api_url['module'])->getId();
-            if (!$module_id) throw new \Exception(__('模型不存在！'));
+            if (!$module_id) {
+                throw new \Exception(__('模型不存在！'));
+            }
             $this->urlManager->clearData();
             $this->urlManager
                 ->setData('module_id', $module_id)
                 ->setData('path', $path)
-                ->setData('identify',md5($path.$type) , true)
+                ->setData('identify', md5($path.$type), true)
                 ->setData('data', json_encode($frontend_api_url))
                 ->setData('type', $type)
                 ->save();
@@ -78,12 +83,14 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         foreach ($backend_pc_urls as $path => $backend_pc_url) {
             $this->module->clearData();
             $module_id = $this->module->load('name', $backend_pc_url['module'])->getId();
-            if (!$module_id) throw new \Exception(__('模型不存在！'));
+            if (!$module_id) {
+                throw new \Exception(__('模型不存在！'));
+            }
             $this->urlManager->clearData();
             $this->urlManager
                 ->setData('module_id', $module_id)
                 ->setData('path', $path)
-                ->setData('identify',md5($path.$type) , true)
+                ->setData('identify', md5($path.$type), true)
                 ->setData('data', json_encode($backend_pc_url))
                 ->setData('type', $type)
                 ->save();
@@ -94,12 +101,14 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         foreach ($backend_api_urls as $path => $backend_api_url) {
             $this->module->clearData();
             $module_id = $this->module->load('name', $backend_api_url['module'])->getId();
-            if (!$module_id) throw new \Exception(__('模型不存在！'));
+            if (!$module_id) {
+                throw new \Exception(__('模型不存在！'));
+            }
             $this->urlManager->clearData();
             $this->urlManager
                 ->setData('module_id', $module_id)
                 ->setData('path', $path)
-                ->setData('identify',md5($path.$type) , true)
+                ->setData('identify', md5($path.$type), true)
                 ->setData('data', json_encode($backend_api_url))
                 ->setData('type', $type)
                 ->save();

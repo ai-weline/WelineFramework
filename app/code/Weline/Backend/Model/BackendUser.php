@@ -18,7 +18,6 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class BackendUser extends \Weline\Framework\Database\Model
 {
-    public const table                = 'backend_user';
     public const fields_ID            = 'user_id';
     public const fields_username      = 'username';
     public const fields_password      = 'password';

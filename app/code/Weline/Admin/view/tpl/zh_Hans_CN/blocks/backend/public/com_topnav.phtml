@@ -1,0 +1,71 @@
+<?php
+/**@var \Weline\Admin\Block\Backend\Page\Topnav $this */
+?>
+<div class='topnav'>
+    <div class='container-fluid'>
+        <nav class='navbar navbar-light navbar-expand-lg topnav-menu'>
+
+            <div class='collapse navbar-collapse' id='topnav-menu-content'>
+                <ul class='navbar-nav'>
+                    <?php foreach($menus  as $top_menu):?>
+                        <!--顶级菜单-->
+                        <li class='nav-item <?php if(($top_menu['sub_menu']??'') ):echo "dropdown";endif;?>'>
+                            <?php 
+                                $action = $top_menu['action'];
+                                $id = $top_menu['source'];
+                            ?>
+                            <?php if(($top_menu['sub_menu']??'') ):?>
+                                <?php 
+                                    $href = '#';
+                                    $dropdown_addition = "id='{$id}' role='button'";
+                                    $dropdown_addition_class = 'arrow-none';
+                                ?>
+                                <?php else:?>
+                                <?php 
+                                    $href = $top_menu->getUrl();
+                                    $dropdown_addition ='';
+                                    $dropdown_addition_class = '';
+                                ?>
+                            <?php endif;?>
+                            <a class='nav-link <?=$dropdown_addition_class ?>' href='<?=$href ?>'
+                               <?=$dropdown_addition ?>>
+                                <i class='<?=($top_menu['icon']??'') ?>'></i>
+                                <?=($top_menu['title']??'') ?>
+                                <?php if(($top_menu['sub_menu']??'') ):?>
+                                    <div class='arrow-down'></div>
+                                <?php endif;?>
+                            </a>
+                            <?php if(($top_menu['sub_menu']??'') ):?>
+                                <div class='dropdown-menu' aria-labelledby='<?=$id ?>'>
+                                    <!--二级菜单-->
+                                    <?php foreach(($top_menu['sub_menu']??'')  as $sub_menu):?>
+                                        <?php if(($sub_menu['sub_menu']??'') ):?>
+                                            <div class='dropdown'>
+                                                <a class='dropdown-item arrow-none' href='#'
+                                                   id='<?=$id ?>'
+                                                   role='button'>
+                                                    <?=($sub_menu['title']??'') ?>
+                                                    <div class='arrow-down'></div>
+                                                </a>
+                                                <div class='dropdown-menu' aria-labelledby='<?=($sub_menu['source']??'') ?>'>
+                                                    <!--三级菜单-->
+                                                    <?php foreach(($sub_menu['sub_menu']??'')  as $third_menu):?>
+                                                        <a href="<?=$third_menu->getUrl() ?>"
+                                                           class='dropdown-item'><?=($third_menu['title']??'') ?></a>
+                                                    <?php endforeach;?>
+                                                </div>
+                                            </div>
+                                            <?php else:?>
+                                            <!--二级菜单如果没有子菜单则直接显示菜单-->
+                                            <a href="<?=$sub_menu->getUrl() ?>" class='dropdown-item'><?=($sub_menu['title']??'') ?></a>
+                                        <?php endif;?>
+                                    <?php endforeach;?>
+                                </div>
+                            <?php endif;?>
+                        </li>
+                    <?php endforeach;?>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>

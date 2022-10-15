@@ -47,9 +47,9 @@ class Notification extends \Weline\Framework\View\Block
 //        if ($total = $this->cache->get($cache_key)) {
 //            return $total;
 //        }
-//        /**@var SystemNotification $notificationsModel */
-//        $notificationsModel = ObjectManager::getInstance(SystemNotification::class);
-//        $total = $notificationsModel->where(SystemNotification::fields_is_read, false)->total();
+//        /**@var FrontendNotification $notificationsModel */
+//        $notificationsModel = ObjectManager::getInstance(FrontendNotification::class);
+//        $total = $notificationsModel->where(FrontendNotification::fields_is_read, false)->total();
 //        $this->cache->set($cache_key, $total);
 //        return $total;
 //    }

@@ -53,8 +53,7 @@ class Reader extends ModuleFileReader
         Request   $request,
         I18nCache $cache,
         Parser    $parser
-    )
-    {
+    ) {
         $this->request   = $request;
         $this->i18nCache = $cache->create();
         $this->scanner   = $scanner;
@@ -88,7 +87,9 @@ class Reader extends ModuleFileReader
                 unset($files[$key]);
                 $files[$filename] = $file;
             }
-            if ($files) $all_lan_pack[$module['name']] = $files;
+            if ($files) {
+                $all_lan_pack[$module['name']] = $files;
+            }
         }
         $this->i18nCache->set($cache_key, $all_lan_pack);
         return $all_lan_pack;

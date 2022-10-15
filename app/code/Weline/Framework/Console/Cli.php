@@ -115,7 +115,13 @@ class Cli extends CliAbstract
         }
         $commands = Env::getCommands();
         if ($arg0 !== 'command:upgrade' && empty($commands)) {
-            exit($this->printer->error('命令系统异常！请完整执行（不能简写）更新模块命令后重试：php bin/m command:upgrade'));
+            try {
+                ObjectManager::getInstance(\Weline\Framework\Console\Console\Command\Upgrade::class)->execute();
+            } catch (Exception $exception) {
+                $this->printer->error($exception->getMessage());
+                exit();
+            }
+//            exit($this->printer->error('命令系统异常！请完整执行（不能简写）更新模块命令后重试：php bin/m command:upgrade'));
         }
 
         // 检查命令
@@ -133,8 +139,8 @@ class Cli extends CliAbstract
         foreach ($recommendCommands as $recommendCommand) {
             $commands = array_merge($commands, $recommendCommand);
         }
-        if (count($commands) === 1&&$command = $commands[0]){
-            foreach ($command as $c=>$data){
+        if (count($commands) === 1&&$command = $commands[0]) {
+            foreach ($command as $c=>$data) {
                 return ['class' => $data['class'], 'command' => $c];
             }
         }

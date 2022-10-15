@@ -55,7 +55,7 @@ class DdlFactory implements FactoryInterface
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      */
-    function alter(ConnectionFactory $connection=null): Alter
+    public function alter(ConnectionFactory $connection=null): Alter
     {
         if (!$connection) {
             return ObjectManager::getInstance(Alter::class);

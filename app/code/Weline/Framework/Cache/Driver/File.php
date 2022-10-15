@@ -30,9 +30,9 @@ class File extends CacheDriverAbstract
      */
     public function __init()
     {
-        if(IS_WIN){
+        if (IS_WIN) {
             $this->config['path'] = str_replace('/', DS, $this->config['path']);
-        }else {
+        } else {
             $this->config['path'] = str_replace('\\', DS, $this->config['path']);
         }
         $this->cachePath = $this->config['path'] ? BP . rtrim($this->config['path'], DS) . DS . $this->identity . DS : BP . 'var' . DS . 'cache' . DS . $this->identity . DS;

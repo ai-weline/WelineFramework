@@ -100,14 +100,13 @@ class ObjectManager implements ManagerInterface
             self::$instance = new self();
         }
         if (isset(self::$instances[$class]) && $obj = self::$instances[$class]) {
-//            if(method_exists($obj, '__init')){
-//                $obj->__init();
-//            }
+            /*if (method_exists($obj, '__init')) {
+                $obj->__init();
+            }*/
             return $obj;
         }
         // 缓存对象读取
         if ($cache && !CLI && $shared && $cache_class_object = self::getCache()->get($class)) {
-
             self::$instances[$class] = self::initClassInstance($class, $cache_class_object);
             return self::$instances[$class];
         }
@@ -128,11 +127,13 @@ class ObjectManager implements ManagerInterface
         } else {
             $arguments = self::getMethodParams($new_class);
         }
-//        if ($new_class == 'Weline\Admin\Block\Page\Topbar') {
+//        if (str_contains($new_class, 'Aiweline\Bbs\Controller\Account\BaseController')) {
 //            p($arguments);
 //        }
         $refClass                  = self::$reflections[$class] ?? self::$reflections[$class] = new ReflectionClass($new_class);
-        if($refClass->isAbstract())throw new Exception(__('抽象类无法被实例化：%1',$class));
+        if ($refClass->isAbstract()) {
+            throw new Exception(__('抽象类无法被实例化：%1', $class));
+        }
         self::$reflections[$class] = $refClass;
 //        p($refClass->getAttributes());
         $new_object           = $refClass->newInstanceArgs($arguments);

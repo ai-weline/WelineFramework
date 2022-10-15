@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,7 +19,6 @@ use Weline\Framework\View\Block;
 
 class Maintenance implements \Weline\Framework\Event\ObserverInterface
 {
-
     /**
      * @inheritDoc
      */
@@ -49,7 +49,9 @@ class Maintenance implements \Weline\Framework\Event\ObserverInterface
                 break;
             }
         }
-        $data->setData('white_urls',$white_urls);
-        if (!$white) die($block->fetchHtml('Weline_Admin::templates/maintenance.phtml'));
+        $data->setData('white_urls', $white_urls);
+        if (!$white) {
+            die($block->fetchHtml('Weline_Admin::templates/maintenance.phtml'));
+        }
     }
 }

@@ -84,8 +84,7 @@ class Handle implements HandleInterface, RegisterInterface
         SetupHelper $setup_helper,
         SetupData   $setup_data,
         Compress    $compress
-    )
-    {
+    ) {
         $this->modules      = Env::getInstance()->getModuleList();
         $this->helper       = $helper;
         $this->system       = $system;
@@ -205,7 +204,7 @@ class Handle implements HandleInterface, RegisterInterface
         $env      = [];
         if (is_file($filepath)) {
             $env = (array)require $filepath;
-            if (!isset($env['router']) || empty($env['router'])) {
+            if (!isset($env['router'])) {
                 // 如果文件不存在则读取模块名字作为router
                 $env = $this->getEnv($module, $env);
             }

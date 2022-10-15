@@ -100,7 +100,7 @@ interface TableInterface
      *
      * @return mixed
      */
-    function setConnection(ConnectionFactory $connection);
+    public function setConnection(ConnectionFactory $connection);
     /**
      * @DESC          # 创建表
      *

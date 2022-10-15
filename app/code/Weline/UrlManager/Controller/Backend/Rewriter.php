@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -22,7 +23,7 @@ use Weline\UrlManager\Model\UrlRewrite;
 
 class Rewriter extends \Weline\Framework\App\Controller\BackendController
 {
-    function get()
+    public function get()
     {
         /**@var UrlRewrite $urlRewriteModel */
         $urlRewriteModel = ObjectManager::getInstance(UrlRewrite::class);
@@ -37,7 +38,7 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch();
     }
 
-    function post()
+    public function post()
     {
         $data = $this->request->getPost();
         if (!isset($data['path'])) {
@@ -59,7 +60,7 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
         $this->redirect($this->_url->getBackendUrl('url-manager/backend/rewriter'));
     }
 
-    function form()
+    public function form()
     {
         $uri_identify = $this->request->getGet('identify', '');
         /**@var UrlManager $urlManager */
@@ -77,7 +78,7 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
      * @throws \ReflectionException
      * @throws Core
      */
-    function getDelete()
+    public function getDelete()
     {
         $rewrite_id = $this->request->getGet('rewrite_id', '');
         /**@var UrlRewrite $urlRewrite */

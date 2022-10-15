@@ -134,11 +134,11 @@ class Template extends DataObject
         if (empty($this->view_dir)) {
             $this->view_dir = $this->request->getRouterData('module_path') . DataInterface::dir . DS;
         }
-            $this->getData('title') ?? $this->setData('title', $this->request->getModuleName());
+        $this->getData('title') ?? $this->setData('title', $this->request->getModuleName());
 
-            $this->theme ?? $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
-            $this->eventsManager ?? $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
-            $this->viewCache ?? $this->viewCache = ObjectManager::getInstance(ViewCache::class)->create();
+        $this->theme ?? $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
+        $this->eventsManager ?? $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
+        $this->viewCache ?? $this->viewCache = ObjectManager::getInstance(ViewCache::class)->create();
 
         if (empty($this->statics_dir)) {
             $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
@@ -417,12 +417,12 @@ class Template extends DataObject
 
     public function getAdminUrl(string $path, array|bool $params = [], bool $merge_query = false): string
     {
-        return $this->getUrlObject()->getBackendUrl($path, $params,$merge_query);
+        return $this->getUrlObject()->getBackendUrl($path, $params, $merge_query);
     }
 
     public function getBackendApi(string $path, array|bool $params = [], bool $merge_query = false): string
     {
-        return $this->getUrlObject()->getBackendApiUrl($path, $params,$merge_query);
+        return $this->getUrlObject()->getBackendApiUrl($path, $params, $merge_query);
     }
     /*_______________URL____________*/
     /**
@@ -438,7 +438,8 @@ class Template extends DataObject
         $hooker_content = '';
         foreach ($hookers as $module => $hooker_file) {
             if (DEV) {
-                $content = "<!-- 来自模组 $module 的钩子实现{$name}代码 起-->" . $this->fetchTagHtml('hooks', $hooker_file) . "<!-- 来自模组 $module 的钩子实现{$name}代码 止-->";;
+                $content = "<!-- 来自模组 $module 的钩子实现{$name}代码 起-->" . $this->fetchTagHtml('hooks', $hooker_file) . "<!-- 来自模组 $module 的钩子实现{$name}代码 止-->";
+                ;
             } else {
                 $content = $this->fetchTagHtml('hooks', $hooker_file);
             }

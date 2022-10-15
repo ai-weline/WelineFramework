@@ -15,9 +15,8 @@ use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
-class SystemNotification extends \Weline\Framework\Database\Model
+class FrontendNotification extends \Weline\Framework\Database\Model
 {
-    public const        table          = 'frontend_system_notification';
     public const        fields_ID      = 'notification_id';
     public const        fields_title   = 'title';
     public const        fields_is_read = 'is_read';

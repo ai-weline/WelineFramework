@@ -38,8 +38,7 @@ class Setup
     public function __construct(
         DbSetup  $setup_db,
         Printing $printing
-    )
-    {
+    ) {
         $this->setup_db = $setup_db;
         $this->printing = $printing;
     }
@@ -48,7 +47,7 @@ class Setup
      * 设置模组上下文
      * @return void
      */
-    function setModuleContext(SetupContext $context)
+    public function setModuleContext(SetupContext $context)
     {
         # 解析模组数据库配置文件
         $db_file = $context->getModulePath() . DS . 'etc' . DS . 'db.php';

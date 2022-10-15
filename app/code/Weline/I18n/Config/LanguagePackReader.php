@@ -48,8 +48,8 @@ class LanguagePackReader
     {
         // 所有语言包
         $packs = [];
-        $this->scanner->globFile(APP_PATH .'i18n'.DS ,$packs,'.csv');
-        foreach($packs as $key => $pack){
+        $this->scanner->globFile(APP_PATH .'i18n'.DS, $packs, '.csv');
+        foreach ($packs as $key => $pack) {
             $file_info = pathinfo($pack, PATHINFO_FILENAME);
             unset($packs[$key]);
             $packs[$file_info] = $pack;

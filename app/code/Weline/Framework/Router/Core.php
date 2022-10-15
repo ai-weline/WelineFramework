@@ -119,11 +119,10 @@ class Core
     public function processUrl()
     {
         // 读取url
-        $url_cache_key   = 'url_cache_key_' . $this->request->getUri() . $this->request->getMethod();
-        $rule_cache_key  = 'rule_data_cache_key_' . $this->request->getUri() . $this->request->getMethod();
-        $cached_url      = $this->cache->get($url_cache_key);
-        $rule            = $this->cache->get($rule_cache_key);
-
+        $url_cache_key  = 'url_cache_key_' . $this->request->getUri() . $this->request->getMethod();
+        $rule_cache_key = 'rule_data_cache_key_' . $this->request->getUri() . $this->request->getMethod();
+        $cached_url     = $this->cache->get($url_cache_key);
+        $rule           = $this->cache->get($rule_cache_key);
         if (PROD && $cached_url) {
             $url = $cached_url;
             # 将规则设置到请求类
@@ -264,11 +263,11 @@ class Core
      */
     public function StaticFile(string &$url): mixed
     {
-        header("Cache-Control: max-age=3600");
+        header('Cache-Control: max-age=3600');
         $filename = APP_CODE_PATH . trim($url, DS);
         $filename = str_replace('/', DS, $filename);
         // 阻止读取其他文件
-        if (is_bool(strpos($filename, \Weline\Framework\View\Data\DataInterface::dir))) {
+        if (!str_contains($filename, \Weline\Framework\View\Data\DataInterface::dir)) {
             $this->request->getResponse()->noRouter();
         }
         if (!is_file($filename)) {
@@ -276,6 +275,7 @@ class Core
             $filename = VENDOR_PATH . trim($url, DS);
             $filename = str_replace('/', DS, $filename);
         }
+
         if (is_file($filename)) {
             $filename_arr = explode('.', $filename);
             $file_ext     = end($filename_arr);
@@ -346,6 +346,8 @@ class Core
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
         $dispatch = ObjectManager::getInstance($dispatch);
+        /**@var \Weline\Framework\Controller\Core $dispatch */
+//        $dispatch->assign($this->request->getData());
         $result   = call_user_func([$dispatch, $method], /*...$this->request->getParams()*/);
 //        file_put_contents(__DIR__.'/'.$cache_key.'.html', $result);
         /** Get output buffer. */

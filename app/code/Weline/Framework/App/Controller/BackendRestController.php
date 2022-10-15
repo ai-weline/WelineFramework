@@ -18,11 +18,9 @@ class BackendRestController extends AbstractRestController
 {
     private BackendApiSession $session;
 
-    function __construct(
+    public function __construct(
         BackendApiSession $backendApiSession,
-    )
-    {
-
+    ) {
         $this->session = $backendApiSession;
     }
 }

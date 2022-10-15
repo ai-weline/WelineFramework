@@ -22,7 +22,6 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Menu extends \Weline\Framework\Database\Model
 {
-    public const table       = 'm_backend_menu';
     public const primary_key = 'name';
 
     public const fields_NAME          = 'name';

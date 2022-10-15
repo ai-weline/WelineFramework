@@ -71,7 +71,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
             $key = array_merge($theme_Config, $key);
             $this->userSession->setData(self::theme_Session_Config, $key);
             if ($this->userSession->isLogin()) {
-                $this->userConfig->setUserId($this->userSession->getLoginUserID())->addConfig(self::theme_Session_Config, $value)->forceCheck()->save();
+                $this->userConfig->setUserId($this->userSession->getLoginUserID())->addConfig(self::theme_Session_Config, $key)->forceCheck()->save();
             }
         } else {
             $theme_Config[$key] = $value;

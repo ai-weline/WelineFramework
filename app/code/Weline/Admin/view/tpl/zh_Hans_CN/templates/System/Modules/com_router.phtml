@@ -1,0 +1,672 @@
+﻿<?php
+/**@var \Weline\Framework\View\Template $this */
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
+?>
+<!DOCTYPE html>
+<!--
+ *@Author       秋枫雁飞
+ *@Email        aiweline@qq.com
+ *@Forum        https://bbs.aiweline.com
+ *@DESC         后台共用头部
+-->
+<html lang='en' <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?>>
+<head>
+    <?php
+/**@var \Weline\Framework\View\Template $this */
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
+?>
+<?php
+/**@var \Weline\Framework\View\Template $this */
+?>
+<meta charset="UTF-8">
+<title><?php echo $this->getData('title'); ?></title>
+<!--元数据-->
+<meta content="<?php echo $this->getData('description'); ?>" name="description"/>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no'>
+<meta content="<?php echo $this->getData('title'); ?>" name='author'/>
+<meta content="<?php echo $this->getData('description'); ?>" name='description'/>
+<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=47269">
+<link rel="Shortcut Icon" href="/Weline/Backend/view/statics/img/favicon.png?v=47269">
+<link rel="Bookmark" href="/Weline/Backend/view/statics/img/favicon.png?v=47269">
+<!--加载requirejs-->
+<?php if (DEV) : ?>
+    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=19887"></script>-->
+<?php
+else:
+    ?>
+    <!--        <script src="/Weline/Backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=35120"></script>-->
+<?php
+endif;
+?>
+<!--加载require常用js模块-->
+<!--<script src="/Weline/Backend/view/statics/base/require.configs.js?v=56830"></script>-->
+<?php echo framework_view_process_block([
+    'class' => 'Weline\\Backend\\Block\\Header\\Base',
+    'template' => 'Weline_Admin::header/base.phtml',
+]);?>
+
+<!--css-->
+<!--loading-->
+<link  href='/Weline/Admin/view/statics/libs/loading/loading.css?v=95274' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=80692' rel="stylesheet" type="text/css"/>
+<link  href='/Weline/Admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=98624' rel="stylesheet" type="text/css"/>
+<!-- Bootstrap Css -->
+<link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/bootstrap' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
+      rel="stylesheet"
+      type="text/css"/>
+<!-- Icons Css -->
+<link  href='/Weline/Admin/view/statics/assets/css/icons.min.css?v=38201' rel="stylesheet" type="text/css"/>
+<!-- App Css-->
+<link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/app' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
+      rel="stylesheet" type="text/css"/>
+<!--JS-->
+<script  src='/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=96589'></script>
+<?php if (DEV): ?>
+    <!--    <script src="/Weline/Backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=18859"></script>-->
+<?php endif; ?>
+<!--加载配置页头-->
+<?php
+echo $this->getHeader()->getHtml();
+?>
+
+    <!-- jvectormap -->
+    <link href="/Weline/Admin/view/statics/assets/libs/jqvmap/jqvmap.min.css?v=49319" rel="stylesheet"/>
+    <!-- jquery.mCustomScrollbar 插件 -->
+    <link href="/Weline/Admin/view/statics/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.css?v=15388" rel="stylesheet"/>
+    <!-- Sweet Alert-->
+    <link href='/Weline/Admin/view/statics/assets/libs/sweetalert2/sweetalert2.min.css?v=31882' rel='stylesheet' type='text/css'/>
+    <title><?= __('Weline Admin 管理面板') ?></title>
+</head>
+
+<body <?= $themeConfig->getLayouts() ?? ''; ?>>
+
+<!--页头工具条 开始-->
+<?php
+/**@var \Weline\Framework\View\Template $this */
+?>
+<!--Loading-->
+<section id="loading">
+    <div class='loader loader-1'>
+        <div class='loader-outter'></div>
+        <div class='loader-inner'></div>
+    </div>
+</section>
+<script>
+    function showLoading() {
+        $('#loading').show()
+    }
+
+    function hideLoading() {
+        $('#loading').hide()
+    }
+
+    $(function () {
+        $('#loading').hide()
+    })
+</script>
+<!--页头工具条 结束-->
+
+<!-- <body data-layout="horizontal" data-topbar="dark"> -->
+
+<!-- 开始 页面 -->
+<div id="layout-wrapper">
+
+
+    <!--页头工具条 开始-->
+    <?php echo framework_view_process_block([
+    'class' => 'Weline\\Admin\\Block\\Backend\\Page\\Topbar',
+    'cache' => '300',
+]);?>
+    <!--页头工具条 结束-->
+
+    <!-- ========== Topnav Start ========== -->
+    <!--页头菜单栏 开始-->
+    <?php echo framework_view_process_block([
+    'class' => 'Weline\\Admin\\Block\\Backend\\Page\\Topnav',
+    'cache' => '300',
+]);?>
+    <!--页头菜单栏 结束-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <!--左侧菜单栏 开始-->
+    <?php
+/**@var \Weline\Framework\View\Template $this */
+
+use Weline\Framework\Manager\ObjectManager;
+
+?>
+<?php
+$themeConfig = ObjectManager::getInstance('\Weline\Backend\Block\ThemeConfig');
+if (!$themeConfig->getThemeConfig('topnav')):
+    ?>
+    <div class="vertical-menu">
+
+        <div data-simplebar class="h-100">
+
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu list-unstyled" id="side-menu">
+                    <?php
+                    /**@var \Weline\Backend\Model\Menu $menuModel */
+                    $menuModel = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Model\Menu::class);
+                    $menus     = $menuModel->getMenuTree();
+                    /**@var \Weline\Backend\Model\Menu $menu */
+                    foreach ($menus as $menu) {
+                        if (empty($menu->getAction()) && empty($menu->getParentSource()) && empty($menu->getPid())) {
+                            ?>
+                            <li class="menu-title"><i class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getTitle()) ?></span></li>
+                            <?php
+                        }
+                        $submenus = $menu->getSubMenu();
+                        /**@var \Weline\Backend\Model\Menu $submenu */
+                        foreach ($submenus as $submenu) {
+                            $level_3_menus = $submenu->getSubMenu();
+                            if (empty($level_3_menus)) {
+                                if ('/' === $submenu->getAction()) {
+                                    ?>
+                                    <li>
+                                        <a href="<?= $submenu->getUrl() ?>" class="waves-effect">
+                                            <i class="<?= $submenu->getIcon() ?>"></i><span
+                                                    class="badge rounded-pill bg-primary float-end">3</span>
+                                            <span><?= $submenu->getTitle() ?></span>
+                                        </a>
+                                    </li>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <li>
+                                        <a href="<?= $submenu->getUrl() ?>" class=" waves-effect">
+                                            <i class="<?= $submenu->getIcon() ?>"></i>
+                                            <span><?= $submenu->getTitle() ?></span>
+                                        </a>
+                                    </li>
+                                    <?php
+                                }
+                            } else {
+                                if ('/' === $submenu->getAction()) {
+                                    ?>
+                                    <li>
+                                        <a href="<?= $submenu->getUrl() ?>" class="waves-effect">
+                                            <i class="<?= $submenu->getIcon() ?>"></i><span
+                                                    class="badge rounded-pill bg-primary float-end">3</span>
+                                            <span><?= $submenu->getTitle() ?></span>
+                                        </a>
+                                    </li>
+                                    <?php
+                                } else {
+                                    ?>
+                                    <li>
+                                        <a href="javascript: void(0);"
+                                           class="has-arrow waves-effect">
+                                            <i class="<?= $submenu->getIcon() ?>"></i>
+                                            <span><?= $submenu->getTitle() ?></span>
+                                        </a>
+                                        <ul class="sub-menu" aria-expanded="false">
+                                            <?php
+                                            /**@var \Weline\Backend\Model\Menu $level_3_menu */
+                                            foreach ($level_3_menus as $level_3_menu) {
+                                                ?>
+                                                <li>
+                                                    <a href="<?= $level_3_menu->getUrl() ?>"><i
+                                                                class="<?= $level_3_menu->getIcon() ?>"></i><?= $level_3_menu->getTitle() ?>
+                                                    </a>
+                                                </li>
+                                                <?php
+                                            }
+                                            ?>
+                                        </ul>
+                                    </li>
+                                    <?php
+                                }
+                            }
+                        }
+                    }
+                    ?>
+                </ul>
+            </div>
+            <!-- Sidebar -->
+        </div>
+    </div>
+<?php endif; ?>
+    <!--左侧菜单栏 结束-->
+
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
+
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0"><?= __('菜单管理') ?></h4>
+
+                            <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);"><?= __('系统') ?></a></li>
+                                    <li class="breadcrumb-item active"><?= __('菜单管理') ?></li>
+                                </ol>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h4 class="card-title"><?= __('菜单编辑器') ?></h4>
+
+                                <!--<div class="table-responsive mCustomScrollbar" data-mcs-axis="yx" data-mcs-theme='dark'
+                                     style="height: 800px">-->
+                                <div class='table-responsive mCustomScrollbar' data-mcs-axis='x'
+                                     data-mcs-theme='dark'>
+                                    <table class="table table-editable table-nowrap align-middle table-edits">
+                                        <thead>
+                                        <tr>
+                                            <th><?= __('模块') ?></th>
+                                            <th><?= __('路由') ?></th>
+                                            <th><?= __('控制器信息') ?></th>
+                                            <th><?= __('操作') ?></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php
+                                        foreach ($this->getData('routers') as $module => $router) {
+                                            ?>
+                                            <tr data-id='<?=$module ?>' class="success">
+                                                <td colspan="3" style="font-weight: 700;font-size: 18px"><?=$module ?></td>
+                                            </tr>
+                                            <?php foreach ($router as $path => $value): ?>
+                                                <tr data-id='<?=$module ?>'>
+                                                    <td></td>
+                                                    <td data-field='path'><?=$path ?></td>
+                                                    <td data-field='info'>
+                                                        <?php foreach ($value as $key => $item):
+                                                            if (is_string($item)):
+                                                                ?>
+                                                                <span><?= $key ?>:<?= $item ?></span><br>
+                                                            <?php
+                                                            else:
+                                                                ?>
+                                                                <b><?= __('控制器类信息：') ?></b><br>
+                                                                <?php
+                                                                foreach ($item as $k => $v) {
+                                                                    ?>
+                                                                    <span><?= str_pad($k, 20, '-', 1) ?>:<?= $v ?></span>
+                                                                    <br>
+                                                                    <?php
+                                                                }
+                                                                ?>
+                                                            <?php
+                                                            endif;
+                                                            ?>
+                                                        <?php
+                                                        endforeach;
+                                                        ?>
+                                                    </td>
+                                                    <td style='width: 100px'>
+                                                        <a class='btn btn-primary btn-lg'
+                                                           href="<?= $this->getAdminUrl('backend/system/config/set?key='.\Weline\Backend\Config\KeysInterface::key_start_page_path.'&value=' . $path) ?>"
+                                                           title='<?= __('设为开始页面') ?>'>
+                                                            <?= __('设为开始页面') ?>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+
+                                            <?php
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                        $pagination = $this->getData('pagination');
+                        echo $pagination['html'] ?? '';
+                        ?>
+
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+            </div> <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <script>document.write(new Date().getFullYear())</script>
+                        © Weline.
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end d-none d-sm-block">
+                            Crafted with <i class="mdi mdi-heart text-danger"></i> By <a
+                                    href="https://www.aiweline.com/">秋枫雁飞(aiweline)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+<!--右边栏-->
+<?php
+/**@var \Weline\Framework\View\Template $this */
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
+?>
+<!-- Right Sidebar -->
+<div class='right-bar'>
+    <div data-simplebar class='h-100'>
+        <div class='rightbar-title d-flex align-items-center px-3 py-4'>
+
+            <h5 class='m-0 me-2'><?= __('设置') ?></h5>
+
+            <a href="javascript:void(0);" class="right-bar-toggle ms-auto">
+                <i class="mdi mdi-close noti-icon"></i>
+            </a>
+        </div>
+
+        <!-- Settings -->
+        <hr class='mt-0'/>
+        <h6 class='text-center mb-0'><?= __('布局元素') ?></h6>
+        <div class='p-4'>
+            <div class='mb-3'>
+                <div class='mt-4 mt-lg-0'>
+                    <h5 class='font-size-14 mb-3'>
+                        导航栏
+                    </h5>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-topbar'
+                               id='data-topbar-light'
+                               value='light' <?= ($themeConfig->getThemeConfig('data-topbar') === 'light') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-topbar-light'>
+                            明亮
+                        </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-topbar'
+                               id='data-topbar-colored'
+                               value='colored' <?= ($themeConfig->getThemeConfig('data-topbar') === 'colored') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-topbar-colored'>
+                            有色
+                        </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-topbar'
+                               id='data-topbar-dark'
+                               value='dark' <?= ($themeConfig->getThemeConfig('data-topbar') === 'dark') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-topbar-dark'>
+                            暗黑
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='mt-4 mt-lg-0'>
+                    <h5 class='font-size-14 mb-3'>
+                        侧边栏
+                    </h5>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-sidebar'
+                               id='data-sidebar-light'
+                               value='light' <?= ($themeConfig->getThemeConfig('data-sidebar') === 'light') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-sidebar-light'>
+                            明亮
+                        </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-sidebar'
+                               id='data-sidebar-dark'
+                               value='dark' <?= ($themeConfig->getThemeConfig('data-sidebar') === 'dark') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-sidebar-dark'>
+                            暗黑
+                        </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-sidebar-size'
+                               id='data-sidebar-size-default'
+                               value='' <?= ($themeConfig->getThemeConfig('data-sidebar-size') === '') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-sidebar-size-default'>
+                            默认尺寸
+                        </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-sidebar-size'
+                               id='data-sidebar-size-small'
+                               value='small' <?= ($themeConfig->getThemeConfig('data-sidebar-size') === 'small') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-sidebar-size-small'>
+                            小尺寸
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class='mb-3'>
+                <div class='mt-4 mt-lg-0'>
+                    <h5 class='font-size-14 mb-3'>
+                        布局尺寸
+                    </h5>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-layout-size'
+                               id='data-layout-size-default'
+                               value='' <?= ($themeConfig->getThemeConfig('data-layout-size') === '') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-layout-size-default'>
+                            默认
+                        </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-layout-size'
+                               id='data-layout-size-boxed'
+                               value='boxed' <?= ($themeConfig->getThemeConfig('data-layout-size') === 'boxed') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-layout-size-boxed'>
+                            盒子
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='data-layout'
+                    <?= $themeConfig->getThemeConfig('data-layout') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="data-layout"
+                       title='"默认无布局：开启后，设置水平布局，关闭后，设置垂直布局"'><?= __('水平布局') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='data-keep-enlarged'
+                    <?= $themeConfig->getThemeConfig('data-keep-enlarged') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="data-keep-enlarged"
+                       title='"开启后，保持内容最大化"'><?= __('保持最大化') ?></label>
+            </div>
+
+            <div class='mb-3'>
+                <h5 class='font-size-14 mb-3'>
+                    布局类
+                </h5>
+                <div class='form-check form-check-inline'>
+                    <input class='form-check-input' type='radio' name='layout-class'
+                           id='layout-class-default'
+                           value='' <?= ($themeConfig->getThemeConfig('layout-class') === '') ? 'checked' : '' ?>>
+                    <label class='form-check-label' for='layout-class-default'>
+                        默认
+                    </label>
+                </div>
+                <div class='form-check form-check-inline'>
+                    <input class='form-check-input' type='radio' name='layout-class'
+                           id='layout-class-vertical-collpsed'
+                           value='vertical-collpsed' <?= ($themeConfig->getThemeConfig('layout-class') === 'vertical-collpsed') ? 'checked' : '' ?>>
+                    <label class='form-check-label' for='layout-class-vertical-collpsed'>
+                        垂直塌陷
+                    </label>
+                </div>
+            </div>
+        </div>
+        <hr class="mt-0"/>
+        <h6 class='text-center mb-0'><?= __('菜单布局') ?></h6>
+        <div class='p-4'>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='light-sidebar'
+                    <?= $themeConfig->getThemeConfig('light-sidebar') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="light-sidebar"><?= __('菜单明亮') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='topnav'
+                    <?= $themeConfig->getThemeConfig('topnav') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="topnav"><?= __('页顶菜单') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='icon-sidebar'
+                    <?= $themeConfig->getThemeConfig('icon-sidebar') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="icon-sidebar"><?= __('图标菜单') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='layouts-compact-sidebar'
+                    <?= $themeConfig->getThemeConfig('layouts-compact-sidebar') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="layouts-compact-sidebar"><?= __('图文菜单') ?></label>
+            </div>
+        </div>
+
+        <hr class="mt-0"/>
+        <h6 class='text-center mb-0'><?= __('主题布局') ?></h6>
+        <div class='p-4'>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='horizontal_menu_top'
+                    <?= $themeConfig->getThemeConfig('horizontal_menu_top') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="horizontal_menu_top"><?= __('水平菜单置顶') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='boxed'
+                    <?= $themeConfig->getThemeConfig('boxed') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="boxed"><?= __('紧凑布局') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='horizontal-boxed'
+                    <?= $themeConfig->getThemeConfig('horizontal-boxed') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="horizontal-boxed"><?= __('水平紧凑布局') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='horizontal'
+                    <?= $themeConfig->getThemeConfig('horizontal') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="horizontal"><?= __('水平布局') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='layouts-hori-topbar-dark'
+                    <?= $themeConfig->getThemeConfig('layouts-hori-topbar-dark') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="layouts-hori-topbar-dark"><?= __('水平顶黑') ?></label>
+            </div>
+            <div class='form-check form-switch mb-3'>
+                <input class='form-check-input' type='checkbox'
+                       id='layouts-hori-boxed-width'
+                    <?= $themeConfig->getThemeConfig('layouts-hori-boxed-width') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="layouts-hori-boxed-width"><?= __('水平盒子') ?></label>
+            </div>
+        </div>
+        <hr class="mt-0"/>
+        <h6 class="text-center mb-0"><?= __('主题颜色') ?></h6>
+
+        <div class="p-4">
+            <div class="mb-2">
+                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-1.png?v=75564" class="img-thumbnail"
+                     alt="layout-1">
+            </div>
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input theme-choice" type="checkbox" id="light-mode-switch"
+                    <?= $themeConfig->getThemeConfig('light-mode-switch') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="light-mode-switch"><?= __('明亮模式') ?></label>
+            </div>
+
+            <div class="mb-2">
+                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-2.png?v=79765" class="img-thumbnail"
+                     alt="layout-2">
+            </div>
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input theme-choice" type="checkbox"
+                       id="dark-mode-switch" <?= $themeConfig->getThemeConfig('dark-mode-switch') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="dark-mode-switch"><?= __('暗黑模式') ?></label>
+            </div>
+
+            <div class="mb-2">
+                <img src="/Weline/Admin/view/statics/assets/images/layouts/layout-3.png?v=23872" class="img-thumbnail"
+                     alt="layout-3">
+            </div>
+            <div class="form-check form-switch mb-5">
+                <input class="form-check-input theme-choice" type="checkbox"
+                       id="rtl-mode-switch" <?= $themeConfig->getThemeConfig('rtl-mode-switch') ? 'checked' : '' ?>>
+                <label class="form-check-label" for="rtl-mode-switch"><?= __('RTL模式') ?></label>
+            </div>
+        </div>
+
+    </div> <!-- end slimscroll-menu-->
+</div>
+<!-- /Right-bar -->
+
+<!-- Right bar overlay-->
+<div class="rightbar-overlay"></div>
+
+<!-- Table Editable plugin -->
+<script src="/Weline/Admin/view/statics/assets/libs/table-edits/build/table-edits.min.js?v=69582"></script>
+<script src="/Weline/Admin/view/statics/assets/js/pages/menus/table-editable.init.js?v=43694"></script>
+<script src='/Weline/Admin/view/statics/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js?v=13424'></script>
+<!-- Sweet Alerts js -->
+<script src='/Weline/Admin/view/statics/assets/libs/sweetalert2/sweetalert2.min.js?v=19598'></script>
+
+<!-- Sweet alert init js-->
+<script src='/Weline/Admin/view/statics/assets/js/pages/menus/sweet-alerts.init.js?v=32835'></script>
+<?php
+/**@var \Weline\Framework\View\Template $this*/
+?>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="footer-wapper">
+                <?php echo framework_view_process_block([
+    0 => 'Weline\\Backend\\Block\\Version',
+]);?>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Account pages -->
+
+<!-- JAVASCRIPT -->
+<!--<script src="/Weline/Admin/view/statics/assets/libs/jquery/jquery.min.js?v=56263"></script>-->
+<script src="/Weline/Admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=70711"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=42395"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=83494"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/node-waves/waves.min.js?v=72049"></script>
+
+<script src="/Weline/Admin/view/statics/assets/js/app.js?v=34661"></script>
+<!--加载配置页脚-->
+<?php
+/**@var \Weline\Framework\View\Template $this */
+echo $this->getFooter()->getHtml();
+?>
+</body>
+</html>

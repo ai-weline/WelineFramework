@@ -248,9 +248,9 @@ abstract class AbstractModel extends DataObject
     protected function processTable(): string
     {
         if (!$this->table) {
-            $class_file_name_arr = explode('\\', $this::class);
-//            $module_table_pre     = array_shift($class_file_name_arr).'_'.array_shift($class_file_name_arr);
-            $class_file_name = array_pop($class_file_name_arr);
+            $class_file_name_arr = explode('Model', $this::class);
+            array_shift($class_file_name_arr);
+            $class_file_name = str_replace('\\', '', implode('', $class_file_name_arr));
             if (str_ends_with($class_file_name, 'Model')) {
                 $class_file_name = substr($class_file_name, 0, strpos($class_file_name, 'Model'));
             }
@@ -258,7 +258,9 @@ abstract class AbstractModel extends DataObject
             $this->origin_table_name = $this->_suffix . strtolower(implode('_', w_split_by_capital(lcfirst($table_name))));
             $this->table             = "`{$this->getConnection()->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
         }
-        $this->origin_table_name = empty($this->origin_table_name) ? $this->table : $this->origin_table_name;
+        if (empty($this->origin_table_name)) {
+            $this->origin_table_name = $this->table;
+        }
         return $this->table;
     }
 
@@ -467,7 +469,6 @@ abstract class AbstractModel extends DataObject
      *
      * @param array|bool|AbstractModel $data
      * @param string|null              $sequence
-     * @param bool                     $remove_force_check_field [如果遇到unique类型，请使用此参数去除不存在则更新时unique导致重复字段值的问题]
      *
      * @return bool
      * @throws Exception
@@ -488,6 +489,12 @@ abstract class AbstractModel extends DataObject
         if (is_array($data)) {
             $this->setModelData($data);
         }
+        # 有要检测更新的字段
+        if ($this->force_check_fields) {
+            foreach ($this->force_check_fields as $force_check_field) {
+                $this->unique_data[$force_check_field] = $this->getData($force_check_field);
+            }
+        }
         // 保存前
         $this->save_before();
         // save之前事件
@@ -501,6 +508,7 @@ abstract class AbstractModel extends DataObject
                 }
                 # 是否强制检查
                 if ($this->force_check_flag) {
+<<<<<<< HEAD
                     if ($this->unique_data) {
                         $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
                         # 存在更新
@@ -519,6 +527,16 @@ abstract class AbstractModel extends DataObject
                                             ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
                                             ->fetch();
                     }
+=======
+                    $save_result = $this->checkUpdateOrInsert();
+//                    if ($this->unique_data) {
+//                        $save_result = $this->checkUpdateOrInsert();
+//                    } else {
+//                        $save_result = $this->getQuery()
+//                                            ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
+//                                            ->fetch();
+//                    }
+>>>>>>> dev
                 } else {
                     $save_result = $this->getQuery()
                                         ->where($this->_primary_key, $this->getId())
@@ -529,6 +547,7 @@ abstract class AbstractModel extends DataObject
                 $insert_data = $this->getModelData();
                 # 是否强制检查
                 if ($this->force_check_flag) {
+<<<<<<< HEAD
                     if ($this->unique_data) {
                         $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
                         # 存在更新
@@ -547,6 +566,16 @@ abstract class AbstractModel extends DataObject
                                             ->insert($this->getModelData(), $this->getModelFields())
                                             ->fetch();
                     }
+=======
+                    $save_result = $this->checkUpdateOrInsert();
+//                    if ($this->unique_data) {
+//                        $save_result = $this->checkUpdateOrInsert();
+//                    } else {
+//                        $save_result = $this->getQuery()
+//                                            ->insert($this->getModelData(), $this->getModelFields())
+//                                            ->fetch();
+//                    }
+>>>>>>> dev
                 } else {
                     unset($insert_data[$this->_primary_key]);
                     $save_result = $this->getQuery()->insert($insert_data)->fetch();
@@ -659,8 +688,13 @@ abstract class AbstractModel extends DataObject
 
     public function clearData(): static
     {
+<<<<<<< HEAD
         $this->items = [];
         $this->_fields = [];
+=======
+        $this->items       = [];
+        $this->_fields     = [];
+>>>>>>> dev
         $this->_bind_query = null;
         $this->clearDataObject();
         $this->setFetchData([]);
@@ -994,7 +1028,7 @@ abstract class AbstractModel extends DataObject
     public function getModelFields(bool $remove_primary_key = false, bool $remove_force_check_fields = false): array
     {
         if (!$remove_force_check_fields && $_model_fields = $this->_model_fields) {
-            return $_model_fields;
+            return array_unique(array_merge($_model_fields, array_values($this->force_check_fields)));
         }
         $module__fields_cache_key = $this::class . '_module__fields_cache_key';
         if (PROD && $_model_fields = $this->_cache->get($module__fields_cache_key)) {
@@ -1156,8 +1190,13 @@ abstract class AbstractModel extends DataObject
         return $this;
     }
 
-    public function getPaginationData(string $url_path = ''): array
+    public function getPaginationData(string $url_path = '', string $pagination_style = 'pagination-rounded'): array
     {
+        # 分页数据存在
+        if (isset($this->pagination['lastPage']) && $this->pagination['lastPage'] < 2) {
+            $this->pagination['html'] = '';
+            return $this->pagination;
+        }
         # 分页数据存在
         if (isset($this->pagination['html'])) {
             return $this->pagination;
@@ -1190,14 +1229,27 @@ abstract class AbstractModel extends DataObject
             return $data;
         }
         /**@var Url $url_builder */
+<<<<<<< HEAD
         $url_builder    = ObjectManager::getInstance(Url::class);
         $currentUrl     = $request->isBackend() ? $url_builder->getBackendUrl($url_path) : $url_builder->getUrl($url_path);
         $currentUrlPath = substr($currentUrl, 0, strpos($currentUrl, '?'));
 
+=======
+        $url_builder = ObjectManager::getInstance(Url::class);
+        $params      = $this->pagination['params'];
+        unset($params['page']);
+        unset($params['pageSize']);
+        $query_flag  = $params ? '&' : '?';
+        $queryUrl    = $request->isBackend() ? $url_builder->getBackendUrl($url_path, $params) : $url_builder->getUrl($url_path, $params);
+>>>>>>> dev
         $prePageName = __('上一页');
-
+        unset($params);
         $prePageClassStatus = $hasPrePage ? '' : 'disabled';
-        $prePageUrl         = $hasPrePage ? "{$currentUrlPath}?page={$this->pagination['prePage']}&pageSize={$this->pagination['pageSize']}" : '#';
+        $params['page']     = $this->pagination['prePage'];
+        $params['pageSize'] = $this->pagination['pageSize'];
+        $query              = http_build_query($params);
+        $prePageUrl         = $hasPrePage ? $queryUrl . $query_flag . $query :
+            '#';
 
         $page_list_html  = '';
         $page            = intval($this->pagination['page']);
@@ -1212,8 +1264,11 @@ abstract class AbstractModel extends DataObject
                 }
                 continue;
             }
-            $pageActiveStatus = ($page === $i) ? 'active' : '';
-            $pageUrl          = "{$currentUrlPath}?page={$i}&pageSize={$this->pagination['pageSize']}";
+            $pageActiveStatus   = ($page === $i) ? 'active' : '';
+            $params['page']     = $i;
+            $params['pageSize'] = $this->pagination['pageSize'];
+            $query              = http_build_query($params);
+            $pageUrl            = $queryUrl . $query_flag . $query;
             if ($i > $page + 3) {
                 if (!$have_after_more) {
                     $page_list_html  .= "<li class='page-item'><a class='page-link' href='#' >...</a> </li>";
@@ -1229,21 +1284,36 @@ abstract class AbstractModel extends DataObject
 PAGELISTHTML;
         }
 
-        $nextPageName = __('下一页');
-
-        $firstPageUrl             = "{$currentUrlPath}?page=1&pageSize={$this->pagination['pageSize']}";
+        $nextPageName             = __('下一页');
+        $params['page']           = 1;
+        $params['pageSize']       = $this->pagination['pageSize'];
+        $query                    = http_build_query($params);
+        $firstPageUrl             = $queryUrl . $query_flag . $query;
         $firstPageName            = __('首页');
         $nextPageClassStatus      = $hasNextPage ? '' : 'disabled';
-        $nextPageUrl              = $hasNextPage ? "{$currentUrlPath}?page={$this->pagination['nextPage']}&pageSize={$this->pagination['pageSize']}" : '#';
-        $lastPageUrl              = "{$currentUrlPath}?page={$lastPage}&pageSize={$this->pagination['pageSize']}";
+        $params['page']           = $this->pagination['nextPage'];
+        $params['pageSize']       = $this->pagination['pageSize'];
+        $query                    = http_build_query($params);
+        $nextPageUrl              = $hasNextPage ? $queryUrl . $query_flag . $query : '#';
+        $params['page']           = $lastPage;
+        $params['pageSize']       = $this->pagination['pageSize'];
+        $query                    = http_build_query($params);
+        $lastPageUrl              = $queryUrl . $query_flag . $query;
         $lastPageName             = __('最后一页');
         $total_page               = __('一共 %1 页', $lastPage);
         $please_input_page_number = __('请输入页码');
         $turn_to_page             = __('跳转页');
+<<<<<<< HEAD
         $form_url                 = "{$currentUrlPath}?page=&pageSize={$this->pagination['pageSize']}";
+=======
+        $params['page']           = '';
+        $params['pageSize']       = $this->pagination['pageSize'];
+        $query                    = http_build_query($params);
+        $form_url                 = $queryUrl . $query_flag . $query;
+>>>>>>> dev
         $this->pagination['html'] = <<<PAGINATION
 <nav aria-label='...'>
-                            <ul class='pagination pagination-lg'>
+                            <ul class='pagination {$pagination_style}'>
                                 <li class='page-item'>
                                     <a class='page-link'
                                        href='{$firstPageUrl}'>{$firstPageName}</a>
@@ -1269,7 +1339,7 @@ PAGELISTHTML;
                                 <li class='page-item'>
                                       <form action="{$form_url}" method="get" class="btn-group">
                                         <input type="text" class="page-link" name="page" placeholder="{$please_input_page_number}">
-                                        <button type="submit" class="btn btn-primary">{$turn_to_page}</button>
+                                        <button type="submit" class="btn btn-primary page-link">{$turn_to_page}</button>
                                       </form>
                                 </li>
                             </ul>
@@ -1280,9 +1350,9 @@ PAGINATION;
         return $this->pagination;
     }
 
-    public function getPagination(): string
+    public function getPagination(string $pagination_style = 'pagination-rounded', string $url_path = ''): string
     {
-        return $this->getPaginationData()['html'] ?? '';
+        return $this->getPaginationData($url_path, $pagination_style)['html'] ?? '';
     }
 
     /**----------链接查询--------------*/
@@ -1341,5 +1411,35 @@ PAGINATION;
     public function setCache(string $key, mixed $value, $duration = 1800)
     {
         return $this->_cache->set($key, $value, $duration);
+    }
+
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/10/9 21:14
+     * 参数区：
+     * @return mixed
+     * @throws Exception
+     * @throws \ReflectionException
+     */
+    private function checkUpdateOrInsert(): mixed
+    {
+        $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
+        # 存在更新
+        if (isset($check_result[$this->_primary_key])) {
+            $this->setId($check_result[$this->_primary_key]);
+            $data = $this->getModelData();
+            unset($data[$this->_primary_key]);
+            $save_result = $this->getQuery()->where($this->unique_data)
+                                ->update($data)
+                                ->fetch();
+        } else {
+            $save_result = $this->getQuery()
+                                ->insert($this->getModelData())
+                                ->fetch();
+        }
+        return $save_result;
     }
 }

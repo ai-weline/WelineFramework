@@ -6,15 +6,15 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!--加载require常用js模块-->
 <!--<script src='@static(Weline_Backend::base/require.configs.js)'></script>-->
 <?php
-$host = $this->request->getBaseHost();
-$base_host = $this->request->getPrePath();
-$base_router = $this->request->getRouterData('router');
-$current_module = $this->request->getModuleName();
-$base_backend_url_host = $this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('admin') . '/';
-$base_backend_api_host = $this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('api_admin') . '/';
-$env_model = \Weline\Framework\App\Env::getInstance()->getConfig('deploy');
-$theme_path = \Weline\Framework\App\Env::getInstance()->getTheme()['path'];
-$env_model_media_base_path_template = $host.(DEV?'/{module}/view/statics/{path}':'/static/' . $theme_path . '/{module}/view/statics/{path}');
+$host                               = $this->request->getBaseHost() . '/';
+$base_host                          = $this->request->getPrePath();
+$base_router                        = $this->request->getRouterData('router');
+$current_module                     = $this->request->getModuleName();
+$base_backend_url_host              = $this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('admin') . '/';
+$base_backend_api_host              = $this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('api_admin') . '/';
+$env_model                          = \Weline\Framework\App\Env::getInstance()->getConfig('deploy');
+$theme_path                         = \Weline\Framework\App\Env::getInstance()->getTheme()['path'];
+$env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{path}' : '/static/' . $theme_path . '/{module}/view/statics/{path}');
 ?>
 <script>
     window.site = {
@@ -32,6 +32,13 @@ $env_model_media_base_path_template = $host.(DEV?'/{module}/view/statics/{path}'
         module = module.replace('_', '/')
         return '{{env_model_media_base_path_template}}'.replace('{path}', path).replace('{module}', module)
     }
+    window.path = (path) => {
+        path = path.replace('*', '{{base_router}}')
+        if (path.indexOf('/') === 0) {
+            path = path.slice(1)
+        }
+        return path;
+    }
     window.lang = (lang) => {
         setCookie('WELINE-USER-LANG', lang);
         window.location.reload();
@@ -40,29 +47,19 @@ $env_model_media_base_path_template = $host.(DEV?'/{module}/view/statics/{path}'
         return window.backend_url(path);
     }
     window.frontend_url = (path) => {
-        if (path.indexOf('/') !== 0) {
-            path = path + '/'
-        }
-        return '{{host}}' + path;
+        return '{{host}}' + window.path(path);
     }
     window.backend_url = (path) => {
-        // if (path.indexOf('/') !== 0) {
-        //     path = path + '/'
-        // }
-        d(window.site.base_backend_url_host)
-        return '{{base_backend_url_host}}' + path;
+        return '{{base_backend_url_host}}' + window.path(path);
     }
     window.api = (path) => {
-        return '{{host}}' + path;
+        return '{{host}}' + window.path(path);
     }
     window.frontend_api = (path) => {
-        return '{{host}}' + path;
+        return '{{host}}' + window.path(path);
     }
     window.backend_api = (path) => {
-        if (path.indexOf('/') !== 0) {
-            path = path + '/'
-        }
-        return '{{base_backend_api_host}}' + path;
+        return '{{base_backend_api_host}}' + window.path(path);
     }
 
     /**
@@ -72,6 +69,7 @@ $env_model_media_base_path_template = $host.(DEV?'/{module}/view/statics/{path}'
     function p(data) {
         console.log(data)
     }
+
     /**
      * 设置Cookie
      * @param cname
@@ -99,6 +97,7 @@ $env_model_media_base_path_template = $host.(DEV?'/{module}/view/statics/{path}'
         }
         return '';
     }
+
     /**
      * 通用打印函数
      * @param data

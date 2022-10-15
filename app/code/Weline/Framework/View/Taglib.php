@@ -21,7 +21,7 @@ use Weline\Framework\View\Exception\TemplateException;
 
 class Taglib
 {
-    const operators_symbol = [
+    public const operators_symbol = [
         # 比较
         '>',
         '<',
@@ -320,7 +320,7 @@ class Taglib
                                 throw new TemplateException(__("empty标签需要设置name属性:[$template_html]例如：%1", htmlentities('<empty name="catalogs"><li>没有数据</li></empty>')));
                             }
                             $name = $this->varParser($this->checkVar($attributes['name']));
-                            return '<?php if(isset($name) && !empty(' . $name . ')): ?>';
+                            return '<?php if(isset(' . $name . ') && !empty(' . $name . ')): ?>';
                         case 'tag-end':
                             return '<?php endif; ?>';
                         default:
@@ -359,7 +359,7 @@ class Taglib
                             case '@tag()':
                                 $template_html = htmlentities($tag_data[0]);
                                 throw new TemplateException(__("elseif没有@elseif()和@elseif{}用法:[{$template_html}]。示例：%1", htmlentities('<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>')));
-                            // <else/>
+                                // <else/>
                             case 'tag-self-close':
                                 $result = '<?php else:?>';
                                 break;
@@ -381,7 +381,7 @@ class Taglib
                                 $data   = array_merge($data, $attributes);
                                 $result = '<?php echo framework_view_process_block(' . w_var_export($data, true) . ');?>';
                                 break;
-                            // @block{Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml}
+                                // @block{Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml}
                             case '@tag{}':
                             case '@tag()':
                                 $data = explode('|', $tag_data[1]);
@@ -396,7 +396,7 @@ class Taglib
                                 }
                                 $result = '<?php echo framework_view_process_block(' . w_var_export($data, true) . ');?>';
                                 break;
-                            // <block class='Weline\Demo\Block\Demo' template='Weline_Demo::templates/demo.phtml'/>
+                                // <block class='Weline\Demo\Block\Demo' template='Weline_Demo::templates/demo.phtml'/>
                             case 'tag-self-close-with-attrs':
                                 if (!isset($attributes['class']) || !$attributes['class']) {
                                     $template_html = htmlentities($tag_data[0]);
@@ -579,6 +579,7 @@ class Taglib
                                 } else {
                                     return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
                                 }
+                                // no break
                             case 'tag-start':
                                 return "<?=\$this->getAdminUrl(";
                             case 'tag-end':
@@ -607,6 +608,7 @@ class Taglib
                                 } else {
                                     return "<?=\$this->getBackendApi({$this->varParser($data)})?>";
                                 }
+                                // no break
                             case 'tag-start':
                                 return "<?=\$this->getBackendApi(";
                             case 'tag-end':
@@ -745,11 +747,11 @@ class Taglib
                     $rawAttributes = $customTag[1] ?? '';
                     # 如果有属性接下来的字母就不会和标签紧贴着，而如果没有属性那么应该是>括号和标签紧贴着，如果都不是说明并非tag标签
                     if ($rawAttributes && (
-                            'tag' === $tag_key ||
-                            'tar-start' === $tag_key ||
-                            'tag-self-close-with-attrs' === $tag_key ||
-                            'tag-self-close' === $tag_key
-                        ) && !str_starts_with($rawAttributes, ' ')) {
+                        'tag' === $tag_key ||
+                        'tar-start' === $tag_key ||
+                        'tag-self-close-with-attrs' === $tag_key ||
+                        'tag-self-close' === $tag_key
+                    ) && !str_starts_with($rawAttributes, ' ')) {
                         continue;
                     }
 
@@ -807,5 +809,4 @@ class Taglib
         }
         return $content;
     }
-
 }

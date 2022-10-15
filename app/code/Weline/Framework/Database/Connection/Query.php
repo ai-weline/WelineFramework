@@ -20,6 +20,8 @@ use Weline\Framework\Database\Connection\Query\QueryTrait;
 use Weline\Framework\Manager\ObjectManager;
 use function DeepCopy\deep_copy;
 
+use function DeepCopy\deep_copy;
+
 abstract class Query implements QueryInterface
 {
     use QueryTrait;
@@ -74,8 +76,10 @@ abstract class Query implements QueryInterface
             $this->insert = $data;
         }
         $fields = '(';
-        foreach ($this->insert[0] as $field => $value) {
-            $fields .= "`$field`,";
+        if (isset($this->insert[0])) {
+            foreach ($this->insert[0] as $field => $value) {
+                $fields .= "`$field`,";
+            }
         }
         $fields           = rtrim($fields, ',') . ')';
         $origin_fields    = $this->fields;
@@ -138,7 +142,11 @@ abstract class Query implements QueryInterface
 //        }
         if (is_array($field)) {
             foreach ($field as $f_key => $where_array) {
+<<<<<<< HEAD
                 if (is_string($where_array)) {
+=======
+                if (!is_array($where_array)) {
+>>>>>>> dev
                     $value          = $where_array;
                     $where_array    = [];
                     $where_array[0] = $f_key;
@@ -203,6 +211,7 @@ abstract class Query implements QueryInterface
         if ($params) {
             $this->pagination = array_merge($this->pagination, $params);
         }
+        $this->pagination['params'] = $params;
         $this->page(intval($this->pagination['page']), $pageSize);
         $query                         = clone $this;
         $total                         = $query->total();

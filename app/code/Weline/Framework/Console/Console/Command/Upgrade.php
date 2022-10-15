@@ -40,8 +40,7 @@ class Upgrade extends CommandAbstract
         Command  $command,
         Scan     $scan,
         System   $system
-    )
-    {
+    ) {
         $this->printer = $printer;
         $this->system  = $system;
         $this->scan    = $scan;
@@ -147,7 +146,11 @@ class Upgrade extends CommandAbstract
                 if (class_exists($class)) {
                     try {
                         $classRef = ObjectManager::getReflectionInstance($class);
+<<<<<<< HEAD
                         if($classRef->isAbstract()){
+=======
+                        if ($classRef->isAbstract()) {
+>>>>>>> dev
                             continue;
                         }
                         $command_class = ObjectManager::getInstance($class);
@@ -199,7 +202,11 @@ class Upgrade extends CommandAbstract
             if (class_exists($class)) {
                 try {
                     $classRef = ObjectManager::getReflectionInstance($class);
+<<<<<<< HEAD
                     if($classRef->isAbstract()){
+=======
+                    if ($classRef->isAbstract()) {
+>>>>>>> dev
                         continue;
                     }
                     $command_class = ObjectManager::getInstance($class);
