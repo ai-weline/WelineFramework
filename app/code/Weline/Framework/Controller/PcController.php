@@ -204,20 +204,20 @@ class PcController extends Core
      *
      * @return string
      */
-    protected function fetchJson(array|bool $data): string
+    protected function fetchJson(array|bool|string $data): string
     {
-        if (is_bool($data)) {
-            if ($data) {
+        if (!is_array($data)) {
+            if (is_bool($data)) {
                 $data = [
-                    'data' => true,
-                    'msg'  => 'success',
-                    'code' => 200
+                    'data' => $data,
+                    'msg'  => $data ? 'success' : 'error',
+                    'code' => $data ? 200 : 400
                 ];
             } else {
                 $data = [
-                    'data' => false,
-                    'msg'  => 'error',
-                    'code' => 400
+                    'data' => $data,
+                    'msg'  => 'success',
+                    'code' => 200
                 ];
             }
         }
