@@ -258,7 +258,9 @@ abstract class AbstractModel extends DataObject
             $this->origin_table_name = $this->_suffix . strtolower(implode('_', w_split_by_capital(lcfirst($table_name))));
             $this->table             = "`{$this->getConnection()->getConfigProvider()->getDatabase()}`.`{$this->origin_table_name}`";
         }
-        $this->origin_table_name = empty($this->origin_table_name) ? $this->table : $this->origin_table_name;
+        if (empty($this->origin_table_name)) {
+            $this->origin_table_name = $this->table;
+        }
         return $this->table;
     }
 
