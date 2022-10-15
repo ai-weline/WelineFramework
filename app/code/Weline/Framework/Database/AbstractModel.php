@@ -484,6 +484,8 @@ abstract class AbstractModel extends DataObject
             $this->force_check_flag = $data;
             if ($sequence) {
                 $this->force_check_fields[] = $sequence;
+            } else {
+                $this->force_check_fields[] = $this->_primary_key;
             }
         }
         if (is_array($data)) {
