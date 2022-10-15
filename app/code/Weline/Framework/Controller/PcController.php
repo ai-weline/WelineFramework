@@ -211,13 +211,13 @@ class PcController extends Core
         if (is_bool($data)) {
             if ($data) {
                 $data = [
-                    'data' => $data,
-                    'msg'  => 'sucess',
+                    'data' => true,
+                    'msg'  => 'success',
                     'code' => 200
                 ];
             } else {
                 $data = [
-                    'data' => $data,
+                    'data' => false,
                     'msg'  => 'error',
                     'code' => 400
                 ];
