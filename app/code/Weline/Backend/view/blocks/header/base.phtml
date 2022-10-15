@@ -56,7 +56,7 @@ $env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{pa
         return '{{base_backend_url_host}}' + window.path(path);
     }
     window.api = (path) => {
-        return '{{host}}' + window.path(path);
+        return '{{base_backend_api_host}}' + window.path(path);
     }
     window.frontend_api = (path) => {
         return '{{host}}' + window.path(path);
