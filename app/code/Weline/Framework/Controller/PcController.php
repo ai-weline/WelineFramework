@@ -55,7 +55,11 @@ class PcController extends Core
     public function redirect(string|int $url): void
     {
         if (is_string($url)) {
-            $this->request->getResponse()->redirect($this->_url->getUrl($url));
+            if ($this->_url->isLink($url)) {
+                $this->request->getResponse()->redirect($url);
+            } else {
+                $this->request->getResponse()->redirect($this->_url->getUrl($url));
+            }
         } elseif ($url = 404) {
             $this->request->getResponse()->responseHttpCode($url);
         }
@@ -145,7 +149,7 @@ class PcController extends Core
      * @throws Exception
      * @throws \ReflectionException
      */
-    protected function assign(array|string $tpl_var, mixed $value = null): static
+    public function assign(array|string $tpl_var, mixed $value = null): static
     {
         if (is_string($tpl_var)) {
             $this->getTemplate()->assign($tpl_var, $value);
@@ -189,9 +193,6 @@ class PcController extends Core
             }
         } elseif (is_bool(strpos($fileName, '/')) || is_bool(strpos($fileName, '\\'))) {
             $fileName = $controller_class_name . DS . $fileName;
-        }
-        if ($data = $this->request->getData()) {
-            $this->assign($data);
         }
         return $this->getTemplate()->fetch('templates' . DS . $fileName);
     }
