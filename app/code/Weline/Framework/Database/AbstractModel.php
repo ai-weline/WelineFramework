@@ -651,6 +651,7 @@ abstract class AbstractModel extends DataObject
         $this->items       = [];
         $this->_fields     = [];
         $this->_bind_query = null;
+        $this->clearQuery();
         $this->clearDataObject();
         $this->setFetchData([]);
         return $this;
@@ -674,7 +675,7 @@ abstract class AbstractModel extends DataObject
         if (in_array($method, get_class_methods(QueryInterface::class))) {
             # 某些函数是不需要保持查询的
             if ($method == 'clearQuery') {
-                $query        = $this->getQuery(false);
+                $query = $this->getQuery(false);
             } else {
                 $query = $this->getQuery();
             }
@@ -977,7 +978,7 @@ abstract class AbstractModel extends DataObject
 
     public function setUpdateTime(string $update_time): static
     {
-        return $this->setData(self::fields_CREATE_TIME, $update_time);
+        return $this->setData(self::fields_UPDATE_TIME, $update_time);
     }
 
     public function getModelFields(bool $remove_primary_key = false, bool $remove_force_check_fields = false): array
