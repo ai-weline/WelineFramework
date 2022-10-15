@@ -203,8 +203,6 @@ class PcController extends Core
      * @param array|bool $data
      *
      * @return string
-     * @throws Exception
-     * @throws \ReflectionException
      */
     protected function fetchJson(array|bool $data): string
     {

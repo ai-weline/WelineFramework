@@ -50,7 +50,7 @@ class Register implements RegisterDataInterface
                 // 安装数据
                 $install_params = [$type, $module_name, ['dir_path' => $vendor_dir . DS . $module_name_dir . DS, 'base_path' => $param . DS, 'module_name' => $module_name], $version, $description];
                 break;
-            // 路由注册
+                // 路由注册
             case self::ROUTER:
             default:
         }

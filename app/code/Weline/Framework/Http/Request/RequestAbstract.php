@@ -10,6 +10,7 @@
 namespace Weline\Framework\Http\Request;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\App\State;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Controller\Data\DataInterface;
@@ -399,8 +400,6 @@ abstract class RequestAbstract extends DataObject
      * 参数区：
      *
      * @return Response
-     * @throws \Weline\Framework\App\Exception
-     * @throws \ReflectionException
      */
     public function getResponse(): Response
     {

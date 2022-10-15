@@ -13,10 +13,13 @@ namespace Weline\Framework\Database\Connection;
 
 use PDO;
 use PDOStatement;
+use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Connection\Query\QueryTrait;
 use Weline\Framework\Manager\ObjectManager;
+
+use function DeepCopy\deep_copy;
 
 abstract class Query implements QueryInterface
 {

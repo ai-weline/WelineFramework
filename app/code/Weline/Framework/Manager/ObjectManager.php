@@ -88,8 +88,6 @@ class ObjectManager implements ManagerInterface
      * @param bool   $cache     是否缓存
      *
      * @return mixed
-     * @throws Exception
-     * @throws \ReflectionException
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true, bool $cache = false): mixed
     {
@@ -131,9 +129,9 @@ class ObjectManager implements ManagerInterface
 //            p($arguments);
 //        }
         $refClass                  = self::$reflections[$class] ?? self::$reflections[$class] = new ReflectionClass($new_class);
-        if ($refClass->isAbstract()) {
-            throw new Exception(__('抽象类无法被实例化：%1', $class));
-        }
+//        if ($refClass->isAbstract()) {
+//            throw new Exception(__('抽象类无法被实例化：%1', $class));
+//        }
         self::$reflections[$class] = $refClass;
 //        p($refClass->getAttributes());
         $new_object           = $refClass->newInstanceArgs($arguments);
