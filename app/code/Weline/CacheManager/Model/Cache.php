@@ -17,7 +17,6 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Cache extends \Weline\Framework\Database\Model
 {
-    public const        table              = 'm_cache_manager';
     public const fields_ID          = 'id';
     public const fields_NAME        = 'name';
     public const fields_Status      = 'status';

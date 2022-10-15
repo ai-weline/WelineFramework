@@ -42,7 +42,7 @@ class Register implements RegisterDataInterface
     {
         $install_params = func_get_args();
         switch ($type) {
-                // 模块安装
+            // 模块安装
             case self::MODULE:
                 $appPathArray    = explode(DS, $param);
                 $module_name_dir = array_pop($appPathArray);
@@ -88,7 +88,7 @@ class Register implements RegisterDataInterface
 
     public static function moduleNameToNamespacePath(string $module_name): string
     {
-        return str_replace('_', '\\', $module_name);
+        return str_replace('_', '\\', $module_name).'\\';
     }
 
     public static function parserModuleName(string $module_name): string

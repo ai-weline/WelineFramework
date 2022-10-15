@@ -15,13 +15,15 @@ use Weline\Backend\Model\Config;
 use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Session\Session;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class FrontendUserConfig extends \Weline\Framework\Database\Model
 {
-    public const fields_ID     = 'user_id';
-    public const fields_config = 'config';
+    public const fields_ID      = 'user_id';
+    public const fields_SESSION = 'session';
+    public const fields_config  = 'config';
 
     /**
      * @inheritDoc
@@ -60,6 +62,14 @@ class FrontendUserConfig extends \Weline\Framework\Database\Model
     public function setUserId(int $admin_user_id)
     {
         return $this->setData(self::fields_ID, $admin_user_id);
+    }
+
+    public function setSession(Session $session): static
+    {
+        $this->setUserId($session->getLoginUserID());
+        $this->setData(self::fields_SESSION, $session::class);
+        $this->addConfig($session->getData());
+        return $this;
     }
 
     public function addConfig(string|array $key, mixed $data = null): static

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -18,9 +19,8 @@ use Weline\UrlManager\Model\UrlRewrite;
 
 class Url extends \Weline\Framework\App\Controller\BackendController
 {
-    function listing()
+    public function listing()
     {
-
         /**@var UrlManager $urlManager */
         $urlManager = ObjectManager::getInstance(UrlManager::class);
         # 搜索词
@@ -36,15 +36,14 @@ class Url extends \Weline\Framework\App\Controller\BackendController
         /**@var UrlRewrite $item */
         $items = $urlManager->getItems();
         foreach ($items as &$item) {
-            $item->setData('can_rewrite',str_ends_with($item['path'], '::GET'));
+            $item->setData('can_rewrite', str_ends_with($item['path'], '::GET'));
         }
         $this->assign('urls', $items);
         $this->assign('pagination', $urlManager->getPagination());
         return $this->fetch();
     }
 
-    function delete()
+    public function delete()
     {
-
     }
 }

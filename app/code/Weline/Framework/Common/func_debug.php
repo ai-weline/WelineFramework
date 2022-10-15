@@ -23,7 +23,6 @@ if (!function_exists('p')) {
      */
     function p($data = null, $pass = false, int $trace_deep = 1): void
     {
-
         // 执行时间
         $exe_time = microtime(true) - START_TIME;
         $isCli    = (PHP_SAPI === 'cli');
@@ -187,11 +186,13 @@ if (function_exists('dump') && !function_exists('d')) {
     function d($data, $trace_deep = 2): void
     {
         // 执行时间
-        $exe_time = microtime(true) - START_TIME;
-        $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $trace_deep);
-        $parent_call_info = array_reverse($parent_call_info);
+        $exe_time                 = microtime(true) - START_TIME;
+        $parent_call_info         = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, $trace_deep);
+        $parent_call_info         = array_reverse($parent_call_info);
         $parent_call_info['time'] = $exe_time;
-        dump($parent_call_info);
+//        if (DEV) {
+//            dump($parent_call_info);
+//        }
         dump($data);
     }
 }
@@ -260,4 +261,3 @@ if (!function_exists('dd')) {
         exit();
     }
 }
-

@@ -43,12 +43,12 @@ abstract class Model extends AbstractModel implements ModelInterface
      *
      * @return array
      */
-    public function getTree(string $main_field='',string $parent_id_field='parent_id',string $order_field='position',string $order_sort='ASC'): array
+    public function getTree(string $main_field='', string $parent_id_field='parent_id', string $order_field='position', string $order_sort='ASC'): array
     {
-        $main_field = $main_field?:$this::fields_ID;
+        $main_field = $main_field ?: $this::fields_ID;
         $top_menus = $this->clearData()->where($parent_id_field, 0)->order($order_field, $order_sort)->select()->fetch()->getItems();
         foreach ($top_menus as &$top_menu) {
-            $top_menu = $this->getSubs($top_menu,$main_field,$parent_id_field,$order_field,$order_sort);
+            $top_menu = $this->getSubs($top_menu, $main_field, $parent_id_field, $order_field, $order_sort);
         }
         return $top_menus;
     }
@@ -83,9 +83,9 @@ abstract class Model extends AbstractModel implements ModelInterface
      *
      * @return Model
      */
-    public function getSubs(Model &$model,string $main_field='',string $parent_id_field='parent_id',string $order_field='position',string $order_sort='ASC'): Model
+    public function getSubs(Model &$model, string $main_field='', string $parent_id_field='parent_id', string $order_field='position', string $order_sort='ASC'): Model
     {
-        $main_field = $main_field?:$this::fields_ID;
+        $main_field = $main_field ?: $this::fields_ID;
         if ($subs = $this->clearData()->where($parent_id_field, $model->getData($main_field))->order($order_field, $order_sort)->select()->fetch()->getItems()) {
             foreach ($subs as &$sub) {
                 $has_sub_menu = $this->clearData()->where($parent_id_field, $sub->getData($main_field))->find()->fetch();

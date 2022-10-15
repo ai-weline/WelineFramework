@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -15,8 +16,6 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Caches extends \Weline\Framework\Database\Model
 {
-
-
     /**
      * @inheritDoc
      */

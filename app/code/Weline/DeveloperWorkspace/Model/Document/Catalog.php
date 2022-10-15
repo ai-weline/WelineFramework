@@ -19,7 +19,6 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Catalog extends \Weline\Framework\Database\Model
 {
-//    const table       = 'dev_document_catalog';
     public const fields_ID           = 'id';
     public const fields_NAME         = 'name';
     public const fields_DESCRIPTION  = 'description';

@@ -19,7 +19,7 @@ class Event extends \Weline\Framework\DataObject\DataObject
     public function __construct(array $data = [])
     {
         parent::__construct($data);
-        if(isset($data['observers'])){
+        if (isset($data['observers'])) {
             foreach ($data['observers'] as $key => $observer) {
                 $observer = ObjectManager::getInstance($observer['instance']);
                 if ($observer instanceof ObserverInterface) {

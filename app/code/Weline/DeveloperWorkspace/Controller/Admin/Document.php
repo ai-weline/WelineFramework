@@ -25,10 +25,9 @@ class Document extends \Weline\Framework\App\Controller\BackendController
 {
     private Url $url;
 
-    function __construct(
+    public function __construct(
         Url $url
-    )
-    {
+    ) {
         $this->url = $url;
     }
 

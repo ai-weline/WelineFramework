@@ -37,7 +37,7 @@ class Block extends Template implements BlockInterface
         $this->is_init = true;
     }
 
-    static function getInstance(): Block|Template
+    public static function getInstance(): Block|Template
     {
         return parent::getInstance();
     }

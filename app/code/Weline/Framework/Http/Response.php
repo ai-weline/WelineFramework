@@ -84,7 +84,7 @@ class Response implements ResponseInterface
         exit();
     }
 
-    public function redirect(string $url,$code=200): void
+    public function redirect(string $url, $code=200): void
     {
         http_response_code($code);
         Header("Location:$url");

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,7 +17,6 @@ use Weline\I18n\Config\Reader;
 
 class ReaderTest extends TestCore
 {
-
     public function testGetAllI18ns()
     {
         /**@var Reader $reader */

@@ -15,6 +15,6 @@ class RouterCache extends \Weline\Framework\Cache\CacheFactory
 {
     public function __construct(string $identity = 'framework_router')
     {
-        parent::__construct($identity, '路由缓存');
+        parent::__construct($identity, '路由缓存', true);
     }
 }

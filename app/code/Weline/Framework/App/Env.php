@@ -350,7 +350,7 @@ class Env extends DataObject
         return $this->module_list;
     }
 
-    function getActiveModules(): array
+    public function getActiveModules(): array
     {
         if ($this->active_module_list) {
             return $this->active_module_list;
@@ -366,13 +366,13 @@ class Env extends DataObject
         return $active_modules;
     }
 
-    function getModuleByName(string $name): array
+    public function getModuleByName(string $name): array
     {
         $modules = $this->getModuleList();
         return $modules[$name] ?? [];
     }
 
-    function getModuleStatus(string $module)
+    public function getModuleStatus(string $module)
     {
         $module = $this->getModuleByName($module);
         return $module['status'] ?? false;

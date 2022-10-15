@@ -73,5 +73,5 @@ interface UrlInterface
      *
      * @return string
      */
-    public function getUri(string $path = ''):string;
+    public function getUri(string $path = ''): string;
 }

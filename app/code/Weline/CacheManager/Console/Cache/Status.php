@@ -70,7 +70,7 @@ class Status implements \Weline\Framework\Console\CommandInterface
                         $cache_config['status'] = $set_data;
                         Env::getInstance()->setConfig('cache', $cache_config);
                         $this->printAll();
-                        if($no_has_data){
+                        if ($no_has_data) {
                             $this->printing->error(__('不存在的缓存标识：'));
                             $this->printing->printList($no_has_data);
                         }

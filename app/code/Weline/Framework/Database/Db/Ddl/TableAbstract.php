@@ -52,7 +52,7 @@ abstract class TableAbstract implements TableInterface
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function setConnection(ConnectionFactory $connection):static
+    public function setConnection(ConnectionFactory $connection): static
     {
         $this->connection = $connection;
         $this->query = $connection->getQuery();

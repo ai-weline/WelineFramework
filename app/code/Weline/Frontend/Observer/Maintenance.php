@@ -56,6 +56,8 @@ class Maintenance implements \Weline\Framework\Event\ObserverInterface
         }
 
         $data->setData('white_urls', $white_urls);
-        if (!$white) die($block->fetchHtml('Weline_Frontend::templates/maintenance.phtml'));
+        if (!$white) {
+            die($block->fetchHtml('Weline_Frontend::templates/maintenance.phtml'));
+        }
     }
 }

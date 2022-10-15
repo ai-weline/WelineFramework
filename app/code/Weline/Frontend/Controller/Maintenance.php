@@ -15,7 +15,7 @@ use Weline\Framework\App\Controller\FrontendController;
 
 class Maintenance extends FrontendController
 {
-    function get()
+    public function get()
     {
         return $this->fetch();
     }

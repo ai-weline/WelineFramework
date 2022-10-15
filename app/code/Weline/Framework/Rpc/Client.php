@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -38,7 +39,8 @@ class Client
      * @param $url
      * @return Client
      */
-    public static function instance($url) {
+    public static function instance($url)
+    {
         return new Client($url);
     }
 

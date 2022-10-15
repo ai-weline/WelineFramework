@@ -25,31 +25,32 @@ use Weline\Framework\Manager\ObjectManager;
 class Setup
 {
     private Table $ddl_table;
-    private ?ConnectionFactory $connection=null;
+    private ?ConnectionFactory $connection = null;
 
     /**
      * Setup constructor.
+     *
      * @param ConfigProvider $configProvider
-     * @param DdlFactory $ddl_table
+     * @param DdlFactory     $ddl_table
+     *
      * @throws Exception
      * @throws \ReflectionException
      */
     public function __construct(
-        DdlFactory     $ddl_table,
+        DdlFactory $ddl_table,
         $connection = null
-    )
-    {
+    ) {
         $this->connection = $connection;
-        $this->ddl_table = $ddl_table->create($connection);
+        $this->ddl_table  = $ddl_table->create($connection);
     }
 
-    function setConnection(ConnectionFactory $connection)
+    public function setConnection(ConnectionFactory $connection)
     {
         $this->connection = $connection;
         return $this;
     }
 
-    function getConnection()
+    public function getConnection()
     {
         return $this->connection;
     }
@@ -61,6 +62,7 @@ class Setup
      *
      * @param string $table_name
      * @param string $comment
+     *
      * @return Table\Create
      */
     public function createTable(string $table_name, string $comment = ''): Table\Create
@@ -78,6 +80,7 @@ class Setup
      * @param string $primary_key
      * @param string $comment
      * @param string $new_table_name
+     *
      * @return Table\Alter
      */
     public function alterTable(string $table_name, string $primary_key, string $comment = '', string $new_table_name = ''): Table\Alter
@@ -89,7 +92,7 @@ class Setup
     /**
      * @DESC          # 获取前缀
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/31 20:27
      * 参数区：
@@ -130,11 +133,12 @@ class Setup
      * 参数区：
      *
      * @param string $name
+     *
      * @return string
      */
     public function getTable(string $name = ''): string
     {
-        if (is_int(strpos($name, $this->getTablePrefix()))) {
+        if (!str_starts_with($name, $this->getTablePrefix())) {
             $name = $this->getTablePrefix() . $name;
         }
         return $name;
@@ -146,6 +150,7 @@ class Setup
      * 参数区：
      *
      * @param string $tableName
+     *
      * @return bool
      */
     public function dropTable(string $tableName): bool
@@ -164,11 +169,13 @@ class Setup
     /**
      * @DESC          # 方法描述
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/31 20:56
      * 参数区：
+     *
      * @param string $sql
+     *
      * @return mixed
      * @throws Exception
      * @throws \ReflectionException

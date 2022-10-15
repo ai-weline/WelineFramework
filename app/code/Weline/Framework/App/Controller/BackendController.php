@@ -27,7 +27,7 @@ class BackendController extends PcController
     public function __init()
     {
         $this->cache = $this->getControllerCache();
-        if(!isset($this->session)){
+        if (!isset($this->session)) {
             $this->session = ObjectManager::getInstance(BackendSession::class);
         }
         parent::__init();

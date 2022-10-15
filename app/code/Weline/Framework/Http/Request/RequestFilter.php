@@ -29,13 +29,13 @@ class RequestFilter
     {
     }
 
-    static function filter(string $filter, mixed $data): mixed
+    public static function filter(string $filter, mixed $data): mixed
     {
         # 根据过滤器类型进行过滤
         return match ($filter) {
             'int', 'integer'   => (int)$data,
             'float'            => (float)$data,
-            'double'            => (double)$data,
+            'double'            => (float)$data,
             'string'           => (string)$data,
             'array'            => (array)$data,
             'bool','boolean'             => (bool)$data,
@@ -283,9 +283,9 @@ class RequestFilter
     public function slog($logs)
     {
         $toppath = Env::path_framework_generated . '/safe-log.htm';
-        if(!is_file($toppath)){
-            if(!is_dir(dirname($toppath))){
-                mkdir(dirname($toppath),755,true);
+        if (!is_file($toppath)) {
+            if (!is_dir(dirname($toppath))) {
+                mkdir(dirname($toppath), 755, true);
             }
             touch($toppath);
         }

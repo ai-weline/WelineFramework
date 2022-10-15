@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,7 +17,6 @@ use Weline\Framework\Rpc\Server;
 
 class Start extends Server implements \Weline\Framework\Console\CommandInterface
 {
-
     /**
      * @inheritDoc
      */

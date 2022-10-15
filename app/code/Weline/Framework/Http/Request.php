@@ -29,7 +29,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     public function getUrlPath(): string
     {
-        return $this->parse_url()['path']??"";
+        return $this->parse_url()['path'] ?? "";
     }
 
     /**
@@ -101,7 +101,9 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $params_ = [];
             foreach (explode('&', $params) as $key => $value) {
                 $value = explode('=', $value);
-                if (count($value) === 2) $params_[$value[0]] = $value[1] ?? '';
+                if (count($value) === 2) {
+                    $params_[$value[0]] = $value[1] ?? '';
+                }
             }
             $params = $params_;
         }
@@ -114,7 +116,12 @@ class Request extends Request\RequestAbstract implements RequestInterface
         if ('' === $key) {
             return $_POST;
         }
-        return $_POST[$key] ?? $default;
+        $result = $_POST[$key] ?? $default;
+        if ($default) {
+            $result = $this->getDefaultTypeData($result, $default);
+        }
+
+        return $result;
     }
 
     public function getGet(string $key = '', mixed $default = null)
@@ -122,7 +129,11 @@ class Request extends Request\RequestAbstract implements RequestInterface
         if ('' === $key) {
             return $_GET;
         }
-        return $_GET[$key] ?? $default;
+        $result = $_GET[$key] ?? $default;
+        if ($default) {
+            $result = $this->getDefaultTypeData($result, $default);
+        }
+        return $result;
     }
 
     public function isPost(): bool
@@ -263,5 +274,34 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getUrlBuilder(): Url
     {
         return ObjectManager::getInstance(Url::class);
+    }
+
+    /**
+     * @DESC          # 获取默认值类型的数据
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/10/7 12:12
+     * 参数区：
+     *
+     * @param mixed $data
+     * @param mixed $default
+     *
+     * @return array|bool|int|mixed|string
+     */
+    public function getDefaultTypeData(mixed $data, mixed $default): mixed
+    {
+        if (is_bool($default)) {
+            $data = (bool)$data;
+        } elseif (is_string($default)) {
+            $data = (string)$data;
+        } elseif (is_array($default)) {
+            $data = (array)$data;
+        } elseif (is_int($default) || is_integer($default)) {
+            $data = (int)$data;
+        } elseif (is_float($default) || is_double($default)) {
+            $data = (float)$data;
+        }
+        return $data;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -45,7 +46,8 @@ class Server
      * @DateTime: 30/9/2022 下午2:52
      * 参数区：
      */
-    private function check() {
+    private function check()
+    {
         $this->serverPath();
     }
 
@@ -58,7 +60,8 @@ class Server
      * 参数区：
      * @param $params
      */
-    private function init($params) {
+    private function init($params)
+    {
         // 将传递过来的参数初始化
         $this->params = $params;
         // 创建tcpsocket服务
@@ -75,10 +78,12 @@ class Server
      */
     private function create(): void
     {
-        $this->server = stream_socket_server("tcp://{$this->params['host']}:{$this->params['port']}", $errno,$errstr);
-        if (!$this->server) exit([
-            $errno,$errstr
-        ]);
+        $this->server = stream_socket_server("tcp://{$this->params['host']}:{$this->params['port']}", $errno, $errstr);
+        if (!$this->server) {
+            exit([
+                $errno,$errstr
+            ]);
+        }
     }
 
     /**
@@ -135,7 +140,7 @@ class Server
                 $buf = fread($client, $this->config['max_size']);
                 print_r('接收到的原始数据:'.$buf."\n");
                 // 自定义协议目的是拿到类方法和参数(可改成自己定义的)
-                $this->parseProtocol($buf,$class, $method,$params);
+                $this->parseProtocol($buf, $class, $method, $params);
                 // 执行方法
                 $this->execMethod($client, $class, $method, $params);
                 //关闭客户端
@@ -159,17 +164,17 @@ class Server
      */
     private function execMethod($client, $class, $method, $params): void
     {
-        if($class && $method) {
+        if ($class && $method) {
             // 首字母转为大写
             $class = ucfirst($class);
             $file = $this->params['path'] . '/' . $class . '.php';
             //判断文件是否存在，如果有，则引入文件
-            if(file_exists($file)) {
+            if (file_exists($file)) {
                 require_once $file;
                 //实例化类，并调用客户端指定的方法
                 $obj = new $class();
                 //如果有参数，则传入指定参数
-                if(!$params) {
+                if (!$params) {
                     $data = $obj->$method();
                 } else {
                     $data = $obj->$method($params);

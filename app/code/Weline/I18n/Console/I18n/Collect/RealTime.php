@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -12,7 +13,6 @@ namespace Weline\I18n\Console\I18n\Collect;
 
 class RealTime implements \Weline\Framework\Console\CommandInterface
 {
-
     /**
      * @inheritDoc
      */

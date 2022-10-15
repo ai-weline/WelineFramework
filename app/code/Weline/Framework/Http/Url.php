@@ -20,8 +20,7 @@ class Url implements UrlInterface
 
     public function __construct(
         Request $request
-    )
-    {
+    ) {
         $this->request = $request;
     }
 

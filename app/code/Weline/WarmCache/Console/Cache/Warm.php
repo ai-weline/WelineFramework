@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -8,7 +9,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 
-namespace WarmCache\Console\Cache;
+namespace Weline\WarmCache\Console\Cache;
 
 use GuzzleHttp\Client;
 use Weline\Framework\App\Env;
@@ -31,17 +32,17 @@ class Warm implements CommandInterface
         $frontend_routers = (array)(require Env::path_FRONTEND_PC_ROUTER_FILE);
         $this->printing->warning(__('缓存预热开始...'));
         foreach ($frontend_routers as $frontend_router => $router_data) {
-            $frontend_router = explode('::',$frontend_router);
+            $frontend_router = explode('::', $frontend_router);
             $frontend_url =  array_shift($frontend_router);
             $method = 'get';
-            if($frontend_router){
+            if ($frontend_router) {
                 $method = strtolower(array_shift($frontend_router));
             }
-            $url = 'http://' . Env::getInstance()->getConfig('domain','127.0.0.1') . '/' . $frontend_url;
+            $url = 'http://' . Env::getInstance()->getConfig('domain', '127.0.0.1') . '/' . $frontend_url;
             $this->printing->note($url);
             try {
                 $this->client->$method($url);
-            }catch (\Exception $exception){
+            } catch (\Exception $exception) {
                 $this->printing->warning($exception->getMessage());
             }
         }
