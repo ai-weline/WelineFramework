@@ -13,14 +13,10 @@ namespace Weline\Framework\Database\Connection;
 
 use PDO;
 use PDOStatement;
-use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Connection\Query\QueryTrait;
 use Weline\Framework\Manager\ObjectManager;
-use function DeepCopy\deep_copy;
-
-use function DeepCopy\deep_copy;
 
 abstract class Query implements QueryInterface
 {
@@ -142,11 +138,7 @@ abstract class Query implements QueryInterface
 //        }
         if (is_array($field)) {
             foreach ($field as $f_key => $where_array) {
-<<<<<<< HEAD
-                if (is_string($where_array)) {
-=======
                 if (!is_array($where_array)) {
->>>>>>> dev
                     $value          = $where_array;
                     $where_array    = [];
                     $where_array[0] = $f_key;

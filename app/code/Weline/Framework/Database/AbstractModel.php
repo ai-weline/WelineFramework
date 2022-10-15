@@ -510,26 +510,6 @@ abstract class AbstractModel extends DataObject
                 }
                 # 是否强制检查
                 if ($this->force_check_flag) {
-<<<<<<< HEAD
-                    if ($this->unique_data) {
-                        $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
-                        # 存在更新
-                        if (isset($check_result[$this->_primary_key])) {
-                            $this->setId($check_result[$this->_primary_key]);
-                            $save_result = $this->getQuery()->where($this->unique_data)
-                                                ->update($this->getModelData())
-                                                ->fetch();
-                        } else {
-                            $save_result = $this->getQuery()
-                                                ->insert($this->getModelData(), $this->getModelFields())
-                                                ->fetch();
-                        }
-                    } else {
-                        $save_result = $this->getQuery()
-                                            ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
-                                            ->fetch();
-                    }
-=======
                     $save_result = $this->checkUpdateOrInsert();
 //                    if ($this->unique_data) {
 //                        $save_result = $this->checkUpdateOrInsert();
@@ -538,7 +518,6 @@ abstract class AbstractModel extends DataObject
 //                                            ->insert($this->getModelData(), $this->getModelFields(true, $this->remove_force_check_field))
 //                                            ->fetch();
 //                    }
->>>>>>> dev
                 } else {
                     $save_result = $this->getQuery()
                                         ->where($this->_primary_key, $this->getId())
@@ -549,26 +528,6 @@ abstract class AbstractModel extends DataObject
                 $insert_data = $this->getModelData();
                 # 是否强制检查
                 if ($this->force_check_flag) {
-<<<<<<< HEAD
-                    if ($this->unique_data) {
-                        $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
-                        # 存在更新
-                        if (isset($check_result[$this->_primary_key])) {
-                            $this->setId($check_result[$this->_primary_key]);
-                            $save_result = $this->getQuery()->where($this->unique_data)
-                                                ->update($this->getModelData())
-                                                ->fetch();
-                        } else {
-                            $save_result = $this->getQuery()
-                                                ->insert($this->getModelData(), $this->getModelFields())
-                                                ->fetch();
-                        }
-                    } else {
-                        $save_result = $this->getQuery()
-                                            ->insert($this->getModelData(), $this->getModelFields())
-                                            ->fetch();
-                    }
-=======
                     $save_result = $this->checkUpdateOrInsert();
 //                    if ($this->unique_data) {
 //                        $save_result = $this->checkUpdateOrInsert();
@@ -577,7 +536,6 @@ abstract class AbstractModel extends DataObject
 //                                            ->insert($this->getModelData(), $this->getModelFields())
 //                                            ->fetch();
 //                    }
->>>>>>> dev
                 } else {
                     unset($insert_data[$this->_primary_key]);
                     $save_result = $this->getQuery()->insert($insert_data)->fetch();
@@ -690,13 +648,8 @@ abstract class AbstractModel extends DataObject
 
     public function clearData(): static
     {
-<<<<<<< HEAD
-        $this->items = [];
-        $this->_fields = [];
-=======
         $this->items       = [];
         $this->_fields     = [];
->>>>>>> dev
         $this->_bind_query = null;
         $this->clearDataObject();
         $this->setFetchData([]);
@@ -1231,19 +1184,12 @@ abstract class AbstractModel extends DataObject
             return $data;
         }
         /**@var Url $url_builder */
-<<<<<<< HEAD
-        $url_builder    = ObjectManager::getInstance(Url::class);
-        $currentUrl     = $request->isBackend() ? $url_builder->getBackendUrl($url_path) : $url_builder->getUrl($url_path);
-        $currentUrlPath = substr($currentUrl, 0, strpos($currentUrl, '?'));
-
-=======
         $url_builder = ObjectManager::getInstance(Url::class);
         $params      = $this->pagination['params'];
         unset($params['page']);
         unset($params['pageSize']);
         $query_flag  = $params ? '&' : '?';
         $queryUrl    = $request->isBackend() ? $url_builder->getBackendUrl($url_path, $params) : $url_builder->getUrl($url_path, $params);
->>>>>>> dev
         $prePageName = __('上一页');
         unset($params);
         $prePageClassStatus = $hasPrePage ? '' : 'disabled';
@@ -1305,14 +1251,10 @@ PAGELISTHTML;
         $total_page               = __('一共 %1 页', $lastPage);
         $please_input_page_number = __('请输入页码');
         $turn_to_page             = __('跳转页');
-<<<<<<< HEAD
-        $form_url                 = "{$currentUrlPath}?page=&pageSize={$this->pagination['pageSize']}";
-=======
         $params['page']           = '';
         $params['pageSize']       = $this->pagination['pageSize'];
         $query                    = http_build_query($params);
         $form_url                 = $queryUrl . $query_flag . $query;
->>>>>>> dev
         $this->pagination['html'] = <<<PAGINATION
 <nav aria-label='...'>
                             <ul class='pagination {$pagination_style}'>
