@@ -10,6 +10,7 @@
 namespace Weline\Framework\Module\Console\Module;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\App\System;
 use Weline\Framework\Console\CommandAbstract;
 use Weline\Framework\Event\EventsManager;
@@ -40,11 +41,12 @@ class Upgrade extends CommandAbstract
         AppScanner $scanner,
         Data       $data,
         System     $system
-    ) {
+    )
+    {
         $this->printer = $printer;
-        $this->system = $system;
+        $this->system  = $system;
         $this->scanner = $scanner;
-        $this->data = $data;
+        $this->data    = $data;
     }
 
     /**
@@ -60,6 +62,8 @@ class Upgrade extends CommandAbstract
      * @param array $args
      *
      * @return mixed|void
+     * @throws \ReflectionException
+     * @throws Exception
      */
     public function execute(array $args = [])
     {
@@ -80,13 +84,23 @@ class Upgrade extends CommandAbstract
         $this->printer->warning($i . '、generated生成目录代码code清理...', '系统');
         $this->system->exec('rm -rf ' . Env::path_framework_generated_code);
         $i += 1;
+        // 扫描代码
+        $this->printer->note($i . '、清理模板缓存', '系统');
+        $modules = Env::getInstance()->getModuleList();
+        foreach ($modules as $module) {
+            $tpl_dir = $module['base_path'] . DS . 'view' . DS . 'tpl';
+            if (is_dir($tpl_dir)) {
+                $this->system->exec("rm -rf {$tpl_dir}");
+            }
+        }
+        $i += 1;
         $this->printer->note($i . '、收集模块信息', '系统');
         # 加载module中的助手函数
-        $modules        = Env::getInstance()->getActiveModules();
+        $modules                = Env::getInstance()->getActiveModules();
         $function_files_content = '';
         foreach ($modules as $module) {
-            $global_file_pattern = $module['base_path'] .'Global'.DS.'*.php';
-            $global_files = glob($global_file_pattern);
+            $global_file_pattern = $module['base_path'] . 'Global' . DS . '*.php';
+            $global_files        = glob($global_file_pattern);
             foreach ($global_files as $global_file) {
                 # 读取文件内容 去除注释以及每个文件末尾的 '\?\>'结束符
                 $function_files_content .= str_replace('?>', '', file_get_contents($global_file)) . PHP_EOL;
@@ -114,7 +128,7 @@ class Upgrade extends CommandAbstract
         // 扫描代码
         list($vendor, $dependencies) = $this->scanner->scanAppModules();
         foreach ($dependencies as $module_name => $module) {
-            $register = $module['register']??"";
+            $register = $module['register'] ?? '';
             if (is_file($register)) {
                 require $register;
             }
