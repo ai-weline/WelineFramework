@@ -20,7 +20,8 @@ class System
      * 参数区：
      *
      * @param string $linux_command
-     * @param bool $preview
+     * @param bool   $preview
+     *
      * @return array
      */
     public function exec(string $linux_command, bool $preview = false): array|string
@@ -60,7 +61,7 @@ class System
 
         exec($linux_command, $output, $return_var);
 
-        return [$output, $return_var];
+        return ['command' => $linux_command, 'output' => $output, 'return_vars' => $return_var];
     }
 
     public function input()
@@ -69,7 +70,7 @@ class System
         if (IS_WIN) {
             $input = fread(STDIN, 1024);
         } else {
-            $fp = fopen('/dev/stdin', 'r');
+            $fp    = fopen('/dev/stdin', 'r');
             $input = fgets($fp, 1024);
             fclose($fp);
         }
