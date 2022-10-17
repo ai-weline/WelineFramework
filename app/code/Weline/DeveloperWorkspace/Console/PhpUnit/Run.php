@@ -125,17 +125,13 @@ class Run implements \Weline\Framework\Console\CommandInterface
         <server name="TELESCOPE_ENABLED" value="false"/>
     </php>-->
      <logging>
-        <!--覆盖率报告生成类型和输出目录 lowUpperBound低覆盖率阈值 highLowerBound高覆盖率阈值-->
-        <testdoxHtml outputFile="' . $php_unit_report_path . '/log.html"/>
+        <junit outputFile="' . $php_unit_report_path . '/junit.xml"/>
+        <teamcity outputFile="' . $php_unit_report_path . '/teamcity.txt"/>
+        <testdoxHtml outputFile="' . $php_unit_report_path . '/testdox.html"/>
+        <testdoxText outputFile="' . $php_unit_report_path . '/testdox.txt"/>
+        <testdoxXml outputFile="' . $php_unit_report_path . '/testdox.xml"/>
+        <text outputFile="' . $php_unit_report_path . '/logfile.txt"/>
      </logging>
-     <!--<logging>
-        <junit outputFile="junit.xml"/>
-        <teamcity outputFile="teamcity.txt"/>
-        <testdoxHtml outputFile="testdox.html"/>
-        <testdoxText outputFile="testdox.txt"/>
-        <testdoxXml outputFile="testdox.xml"/>
-        <text outputFile="logfile.txt"/>
-     </logging>-->
 </phpunit>
 ';
         file_put_contents($php_unit_config_path, $php_unit_xml);
@@ -147,6 +143,7 @@ class Run implements \Weline\Framework\Console\CommandInterface
         if ($command['return_vars']) {
             $this->printing->success((string)$command['return_vars']);
         }
+        $this->system->exec("php -S localhost:8080 -t $php_unit_report_path");
     }
 
     /**
