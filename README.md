@@ -102,6 +102,8 @@ composer create-project aiweline/weline-framework WelineFramework --prefer-dist
     
     
 #### 更新说明
+# 1.0.2
+1、新增自动化测试命令。
 
 # 1.0.1
 ```markdown
@@ -129,9 +131,6 @@ composer create-project aiweline/weline-framework WelineFramework --prefer-dist
 22. 新增工厂类模式
 ```
 #### 参与贡献
-
-(个人已经开发两年了，我只是想把PHP性能和优雅不能共存的问题解决，框架使用上内存缓存后理论上性能接近协程框架)如果你和我一样喜欢自由代码，可联系参与！ Oh~~
-
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
 3.  提交代码
