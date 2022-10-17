@@ -26,11 +26,11 @@ class I18nTest extends TestCore
 
     public function testGetLocals()
     {
-        p($this->i18n->getLocals());
+        assert(!is_array($this->i18n->getLocals()), __('Weline_I18n:语言包Locals读取'));
     }
 
     public function testGetLocalWords()
     {
-        p($this->i18n->getLocalsWords());
+        assert(!is_array($this->i18n->getLocalsWords()), __('Weline_I18n:语言包Locals翻译词典读取'));
     }
 }

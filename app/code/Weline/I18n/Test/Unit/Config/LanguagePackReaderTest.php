@@ -19,8 +19,8 @@ class LanguagePackReaderTest extends TestCore
 {
     public function testGetLanguagePack()
     {
-        /**@var LanguagePackReader $langReader*/
+        /**@var LanguagePackReader $langReader */
         $langReader = ObjectManager::getInstance(LanguagePackReader::class);
-        p($langReader->getLanguagePack());
+        assert(is_array($langReader), __('Weline_I18n:语言包读取'));
     }
 }
