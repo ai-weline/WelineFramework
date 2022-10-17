@@ -15,12 +15,14 @@ use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 use Weline\I18n\Config\LanguagePackReader;
 
+use function PHPUnit\Framework\assertIsArray;
+
 class LanguagePackReaderTest extends TestCore
 {
     public function testGetLanguagePack()
     {
         /**@var LanguagePackReader $langReader */
         $langReader = ObjectManager::getInstance(LanguagePackReader::class);
-        assert(is_array($langReader), __('Weline_I18n:语言包读取'));
+        assertIsArray($langReader->getLanguagePack(), __('Weline_I18n:语言包读取'));
     }
 }

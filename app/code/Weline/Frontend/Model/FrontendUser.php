@@ -11,10 +11,13 @@ declare(strict_types=1);
 
 namespace Weline\Frontend\Model;
 
+use Weline\Backend\Model\Config;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Database\Db\Ddl\Table;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
+use Weline\Framework\View\Template;
 
 class FrontendUser extends \Weline\Framework\Database\Model
 {

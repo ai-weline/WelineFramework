@@ -12,6 +12,8 @@ declare(strict_types=1);
 namespace Weline\Frontend\Model\Html;
 
 use Weline\Backend\Model\Config;
+use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Session\Session;
 use Weline\Framework\View\Data\HtmlInterface;
 
 class Header implements HtmlInterface

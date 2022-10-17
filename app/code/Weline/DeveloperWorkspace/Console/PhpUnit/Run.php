@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -14,16 +15,36 @@ namespace Weline\DeveloperWorkspace\Console\PhpUnit;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\App\System;
+use Weline\Framework\Output\Cli\Printing;
 
 class Run implements \Weline\Framework\Console\CommandInterface
 {
+    private System $system;
+    private Printing $printing;
+
+    public function __construct(
+        System   $system,
+        Printing $printing
+    ) {
+        $this->system   = $system;
+        $this->printing = $printing;
+    }
 
     /**
      * @inheritDoc
      */
     public function execute(array $args = [])
     {
-        $php_unit_xml_path = BP . 'phpunit.xml';
+        $php_unit_path = DEV_PATH . 'phpunit' . DS;
+        if (!is_dir($php_unit_path)) {
+            mkdir($php_unit_path, 755, true);
+        }
+        $php_unit_report_path = $php_unit_path . 'report';
+        if (!is_dir($php_unit_report_path)) {
+            mkdir($php_unit_report_path, 755, true);
+        }
+        $php_unit_config_path = $php_unit_path . 'config.xml';
         # 先把所有模组的test文件目录写到phpunit.xml【避免全目录扫描提升测试速度】
         $modules      = Env::getInstance()->getActiveModules();
         $php_unit_xml = '<?xml version=\'1.0\' encoding=\'UTF-8\'?>
@@ -31,7 +52,7 @@ class Run implements \Weline\Framework\Console\CommandInterface
          xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/6.2/phpunit.xsd"
          backupGlobals="false"
          backupStaticAttributes="false"
-         bootstrap="tests/bootstrap.php"
+         bootstrap="../../app/bootstrap.php"
          colors="true"
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
@@ -42,22 +63,26 @@ class Run implements \Weline\Framework\Console\CommandInterface
     <testsuites>';
 
         foreach ($modules as $module) {
-            $test_path      = $module['base_path'] . 'test';
-            $testsuite_path = $module['base_path'] . 'test' . DS . 'testsuite.xml';
-            $testsuites     = '';
-            if (is_file($testsuite_path)) {
-                $xml = simplexml_load_file($testsuite_path);
-                foreach ($xml->children() as $testsuite) {
-                    $testsuite = get_object_vars($testsuite);
-                    if (!isset($testsuite['@attributes']['name'])) {
-                        throw new Exception(__('testsuite套件配置错误,未配置套件名：%1 ，示例：<testsuite name="unit">
-        <file>TestCache.php</file>
+            $test_path      = $module['base_path'] . 'test' . DS;
+            $testsuite_path = $test_path . 'testsuite.xml';
+            if (is_dir($test_path)) {
+                $testsuites = '';
+                if (is_file($testsuite_path)) {
+                    $xml = simplexml_load_file($testsuite_path);
+                    foreach ($xml->children() as $testsuite) {
+                        $testsuite = get_object_vars($testsuite);
+                        if (!isset($testsuite['@attributes']['name'])) {
+                            throw new Exception(__('testsuite套件配置错误,未配置套件名：%1 ，示例：<testsuite name="unit">
+        <file>CacheTest.php</file>
     </testsuite>', $testsuite_path));
-                    }
-                    $suite_name = $testsuite['@attributes']['name'] ?? $module['name'];
-                    unset($testsuite['@attributes']);
-                    foreach ($testsuite as $key => $testsuite_data) {
-                        $testsuites .= "
+                        }
+                        $suite_name = $testsuite['@attributes']['name'] ?? $module['name'];
+                        unset($testsuite['@attributes']);
+                        foreach ($testsuite as $key => $testsuite_data) {
+                            if (($key === 'file' or $key === 'directory') and !str_starts_with(BP, $testsuite_data)) {
+                                $testsuite_data = $test_path . $testsuite_data;
+                            }
+                            $testsuites .= "
         <testsuite name='unit'>
             <{$key}>{$testsuite_data}</{$key}>
         </testsuite>
@@ -65,10 +90,10 @@ class Run implements \Weline\Framework\Console\CommandInterface
             <{$key}>{$testsuite_data}</{$key}>
         </testsuite>
                         ";
+                        }
                     }
-                }
-            } else {
-                $testsuites .= "
+                } else {
+                    $testsuites .= "
         <testsuite name='unit'>
             <directory suffix=\"Test.php\">$test_path</directory>
         </testsuite>
@@ -76,15 +101,52 @@ class Run implements \Weline\Framework\Console\CommandInterface
             <directory suffix=\"Test.php\">$test_path</directory>
         </testsuite>
                         ";
-            }
-            $php_unit_xml .= "
+                }
+                $php_unit_xml .= "
             $testsuites
             ";
+            }
         }
-        $php_unit_xml .= '    </testsuites>
-</phpunit>';
-        file_put_contents( $php_unit_xml_path, $php_unit_xml);
-        // TODO 使用xml文件测试
+        $php_unit_xml .= '</testsuites>
+<coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">../../app</directory>
+        </include>
+    </coverage>
+    <!--<php>
+        <server name="APP_ENV" value="testing"/>
+        <server name="BCRYPT_ROUNDS" value="4"/>
+        <server name="CACHE_DRIVER" value="array"/>
+        <server name="DB_CONNECTION" value="sqlite"/>
+        <server name="DB_DATABASE" value=":memory:"/>
+        <server name="MAIL_MAILER" value="array"/>
+        <server name="QUEUE_CONNECTION" value="sync"/>
+        <server name="SESSION_DRIVER" value="file"/>
+        <server name="TELESCOPE_ENABLED" value="false"/>
+    </php>-->
+     <logging>
+        <!--覆盖率报告生成类型和输出目录 lowUpperBound低覆盖率阈值 highLowerBound高覆盖率阈值-->
+        <testdoxHtml outputFile="' . $php_unit_report_path . '/log.html"/>
+     </logging>
+     <!--<logging>
+        <junit outputFile="junit.xml"/>
+        <teamcity outputFile="teamcity.txt"/>
+        <testdoxHtml outputFile="testdox.html"/>
+        <testdoxText outputFile="testdox.txt"/>
+        <testdoxXml outputFile="testdox.xml"/>
+        <text outputFile="logfile.txt"/>
+     </logging>-->
+</phpunit>
+';
+        file_put_contents($php_unit_config_path, $php_unit_xml);
+        $text_suite_name = $args[1] ?? 'unit';
+        $this->printing->note(__('正在测试套件: %1', $text_suite_name));
+        $command = $this->system->exec("phpunit --configuration $php_unit_config_path", false);
+        $this->printing->success($command['command']);
+        $this->printing->success(implode("\r\n", $command['output']));
+        if ($command['return_vars']) {
+            $this->printing->success((string)$command['return_vars']);
+        }
     }
 
     /**

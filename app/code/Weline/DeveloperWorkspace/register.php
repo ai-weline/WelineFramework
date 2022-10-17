@@ -14,5 +14,5 @@ Register::register(
     'Weline_DeveloperWorkspace',
     __DIR__,
     '1.0.0',
-    '系统开发文档'
+    '系统开发空间'
 );

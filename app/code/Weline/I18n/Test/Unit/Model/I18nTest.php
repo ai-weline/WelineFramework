@@ -15,6 +15,8 @@ use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 use Weline\I18n\Model\I18n;
 
+use function PHPUnit\Framework\assertIsArray;
+
 class I18nTest extends TestCore
 {
     private I18n $i18n;
@@ -26,11 +28,11 @@ class I18nTest extends TestCore
 
     public function testGetLocals()
     {
-        assert(!is_array($this->i18n->getLocals()), __('Weline_I18n:语言包Locals读取'));
+        assertIsArray($this->i18n->getLocals(), __('Weline_I18n:语言包Locals读取'));
     }
 
     public function testGetLocalWords()
     {
-        assert(!is_array($this->i18n->getLocalsWords()), __('Weline_I18n:语言包Locals翻译词典读取'));
+        assertIsArray($this->i18n->getLocalsWords(), __('Weline_I18n:语言包Locals翻译词典读取'));
     }
 }

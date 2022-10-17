@@ -14,6 +14,9 @@ use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\UnitTest\TestCore;
 use Weline\Theme\Model\WelineTheme;
 
+use function PHPUnit\Framework\assertIsArray;
+use function PHPUnit\Framework\assertIsObject;
+
 class ThemeTest extends TestCore
 {
     /**
@@ -29,8 +32,9 @@ class ThemeTest extends TestCore
     public function testGetMode()
     {
 //        $theme       = $this->theme->load(1);
-        p($this->theme->getActiveTheme());
-        $save_result = $this->theme->setData(Env::default_theme_DATA)->save();
-        p($save_result);
+        assertIsObject($this->theme->getActiveTheme(), __('Weline_Theme:主题模型获取默认主题。'));
+//        p($this->theme->getActiveTheme());
+//        $save_result = $this->theme->setData(Env::default_theme_DATA)->save();
+//        p($save_result);
     }
 }
