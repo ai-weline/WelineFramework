@@ -96,6 +96,10 @@ class App
         if (is_file(APP_CODE_PATH . 'config.php')) {
             require APP_CODE_PATH . 'config.php';
         }
+        // 开发 目录
+        if (!defined('DEV_PATH')) {
+            define('DEV_PATH', BP . 'dev' . DS);
+        }
         // 主题 目录
         if (!defined('APP_DESIGN_PATH')) {
             define('APP_DESIGN_PATH', APP_CODE_PATH . 'design' . DS);
