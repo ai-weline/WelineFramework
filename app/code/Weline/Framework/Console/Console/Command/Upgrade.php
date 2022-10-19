@@ -85,7 +85,9 @@ class Upgrade extends CommandAbstract
         // 删除命令文件
         if (is_file(Env::path_COMMANDS_FILE)) {
             list($out, $var) = $this->system->exec('rm ' . Env::path_COMMANDS_FILE);
-            $this->printer->printList($out);
+            if ($out) {
+                $this->printer->printList($out);
+            }
         }
 
         $commands = $this->scan();

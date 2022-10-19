@@ -360,17 +360,13 @@ abstract class AbstractModel extends DataObject
         # 如果绑定了查询
         if ($this->_bind_query) {
             if (!$keep_condition) {
-                $this->_bind_query->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
-            } else {
-                $this->_bind_query->table($this->getOriginTableName())->identity($this->_primary_key);
+                $this->_bind_query->clearQuery();
             }
             return $this->_bind_query;
         }
         if ($this->current_query) {
             if (!$keep_condition) {
-                $this->current_query->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
-            } else {
-                $this->current_query->table($this->getOriginTableName())->identity($this->_primary_key);
+                $this->current_query->clearQuery();
             }
             return $this->current_query;
         }

@@ -24,7 +24,7 @@ class Encrypt
      * @param $salt
      * @return string
      */
-    public static function md5_salt($password, $salt): string
+    public static function md5_salt(string $password, string $salt): string
     {
         $str1 = mb_substr($password, 0, 5);
         $str2 = mb_substr($salt, 0, 2);
