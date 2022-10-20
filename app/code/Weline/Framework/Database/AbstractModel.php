@@ -642,14 +642,23 @@ abstract class AbstractModel extends DataObject
     {
     }
 
-    public function clearData(): static
+    public function clearData(bool $with_query = false): static
     {
-        $this->items       = [];
-        $this->_fields     = [];
-        $this->_bind_query = null;
-        $this->clearQuery();
+        $this->items   = [];
+        $this->_fields = [];
+        if ($with_query) {
+            $this->_bind_query = null;
+            $this->clearQuery();
+        }
+        $this->_model_fields_data = [];
         $this->clearDataObject();
         $this->setFetchData([]);
+        return $this;
+    }
+    public function recovery(): static
+    {
+        $this->clearData();
+        $this->setQuery($this->getQuery()->table($this->getOriginTableName())->identity($this->_primary_key));
         return $this;
     }
 

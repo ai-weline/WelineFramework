@@ -36,13 +36,11 @@ trait QueryTrait
         '=',
     ];
     public ConnectionFactory $connection;
-    public CacheInterface $cache;
     public string $db_name = 'default';
 
     public function __construct(ConnectionFactory $connection)
     {
         $this->connection = $connection;
-        $this->cache = ObjectManager::getInstance(DbCache::class)->create();
         $this->db_name = $this->connection->getConfigProvider()->getDatabase();
     }
 
