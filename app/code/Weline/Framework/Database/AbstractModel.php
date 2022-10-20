@@ -362,17 +362,35 @@ abstract class AbstractModel extends DataObject
             if (!$keep_condition) {
                 $this->_bind_query->clearQuery();
             }
-            return $this->_bind_query;
+            return $this->_bind_query->table($this->getOriginTableName())->identity($this->_primary_key);
         }
         if ($this->current_query) {
             if (!$keep_condition) {
                 $this->current_query->clearQuery();
             }
-            return $this->current_query;
+            return $this->current_query->table($this->getOriginTableName())->identity($this->_primary_key);
         }
         # 区分是否保持查询
         $this->current_query = $this->getConnection()->getQuery()->clearQuery()->table($this->getOriginTableName())->identity($this->_primary_key);
         return $this->current_query;
+    }
+
+    /**
+     * @DESC         |获取新的查询构建器 基础表和主键默认为模型表和模型主键 可控制是否全新查询器
+     *
+     * 参数区：
+     *
+     * @param bool $really_new
+     *
+     * @return QueryInterface
+     */
+    public function newQuery(bool $really_new = true): QueryInterface
+    {
+        $query = $this->getConnection()->getQuery()->clearQuery();
+        if ($really_new) {
+            $query->table($this->getOriginTableName())->identity($this->_primary_key);
+        }
+        return $query;
     }
 
     /**
@@ -655,6 +673,7 @@ abstract class AbstractModel extends DataObject
         $this->setFetchData([]);
         return $this;
     }
+
     public function recovery(): static
     {
         $this->clearData();

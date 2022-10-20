@@ -136,8 +136,6 @@ class ConnectionFactory
      * @DateTime: 2021/8/18 21:07
      * 参数区：
      * @return QueryInterface
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\App\Exception
      */
     public function getQuery(): QueryInterface
     {

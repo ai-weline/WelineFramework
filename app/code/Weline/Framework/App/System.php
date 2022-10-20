@@ -22,7 +22,8 @@ class System
      * @param string $linux_command
      * @param bool   $preview
      *
-     * @return array
+     * @return array|string
+     * @throws \Weline\Framework\App\Exception
      */
     public function exec(string $linux_command, bool $preview = false): array|string
     {
@@ -52,7 +53,7 @@ class System
             }
         }
         if ($preview) {
-            return $linux_command;
+            return ['command' => $linux_command, 'output' => '', 'return_vars' => ''];
         }
         # 检测函数是否解禁
         if (!function_exists('exec')) {
