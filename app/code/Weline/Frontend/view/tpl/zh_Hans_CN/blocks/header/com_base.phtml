@@ -13,7 +13,7 @@ $theme_path                         = \Weline\Framework\App\Env::getInstance()->
 $env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{path}' : '/static/' . $theme_path . '/{module}/view/statics/{path}');
 ?>
 <!--加载require常用js模块-->
-<!--<script src='/Weline/Frontend/view/statics/base/require.configs.js?v=12194'></script>-->
+<!--<script src='/Weline/Frontend/view/statics/base/require.configs.js?v=44599'></script>-->
 <script>
     window.site = {
         host: '<?=$host ??'';?>',
@@ -31,6 +31,9 @@ $env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{pa
     }
     window.path = (path) => {
         path = path.replace('*', '<?=$base_router ??'';?>')
+        if (path.indexOf('//') === 0) {
+            path = path.slice(2)
+        }
         if (path.indexOf('/') === 0) {
             path = path.slice(1)
         }

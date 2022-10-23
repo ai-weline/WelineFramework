@@ -24,7 +24,7 @@ class Start extends Server implements \Weline\Framework\Console\CommandInterface
     {
         Server::instance([
             'host'  => '127.0.0.1',
-            'port'  => 8888,
+            'port'  => 8989,
             'path'  => './api'
         ])->run();
     }

@@ -137,8 +137,8 @@ class Upgrade extends CommandAbstract
 
         // 清理其他
         $this->printer->note($i . '、清理缓存...');
-        /**@var $cacheManagerConsole \Weline\CacheManager\Console\Cache\Clear */
-        $cacheManagerConsole = ObjectManager::getInstance(\Weline\CacheManager\Console\Cache\Clear::class);
+        /**@var $cacheManagerConsole \Weline\CacheManager\Console\Cache\Flush */
+        $cacheManagerConsole = ObjectManager::getInstance(\Weline\CacheManager\Console\Cache\Flush::class);
         $cacheManagerConsole->execute();
 
         /**@var EventsManager $eventsManager */

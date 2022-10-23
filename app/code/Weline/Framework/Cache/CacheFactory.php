@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Cache;
 
+use JetBrains\PhpStorm\NoReturn;
 use Weline\Framework\App;
 use Weline\Framework\App\Env;
 use Weline\Framework\Manager\ObjectManager;
@@ -69,18 +70,19 @@ class CacheFactory implements CacheFactoryInterface
      *
      * @return CacheInterface
      */
-    public function create(string $driver = '', string $tip = null): CacheInterface
+    #[NoReturn] public function create(string $driver = '', string $tip = null): CacheInterface
     {
+        $driver = strtolower($driver);
         if (empty($driver) && isset($this->config['default'])) {
             $driver = $this->config['default'];
         }
-        if (class_exists($driver)) {
-            $driver_class = $driver;
-        } else {
+        if (class_exists(self::driver_NAMESPACE . ucfirst($driver))) {
             $driver_class = self::driver_NAMESPACE . ucfirst($driver);
+        } else {
+            $driver_class = $driver;
         }
         $status       = (bool)Env::getInstance()->getData('cache/status/' . $this->identity);
-        $this->driver = new $driver_class($this->identity, $this->config['drivers'][$driver], $tip ?: $this->tip, $status ?: $this->status);
+        $this->driver = new $driver_class($this->identity, $this->config['drivers'][strtolower($driver)], $tip ?: $this->tip, $status ?: $this->status);
         return $this->driver;
     }
 
