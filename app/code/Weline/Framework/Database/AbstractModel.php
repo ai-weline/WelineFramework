@@ -1152,13 +1152,16 @@ abstract class AbstractModel extends DataObject
      * @throws \ReflectionException
      *
      */
-    public function pagination(int $page = 0, int $pageSize = 0, array $params = []): AbstractModel|static
+    public function pagination(int $page = 0, int $pageSize = 0, array $params = [], int $max_limit = 1000): AbstractModel|static
     {
+        if ($pageSize > $max_limit) {
+            throw new Exception(__('分页超过每页限制大小！限制每页大小：%1', $max_limit));
+        }
         if (empty($page)) {
             $page = ObjectManager::getInstance(Request::class)->getGet('page', 1) ?: 1;
         }
         if (empty($pageSize)) {
-            $pageSize = ObjectManager::getInstance(Request::class)->getGet('pageSize', 20) ?: 20;
+            $pageSize = ObjectManager::getInstance(Request::class)->getGet('pageSize', 10) ?: 10;
         }
         if (empty($params)) {
             $params = ObjectManager::getInstance(Request::class)->getGet();
