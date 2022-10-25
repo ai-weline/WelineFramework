@@ -36,8 +36,6 @@ class State
 
     public function getStateCode()
     {
-        p($this->request->getModuleName());
-
         return $this->request->getAreaRouter();
     }
 }

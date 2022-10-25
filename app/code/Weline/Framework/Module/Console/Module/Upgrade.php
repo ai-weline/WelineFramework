@@ -140,6 +140,7 @@ class Upgrade extends CommandAbstract
         /**@var $cacheManagerConsole \Weline\CacheManager\Console\Cache\Flush */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\CacheManager\Console\Cache\Flush::class);
         $cacheManagerConsole->execute();
+        $this->system->exec('rm -rf ' . BP . 'var' . DS . 'cache');
 
         /**@var EventsManager $eventsManager */
         $eventsManager = ObjectManager::getInstance(EventsManager::class);

@@ -2150,7 +2150,7 @@ var requirejs, require, define, xpcUtil;
                 node.setAttribute('data-requirecontext', context.contextName);
                 node.setAttribute('data-requiremodule', moduleName);
 
-                //Set up load listener. Test attachEvent first because IE9 has
+                //Set up load listener. test attachEvent first because IE9 has
                 //a subtle issue in its addEventListener and script onload firings
                 //that do not match the behavior of all other browsers with
                 //addEventListener support, which fire the onload event for a

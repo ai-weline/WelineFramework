@@ -16,7 +16,9 @@ namespace Weline\DeveloperWorkspace\Console\PhpUnit;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\App\System;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Cli\Printing;
+use Weline\Framework\System\File\Scan;
 
 class Run implements \Weline\Framework\Console\CommandInterface
 {
@@ -95,9 +97,62 @@ class Run implements \Weline\Framework\Console\CommandInterface
                 } else {
                     $testsuites .= "
         <testsuite name='unit'>
-            <directory suffix=\"Test.php\">$test_path</directory>
+            <directory suffix=\"test.php\">$test_path</directory>
         </testsuite>
         <testsuite name='{$module['name']}'>
+            <directory suffix=\"test.php\">$test_path</directory>
+        </testsuite>
+                        ";
+                }
+                $php_unit_xml .= "
+            $testsuites
+            ";
+            }
+        }
+        $code_framework_modules   = glob(APP_CODE_PATH . 'Weline' . DS . 'Framework' . DS . '*' . DS . 'test', GLOB_ONLYDIR);
+        $vendor_framework_modules = glob(VENDOR_PATH . 'weline' . DS . 'framework' . DS . '*' . DS . 'test', GLOB_ONLYDIR);
+        $framework_modules        = array_merge($vendor_framework_modules, $code_framework_modules);
+        foreach ($framework_modules as $test_path) {
+            $testsuite_path = $test_path . 'testsuite.xml';
+            if (is_dir($test_path)) {
+                $testsuites = '';
+                if (is_file($testsuite_path)) {
+                    $xml = simplexml_load_file($testsuite_path);
+                    foreach ($xml->children() as $testsuite) {
+                        $testsuite = get_object_vars($testsuite);
+                        if (!isset($testsuite['@attributes']['name'])) {
+                            throw new Exception(__('testsuite套件配置错误,未配置套件名：%1 ，示例：<testsuite name="unit">
+        <file>CacheTest.php</file>
+    </testsuite>', $testsuite_path));
+                        }
+                        $suite_name = $testsuite['@attributes']['name'] ?? $module['name'];
+                        unset($testsuite['@attributes']);
+                        foreach ($testsuite as $key => $testsuite_data) {
+                            if (($key === 'file' or $key === 'directory') and !str_starts_with(BP, $testsuite_data)) {
+                                $testsuite_data = $test_path . $testsuite_data;
+                            }
+                            $testsuites .= "
+        <testsuite name='framework'>
+            <{$key}>{$testsuite_data}</{$key}>
+        </testsuite>
+        <testsuite name='unit'>
+            <{$key}>{$testsuite_data}</{$key}>
+        </testsuite>
+        <testsuite name='$suite_name'>
+            <{$key}>{$testsuite_data}</{$key}>
+        </testsuite>
+                        ";
+                        }
+                    }
+                } else {
+                    $testsuites .= "
+        <testsuite name='framework'>
+            <directory suffix=\"Test.php\">$test_path</directory>
+        </testsuite>
+        <testsuite name='unit'>
+            <directory suffix=\"Test.php\">$test_path</directory>
+        </testsuite>
+        <testsuite name='Weline_Framework'>
             <directory suffix=\"Test.php\">$test_path</directory>
         </testsuite>
                         ";
@@ -127,7 +182,7 @@ class Run implements \Weline\Framework\Console\CommandInterface
      <logging>
         <junit outputFile="' . $php_unit_report_path . '/junit.xml"/>
         <teamcity outputFile="' . $php_unit_report_path . '/teamcity.txt"/>
-        <testdoxHtml outputFile="' . $php_unit_report_path . '/testdox.html"/>
+        <testdoxHtml outputFile="' . $php_unit_report_path . '/index.html"/>
         <testdoxText outputFile="' . $php_unit_report_path . '/testdox.txt"/>
         <testdoxXml outputFile="' . $php_unit_report_path . '/testdox.xml"/>
         <text outputFile="' . $php_unit_report_path . '/logfile.txt"/>

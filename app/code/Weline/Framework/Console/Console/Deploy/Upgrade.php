@@ -50,7 +50,6 @@ class Upgrade extends CommandAbstract
                 if (IS_WIN) {
                     $module_view_dir .= DataInterface::dir_type_STATICS . DS;
                 }
-                # FIXME 兼容composer下模块的静态文件
                 $origin_view_dir = $module_view_static_dir;
                 if (is_dir($origin_view_dir)) {
                     $this->printer->note($vendor . '_' . $name . '...');

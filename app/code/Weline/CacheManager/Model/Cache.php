@@ -40,7 +40,6 @@ class Cache extends \Weline\Framework\Database\Model
      */
     public function upgrade(ModelSetup $setup, Context $context): void
     {
-        // TODO: Implement upgrade() method.
     }
 
     /**

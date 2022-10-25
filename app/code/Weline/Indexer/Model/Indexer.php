@@ -37,7 +37,6 @@ class Indexer extends Model
 
     public function upgrade(ModelSetup $setup, Context $context): void
     {
-        // TODO: Implement upgrade() method.
     }
 
     public function install(ModelSetup $setup, Context $context): void

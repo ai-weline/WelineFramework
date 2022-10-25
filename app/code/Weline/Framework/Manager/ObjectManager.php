@@ -88,6 +88,8 @@ class ObjectManager implements ManagerInterface
      * @param bool   $cache     是否缓存
      *
      * @return mixed
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true, bool $cache = false): mixed
     {
@@ -353,6 +355,42 @@ class ObjectManager implements ManagerInterface
         }
         return self::initClassInstance($class, $instance);
     }
+    /**
+     * @Desc         | 创建实例并运行
+     * @param        $class
+     * @param string $method
+     * @param array  $params
+     *
+     * @return mixed
+     * @throws \ReflectionException
+     * @throws Exception
+     */
+    public static function makeWithoutFactory($class, array $params = [], string $method = '__construct'): mixed
+    {
+        // 拦截器处理
+        if ('__construct' === $method) {
+            $instance      = (new ReflectionClass($class));
+            $method_params = self::getMethodParams($instance, $method);
+            foreach ($method_params as $key => $method_param) {
+                if (empty($method_param)) {
+                    unset($method_params[$key]);
+                }
+            }
+            $method_params = array_merge($method_params, $params);
+            $instance      = $instance->newInstanceArgs($method_params);
+            if (method_exists($instance, '__init')) {
+                $instance->__init();
+            }
+        } else {
+            $instance = new ReflectionClass($class);
+            if (method_exists($instance, '__init')) {
+                $instance->__init();
+            }
+            $paramArr = self::getMethodParams($instance, $method);
+            $instance = $instance->{$method}(...array_merge($paramArr, $params));
+        }
+        return $instance;
+    }
 
     /**
      * @Desc         | 获取方法参数,插件实现
@@ -389,7 +427,6 @@ class ObjectManager implements ManagerInterface
                 throw new Exception(__('无法获得对象方法：%1，错误：%2', [$methodsName, $e->getMessage()]), $e);
             }
             // 判断构造函数是否有参数
-            // TODO 完成自动注入在 PHP 8.1环境下的问题
             $params = $construct->getParameters();
             if (count($params) > 0) {
                 // 判断参数类型

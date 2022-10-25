@@ -121,7 +121,6 @@ class Handle implements HandleInterface, RegisterInterface
         $module_path = $this->modules[$module]['base_path'] . DS;
 
         $zip = $this->compress->compression("{$module_path}", APP_CODE_PATH . $module, APP_CODE_PATH);
-        // TODO 完成模块卸载 兼容 win 和 linux
 
         $this->printer->note($zip);
         $this->printer->note('3、卸载应用代码...');
@@ -215,7 +214,7 @@ class Handle implements HandleInterface, RegisterInterface
         if (empty($env)) {
             $env = $this->getEnv($module, $env);
         }                                          // 如果文件不存在则读取模块名字作为router
-        $router = strtolower($env['router'] ?: '');// TODO 定义路由区分大小写
+        $router = strtolower($env['router'] ?: '');
         $module->setRouter($router);
         $this->setup_context = ObjectManager::make(SetupContext::class, ['module_name' => $module->getName(), 'module_version' => $version, 'module_description' => $description], '__construct');
         $setup_dir           = $module->getBasePath() . \Weline\Framework\Setup\Data\DataInterface::dir;

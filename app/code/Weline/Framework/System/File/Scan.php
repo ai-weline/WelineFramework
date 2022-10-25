@@ -155,8 +155,7 @@ class Scan
         string $replace_path='',
         bool $remove_ext = false,
         bool $class_path = false
-    )
-    {
+    ) {
         foreach (glob($pattern_dir) as $file) {
             if (is_dir($file)) {
                 $this->globFile($file . DS . '*', $files, $ext, $remove_path, $replace_path, $remove_ext, $class_path);

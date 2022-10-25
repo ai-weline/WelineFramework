@@ -56,10 +56,10 @@ composer create-project aiweline/weline-framework WelineFramework --prefer-dist
 
 ### 框架目的
 
-个人已经开发两年了，我只是想把PHP性能和优雅不能共存的问题解决，框架使用上内存缓存后理论上性能接近协程框架
+为解决PHP框架性能和优雅不能共存的问题解决。
 
 
-测试环境：http://weline-framework-dev.aiweline.com/ 随时在开发测试，有可能会访问不了
+测试环境：http://weline-framework-dev.aiweline.com/
 
 黑白主题：
 暗黑：
@@ -103,7 +103,7 @@ composer create-project aiweline/weline-framework WelineFramework --prefer-dist
     
 #### 更新说明
 # 1.0.2
-1、新增自动化测试命令。
+1、新增自动化单元测试命令。php bin/m phpunit:run
 
 # 1.0.1
 ```markdown

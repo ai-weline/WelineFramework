@@ -57,7 +57,6 @@ class Client
      */
     public function __call($name, $arguments)
     {
-        // TODO: Implement __call() method.
         //创建一个客户端
         $client = stream_socket_client("tcp://{$this->url_info['host']}:{$this->url_info['port']}", $errno, $errstr);
         if (!$client) {

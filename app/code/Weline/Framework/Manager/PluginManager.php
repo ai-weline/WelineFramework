@@ -23,7 +23,6 @@ class PluginManager implements ManagerInterface
 
     public static function create(string $class, string $method, array $params)
     {
-        // TODO: Implement create() method.
     }
 
     public static function getInstance($class = '')

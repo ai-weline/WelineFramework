@@ -184,7 +184,7 @@ class ConnectionFactory
             # 检测从库配置，如果有从库，则从库中查询
             if ($slaves_configs = $this->configProvider->getSalvesConfig()) {
                 # 如果有从库直接读取从库，一个请求只能读取一个从库
-                # TODO 均衡算法（先随机选一个）
+                # FIXME 均衡算法（先随机选一个）
                 $slave_config = $slaves_configs[array_rand($slaves_configs)];
                 $config_key   = md5($slave_config['host'] . $slave_config['port'] . $slave_config['database']);
                 if (!isset($this->queries[$config_key])) {

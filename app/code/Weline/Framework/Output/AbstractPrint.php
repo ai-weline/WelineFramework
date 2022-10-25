@@ -24,17 +24,14 @@ abstract class AbstractPrint implements PrintInterface
 
     public function success(string $data = 'Success!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
     {
-        // TODO: Implement success() method.
     }
 
     public function warning(string $data = 'Warning!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
     {
-        // TODO: Implement warning() method.
     }
 
     public function note(string $data = 'Note!', string $message = '', string $color = self::ERROR, int $pad_length = 25)
     {
-        // TODO: Implement note() method.
     }
 
     /**

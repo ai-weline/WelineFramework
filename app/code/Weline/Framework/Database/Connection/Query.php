@@ -136,9 +136,6 @@ abstract class Query implements QueryInterface
 
     public function where(array|string $field, mixed $value = null, string $condition = '=', string $where_logic = 'AND'): QueryInterface
     {
-//        if (PROD) {
-//            $this->cache->get();// TODO 缓存
-//        }
         if (is_array($field)) {
             foreach ($field as $f_key => $where_array) {
                 if (!is_array($where_array)) {

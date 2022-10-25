@@ -72,7 +72,6 @@ class CacheFactory implements CacheFactoryInterface
      */
     #[NoReturn] public function create(string $driver = '', string $tip = null): CacheInterface
     {
-        $driver = strtolower($driver);
         if (empty($driver) && isset($this->config['default'])) {
             $driver = $this->config['default'];
         }
@@ -82,7 +81,7 @@ class CacheFactory implements CacheFactoryInterface
             $driver_class = $driver;
         }
         $status       = (bool)Env::getInstance()->getData('cache/status/' . $this->identity);
-        $this->driver = new $driver_class($this->identity, $this->config['drivers'][strtolower($driver)], $tip ?: $this->tip, $status ?: $this->status);
+        $this->driver = new $driver_class($this->identity, $this->config['drivers'][$driver], $tip ?: $this->tip, $status ?: $this->status);
         return $this->driver;
     }
 

@@ -221,7 +221,6 @@ abstract class AbstractModel extends DataObject
             if (!isset($db_config['master'])) {
                 throw new DbException(__('请配置主数据库配置信息,或者主数据库配置信息设置错误') . (DEV ? '(' . $db_config_file . ')' : ''));
             }
-            # TODO 子应用数据库配置
             $this->connection = $this->dbManager->create(
                 $this->module_name,
                 new ConfigProvider($db_config)

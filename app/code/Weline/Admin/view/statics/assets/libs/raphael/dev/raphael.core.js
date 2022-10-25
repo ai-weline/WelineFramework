@@ -5140,7 +5140,7 @@ define(["eve"], function(eve) {
      - stretch (string) #optional font stretch
      = (object) the font object
      > Usage
-     | paper.print(100, 100, "Test string", paper.getFont("Times", 800), 30);
+     | paper.print(100, 100, "test string", paper.getFont("Times", 800), 30);
     \*/
     paperproto.getFont = function (family, weight, style, stretch) {
         stretch = stretch || "normal";

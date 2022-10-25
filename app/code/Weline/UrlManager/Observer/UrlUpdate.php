@@ -44,12 +44,12 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         $type = 'frontend_pc';
         $frontend_pc_urls = include Env::path_FRONTEND_PC_ROUTER_FILE;
         foreach ($frontend_pc_urls as $path => $frontend_pc_url) {
-            $this->module->clearData();
+            $this->module->recovery();
             $module_id = $this->module->load('name', $frontend_pc_url['module'])->getId();
             if (!$module_id) {
                 throw new \Exception(__('模型不存在！'));
             }
-            $this->urlManager->clearData();
+            $this->urlManager->recovery();
             $this->urlManager
                 ->setData('module_id', $module_id)
                 ->setData('path', $path)
@@ -63,12 +63,12 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         $frontend_api_urls = include Env::path_FRONTEND_REST_API_ROUTER_FILE;
         $type = 'frontend_rest';
         foreach ($frontend_api_urls as $path => $frontend_api_url) {
-            $this->module->clearData();
+            $this->module->recovery();
             $module_id = $this->module->load('name', $frontend_api_url['module'])->getId();
             if (!$module_id) {
                 throw new \Exception(__('模型不存在！'));
             }
-            $this->urlManager->clearData();
+            $this->urlManager->recovery();
             $this->urlManager
                 ->setData('module_id', $module_id)
                 ->setData('path', $path)
@@ -81,12 +81,12 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         $type = 'backend_pc';
         $backend_pc_urls = include Env::path_BACKEND_PC_ROUTER_FILE;
         foreach ($backend_pc_urls as $path => $backend_pc_url) {
-            $this->module->clearData();
+            $this->module->recovery();
             $module_id = $this->module->load('name', $backend_pc_url['module'])->getId();
             if (!$module_id) {
                 throw new \Exception(__('模型不存在！'));
             }
-            $this->urlManager->clearData();
+            $this->urlManager->recovery();
             $this->urlManager
                 ->setData('module_id', $module_id)
                 ->setData('path', $path)
@@ -99,12 +99,12 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         $type = 'backend_rest';
         $backend_api_urls = include Env::path_BACKEND_PC_ROUTER_FILE;
         foreach ($backend_api_urls as $path => $backend_api_url) {
-            $this->module->clearData();
+            $this->module->recovery();
             $module_id = $this->module->load('name', $backend_api_url['module'])->getId();
             if (!$module_id) {
                 throw new \Exception(__('模型不存在！'));
             }
-            $this->urlManager->clearData();
+            $this->urlManager->recovery();
             $this->urlManager
                 ->setData('module_id', $module_id)
                 ->setData('path', $path)
