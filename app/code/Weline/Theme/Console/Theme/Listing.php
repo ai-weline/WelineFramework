@@ -16,7 +16,7 @@ class Listing extends AbstractConsole
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         # 读取主题列表
         $themes = $this->welineTheme->select()->fetch();

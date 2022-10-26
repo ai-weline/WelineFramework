@@ -64,7 +64,7 @@ class Upgrade extends CommandAbstract
      * @throws \ReflectionException
      * @throws Exception
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $i = 1;
         // 删除路由文件

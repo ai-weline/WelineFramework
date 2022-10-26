@@ -27,7 +27,7 @@ class Warm implements CommandInterface
         $this->printing = $printing;
     }
 
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $frontend_routers = (array)(require Env::path_FRONTEND_PC_ROUTER_FILE);
         $this->printing->warning(__('缓存预热开始...'));

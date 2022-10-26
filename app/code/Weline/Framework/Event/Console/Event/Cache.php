@@ -34,7 +34,7 @@ class Cache implements CommandInterface
         $this->eventCache = $eventCache->create();
     }
 
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         if (! isset($args[1])) {
             $this->printing->error(__('错误的缓存处理参数！-c：清除缓存，-f：刷新缓存！'));

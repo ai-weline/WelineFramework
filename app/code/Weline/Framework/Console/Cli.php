@@ -33,7 +33,7 @@ class Cli extends CliAbstract
         }
         $command_class = $this->checkCommand();
 //        $this->printer->note(__('执行命令：') . $class['command'] . ' ' . (isset($this->argv[1])?$this->argv[1]:''));
-        ObjectManager::getInstance($command_class['class'])->execute($this->argv);
+        ObjectManager::getInstance($command_class['class'])->execute($this->argv, $command_class['data']);
         $this->printer->printing("\n");
         $this->printer->note(__('执行命令：') . $command_class['command'] . ' ' . ($this->argv[1] ?? '')/*,$this->printer->colorize('CLI-System','red')*/);
     }
@@ -127,10 +127,10 @@ class Cli extends CliAbstract
         // 检查命令
         $command_class = '';
         foreach ($commands as $group => $group_commands) {
-            if (isset($group_commands[$arg0])&& $command_data = $group_commands[$arg0]) {
-                $group_arr    = explode('#', $group);
+            if (isset($group_commands[$arg0]) && $command_data = $group_commands[$arg0]) {
+                $group_arr     = explode('#', $group);
                 $command_class = $command_data['class'];
-                return ['class' => $command_class, 'command' => $arg0];
+                return ['class' => $command_class, 'command' => $arg0, 'data' => $command_data];
             }
         }
 
@@ -139,9 +139,9 @@ class Cli extends CliAbstract
         foreach ($recommendCommands as $recommendCommand) {
             $commands = array_merge($commands, $recommendCommand);
         }
-        if (count($commands) === 1&&$command = $commands[0]) {
-            foreach ($command as $c=>$data) {
-                return ['class' => $data['class'], 'command' => $c];
+        if (count($commands) === 1 && $command = $commands[0]) {
+            foreach ($command as $c => $data) {
+                return ['class' => $data['class'], 'command' => $c, 'data' => $data];
             }
         }
         foreach ($recommendCommands as $key => &$command) {

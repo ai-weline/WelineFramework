@@ -36,7 +36,7 @@ class Run implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $php_unit_path = DEV_PATH . 'phpunit' . DS;
         if (!is_dir($php_unit_path)) {

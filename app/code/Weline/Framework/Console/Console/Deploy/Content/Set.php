@@ -27,7 +27,7 @@ class Set implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         if (!isset($args[1])) {
             $this->printing->error(__('请指定设置类型:'));

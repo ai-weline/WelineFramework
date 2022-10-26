@@ -14,7 +14,7 @@ use Weline\Framework\Console\CommandAbstract;
 
 class Status extends CommandAbstract
 {
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         array_shift($args);
         $module_list = Env::getInstance()->getModuleList();

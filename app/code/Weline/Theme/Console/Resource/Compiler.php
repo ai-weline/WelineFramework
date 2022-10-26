@@ -29,7 +29,7 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $source_types = [];
         array_shift($args);

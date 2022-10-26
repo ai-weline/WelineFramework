@@ -39,7 +39,7 @@ class Set implements CommandInterface
         $this->system = $system;
     }
 
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         array_shift($args);
         $param = array_shift($args);

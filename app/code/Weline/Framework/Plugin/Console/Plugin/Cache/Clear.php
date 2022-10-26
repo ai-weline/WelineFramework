@@ -36,7 +36,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $this->pluginCache->clear();
         $this->printing->success(__('拦截器缓存清理成功！'), '系统');

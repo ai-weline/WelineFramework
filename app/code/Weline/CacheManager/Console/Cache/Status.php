@@ -36,7 +36,7 @@ class Status implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         # 操作符
         if (isset($args[1]) && $op = $args[1]) {

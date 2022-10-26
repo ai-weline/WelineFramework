@@ -14,7 +14,7 @@ use Weline\Framework\Console\CommandAbstract;
 
 class Show extends CommandAbstract
 {
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $this->printer->success('当前部署模式：' . Env::getInstance()->getConfig('deploy'));
     }

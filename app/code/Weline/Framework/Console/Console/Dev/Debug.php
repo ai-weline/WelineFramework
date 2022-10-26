@@ -13,7 +13,7 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Debug extends \Weline\Framework\Console\CommandAbstract
 {
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         if (! isset($args[1])) {
             if (DEV) {

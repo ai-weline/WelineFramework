@@ -37,7 +37,7 @@ class Clear implements CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $this->eventCache->clear();
 

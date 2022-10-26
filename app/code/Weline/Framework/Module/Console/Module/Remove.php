@@ -61,7 +61,7 @@ class Remove extends CommandAbstract
      * @throws \Weline\Framework\App\Exception
      * @throws ConsoleException
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         array_shift($args);
 

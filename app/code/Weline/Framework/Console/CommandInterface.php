@@ -35,10 +35,10 @@ interface CommandInterface
      * 参数区：
      *
      * @param array $args
+     * @param array $data
      *
-     * @return mixed
      */
-    public function execute(array $args = []);
+    public function execute(array $args = [],array $data=[]);
 
     /**
      * @DESC         |命令注释

@@ -39,7 +39,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $is_force = in_array('-f', $args);
         $caches   = $this->scanner->getCaches();

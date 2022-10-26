@@ -18,7 +18,7 @@ class Compile extends \Weline\Framework\Console\CommandAbstract
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         // 扫描代码
         $scanner = new AppScanner();

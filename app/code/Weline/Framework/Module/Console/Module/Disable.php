@@ -16,7 +16,7 @@ use Weline\Framework\Module\Helper\Data;
 
 class Disable extends CommandAbstract
 {
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $command     = array_shift($args);
         $module_list = Env::getInstance()->getModuleList();

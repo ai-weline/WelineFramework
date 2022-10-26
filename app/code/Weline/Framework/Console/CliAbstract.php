@@ -108,7 +108,7 @@ abstract class CliAbstract implements CommandInterface
      * @return mixed|void
      *@throws \Weline\Framework\App\Exception
      */
-    public function execute(array $args = null)
+    public function execute(array $args = null,array $data=[])
     {
         $commands = isset($this->getCommandList()[$args]) ? $this->getCommandList()[$args] : $this->getCommandList();
 

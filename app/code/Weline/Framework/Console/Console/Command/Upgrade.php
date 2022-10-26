@@ -40,7 +40,8 @@ class Upgrade extends CommandAbstract
         Command  $command,
         Scan     $scan,
         System   $system
-    ) {
+    )
+    {
         $this->printer = $printer;
         $this->system  = $system;
         $this->scan    = $scan;
@@ -75,12 +76,13 @@ class Upgrade extends CommandAbstract
      * 参数区：
      *
      * @param array $args
+     * @param array $data
      *
      * @return mixed|void
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         // 删除命令文件
         if (is_file(Env::path_COMMANDS_FILE)) {
@@ -160,9 +162,10 @@ class Upgrade extends CommandAbstract
                             array_pop($file_array);
                             $command_prefix                                           = strtolower(implode(':', $file_array));
                             $commands[$command_prefix . '#' . $module_name][$command] = [
-                                'tip'   => $command_class->getTip(),
-                                'class' => $class,
-                                'type'  => 'module'
+                                'tip'    => $command_class->getTip(),
+                                'class'  => $class,
+                                'type'   => 'module',
+                                'module' => $module['name']
                             ];
                         } else {
                             if (DEV && CLI) {
@@ -187,7 +190,7 @@ class Upgrade extends CommandAbstract
             true
         );
         $this->scan->globFile(
-            Env::framework_code_path . '*' . DS. 'Console' . DS . '*',
+            Env::framework_code_path . '*' . DS . 'Console' . DS . '*',
             $framework_files,
             '.php',
             Env::framework_code_path,
@@ -215,9 +218,10 @@ class Upgrade extends CommandAbstract
                         array_pop($class_array);
                         $command_prefix                                                                 = strtolower(implode(':', $class_array));
                         $commands[$command_prefix . '#Weline_Framework_' . $framework_module][$command] = [
-                            'tip'   => $command_class->getTip(),
-                            'class' => $class,
-                            'type'  => 'framework'
+                            'tip'    => $command_class->getTip(),
+                            'class'  => $class,
+                            'type'   => 'framework',
+                            'module' => 'Weline_Framework'
                         ];
                     } else {
                         if (DEV && CLI) {

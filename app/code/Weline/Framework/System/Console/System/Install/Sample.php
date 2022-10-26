@@ -13,7 +13,7 @@ use Weline\Framework\Console\CommandAbstract;
 
 class Sample extends CommandAbstract
 {
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $this->printer->note('安装命令示例：');
         $line_break = IS_WIN ? '^' : '\\';

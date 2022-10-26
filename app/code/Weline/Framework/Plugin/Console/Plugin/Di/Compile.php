@@ -48,7 +48,7 @@ class Compile implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $this->printing->printing(__('编译开始...'));
         $this->printing->printing(__('清除旧编译内容...'));

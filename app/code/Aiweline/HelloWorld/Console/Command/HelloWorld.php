@@ -32,7 +32,7 @@ class HelloWorld implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $this->printing->printing(__('欢迎来到命令交互世界！'));
     }

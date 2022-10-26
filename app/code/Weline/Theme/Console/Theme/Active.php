@@ -13,7 +13,7 @@ use Weline\Framework\Exception\Core;
 
 class Active extends AbstractConsole
 {
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $theme_name = isset($args[1]) ? $args[1] : '';
         if ($theme_name) {

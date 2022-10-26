@@ -27,7 +27,7 @@ class StaticFileRandVersion implements \Weline\Framework\Console\CommandInterfac
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         if (Env::getInstance()->getConfig('static_file_rand_version')) {
             Env::getInstance()->setConfig('static_file_rand_version', false);

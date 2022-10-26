@@ -30,7 +30,7 @@ class Listing implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $indexer_list = $this->indexer->select()->fetch();
         /**@var Indexer $indexer*/

@@ -36,7 +36,7 @@ class Flush implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $caches = $this->scanner->getCaches();
         foreach ($caches as $form => $cache) {

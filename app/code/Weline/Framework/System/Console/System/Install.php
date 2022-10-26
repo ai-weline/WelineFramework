@@ -36,7 +36,7 @@ class Install extends \Weline\Framework\Console\CommandAbstract
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         $install_file = BP . 'setup/install.lock';
         if (is_file($install_file)) {

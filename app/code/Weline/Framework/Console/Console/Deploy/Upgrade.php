@@ -35,7 +35,7 @@ class Upgrade extends CommandAbstract
         $this->system  = $system;
     }
 
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         // 扫描代码
         list($registers) = $this->scanner->scanAppModules();

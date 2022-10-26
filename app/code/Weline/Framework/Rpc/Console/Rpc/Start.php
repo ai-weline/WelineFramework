@@ -20,7 +20,7 @@ class Start extends Server implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         Server::instance([
             'host'  => '127.0.0.1',

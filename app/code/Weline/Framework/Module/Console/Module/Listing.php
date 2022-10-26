@@ -27,7 +27,7 @@ class Listing implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $args = [])
+    public function execute(array $args = [], array $data = [])
     {
         foreach (Env::getInstance()->getModuleList() as $name => $module) {
             if ($module['status']) {

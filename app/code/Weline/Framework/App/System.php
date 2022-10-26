@@ -20,14 +20,14 @@ class System
      * 参数区：
      *
      * @param string $linux_command
-     * @param bool   $preview
+     * @param bool   $process_win_to_linux
      *
      * @return array|string
      * @throws \Weline\Framework\App\Exception
      */
-    public function exec(string $linux_command, bool $preview = false): array|string
+    public function exec(string $linux_command, bool $process_win_to_linux = true): array|string
     {
-        if (IS_WIN) {
+        if (IS_WIN && $process_win_to_linux) {
             // 删除
             if (
                 (is_int(strpos($linux_command, 'rm')) || is_int(strpos($linux_command, 'cp'))) &&
@@ -52,9 +52,6 @@ class System
                 $linux_command = str_replace('/S/Q', '/S/Q/Y', $linux_command);
             }
         }
-        if ($preview) {
-            return ['command' => $linux_command, 'output' => '', 'return_vars' => ''];
-        }
         # 检测函数是否解禁
         if (!function_exists('exec')) {
             throw new Exception(__(' exec() 函数需要解禁: 请到 php.ini 中找到 disable_function 删除 exec '));
@@ -65,7 +62,50 @@ class System
         return ['command' => $linux_command, 'output' => $output, 'return_vars' => $return_var];
     }
 
-    public function input()
+    /**
+     * @DESC         |执行win命令
+     *
+     * 参数区：
+     *
+     * @param string $win_command
+     *
+     * @return array|string
+     * @throws \Weline\Framework\App\Exception
+     */
+    public function win_exec(string $win_command): array|string
+    {
+        # 检测函数是否解禁
+        if (!function_exists('exec')) {
+            throw new Exception(__(' exec() 函数需要解禁: 请到 php.ini 中找到 disable_function 删除 exec '));
+        }
+
+        exec($win_command, $output, $return_var);
+
+        return ['command' => $win_command, 'output' => $output, 'return_vars' => $return_var];
+    }
+    /**
+     * @DESC         |执行win命令
+     *
+     * 参数区：
+     *
+     * @param string $linux_command
+     *
+     * @return array|string
+     * @throws \Weline\Framework\App\Exception
+     */
+    public function linux_exec(string $linux_command): array|string
+    {
+        # 检测函数是否解禁
+        if (!function_exists('exec')) {
+            throw new Exception(__(' exec() 函数需要解禁: 请到 php.ini 中找到 disable_function 删除 exec '));
+        }
+
+        exec($linux_command, $output, $return_var);
+
+        return ['command' => $linux_command, 'output' => $output, 'return_vars' => $return_var];
+    }
+
+    public function input(): bool|string
     {
         // 判断系统
         if (IS_WIN) {
