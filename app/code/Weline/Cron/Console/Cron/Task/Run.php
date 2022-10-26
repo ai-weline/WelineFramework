@@ -7,12 +7,12 @@ declare(strict_types=1);
  * 邮箱：aiweline@qq.com
  * 网址：aiweline.com
  * 论坛：https://bbs.aiweline.com
- * 日期：2022/10/27 00:28:53
+ * 日期：2022/10/27 00:51:30
  */
 
-namespace Weline\Cron\Console\Cron;
+namespace Weline\Cron\Console\Cron\Task;
 
-class RunScheduleTask extends BaseCommand
+class Run extends \Weline\Cron\Console\Cron\BaseCommand
 {
 
     /**
@@ -20,7 +20,7 @@ class RunScheduleTask extends BaseCommand
      */
     public function execute(array $args = [], array $data = [])
     {
-        dd($data);
+        file_put_contents(__DIR__.DS.'tt.txt', '111111',FILE_APPEND);
     }
 
     /**
@@ -28,6 +28,6 @@ class RunScheduleTask extends BaseCommand
      */
     public function getTip(): string
     {
-        return '运行计划任务';
+        return '运行计划调度任务';
     }
 }

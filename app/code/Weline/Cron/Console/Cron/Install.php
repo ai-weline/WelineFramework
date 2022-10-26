@@ -37,7 +37,7 @@ class Install extends BaseCommand
                 $bat_string             = "
 @echo off
 Rem WelineFramework框架 Window计划任务脚本
-$base_project_disk_name && cd $base_project_dir && php bin/m cron:runscheduletask
+$base_project_disk_name && cd $base_project_dir && php bin/m cron:task:run
                 ";
                 $bat_file               = Env::path_framework_generated . 'cron.bat';
                 file_put_contents($bat_file, $bat_string);
