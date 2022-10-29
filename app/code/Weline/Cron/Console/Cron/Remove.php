@@ -20,24 +20,12 @@ class Remove extends BaseCommand
      */
     public function execute(array $args = [], array $data = [])
     {
-        $cron_name = $this->config->getConfig(self::cron_config_key, $data['module']);
-        if ($cron_name) {
-            if (IS_WIN) {
-                # 查找任务
-                $data = $this->system->win_exec("schtasks /query /tn $cron_name");
-                if (count($data['output']) === 5) {
-                    $data = $this->system->win_exec("schtasks /Delete /tn $cron_name /F");
-                    if (count($data['output']) === 1) {
-                        $this->printing->success('[' . PHP_OS . '] ' . __('系统计划任务：%1 ,成功删除!', $cron_name));
-                    } else {
-                        $this->printing->error('[' . PHP_OS . '] ' . __('系统计划任务%1移除失败！', $cron_name));
-                    }
-                } else {
-                    $this->printing->error('[' . PHP_OS . '] ' . __('系统计划任务%1不存在！', $cron_name));
-                }
-            }else{
-                // FIXME linux移除任务
-            }
+        $cron_name = $this->getCronName($data['module']);
+        $result    = $this->schedule->remove($cron_name);
+        if ($result['status']) {
+            $this->printing->success($result['msg']);
+        } else {
+            $this->printing->error($result['msg']);
         }
     }
 

@@ -23,22 +23,13 @@ class Run extends BaseCommand
      */
     public function execute(array $args = [], array $data = [])
     {
-        $cron_name = $this->config->getConfig(self::cron_config_key, $data['module']);
-        if ($cron_name) {
-            if (IS_WIN) {
-                $data = $this->system->win_exec("schtasks /Run /tn $cron_name");
-                if (count($data['output']) === 1) {
-                    $this->printing->success('[' . PHP_OS . '] ' . __('系统计划任务：%1 ,成功运行!', $cron_name));
-                } else {
-                    $this->printing->error('[' . PHP_OS . '] ' . __('系统计划任务：%1 ,运行失败!任务可能未安装！请执行：php bin/m cron:install 安装计划任务！', $cron_name));
-                }
-            } else {
-                // FIXME linux
-            }
+        $cron_name = $this->getCronName($data['module']);
+        $result    = $this->schedule->run($cron_name);
+        if ($result['status']) {
+            $this->printing->success($result['msg']);
         } else {
-            $this->printing->error('[' . PHP_OS . '] ' . __('系统计划任务：%1 ,尚未安装!', $cron_name));
+            $this->printing->error($result['msg']);
         }
-
     }
 
     /**

@@ -22,32 +22,13 @@ class Install extends BaseCommand
      */
     public function execute(array $args = [], array $data = [])
     {
-        if (IS_WIN) {
-            $cron_name = $this->config->getConfig(self::cron_config_key, $data['module']);
-            if (empty($cron_name)) {
-                $cron_name = '[' . $data['module'] . ']-' . md5(time() . mt_rand(0, 1000000));
-                $this->config->setConfig(self::cron_config_key, $cron_name, $data['module']);
-            }
-            # 查找任务
-            $data = $this->system->win_exec("schtasks /query /tn $cron_name");
-            if (count($data['output']) !== 5) {
-                $base_project_dir       = BP;
-                $base_project_disk_name = substr($base_project_dir, 0, 2);
-                # FIXME bat弹窗问题
-                $bat_string             = "
-@echo off
-Rem WelineFramework框架 Window计划任务脚本
-$base_project_disk_name && cd $base_project_dir && php bin/m cron:task:run
-                ";
-                $bat_file               = Env::path_framework_generated . 'cron.bat';
-                file_put_contents($bat_file, $bat_string);
-                $create_command = "SCHTASKS /Create /TN $cron_name /TR $bat_file /SC MINUTE";
-                $this->system->win_exec($create_command);
-            }
-        } else {
-            // FIXME linux计划任务脚本
+        $cron_name = $this->getCronName($data['module']);
+        $result = $this->schedule->create($cron_name);
+        if($result['status']){
+            $this->printing->note($result['msg']);
+        }else{
+            $this->printing->warning($result['msg']);
         }
-        $this->printing->note('[' . PHP_OS . ']'.__('定时任务已安装：%1',$cron_name));
     }
 
     /**

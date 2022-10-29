@@ -67,15 +67,28 @@ class Upgrade extends CommandAbstract
     public function execute(array $args = [], array $data = [])
     {
         $i = 1;
+        $this->printer->note($i . '、module模块更新...');
+        // 注册模块
+        $all_modules = [];
+        // 扫描代码
+        list($vendor, $dependencies) = $this->scanner->scanAppModules();
+        foreach ($dependencies as $module_name => $module) {
+            $register = $module['register'] ?? '';
+            if (is_file($register)) {
+                require $register;
+            }
+        }
+        $this->printer->note('模块更新完毕！');
+        $i += 1;
         // 删除路由文件
         $this->printer->warning($i . '、路由更新...', '系统');
         $this->printer->warning('清除文件：');
         foreach (Env::router_files_PATH as $path) {
             $this->printer->warning($path);
             if (is_file($path)) {
-                list($out, $var) = $this->system->exec('rm -f ' . $path);
-                if ($out) {
-                    $this->printer->printList($out);
+                $data = $this->system->exec('rm -f ' . $path);
+                if ($data) {
+                    $this->printer->printList($data);
                 }
             }
         }
@@ -120,19 +133,6 @@ class Upgrade extends CommandAbstract
         /**@var $cacheManagerConsole \Weline\CacheManager\Console\Cache\Clear */
         $cacheManagerConsole = ObjectManager::getInstance(\Weline\Framework\Plugin\Console\Plugin\Di\Compile::class);
         $cacheManagerConsole->execute();
-        $i += 1;
-        $this->printer->note($i . '、module模块更新...');
-        // 注册模块
-        $all_modules = [];
-        // 扫描代码
-        list($vendor, $dependencies) = $this->scanner->scanAppModules();
-        foreach ($dependencies as $module_name => $module) {
-            $register = $module['register'] ?? '';
-            if (is_file($register)) {
-                require $register;
-            }
-        }
-        $this->printer->note('模块更新完毕！');
         $i += 1;
 
         // 清理其他
