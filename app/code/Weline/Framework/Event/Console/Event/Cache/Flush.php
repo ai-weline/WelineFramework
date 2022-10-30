@@ -45,7 +45,7 @@ class Flush implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return __('刷新系统事件缓存！');
     }

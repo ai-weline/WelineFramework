@@ -121,7 +121,7 @@ class Status implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return __('缓存状态。[enable/disable]:开启/关闭 [identify...]:缓存识别名');
     }

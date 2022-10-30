@@ -74,7 +74,7 @@ class Upgrade extends CommandAbstract
         $this->printer->success('静态文件部署完毕！');
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '静态资源同步更新。';
     }

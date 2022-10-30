@@ -16,7 +16,7 @@ class Command extends CommandAbstract
         return '定位命令';
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '定位命令';
     }

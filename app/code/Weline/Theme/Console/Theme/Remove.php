@@ -59,7 +59,7 @@ class Remove extends AbstractConsole
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return __('卸载主题');
     }

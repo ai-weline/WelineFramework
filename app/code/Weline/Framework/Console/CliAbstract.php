@@ -65,7 +65,7 @@ abstract class CliAbstract implements CommandInterface
      *
      * @return string
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return 'CLI ' . self::version;
     }

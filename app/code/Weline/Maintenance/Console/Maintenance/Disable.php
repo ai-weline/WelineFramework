@@ -46,7 +46,7 @@ class Disable implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '关闭维护模式';
     }

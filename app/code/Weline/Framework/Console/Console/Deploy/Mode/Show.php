@@ -19,7 +19,7 @@ class Show extends CommandAbstract
         $this->printer->success('当前部署模式：' . Env::getInstance()->getConfig('deploy'));
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '查看部署环境';
     }

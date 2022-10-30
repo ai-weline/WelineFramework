@@ -43,9 +43,10 @@ class Catalog extends \Weline\Admin\Controller\BaseController
     private function processTrees(array &$trees)
     {
         foreach ($trees as &$tree) {
-            $tree['text']       = '<a class="btn" href="' . $this->_url->build('/dev/tool/admin/document/catalog', ['id' => $tree['id']]) . '">' . $tree['text'] . '</a>
-<a class="btn btn-info pull-right" href="' . $this->_url->build('/dev/tool/admin/document/catalog', ['id' => $tree['id']]) . '">修改</a>
-<a class="btn btn-danger pull-right" href="' . $this->_url->build('/dev/tool/admin/document/catalog/delete', ['id' => $tree['id']]) . '">' . __('删除') . '</a>
+            $tree['text']       = '<a class="btn" href="' . $this->_url->getBackendUrl('/dev/tool/admin/document/catalog', ['id' => $tree['id']]) . '">' . 
+                $tree['text'] . '</a>
+<a class="btn btn-info pull-right" href="' . $this->_url->getBackendUrl('/dev/tool/admin/document/catalog', ['id' => $tree['id']]) . '">修改</a>
+<a class="btn btn-danger pull-right" href="' . $this->_url->getBackendUrl('/dev/tool/admin/document/catalog/delete', ['id' => $tree['id']]) . '">' . __('删除') . '</a>
 ';
             $tree['selectable'] = true;
             $tree['state']      = [
@@ -55,7 +56,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
                 'selected' => false
             ];
             $tree['tags']       = ['available'];
-            $tree['href']       = $this->_url->build('/dev/tool/document/catalog', ['id' => $tree['id']]);
+            $tree['href']       = $this->_url->getBackendUrl('/dev/tool/document/catalog', ['id' => $tree['id']]);
             if (isset($tree['nodes']) and count($tree['nodes'])) {
                 $this->processTrees($tree['nodes']);
             }
@@ -80,7 +81,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
                 $this->getMessageManager()->addException($e);
             }
         }
-        $this->redirect($this->_url->build('dev/tool/admin/document/catalog'));
+        $this->redirect($this->_url->getBackendUrl('dev/tool/admin/document/catalog'));
     }
 
     public function postPost()
@@ -93,7 +94,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         $level     = $pid_level;
         if ($pid === $post['id']) {
             $this->getMessageManager()->addError(__('不能自己选择自己作为父类！'));
-            $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id' => $post['id']]));
+            $this->redirect($this->_url->getBackendUrl('dev/tool/admin/document/catalog', ['id' => $post['id']]));
         }
         if ($level) {
             $level += 1;
@@ -103,7 +104,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         $post['name'] = trim($post['name']);
         if (empty($post['name'])) {
             $this->getMessageManager()->addError(__('目录名不能为空！'));
-            $this->redirect($this->_url->build('dev/tool/admin/document/catalog'));
+            $this->redirect($this->_url->getBackendUrl('dev/tool/admin/document/catalog'));
         }
         $post['pid']   = $pid;
         $post['level'] = $level;
@@ -112,12 +113,12 @@ class Catalog extends \Weline\Admin\Controller\BaseController
             $catalog = $catalog->load($id);
             if (!$catalog->getId()) {
                 $this->getMessageManager()->addError(__('该记录已不存在！'));
-                $this->redirect($this->_url->build('dev/tool/admin/document/catalog'));
+                $this->redirect($this->_url->getBackendUrl('dev/tool/admin/document/catalog'));
             }
             $catalog->save($post);
 
             $this->getMessageManager()->addSuccess(__('修改成功！'));
-            $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id' => $id]));
+            $this->redirect($this->_url->getBackendUrl('dev/tool/admin/document/catalog', ['id' => $id]));
         }
         # 新增
         unset($post['id']);
@@ -127,7 +128,7 @@ class Catalog extends \Weline\Admin\Controller\BaseController
         } catch (\Exception $exception) {
             $this->getMessageManager()->addException($exception);
         }
-        $this->redirect($this->_url->build('dev/tool/admin/document/catalog', ['id' => $catalog->getId()]));
+        $this->redirect($this->_url->getBackendUrl('dev/tool/admin/document/catalog', ['id' => $catalog->getId()]));
     }
 
     private function getCatalogModel(): \Weline\DeveloperWorkspace\Model\Document\Catalog

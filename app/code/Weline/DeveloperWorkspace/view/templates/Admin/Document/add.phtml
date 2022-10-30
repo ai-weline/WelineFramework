@@ -108,15 +108,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                             id='author'
                                                             aria-describedby='authorPrepend' required>
                                                         <foreach name="users">
-                                                            <php>$author_id = $document->getAuthorId();</php>
-                                                            <php>$v_id = $v['id'];</php>
-                                                            <if condition="$author_id === $v_id">
-                                                                <option value="@var{$v.id}" selected>
-                                                                    <var>$v->getUsername()</var>
+                                                            <if condition="document.author_id === v.user_id">
+                                                                <option value="{{v.user_id}}" selected>
+                                                                    {{v.username}}
                                                                 </option>
                                                                 <else/>
-                                                                <option value="@var{$v.id}">
-                                                                    <var>$v->getUsername()</var>
+                                                                <option value="{{v.user_id}}">
+                                                                    {{v.username}}
                                                                 </option>
                                                             </if>
                                                         </foreach>

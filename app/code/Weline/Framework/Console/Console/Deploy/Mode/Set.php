@@ -72,7 +72,7 @@ class Set extends CommandAbstract
         }
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '部署模式设置。（dev:开发模式；prod:生产环境。）';
     }

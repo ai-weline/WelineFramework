@@ -32,8 +32,8 @@ class Remove extends BaseCommand
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
-        return '移除定时任务。';
+        return '移除系统定时任务。';
     }
 }

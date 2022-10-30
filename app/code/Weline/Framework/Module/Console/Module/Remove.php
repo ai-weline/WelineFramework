@@ -124,7 +124,7 @@ class Remove extends CommandAbstract
      *
      * @return string
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '移除模块以及模块数据！并执行卸载脚本（如果有）';
     }

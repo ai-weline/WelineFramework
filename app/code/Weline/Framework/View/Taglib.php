@@ -320,7 +320,7 @@ class Taglib
                                 throw new TemplateException(__("empty标签需要设置name属性:[$template_html]例如：%1", htmlentities('<empty name="catalogs"><li>没有数据</li></empty>')));
                             }
                             $name = $this->varParser($this->checkVar($attributes['name']));
-                            return '<?php if(isset(' . $name . ') && !empty(' . $name . ')): ?>';
+                            return '<?php if(' . $name . ' && !empty(' . $name . ')): ?>';
                         case 'tag-end':
                             return '<?php endif; ?>';
                         default:

@@ -76,7 +76,7 @@ class Set implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '设置静态文件状态';
     }

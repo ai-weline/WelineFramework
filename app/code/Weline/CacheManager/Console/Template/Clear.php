@@ -70,7 +70,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '清理模板缓存！';
     }

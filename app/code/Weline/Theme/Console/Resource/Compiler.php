@@ -77,7 +77,7 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return __('编译资源');
     }

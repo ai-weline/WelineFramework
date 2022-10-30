@@ -34,8 +34,8 @@ class Install extends BaseCommand
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
-        return '安装定时任务。';
+        return '安装系统定时任务。';
     }
 }

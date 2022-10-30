@@ -41,7 +41,7 @@ class StaticFileRandVersion implements \Weline\Framework\Console\CommandInterfac
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '随机静态文件版本号：协助开发模式下实时刷新浏览器更新静态css,js,less等静态文件。';
     }

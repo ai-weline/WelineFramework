@@ -35,7 +35,7 @@ class Status extends CommandAbstract
         }
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '获取模块列表';
     }

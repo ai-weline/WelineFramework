@@ -31,7 +31,7 @@ class Sample extends CommandAbstract
         exit();
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '安装脚本样例';
     }

@@ -49,7 +49,7 @@ class Warm implements CommandInterface
         $this->printing->success('缓存预热完成！');
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return __('提供缓存预热,加速网页访问');
     }

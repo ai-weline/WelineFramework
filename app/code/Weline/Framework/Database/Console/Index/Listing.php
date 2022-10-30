@@ -44,7 +44,7 @@ class Listing implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return __('索引器列表');
     }

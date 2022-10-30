@@ -204,7 +204,7 @@ class Run implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return 'PhpUnite测试套件测试命令';
     }

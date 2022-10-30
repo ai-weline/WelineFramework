@@ -96,7 +96,7 @@ class CacheFactory implements CacheFactoryInterface
     /**
      * @return string
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return $this->tip;
     }

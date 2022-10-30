@@ -33,7 +33,7 @@ class Disable implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '禁用php-cs-fixer代码美化工具';
     }

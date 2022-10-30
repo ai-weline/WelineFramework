@@ -17,11 +17,12 @@ use Weline\Framework\Controller\Data\DataInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Cache\RequestCache;
+use Weline\Framework\Http\Request;
 use Weline\Framework\Http\Response;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Router\Cache\RouterCache;
 
-abstract class RequestAbstract extends DataObject
+abstract class RequestAbstract extends RequestFilter
 {
     public const HEADER = 'header';
 
@@ -38,10 +39,6 @@ abstract class RequestAbstract extends DataObject
     private ?string $uri = null;
 
     /**
-     * @var RequestFilter
-     */
-    public RequestFilter $_filter;
-    /**
      * @var CacheInterface|null
      */
     public ?CacheInterface $cache = null;
@@ -55,9 +52,6 @@ abstract class RequestAbstract extends DataObject
 
     public function __init()
     {
-        if (empty($this->_filter)) {
-            $this->_filter = RequestFilter::getInstance();
-        }
         if (empty($this->cache)) {
             $this->cache = ObjectManager::getInstance(RequestCache::class . 'Factory');
         }
@@ -82,6 +76,8 @@ abstract class RequestAbstract extends DataObject
      * 参数区：
      *
      * @param array $router
+     *
+     * @return \Weline\Framework\Http\Request\RequestAbstract
      */
     public function setRouter(array $router): RequestAbstract
     {
@@ -130,6 +126,8 @@ abstract class RequestAbstract extends DataObject
      * 参数区：
      *
      * @return string
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
     public function getRequestArea(): string
     {
@@ -400,6 +398,8 @@ abstract class RequestAbstract extends DataObject
      * 参数区：
      *
      * @return Response
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
     public function getResponse(): Response
     {

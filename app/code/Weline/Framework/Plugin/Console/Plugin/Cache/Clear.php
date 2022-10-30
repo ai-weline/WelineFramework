@@ -45,7 +45,7 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return __('插件缓存清理！');
     }

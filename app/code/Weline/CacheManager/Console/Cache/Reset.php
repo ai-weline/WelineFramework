@@ -68,7 +68,7 @@ class Reset implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '重置缓存。（删除缓存：手动删除缓存file缓存请删除./var/cache）';
     }

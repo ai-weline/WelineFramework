@@ -32,7 +32,7 @@ class Start extends Server implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return __('启动RPC服务。');
     }

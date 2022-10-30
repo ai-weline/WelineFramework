@@ -53,7 +53,7 @@ class Active extends AbstractConsole
         }
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '查看当前主题或者激活特定主题';
     }

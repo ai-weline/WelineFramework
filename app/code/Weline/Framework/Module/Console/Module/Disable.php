@@ -45,7 +45,7 @@ class Disable extends CommandAbstract
         }
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '禁用模块';
     }

@@ -33,7 +33,7 @@ class Enable implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '启用php-cs-fixer代码美化工具';
     }

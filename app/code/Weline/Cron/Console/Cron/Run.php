@@ -35,8 +35,8 @@ class Run extends BaseCommand
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
-        return '运行计划任务。';
+        return '运行系统定时任务。';
     }
 }

@@ -66,7 +66,7 @@ class Set implements CommandInterface
         }
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '设置翻译模式：online,实时翻译;default,缓存翻译。';
     }

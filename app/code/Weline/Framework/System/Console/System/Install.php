@@ -126,7 +126,7 @@ class Install extends \Weline\Framework\Console\CommandAbstract
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '框架安装';
     }

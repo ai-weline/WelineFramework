@@ -70,7 +70,7 @@ class Compile implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '【插件】系统依赖编译';
     }

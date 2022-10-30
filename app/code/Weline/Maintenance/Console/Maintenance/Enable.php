@@ -46,7 +46,7 @@ class Enable implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '开启维护模式';
     }

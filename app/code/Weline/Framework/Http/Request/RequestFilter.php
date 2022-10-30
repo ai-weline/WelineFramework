@@ -10,8 +10,9 @@
 namespace Weline\Framework\Http\Request;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\DataObject\DataObject;
 
-class RequestFilter
+class RequestFilter extends DataObject
 {
     private static RequestFilter $instance;
 
@@ -22,10 +23,6 @@ class RequestFilter
     public const default_ENCODE = 'UTF-8';
 
     private function __clone()
-    {
-    }
-
-    private function __construct()
     {
     }
 
@@ -246,7 +243,7 @@ class RequestFilter
     /**
      * 过滤危险参数
      */
-    public function init()
+    public function init(): void
     {
         $getfilter    = "'|(and|or)\\b.+?(>|<|=|in|like)|\\/\\*.+?\\*\\/|<\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)";
         $postfilter   = '\\b(and|or)\\b.{1,6}?(=|>|<|\\bin\\b|\\blike\\b)|\\/\\*.+?\\*\\/|<\\s*script\\b|\\bEXEC\\b|UNION.+?SELECT|UPDATE.+?SET|INSERT\\s+INTO.+?VALUES|(SELECT|DELETE).+?FROM|(CREATE|ALTER|DROP|TRUNCATE)\\s+(TABLE|DATABASE)';
@@ -268,12 +265,15 @@ class RequestFilter
         }
     }
 
-    public function StopAttack($StrFiltKey, $StrFiltValue, $ArrFiltReq)
+    public function StopAttack($StrFiltKey, $StrFiltValue, $ArrFiltReq): void
     {
         if (is_array($StrFiltValue)) {
             $StrFiltValue = json_encode($StrFiltValue);
         }
-        if (preg_match('/' . $ArrFiltReq . '/is', $StrFiltValue) === 1) {
+        if (PROD&&preg_match('/' . $ArrFiltReq . '/is', $StrFiltValue,$matches) === 1) {
+            if(DEV){
+                dd($matches);
+            }
             $this->slog('<br><br>操作IP: ' . $_SERVER['REMOTE_ADDR'] . '<br>操作时间: ' . date('%Y-%m-%d %H:%M:%S') . '<br>操作页面:' . $_SERVER['PHP_SELF'] . '<br>提交方式: ' . $_SERVER['REQUEST_METHOD'] . '<br>提交参数: ' . $StrFiltKey . '<br>提交数据: ' . $StrFiltValue);
             print 'WelineFramework 警告:非法操作！';
             exit();

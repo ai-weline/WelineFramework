@@ -57,7 +57,7 @@ class Cache implements CommandInterface
         }
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '事件缓存管理！-c：清除缓存；-f：刷新缓存。';
     }

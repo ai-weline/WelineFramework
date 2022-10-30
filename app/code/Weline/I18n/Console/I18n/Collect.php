@@ -41,7 +41,7 @@ class Collect implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '收集翻译词';
     }

@@ -24,7 +24,7 @@ class Debug extends \Weline\Framework\Console\CommandAbstract
         $class = ObjectManager::getInstance($args[1]);
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '开发测试：用于运行测试对象！';
     }

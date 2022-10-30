@@ -52,5 +52,5 @@ interface CommandInterface
      *
      * @return string
      */
-    public function getTip(): string;
+    public function tip(): string;
 }

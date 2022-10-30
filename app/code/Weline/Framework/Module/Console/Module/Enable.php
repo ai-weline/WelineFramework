@@ -44,7 +44,7 @@ class Enable extends Command
         }
     }
 
-    public function getTip(): string
+    public function tip(): string
     {
         return '模块启用';
     }

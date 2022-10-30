@@ -61,7 +61,7 @@ class PhpCsFixer implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '代码美化工具';
     }

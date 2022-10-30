@@ -92,7 +92,7 @@ class UpgradeCache implements \Weline\Framework\Event\ObserverInterface
             ->setData($model::fields_TYPE, $cache['type'])
             ->setData($model::fields_Status, $cacheObj->getStatus() ? 1 : 0)
             ->setData($model::fields_Permanently, $cacheObj->isKeep() ? 1 : 0)
-            ->setData($model::fields_DESCRIPTION, $cacheObj->getTip())
+            ->setData($model::fields_DESCRIPTION, $cacheObj->tip())
             ->save();
     }
 

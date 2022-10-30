@@ -24,7 +24,7 @@ class RealTime implements \Weline\Framework\Console\CommandInterface
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return __('是否实时收集翻译词典。[enable/disable]');
     }

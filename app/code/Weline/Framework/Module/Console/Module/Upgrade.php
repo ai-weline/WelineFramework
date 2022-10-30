@@ -67,19 +67,6 @@ class Upgrade extends CommandAbstract
     public function execute(array $args = [], array $data = [])
     {
         $i = 1;
-        $this->printer->note($i . '、module模块更新...');
-        // 注册模块
-        $all_modules = [];
-        // 扫描代码
-        list($vendor, $dependencies) = $this->scanner->scanAppModules();
-        foreach ($dependencies as $module_name => $module) {
-            $register = $module['register'] ?? '';
-            if (is_file($register)) {
-                require $register;
-            }
-        }
-        $this->printer->note('模块更新完毕！');
-        $i += 1;
         // 删除路由文件
         $this->printer->warning($i . '、路由更新...', '系统');
         $this->printer->warning('清除文件：');
@@ -105,6 +92,19 @@ class Upgrade extends CommandAbstract
                 $this->system->exec("rm -rf {$tpl_dir}");
             }
         }
+        $i += 1;
+        $this->printer->note($i . '、module模块更新...');
+        // 注册模块
+        $all_modules = [];
+        // 扫描代码
+        list($vendor, $dependencies) = $this->scanner->scanAppModules();
+        foreach ($dependencies as $module_name => $module) {
+            $register = $module['register'] ?? '';
+            if (is_file($register)) {
+                require $register;
+            }
+        }
+        $this->printer->note('模块更新完毕！');
         $i += 1;
         $this->printer->note($i . '、收集模块信息', '系统');
         # 加载module中的助手函数
@@ -150,7 +150,7 @@ class Upgrade extends CommandAbstract
     /**
      * @inheritDoc
      */
-    public function getTip(): string
+    public function tip(): string
     {
         return '升级模块';
     }
