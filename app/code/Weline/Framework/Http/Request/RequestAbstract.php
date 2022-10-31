@@ -24,6 +24,8 @@ use Weline\Framework\Router\Cache\RouterCache;
 
 abstract class RequestAbstract extends RequestFilter
 {
+    /**缓存专区*/
+    public string $uri_cache_key = '';
     public const HEADER = 'header';
 
     public const MOBILE_DEVICE_HEADERS = [
@@ -54,6 +56,9 @@ abstract class RequestAbstract extends RequestFilter
     {
         if (empty($this->cache)) {
             $this->cache = ObjectManager::getInstance(RequestCache::class . 'Factory');
+        }
+        if (empty($this->uri_cache_key)) {
+            $this->uri_cache_key = $this->getUri() . $this->getMethod();
         }
         if (empty($this->_response)) {
             $this->_response = $this->getResponse();
@@ -325,8 +330,7 @@ abstract class RequestAbstract extends RequestFilter
             return $this->uri;
         }
         $uri = trim($this->getServer('REQUEST_URI'), '/');
-        $url_path_cache_key = 'url_path_cache_key_' . $uri . $this->getMethod();
-        $url_path           = $this->cache->get($url_path_cache_key);
+        $url_path           = $this->cache->get($this->uri_cache_key);
         if ($url_path) {
             $this->setServer('REQUEST_URI', $uri);
             return $url_path;
@@ -339,7 +343,6 @@ abstract class RequestAbstract extends RequestFilter
             $event->dispatch('Weline_Framework_Router::router_start', ['data' => $data]);
             $uri = $data->getData('uri');
             $this->setServer('REQUEST_URI', $uri);
-            $this->cache->set($url_path_cache_key, $uri);
         }
         $this->uri = $uri;
         return $uri;

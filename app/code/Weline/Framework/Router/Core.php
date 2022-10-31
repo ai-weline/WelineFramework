@@ -25,8 +25,6 @@ class Core
 
     public const url_path_split = '/';
 
-    private ?Env $_etc;
-
     private Request $request;
 
     private string $request_area;
@@ -60,10 +58,6 @@ class Core
 
         if (empty($this->area_router)) {
             $this->area_router = $this->request->getAreaRouter();
-        }
-
-        if (empty($this->_etc)) {
-            $this->_etc = Env::getInstance();
         }
         if (empty($this->is_admin)) {
             $this->is_admin = is_int(strpos(strtolower($this->request_area), \Weline\Framework\Router\DataInterface::area_BACKEND));
@@ -351,9 +345,10 @@ class Core
         $result   = call_user_func([$dispatch, $method], /*...$this->request->getParams()*/);
 //        file_put_contents(__DIR__.'/'.$cache_key.'.html', $result);
         /** Get output buffer. */
-        # FIXME 是否显示模板路径
         $this->cache->set($cache_key, $result, 5);
         $this->is_match = true;
+        # 最后输出事件
+        $this->request->cache->set($this->request->uri_cache_key, $this->request->getUri());
         return $result;
     }
 }

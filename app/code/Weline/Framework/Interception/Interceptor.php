@@ -19,7 +19,7 @@ trait Interceptor
 
     private PluginsManager $pluginsManager;
 
-    public function __init()
+    public function __init(): void
     {
         if (method_exists(get_parent_class($this), '__init')) {
             parent::__init();
@@ -66,11 +66,14 @@ trait Interceptor
      * 调用给定的方法所有的插件
      *
      * @param string $method
-     * @param array $arguments
-     * @param array $pluginInfo
+     * @param array  $arguments
+     * @param array  $pluginInfo
+     *
      * @return mixed|null
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
-    protected function ___callPlugins($method, array $arguments, array $pluginInfo)
+    protected function ___callPlugins(string $method, array $arguments, array $pluginInfo): mixed
     {
         //闭包调用
         $subject = $this;
