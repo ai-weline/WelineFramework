@@ -306,7 +306,17 @@ class Template extends DataObject
             $content    = file_get_contents($tplFile);
             $repContent = $this->tmp_replace($content, $comFileName);                   //得到模板文件 并替换占位符 并得到替换后的文件
             if(DEV){
-                $repContent = '<!-- ' . __('模板文件：%1', $tplFile) . ' START -->' . $repContent . '<!--' . __('编译文件：%1', $comFileName) . ' END-->';
+                $tpl_pad_file_name = __('模板文件：%1 START', $tplFile);
+                $tpl_str_len = strlen($tpl_pad_file_name);
+                $tpl_str_pad_all = str_pad('', $tpl_str_len,'=',STR_PAD_BOTH);
+                $tpl_str_pad_file = str_pad($tpl_pad_file_name, $tpl_str_len,'=',STR_PAD_BOTH);
+                $com_pad_file_name = __('模板文件：%1 END', $comFileName);
+                $com_str_len = strlen($com_pad_file_name);
+                $com_str_pad_all = str_pad('', $com_str_len,'=',STR_PAD_BOTH);
+                $com_str_pad_file = str_pad($com_pad_file_name, $com_str_len,'=',STR_PAD_BOTH);
+                $repContent = "<!--".PHP_EOL. "$tpl_str_pad_all ".PHP_EOL .$tpl_str_pad_file .PHP_EOL .$tpl_str_pad_all.PHP_EOL. ' -->'
+                    .PHP_EOL. $repContent .PHP_EOL
+                    . '<!--' .PHP_EOL.$com_str_pad_all.PHP_EOL. $com_str_pad_file.PHP_EOL.$com_str_pad_all.PHP_EOL.'-->';
             }
             file_put_contents($comFileName, $repContent);                               //将替换后的文件写入定义的缓存文件中
         }
