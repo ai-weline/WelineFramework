@@ -55,7 +55,6 @@ class Run implements CommandInterface
             $this->cronTask->where($this->cronTask::fields_NAME,$task_names);
         }
         $tasks = $this->cronTask->select()->fetch()->getItems();
-        dd($tasks);
         /**@var CronTask $taskModel */
         foreach ($tasks as $taskModel) {
             $task_start_time = microtime(true);
@@ -90,6 +89,7 @@ class Run implements CommandInterface
                         );
                         if ($block_time = $taskModel->getData($taskModel::fields_BLOCK_TIME)) {
                             if ($block_time > ($taskModel->getData($taskModel::fields_BLOCK_UNLOCK_TIMEOUT) * 60)) {
+                                $taskModel->setData($taskModel::fields_BLOCK_TIMES, (int)$taskModel->getData($taskModel::fields_BLOCK_TIMES)+1);
                                 $taskModel->setData($taskModel::fields_STATUS, CronStatus::PENDING->value);
                                 $taskModel->setData($taskModel::fields_RUNTIME_ERROR_DATE, date('Y-m-d H:i:s'));
                                 $taskModel->setData($taskModel::fields_RUNTIME_ERROR, "任务调度系统：调度任务阻塞超时自动解锁，请查看任务调度设置是否合理！");

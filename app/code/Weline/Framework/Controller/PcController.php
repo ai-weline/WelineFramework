@@ -58,7 +58,7 @@ class PcController extends Core
             if ($this->_url->isLink($url)) {
                 $this->request->getResponse()->redirect($url);
             } else {
-                $this->request->getResponse()->redirect($this->_url->getUrl($url));
+                $this->request->getResponse()->redirect($this->request->isBackend()?$this->_url->getBackendUrl($url):$this->_url->getUrl($url));
             }
         } elseif ($url = 404) {
             $this->request->getResponse()->responseHttpCode($url);

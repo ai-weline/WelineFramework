@@ -60,12 +60,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 class="mb-sm-0"><?= __('缓存管理') ?></h4>
+                            <h4 class="mb-sm-0"><?= __('计划任务调度管理器') ?></h4>
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
                                     <li class="breadcrumb-item"><a href="javascript: void(0);"><?= __('系统') ?></a></li>
-                                    <li class="breadcrumb-item active"><?= __('缓存管理') ?></li>
+                                    <li class="breadcrumb-item active"><?= __('计划任务调度管理器') ?></li>
                                 </ol>
                             </div>
 
@@ -78,7 +78,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                     <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-
+                                <template>Weline_Component::message.phtml</template>
                                 <h4 class="card-title"><?= __('计划任务调度管理器') ?>:
                                     <lang>一共有</lang>
                                     <var>total</var>
@@ -114,10 +114,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <lang>运行时长</lang>
                                             </th>
                                             <th>
-                                                <lang>阻塞时长</lang>
+                                                <lang>阻塞时长（单位：秒）</lang>
                                             </th>
                                             <th>
                                                 <lang>阻塞超时解锁时长</lang>
+                                            </th>
+                                            <th>
+                                                <lang>阻塞解锁次数</lang>
                                             </th>
                                             <th>
                                                 <lang>上次运行时间</lang>
@@ -162,7 +165,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <td>{{task.cron_time}}</td>
                                                 <td style="color: @if{task.status === 'success'=>'green'}">{{task.status}}</td>
                                                 <td>{{task.runtime}}</td>
-                                                <td>{{task.block_time}}</td>
+                                                <td class="@if{task.block_time=>'text-danger'}"><php>echo $task['block_time'];</php>s</td>
+                                                <td class="@if{task.block_time=>'text-danger'}">{{ task.block_times }} <lang>次</lang></td>
                                                 <td>{{task.block_unlock_timeout}} <lang>分钟</lang></td>
                                                 <td>{{task.run_time}}</td>
                                                 <td>{{task.run_date}}</td>
@@ -174,6 +178,20 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <td style="color: @if{task.runtime_error_date=>'red'}">{{task.runtime_error_date}}</td>
                                                 <td>{{task.create_time}}</td>
                                                 <td>{{task.update_time}}</td>
+                                                <td>
+                                                    <if condition="task.status === 'block'">
+                                                        <form action="@backend-url('*/cron/unlock')" method="post">
+                                                            <input type="hidden" name="task_id" value="{{task.id}}">
+                                                            <button class='btn btn-primary'><lang>解锁</lang></button>
+                                                        </form>
+                                                        <else/>
+                                                        <form action="@backend-url('*/cron/lock')" method='post'>
+                                                            <input type='hidden' name='task_id' value='{{task.id}}'>
+                                                            <button class='btn btn-primary'>锁定 {{task.block_unlock_timeout}}
+                                                                <lang>分钟</lang></button>
+                                                        </form>
+                                                    </if>
+                                                </td>
                                             </tr>
                                         </foreach>
                                         </tbody>

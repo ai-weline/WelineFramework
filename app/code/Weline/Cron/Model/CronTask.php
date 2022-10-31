@@ -27,6 +27,7 @@ class CronTask extends \Weline\Framework\Database\Model
     const fields_STATUS               = 'status';
     const fields_RUNTIME              = 'runtime';
     const fields_BLOCK_TIME           = 'block_time';
+    const fields_BLOCK_TIMES          = 'block_times';
     const fields_BLOCK_UNLOCK_TIMEOUT = 'block_unlock_timeout';
     const fields_RUN_TIME             = 'run_time';
     const fields_RUN_DATE             = 'run_date';
@@ -57,7 +58,7 @@ class CronTask extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-//        $setup->dropTable();
+        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable()
                   ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', 'ID')
@@ -68,6 +69,7 @@ class CronTask extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_STATUS, TableInterface::column_type_VARCHAR, 8, 'default "' . CronStatus::PENDING->value . '"', '任务状态')
                   ->addColumn(self::fields_RUNTIME, TableInterface::column_type_FLOAT, 0, 'default 0', '运行时长')
                   ->addColumn(self::fields_BLOCK_TIME, TableInterface::column_type_FLOAT, 0, 'default 0', '阻塞时长')
+                  ->addColumn(self::fields_BLOCK_TIMES, TableInterface::column_type_INTEGER, 0, 'default 0', '阻塞次数')
                   ->addColumn(self::fields_BLOCK_UNLOCK_TIMEOUT, TableInterface::column_type_INTEGER, 0, 'default 30', '阻塞超时解锁时长')
                   ->addColumn(self::fields_RUN_TIME, TableInterface::column_type_VARCHAR, 20, 'default 0', '运行时间戳')
                   ->addColumn(self::fields_RUN_DATE, TableInterface::column_type_DATETIME, 0, 'default null', '运行日期')

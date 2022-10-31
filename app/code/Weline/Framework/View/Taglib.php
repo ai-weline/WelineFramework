@@ -594,6 +594,35 @@ class Taglib
                         }
                     }
             ],
+            'backend-url'   => [
+                'tag'       => 1,
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  =>
+                    function ($tag_key, $config, $tag_data, $attributes) use ($template) {
+                        switch ($tag_key) {
+                            case 'tag':
+                                $data = $this->varParser(str_replace(' ', '', $tag_data[2]));
+                                if (str_starts_with($data, '"') || str_starts_with($data, "'")) {
+                                    return "<?=\$this->getAdminUrl({$data})?>";
+                                } else {
+                                    return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
+                                }
+                                // no break
+                            case 'tag-start':
+                                return "<?=\$this->getAdminUrl(";
+                            case 'tag-end':
+                                return ")?>";
+                            default:
+                                $data = str_replace(' ', '', $tag_data[1]);
+                                if (str_starts_with($data, '"') || str_starts_with($data, "'")) {
+                                    return "<?=\$this->getAdminUrl({$data})?>";
+                                } else {
+                                    return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
+                                }
+                        }
+                    }
+            ],
             'backend-api' => [
                 'tag'       => 1,
                 'tag-start' => 1,

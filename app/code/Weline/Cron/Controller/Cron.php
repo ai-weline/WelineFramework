@@ -46,9 +46,13 @@ class Cron extends \Weline\Framework\App\Controller\BackendController
             $task = $this->cronTask->load($task_id);
             $task->setData($task::fields_STATUS, CronStatus::BLOCK->value)
                  ->save();
-            return $this->fetchJson($this > $this->success(__('锁定任务：%1', $task->getData('name'))));
+//            return $this->fetchJson($this->success(__('锁定任务：%1', $task->getData('name'))));
+            $this->getMessageManager()->addSuccess(__('锁定任务：%1', $task->getData('name')));
+            $this->redirect('*/cron/listing');
         } catch (\ReflectionException|Core $e) {
-            return $this->fetchJson($this->error($e->getMessage()));
+            $this->getMessageManager()->addError(__('锁定任务失败：%1',$e->getMessage()));
+            $this->redirect('*/cron/listing');
+//            return $this->fetchJson($this->error($e->getMessage()));
         }
     }
 
@@ -59,9 +63,13 @@ class Cron extends \Weline\Framework\App\Controller\BackendController
             $task = $this->cronTask->load($task_id);
             $task->setData($task::fields_STATUS, CronStatus::PENDING->value)
                  ->save();
-            return $this->fetchJson($this > $this->success(__('解锁任务：%1', $task->getData('name'))));
+//            return $this->fetchJson($this->success(__('解锁任务：%1', $task->getData('name'))));
+            $this->getMessageManager()->addSuccess(__('解锁任务：%1', $task->getData('name')));
+            $this->redirect('*/cron/listing');
         } catch (\ReflectionException|Core $e) {
-            return $this->fetchJson($this->error($e->getMessage()));
+//            return $this->fetchJson($this->error($e->getMessage()));
+            $this->getMessageManager()->addError(__('解锁任务失败：%1',$e->getMessage()));
+            $this->redirect('*/cron/listing');
         }
     }
 }

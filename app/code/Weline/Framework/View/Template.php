@@ -305,6 +305,9 @@ class Template extends DataObject
             //如果缓存文件不存在则 编译 或者文件修改了也编译
             $content    = file_get_contents($tplFile);
             $repContent = $this->tmp_replace($content, $comFileName);                   //得到模板文件 并替换占位符 并得到替换后的文件
+            if(DEV){
+                $repContent = '<!-- ' . __('模板文件：%1', $tplFile) . ' START -->' . $repContent . '<!--' . __('编译文件：%1', $comFileName) . ' END-->';
+            }
             file_put_contents($comFileName, $repContent);                               //将替换后的文件写入定义的缓存文件中
         }
         return $comFileName;
