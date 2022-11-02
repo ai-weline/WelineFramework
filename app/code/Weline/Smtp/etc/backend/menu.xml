@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menus xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
+       xs:noNamespaceSchemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd"
+       xs:schemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd">
+    <!--Smtp邮件服务-->
+    <add source="Weline_Smtp::system_smtp" name="system_smtp" title="Smtp邮件服务" action="smtp/backend/config"
+         parent="Weline_Backend::system_configuration" icon="mdi mdi-email-send-outline" order="1"/>
+</menus>

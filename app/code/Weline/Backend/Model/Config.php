@@ -15,7 +15,7 @@ use Weline\SystemConfig\Model\SystemConfig;
 
 class Config
 {
-    private SystemConfig $systemConfig;
+    public SystemConfig $systemConfig;
 
     public function __construct(
         SystemConfig $systemConfig
