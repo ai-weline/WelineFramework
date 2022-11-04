@@ -31,6 +31,7 @@ class SmtpSendLog extends \Weline\Framework\Database\Model
     const fields_BCC         = 'bcc';
     const fields_IS_HTML     = 'is_html';
     const fields_ATTACHMENT  = 'attachment';
+    const fields_MODULE      = 'module';
 
     /**
      * @inheritDoc
@@ -90,7 +91,7 @@ class SmtpSendLog extends \Weline\Framework\Database\Model
                       self::fields_REPLY_TO,
                       TableInterface::column_type_MEDIU_TEXT,
                       0,
-                      'not null',
+                      '',
                       '回复（一个或者多个）')
                   ->addColumn(
                       self::fields_SUBJECT,
@@ -108,34 +109,41 @@ class SmtpSendLog extends \Weline\Framework\Database\Model
                       self::fields_ALT,
                       TableInterface::column_type_MEDIU_TEXT,
                       0,
-                      'not null',
+                      '',
                       '邮件签名')
                   ->addColumn(
                       self::fields_CC,
                       TableInterface::column_type_MEDIU_TEXT,
                       0,
-                      'not null',
+                      '',
                       '邮件抄送（一个或者多个）')
                   ->addColumn(
                       self::fields_BCC,
                       TableInterface::column_type_MEDIU_TEXT,
                       0,
-                      'not null',
+                      '',
                       '隐蔽邮件抄送（一个或者多个）')
                   ->addColumn(
                       self::fields_IS_HTML,
                       TableInterface::column_type_SMALLINT,
                       1,
-                      'not null',
+                      'default 1',
                       '是否是html')
                   ->addColumn(
                       self::fields_ATTACHMENT,
                       TableInterface::column_type_MEDIU_TEXT,
                       0,
-                      'not null',
+                      '',
                       '附件（一个或者多个）')
+                  ->addColumn(
+                      self::fields_MODULE,
+                      TableInterface::column_type_VARCHAR,
+                      128,
+                      'not null',
+                      '模组')
                   ->addIndex(TableInterface::index_type_FULLTEXT, 'FROM_EMAIL', self::fields_FROM)
                   ->addIndex(TableInterface::index_type_FULLTEXT, 'TO_EMAIL', self::fields_TO)
+                  ->addIndex(TableInterface::index_type_FULLTEXT, 'SEND_MODULE', self::fields_MODULE)
                   ->create();
         }
     }

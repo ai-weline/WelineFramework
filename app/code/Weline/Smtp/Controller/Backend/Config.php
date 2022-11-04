@@ -70,8 +70,8 @@ class Config extends \Weline\Admin\Controller\BaseController
         $smtpSender = ObjectManager::getInstance(SmtpSender::class);
         try {
             $smtpSender->sender(
-                ['email' => $this->data->get($this->data::smtp_username), '发送者'],
-                ['email' => $test_email, '接收者'],
+                ['email' => $this->data->get($this->data::smtp_username), 'name' => '发送者'],
+                ['email' => $test_email, 'name' => '接收者'],
                 'WelineFramework 框架Smtp测试！',
                 'WelineFramework 框架Smtp测试！这只是一个测试邮件。'
             );

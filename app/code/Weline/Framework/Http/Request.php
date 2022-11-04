@@ -10,6 +10,7 @@
 namespace Weline\Framework\Http;
 
 use Weline\Framework\App\Env;
+use Weline\Framework\App\Exception;
 use Weline\Framework\Http\Request\RequestFilter;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -65,7 +66,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         } else {
             $data = RequestFilter::filter(gettype($default), $data);
         }
-        return $data;
+        return $this->checkResult($key, $data);
     }
 
     public function getParams()
@@ -84,7 +85,8 @@ class Request extends Request\RequestAbstract implements RequestInterface
     public function getBodyParam($key, mixed $default = null)
     {
         $params = $this->getBodyParams(true);
-        return $params[$key] ?? $default;
+        $result = $params[$key] ?? $default;
+        return $this->checkResult($key, $result);
     }
 
     public function getBodyParams(bool $array = false)
@@ -121,7 +123,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
             $result = $this->getDefaultTypeData($result, $default);
         }
 
-        return $result;
+        return $this->checkResult($key, $result);
     }
 
     public function getGet(string $key = '', mixed $default = null)
@@ -132,6 +134,14 @@ class Request extends Request\RequestAbstract implements RequestInterface
         $result = $_GET[$key] ?? $default;
         if ($default) {
             $result = $this->getDefaultTypeData($result, $default);
+        }
+        return $this->checkResult($key, $result);
+    }
+
+    private function checkResult(string $key, mixed &$result): mixed
+    {
+        if ($result === null) {
+            throw new Exception(__('未提供参数：%1', $key));
         }
         return $result;
     }

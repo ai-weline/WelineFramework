@@ -97,10 +97,10 @@ class Run implements \Weline\Framework\Console\CommandInterface
                 } else {
                     $testsuites .= "
         <testsuite name='unit'>
-            <directory suffix=\"test.php\">$test_path</directory>
+            <directory suffix=\"Test.php\">$test_path</directory>
         </testsuite>
         <testsuite name='{$module['name']}'>
-            <directory suffix=\"test.php\">$test_path</directory>
+            <directory suffix=\"Test.php\">$test_path</directory>
         </testsuite>
                         ";
                 }

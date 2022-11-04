@@ -12,10 +12,6 @@ declare(strict_types=1);
 
 namespace Weline\Smtp\Helper;
 
-use Weline\Framework\App\Exception;
-use Weline\Framework\Http\Request;
-use Weline\Framework\Manager\ObjectManager;
-
 class Data extends \Weline\Backend\Model\Config
 {
     const smtp_host         = 'smtp_host';
