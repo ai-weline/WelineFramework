@@ -56,7 +56,10 @@ class File extends CacheDriverAbstract
             return false;
         }
         $key       = $this->buildKey($key);
-        $cacheFile = $this->processCacheFile($this->cachePath . $key);
+        $cacheFile = $this->cachePath . $key;
+        if(!file_exists($cacheFile)){
+            return false;
+        }
         // filemtime用来获取文件的修改时间
         if (filemtime($cacheFile) > time()) {
             // file_get_contents用来获取文件内容，unserialize用来反序列化文件内容
@@ -81,7 +84,10 @@ class File extends CacheDriverAbstract
             return false;
         }
         $key       = $this->buildKey($key);
-        $cacheFile = $this->processCacheFile($this->cachePath . $key);
+        $cacheFile = $this->cachePath . $key;
+        if(!file_exists($cacheFile)){
+            return false;
+        }
         // 用修改时间标记过期时间，存入时会做相应的处理
         return @filemtime($cacheFile) > time();
     }
@@ -161,9 +167,13 @@ class File extends CacheDriverAbstract
     public function delete($key): bool
     {
         $key       = $this->buildKey($key);
-        $cacheFile = $this->processCacheFile($this->cachePath . $key);
-        // unlink用来删除文件
-        return unlink($cacheFile);
+
+        $cacheFile = $this->cachePath . $key;
+        if(is_file($cacheFile)){
+            // unlink用来删除文件
+            return unlink($cacheFile);
+        }
+        return false;
     }
 
     /**

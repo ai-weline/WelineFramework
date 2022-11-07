@@ -24,7 +24,7 @@ class Url extends \Weline\Framework\App\Controller\BackendController
         /**@var UrlManager $urlManager */
         $urlManager = ObjectManager::getInstance(UrlManager::class);
         # 搜索词
-        $q = $this->request->getParam('q');
+        $q = $this->request->getParam('q','');
         if ($q) {
             $urlManager->where('path', "%{$q}%", 'like');
         }

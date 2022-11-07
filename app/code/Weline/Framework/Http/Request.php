@@ -20,12 +20,20 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     private string $module_name = '';
 
+    private bool $check_param = false;
+
     public function __init()
     {
         parent::__init();
         if (is_array($this->getBodyParams())) {
             $this->setData(array_merge($this->getParams(), $this->getBodyParams()));
         }
+    }
+
+    public function checkParam(bool $check_param = true)
+    {
+        $this->check_param = $check_param;
+        return $this->check_param;
     }
 
     public function getUrlPath(): string
@@ -140,8 +148,10 @@ class Request extends Request\RequestAbstract implements RequestInterface
 
     private function checkResult(string $key, mixed &$result): mixed
     {
-        if ($result === null) {
-            throw new Exception(__('未提供参数：%1', $key));
+        if ($this->check_param) {
+            if ($result === null) {
+                throw new Exception(__('未提供参数：%1', $key));
+            }
         }
         return $result;
     }

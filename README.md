@@ -60,9 +60,11 @@ composer create-project aiweline/weline-framework WelineFramework --prefer-dist
 为解决PHP框架性能和优雅不能共存的问题解决。
 
 #### 更新说明
+```angular2html
 # 1.0.2
 1、新增自动化单元测试命令。php bin/m phpunit:run
 2、新增计划任务调度系统。php bin/m cron:* 系列任务调度操作命令
+```
 
 # 1.0.1
 ```markdown
