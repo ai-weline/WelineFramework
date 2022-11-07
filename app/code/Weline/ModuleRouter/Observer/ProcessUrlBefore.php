@@ -24,14 +24,12 @@ use Weline\ModuleRouter\Config\ModuleRouterReader;
 class ProcessUrlBefore implements \Weline\Framework\Event\ObserverInterface
 {
     private CacheInterface $moduleRouterCache;
-    private Request $request;
 
     public function __construct(
         ModuleRouterCache $moduleRouterCache,
-        Request $request
+        private Request $request
     ) {
         $this->moduleRouterCache = $moduleRouterCache->create();
-        $this->request = $request;
     }
 
     /**

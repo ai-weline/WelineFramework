@@ -26,6 +26,7 @@ abstract class RequestAbstract extends RequestFilter
 {
     /**缓存专区*/
     public string $uri_cache_key = '';
+    public ?string $uri_cache_url_path_data = null;
     public const HEADER = 'header';
 
     public const MOBILE_DEVICE_HEADERS = [
@@ -70,7 +71,7 @@ abstract class RequestAbstract extends RequestFilter
     public function parse_url(): bool|int|array|string|null
     {
         if (empty($this->parse_url)) {
-            $this->parse_url = parse_url(trim($this->getUri(), '/'));
+            $this->parse_url = parse_url(rtrim($this->getUri(), '/'));
         }
         return $this->parse_url;
     }
@@ -276,7 +277,7 @@ abstract class RequestAbstract extends RequestFilter
      */
     public function getMethod(): string
     {
-        return $_SERVER['REQUEST_METHOD']??'';
+        return $_SERVER['REQUEST_METHOD'] ?? '';
     }
 
     /**
@@ -329,14 +330,15 @@ abstract class RequestAbstract extends RequestFilter
         if (!is_null($this->uri)) {
             return $this->uri;
         }
-        $uri = trim($this->getServer('REQUEST_URI'), '/');
-        $url_path           = $this->cache->get($this->uri_cache_key);
-        if ($url_path) {
+        $uri      = rtrim($this->getServer('REQUEST_URI'), '/');
+        $url_path = $this->cache->get($this->uri_cache_key);
+        if ($url_path !== false) {
+            $this->uri_cache_url_path_data = $url_path;
             $this->setServer('REQUEST_URI', $uri);
             return $url_path;
         }
         # url 重写
-        if ($uri&&$this->isGet()) {
+        if ($uri && $this->isGet()) {
             /**@var EventsManager $event */
             $event = ObjectManager::getInstance(EventsManager::class);
             $data  = new DataObject(['uri' => $uri]);
@@ -367,7 +369,7 @@ abstract class RequestAbstract extends RequestFilter
     {
         $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
-        return $this->getBaseHost() .'/'. array_shift($url_exp);
+        return $this->getBaseHost() . '/' . array_shift($url_exp);
     }
 
     public function getBaseUri(): string

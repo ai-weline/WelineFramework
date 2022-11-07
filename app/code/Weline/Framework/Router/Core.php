@@ -37,7 +37,15 @@ class Core
     private CacheInterface $cache;
 
     protected array $router;
+    protected string $url;
+    /**缓存建*/
     protected string $_router_cache_key;
+    protected string $url_cache_key;
+    protected string $rule_cache_key;
+
+    /**缓存结果*/
+    protected mixed $rule_cache_data = null;
+    protected mixed $url_cache_data = null;
 
     /**
      * @DESC         |任何时候都会初始化
@@ -45,7 +53,7 @@ class Core
      * 参数区：
      *
      */
-    public function __init()
+    public function __init(): void
     {
         $this->request = ObjectManager::getInstance(Request::class);
         if (empty($this->cache)) {
@@ -62,6 +70,10 @@ class Core
         if (empty($this->is_admin)) {
             $this->is_admin = is_int(strpos(strtolower($this->request_area), \Weline\Framework\Router\DataInterface::area_BACKEND));
         }
+        // 读取url
+        $this->url_cache_key     = 'url_cache_key_' . $this->request->getUri() . $this->request->getMethod();
+        $this->rule_cache_key    = 'rule_data_cache_key_' . $this->request->getUri() . $this->request->getMethod();
+        $this->_router_cache_key = 'router_start_cache_key_' . $this->request->getUri() . $this->request->getMethod();
     }
 
     public function getRequest(): Request
@@ -81,9 +93,8 @@ class Core
     public function start()
     {
         # 获取URL
-        $url = $this->processUrl();
+        $this->url = $url = $this->processUrl();
 //        $url                     = str_replace('-', '', $origin_url);
-        $this->_router_cache_key = 'router_start_cache_key_' . $this->request->getUri() . $this->request->getMethod();
         if ($router = $this->cache->get($this->_router_cache_key)) {
             $this->router = $router;
             return $this->route();
@@ -112,13 +123,12 @@ class Core
 
     public function processUrl()
     {
-        // 读取url
-        $url_cache_key  = 'url_cache_key_' . $this->request->getUri() . $this->request->getMethod();
-        $rule_cache_key = 'rule_data_cache_key_' . $this->request->getUri() . $this->request->getMethod();
-        $cached_url     = $this->cache->get($url_cache_key);
-        $rule           = $this->cache->get($rule_cache_key);
-        if (PROD && $cached_url) {
-            $url = $cached_url;
+
+        $url  = $this->cache->get($this->url_cache_key);
+        $rule = $this->cache->get($this->rule_cache_key);
+        if (PROD && $url) {
+            $this->url_cache_data  = $url;
+            $this->rule_cache_data = $rule;
             # 将规则设置到请求类
             $this->request->setRule($rule);
             $this->request->setData($rule);
@@ -135,7 +145,7 @@ class Core
             $eventManager->dispatch('Weline_Framework_Router::process_uri_before', ['data' => $routerData]);
             $url  = $routerData->getData('path');
             $rule = $routerData->getData('rule');
-            $this->cache->set($rule_cache_key, $rule);
+
             # 将规则设置到请求类
             $this->request->setRule($rule);
             $this->request->setData($rule);
@@ -153,7 +163,6 @@ class Core
             $url = implode('/', $url_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
             $url = trim($url, '/');
             $url = str_replace('//', '/', $url);
-            $this->cache->set($url_cache_key, $url);
         }
 
         return $url;
@@ -342,13 +351,19 @@ class Core
         $dispatch = ObjectManager::getInstance($dispatch);
         /**@var \Weline\Framework\Controller\Core $dispatch */
 //        $dispatch->assign($this->request->getData());
-        $result   = call_user_func([$dispatch, $method], /*...$this->request->getParams()*/);
+        $result = call_user_func([$dispatch, $method], /*...$this->request->getParams()*/);
 //        file_put_contents(__DIR__.'/'.$cache_key.'.html', $result);
         /** Get output buffer. */
         $this->cache->set($cache_key, $result, 5);
         $this->is_match = true;
-        # 最后输出事件
-        $this->request->cache->set($this->request->uri_cache_key, $this->request->getUri());
+        # 最后输出前 保证真实可靠的URL才进行缓存
+        if(is_null($this->request->uri_cache_url_path_data)){
+            $this->request->cache->set($this->request->uri_cache_key, $this->request->getUri());
+        }
+        if (!$this->url_cache_data) {
+            $this->cache->set($this->rule_cache_key, $this->request->getRule());
+            $this->cache->set($this->url_cache_key, $this->url);
+        }
         return $result;
     }
 }
