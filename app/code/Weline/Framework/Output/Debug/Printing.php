@@ -33,7 +33,7 @@ class Printing extends AbstractPrint
     public function debug($message, string $log_path = null, int $message_type = 3)
     {
         if ($log_path === null) {
-            $log_path = $this->etc->getLogPath(Env::log_path_ERROR);
+            $log_path = str_replace('\\', DS, $this->etc->getLogPath(Env::log_path_ERROR));
         }
         $this->write($log_path, is_array($message) ? var_export($message, true) : $message, $message_type);
     }

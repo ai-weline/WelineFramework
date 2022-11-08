@@ -369,7 +369,7 @@ abstract class RequestAbstract extends RequestFilter
     {
         $uri     = $this->getUri();
         $url_exp = explode('?', $uri);
-        return $this->getBaseHost() . '/' . array_shift($url_exp);
+        return $this->getBaseHost() . array_shift($url_exp);
     }
 
     public function getBaseUri(): string

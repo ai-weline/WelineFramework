@@ -30,18 +30,18 @@ class System
         if (IS_WIN && $process_win_to_linux) {
             // 删除
             if (
-                (is_int(strpos($linux_command, 'rm')) || is_int(strpos($linux_command, 'cp'))) &&
-                (is_int(strpos($linux_command, '-rf')) || is_int(strpos($linux_command, '-fr')))
+                (is_int(strpos($linux_command, 'rm ')) || is_int(strpos($linux_command, 'cp '))) &&
+                (is_int(strpos($linux_command, ' -rf ')) || is_int(strpos($linux_command, ' -fr ')))
             ) {
-                $linux_command = str_replace('rm', 'rd', $linux_command);
-                $linux_command = str_replace('-rf', '-r', $linux_command);
-                $linux_command = str_replace('-fr', '-r', $linux_command);
+                $linux_command = str_replace('rm ', 'rd ', $linux_command);
+                $linux_command = str_replace(' -rf ', ' -r ', $linux_command);
+                $linux_command = str_replace(' -fr ', ' -r ', $linux_command);
             }
             $linux_to_win = [
-                'rm' => 'del',
-                '-f' => '/F',
-                'cp' => 'xcopy',
-                '-r' => '/S/Q',
+                'rm ' => ' del ',
+                ' -f ' => ' /F ',
+                'cp ' => ' xcopy ',
+                ' -r ' => ' /S/Q ',
             ];
 
 

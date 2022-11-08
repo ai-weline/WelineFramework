@@ -22,6 +22,7 @@ use Weline\Framework\Exception\Core;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Output\Debug\Printing;
 
 /**
  * Class AbstractModel
@@ -641,9 +642,11 @@ abstract class AbstractModel extends DataObject
         // 加载之前
         $this->delete_before();
         // load之前事件
-        $this->getEvenManager()->dispatch($this->processTable() . '_model_delete_before', ['model' => $this]);
-        $this->getQuery()->where($this->_primary_key, $this->getId())->delete()->fetch();
-        $this->clearData();
+        if ($this->getId()) {
+            $this->getEvenManager()->dispatch($this->processTable() . '_model_delete_before', ['model' => $this]);
+            $this->getQuery()->where($this->_primary_key, $this->getId())->delete()->fetch();
+            $this->clearData();
+        }
         // load之之后事件
         $this->getEvenManager()->dispatch($this->processTable() . '_model_delete_after', ['model' => $this]);
         // 加载之后
