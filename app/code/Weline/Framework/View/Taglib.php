@@ -102,7 +102,9 @@ class Taglib
             $pieces    = explode('.', $var);
             $has_piece = false;
             if (count($pieces) > 1) {
-                $name_str  .= '(';
+                if (PROD) {
+                    $name_str .= '(';
+                }
                 $has_piece = true;
             }
             foreach ($pieces as $key => $piece) {
@@ -121,9 +123,13 @@ class Taglib
 //            if($has_piece) {
 //                $name_str .= ")??{$default}";
 //            }
-            if(DEV){
-                $name_str = $has_piece ? "{$name_str}?:{$default}) " : $name_str . ' ';
-            }else{
+            if (DEV) {
+                if ($default==='\'\'') {
+                    $name_str = $name_str . ' ';
+                } else {
+                    $name_str = $has_piece ? "({$name_str}?:{$default}) " : $name_str . ' ';
+                }
+            } else {
                 $name_str = $has_piece ? "{$name_str}??{$default}) " : $name_str . ' ';
             }
 //            $name_str = $default ? "({$name_str}?? {$default}) " : ($has_piece ? "({$name_str}??'') " : $name_str . ' ');
@@ -261,7 +267,7 @@ class Taglib
                             throw new TemplateException(__("if没有自闭合标签:[{$template_html}]。示例：%1", htmlentities('<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>')));
                         case 'tag-start':
                             # 排除非if和属性标签的情况
-                            if (str_starts_with($tag_data[0], '<if ')||str_starts_with($tag_data[0], '<w:if ')) {
+                            if (str_starts_with($tag_data[0], '<if ') || str_starts_with($tag_data[0], '<w:if ')) {
                                 if (!isset($attributes['condition'])) {
                                     if (str_starts_with($tag_data[0], '<if ')) {
                                         $template_html = htmlentities($tag_data[0]);
@@ -283,9 +289,9 @@ class Taglib
                 }
             ],
             'empty'       => [
-                'tag-start'  => 1,
-                'tag-end'  => 1,
-                'callback' => function ($tag_key, $config, $tag_data, $attributes) use ($template) {
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  => function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                     switch ($tag_key) {
                         // @empty{$name|<li>空的</li>}
                         case '@tag{}':
@@ -308,9 +314,9 @@ class Taglib
                 }
             ],
             'notempty'    => [
-                'tag-start'      => 1,
-                'tag-end'  => 1,
-                'callback' => function ($tag_key, $config, $tag_data, $attributes) use ($template) {
+                'tag-start' => 1,
+                'tag-end'   => 1,
+                'callback'  => function ($tag_key, $config, $tag_data, $attributes) use ($template) {
                     switch ($tag_key) {
                         // @empty{$name|<li>空的</li>}
                         case '@tag{}':
@@ -363,7 +369,7 @@ class Taglib
                             case '@tag()':
                                 $template_html = htmlentities($tag_data[0]);
                                 throw new TemplateException(__("elseif没有@elseif()和@elseif{}用法:[{$template_html}]。示例：%1", htmlentities('<if condition="$a>$b"><var>a</var><elseif condition="$b>$a"/><var>b</var><else/><var>a</var><var>b</var></if>')));
-                                // <else/>
+                            // <else/>
                             case 'tag-self-close':
                                 $result = '<?php else:?>';
                                 break;
@@ -385,7 +391,7 @@ class Taglib
                                 $data   = array_merge($data, $attributes);
                                 $result = '<?php echo framework_view_process_block(' . w_var_export($data, true) . ');?>';
                                 break;
-                                // @block{Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml}
+                            // @block{Weline\Admin\Block\Demo|Weline_Admin::block/demo.phtml}
                             case '@tag{}':
                             case '@tag()':
                                 $data = explode('|', $tag_data[1]);
@@ -400,7 +406,7 @@ class Taglib
                                 }
                                 $result = '<?php echo framework_view_process_block(' . w_var_export($data, true) . ');?>';
                                 break;
-                                // <block class='Weline\Demo\Block\Demo' template='Weline_Demo::templates/demo.phtml'/>
+                            // <block class='Weline\Demo\Block\Demo' template='Weline_Demo::templates/demo.phtml'/>
                             case 'tag-self-close-with-attrs':
                                 if (!isset($attributes['class']) || !$attributes['class']) {
                                     $template_html = htmlentities($tag_data[0]);
@@ -583,7 +589,7 @@ class Taglib
                                 } else {
                                     return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
                                 }
-                                // no break
+                            // no break
                             case 'tag-start':
                                 return "<?=\$this->getAdminUrl(";
                             case 'tag-end':
@@ -598,7 +604,7 @@ class Taglib
                         }
                     }
             ],
-            'backend-url'   => [
+            'backend-url' => [
                 'tag'       => 1,
                 'tag-start' => 1,
                 'tag-end'   => 1,
@@ -612,7 +618,7 @@ class Taglib
                                 } else {
                                     return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
                                 }
-                                // no break
+                            // no break
                             case 'tag-start':
                                 return "<?=\$this->getAdminUrl(";
                             case 'tag-end':
@@ -641,7 +647,7 @@ class Taglib
                                 } else {
                                     return "<?=\$this->getBackendApi({$this->varParser($data)})?>";
                                 }
-                                // no break
+                            // no break
                             case 'tag-start':
                                 return "<?=\$this->getBackendApi(";
                             case 'tag-end':
@@ -780,11 +786,11 @@ class Taglib
                     $rawAttributes = $customTag[1] ?? '';
                     # 如果有属性接下来的字母就不会和标签紧贴着，而如果没有属性那么应该是>括号和标签紧贴着，如果都不是说明并非tag标签
                     if ($rawAttributes && (
-                        'tag' === $tag_key ||
-                        'tar-start' === $tag_key ||
-                        'tag-self-close-with-attrs' === $tag_key ||
-                        'tag-self-close' === $tag_key
-                    ) && !str_starts_with($rawAttributes, ' ')) {
+                            'tag' === $tag_key ||
+                            'tar-start' === $tag_key ||
+                            'tag-self-close-with-attrs' === $tag_key ||
+                            'tag-self-close' === $tag_key
+                        ) && !str_starts_with($rawAttributes, ' ')) {
                         continue;
                     }
 

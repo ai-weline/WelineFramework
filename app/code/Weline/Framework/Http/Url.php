@@ -121,10 +121,10 @@ class Url implements UrlInterface
      *
      * @return string
      */
-    public function extractedUrl(array $params, bool $merge_params, string $url=''): string
+    public function extractedUrl(array $params, bool $merge_params=false, string $url=''): string
     {
         if (empty($url)) {
-            $url = $this->getUri();
+            $url = $this->request->getBaseUrl();
         }
         if ($params) {
             if ($merge_params) {
