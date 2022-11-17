@@ -44,11 +44,11 @@ class Upgrade extends CommandAbstract
         foreach ($modules as $module) {
             $name                   = $module['name'];
             $module_view_static_dir = $module['base_path'] . DataInterface::dir . DS . DataInterface::dir_type_STATICS;
-            $module_view_dir        = $module['path'] . DataInterface::dir . DS. DataInterface::dir_type_STATICS . DS;
+            $module_view_dir        = $module['path'] . DataInterface::dir ;
             // windows的文件复制兼容
-//            if (IS_WIN) {
-//                $module_view_dir .= DataInterface::dir_type_STATICS . DS;
-//            }
+            if (IS_WIN) {
+                $module_view_dir .= DataInterface::dir_type_STATICS . DS;
+            }
             $origin_view_dir = $module_view_static_dir;
             if (is_dir($origin_view_dir)) {
                 $this->printer->note($name . '...');

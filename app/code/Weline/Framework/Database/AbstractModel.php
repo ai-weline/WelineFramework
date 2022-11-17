@@ -1206,6 +1206,7 @@ abstract class AbstractModel extends DataObject
         /**@var Request $request */
         $request                  = ObjectManager::getInstance(Request::class);
         $this->pagination['lang'] = $request->getHeader('WELINE-USER-LANG');
+        $this->pagination['uri'] = $request->getUri();
 
         # 页码缓存
         $cache_key = md5(json_encode($this->pagination));

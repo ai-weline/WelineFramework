@@ -90,6 +90,7 @@
 ## 静态文件
 # 非pub目录请求，且如果加上pub目录判断是文件，则重写到pub目录，重新请求这个文件
 RewriteCond %{REQUEST_URI} !^/pub/.*$
+RewriteCond %{REQUEST_URI} ^/static/.*$
 RewriteCond %{DOCUMENT_ROOT}/pub/$1 -f
 RewriteRule ^(.*)$ /pub/$1 [L]
 
