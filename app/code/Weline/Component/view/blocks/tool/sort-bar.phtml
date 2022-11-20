@@ -1,31 +1,3 @@
-<!--<div class="row">-->
-<!--    <nav class='navbar navbar-default' role='navigation'>-->
-<!--        <div class='container-fluid'>-->
-<!--            <div class='navbar-header'>-->
-<!--                <button type='button' class='navbar-toggle' data-toggle='collapse'-->
-<!--                        data-target='#{{id}}'>-->
-<!--                    <span class='sr-only'><lang>排序</lang></span>-->
-<!--                    <span class='icon-bar'></span>-->
-<!--                    <span class='icon-bar'></span>-->
-<!--                    <span class='icon-bar'></span>-->
-<!--                </button>-->
-<!--                <a class='navbar-brand' href='#'><lang>排序</lang></a>-->
-<!--            </div>-->
-<!--            <div class='collapse navbar-collapse' id='{{id}}'>-->
-<!--                <ul class='nav navbar-nav'>-->
-<!--                    <foreach name="sorts" item="sort">-->
-<!--                        <li class='@if{sort.target=>"active"}'>{{sort.icon}}<a href='{{sort.href}}' data-tag="{{sort.tag}}">{{sort.name}}</a></li>-->
-<!--                    </foreach>-->
-<!--                </ul>-->
-<!--                <form class='navbar-form navbar-left' role='search' action="{{action}}" method="get">-->
-<!--                    <button type='submit' class='btn btn-default'>-->
-<!--                        <lang>清空条件</lang>-->
-<!--                    </button>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </nav>-->
-<!--</div>-->
 <div class='container-fluid'>
     <nav class='navbar navbar-light navbar-expand-lg topnav-menu'>
         <div class='collapse navbar-collapse' id='topnav-menu-content'>
@@ -33,11 +5,11 @@
                 <!--循环条件-->
                 <foreach name='sorts' item='sort'>
                     <li class='nav-item @if{sort.target=>"active"}'>
-                        <a class="nav-link" href='{{sort.href}}' data-tag='{{sort.tag}}'>{{sort.icon}}{{sort.name}}</a>
+                        <a class="nav-link" href='{{sort.href}}'>{{sort.name}}{{sort.icon}}</a>
                     </li>
                 </foreach>
             </ul>
-            <a class='nav-link' href='{{action}}' data-tag='{{sort.tag}}'><lang>清空条件</lang></a>
+            <a class='nav-link' href='{{action}}' data-tag='{{sort.tag.sort}}'><lang>清空条件</lang></a>
         </div>
     </nav>
 </div>
