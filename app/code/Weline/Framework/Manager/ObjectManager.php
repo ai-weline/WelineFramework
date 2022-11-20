@@ -342,18 +342,14 @@ class ObjectManager implements ManagerInterface
             }
             $method_params = array_merge($method_params, $params);
             $instance      = $instance->newInstanceArgs($method_params);
-            if (method_exists($instance, '__init')) {
-                $instance->__init();
-            }
+            $instance = self::initClassInstance($class, $instance);
         } else {
             $instance = new ReflectionClass($new_class);
-            if (method_exists($instance, '__init')) {
-                $instance->__init();
-            }
+            $instance = self::initClassInstance($class, $instance);
             $paramArr = self::getMethodParams($instance, $method);
             $instance = $instance->{$method}(...array_merge($paramArr, $params));
         }
-        return self::initClassInstance($class, $instance);
+        return $instance;
     }
     /**
      * @Desc         | 创建实例并运行
