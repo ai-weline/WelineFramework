@@ -11,4 +11,7 @@
     <event name="Framework_Console::compile">
         <observer name="Framework_Theme::compile" instance="Weline\Theme\Observer\CompileResource" disabled="false" shared="true"/>
     </event>
+    <event name="Framework_Module::module_upgrade">
+        <observer name="Weline_Frontend::compiler_upgrade" instance="Weline\Theme\Observer\UpgradeCompiler" disabled="false" shared="true"/>
+    </event>
 </config>

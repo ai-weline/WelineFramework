@@ -3,6 +3,7 @@
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig                        = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
 $host                               = $this->request->getBaseHost() . '/';
+$domain                             = $this->request->getServer('SERVER_NAME');
 $base_host                          = $this->request->getPrePath();
 $base_router                        = $this->request->getRouterData('router');
 $current_module                     = $this->request->getModuleName();
@@ -12,8 +13,21 @@ $env_model                          = \Weline\Framework\App\Env::getInstance()->
 $theme_path                         = \Weline\Framework\App\Env::getInstance()->getTheme()['path'];
 $env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{path}' : '/static/' . $theme_path . '/{module}/view/statics/{path}');
 ?>
+<!--加载requirejs-->
+<?php if (DEV) : ?>
+    <!--    <script src="@static(Weline_Frontend::/libs/requirejs/2.3.6/requirejs.js)"></script>-->
+<?php
+else:
+    ?>
+    <!--    <script src="@static(Weline_Frontend::/libs/requirejs/2.3.6/requirejs.min.js)"></script>-->
+<?php
+endif;
+?>
 <!--加载require常用js模块-->
 <!--<script src='@static(Weline_Frontend::base/require.configs.js)'></script>-->
+<!--加载require常用js模块-->
+<js>Weline_Frontend::/libs/jquery/3.6.0/jquery.js</js>
+<w:js>Weline_Frontend::/js/cookie.js</w:js>
 <script>
     window.site = {
         host: '{{host}}',
@@ -39,12 +53,8 @@ $env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{pa
         }
         return path;
     }
-    window.lang = (lang) => {
-        setCookie('WELINE-USER-LANG', lang);
-        window.location.reload();
-    }
     window.url = (path) => {
-        return '{{host}}/' + window.path(path);
+        return '{{host}}' + window.path(path);
     }
     window.api = (path) => {
         return '{{host}}' + window.path(path);
@@ -53,34 +63,10 @@ $env_model_media_base_path_template = $host . (DEV ? '/{module}/view/statics/{pa
         return '{{host}}' + window.path(path);
     }
 
-    /**
-     * 设置Cookie
-     * @param cname
-     * @param cvalue
-     * @param exdays
-     */
-    function setCookie(cname, cvalue, exdays) {
-        let d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        let expires = 'expires=' + d.toGMTString();
-        document.cookie = cname + '=' + cvalue + '; ' + expires;
+    function lang(lang) {
+        setCookie('WELINE-USER-LANG', lang, {path: '/', domain: '.{{domain}}'});
+        window.location.reload();
     }
-
-    /**
-     * 获取Cookie
-     * @param cname
-     * @returns {string}
-     */
-    function getCookie(cname) {
-        let name = cname + '=';
-        let ca = document.cookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i].trim();
-            if (c.indexOf(name) === 0) return c.substring(name.length, c.length);
-        }
-        return '';
-    }
-
     /**
      * 通用打印函数
      * @param data

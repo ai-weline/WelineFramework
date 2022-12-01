@@ -31,18 +31,65 @@ class SortBar extends \Weline\Framework\View\Block
             'sort'  => 'desc'
         ]
     ];
+
+    private array $sort_data = [];
     protected string $_template = 'Weline_Component::tool/sort-bar.phtml';
 
     public function __init()
     {
         parent::__init();
         $action = $this->request->getUrlBuilder()->getUrl();
-        $filter = $this->getData('sorter');# 排序器名字，用于读取映射缓存
-        if (empty($filter)) {
-            throw new \Exception(__('排序器ID不能为空：%1', htmlentities('<block class="">')));
+        # 查看排序器缓存
+        $sorter_name = $this->getData('sorter');# 排序器名字，用于读取映射缓存
+        if (empty($sorter_name)) {
+            throw new \Exception(__('排序器属性sorter不能为空，示例：%1', htmlentities('<w:block class=\'Weline\Component\Block\Tool\SortBar\' up_icon="mdi mdi-arrow-up" down_icon="mdi mdi-arrow-down" sorts="hot=>viewed:desc,price=>price:asc"  sorter="index_sorter"/>')));
+        }
+        $this->assign('sorts', $this->getSorts($sorter_name));
+        $this->assign('action', $action);
+    }
+
+    public function getSorts(string $sorter_name, $current = false): array
+    {
+        $sorts = $this->getDefaultSorts($sorter_name);
+        # params添加，并由是否当前排序来决定返回是否反转数据
+        $params = $this->request->getParams();
+        foreach ($sorts['data'] as $key => &$sort) {
+            $target         = isset($params[$key]);
+            $sort['target'] = $target;
+            if ($target) {
+                $sort['sort'] = $params[$key];
+            }
+            if ($current) {
+                continue;
+            }
+            switch (strtolower($sort['sort'])) {
+                case 'desc':
+                    $sort['sort'] = 'asc';
+                    $sort['icon'] = $sorts['down_icon'];
+                    break;
+                case 'asc':
+                    $sort['sort'] = 'desc';
+                    $sort['icon'] = $sorts['up_icon'];
+                    break;
+            }
+            $sort['href'] = $this->request->getUrlBuilder()->extractedUrl([$key => $sort['sort']], true);
+            $sort['name'] = __($key);
+        }
+        return $sorts['data'];
+    }
+
+    public function getCurrentSorts(string $sorter_name): array
+    {
+        return $this->getSorts($sorter_name, true);
+    }
+
+    public function getDefaultSorts(string $sorter_name)
+    {
+        if (isset($this->sort_data[$sorter_name])) {
+            return $this->sort_data[$sorter_name];
         }
         # 查看排序器缓存
-        $sorts = $this->_cache->get($filter) ?: [];
+        $sorts = $this->_cache->get($sorter_name) ?: [];
         if (!$sorts) {
             $action_sorts       = $this->getData('sorts');#lasted=>create_time:desc
             $up_icon            = $this->getData('up_icon') ? '<i class="' . $this->getData('up_icon') . '"></i>' : '<i class="mdi mdi-arrow-up"></i>';
@@ -67,36 +114,8 @@ class SortBar extends \Weline\Framework\View\Block
                     $sorts['data'] = array_merge($sorts['data'], $action_sorts);
                 }
             }
-            $this->_cache->set($filter, $sorts);
+            $this->_cache->set($sorter_name, $sorts);
         }
-
-        # params排序反转
-        $params    = $this->request->getParams();
-        $sort_data = [];
-        foreach ($sorts['data'] as $key => $sort) {
-            $icon      = $sorts['down_icon'];
-            $target = isset($params[$key]);
-            if ($target) {
-                $sort['sort'] = $params[$key];
-            }
-            switch (strtolower($sort['sort'])) {
-                case 'desc':
-                    $sort['sort'] = 'asc';
-                    break;
-                case 'asc':
-                    $sort['sort'] = 'desc';
-                    $icon         = $sorts['up_icon'];
-                    break;
-            }
-            $sort_data[$key] = [
-                'href'   => $this->request->getUrlBuilder()->extractedUrl([$key => $sort['sort']], true),
-                'name'   => __($key),
-                'icon'   => $icon,
-                'sort'   => $sort['sort'],
-                'target' => $target,
-            ];
-        }
-        $this->assign('sorts', $sort_data);
-        $this->assign('action', $action);
+        return $sorts;
     }
 }

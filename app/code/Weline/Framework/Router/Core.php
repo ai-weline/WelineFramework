@@ -9,7 +9,6 @@
 
 namespace Weline\Framework\Router;
 
-use JetBrains\PhpStorm\NoReturn;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
@@ -123,7 +122,6 @@ class Core
 
     public function processUrl()
     {
-
         $url  = $this->cache->get($this->url_cache_key);
         $rule = $this->cache->get($this->rule_cache_key);
         if (PROD && $url) {
@@ -134,9 +132,9 @@ class Core
             $this->request->setData($rule);
         } else {
             $url = $this->request->getUrlPath();
+            $url = str_replace('//', '/', $url);
             if ($this->is_admin) {
                 $url = str_replace($this->area_router, '', $url);
-                $url = str_replace('//', '/', $url);
             }
             # ----------事件：处理url之前 开始------------
             /**@var EventsManager $eventManager */
@@ -357,7 +355,7 @@ class Core
         $this->cache->set($cache_key, $result, 5);
         $this->is_match = true;
         # 最后输出前 保证真实可靠的URL才进行缓存
-        if(is_null($this->request->uri_cache_url_path_data)){
+        if (is_null($this->request->uri_cache_url_path_data)) {
             $this->request->cache->set($this->request->uri_cache_key, $this->request->getUri());
         }
         if (!$this->url_cache_data) {

@@ -1,21 +1,8 @@
-*,
-*:before,
-*:after {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-body {
-    background: black;
-}
-
-.container {
+.loader-container {
     text-align: center;
 }
 
-section {
+.loader-section {
     position: absolute;
     z-index: 9999;
     width: 100%;
@@ -32,7 +19,7 @@ section {
 }
 
 @media only screen and (max-width: 600px) {
-    section {
+    .loader-section {
         min-width: 350px;
     }
 }

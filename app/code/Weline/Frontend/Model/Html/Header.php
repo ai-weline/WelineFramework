@@ -11,22 +11,20 @@ declare(strict_types=1);
 
 namespace Weline\Frontend\Model\Html;
 
-use Weline\Backend\Model\Config;
-use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\Session\Session;
+use Weline\Frontend\Model\Config;
 use Weline\Framework\View\Data\HtmlInterface;
 
 class Header implements HtmlInterface
 {
     public const key    = 'header';
     public const module = 'Weline_Frontend';
-    private Config $backendConfig;
+    private Config $frontendConfig;
     private string $_html = '';
 
     public function __construct(
-        Config $backendConfig
+        Config $frontendConfig
     ) {
-        $this->backendConfig = $backendConfig;
+        $this->frontendConfig = $frontendConfig;
     }
 
     /**
@@ -40,7 +38,7 @@ class Header implements HtmlInterface
      */
     public function getHtml(): string
     {
-        return ($this->backendConfig->getConfig(self::key, self::module) ?? '').$this->_html;
+        return ($this->frontendConfig->getConfig(self::key, self::module) ?? '').$this->_html;
     }
 
     /**
@@ -54,11 +52,12 @@ class Header implements HtmlInterface
      * @param string $html
      *
      * @return Header
+     * @throws \Weline\Framework\App\Exception
      */
     public function setHtml(string $html): static
     {
         $this->_html = $html;
-        $this->backendConfig->setConfig(self::key, $html, self::module);
+        $this->frontendConfig->setConfig(self::key, $html, self::module);
         return $this;
     }
 

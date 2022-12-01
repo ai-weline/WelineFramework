@@ -30,12 +30,13 @@ class RequireJs extends ResourceReader
     {
         # require js 配置
         $require_configs = $this->getFileList();
-        foreach ($require_configs as $require_config_key => $require_config_js) {
+        foreach ($require_configs as  $require_config_js) {
             $area = $require_config_js['area'];
             if (!isset($this->config_resources[$area])) {
                 $this->config_resources[$area]='';
             }
             $content = file_get_contents($require_config_js['origin']);
+
             # 替换模块的路径
             foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
                 $related_file_path = str_replace(trim($module_info['path'] . DS . 'view', DS), '/', $require_config_js['dir']);

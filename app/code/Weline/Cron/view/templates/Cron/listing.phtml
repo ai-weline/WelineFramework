@@ -163,11 +163,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <td>{{task.module}}</td>
                                                 <td>{{task.class}}</td>
                                                 <td>{{task.cron_time}}</td>
-                                                <td style="color: @if{task.status === 'success'=>'green'}">{{task.status}}</td>
+                                                <td style="color: @if{task.status === 'success'=>'green'} @if{task.status ===
+                                                'lock'=>'red'} @if{task.status ===
+                                                'pending'=>'blue'}">{{task.status}}</td>
                                                 <td>{{task.runtime}}</td>
                                                 <td class="@if{task.block_time=>'text-danger'}"><php>echo $task['block_time'];</php>s</td>
-                                                <td class="@if{task.block_time=>'text-danger'}">{{ task.block_times }} <lang>次</lang></td>
                                                 <td>{{task.block_unlock_timeout}} <lang>分钟</lang></td>
+                                                <td class="@if{task.block_time=>'text-danger'}">{{ task.block_times }} <lang>次</lang></td>
                                                 <td>{{task.run_time}}</td>
                                                 <td>{{task.run_date}}</td>
                                                 <td>{{task.next_run_date}}</td>

@@ -34,7 +34,7 @@ class Compiler implements \Weline\Framework\Event\ObserverInterface
                 case self::require_js_type:
                     $path = dirname(__DIR__) . DS . 'view' . DS . 'statics' . DS . self::require_js_file;
                     if (!is_dir(dirname($path))) {
-                        mkdir($path, 755, true);
+                        mkdir(dirname($path), 755, true);
                     }
                     if (!is_file($path)) {
                         touch($path);

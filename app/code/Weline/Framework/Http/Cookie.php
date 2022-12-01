@@ -42,6 +42,7 @@ class Cookie
     {
         // 用户语言优先
         $lang = $_COOKIE['WELINE-USER-LANG'] ?? null;
+//        dd($_COOKIE);
         // 默认网站语言
         if (empty($lang)) {
             $lang = self::get('WELINE-WEBSITE-LANG', 'zh_Hans_CN');

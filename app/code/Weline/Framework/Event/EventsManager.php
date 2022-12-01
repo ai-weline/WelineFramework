@@ -28,7 +28,8 @@ class EventsManager
 
     public function __construct(
         XmlReader $reader
-    ) {
+    )
+    {
         $this->reader = $reader;
     }
 
@@ -65,17 +66,14 @@ class EventsManager
      * 参数区：
      *
      * @param string $eventName
-     * @param array $data
+     * @param array  $data
+     *
      * @return $this
      */
     public function dispatch(string $eventName, array $data = []): static
     {
-        if (!isset($this->events[$eventName])) {
-            $data['observers'] = $this->getEventObservers($eventName);
-            $this->events = array_merge($this->events, [$eventName => (new Event($data))->setName($eventName)]);
-//            $this->events[$eventName] = (new Event($data))->setName($eventName);
-        }
-//        p($this->events, 1);
+        $data['observers'] = $this->getEventObservers($eventName);
+        $this->events[$eventName] = (new Event($data))->setName($eventName);
         $this->events[$eventName]->dispatch();
 
         return $this;
@@ -84,11 +82,13 @@ class EventsManager
     /**
      * @DESC          # 读取事件数据 读取非对象数值传输时的事件更改结果 如果是对象数据则不需要这个函数
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/15 21:57
      * 参数区：
+     *
      * @param string $eventName
+     *
      * @return DataObject|null
      */
     public function getEventData(string $eventName): DataObject|null
@@ -104,8 +104,9 @@ class EventsManager
      *
      * 参数区：
      *
-     * @param string $eventName
+     * @param string   $eventName
      * @param Observer $observer
+     *
      * @return $this
      * @throws Exception
      */
@@ -124,7 +125,9 @@ class EventsManager
      * @DESC         |触发运行器
      *
      * 参数区：
+     *
      * @param string $eventName
+     *
      * @throws Exception
      */
     public function trigger(string $eventName)
