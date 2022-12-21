@@ -124,7 +124,7 @@ class Taglib
 //                $name_str .= ")??{$default}";
 //            }
             if (DEV) {
-                if ($default==='\'\'') {
+                if ($default === '\'\'') {
                     $name_str = $name_str . ' ';
                 } else {
                     $name_str = $has_piece ? "({$name_str}?:{$default}) " : $name_str . ' ';

@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Weline\Theme\Console\Resource\Compiler;
 
 use Weline\Framework\Manager\ObjectManager;
+
 class RequireJs extends \Weline\Framework\Resource\Compiler
 {
     public function __init()

@@ -30,10 +30,10 @@ class Catalogs extends \Weline\Framework\View\Block
         $trees = $this->getCatalog()->getTree();
         return [
             [
-                'text'=>__('开发文档'),
-                'name'=>__('开发文档'),
-                'nodes'=>$trees,
-                'href'=>''
+                'text'  => __('开发文档'),
+                'name'  => __('开发文档'),
+                'nodes' => $trees,
+                'href'  => ''
             ]
         ];
     }

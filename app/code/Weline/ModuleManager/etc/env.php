@@ -9,7 +9,7 @@ declare(strict_types=1);
  * 论坛：https://bbs.aiweline.com
  */
 return [
-    'router' => 'module-manager',
+    'router'       => 'module-manager',
     'dependencies' => [
         'Weline_Admin'
     ]

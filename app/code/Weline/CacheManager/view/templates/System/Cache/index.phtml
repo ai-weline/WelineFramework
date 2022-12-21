@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
@@ -79,7 +79,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                         <div class="card">
                             <div class="card-body">
 
-                                <h4 class="card-title"><?= __('缓存控制器') ?>:<lang>一共有 </lang><var>total</var> <lang>条数据</lang></h4>
+                                <h4 class="card-title"><?= __('缓存控制器') ?>:
+                                    <lang>一共有</lang>
+                                    <var>total</var>
+                                    <lang>条数据</lang>
+                                </h4>
 
                                 <!--<div class="table-responsive mCustomScrollbar" data-mcs-axis="yx" data-mcs-theme='dark'
                                      style="height: 800px">-->
@@ -121,7 +125,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <td style='width: 100px'>
                                                     <input class='form-check form-switch' type='checkbox'
                                                            alt="@php{echo $cache->isKeep()?__('系统持久缓存无法操作'):'状态开关'}"
-                                                    id='@var{$cache->getIdentity()}' switch='bool' @if{$cache->getPermanently()=>'checked disabled'} @if{$cache->getStatus()=>'checked'}>
+                                                           id='@var{$cache->getIdentity()}' switch='bool' @if{$cache->getPermanently()=>'checked
+                                                    disabled'} @if{$cache->getStatus()=>'checked'}>
                                                     <label class='form-label' for='@var{$cache->getIdentity()}'
                                                            data-on-label='<?= __('开启') ?>'
                                                            data-off-label='<?= __('关闭') ?>'></label>

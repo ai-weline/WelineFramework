@@ -15,7 +15,7 @@
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-<!--    菜单声明-->
+    <!--    菜单声明-->
     <xs:complexType name="menuDeclaration">
         <xs:annotation>
             <xs:documentation>

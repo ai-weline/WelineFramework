@@ -38,8 +38,9 @@ class Setup
      */
     public function __construct(
         DdlFactory $ddl_table,
-        $connection = null
-    ) {
+                   $connection = null
+    )
+    {
         $this->connection = $connection;
         $this->ddl_table  = $ddl_table->create($connection);
     }

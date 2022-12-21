@@ -98,10 +98,10 @@ class Catalog extends \Weline\Framework\Database\Model
 
     public function getDescription(): string
     {
-        return $this->getData(self::fields_DESCRIPTION)??'';
+        return $this->getData(self::fields_DESCRIPTION) ?? '';
     }
 
-    public function getTree(string $main_field='', string $parent_id_field='parent_id', string $order_field='position', string $order_sort='ASC'): array
+    public function getTree(string $main_field = '', string $parent_id_field = 'parent_id', string $order_field = 'position', string $order_sort = 'ASC'): array
     {
         $catalogs = $this->where('pid=0')->select()->fetchOrigin();
         /**@var Catalog $catalog */

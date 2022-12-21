@@ -28,15 +28,17 @@ class Set implements CommandInterface
 
     /**
      * Set 初始函数...
+     *
      * @param Printing $printing
-     * @param System $system
+     * @param System   $system
      */
     public function __construct(
         Printing $printing,
         System   $system
-    ) {
+    )
+    {
         $this->printing = $printing;
-        $this->system = $system;
+        $this->system   = $system;
     }
 
     public function execute(array $args = [], array $data = [])

@@ -22,7 +22,7 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class SystemConfig extends \Weline\Framework\Database\Model
 {
-    public const primary_key   = 'key';
+    public const primary_key = 'key';
 
     public const fields_KEY    = 'key';
     public const fields_VALUE  = 'v';
@@ -95,9 +95,9 @@ class SystemConfig extends \Weline\Framework\Database\Model
                  ->forceCheck()
                  ->save();
             # 设置配置缓存
-            $this->_cache->set($cache_key, $value, );
+            $this->_cache->set($cache_key, $value,);
             return true;
-        } catch (\ReflectionException | Core $e) {
+        } catch (\ReflectionException|Core $e) {
             throw new Exception($e->getMessage());
         }
     }

@@ -22,7 +22,7 @@ class Env extends DataObject
     public const framework_code_path = APP_CODE_PATH . 'Weline' . DS . 'Framework' . DS;
 
     public const path_framework_generated = BP . 'generated' . DS;
-    public const path_bin = BP . 'bin' . DS;
+    public const path_bin                 = BP . 'bin' . DS;
 
     public const path_framework_generated_code = self::path_framework_generated . 'code' . DS;
 
@@ -85,7 +85,7 @@ class Env extends DataObject
     ];
 
     // 生成的var目录
-    public const VAR_DIR = BP . 'var'.DS;
+    public const VAR_DIR = BP . 'var' . DS;
 
     // 生成文件的目录
     public const GENERATED_DIR = BP . 'generated';

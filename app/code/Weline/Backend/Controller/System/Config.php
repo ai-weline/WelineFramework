@@ -22,9 +22,9 @@ class Config extends \Weline\Framework\App\Controller\BackendController
         $config->setConfig($key, $value, 'Weline_Backend');
         $fetchName = 'fetch' . ucfirst($type);
         try {
-            return  $this->$fetchName($this->success());
+            return $this->$fetchName($this->success());
         } catch (\Exception $exception) {
-            return  $this->$fetchName($this->exception($exception));
+            return $this->$fetchName($this->exception($exception));
         }
     }
 }

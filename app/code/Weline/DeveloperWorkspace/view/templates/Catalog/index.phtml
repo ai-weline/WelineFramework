@@ -46,13 +46,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     <!-- ============================================================== -->
     <!-- Start right Content here -->
     <!-- ============================================================== -->
-    <?php /**@var \Weline\DeveloperWorkspace\Model\Document\Catalog $catelog*/?>
+    <?php /**@var \Weline\DeveloperWorkspace\Model\Document\Catalog $catelog */ ?>
     <div class="main-content">
         <div class="page-content" style="min-height: 800px">
             <div class="container-fluid">
                 <div class='row'>
                     <h4 class='card-title'>
-                        <var>$catalog->getName()</var>-<lang>开发文档</lang>
+                        <var>$catalog->getName()</var>-
+                        <lang>开发文档</lang>
                     </h4>
                     <p class='card-title-desc'>
                         <var>$catalog->getName()</var>
@@ -61,9 +62,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                     <div class="col-lg-12">
                         <!--文章列表-->
                         <ul>
-                        <foreach name="documents">
-                            <li><a href="@var{$v->getUrl()}"><var>$v->getTitle()</var></a></li>
-                        </foreach>
+                            <foreach name="documents">
+                                <li><a href="@var{$v->getUrl()}"><var>$v->getTitle()</var></a></li>
+                            </foreach>
                         </ul>
                     </div>
                 </div> <!-- end row -->

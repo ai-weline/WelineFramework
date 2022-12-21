@@ -32,10 +32,10 @@ class RequestFilter extends DataObject
         return match ($filter) {
             'int', 'integer'   => (int)$data,
             'float'            => (float)$data,
-            'double'            => (float)$data,
+            'double'           => (float)$data,
             'string'           => (string)$data,
             'array'            => (array)$data,
-            'bool','boolean'             => (bool)$data,
+            'bool', 'boolean'  => (bool)$data,
             'json'             => json_decode($data, true),
             'xml'              => simplexml_load_string($data),
             'serialize'        => unserialize($data),
@@ -270,8 +270,8 @@ class RequestFilter extends DataObject
         if (is_array($StrFiltValue)) {
             $StrFiltValue = json_encode($StrFiltValue);
         }
-        if (PROD&&preg_match('/' . $ArrFiltReq . '/is', $StrFiltValue,$matches) === 1) {
-            if(DEV){
+        if (PROD && preg_match('/' . $ArrFiltReq . '/is', $StrFiltValue, $matches) === 1) {
+            if (DEV) {
                 dd($matches);
             }
             $this->slog('<br><br>操作IP: ' . $_SERVER['REMOTE_ADDR'] . '<br>操作时间: ' . date('%Y-%m-%d %H:%M:%S') . '<br>操作页面:' . $_SERVER['PHP_SELF'] . '<br>提交方式: ' . $_SERVER['REQUEST_METHOD'] . '<br>提交参数: ' . $StrFiltKey . '<br>提交数据: ' . $StrFiltValue);
@@ -289,7 +289,7 @@ class RequestFilter extends DataObject
             }
             touch($toppath);
         }
-        $Ts      = fopen($toppath, 'a+');
+        $Ts = fopen($toppath, 'a+');
         fputs($Ts, $logs . "\r\n");
         fclose($Ts);
     }

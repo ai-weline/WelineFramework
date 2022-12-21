@@ -17,6 +17,41 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
         <!-- Settings -->
         <hr class='mt-0'/>
+        <h6 class='text-center mb-0'><lang>系统配置</lang></h6>
+        <div class='p-4'>
+            <div class='mb-3'>
+                <div class='mt-4 mt-lg-0'>
+                    <h5 class='font-size-14 mb-3'>
+                        <lang>全局 默认/还原</lang>
+                    </h5>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-topbar'
+                               id='reset-theme'
+                               value=''>
+                        <label class='form-check-label' for='data-topbar-light'>
+                            <lang>还原</lang>
+                        </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='light-mode-switch'
+                               id='light-mode-radio'
+                               value='light' <?= $themeConfig->getThemeConfig('light-mode-switch') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-topbar-light'>
+                            <lang>明亮</lang>
+                        </label>
+                    </div>
+                    <div class='form-check form-check-inline'>
+                        <input class='form-check-input' type='radio' name='data-topbar'
+                               id='dark-mode-radio'
+                               value='dark' <?= $themeConfig->getThemeConfig('dark-mode-switch') ? 'checked' : '' ?>>
+                        <label class='form-check-label' for='data-topbar-light'>
+                            <lang>暗黑</lang>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class='mt-0'/>
         <h6 class='text-center mb-0'><?= __('布局元素') ?></h6>
         <div class='p-4'>
             <div class='mb-3'>
@@ -252,7 +287,6 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                 <label class="form-check-label" for="rtl-mode-switch"><?= __('RTL模式') ?></label>
             </div>
         </div>
-
     </div> <!-- end slimscroll-menu-->
 </div>
 <!-- /Right-bar -->

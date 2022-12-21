@@ -1,4 +1,3 @@
-
 //
 // Google map
 //
@@ -26,17 +25,19 @@
   width: 0;
   height: 0;
   position: absolute;
+
   &.above {
     bottom: -15px;
     border-left: 16px solid transparent;
     border-right: 16px solid transparent;
     border-top: 16px solid $primary;
   }
+
   &.below {
     top: -15px;
     border-left: 16px solid transparent;
     border-right: 16px solid transparent;
     border-bottom: 16px solid $primary;
   }
-  
+
 }

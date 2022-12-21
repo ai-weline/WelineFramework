@@ -22,8 +22,9 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
 
     public function __construct(
         \Weline\Backend\Model\Menu $menu,
-        MenuXmlReader $menuReader
-    ) {
+        MenuXmlReader              $menuReader
+    )
+    {
         $this->menu       = $menu;
         $this->menuReader = $menuReader;
     }
@@ -53,7 +54,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                             $menu[Menu::fields_PID] = 0;
                         }
                     }
-                    $menu[Menu::fields_PID] = $menu[Menu::fields_PID]??0;
+                    $menu[Menu::fields_PID] = $menu[Menu::fields_PID] ?? 0;
                     # 先查询一遍
                     /**@var Menu $menuModel */
                     $this->menu->clearData();
@@ -95,8 +96,8 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                         $menu[Menu::fields_PID] = 0;
                     }
                 }
-                $menu[Menu::fields_PID] = $menu[Menu::fields_PID]??0;
-                $result = $menuModel->setData($menu)->forceCheck(true)->save();
+                $menu[Menu::fields_PID] = $menu[Menu::fields_PID] ?? 0;
+                $result                 = $menuModel->setData($menu)->forceCheck(true)->save();
                 # 2 检查自身是否被别的模块作为父分类
                 $menuModel->clearData();
                 if ($this_menu_id = $menuModel->getId() && $is_others_parent = $menuModel->where(Menu::fields_PARENT_SOURCE, $menu[Menu::fields_SOURCE])->select()->fetch()) {

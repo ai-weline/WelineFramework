@@ -8,12 +8,13 @@
     color: $gray-600;
     line-height: 24px;
     padding: 6px 5px;
+
     &.active {
       color: $danger;
       font-weight: 500;
     }
 
-    i{
+    i {
       font-size: 18px;
     }
   }
@@ -24,6 +25,7 @@
     color: $dark;
     font-weight: 500;
   }
+
   p {
     font-size: 13px;
   }
@@ -41,7 +43,7 @@
     cursor: default;
     transition-duration: .3s;
 
-    a{
+    a {
       color: $gray-600;
     }
 
@@ -129,13 +131,14 @@
       box-shadow: inset 3px 0 0 $primary;
     }
 
-    
-  &.unread  {
-    background-color: $gray-300;
-    font-weight: 500;
-    color: darken($dark,5%);
-      a{
-        color: darken($dark,5%);
+
+    &.unread {
+      background-color: $gray-300;
+      font-weight: 500;
+      color: darken($dark, 5%);
+
+      a {
+        color: darken($dark, 5%);
         font-weight: 500;
       }
     }
@@ -155,6 +158,7 @@
       opacity: 0;
       cursor: pointer;
     }
+
     input:checked ~ label {
       opacity: 1;
     }
@@ -169,12 +173,13 @@
       margin-bottom: 0;
       transition-duration: .05s;
       top: 0;
+
       &:before {
         content: "\F012C";
         font-family: "Material Design Icons";
         top: 0;
         height: 20px;
-        color: darken($dark,5%);
+        color: darken($dark, 5%);
         width: 20px;
         position: absolute;
         margin-top: -16px;
@@ -185,8 +190,8 @@
   }
 }
 
-@media (max-width: 575.98px) { 
+@media (max-width: 575.98px) {
   .message-list li .col-mail-1 {
-      width: 200px;
+    width: 200px;
   }
 }

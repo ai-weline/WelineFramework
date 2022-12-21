@@ -21,9 +21,9 @@ class Reindex implements \Weline\Framework\Console\CommandInterface
      */
     public function execute(array $args = [], array $data = [])
     {
-        /**@var EventsManager $eventManager*/
+        /**@var EventsManager $eventManager */
         $eventManager = ObjectManager::getInstance(EventsManager::class);
-        $eventManager->dispatch('Framework_Database::indexer', ['args'=>$args]);
+        $eventManager->dispatch('Framework_Database::indexer', ['args' => $args]);
     }
 
     /**

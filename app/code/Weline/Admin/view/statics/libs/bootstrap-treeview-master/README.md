@@ -6,17 +6,17 @@
 [![npm version](https://img.shields.io/npm/v/bootstrap-treeview.svg?style=flat)](https://www.npmjs.com/package/bootstrap-treeview)
 [![Build Status](https://img.shields.io/travis/jonmiles/bootstrap-treeview/master.svg?style=flat)](https://travis-ci.org/jonmiles/bootstrap-treeview)
 
-A simple and elegant solution to displaying hierarchical tree structures (i.e. a Tree View) while leveraging the best that Twitter Bootstrap has to offer.
+A simple and elegant solution to displaying hierarchical tree structures (i.e. a Tree View) while leveraging the best that Twitter Bootstrap has to
+offer.
 
 ![Bootstrap Tree View Default](https://raw.github.com/jonmiles/bootstrap-treeview/master/screenshot/default.PNG)
 
 ## Dependencies
 
-Where provided these are the actual versions bootstrap-treeview has been tested against.  
+Where provided these are the actual versions bootstrap-treeview has been tested against.
 
 - [Bootstrap v3.3.4 (>= 3.0.0)](http://getbootstrap.com/)
 - [jQuery v2.1.3 (>= 1.9.0)](http://jquery.com/)
-
 
 ## Getting Started
 
@@ -35,8 +35,6 @@ $ npm install bootstrap-treeview
 ```
 
 or [download](https://github.com/jonmiles/bootstrap-treeview/releases/tag/v1.2.0) manually.
-
-
 
 ### Usage
 
@@ -67,7 +65,6 @@ function getTree() {
 
 $('#tree').treeview({data: getTree()});
 ```
-
 
 ## Data Structure
 
@@ -111,7 +108,7 @@ var tree = [
 ];
 ```
 
-At the lowest level a tree node is a represented as a simple JavaScript object.  This one required property `text` will build you a tree.
+At the lowest level a tree node is a represented as a simple JavaScript object. This one required property `text` will build you a tree.
 
 ```javascript
 {
@@ -149,82 +146,96 @@ If you want to do more, here's the full node specification
 The following properties are defined to allow node level overrides, such as node specific icons, colours and tags.
 
 #### text
+
 `String` `Mandatory`
 
 The text value displayed for a given tree node, typically to the right of the nodes icon.
 
 #### icon
+
 `String` `Optional`
 
 The icon displayed on a given node, typically to the left of the text.
 
-For simplicity we directly leverage [Bootstraps Glyphicons support](http://getbootstrap.com/components/#glyphicons) and as such you should provide both the base class and individual icon class separated by a space.  
+For simplicity we directly leverage [Bootstraps Glyphicons support](http://getbootstrap.com/components/#glyphicons) and as such you should provide
+both the base class and individual icon class separated by a space.
 
-By providing the base class you retain full control over the icons used.  If you want to use your own then just add your class to this icon field.
+By providing the base class you retain full control over the icons used. If you want to use your own then just add your class to this icon field.
 
 #### selectedIcon
+
 `String` `Optional`
 
 The icon displayed on a given node when selected, typically to the left of the text.
 
 #### color
+
 `String` `Optional`
 
 The foreground color used on a given node, overrides global color option.
 
 #### backColor
+
 `String` `Optional`
 
 The background color used on a given node, overrides global color option.
 
 #### href
+
 `String` `Optional`
 
 Used in conjunction with global enableLinks option to specify anchor tag URL on a given node.
 
 #### selectable
+
 `Boolean` `Default: true`
 
 Whether or not a node is selectable in the tree. False indicates the node should act as an expansion heading and will not fire selection events.
 
 #### state
+
 `Object` `Optional`
 Describes a node's initial state.
 
 #### state.checked
+
 `Boolean` `Default: false`
 
 Whether or not a node is checked, represented by a checkbox style glyphicon.
 
 #### state.disabled
+
 `Boolean` `Default: false`
 
 Whether or not a node is disabled (not selectable, expandable or checkable).
 
 #### state.expanded
+
 `Boolean` `Default: false`
 
-Whether or not a node is expanded i.e. open.  Takes precedence over global option levels.
+Whether or not a node is expanded i.e. open. Takes precedence over global option levels.
 
 #### state.selected
+
 `Boolean` `Default: false`
 
 Whether or not a node is selected.
 
 #### tags
+
 `Array of Strings`  `Optional`
 
-Used in conjunction with global showTags option to add additional information to the right of each node; using [Bootstrap Badges](http://getbootstrap.com/components/#badges)
+Used in conjunction with global showTags option to add additional information to the right of each node;
+using [Bootstrap Badges](http://getbootstrap.com/components/#badges)
 
 ### Extendible
 
-You can extend the node object by adding any number of additional key value pairs that you require for your application.  Remember this is the object which will be passed around during selection events.
-
-
+You can extend the node object by adding any number of additional key value pairs that you require for your application. Remember this is the object
+which will be passed around during selection events.
 
 ## Options
 
-Options allow you to customise the treeview's default appearance and behaviour.  They are passed to the plugin on initialization, as an object.
+Options allow you to customise the treeview's default appearance and behaviour. They are passed to the plugin on initialization, as an object.
 
 ```javascript
 // Example: initializing the treeview
@@ -236,6 +247,7 @@ $('#tree').treeview({
   backColor: 'green'
 });
 ```
+
 You can pass a new options object to the treeview at any time but this will have the effect of re-initializing the treeview.
 
 ### List of Options
@@ -243,134 +255,158 @@ You can pass a new options object to the treeview at any time but this will have
 The following is a list of all available options.
 
 #### data
-Array of Objects.  No default, expects data
+
+Array of Objects. No default, expects data
 
 This is the core data to be displayed by the tree view.
 
 #### backColor
-String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp).  Default: inherits from Bootstrap.css.
+
+String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp). Default: inherits from Bootstrap.css.
 
 Sets the default background color used by all nodes, except when overridden on a per node basis in data.
 
 #### borderColor
-String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp).  Default: inherits from Bootstrap.css.
+
+String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp). Default: inherits from Bootstrap.css.
 
 Sets the border color for the component; set showBorder to false if you don't want a visible border.
 
 #### checkedIcon
-String, class names(s).  Default: "glyphicon glyphicon-check" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
+
+String, class names(s). Default: "glyphicon glyphicon-check" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
 
 Sets the icon to be as a checked checkbox, used in conjunction with showCheckbox.
 
 #### collapseIcon
-String, class name(s).  Default: "glyphicon glyphicon-minus" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
+
+String, class name(s). Default: "glyphicon glyphicon-minus" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
 
 Sets the icon to be used on a collapsible tree node.
 
 #### color
-String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp).  Default: inherits from Bootstrap.css.
+
+String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp). Default: inherits from Bootstrap.css.
 
 Sets the default foreground color used by all nodes, except when overridden on a per node basis in data.
 
 #### emptyIcon
-String, class name(s).  Default: "glyphicon" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
+
+String, class name(s). Default: "glyphicon" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
 
 Sets the icon to be used on a tree node with no child nodes.
 
 #### enableLinks
-Boolean.  Default: false
 
-Whether or not to present node text as a hyperlink.  The href value of which must be provided in the data structure on a per node basis.
+Boolean. Default: false
+
+Whether or not to present node text as a hyperlink. The href value of which must be provided in the data structure on a per node basis.
 
 #### expandIcon
-String, class name(s).  Default: "glyphicon glyphicon-plus" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
+
+String, class name(s). Default: "glyphicon glyphicon-plus" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
 
 Sets the icon to be used on an expandable tree node.
 
 #### highlightSearchResults
-Boolean.  Default: true
+
+Boolean. Default: true
 
 Whether or not to highlight search results.
 
 #### highlightSelected
-Boolean.  Default: true
+
+Boolean. Default: true
 
 Whether or not to highlight the selected node.
 
 #### levels
+
 Integer. Default: 2
 
 Sets the number of hierarchical levels deep the tree will be expanded to by default.
 
 #### multiSelect
-Boolean.  Default: false
+
+Boolean. Default: false
 
 Whether or not multiple nodes can be selected at the same time.
 
 #### nodeIcon
-String, class name(s).  Default: "glyphicon glyphicon-stop" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
+
+String, class name(s). Default: "glyphicon glyphicon-stop" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
 
 Sets the default icon to be used on all nodes, except when overridden on a per node basis in data.
 
 #### onhoverColor
-String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp).  Default: '#F5F5F5'.
+
+String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp). Default: '#F5F5F5'.
 
 Sets the default background color activated when the users cursor hovers over a node.
 
 #### selectedIcon
-String, class name(s).  Default: "glyphicon glyphicon-stop" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
+
+String, class name(s). Default: "glyphicon glyphicon-stop" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
 
 Sets the default icon to be used on all selected nodes, except when overridden on a per node basis in data.
 
 #### searchResultBackColor
-String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp).  Default: undefined, inherits.
+
+String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp). Default: undefined, inherits.
 
 Sets the background color of the selected node.
 
 #### searchResultColor
-String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp).  Default: '#D9534F'.
+
+String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp). Default: '#D9534F'.
 
 Sets the foreground color of the selected node.
 
 #### selectedBackColor
-String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp).  Default: '#428bca'.
+
+String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp). Default: '#428bca'.
 
 Sets the background color of the selected node.
 
 #### selectedColor
-String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp).  Default: '#FFFFFF'.
+
+String, [any legal color value](http://www.w3schools.com/cssref/css_colors_legal.asp). Default: '#FFFFFF'.
 
 Sets the foreground color of the selected node.
 
 #### showBorder
-Boolean.  Default: true
+
+Boolean. Default: true
 
 Whether or not to display a border around nodes.
 
 #### showCheckbox
-Boolean.  Default: false
+
+Boolean. Default: false
 
 Whether or not to display checkboxes on nodes.
 
 #### showIcon
-Boolean.  Default: true
+
+Boolean. Default: true
 
 Whether or not to display a nodes icon.
 
 #### showTags
-Boolean.  Default: false
 
-Whether or not to display tags to the right of each node.  The values of which must be provided in the data structure on a per node basis.
+Boolean. Default: false
+
+Whether or not to display tags to the right of each node. The values of which must be provided in the data structure on a per node basis.
 
 #### uncheckedIcon
-String, class names(s).  Default: "glyphicon glyphicon-unchecked" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
+
+String, class names(s). Default: "glyphicon glyphicon-unchecked" as defined by [Bootstrap Glyphicons](http://getbootstrap.com/components/#glyphicons)
 
 Sets the icon to be as an unchecked checkbox, used in conjunction with showCheckbox.
 
-
 ## Methods
 
-Methods provide a way of interacting with the plugin programmatically.  For example, expanding a node is possible via the expandNode method.
+Methods provide a way of interacting with the plugin programmatically. For example, expanding a node is possible via the expandNode method.
 
 You can invoke methods in one of two ways, using either:
 
@@ -381,6 +417,7 @@ The plugin's wrapper works as a proxy for accessing the underlying methods.
 ```javascript
 $('#tree').treeview('methodName', args)
 ```
+
 > Limitation, multiple arguments must be passed as an array of arguments.
 
 #### 2. The treeview directly
@@ -397,6 +434,7 @@ $('#tree').treeview(true)
 $('#tree').data('treeview')
   .methodName(args);
 ```
+
 > A better approach, if you plan a lot of interaction.
 
 ### List of Methods
@@ -445,7 +483,7 @@ Triggers `nodeCollapsed` event; pass silent to suppress events.
 
 #### collapseNode(node | nodeId, options)
 
-Collapse a given tree node and it's child nodes.  If you don't want to collapse the child nodes, pass option `{ ignoreChildren: true }`.
+Collapse a given tree node and it's child nodes. If you don't want to collapse the child nodes, pass option `{ ignoreChildren: true }`.
 
 ```javascript
 $('#tree').treeview('collapseNode', [ nodeId, { silent: true, ignoreChildren: false } ]);
@@ -495,7 +533,7 @@ Triggers `nodeEnabled` event; pass silent to suppress events.
 
 #### expandAll(options)
 
-Expand all tree nodes.  Optionally can be expanded to any given number of levels.
+Expand all tree nodes. Optionally can be expanded to any given number of levels.
 
 ```javascript
 $('#tree').treeview('expandAll', { levels: 2, silent: true });
@@ -505,7 +543,7 @@ Triggers `nodeExpanded` event; pass silent to suppress events.
 
 #### expandNode(node | nodeId, options)
 
-Expand a given tree node, accepts node or nodeId.  Optionally can be expanded to any given number of levels.
+Expand a given tree node, accepts node or nodeId. Optionally can be expanded to any given number of levels.
 
 ```javascript
 $('#tree').treeview('expandNode', [ nodeId, { levels: 2, silent: true } ]);
@@ -605,7 +643,7 @@ Triggers `nodeExpanded` event; pass silent to suppress events.
 
 #### search(pattern, options)
 
-Searches the tree view for nodes that match a given string, highlighting them in the tree.  
+Searches the tree view for nodes that match a given string, highlighting them in the tree.
 
 Returns an array of matching nodes.
 
@@ -701,7 +739,8 @@ Triggers `nodeUnselected` event; pass silent to suppress events.
 
 ## Events
 
-Events are provided so that your application can respond to changes in the treeview's state.  For example, if you want to update a display when a node is selected use the `nodeSelected` event.
+Events are provided so that your application can respond to changes in the treeview's state. For example, if you want to update a display when a node
+is selected use the `nodeSelected` event.
 
 You can bind to any event defined below by either using an options callback handler, or the standard jQuery .on method.
 
@@ -741,15 +780,14 @@ $('#tree').on('nodeSelected', function(event, data) {
 
 `nodeUnchecked (event, node)`  - A node is unchecked.
 
-`nodeUnselected (event, node)`  - A node is unselected.  
+`nodeUnselected (event, node)`  - A node is unselected.
 
 `searchComplete (event, results)`  - After a search completes
 
 `searchCleared (event, results)`  - After search results are cleared
 
-
-
 ## Copyright and Licensing
+
 Copyright 2013 Jonathan Miles
 
 Licensed under the Apache License, Version 2.0 (the "License");

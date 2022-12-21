@@ -48,11 +48,12 @@ class Event extends \Weline\Framework\DataObject\DataObject
      * 参数区：
      *
      * @param Observer $observer
+     *
      * @return \Weline\Framework\Event\Event
      */
     public function addObserver(Observer $observer)
     {
-        $observers = $this->getData('observers');
+        $observers   = $this->getData('observers');
         $observers[] = $observer;
         $this->setData('observers', $observers);
 
@@ -85,6 +86,7 @@ class Event extends \Weline\Framework\DataObject\DataObject
      * 参数区：
      *
      * @param string $name
+     *
      * @return $this
      */
     public function setName(string $name)

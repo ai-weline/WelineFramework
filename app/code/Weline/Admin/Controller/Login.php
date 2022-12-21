@@ -26,7 +26,8 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         BackendUser    $adminUser,
         MessageManager $messageManager,
         Data           $helper
-    ) {
+    )
+    {
         $this->adminUser      = $adminUser;
         $this->helper         = $helper;
         $this->messageManager = $messageManager;

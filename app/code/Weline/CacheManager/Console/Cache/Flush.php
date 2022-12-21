@@ -26,9 +26,10 @@ class Flush implements \Weline\Framework\Console\CommandInterface
     private Printing $printing;
 
     public function __construct(
-        Scanner $scanner,
+        Scanner  $scanner,
         Printing $printing
-    ) {
+    )
+    {
         $this->scanner  = $scanner;
         $this->printing = $printing;
     }

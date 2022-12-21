@@ -20,17 +20,18 @@ class Data extends \Weline\Framework\App\Helper
     private BackendUser $adminUser;
 
     public function __construct(
-        Request   $_request,
+        Request     $_request,
         BackendUser $adminUser
-    ) {
-        $this->request = $_request;
+    )
+    {
+        $this->request   = $_request;
         $this->adminUser = $adminUser;
     }
 
     /**
      * @DESC          # 返回管理员
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/11/9 14:06
      * 参数区：

@@ -24,7 +24,7 @@ class Disable extends CommandAbstract
             $this->printer->error('请先更新模块:bin/m module:upgrade');
             exit();
         }
-        if (! empty($args)) {
+        if (!empty($args)) {
             foreach ($args as $module) {
                 if (isset($module_list[$module])) {
                     $module_list[$module]['status'] = false;
@@ -35,7 +35,7 @@ class Disable extends CommandAbstract
                 }
             }
             // 更新模块信息
-            /**@var Data $helper*/
+            /**@var Data $helper */
             $helper = ObjectManager::getInstance(Data::class);
             $helper->updateModules($module_list);
             # 请继续执行 php bin/m module:upgrade

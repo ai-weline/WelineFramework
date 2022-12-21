@@ -26,8 +26,9 @@ class Flush implements \Weline\Framework\Console\CommandInterface
 
     public function __construct(
         EventCache $eventCache,
-        Printing $printing
-    ) {
+        Printing   $printing
+    )
+    {
         $this->printing   = $printing;
         $this->eventCache = $eventCache;
     }

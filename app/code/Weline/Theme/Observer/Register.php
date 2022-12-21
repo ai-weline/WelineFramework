@@ -19,7 +19,7 @@ class Register implements ObserverInterface
 {
     public function execute(Event $event)
     {
-        /**@var DataObject $data*/
+        /**@var DataObject $data */
         $data           = $event->getData('data');
         $func_arguments = $data->getData('register_arguments');
         $type           = $func_arguments[0];

@@ -14,7 +14,7 @@ class InstallData
     public function getData(string $key = '')
     {
         $data = [
-            'env' => [
+            'env'      => [
                 'functions' => ['exec', 'putenv'],
                 'modules'   => ['PDO', 'exif', 'fileinfo', 'xsl'],
             ],

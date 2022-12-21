@@ -10,7 +10,7 @@ $(function () {
     $('.table-edits tr').editable({
         dropdowns: {
             gender: ['Male', 'Female']
-          },
+        },
         edit: function (values) {
             $(".edit i", this)
                 .removeClass('fa-pencil-alt')

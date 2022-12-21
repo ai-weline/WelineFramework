@@ -23,7 +23,7 @@ class CacheTest extends \Weline\Framework\UnitTest\TestCore
 {
     public function testMemcachedCache()
     {
-        if(class_exists(\Memcached::class)){
+        if (class_exists(\Memcached::class)) {
             /**@var \Weline\Framework\Cache\Driver\Memcached $cache */
             $cache     = ObjectManager::makeWithoutFactory(CacheFactory::class)->create('memcached');
             $cache_key = 'test_memcached_object_cache';
@@ -31,7 +31,7 @@ class CacheTest extends \Weline\Framework\UnitTest\TestCore
             /**@var DataObject $data */
             $data = $cache->get($cache_key);
             assertTrue($data->getData('test_memcached_object_cache') === 'ok', 'Memcached:缓存对象成功！');
-        }else{
+        } else {
             assertTrue(true, 'Memcached:缓存对象跳过！');
         }
     }

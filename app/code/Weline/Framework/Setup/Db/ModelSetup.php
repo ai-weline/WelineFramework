@@ -42,9 +42,10 @@ class ModelSetup
      * @throws \ReflectionException
      */
     public function __construct(
-        Printing       $printing,
-        DdlFactory     $ddl_table
-    ) {
+        Printing   $printing,
+        DdlFactory $ddl_table
+    )
+    {
         $this->ddl_table = $ddl_table->create();
         $this->printing  = $printing;
     }

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
@@ -100,13 +100,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             foreach ($plugins as $file => $plugin) :
                                                 ?>
                                                 <tr>
-                                                    <th colspan="4" class='co-name'><?=__('插件配置文件：')?><?= $file ?></th>
+                                                    <th colspan="4" class='co-name'><?= __('插件配置文件：') ?><?= $file ?></th>
                                                 </tr>
                                                 <?php
                                                 foreach ($plugin as $name => $instances) {
                                                     ?>
                                                     <tr>
-                                                        <th colspan="4" class='co-name'><?=__('插件名：')?><?= $name ?></th>
+                                                        <th colspan="4" class='co-name'><?= __('插件名：') ?><?= $name ?></th>
                                                     </tr>
                                                     <?php
                                                     foreach ($instances as $key => $instance) {

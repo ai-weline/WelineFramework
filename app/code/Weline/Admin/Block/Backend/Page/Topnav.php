@@ -18,11 +18,11 @@ class Topnav extends \Weline\Framework\View\Block
     private \Weline\Backend\Block\ThemeConfig $themeConfig;
 
     public function __construct(
-        \Weline\Backend\Model\Menu $menu,
+        \Weline\Backend\Model\Menu        $menu,
         \Weline\Backend\Block\ThemeConfig $themeConfig,
-        array $data = []
+        array                             $data = []
     ) {
-        $this->menu = $menu;
+        $this->menu        = $menu;
         $this->themeConfig = $themeConfig;
         parent::__construct($data);
     }

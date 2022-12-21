@@ -18,7 +18,7 @@ class I18nTest extends TestCore
 {
     public function testGetLocalByCode()
     {
-        /**@var I18n $i18n*/
+        /**@var I18n $i18n */
         $i18n = ObjectManager::getInstance(I18n::class);
 //        p($i18n->getLocalByCode('zh_Hans_CN'));
         p($i18n->getLocalesWithFlags());

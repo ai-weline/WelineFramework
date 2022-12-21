@@ -8,6 +8,6 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!--<script src='@static(Weline_Frontend::base/require.configs.js)'></script>-->
 <script>
     window.site = {
-        themeConfig:<?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
+        themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
     }
 </script>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
@@ -132,7 +132,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                     </td>
                                                     <td style='width: 100px'>
                                                         <a class='btn btn-primary btn-lg'
-                                                           href="<?= $this->getAdminUrl('backend/system/config/set?key='.\Weline\Backend\Config\KeysInterface::key_start_page_path.'&value=' . $path) ?>"
+                                                           href="<?= $this->getAdminUrl('backend/system/config/set?key=' . \Weline\Backend\Config\KeysInterface::key_start_page_path . '&value=' . $path) ?>"
                                                            title='<?= __('设为开始页面') ?>'>
                                                             <?= __('设为开始页面') ?>
                                                         </a>

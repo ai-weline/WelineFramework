@@ -38,7 +38,7 @@ use Weline\Framework\Output\Debug\Printing;
  * @method AbstractModel|QueryInterface find()
  * @method int total()
  * @method AbstractModel|QueryInterface select()
- * @method AbstractModel|QueryInterface insert(array $data)
+ * @method AbstractModel|QueryInterface insert(array $data, array|string $exist_update_fields = [])
  * @method AbstractModel|QueryInterface query(string $sql)
  * @method AbstractModel|QueryInterface getIndexFields()
  * @method AbstractModel|QueryInterface reindex(string $table, array $fields = [])
@@ -1206,7 +1206,7 @@ abstract class AbstractModel extends DataObject
         /**@var Request $request */
         $request                  = ObjectManager::getInstance(Request::class);
         $this->pagination['lang'] = $request->getHeader('WELINE-USER-LANG');
-        $this->pagination['uri'] = $request->getUri();
+        $this->pagination['uri']  = $request->getUri();
 
         # 页码缓存
         $cache_key = md5(json_encode($this->pagination));

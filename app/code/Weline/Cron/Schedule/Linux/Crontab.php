@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,7 +17,7 @@ use Weline\Framework\App\Env;
 
 class Crontab implements \Weline\Cron\Schedule\ScheduleInterface
 {
-    function create(string $name): array
+    public function create(string $name): array
     {
         #生成shell脚本
         $base_project_dir     = BP;
@@ -27,22 +28,24 @@ cd $base_project_dir &&
 php bin/m cron:task:run
         ";
         file_put_contents($cron_shell_file_path, $shell_string);
-        if (is_string($name) && !empty($name) && $this->exist($name) === FALSE) {
-            exec('echo -e "`crontab -l` ' . PHP_EOL . ' */1 * * * * sh ' . $cron_shell_file_path . '" | crontab -',
-                 $output);
+        if (is_string($name) && !empty($name) && $this->exist($name) === false) {
+            exec(
+                'echo -e "`crontab -l` ' . PHP_EOL . ' */1 * * * * sh ' . $cron_shell_file_path . '" | crontab -',
+                $output
+            );
             return ['status' => true, 'msg' => '[' . PHP_OS . ']' . __('系统定时任务安装成功：%1', $name), 'result' => $output];
         }
         return ['status' => false, 'msg' => '[' . PHP_OS . ']' . __('系统定时任务已存在：%1', $name), 'result' => ''];
     }
 
-    function run(string $name): array
+    public function run(string $name): array
     {
         $base_project_dir = BP;
         exec("cd $base_project_dir && php bin/m cron:task:run", $output);
         return ['status' => true, 'msg' => '[' . PHP_OS . '] ' . __('系统计划任务：%1 ,成功运行!', $name), 'result' => $output];
     }
 
-    function remove(string $name): array
+    public function remove(string $name): array
     {
         $jobs = $this->getJobs();
         foreach ($jobs as $key => $job) {
@@ -53,11 +56,13 @@ php bin/m cron:task:run
         $jobs_string = implode(PHP_EOL, $jobs);
         exec("echo -e \"$jobs_string\" | crontab -");
         # 删除脚本
-        if (is_file(Env::path_framework_generated . $name . '-cron.sh')) unlink(Env::path_framework_generated . $name . '-cron.sh');
+        if (is_file(Env::path_framework_generated . $name . '-cron.sh')) {
+            unlink(Env::path_framework_generated . $name . '-cron.sh');
+        }
         return ['status' => false, 'msg' => '[' . PHP_OS . ']' . __('系统定时任务已移除：%1', $name), 'result' => ''];
     }
 
-    function exist(string $name): bool
+    public function exist(string $name): bool
     {
         $crontab = $this->getJobs();
         foreach ($crontab as $job) {

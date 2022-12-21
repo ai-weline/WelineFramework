@@ -1,4 +1,4 @@
-(function() {
+(function () {
     'use strict';
     var assert = require('assert');
     var Vinyl = require('vinyl');
@@ -31,9 +31,9 @@
                 "enableLogging": false,
                 "minify": false
             },
-            "rules": [ ],
-            "declarations": [ ],
-            "properties": [ ],
+            "rules": [],
+            "declarations": [],
+            "properties": [],
             "map": false
         });
 
@@ -53,20 +53,20 @@
 
         stream.on('data', function (file) {
             assert.equal(file.contents.toString(), ".toRight {\n" +
-                                                   "  text-align: left;\n" +
-                                                   "}\n");
+                "  text-align: left;\n" +
+                "}\n");
             cb();
         });
 
         stream.write(new Vinyl({
             path: 'styles.css',
             contents: Buffer.from(".toRight {\n" +
-                                 "  /*rtl:remove*/\n" +
-                                 "  direction: rtl;\n" +
-                                 "  \n" +
-                                 "  /*rtl:ignore*/\n" +
-                                 "  text-align: left;\n" +
-                                 "}\n")
+                "  /*rtl:remove*/\n" +
+                "  direction: rtl;\n" +
+                "  \n" +
+                "  /*rtl:ignore*/\n" +
+                "  text-align: left;\n" +
+                "}\n")
         }));
     });
 })();

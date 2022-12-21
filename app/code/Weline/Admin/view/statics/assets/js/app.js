@@ -177,7 +177,7 @@ File: Main Js File
     }
 
     function initSettings() {
-        $("#light-mode-switch, #dark-mode-switch, #rtl-mode-switch").on("change", function (e) {
+        $("#light-mode-switch, #dark-mode-switch, #rtl-mode-switch,#dark-mode-radio,#light-mode-radio,#reset-theme").on("change", function (e) {
             updateThemeSetting(e.target.id);
         });
         // 元素控制
@@ -253,9 +253,19 @@ File: Main Js File
         }
         light_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-topbar': "dark", 'data-sidebar': 'dark'}, 'light-sidebar': false,'data-topbar': "dark", 'data-sidebar': 'dark'}
+            let layout = {
+                layouts: {'data-topbar': "dark", 'data-sidebar': 'dark'},
+                'light-sidebar': false,
+                'data-topbar': "dark",
+                'data-sidebar': 'dark'
+            }
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-topbar': "colored", 'data-sidebar': 'light'}, 'light-sidebar': true,'data-topbar': "colored", 'data-sidebar': 'light'};
+                layout = {
+                    layouts: {'data-topbar': "colored", 'data-sidebar': 'light'},
+                    'light-sidebar': true,
+                    'data-topbar': "colored",
+                    'data-sidebar': 'light'
+                };
             }
             setThemeConfig(layout)
             hideLoading()
@@ -267,9 +277,19 @@ File: Main Js File
         }
         icon_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-keep-enlarged': "false", class: ""}, 'icon-sidebar': false,'layout-class': "",'data-keep-enlarged': "false"}
+            let layout = {
+                layouts: {'data-keep-enlarged': "false", class: ""},
+                'icon-sidebar': false,
+                'layout-class': "",
+                'data-keep-enlarged': "false"
+            }
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-keep-enlarged': "true", class: "vertical-collpsed"}, 'icon-sidebar': true,'data-keep-enlarged': "true", 'layout-class': "vertical-collpsed"};
+                layout = {
+                    layouts: {'data-keep-enlarged': "true", class: "vertical-collpsed"},
+                    'icon-sidebar': true,
+                    'data-keep-enlarged': "true",
+                    'layout-class': "vertical-collpsed"
+                };
             }
             setThemeConfig(layout)
             hideLoading()
@@ -281,9 +301,9 @@ File: Main Js File
         }
         layouts_compact_sidebar.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-sidebar-size': ""}, 'layouts-compact-sidebar': false,'data-sidebar-size': ""};
+            let layout = {layouts: {'data-sidebar-size': ""}, 'layouts-compact-sidebar': false, 'data-sidebar-size': ""};
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-sidebar-size': "small"}, 'layouts-compact-sidebar': true,'data-sidebar-size': "small"}
+                layout = {layouts: {'data-sidebar-size': "small"}, 'layouts-compact-sidebar': true, 'data-sidebar-size': "small"}
             }
             setThemeConfig(layout)
             hideLoading()
@@ -311,9 +331,9 @@ File: Main Js File
         }
         horizontal.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-layout': ""}, 'horizontal': false,'data-layout': ""};
+            let layout = {layouts: {'data-layout': ""}, 'horizontal': false, 'data-layout': ""};
             if ($(e.target).prop('checked')) {
-                layout = {layouts: {'data-layout': "horizontal"}, 'horizontal': true,'data-layout': "horizontal"}
+                layout = {layouts: {'data-layout': "horizontal"}, 'horizontal': true, 'data-layout': "horizontal"}
             }
             setThemeConfig(layout)
             hideLoading()
@@ -325,7 +345,7 @@ File: Main Js File
         }
         layouts_hori_topbar_dark.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-layout': ""}, 'layouts-hori-topbar-dark': false,'data-layout': ""};
+            let layout = {layouts: {'data-layout': ""}, 'layouts-hori-topbar-dark': false, 'data-layout': ""};
             if ($(e.target).prop('checked')) {
                 layout = {
                     layouts: {'data-layout': "horizontal", 'data-topbar': 'dark'},
@@ -344,7 +364,12 @@ File: Main Js File
         }
         layouts_hori_boxed_width.on("change", function (e) {
             showLoading()
-            let layout = {layouts: {'data-layout': "", 'data-layout-size': ""},'data-layout': "", 'layouts-hori-boxed-width': false,'data-layout-size': "",};
+            let layout = {
+                layouts: {'data-layout': "", 'data-layout-size': ""},
+                'data-layout': "",
+                'layouts-hori-boxed-width': false,
+                'data-layout-size': "",
+            };
             if ($(e.target).prop('checked')) {
                 layout = {
                     layouts: {'data-layout': "horizontal", 'data-layout-size': "boxed"},
@@ -472,8 +497,44 @@ File: Main Js File
     }
 
     function updateThemeSetting(id) {
+        if(id==='reset-theme'){
+            showLoading()
+            setThemeConfig({
+                layouts: {
+                    'data-topbar': 'light',
+                    'data-sidebar': 'light',
+                },
+                'light-mode-switch': true,
+                'dark-mode-switch': false,
+                'rtl-mode-switch': false,
+            })
+        }
+        else if(id==='light-mode-radio'){
+            showLoading()
+            setThemeConfig({
+                layouts: {
+                    'data-topbar': 'light',
+                    'data-sidebar': 'light',
+                },
+                'light-mode-switch': true,
+                'dark-mode-switch': false,
+                'rtl-mode-switch': false,
+            })
+        }
+        else if(id==='dark-mode-radio'){
+            showLoading()
+            setThemeConfig({
+                layouts: {
+                    'data-topbar': 'dark',
+                    'data-sidebar': 'dark',
+                },
+                'light-mode-switch': false,
+                'dark-mode-switch': true,
+                'rtl-mode-switch': false,
+            })
+        }
         // ajax请求设置主题模式
-        if ($("#light-mode-switch").prop("checked") === true && id === "light-mode-switch") {
+        else if ($("#light-mode-switch").prop("checked") === true && id === "light-mode-switch") {
             showLoading()
             setThemeConfig({
                 layouts: {

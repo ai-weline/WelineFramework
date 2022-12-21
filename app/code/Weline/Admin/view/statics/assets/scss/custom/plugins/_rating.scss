@@ -1,9 +1,8 @@
-
 //
 // Rating
 //
 
-.symbol{
+.symbol {
   border-color: $card-bg;
 }
 
@@ -15,12 +14,12 @@
   top: 0px;
 }
 
-.rating-star{
-  > span{
+.rating-star {
+  > span {
     display: inline-block;
     vertical-align: middle;
 
-    &.badge{
+    &.badge {
       margin-left: 4px;
     }
   }

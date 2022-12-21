@@ -5,6 +5,7 @@
 /* CSS Switch */
 input[switch] {
   display: none;
+
   + label {
     font-size: 1em;
     line-height: 1;
@@ -20,6 +21,7 @@ input[switch] {
     position: relative;
     font-weight: $font-weight-medium;
     transition: all 0.1s ease-in-out;
+
     &:before {
       color: $dark;
       content: attr(data-off-label);
@@ -59,6 +61,7 @@ input[switch] {
 
 input[switch]:checked + label {
   background-color: $primary;
+
   &:before {
     color: $white;
     content: attr(data-on-label);
@@ -75,8 +78,9 @@ input[switch]:checked + label {
 input[switch="bool"] + label {
   background-color: $danger;
 }
-input[switch="bool"] + label:before,input[switch="bool"]:checked + label:before,
-input[switch="default"]:checked + label:before{
+
+input[switch="bool"] + label:before, input[switch="bool"]:checked + label:before,
+input[switch="default"]:checked + label:before {
   color: $white;
 }
 
@@ -112,9 +116,10 @@ input[switch="dark"]:checked + label {
   background-color: $dark;
 }
 
-.square-switch{
+.square-switch {
   margin-right: 7px;
-  input[switch]+label, input[switch]+label:after{
+
+  input[switch] + label, input[switch] + label:after {
     border-radius: 4px;
   }
 }

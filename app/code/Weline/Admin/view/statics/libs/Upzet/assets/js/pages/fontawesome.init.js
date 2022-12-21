@@ -5,29 +5,29 @@ icons = JSON.parse(icons);
 var solid = "";
 var regular = "";
 var brand = "";
-jQuery.each( icons.data, function( i, val ) {
-if(val.attributes.membership.free.length) {
-    // console.log('val.attributes.membership.free', val.attributes.membership.free);
-    jQuery.each( val.attributes.membership.free, function( k, iconBrand ) {
-        console.log('iconBrand', iconBrand);
-        switch(iconBrand) {
-        case "brands":
-            brand +='<div class="col-xl-3 col-lg-4 col-sm-6">\
-                        <i class="fab fa-'+val.id+'"></i> fab fa-'+val.id+'\
+jQuery.each(icons.data, function (i, val) {
+    if (val.attributes.membership.free.length) {
+        // console.log('val.attributes.membership.free', val.attributes.membership.free);
+        jQuery.each(val.attributes.membership.free, function (k, iconBrand) {
+            console.log('iconBrand', iconBrand);
+            switch (iconBrand) {
+                case "brands":
+                    brand += '<div class="col-xl-3 col-lg-4 col-sm-6">\
+                        <i class="fab fa-' + val.id + '"></i> fab fa-' + val.id + '\
                     </div>';
-            break;
-        case 'solid':
-            solid +='<div class="col-xl-3 col-lg-4 col-sm-6">\
-                    <i class="fas fa-'+val.id+'"></i> fas fa-'+val.id+'\
+                    break;
+                case 'solid':
+                    solid += '<div class="col-xl-3 col-lg-4 col-sm-6">\
+                    <i class="fas fa-' + val.id + '"></i> fas fa-' + val.id + '\
                 </div>';
-            break;
-        default:
-            regular +='<div class="col-xl-3 col-lg-4 col-sm-6">\
-                    <i class="far fa-'+val.id+'"></i> far fa-'+val.id+'\
+                    break;
+                default:
+                    regular += '<div class="col-xl-3 col-lg-4 col-sm-6">\
+                    <i class="far fa-' + val.id + '"></i> far fa-' + val.id + '\
                 </div>';
-        }
-    });
-}
+            }
+        });
+    }
 });
 $("#solid").html(solid);
 $("#brand").html(brand);

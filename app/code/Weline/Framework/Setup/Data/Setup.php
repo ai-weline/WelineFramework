@@ -27,18 +27,20 @@ class Setup
      */
     private Printing $printing;
 
-    private ?ConnectionFactory $master_connection=null;
-    private ?ConnectionFactory $connection=null;
+    private ?ConnectionFactory $master_connection = null;
+    private ?ConnectionFactory $connection = null;
 
     /**
      * Setup 初始函数...
-     * @param DbSetup $setup_db
+     *
+     * @param DbSetup  $setup_db
      * @param Printing $printing
      */
     public function __construct(
         DbSetup  $setup_db,
         Printing $printing
-    ) {
+    )
+    {
         $this->setup_db = $setup_db;
         $this->printing = $printing;
     }
@@ -68,7 +70,7 @@ class Setup
                 return $this->master_connection;
             }
             $this->master_connection = ObjectManager::getInstance(DbManagerFactory::class);
-            $this->connection = $this->master_connection;
+            $this->connection        = $this->master_connection;
             $this->setup_db->setConnection($this->connection);
         }
     }
@@ -76,7 +78,7 @@ class Setup
     /**
      * @DESC          # 获取数据库链接
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/31 20:47
      * 参数区：
@@ -91,7 +93,7 @@ class Setup
     /**
      * @DESC          # 打印
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/31 20:48
      * 参数区：

@@ -95,6 +95,7 @@ class Document extends \Weline\Framework\Database\Model
     {
         return $this->getData(self::fields_CONTEND);
     }
+
     public function getDecodeContent()
     {
         return htmlspecialchars_decode($this->getContent());

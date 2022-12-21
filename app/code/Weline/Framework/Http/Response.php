@@ -63,7 +63,7 @@ class Response implements ResponseInterface
     /**
      * @DESC          # 无路由
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/7 23:06
      * 参数区：
@@ -82,7 +82,7 @@ class Response implements ResponseInterface
         exit();
     }
 
-    public function redirect(string $url, $code=200): void
+    public function redirect(string $url, $code = 200): void
     {
         http_response_code($code);
         Header("Location:$url");

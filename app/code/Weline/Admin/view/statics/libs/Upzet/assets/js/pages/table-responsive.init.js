@@ -5,7 +5,7 @@ Contact: 秋枫雁飞(aiweline) 1714255949@qq.com
 File: Table responsive Init Js File
 */
 
-$(function() {
+$(function () {
     $('.table-responsive').responsiveTable({
         addDisplayAllBtn: 'btn btn-secondary'
     });

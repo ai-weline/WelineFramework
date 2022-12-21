@@ -74,7 +74,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                     <div class='row'>
                                         <div class='col-md-4'>
                                             <div class='mb-3 position-relative'>
-                                                <label class='form-label' for='path'><lang>路径</lang></label>
+                                                <label class='form-label' for='path'>
+                                                    <lang>路径</lang>
+                                                </label>
                                                 <input type='text' class='form-control disabled' id='path' name="path"
                                                        placeholder='@lang{输入路径}' value='{{url.path}}' required @if{url.path=>'disabled'}>
                                                 <div class='valid-tooltip'>
@@ -87,7 +89,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </div>
                                         <div class='col-md-4'>
                                             <div class='mb-3 position-relative'>
-                                                <label class='form-label' for='rewrite'><lang>重写路径</lang></label>
+                                                <label class='form-label' for='rewrite'>
+                                                    <lang>重写路径</lang>
+                                                </label>
                                                 <input type='text' class='form-control' id='rewrite' name="rewrite"
                                                        placeholder='@lang{输入路径}' value='{{url.rewrite_path}}' required>
                                                 <div class='valid-tooltip'>
@@ -98,15 +102,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 </div>
                                             </div>
                                         </div>
-<!--                                        <div class='col-md-4'>-->
-<!--                                            <div class='mb-3 position-relative'>-->
-<!--                                                <input class='form-check form-switch' type='checkbox' id='keep_origin' switch='bool' checked>-->
-<!--                                                <label class='form-label' for='switch3' data-on-label='Yes'-->
-<!--                                                       data-off-label='No'></label>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
+                                        <!--                                        <div class='col-md-4'>-->
+                                        <!--                                            <div class='mb-3 position-relative'>-->
+                                        <!--                                                <input class='form-check form-switch' type='checkbox' id='keep_origin' switch='bool' checked>-->
+                                        <!--                                                <label class='form-label' for='switch3' data-on-label='Yes'-->
+                                        <!--                                                       data-off-label='No'></label>-->
+                                        <!--                                            </div>-->
+                                        <!--                                        </div>-->
                                     </div>
-                                    <button class='btn btn-primary' type='submit'><lang>重写路由</lang></button>
+                                    <button class='btn btn-primary' type='submit'>
+                                        <lang>重写路由</lang>
+                                    </button>
                                 </form>
                             </div>
                         </div>

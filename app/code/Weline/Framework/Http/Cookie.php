@@ -16,7 +16,7 @@ class Cookie
 {
     public static function set(string $key, string $value, int $expire = 3600 * 24 * 7, array $options = [])
     {
-        $_options['path'] = '/';
+        $_options['path']   = '/';
         $_options['domain'] = getenv('HTTP_HOST');
         if ($options) {
             $_options = array_merge($_options, $options);

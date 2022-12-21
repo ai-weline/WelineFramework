@@ -16,15 +16,15 @@ use Weline\Backend\Session\BackendSession;
 
 class ThemeConfig extends \Weline\Framework\View\Block
 {
-    public const        area                 = 'frontend_';
-    public const        theme_Session_Config = 'frontend_theme_config';
+    public const        area                 = 'backend_';
+    public const        theme_Session_Config = 'backend_theme_config';
     private BackendSession $userSession;
     private BackendUserConfig $userConfig;
 
-    public function __construct(BackendUserConfig $userConfig, BackendSession $frontendSession, array $data = [])
+    public function __construct(BackendUserConfig $userConfig, BackendSession $backendSession, array $data = [])
     {
         parent::__construct($data);
-        $this->userSession = $frontendSession;
+        $this->userSession = $backendSession;
         $this->userConfig  = $userConfig;
     }
 
@@ -34,13 +34,13 @@ class ThemeConfig extends \Weline\Framework\View\Block
         $this->userConfig->setId($this->userSession->getLoginUserID());
     }
 
-    public function getOriginThemeConfig($key='')
+    public function getOriginThemeConfig($key = '')
     {
         $themeConfig = $this->userSession->getData(self::theme_Session_Config);
         if (empty($themeConfig) and $this->userSession->isLogin()) {
             $themeConfig = $this->userConfig->getData(self::theme_Session_Config);
         }
-        return $key ? ($themeConfig[$key]??'') : $themeConfig;
+        return $key ? ($themeConfig[$key] ?? '') : $themeConfig;
     }
 
     public function getThemeConfig(string $key = '')
@@ -79,14 +79,14 @@ class ThemeConfig extends \Weline\Framework\View\Block
         if (is_array($key)) {
             $this->userSession->setData(self::theme_Session_Config, $key);
             if ($this->userSession->isLogin()) {
-                $this->userConfig->addConfig(self::theme_Session_Config, $value)->forceCheck()->save();
+                $this->userConfig->addConfig(self::theme_Session_Config, $key)->save();
             }
         } else {
-            $theme_Config = $this->getOriginThemeConfig();
+            $theme_Config       = $this->getOriginThemeConfig();
             $theme_Config[$key] = $value;
             $this->userSession->setData(self::theme_Session_Config, $theme_Config);
             if ($this->userSession->isLogin()) {
-                $this->userConfig->addConfig(self::theme_Session_Config, $theme_Config)->forceCheck()->save();
+                $this->userConfig->addConfig(self::theme_Session_Config, $theme_Config)->save();
             }
         }
 
@@ -98,7 +98,7 @@ class ThemeConfig extends \Weline\Framework\View\Block
     {
         $body_attributes = $this->userSession->getData(self::theme_Session_Config)['layouts'] ?? [];
         if (empty($body_attributes)) {
-            $body_attributes = json_decode($this->userConfig->getData(self::theme_Session_Config)??'')['layouts']??[];
+            $body_attributes = json_decode($this->userConfig->getData(self::theme_Session_Config) ?? '')['layouts'] ?? [];
         }
         $body_attributes_str = '';
         foreach ($body_attributes as $attribute => $value) {

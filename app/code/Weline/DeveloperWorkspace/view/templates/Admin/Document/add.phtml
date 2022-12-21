@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
@@ -255,7 +255,7 @@ File: Form editor Js File
                 skin: 'oxide-dark',
                 theme: 'silver',
                 automatic_uploads: true,
-                images_reuse_filename:true,//不用每次都上传，同一个文件不上传
+                images_reuse_filename: true,//不用每次都上传，同一个文件不上传
                 images_upload_url: '@admin-url("dev/tool/admin/document/upload")',
                 /*images_upload_handler: function (blobInfo, succFun, failFun) {
                     var xhr, formData;

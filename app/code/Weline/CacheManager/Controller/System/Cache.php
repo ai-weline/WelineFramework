@@ -33,15 +33,15 @@ class Cache extends \Weline\Admin\Controller\BaseController
 
     public function postStatus()
     {
-        $identity       = $this->request->getParam('identity');
-        $cache      = ($this->request->getParam('cache') === 'false') ? 0 : 1;
-        /**@var \Weline\CacheManager\Model\Cache $cacheModel*/
+        $identity = $this->request->getParam('identity');
+        $cache    = ($this->request->getParam('cache') === 'false') ? 0 : 1;
+        /**@var \Weline\CacheManager\Model\Cache $cacheModel */
         $cacheModel = ObjectManager::getInstance(\Weline\CacheManager\Model\Cache::class);
         try {
             $cacheModel->where('identity', $identity)->update(['status' => $cache])->fetch();
-            $cacheEnv = Env::getInstance()->getConfig('cache');
-            $status = $cacheEnv['status']??[];
-            $status[$identity] = $cache;
+            $cacheEnv           = Env::getInstance()->getConfig('cache');
+            $status             = $cacheEnv['status'] ?? [];
+            $status[$identity]  = $cache;
             $cacheEnv['status'] = $status;
             Env::getInstance()->setConfig('cache', $cacheEnv);
         } catch (\Exception $exception) {

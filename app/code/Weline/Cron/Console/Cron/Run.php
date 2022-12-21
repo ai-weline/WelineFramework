@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,6 @@ use Weline\Framework\App\System;
 
 class Run extends BaseCommand
 {
-
     /**
      * @inheritDoc
      */

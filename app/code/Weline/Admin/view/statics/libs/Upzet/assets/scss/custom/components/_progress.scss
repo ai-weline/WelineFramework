@@ -24,6 +24,7 @@
 
 .animated-progess {
   position: relative;
+
   .progress-bar {
     position: relative;
     border-radius: 6px;
@@ -35,6 +36,7 @@
 .progress-animate {
   position: relative;
   overflow: visible;
+
   .progress-bar {
     position: relative;
     border-radius: 6px;
@@ -58,6 +60,7 @@
   background-color: $card-bg;
   border: 1px solid;
   border-radius: $border-radius;
+
   &::after {
     content: "";
     position: absolute;

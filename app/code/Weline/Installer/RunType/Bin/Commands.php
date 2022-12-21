@@ -36,8 +36,8 @@ class Commands
             try {
                 $command = 'php ' . BP . $needCommand;
                 \exec($command, $result, $return);
-                $tmp[$needCommand]=implode(',', $result);
-                $value = str_pad('✔', 10, ' ', STR_PAD_BOTH);
+                $tmp[$needCommand] = implode(',', $result);
+                $value             = str_pad('✔', 10, ' ', STR_PAD_BOTH);
             } catch (Exception $e) {
                 $hasErr = true;
                 $value  = str_pad('✖', 10, ' ', STR_PAD_BOTH);

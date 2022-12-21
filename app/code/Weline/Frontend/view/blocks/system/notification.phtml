@@ -39,7 +39,7 @@
                                 </div>
                             <?php
                             else:
-                                $avatar = $notice->getAvatar()?$this->fetchTagSourceFile('static', 'Weline_Frontend::'.$notice->getAvatar()):'';
+                                $avatar = $notice->getAvatar() ? $this->fetchTagSourceFile('static', 'Weline_Frontend::' . $notice->getAvatar()) : '';
                                 ?>
                                 <img src="<?= $avatar ?>" class="rounded-circle avatar-xs"
                                      alt="user-pic">

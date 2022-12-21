@@ -19,19 +19,22 @@ class Config
 
     public function __construct(
         SystemConfig $systemConfig
-    ) {
+    )
+    {
         $this->systemConfig = $systemConfig;
     }
 
     /**
      * @DESC          # 【后端】读取配置
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 22:18
      * 参数区：
+     *
      * @param string $key
      * @param string $module
+     *
      * @return mixed
      */
     public function getConfig(string $key, string $module): mixed

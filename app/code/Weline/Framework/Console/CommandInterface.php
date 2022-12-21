@@ -16,7 +16,7 @@ namespace Weline\Framework\Console;
  * @DESC         此文件源码由Aiweline（秋枫雁飞）开发，请勿随意修改源码！
  *
  * Interface CommandInterface
- * @package Weline\Framework\Console
+ * @package      Weline\Framework\Console
  */
 interface CommandInterface
 {
@@ -38,7 +38,7 @@ interface CommandInterface
      * @param array $data
      *
      */
-    public function execute(array $args = [],array $data=[]);
+    public function execute(array $args = [], array $data = []);
 
     /**
      * @DESC         |命令注释

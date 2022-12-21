@@ -134,11 +134,11 @@ class Template extends DataObject
         if (empty($this->view_dir)) {
             $this->view_dir = $this->request->getRouterData('module_path') . DataInterface::dir . DS;
         }
-        $this->getData('title') ?? $this->setData('title', $this->request->getModuleName());
+            $this->getData('title') ?? $this->setData('title', $this->request->getModuleName());
 
-        $this->theme ?? $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
-        $this->eventsManager ?? $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
-        $this->viewCache ?? $this->viewCache = ObjectManager::getInstance(ViewCache::class)->create();
+            $this->theme ?? $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
+            $this->eventsManager ?? $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
+            $this->viewCache ?? $this->viewCache = ObjectManager::getInstance(ViewCache::class)->create();
 
         if (empty($this->statics_dir)) {
             $this->statics_dir = $this->getViewDir(DataInterface::view_STATICS_DIR);
@@ -307,16 +307,16 @@ class Template extends DataObject
             $repContent = $this->tmp_replace($content, $comFileName);                   //得到模板文件 并替换占位符 并得到替换后的文件
             if (DEV) {
                 $tpl_pad_file_name = __('模板文件：%1 START', $tplFile);
-                $tpl_str_len = strlen($tpl_pad_file_name);
-                $tpl_str_pad_all = str_pad('', $tpl_str_len, '=', STR_PAD_BOTH);
-                $tpl_str_pad_file = str_pad($tpl_pad_file_name, $tpl_str_len, '=', STR_PAD_BOTH);
+                $tpl_str_len       = strlen($tpl_pad_file_name);
+                $tpl_str_pad_all   = str_pad('', $tpl_str_len, '=', STR_PAD_BOTH);
+                $tpl_str_pad_file  = str_pad($tpl_pad_file_name, $tpl_str_len, '=', STR_PAD_BOTH);
                 $com_pad_file_name = __('模板文件：%1 END', $comFileName);
-                $com_str_len = strlen($com_pad_file_name);
-                $com_str_pad_all = str_pad('', $com_str_len, '=', STR_PAD_BOTH);
-                $com_str_pad_file = str_pad($com_pad_file_name, $com_str_len, '=', STR_PAD_BOTH);
-                $repContent = "<!--".PHP_EOL. "$tpl_str_pad_all ".PHP_EOL .$tpl_str_pad_file .PHP_EOL .$tpl_str_pad_all.PHP_EOL. ' -->'
-                    .PHP_EOL. $repContent .PHP_EOL
-                    . '<!--' .PHP_EOL.$com_str_pad_all.PHP_EOL. $com_str_pad_file.PHP_EOL.$com_str_pad_all.PHP_EOL.'-->';
+                $com_str_len       = strlen($com_pad_file_name);
+                $com_str_pad_all   = str_pad('', $com_str_len, '=', STR_PAD_BOTH);
+                $com_str_pad_file  = str_pad($com_pad_file_name, $com_str_len, '=', STR_PAD_BOTH);
+                $repContent        = "<!--" . PHP_EOL . "$tpl_str_pad_all " . PHP_EOL . $tpl_str_pad_file . PHP_EOL . $tpl_str_pad_all . PHP_EOL . ' -->'
+                    . PHP_EOL . $repContent . PHP_EOL
+                    . '<!--' . PHP_EOL . $com_str_pad_all . PHP_EOL . $com_str_pad_file . PHP_EOL . $com_str_pad_all . PHP_EOL . '-->';
             }
             file_put_contents($comFileName, $repContent);                               //将替换后的文件写入定义的缓存文件中
         }
@@ -451,8 +451,7 @@ class Template extends DataObject
         $hooker_content = '';
         foreach ($hookers as $module => $hooker_file) {
             if (DEV) {
-                $content = "<!-- 来自模组 $module 的钩子实现{$name}代码 起-->" . $this->fetchTagHtml('hooks', $hooker_file) . "<!-- 来自模组 $module 的钩子实现{$name}代码 止-->";
-                ;
+                $content = "<!-- 来自模组 $module 的钩子实现{$name}代码 起-->" . $this->fetchTagHtml('hooks', $hooker_file) . "<!-- 来自模组 $module 的钩子实现{$name}代码 止-->";;
             } else {
                 $content = $this->fetchTagHtml('hooks', $hooker_file);
             }

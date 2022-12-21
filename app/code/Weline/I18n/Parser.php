@@ -22,13 +22,13 @@ class Parser
         // 只缓存 收集来的 翻译文件 以及翻译包
         /**@var $cache \Weline\Framework\Cache\CacheInterface */
         $cache = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\I18n\Cache\I18NCache::class)->create();
-        if (! CLI && ! DEV && $cache_words = $cache->get($words)) {
+        if (!CLI && !DEV && $cache_words = $cache->get($words)) {
             $words = $cache_words;
         } else {
             // 如果没有缓存就收集到词组中
             // 收集词组位置
             $filename = \Weline\Framework\App\Env::path_TRANSLATE_ALL_COLLECTIONS_WORDS_FILE;
-            if (! file_exists($filename)) {
+            if (!file_exists($filename)) {
                 touch($filename);
             }
 

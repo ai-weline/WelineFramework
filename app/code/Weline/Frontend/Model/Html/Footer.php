@@ -16,21 +16,22 @@ use Weline\Framework\View\Data\HtmlInterface;
 
 class Footer implements HtmlInterface
 {
-    public const key = 'footer';
+    public const key    = 'footer';
     public const module = 'Weline_Frontend';
     private Config $frontendConfig;
-    private string $_html='';
+    private string $_html = '';
 
     public function __construct(
         Config $frontendConfig
-    ) {
+    )
+    {
         $this->frontendConfig = $frontendConfig;
     }
 
     /**
      * @DESC          # 返回Html头部配置
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/14 21:51
      * 参数区：
@@ -38,7 +39,7 @@ class Footer implements HtmlInterface
      */
     public function getHtml(): string
     {
-        return ($this->frontendConfig->getConfig(self::key, self::module) ?? '').$this->_html;
+        return ($this->frontendConfig->getConfig(self::key, self::module) ?? '') . $this->_html;
     }
 
     /**
@@ -59,6 +60,7 @@ class Footer implements HtmlInterface
         $this->frontendConfig->setConfig(self::key, $html, self::module);
         return $this;
     }
+
     public function addHtml(string $html): static
     {
         $this->_html .= $html;

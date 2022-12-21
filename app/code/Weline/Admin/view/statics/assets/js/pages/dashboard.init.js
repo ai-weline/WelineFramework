@@ -8,7 +8,6 @@ File: Dashboard chart Int js
 // Radialchart 1
 
 
-
 // Radialchart 2
 
 var radialoptions = {
@@ -179,8 +178,8 @@ var options = {
             track: {
                 show: true,
                 strokeWidth: '70%',
-                margin: 12, 
-               
+                margin: 12,
+
             },
             dataLabels: {
                 name: {

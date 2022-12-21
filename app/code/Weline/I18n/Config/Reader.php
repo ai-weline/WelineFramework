@@ -53,7 +53,8 @@ class Reader extends ModuleFileReader
         Request   $request,
         I18nCache $cache,
         Parser    $parser
-    ) {
+    )
+    {
         $this->request   = $request;
         $this->i18nCache = $cache->create();
         $this->scanner   = $scanner;

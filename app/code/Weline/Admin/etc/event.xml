@@ -6,6 +6,7 @@
         <observer name="Weline_Admin::backend_whitelist_url" instance="Weline\Admin\Observer\BackendWhitelistUrl" disabled="false" shared="true"/>
     </event>
     <event name="Framework_Router::backend_no_login_redirect_url">
-        <observer name="Framework_Admin::backend_no_login_redirect_url" instance="Weline\Admin\Observer\BackendNoLoginRedirectUrl" disabled="false" shared="true"/>
+        <observer name="Framework_Admin::backend_no_login_redirect_url" instance="Weline\Admin\Observer\BackendNoLoginRedirectUrl" disabled="false"
+                  shared="true"/>
     </event>
 </config>

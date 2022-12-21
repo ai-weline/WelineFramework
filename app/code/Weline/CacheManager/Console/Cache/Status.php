@@ -28,7 +28,8 @@ class Status implements \Weline\Framework\Console\CommandInterface
     public function __construct(
         Scanner  $scanner,
         Printing $printing
-    ) {
+    )
+    {
         $this->scanner  = $scanner;
         $this->printing = $printing;
     }
@@ -52,7 +53,7 @@ class Status implements \Weline\Framework\Console\CommandInterface
                     $cache_config = Env::getInstance()->getData('cache');
                     $identify_s   = array_slice($args, 2, count($args));
                     $no_has_data  = [];
-                    $set_data     = $cache_config['status']??[];
+                    $set_data     = $cache_config['status'] ?? [];
                     if ($identify_s) {
                         foreach ($identify_s as $identify) {
                             $no_has = true;

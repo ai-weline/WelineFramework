@@ -22,7 +22,7 @@ class Status extends CommandAbstract
             $this->printer->error('请先更新模块:bin/m module:upgrade');
             exit();
         }
-        if (! empty($args)) {
+        if (!empty($args)) {
             foreach ($args as $module) {
                 if (isset($module_list[$module])) {
                     $this->printer->printList([$module => $module_list[$module]], '=>');

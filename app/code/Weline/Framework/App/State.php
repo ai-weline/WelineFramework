@@ -26,11 +26,13 @@ class State
 
     /**
      * State 初始函数...
+     *
      * @param Request $request
      */
     public function __construct(
         Request $request
-    ) {
+    )
+    {
         $this->request = $request;
     }
 

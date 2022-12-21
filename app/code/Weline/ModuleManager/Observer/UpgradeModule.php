@@ -24,16 +24,16 @@ class UpgradeModule implements \Weline\Framework\Event\ObserverInterface
     public function execute(Event $event)
     {
         # 获取modules
-        $modules = (include Env::path_MODULES_FILE)??[];
+        $modules = (include Env::path_MODULES_FILE) ?? [];
         # 模型
         /**@var Module $moduleModel */
         $moduleModel = ObjectManager::getInstance(Module::class);
         $moduleModel->query("truncate table {$moduleModel->getTable()}");
         # 写入数据库
         foreach ($modules as $module) {
-            $module['base_path'] = str_replace(BP, '', $module['base_path']);
+            $module['base_path']   = str_replace(BP, '', $module['base_path']);
             $module['description'] = htmlspecialchars($module['description']);
-            $module['status'] = $module['status'] ? 1 : 0;
+            $module['status']      = $module['status'] ? 1 : 0;
             $moduleModel->clearData()
                         ->setData($module)
                         ->save();

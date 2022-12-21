@@ -49,7 +49,7 @@ class BackendUserConfig extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_ID, Table::column_type_INTEGER, null, 'primary key', '管理员ID')
                   ->addColumn(self::fields_config, Table::column_type_TEXT, null, '', '配置JSON信息')
                   ->create();
-            /**@var Config $config*/
+            /**@var Config $config */
             $config = ObjectManager::getInstance(Config::class);
             $config->setConfig('admin_default_avatar', 'Weline_Admin::/img/logo.png', 'Weline_Admin');
             $setup->getPrinting()->printing('admin_default_avatar', 'Weline_Admin::/img/logo.png');

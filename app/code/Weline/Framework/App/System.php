@@ -39,9 +39,9 @@ class System
                 $linux_command = str_replace(' -fr ', ' -r  -f ', $linux_command);
             }
             $linux_to_win = [
-                'rm ' => ' del ',
+                'rm '  => ' del ',
                 ' -f ' => ' /F ',
-                'cp ' => ' xcopy ',
+                'cp '  => ' xcopy ',
                 ' -r ' => ' /S/Q ',
             ];
 
@@ -84,6 +84,7 @@ class System
 
         return ['command' => $win_command, 'output' => $output, 'return_vars' => $return_var];
     }
+
     /**
      * @DESC         |执行win命令
      *

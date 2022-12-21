@@ -20,7 +20,8 @@ class Url implements UrlInterface
 
     public function __construct(
         Request $request
-    ) {
+    )
+    {
         $this->request = $request;
     }
 
@@ -121,7 +122,7 @@ class Url implements UrlInterface
      *
      * @return string
      */
-    public function extractedUrl(array $params, bool $merge_params=false, string $url=''): string
+    public function extractedUrl(array $params, bool $merge_params = false, string $url = ''): string
     {
         if (empty($url)) {
             $url = $this->request->getBaseUrl();
@@ -160,11 +161,11 @@ class Url implements UrlInterface
 
     public function full_url($s, $use_forwarded_host = false): string
     {
-        return $this->url_origin($s, $use_forwarded_host) . $s['REQUEST_URI'].'?'.$this->request->getGet();
+        return $this->url_origin($s, $use_forwarded_host) . $s['REQUEST_URI'] . '?' . $this->request->getGet();
     }
 
     public function current_url(): string
     {
-        return $this->url_origin($_SERVER, false) . $_SERVER['REQUEST_URI'].'?'.$this->request->getGet();
+        return $this->url_origin($_SERVER, false) . $_SERVER['REQUEST_URI'] . '?' . $this->request->getGet();
     }
 }

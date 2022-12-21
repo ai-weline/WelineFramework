@@ -42,7 +42,7 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
     public function execute(Event $event)
     {
         # 读取前端PC url存放位置更新到数据库中
-        if(is_file(Env::path_FRONTEND_PC_ROUTER_FILE)){
+        if (is_file(Env::path_FRONTEND_PC_ROUTER_FILE)) {
             $type             = 'frontend_pc';
             $frontend_pc_urls = include Env::path_FRONTEND_PC_ROUTER_FILE;
             if (is_array($frontend_pc_urls))
@@ -64,7 +64,7 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         }
 
         # 读取前端REST api存放位置更新到数据库中
-        if(is_file(Env::path_FRONTEND_REST_API_ROUTER_FILE)){
+        if (is_file(Env::path_FRONTEND_REST_API_ROUTER_FILE)) {
             $frontend_api_urls = include Env::path_FRONTEND_REST_API_ROUTER_FILE;
             $type              = 'frontend_rest';
             if (is_array($frontend_api_urls))
@@ -86,7 +86,7 @@ class UrlUpdate implements \Weline\Framework\Event\ObserverInterface
         }
 
         # 读取后端PC url存放位置更新到数据库中
-        if(is_file(Env::path_BACKEND_PC_ROUTER_FILE)){
+        if (is_file(Env::path_BACKEND_PC_ROUTER_FILE)) {
             $type            = 'backend_pc';
             $backend_pc_urls = include Env::path_BACKEND_PC_ROUTER_FILE;
             if (is_array($backend_pc_urls))

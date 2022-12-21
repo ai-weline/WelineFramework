@@ -28,13 +28,15 @@ class Locals implements \Weline\Framework\Console\CommandInterface
 
     /**
      * Locals 初始函数...
-     * @param I18n $i18n
+     *
+     * @param I18n     $i18n
      * @param Printing $printing
      */
     public function __construct(
-        I18n $i18n,
+        I18n     $i18n,
         Printing $printing
-    ) {
+    )
+    {
         $this->i18n     = $i18n;
         $this->printing = $printing;
     }

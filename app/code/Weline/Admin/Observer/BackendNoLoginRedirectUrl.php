@@ -21,7 +21,8 @@ class BackendNoLoginRedirectUrl implements \Weline\Framework\Event\ObserverInter
 
     public function __construct(
         Url $url
-    ) {
+    )
+    {
         $this->url = $url;
     }
 

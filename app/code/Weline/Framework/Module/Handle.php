@@ -84,7 +84,8 @@ class Handle implements HandleInterface, RegisterInterface
         SetupHelper $setup_helper,
         SetupData   $setup_data,
         Compress    $compress
-    ) {
+    )
+    {
         $this->modules      = Env::getInstance()->getModuleList();
         $this->helper       = $helper;
         $this->system       = $system;

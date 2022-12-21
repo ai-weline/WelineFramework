@@ -30,10 +30,11 @@ class Install
     private DataSetup $setup;
 
     public function __construct(
-        Data $data,
+        Data      $data,
         DataSetup $setup,
-        Printing $printing
-    ) {
+        Printing  $printing
+    )
+    {
         $this->data     = $data;
         $this->printing = $printing;
         $this->setup    = $setup;

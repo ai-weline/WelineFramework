@@ -7,9 +7,9 @@ File: Summernote Js File
 */
 
 
-$(document).ready(function(){
+$(document).ready(function () {
 
-    if($("#email-editor ").length > 0){
+    if ($("#email-editor ").length > 0) {
         tinymce.init({
             selector: "textarea#email-editor",
             height: 300,

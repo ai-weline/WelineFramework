@@ -31,9 +31,10 @@ abstract class AbstractConsole implements CommandInterface
 
     public function __construct(
         WelineTheme $welineTheme,
-        Printing $printing
-    ) {
+        Printing    $printing
+    )
+    {
         $this->welineTheme = $welineTheme;
-        $this->printing = $printing;
+        $this->printing    = $printing;
     }
 }

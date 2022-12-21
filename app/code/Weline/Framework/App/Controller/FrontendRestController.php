@@ -23,8 +23,8 @@ class FrontendRestController extends AbstractRestController
      * 参数区：
      *
      * @param string $msg
-     * @param bool $data
-     * @param int $code
+     * @param bool   $data
+     * @param int    $code
      */
     #[NoReturn] public function errorXml(string $msg = '错误！', mixed $data = false, int $code = 400)
     {

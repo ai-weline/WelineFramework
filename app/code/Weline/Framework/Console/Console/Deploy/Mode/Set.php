@@ -27,7 +27,8 @@ class Set extends CommandAbstract
 
     public function __construct(
         System $system
-    ) {
+    )
+    {
         $this->system = $system;
     }
 
@@ -103,7 +104,9 @@ class Set extends CommandAbstract
      * @DESC         |清理模块生成主题文件目录
      *
      * 参数区：
+     *
      * @param string $theme
+     *
      * @throws \Weline\Framework\App\Exception
      */
     protected function cleanThemeDir(string $theme = 'default')

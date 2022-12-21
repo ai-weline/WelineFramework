@@ -57,7 +57,7 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
      * @DateTime: 2022/6/6 21:35
      * 参数区：
      *
-     * @param $cache_files
+     * @param        $cache_files
      * @param string $dir
      *
      * @return array
@@ -106,8 +106,8 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
     public function scanFrameworkCaches(): array
     {
         // 扫描核心命令 兼容AppCode和composer
-        $app_framework      = glob(APP_CODE_PATH . 'Weline' . DS . 'Framework' . DS.'*'.DS . 'Cache' . DS . '*.php', GLOB_NOSORT);
-        $composer_framework = glob(VENDOR_PATH . 'Weline' . DS . 'Framework' . DS.'*'.DS . 'Cache' . DS . '*.php', GLOB_NOSORT);
+        $app_framework      = glob(APP_CODE_PATH . 'Weline' . DS . 'Framework' . DS . '*' . DS . 'Cache' . DS . '*.php', GLOB_NOSORT);
+        $composer_framework = glob(VENDOR_PATH . 'Weline' . DS . 'Framework' . DS . '*' . DS . 'Cache' . DS . '*.php', GLOB_NOSORT);
         // 合并
         $cache_files = array_merge($composer_framework, $app_framework);
         # 查找缓存管理器

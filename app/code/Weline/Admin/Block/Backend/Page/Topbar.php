@@ -25,7 +25,7 @@ class Topbar extends \Weline\Framework\View\Block
     private AdminSession $session;
     private ?BackendUser $user = null;
 
-    public function __construct(Config $config, AdminSession $session, array $data=[])
+    public function __construct(Config $config, AdminSession $session, array $data = [])
     {
         $this->config  = $config;
         $this->session = $session;

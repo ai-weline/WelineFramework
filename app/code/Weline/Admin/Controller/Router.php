@@ -20,7 +20,7 @@ class Router implements RouterInterface
     {
         $flag = '/admin/Template/Upzet/';
         if (str_starts_with(strtolower($path), strtolower($flag))) {
-            $rule = ['template'=>str_replace(strtolower($flag), '', strtolower($path))];
+            $rule = ['template' => str_replace(strtolower($flag), '', strtolower($path))];
             $path = $flag;
         }
     }

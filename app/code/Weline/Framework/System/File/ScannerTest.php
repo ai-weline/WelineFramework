@@ -21,6 +21,7 @@ class ScannerTest extends TestCase
         $scanner->scanAppVendors();
         $this->assertTrue(true);
     }
+
     //scanVendorModulesWithFiles
     public function testScanVendorModulesWithFiles()
     {

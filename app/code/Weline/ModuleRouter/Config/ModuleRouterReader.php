@@ -44,12 +44,12 @@ class ModuleRouterReader extends \Weline\Framework\System\ModuleFileReader
                     continue;
                 }
                 # 兼容composer的路由文件
-                $base_namespace = $modules[$module]['namespace_path'].'\\';
-                $namespace = str_replace($modules[$module]['base_path'], $base_namespace, $router_file);
-                $namespace = str_replace(['.php',DS], ['','\\'], $namespace);
-                $router_file = [
-                    'origin'=>$router_file,
-                    'class'=>$namespace,
+                $base_namespace           = $modules[$module]['namespace_path'] . '\\';
+                $namespace                = str_replace($modules[$module]['base_path'], $base_namespace, $router_file);
+                $namespace                = str_replace(['.php', DS], ['', '\\'], $namespace);
+                $router_file              = [
+                    'origin' => $router_file,
+                    'class'  => $namespace,
                 ];
                 $vendors_modules[$module] = $router_file;
             }

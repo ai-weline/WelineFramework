@@ -57,7 +57,7 @@ class File extends CacheDriverAbstract
         }
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
-        if(!file_exists($cacheFile)){
+        if (!file_exists($cacheFile)) {
             return false;
         }
         // filemtime用来获取文件的修改时间
@@ -85,7 +85,7 @@ class File extends CacheDriverAbstract
         }
         $key       = $this->buildKey($key);
         $cacheFile = $this->cachePath . $key;
-        if(!file_exists($cacheFile)){
+        if (!file_exists($cacheFile)) {
             return false;
         }
         // 用修改时间标记过期时间，存入时会做相应的处理
@@ -166,10 +166,10 @@ class File extends CacheDriverAbstract
      */
     public function delete($key): bool
     {
-        $key       = $this->buildKey($key);
+        $key = $this->buildKey($key);
 
         $cacheFile = $this->cachePath . $key;
-        if(is_file($cacheFile)){
+        if (is_file($cacheFile)) {
             // unlink用来删除文件
             return unlink($cacheFile);
         }

@@ -31,10 +31,10 @@ if ($('#line_chart_datalabel').length) {
             name: "High - 2018",
             data: [26, 24, 32, 36, 33, 31, 33]
         },
-        {
-            name: "Low - 2018",
-            data: [14, 11, 16, 12, 17, 13, 12]
-        }
+            {
+                name: "Low - 2018",
+                data: [14, 11, 16, 12, 17, 13, 12]
+            }
         ],
         title: {
             text: 'Average High & Low Temperature',
@@ -120,14 +120,14 @@ if ($('#line_chart_dashed').length) {
             name: "Session Duration",
             data: [45, 52, 38, 24, 33, 26, 21, 20, 6, 8, 15, 10]
         },
-        {
-            name: "Page Views",
-            data: [36, 42, 60, 42, 13, 18, 29, 37, 36, 51, 32, 35]
-        },
-        {
-            name: 'Total Visits',
-            data: [89, 56, 74, 98, 72, 38, 64, 46, 84, 58, 46, 49]
-        }
+            {
+                name: "Page Views",
+                data: [36, 42, 60, 42, 13, 18, 29, 37, 36, 51, 32, 35]
+            },
+            {
+                name: 'Total Visits',
+                data: [89, 56, 74, 98, 72, 38, 64, 46, 84, 58, 46, 49]
+            }
         ],
         title: {
             text: 'Page Statistics',
@@ -260,7 +260,7 @@ if ($('#column_chart').length) {
             name: 'Free Cash Flow',
             data: [37, 42, 38, 26, 47, 50, 54, 55, 43]
         }],
-        colors: ['#eff2f7', '#3d8ef8','#11c46e'],
+        colors: ['#eff2f7', '#3d8ef8', '#11c46e'],
         xaxis: {
             categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
         },

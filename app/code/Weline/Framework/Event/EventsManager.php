@@ -72,7 +72,7 @@ class EventsManager
      */
     public function dispatch(string $eventName, array $data = []): static
     {
-        $data['observers'] = $this->getEventObservers($eventName);
+        $data['observers']        = $this->getEventObservers($eventName);
         $this->events[$eventName] = (new Event($data))->setName($eventName);
         $this->events[$eventName]->dispatch();
 

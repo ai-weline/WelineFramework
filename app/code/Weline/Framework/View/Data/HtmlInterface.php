@@ -16,10 +16,11 @@ interface HtmlInterface
     /**
      * @DESC          # 设置头部信息
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/15 21:12
      * 参数区：
+     *
      * @param string $html
      */
     public function setHtml(string $html): static;
@@ -27,7 +28,7 @@ interface HtmlInterface
     /**
      * @DESC          # 读取头部信息
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/9/15 21:12
      * 参数区：

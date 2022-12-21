@@ -18,7 +18,7 @@ class RequireJsTest extends TestCore
 {
     public function testCompiler()
     {
-        /**@var RequireJs $compile*/
+        /**@var RequireJs $compile */
         $compile = ObjectManager::getInstance(RequireJs::class);
         p($compile->compile());
     }

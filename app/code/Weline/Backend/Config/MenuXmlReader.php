@@ -23,8 +23,9 @@ class MenuXmlReader extends XmlReader
     public function __construct(
         Scanner $scanner,
         Parser  $parser,
-        $path = 'backend/menu.xml'
-    ) {
+                $path = 'backend/menu.xml'
+    )
+    {
         parent::__construct($scanner, $parser, $path);
     }
 

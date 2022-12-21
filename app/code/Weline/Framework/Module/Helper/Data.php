@@ -31,7 +31,8 @@ class Data extends AbstractHelper
     public function __construct(
         File $file,
         Scan $scan
-    ) {
+    )
+    {
         $this->file = $file;
         $this->scan = $scan;
     }
@@ -58,7 +59,7 @@ class Data extends AbstractHelper
      *
      * 参数区：
      *
-     * @param array $modules
+     * @param array  $modules
      * @param string $name
      * @param string $router
      *
@@ -80,20 +81,20 @@ class Data extends AbstractHelper
                         continue;
                     }
                     $apiDirArray = explode(Handle::api_DIR, $api_class);
-                    $baseRouter = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
-                    $baseRouter = trim($router . $baseRouter, '/');
+                    $baseRouter  = str_replace('\\', '/', strtolower(array_pop($apiDirArray)));
+                    $baseRouter  = trim($router . $baseRouter, '/');
 
                     $this->parent_class_arr = [];// 清空父类信息
-                    $ctl_data = $this->parserController($api_class);
+                    $ctl_data               = $this->parserController($api_class);
                     if (empty($ctl_data)) {
                         continue;
                     }
                     $ctl_methods = $ctl_data['methods'];
-                    $ctl_area = $ctl_data['area'];
+                    $ctl_area    = $ctl_data['area'];
                     foreach ($ctl_methods as $method) {
                         // 分析请求方法
-                        $request_method = null;
-                        $rule_method = $method;
+                        $request_method             = null;
+                        $rule_method                = $method;
                         $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
                         if (1 === count($request_method_split_array)) {
                             $request_method_split_array[1] = $request_method_split_array[0];
@@ -108,32 +109,32 @@ class Data extends AbstractHelper
                         # 检测请求方法和方法名是否重合，重合就使用方法名作为请求方法
                         if (in_array(strtoupper($rule_method), Request::METHODS)) {
                             $request_method = strtoupper($rule_method);
-                            $rule_method = '';
+                            $rule_method    = '';
                         }
                         # 删除index后缀
-                        $rule_router = strtolower($baseRouter . '/' . $rule_method);
-                        $rule_rule_arr = explode('/', trim($rule_router, '/'));
+                        $rule_router     = strtolower($baseRouter . '/' . $rule_method);
+                        $rule_rule_arr   = explode('/', trim($rule_router, '/'));
                         $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
                         while ('index' === array_pop($rule_rule_arr)) {
                             $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
                             continue;
                         }
-                        $rule_router = implode('/', $rule_rule_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
-                        $rule_router = trim($rule_router, '/');
+                        $rule_router    = implode('/', $rule_rule_arr) . (('index' !== $last_rule_value) ? '/' . $last_rule_value : '');
+                        $rule_router    = trim($rule_router, '/');
                         $request_method = $request_method ?? RequestInterface::GET;
                         # 模块路由解析
                         $routers = is_string($router) ? [$router] : $router;
                         foreach ($routers as $router_) {
                             // 路由注册+
                             Register::register(RegisterDataInterface::ROUTER, $name, [
-                                'type' => DataInterface::type_API,
-                                'area' => $ctl_area,
-                                'module' => $name,
-                                'base_router' => $router_,
-                                'router' => $rule_router . ($request_method ? '::' . $request_method : ''),
-                                'class' => $api_class,
-                                'module_path' => $path,
-                                'method' => $method,
+                                'type'           => DataInterface::type_API,
+                                'area'           => $ctl_area,
+                                'module'         => $name,
+                                'base_router'    => $router_,
+                                'router'         => $rule_router . ($request_method ? '::' . $request_method : ''),
+                                'class'          => $api_class,
+                                'module_path'    => $path,
+                                'method'         => $method,
                                 'request_method' => $request_method,
                             ]);
                         }
@@ -155,17 +156,17 @@ class Data extends AbstractHelper
                     $baseRouter = trim($router . $baseRouter, '/');
 
                     $this->parent_class_arr = [];// 清空父类信息
-                    $ctl_data = $this->parserController($pc_class);
+                    $ctl_data               = $this->parserController($pc_class);
                     if (empty($ctl_data)) {
                         continue;
                     }
 
                     $ctl_methods = $ctl_data['methods'];
-                    $ctl_area = $ctl_data['area'];
+                    $ctl_area    = $ctl_data['area'];
                     foreach ($ctl_methods as $method) {
                         // 分析请求方法
-                        $request_method = '';
-                        $rule_method = $method;
+                        $request_method             = '';
+                        $rule_method                = $method;
                         $request_method_split_array = preg_split('/(?=[A-Z])/', $method);
                         if (1 === count($request_method_split_array)) {
                             $request_method_split_array[1] = $request_method_split_array[0];
@@ -180,11 +181,11 @@ class Data extends AbstractHelper
                         # 如果没有解析到请求方法就使用方法名
                         if (!$request_method && in_array(strtoupper($rule_method), Request::METHODS)) {
                             $request_method = strtoupper($rule_method);
-                            $rule_method = '';
+                            $rule_method    = '';
                         }
                         # 删除index后缀
-                        $rule_router = strtolower($baseRouter . '/' . $rule_method);
-                        $rule_rule_arr = explode('/', trim($rule_router, '/'));
+                        $rule_router     = strtolower($baseRouter . '/' . $rule_method);
+                        $rule_rule_arr   = explode('/', trim($rule_router, '/'));
                         $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
                         while ('index' === array_pop($rule_rule_arr)) {
                             $last_rule_value = $rule_rule_arr[array_key_last($rule_rule_arr)] ?? '';
@@ -198,14 +199,14 @@ class Data extends AbstractHelper
                         foreach ($routers as $router_) {
                             // 路由注册+
                             Register::register(RegisterDataInterface::ROUTER, $name, [
-                                'type' => DataInterface::type_PC,
-                                'area' => $ctl_area,
-                                'module' => $name,
-                                'base_router' => $router_,
-                                'router' => $rule_router . ($request_method ? '::' . $request_method : ''),
-                                'class' => $pc_class,
-                                'method' => $method,
-                                'module_path' => $path,
+                                'type'           => DataInterface::type_PC,
+                                'area'           => $ctl_area,
+                                'module'         => $name,
+                                'base_router'    => $router_,
+                                'router'         => $rule_router . ($request_method ? '::' . $request_method : ''),
+                                'class'          => $pc_class,
+                                'method'         => $method,
+                                'module_path'    => $path,
                                 'request_method' => $request_method,
                             ]);
                         }
@@ -225,7 +226,7 @@ class Data extends AbstractHelper
      *
      * 参数区：
      *
-     * @param array $modules
+     * @param array  $modules
      * @param string $name
      *
      * @return string
@@ -273,7 +274,7 @@ class Data extends AbstractHelper
         // 默认前端控制器
 //        $ctl_area = \Weline\Framework\Controller\Data\DataInterface::type_pc_FRONTEND;
         if (class_exists($class)) {
-            $reflect = new \ReflectionClass($class);
+            $reflect            = new \ReflectionClass($class);
             $controller_methods = [];
             foreach ($reflect->getMethods() as $method) {
                 if (is_int(strpos($method->getName(), '__'))) {
@@ -292,7 +293,7 @@ class Data extends AbstractHelper
                     }
                 }
                 $this->parent_class_arr = array_merge($this->parent_class_arr, $controller_class);
-                $parent_methods = [];
+                $parent_methods         = [];
                 foreach ($parent_class->getMethods() as $method) {
                     if (is_int(strpos($method->getName(), '__'))) {
                         continue;
@@ -324,7 +325,7 @@ class Data extends AbstractHelper
      *
      * 参数区：
      *
-     * @param array $modules
+     * @param array  $modules
      * @param string $name
      *
      * @return bool
@@ -344,7 +345,7 @@ class Data extends AbstractHelper
      *
      * 参数区：
      *
-     * @param array $modules
+     * @param array  $modules
      * @param string $name
      *
      * @return bool
@@ -363,7 +364,7 @@ class Data extends AbstractHelper
      *
      * 参数区：
      *
-     * @param array $modules
+     * @param array  $modules
      * @param string $name
      * @param string $version
      *

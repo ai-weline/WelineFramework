@@ -15,9 +15,9 @@ use Weline\Framework\View\Template;
 
 class RequireJs extends ResourceReader
 {
-    private array $config_resources=[];
+    private array $config_resources = [];
 
-    public function __construct(string $path='view', string $file='require.config.js', $source_type='require.config.js', array $data = [])
+    public function __construct(string $path = 'view', string $file = 'require.config.js', $source_type = 'require.config.js', array $data = [])
     {
         parent::__construct($path, $file, $source_type, $data);
     }
@@ -26,25 +26,26 @@ class RequireJs extends ResourceReader
     {
         return Env::getInstance()->getConfig('theme');
     }
+
     public function getResourceFiles(): array
     {
         # require js 配置
         $require_configs = $this->getFileList();
-        foreach ($require_configs as  $require_config_js) {
+        foreach ($require_configs as $require_config_js) {
             $area = $require_config_js['area'];
             if (!isset($this->config_resources[$area])) {
-                $this->config_resources[$area]='';
+                $this->config_resources[$area] = '';
             }
             $content = file_get_contents($require_config_js['origin']);
 
             # 替换模块的路径
-            foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
+            foreach (Env::getInstance()->getModuleList() as $module_name => $module_info) {
                 $related_file_path = str_replace(trim($module_info['path'] . DS . 'view', DS), '/', $require_config_js['dir']);
                 $related_file_path = str_replace('//', '/', $related_file_path);
-                $file_path = $this->fetchFile($module_name . '::' . $related_file_path);
-                $file_path = str_replace('//', '/', $file_path);
-                $file_path = str_replace('//', '/', $file_path);
-                $content =str_replace($module_name, $file_path, $content);
+                $file_path         = $this->fetchFile($module_name . '::' . $related_file_path);
+                $file_path         = str_replace('//', '/', $file_path);
+                $file_path         = str_replace('//', '/', $file_path);
+                $content           = str_replace($module_name, $file_path, $content);
             }
             $this->config_resources[$area] .= $content;
         }

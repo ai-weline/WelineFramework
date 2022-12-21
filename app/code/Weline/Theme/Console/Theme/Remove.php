@@ -44,9 +44,9 @@ class Remove extends AbstractConsole
 //                $theme->delete();
                 // 压缩主题包
                 $this->printing->note(__('正在压缩备份文件...'));
-                /**@var \Weline\Framework\System\File\Compress $compress*/
+                /**@var \Weline\Framework\System\File\Compress $compress */
                 $compress = ObjectManager::getInstance(\Weline\Framework\System\File\Compress::class);
-                $res = $compress->compression(Env::path_THEME_DESIGN_DIR . $theme->getPath(), Env::path_THEME_DESIGN_DIR, Env::path_THEME_DESIGN_DIR);
+                $res      = $compress->compression(Env::path_THEME_DESIGN_DIR . $theme->getPath(), Env::path_THEME_DESIGN_DIR, Env::path_THEME_DESIGN_DIR);
                 p($res);
             } else {
                 $this->printing->error(__('当前主题未安装：卸载失败！'), __('主题'));

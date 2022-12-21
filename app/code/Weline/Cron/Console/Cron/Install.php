@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,17 +17,16 @@ use Weline\Framework\App\Env;
 
 class Install extends BaseCommand
 {
-
     /**
      * @inheritDoc
      */
     public function execute(array $args = [], array $data = [])
     {
         $cron_name = $this->getCronName($data['module']);
-        $result = $this->schedule->create($cron_name);
-        if($result['status']){
+        $result    = $this->schedule->create($cron_name);
+        if ($result['status']) {
             $this->printing->note($result['msg']);
-        }else{
+        } else {
             $this->printing->warning($result['msg']);
         }
     }

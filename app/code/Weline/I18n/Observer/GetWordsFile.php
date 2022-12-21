@@ -33,7 +33,8 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
      */
     public function __construct(
         I18n $i18n
-    ) {
+    )
+    {
         $this->i18n = $i18n;
     }
 

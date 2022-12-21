@@ -45,11 +45,11 @@ abstract class BaseCommand implements \Weline\Framework\Console\CommandInterface
         $this->schedule = $schedule;
     }
 
-    function getCronName(string $module_name='Weline_Cron')
+    function getCronName(string $module_name = 'Weline_Cron')
     {
         $cron_name = $this->config->getConfig(self::cron_config_key, $module_name);
         if (empty($cron_name)) {
-            $cron_name = '['.$module_name.']-' . md5(time() . mt_rand(0, 1000000));
+            $cron_name = '[' . $module_name . ']-' . md5(time() . mt_rand(0, 1000000));
             $this->config->setConfig(self::cron_config_key, $cron_name, $module_name);
         }
         return $cron_name;

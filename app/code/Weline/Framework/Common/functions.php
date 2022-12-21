@@ -164,7 +164,7 @@ if (!function_exists('framework_view_process_block')) {
     function framework_view_process_block(array $data): string
     {
         if (!isset($data['class'])) {
-            $data['class'] =$data[0]??'';
+            $data['class'] = $data[0] ?? '';
             if (!$data['class']) {
                 throw new \Weline\Framework\App\Exception(__('framework.view.block.class_not_found %1', $data['class']));
             }
@@ -174,7 +174,7 @@ if (!function_exists('framework_view_process_block')) {
         # 处理参数
         array_shift($data);
         $params = [];
-        foreach ($data as $key=> $param) {
+        foreach ($data as $key => $param) {
             if (is_string($key)) {
                 $params[$key] = $param;
             } else {
@@ -190,7 +190,7 @@ if (!function_exists('framework_view_process_block')) {
             $cache = ObjectManager::getInstance(ViewCache::class)->create();
             /**@var Request $request */
             $request   = ObjectManager::getInstance(Request::class);
-            $cache_key = $block_class. '_' . json_encode(array_merge($request->getParams(), $params));
+            $cache_key = $block_class . '_' . json_encode(array_merge($request->getParams(), $params));
             $result    = $cache->get($cache_key) ?: '';
 //            if($block_class == 'Weline\Admin\Block\Backend\Page\Topnav'){
 //                p($result,1);

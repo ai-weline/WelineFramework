@@ -24,7 +24,8 @@ class UpgradeCache implements \Weline\Framework\Event\ObserverInterface
 
     public function __construct(
         Scanner $scanner
-    ) {
+    )
+    {
         $this->scanner   = $scanner;
         $frameworkCaches = $this->scanner->scanFrameworkCaches();
         $appCaches       = $this->scanner->scanAppCaches();
@@ -70,7 +71,7 @@ class UpgradeCache implements \Weline\Framework\Event\ObserverInterface
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      */
-    public function processCache(\Weline\CacheManager\Model\Cache $model, array $cache, array $modules, $default_module_name='')
+    public function processCache(\Weline\CacheManager\Model\Cache $model, array $cache, array $modules, $default_module_name = '')
     {
         /**@var CacheFactory $cache */
         $cacheObj = ObjectManager::getInstance($cache['class']);

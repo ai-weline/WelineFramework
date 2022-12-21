@@ -30,10 +30,11 @@ class ReindexCollector implements \Weline\Framework\Event\ObserverInterface
      */
     public function __construct(
         ModuleFileReader $moduleFileReader,
-        Indexer $indexer
-    ) {
+        Indexer          $indexer
+    )
+    {
         $this->moduleFileReader = $moduleFileReader;
-        $this->indexer = $indexer;
+        $this->indexer          = $indexer;
     }
 
     /**
@@ -45,14 +46,14 @@ class ReindexCollector implements \Weline\Framework\Event\ObserverInterface
         foreach ($modules as $module) {
             $models = $this->moduleFileReader->read($module['name'], 'Model');
             foreach ($models as $model_files) {
-                /**@var \Weline\Framework\System\File\Data\File $model_file*/
+                /**@var \Weline\Framework\System\File\Data\File $model_file */
                 foreach ($model_files as $model_file) {
-                    $model = $model_file->getNamespace().'\\'.$model_file->getFilename();
+                    $model = $model_file->getNamespace() . '\\' . $model_file->getFilename();
                     if (class_exists($model)) {
                         $model = ObjectManager::getInstance($model);
-                        if ($model instanceof AbstractModel && $indexer =$model::indexer) {
+                        if ($model instanceof AbstractModel && $indexer = $model::indexer) {
                             # 检测是否有indexer
-                            $hasIndexer = $this->indexer->where([['name',$indexer],['model',$model::class]])->find()->fetch();
+                            $hasIndexer = $this->indexer->where([['name', $indexer], ['model', $model::class]])->find()->fetch();
                             if (!$hasIndexer->getId()) {
                                 # 如果没有indexer，则创建
                                 $this->indexer->setName($indexer);

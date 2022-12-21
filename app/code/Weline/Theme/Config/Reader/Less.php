@@ -16,9 +16,9 @@ use Weline\Framework\View\Template;
 
 class Less extends ResourceReader
 {
-    private array $config_resources=[];
+    private array $config_resources = [];
 
-    public function __construct(string $path='view', string $file='', $source_type='less', array $data = [])
+    public function __construct(string $path = 'view', string $file = '', $source_type = 'less', array $data = [])
     {
         parent::__construct($path, $file, $source_type, $data);
     }
@@ -27,6 +27,7 @@ class Less extends ResourceReader
     {
         return Env::getInstance()->getConfig('theme');
     }
+
     public function getFileList(\Closure $callback = null): array
     {
         $callback = function ($data) {
@@ -43,9 +44,9 @@ class Less extends ResourceReader
                                 }
                                 $need_data[] = [
                                     'module' => $vendor . '_' . $name,
-                                    'dir' => $dir,
-                                    'area' => $area,
-                                    'file' => $dir_file->getRelate(),
+                                    'dir'    => $dir,
+                                    'area'   => $area,
+                                    'file'   => $dir_file->getRelate(),
                                     'origin' => $dir_file->getOrigin(),
                                 ];
                             }
@@ -57,6 +58,7 @@ class Less extends ResourceReader
         };
         return parent::getFileList($callback);
     }
+
     public function getResourceFiles(): array
     {
         # less文件
@@ -65,18 +67,18 @@ class Less extends ResourceReader
         foreach ($less_files as $require_config_key => $less_file) {
             $area = $less_file['area'];
             if (!isset($this->config_resources[$area])) {
-                $this->config_resources[$area]='';
+                $this->config_resources[$area] = '';
             }
             $content = file_get_contents($less_file['origin']);
             # 替换模块的路径
-            foreach (Env::getInstance()->getModuleList() as $module_name=>$module_info) {
+            foreach (Env::getInstance()->getModuleList() as $module_name => $module_info) {
                 $related_file_path = str_replace(trim($module_info['base_path'], DS) . DS . 'view', '/', $less_file['dir']);
                 $related_file_path = str_replace('//', '/', $related_file_path);
                 $related_file_path = str_replace('//', '/', $related_file_path);
-                $file_path = $this->fetchFile($module_name . '::' . $related_file_path);
-                $file_path = str_replace('//', '/', $file_path);
-                $file_path = str_replace('//', '/', $file_path);
-                $content =str_replace($module_name, $file_path, $content);
+                $file_path         = $this->fetchFile($module_name . '::' . $related_file_path);
+                $file_path         = str_replace('//', '/', $file_path);
+                $file_path         = str_replace('//', '/', $file_path);
+                $content           = str_replace($module_name, $file_path, $content);
             }
             $this->config_resources[$area] .= $content;
         }

@@ -221,8 +221,8 @@ var options = {
             track: {
                 show: true,
                 strokeWidth: '70%',
-                margin: 12, 
-               
+                margin: 12,
+
             },
             dataLabels: {
                 name: {

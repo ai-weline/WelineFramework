@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -26,10 +27,9 @@ class Run implements CommandInterface
      */
     private CronTask $cronTask;
 
-    function __construct(
+    public function __construct(
         CronTask $cronTask
-    )
-    {
+    ) {
         $this->cronTask = $cronTask;
     }
 
@@ -39,20 +39,20 @@ class Run implements CommandInterface
     public function execute(array $args = [], array $data = [])
     {
         array_shift($args);
-        $force =array_search('-f',$args);
+        $force      = array_search('-f', $args);
         $task_names = $args;
-        if(!is_bool($force)){
+        if (!is_bool($force)) {
             unset($task_names[$force]);
             # 解锁任务
-            $this->cronTask->where($this->cronTask::fields_NAME,$task_names)->update(['status'=>CronStatus::PENDING->value])->fetch();
-            if($task_names){
-                $this->cronTask->where($this->cronTask::fields_NAME,$task_names);
+            $this->cronTask->where($this->cronTask::fields_NAME, $task_names)->update(['status' => CronStatus::PENDING->value])->fetch();
+            if ($task_names) {
+                $this->cronTask->where($this->cronTask::fields_NAME, $task_names);
             }
-            $this->cronTask->update(['status'=>CronStatus::PENDING->value])->fetch();
+            $this->cronTask->update(['status' => CronStatus::PENDING->value])->fetch();
         }
         # 读取给定的任务
-        if($task_names){
-            $this->cronTask->where($this->cronTask::fields_NAME,$task_names);
+        if ($task_names) {
+            $this->cronTask->where($this->cronTask::fields_NAME, $task_names);
         }
         $tasks = $this->cronTask->select()->fetch()->getItems();
         /**@var CronTask $taskModel */
@@ -89,7 +89,7 @@ class Run implements CommandInterface
                         );
                         if ($block_time = $taskModel->getData($taskModel::fields_BLOCK_TIME)) {
                             if ($block_time > ($taskModel->getData($taskModel::fields_BLOCK_UNLOCK_TIMEOUT) * 60)) {
-                                $taskModel->setData($taskModel::fields_BLOCK_TIMES, (int)$taskModel->getData($taskModel::fields_BLOCK_TIMES)+1);
+                                $taskModel->setData($taskModel::fields_BLOCK_TIMES, (int)$taskModel->getData($taskModel::fields_BLOCK_TIMES) + 1);
                                 $taskModel->setData($taskModel::fields_STATUS, CronStatus::PENDING->value);
                                 $taskModel->setData($taskModel::fields_RUNTIME_ERROR_DATE, date('Y-m-d H:i:s'));
                                 $taskModel->setData($taskModel::fields_RUNTIME_ERROR, "任务调度系统：调度任务阻塞超时自动解锁，请查看任务调度设置是否合理！");
@@ -102,21 +102,10 @@ class Run implements CommandInterface
             }
             # 设置程序运行数据
             $taskModel->setData($taskModel::fields_NEXT_RUN_DATE, $cron->getNextRunDate()->format('Y-m-d H:i:s'));
+            $taskModel->setData($taskModel::fields_MAX_NEXT_RUN_DATE, $cron->getNextRunDate('now', 3)->format('Y-m-d H:i:s'));
             $taskModel->setData($taskModel::fields_PRE_RUN_DATE, $cron->getPreviousRunDate()->format('Y-m-d H:i:s'));
             $taskModel->save();
         }
-
-//        for ($i = 0; $i < 24; $i++) {
-//            for ($j = 0; $j < 60; $j++) {
-//                $date = sprintf('%d:%02d', $i, $j);
-//
-////                if (parse_crontab('*/5 * * * *', $date)) {
-////                    print "$date yes\n";
-////                } else {
-////                    print "$date no\n";
-////                }
-//            }
-//        }
     }
 
     /**

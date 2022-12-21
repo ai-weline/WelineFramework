@@ -36,10 +36,11 @@ class Header implements HtmlInterface
      * @DateTime: 2021/9/14 21:51
      * 参数区：
      * @return mixed
+     * @throws \Weline\Framework\Exception\Core
      */
     public function getHtml(): string
     {
-        return Template::getInstance()->tmp_replace(($this->backendConfig->getConfig(self::key, self::module) ?? '').$this->_html);
+        return Template::getInstance()->tmp_replace(($this->backendConfig->getConfig(self::key, self::module) ?? '') . $this->_html);
     }
 
     /**
@@ -53,6 +54,7 @@ class Header implements HtmlInterface
      * @param string $html
      *
      * @return Header
+     * @throws \Weline\Framework\App\Exception
      */
     public function setHtml(string $html): static
     {

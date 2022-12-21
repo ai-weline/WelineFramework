@@ -21,8 +21,8 @@ abstract class ResourceReader extends \Weline\Framework\Module\File\Reader imple
 
     public function __construct(string $path, string $file, $source_type, array $data = [])
     {
-        $this->file = $file;
-        $this->path = $path;
+        $this->file        = $file;
+        $this->path        = $path;
         $this->source_type = $source_type;
         parent::__construct($path, $data);
     }
@@ -47,10 +47,10 @@ abstract class ResourceReader extends \Weline\Framework\Module\File\Reader imple
                                     $area = 'backend';
                                 }
                                 $need_data[] = [
-                                    'module' =>$module,
-                                    'dir' => $dir,
-                                    'area' => $area,
-                                    'file' => $dir_file->getRelate(),
+                                    'module' => $module,
+                                    'dir'    => $dir,
+                                    'area'   => $area,
+                                    'file'   => $dir_file->getRelate(),
                                     'origin' => $dir_file->getOrigin(),
                                 ];
                             }

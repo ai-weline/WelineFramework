@@ -132,10 +132,10 @@ class Core
             $this->request->setData($rule);
         } else {
             $url = $this->request->getUrlPath();
-            $url = str_replace('//', '/', $url);
             if ($this->is_admin) {
                 $url = str_replace($this->area_router, '', $url);
             }
+            $url = str_replace('//', '/', $url);
             # ----------事件：处理url之前 开始------------
             /**@var EventsManager $eventManager */
             $eventManager = ObjectManager::getInstance(EventsManager::class);

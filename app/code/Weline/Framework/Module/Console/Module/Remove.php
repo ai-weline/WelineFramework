@@ -43,7 +43,8 @@ class Remove extends CommandAbstract
         Data    $data,
         Upgrade $upgrade,
         Handle  $handle
-    ) {
+    )
+    {
         $this->system  = $system;
         $this->data    = $data;
         $this->upgrade = $upgrade;

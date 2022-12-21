@@ -30,11 +30,12 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
         Printing    $printing,
         System      $system,
         Scan        $scan
-    ) {
+    )
+    {
         $this->welineTheme = $welineTheme;
-        $this->scan = $scan;
-        $this->system = $system;
-        $this->printing = $printing;
+        $this->scan        = $scan;
+        $this->system      = $system;
+        $this->printing    = $printing;
     }
 
     /**
@@ -68,12 +69,12 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
 
         # 如果命令指定了特定模块 纳入特定模块的迁移数组
         $this->printing->warning(__('收集') . $theme->getName() . __('主题文件...'));
-        $modules = $args;
+        $modules           = $args;
         $themes_files_data = [];
         if ($modules) {
             foreach ($modules as $module) {
                 $this->printing->note($module);
-                $module_path = str_replace('_', DS, $module);
+                $module_path       = str_replace('_', DS, $module);
                 $themes_files_data = array_merge($themes_files_data, $this->fetchThemeFiles($theme, $theme->getPath() . $module_path));
             }
         } else {
@@ -98,14 +99,14 @@ class Upgrade implements \Weline\Framework\Console\CommandInterface
 
     public function fetchThemeFiles($theme, $path): array
     {
-        $themes_files_data = [];
+        $themes_files_data  = [];
         $theme_extend_files = $this->scan->scanDirTree($path);
         foreach ($theme_extend_files as $theme_extend_file) {
             /**@var \Weline\Framework\System\File\Data\File $file */
             foreach ($theme_extend_file as $file) {
                 $file_path = $file->getOrigin();
                 if (!strpos($file_path, 'templates') && !strpos($file_path, 'register.php')) {
-                    $new_file_path = str_replace($theme->getPath(), APP_STATIC_PATH . $theme->getOriginPath() . DS, $file_path);
+                    $new_file_path                 = str_replace($theme->getPath(), APP_STATIC_PATH . $theme->getOriginPath() . DS, $file_path);
                     $themes_files_data[$file_path] = dirname($new_file_path) . DS;
                 }
             }

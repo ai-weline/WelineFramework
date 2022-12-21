@@ -20,7 +20,8 @@ class Listing implements \Weline\Framework\Console\CommandInterface
 
     public function __construct(
         Printing $printing
-    ) {
+    )
+    {
         $this->printing = $printing;
     }
 

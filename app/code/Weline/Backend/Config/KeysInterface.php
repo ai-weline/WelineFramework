@@ -13,7 +13,7 @@ namespace Weline\Backend\Config;
 
 interface KeysInterface
 {
-    public const start_module = 'Weline_Backend';
-    public const key_start_page_path = 'start_page_path';
+    public const start_module          = 'Weline_Backend';
+    public const key_start_page_path   = 'start_page_path';
     public const cache_start_page_path = 'start_page_path_cache';
 }

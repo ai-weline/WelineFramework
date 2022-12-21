@@ -8,8 +8,8 @@
  */
 
 return [
-    'router' => 'smtp',
-    'dependencies'=>[
+    'router'       => 'smtp',
+    'dependencies' => [
         'Weline_Admin'
     ]
 ];

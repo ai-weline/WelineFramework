@@ -41,7 +41,7 @@ trait QueryTrait
     public function __construct(ConnectionFactory $connection)
     {
         $this->connection = $connection;
-        $this->db_name = $this->connection->getConfigProvider()->getDatabase();
+        $this->db_name    = $this->connection->getConfigProvider()->getDatabase();
     }
 
     public function __sleep()
@@ -58,7 +58,7 @@ trait QueryTrait
     /**
      * @DESC          | 获取链接
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 21:10
      *
@@ -72,7 +72,7 @@ trait QueryTrait
     /**
      * @DESC          | 设置链接
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 21:10
      *
@@ -87,12 +87,14 @@ trait QueryTrait
     /**
      * @DESC          |  # 检测条件数组 下角标 必须为数字
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 22:39
      * 参数区：
+     *
      * @param array $where_array
      * @param mixed $f_key
+     *
      * @throws DbException
      * @throws \Weline\Framework\App\Exception
      */
@@ -108,11 +110,13 @@ trait QueryTrait
     /**
      * @DESC          | 检测条件参数是否正确
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/16 22:30
      * 参数区：
+     *
      * @param array $where_array
+     *
      * @return string
      * @throws DbException
      */
@@ -128,7 +132,7 @@ trait QueryTrait
     /**
      * @DESC          # 准备sql
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/17 22:52
      * 参数区：
@@ -149,7 +153,7 @@ trait QueryTrait
         $wheres = '';
         if ($this->wheres) {
             $wheres .= ' WHERE ';
-            $logic = 'AND ';
+            $logic  = 'AND ';
             foreach ($this->wheres as $key => $where) {
                 $key += 1;
                 # 如果自己设置了where 逻辑连接符 就修改默认的连接符 AND
@@ -161,22 +165,22 @@ trait QueryTrait
                     case 1:
                         $wheres .= $where[0] . " {$logic} ";
                         break;
-                        # 默认where逻辑连接符为AND
+                    # 默认where逻辑连接符为AND
                     default:
                         $param = ':' . trim($where[0], '`');
                         # 是sql的字段不添加字段引号(没有值则是sql)
-                        if (null===$where[2]) {
+                        if (null === $where[2]) {
                             $wheres .= '(' . $where[0] . ') ' . $logic;
                         } else {
                             $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
                             # 处理带别名的参数键
-                            $param = str_replace('.', '__', $param) . $key;
+                            $param                      = str_replace('.', '__', $param) . $key;
                             $this->bound_values[$param] = (string)$where[2];
-                            $where[2] = match (strtolower($where[1])) {
+                            $where[2]                   = match (strtolower($where[1])) {
                                 'in', 'find_in_set' => '(' . $param . ')',
-                                default => $param,
+                                default             => $param,
                             };
-                            $wheres .= '(' . implode(' ', $where) . ') ' . $logic;
+                            $wheres                     .= '(' . implode(' ', $where) . ') ' . $logic;
                         }
                 }
             }
@@ -198,17 +202,17 @@ trait QueryTrait
                 $values = '';
                 foreach ($this->insert as $insert_key => $insert) {
                     $insert_key += 1;
-                    $values .= '(';
+                    $values     .= '(';
                     foreach ($insert as $insert_field => $insert_value) {
-                        $insert_bound_key = ":{$insert_field}_field_{$insert_key}";
+                        $insert_bound_key                      = ":{$insert_field}_field_{$insert_key}";
                         $this->bound_values[$insert_bound_key] = $insert_value;
-                        $values .= "$insert_bound_key , ";
+                        $values                                .= "$insert_bound_key , ";
                     }
                     $values = rtrim($values, ', ');
                     $values .= '),';
                 }
                 $values = rtrim($values, ',');
-                $sql = "INSERT INTO {$this->table} {$this->fields} VALUES {$values} {$this->exist_update_sql}";
+                $sql    = "INSERT INTO {$this->table} {$this->fields} VALUES {$values} {$this->exist_update_sql}";
                 break;
             case 'delete':
                 $sql = "DELETE FROM {$this->table} {$wheres} {$this->additional_sql}";
@@ -217,10 +221,10 @@ trait QueryTrait
                 # 设置where条件
                 $identity_values = array_column($this->updates, $this->identity_field);
                 if ($identity_values) {
-                    $identity_values_key = ':identity_values_key';
-                    $identity_values_str = implode(',', $identity_values);
+                    $identity_values_key                      = ':identity_values_key';
+                    $identity_values_str                      = implode(',', $identity_values);
                     $this->bound_values[$identity_values_key] = $identity_values_str;
-                    $wheres .= ($wheres ? " AND " : 'WHERE ') . "$this->identity_field IN ( $identity_values_key )";
+                    $wheres                                   .= ($wheres ? " AND " : 'WHERE ') . "$this->identity_field IN ( $identity_values_key )";
                 }
 
                 # 排除没有条件值的更新
@@ -239,12 +243,12 @@ trait QueryTrait
                             $updates .= sprintf("`%s` = CASE `%s` \n", $column, $this->identity_field);
                             foreach ($this->updates as $update_key => $line) {
                                 # 主键值
-                                $update_key += 1;
-                                $identity_field_column_key = ":{$this->identity_field}_{$column}_key_{$update_key}";
+                                $update_key                                     += 1;
+                                $identity_field_column_key                      = ":{$this->identity_field}_{$column}_key_{$update_key}";
                                 $this->bound_values[$identity_field_column_key] = $line[$this->identity_field];
 
                                 # 更新键值
-                                $identity_field_column_value = ":update_{$column}_value_{$update_key}";
+                                $identity_field_column_value                      = ":update_{$column}_value_{$update_key}";
                                 $this->bound_values[$identity_field_column_value] = $line[$column];
                                 # 组装
                                 $updates .= sprintf("WHEN %s THEN %s ", $identity_field_column_key, $identity_field_column_value);
@@ -257,16 +261,16 @@ trait QueryTrait
                             throw new SqlParserException(__('更新条数大于一条时请使用示例更新：$query->table("demo")->identity("id")->update(["id"=>1,"name"=>"测试1"])->update(["id"=>2,"name"=>"测试2"])或者update中指定条件字段id：$query->table("demo")->update([["id"=>1,"name"=>"测试1"],["id"=>2,"name"=>"测试2"]],"id")'));
                         }
                         foreach ($this->updates[0] as $update_field => $field_value) {
-                            $update_key = ":$update_field";
-                            $update_field = $this->parserFiled($update_field);
+                            $update_key                      = ":$update_field";
+                            $update_field                    = $this->parserFiled($update_field);
                             $this->bound_values[$update_key] = $field_value;
-                            $updates .= "$update_field = $update_key,";
+                            $updates                         .= "$update_field = $update_key,";
                         }
                     }
                 } elseif ($this->single_updates) {
                     foreach ($this->single_updates as $update_field => $update_value) {
                         $update_field = $this->parserFiled($update_field);
-                        $updates .= "$update_field=$update_value,";
+                        $updates      .= "$update_field=$update_value,";
                     }
                 } else {
                     throw new QueryException(__('无法解析更新数据！多记录更新数据：%1，单记录更新数据：%2', [var_export($this->updates, true), var_export($this->single_updates, true)]));
@@ -283,17 +287,19 @@ trait QueryTrait
         };
         # 预置sql
         $this->PDOStatement = $this->connection->getLink()->prepare($sql);
-        $this->sql = $sql;
+        $this->sql          = $sql;
     }
 
     /**
      * @DESC          # 解析数组键
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/25 22:34
      * 参数区：
+     *
      * @param string|array $field 解析数据：一维数组值 或者 二维数组值
+     *
      * @return string|array
      */
     public function parserFiled(string|array &$field): string|array
@@ -301,7 +307,7 @@ trait QueryTrait
         if (is_array($field)) {
             foreach ($field as $field_key => $value) {
                 unset($field[$field_key]);
-                $field_key = '`' . str_replace('.', '`.`', $field_key) . '`';
+                $field_key         = '`' . str_replace('.', '`.`', $field_key) . '`';
                 $field[$field_key] = $value;
             }
         } else {
@@ -315,11 +321,13 @@ trait QueryTrait
     /**
      * @DESC          # 异常函数
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/23 21:28
      * 参数区：
+     *
      * @param $words
+     *
      * @throws DbException
      */
     protected function exceptionHandle($words)

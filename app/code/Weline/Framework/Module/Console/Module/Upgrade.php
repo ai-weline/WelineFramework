@@ -41,7 +41,8 @@ class Upgrade extends CommandAbstract
         AppScanner $scanner,
         Data       $data,
         System     $system
-    ) {
+    )
+    {
         $this->printer = $printer;
         $this->system  = $system;
         $this->scanner = $scanner;

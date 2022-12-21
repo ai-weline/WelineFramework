@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
@@ -146,7 +146,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                         </b>
                                                     </if>
                                                 </td>
-                                                <td><string>$module->getDescription()|50</string></td>
+                                                <td>
+                                                    <string>$module->getDescription()|50</string>
+                                                </td>
                                                 <td @if{$module->getPosition() ==='system'=>"class='disabled text-danger'"}>
                                                     <if condition="module.position === 'app'">
                                                         <lang>第三方</lang>
@@ -166,7 +168,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <td style='width: 100px'>
                                                     <input class='form-check form-switch' type='checkbox'
                                                            alt="@var{$module->getStatus()?__('开启'):__('关闭')}"
-                                                           id='@var{$module->getName()}' switch='bool' @if{$module->getStatus()=>'checked'} @if{$module->getPosition()==='system'=>'disabled'}>
+                                                           id='@var{$module->getName()}' switch='bool' @if{$module->getStatus()=>'checked'}
+                                                    @if{$module->getPosition()==='system'=>'disabled'}>
                                                     <label class='form-label' for='@var{$module->getName()}'
                                                            data-on-label='<?= __('开启') ?>'
                                                            data-off-label='<?= __('关闭') ?>'>

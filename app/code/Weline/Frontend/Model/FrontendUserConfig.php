@@ -58,9 +58,9 @@ class FrontendUserConfig extends \Weline\Framework\Database\Model
         }
     }
 
-    public function setUserId(int $admin_user_id)
+    public function setUserId(int $frontend_user_id)
     {
-        return $this->setData(self::fields_ID, $admin_user_id);
+        return $this->setData(self::fields_ID, $frontend_user_id);
     }
 
     public function setSession(Session $session): static

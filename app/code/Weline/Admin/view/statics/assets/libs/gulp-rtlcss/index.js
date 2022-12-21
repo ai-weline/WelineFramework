@@ -1,4 +1,4 @@
-(function(){
+(function () {
     "use strict";
     var PluginError = require('plugin-error'),
         through = require('through2'),

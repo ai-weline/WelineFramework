@@ -20,12 +20,13 @@ class FormKey
     private string $_key = '';
     private array $_key_paths = [];
 
-    public const key_name = 'form_key';
+    public const key_name       = 'form_key';
     public const form_key_paths = 'form_key_paths';
 
     public function __construct(
         Session $session
-    ) {
+    )
+    {
         $this->_session = $session;
     }
 

@@ -25,7 +25,8 @@ class Init
 {
     public function beforeStart(
         \Weline\Framework\Router\Core $router
-    ) {
+    )
+    {
         if (Env::getInstance()->getConfig('maintenance', false)) {
             /**@var Request $req */
             $req = ObjectManager::getInstance(Request::class);
@@ -34,7 +35,7 @@ class Init
             $data  = new DataObject(['white_urls' => []]);
             $event->dispatch('Weline_Framework::maintenance', ['data' => $data]);
             $white_urls = $data->getData('white_urls');
-            $white         = false;
+            $white      = false;
             foreach ($white_urls as $white_url_string) {
                 if (str_contains($req->getUri(), $white_url_string)) {
                     $white = true;

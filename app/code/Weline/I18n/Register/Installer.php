@@ -21,12 +21,14 @@ class Installer implements RegisterInterface
 
     /**
      * Installer 初始函数...
+     *
      * @param Printing $printing
      */
     public function __construct(
         Printing $printing
-    ) {
-        $this->printing    = $printing;
+    )
+    {
+        $this->printing = $printing;
     }
 
     /**
@@ -43,7 +45,7 @@ class Installer implements RegisterInterface
     public function register(string $type, string $module_name, array|string $param, string $version = '', string $description = ''): mixed
     {
         // 参数检查
-        $this->printing->printing(__('语言包(%1)：%2 已安装。', [$module_name,$param]));
+        $this->printing->printing(__('语言包(%1)：%2 已安装。', [$module_name, $param]));
         return '';
     }
 }

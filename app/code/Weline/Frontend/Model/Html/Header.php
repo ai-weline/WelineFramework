@@ -23,7 +23,8 @@ class Header implements HtmlInterface
 
     public function __construct(
         Config $frontendConfig
-    ) {
+    )
+    {
         $this->frontendConfig = $frontendConfig;
     }
 
@@ -38,7 +39,7 @@ class Header implements HtmlInterface
      */
     public function getHtml(): string
     {
-        return ($this->frontendConfig->getConfig(self::key, self::module) ?? '').$this->_html;
+        return ($this->frontendConfig->getConfig(self::key, self::module) ?? '') . $this->_html;
     }
 
     /**

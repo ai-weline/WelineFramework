@@ -51,7 +51,7 @@ class Checker
 
     public function setNeed(string $type, $value)
     {
-        if (! in_array($type, $this->canCheck, true)) {
+        if (!in_array($type, $this->canCheck, true)) {
             $this->canCheck[] = $type;
         }
         if (is_array($value)) {

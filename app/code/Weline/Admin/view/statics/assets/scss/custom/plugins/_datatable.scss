@@ -32,7 +32,7 @@ div.dataTables_wrapper {
   }
 }
 
-div.table-responsive>div.dataTables_wrapper>div.row>div[class^="col-"] {
+div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"] {
   &:first-child {
     padding-left: 0;
   }
@@ -94,26 +94,28 @@ table.dataTable {
   tbody {
     // Multi select table
 
-    > tr.selected, >tr>.selected {
-        background-color: rgba($primary,.2);
-        
-        td {
-            border-color: rgba($primary,.2);
-            color: $primary;
-        }
+    > tr.selected, > tr > .selected {
+      background-color: rgba($primary, .2);
+
+      td {
+        border-color: rgba($primary, .2);
+        color: $primary;
+      }
     }
+
     td {
-        &:focus {
-            outline: none !important;
-        }
+      &:focus {
+        outline: none !important;
+      }
     }
+
     // Key Tables
-    th.focus,td.focus{
-        outline: 2px solid $primary !important;
-        outline-offset: -1px;
-        background-color: rgba($primary, 0.15);
+    th.focus, td.focus {
+      outline: 2px solid $primary !important;
+      outline-offset: -1px;
+      background-color: rgba($primary, 0.15);
     }
-}
+  }
 }
 
 .dataTables_info {
@@ -123,11 +125,11 @@ table.dataTable {
 
 // Responsive data table
 table.dataTable.dtr-inline.collapsed {
-  >tbody {
-    >tr[role=row] {
+  > tbody {
+    > tr[role=row] {
 
-      >td,
-      >th {
+      > td,
+      > th {
         &:first-child {
           &:before {
             box-shadow: $box-shadow-lg;
@@ -138,10 +140,10 @@ table.dataTable.dtr-inline.collapsed {
       }
     }
 
-    >tr.parent {
+    > tr.parent {
 
-      >td,
-      >th {
+      > td,
+      > th {
         &:first-child {
           &:before {
             background-color: $danger;
@@ -204,7 +206,6 @@ div.dt-button-info {
 }
 
 
-
 // datatable
 
 
@@ -213,11 +214,10 @@ div.dt-button-info {
 }
 
 
-
 .table,
 table {
   &.dataTable {
-    &.dtr-inline.collapsed>tbody>tr>td {
+    &.dtr-inline.collapsed > tbody > tr > td {
       position: relative;
 
       &.dtr-control {

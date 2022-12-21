@@ -19,6 +19,7 @@ class Security
      * 参数区：
      *
      * @param string $xmlContent
+     *
      * @return bool
      */
     private function heuristicScan(string $xmlContent)
@@ -44,6 +45,7 @@ class Security
      * 参数区：
      *
      * @param string $xmlContent
+     *
      * @return bool
      */
     public function scan(string $xmlContent)
@@ -83,7 +85,7 @@ class Security
 //        libxml_disable_entity_loader($loadEntities);
         libxml_use_internal_errors($useInternalXmlErrors);
 
-        if (! $result) {
+        if (!$result) {
             return false;
         }
 

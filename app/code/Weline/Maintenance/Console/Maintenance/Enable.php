@@ -26,11 +26,13 @@ class Enable implements \Weline\Framework\Console\CommandInterface
 
     /**
      * Enable 初始函数...
+     *
      * @param Printing $printing
      */
     public function __construct(
         Printing $printing
-    ) {
+    )
+    {
         $this->printing = $printing;
     }
 

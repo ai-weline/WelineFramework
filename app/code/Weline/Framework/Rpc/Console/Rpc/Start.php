@@ -23,10 +23,10 @@ class Start extends Server implements \Weline\Framework\Console\CommandInterface
     public function execute(array $args = [], array $data = [])
     {
         Server::instance([
-            'host'  => '127.0.0.1',
-            'port'  => 8989,
-            'path'  => './api'
-        ])->run();
+                             'host' => '127.0.0.1',
+                             'port' => 8989,
+                             'path' => './api'
+                         ])->run();
     }
 
     /**

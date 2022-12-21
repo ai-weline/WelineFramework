@@ -8,8 +8,8 @@
  */
 
 return [
-    'router' => 'admin',
-    'dependencies'=>[
+    'router'       => 'admin',
+    'dependencies' => [
         'Weline_SystemConfig'
     ]
 ];

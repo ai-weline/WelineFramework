@@ -62,14 +62,14 @@ class Total extends \Weline\Framework\View\Block
             $rate = (($now_period_total - $last_period_total) / $last_period_total) * 100;
         }
         $rate = number_format($rate, 2);
-        $this->assign('up_down', $rate>0 ? 'up' : 'down');
-        $this->assign('rate', $rate.'%');
-        $id = 'id'.md5(json_encode($this->getData()));
+        $this->assign('up_down', $rate > 0 ? 'up' : 'down');
+        $this->assign('rate', $rate . '%');
+        $id = 'id' . md5(json_encode($this->getData()));
         $this->assign('id', $id);
         # class
         $this->assign('class', $rate > 0 ? 'text-success' : 'text-danger');
-        $options_name = 'radialoptions'.$id;
-        $chart_name = 'radialchart'.$id;
+        $options_name = 'radialoptions' . $id;
+        $chart_name   = 'radialchart' . $id;
         # 向footer中注入js脚本
         $this->getFooter()->addHtml(
             "<script>

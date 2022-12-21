@@ -10,8 +10,8 @@ File: Chartjs Init
     'use strict';
     $(function () {
 
-        Chart.defaults.global.defaultFontColor="#7b919e",
-        Chart.defaults.scale.gridLines.color="rgba(123, 145, 158,0.1)";
+        Chart.defaults.global.defaultFontColor = "#7b919e",
+            Chart.defaults.scale.gridLines.color = "rgba(123, 145, 158,0.1)";
 
         // Line Chart
         if ($('#lineChart').length) {
@@ -89,10 +89,10 @@ File: Chartjs Init
                 data: {
                     labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep"],
                     datasets: [{
-                            label: 'Apple',
-                            data: [46, 57, 59, 54, 62, 58, 64, 60, 66],
-                            backgroundColor: '#eff2f7'
-                        },
+                        label: 'Apple',
+                        data: [46, 57, 59, 54, 62, 58, 64, 60, 66],
+                        backgroundColor: '#eff2f7'
+                    },
                         {
                             label: 'Samsung',
                             data: [74, 83, 102, 97, 86, 106, 93, 114, 94],
@@ -156,30 +156,30 @@ File: Chartjs Init
                     fill: 'origin',
                     label: "Upcube"
                 },
-                {
-                    data: [50, 40, 48, 70, 50, 63, 63, 42, 42, 51, 35, 35],
-                    backgroundColor: [
-                        'rgba(124, 138, 150, 0.3)'
-                    ],
-                    borderColor: [
-                        '#7c8a96'
-                    ],
-                    borderWidth: 1,
-                    fill: 'origin',
-                    label: "Zinzer"
-                },
-                {
-                    data: [95, 75, 90, 105, 95, 95, 95, 100, 75, 95, 90, 105],
-                    backgroundColor: [
-                        'rgba(223, 227, 233, 0.2)'
-                    ],
-                    borderColor: [
-                        '#dfe3e9'
-                    ],
-                    borderWidth: 1,
-                    fill: 'origin',
-                    label: "Drixo"
-                }
+                    {
+                        data: [50, 40, 48, 70, 50, 63, 63, 42, 42, 51, 35, 35],
+                        backgroundColor: [
+                            'rgba(124, 138, 150, 0.3)'
+                        ],
+                        borderColor: [
+                            '#7c8a96'
+                        ],
+                        borderWidth: 1,
+                        fill: 'origin',
+                        label: "Zinzer"
+                    },
+                    {
+                        data: [95, 75, 90, 105, 95, 95, 95, 100, 75, 95, 90, 105],
+                        backgroundColor: [
+                            'rgba(223, 227, 233, 0.2)'
+                        ],
+                        borderColor: [
+                            '#dfe3e9'
+                        ],
+                        borderWidth: 1,
+                        fill: 'origin',
+                        label: "Drixo"
+                    }
                 ]
             };
             var areaOptions = {
@@ -278,8 +278,8 @@ File: Chartjs Init
                 data: {
                     datasets: [{
                         data: [21, 16, 48, 31],
-                        backgroundColor: ['#3d8ef8','#7c8a96','#11c46e','#f1b44c'],
-                        borderColor: ['#3d8ef8','#7c8a96','#11c46e','#f1b44c']
+                        backgroundColor: ['#3d8ef8', '#7c8a96', '#11c46e', '#f1b44c'],
+                        borderColor: ['#3d8ef8', '#7c8a96', '#11c46e', '#f1b44c']
                     }],
 
                     // These labels appear in the legend and in the tooltips when hovering different arcs
@@ -319,7 +319,7 @@ File: Chartjs Init
                             pointHoverBorderColor: "#dfe3e9",
                             data: [65, 59, 90, 81, 56, 55, 40]
                         },
-                        {   
+                        {
                             label: "Healthy",
                             backgroundColor: "rgba(61, 142, 248,0.2)",
                             borderColor: "#3d8ef8",

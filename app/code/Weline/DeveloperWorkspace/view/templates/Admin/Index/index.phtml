@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
@@ -53,12 +53,18 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                 <div class="row">
                     <div class="col-12">
                         <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                            <h4 class="mb-sm-0"><lang>开发文档管理器</lang></h4>
+                            <h4 class="mb-sm-0">
+                                <lang>开发文档管理器</lang>
+                            </h4>
 
                             <div class="page-title-right">
                                 <ol class="breadcrumb m-0">
-                                    <li class="breadcrumb-item"><a href="javascript: void(0);"><lang>系统</lang></a></li>
-                                    <li class="breadcrumb-item active"><lang>开发文档管理器</lang></li>
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">
+                                            <lang>系统</lang>
+                                        </a></li>
+                                    <li class="breadcrumb-item active">
+                                        <lang>开发文档管理器</lang>
+                                    </li>
                                 </ol>
                             </div>
                         </div>
@@ -69,7 +75,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                     <div class="col-xl-3 col-sm-6">
                         <div class="card">
                             <div class="card-body">
-                               111
+                                111
                             </div>
                             <!-- end card-body -->
                         </div>
@@ -82,8 +88,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                     <div class="col-xl-3 col-sm-6">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class='card-title'><lang>新建文档</lang></h4>
-                                <p class='card-title-desc'><lang>新建一篇开发文档</lang></p>
+                                <h4 class='card-title'>
+                                    <lang>新建文档</lang>
+                                </h4>
+                                <p class='card-title-desc'>
+                                    <lang>新建一篇开发文档</lang>
+                                </p>
 
                                 <form method='post'>
                                     <label for='elm1'></label><textarea id='elm1' name='area'></textarea>

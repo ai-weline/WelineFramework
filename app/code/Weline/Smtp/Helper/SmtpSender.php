@@ -30,15 +30,16 @@ class SmtpSender extends \Weline\Framework\App\Helper
 
     public function __construct(
         Data $data
-    ) {
+    )
+    {
         $this->data = $data;
         //创建实例；传递“true”将启用异常
         $this->mail = new PHPMailer(true);
         $this->mail->addCustomHeader('charset', 'UTF-8');
         $this->mail->addCustomHeader('Content-Transfer-Encoding', '8Bit');
-        $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;              //Enable verbose debug output
+        $this->mail->SMTPDebug = SMTP::DEBUG_SERVER;                   //Enable verbose debug output
         $this->mail->isSMTP();                                         //使用SMTP发送
-        $this->mail->CharSet='UTF-8';
+        $this->mail->CharSet = 'UTF-8';
     }
 
     public function getHelper(): Data
@@ -87,7 +88,8 @@ class SmtpSender extends \Weline\Framework\App\Helper
         string|array $cc = '',
         string|array $bcc = '',
         string       $module = 'Weline_Smtp'
-    ): bool {
+    ): bool
+    {
         //服务器设置
         $this->mail->Host = $this->data->get($this->data::smtp_host, $module);
 
@@ -193,8 +195,8 @@ class SmtpSender extends \Weline\Framework\App\Helper
         /**@var \Weline\Smtp\Model\SmtpSendLog $sendLog */
         $sendLog = ObjectManager::getInstance(SmtpSendLog::class);
         try {
-            $sendLog->setData($sendLog::fields_FROM, $from['email']??$from)
-                    ->setData($sendLog::fields_SENDER_NAME, $from['name']??'')
+            $sendLog->setData($sendLog::fields_FROM, $from['email'] ?? $from)
+                    ->setData($sendLog::fields_SENDER_NAME, $from['name'] ?? '')
                     ->setData($sendLog::fields_TO, json_encode($to))
                     ->setData($sendLog::fields_REPLY_TO, $reply_to ? json_encode($reply_to) : null)
                     ->setData($sendLog::fields_SUBJECT, $subject)

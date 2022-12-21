@@ -37,7 +37,8 @@ class Installer implements RegisterInterface
     public function __construct(
         WelineTheme $welineTheme,
         Printing    $printing
-    ) {
+    )
+    {
         $this->welineTheme = $welineTheme;
         $this->printing    = $printing;
     }
@@ -65,7 +66,7 @@ class Installer implements RegisterInterface
         }
         // 检测是否有父主题
         $parent_id = 0;
-        if (isset($param['parent'])&&$parent =$param['parent']) {
+        if (isset($param['parent']) && $parent = $param['parent']) {
             $parent = $this->welineTheme->load('name', $parent);
             if (!$parent->getId()) {
                 throw new Exception(__('父主题：%1 不存在！', $parent));
@@ -104,8 +105,8 @@ class Installer implements RegisterInterface
                 // 新安装
                 $this->welineTheme->clearQuery();
                 $res = $this->welineTheme->setId(0)
-                                  ->setIsActive(true)
-                                  ->save();
+                                         ->setIsActive(true)
+                                         ->save();
                 if (!$res) {
                     throw new Exception(__('主题注册失败！'));
                 }

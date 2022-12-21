@@ -20,9 +20,9 @@ class Server
      * @var string[]
      */
     private $params = [
-        'host'  => '',  // ip地址，列出来的目的是为了友好看出来此变量中存储的信息
-        'port'  => '', // 端口
-        'path'  => '' // 服务目录
+        'host' => '',  // ip地址，列出来的目的是为了友好看出来此变量中存储的信息
+        'port' => '', // 端口
+        'path' => '' // 服务目录
     ];
     /**
      * 本类常用配置
@@ -41,7 +41,7 @@ class Server
     /**
      * @DESC          # 必要验证
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:52
      * 参数区：
@@ -54,10 +54,11 @@ class Server
     /**
      * @DESC          # 初始化必要参数
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:53
      * 参数区：
+     *
      * @param $params
      */
     private function init($params)
@@ -71,7 +72,7 @@ class Server
     /**
      * @DESC          # 创建tcpsocket服务
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:53
      * 参数区：
@@ -81,7 +82,7 @@ class Server
         $this->server = stream_socket_server("tcp://{$this->params['host']}:{$this->params['port']}", $errno, $errstr);
         if (!$this->server) {
             exit([
-                $errno,$errstr
+                $errno, $errstr
             ]);
         }
     }
@@ -89,16 +90,16 @@ class Server
     /**
      * @DESC          # rpc服务目录
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:53
      * 参数区：
      */
     public function serverPath(): void
     {
-        $path = $this->params['path'];
+        $path     = $this->params['path'];
         $realPath = realpath(__DIR__ . $path);
-        if ($realPath === false ||!file_exists($realPath)) {
+        if ($realPath === false || !file_exists($realPath)) {
             exit("{$path} error!");
         }
         $this->config['real_path'] = $realPath;
@@ -107,11 +108,13 @@ class Server
     /**
      * @DESC          # 返回当前实例
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:53
      * 参数区：
+     *
      * @param $params
+     *
      * @return Server
      */
     public static function instance($params): Server
@@ -125,7 +128,7 @@ class Server
     /**
      * @DESC          # 运行
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:53
      * 参数区：
@@ -138,7 +141,7 @@ class Server
             if ($client) {
                 echo "有新连接\n";
                 $buf = fread($client, $this->config['max_size']);
-                print_r('接收到的原始数据:'.$buf."\n");
+                print_r('接收到的原始数据:' . $buf . "\n");
                 // 自定义协议目的是拿到类方法和参数(可改成自己定义的)
                 $this->parseProtocol($buf, $class, $method, $params);
                 // 执行方法
@@ -153,10 +156,11 @@ class Server
     /**
      * @DESC          # 执行方法
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:54
      * 参数区：
+     *
      * @param $client
      * @param $class
      * @param $method
@@ -167,7 +171,7 @@ class Server
         if ($class && $method) {
             // 首字母转为大写
             $class = ucfirst($class);
-            $file = $this->params['path'] . '/' . $class . '.php';
+            $file  = $this->params['path'] . '/' . $class . '.php';
             //判断文件是否存在，如果有，则引入文件
             if (file_exists($file)) {
                 require_once $file;
@@ -192,10 +196,11 @@ class Server
     /**
      * @DESC          # 解析协议
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:56
      * 参数区：
+     *
      * @param $buf
      * @param $class
      * @param $method
@@ -203,8 +208,8 @@ class Server
      */
     private function parseProtocol($buf, &$class, &$method, &$params): void
     {
-        $buf = json_decode($buf, true);
-        $class = $buf['class'];
+        $buf    = json_decode($buf, true);
+        $class  = $buf['class'];
         $method = $buf['method'];
         $params = $buf['params'];
     }
@@ -212,10 +217,11 @@ class Server
     /**
      * @DESC          # 打包协议
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午2:56
      * 参数区：
+     *
      * @param $data
      */
     private function packProtocol(&$data): void

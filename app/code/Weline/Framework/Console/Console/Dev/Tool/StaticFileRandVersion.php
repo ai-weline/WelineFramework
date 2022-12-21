@@ -20,7 +20,8 @@ class StaticFileRandVersion implements \Weline\Framework\Console\CommandInterfac
 
     public function __construct(
         Printing $printing
-    ) {
+    )
+    {
         $this->printing = $printing;
     }
 

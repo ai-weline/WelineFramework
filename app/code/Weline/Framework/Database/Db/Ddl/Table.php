@@ -26,6 +26,7 @@ class Table implements Db\TableInterface
         $this->connection = $connection;
         return $this;
     }
+
     public function createTable(): \Weline\Framework\Database\Api\Db\Ddl\Table\CreateInterface
     {
         return ObjectManager::getInstance(Create::class)->setConnection($this->connection);

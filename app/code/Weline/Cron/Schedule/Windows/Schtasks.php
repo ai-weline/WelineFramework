@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -22,14 +23,13 @@ class Schtasks implements \Weline\Cron\Schedule\ScheduleInterface
      */
     private System $system;
 
-    function __construct(
+    public function __construct(
         System $system
-    )
-    {
+    ) {
         $this->system = $system;
     }
 
-    function create(string $name): array
+    public function create(string $name): array
     {
         if (!$this->exist($name)) {
             $base_project_dir       = BP;
@@ -49,7 +49,7 @@ $base_project_disk_name && cd $base_project_dir && php bin/m cron:task:run
         return ['status' => false, 'msg' => '[' . PHP_OS . ']' . __('系统定时任务已存在：%1', $name), 'result' => []];
     }
 
-    function run(string $name): array
+    public function run(string $name): array
     {
         $data = $this->system->win_exec("schtasks /Run /tn $name");
         if (count($data['output']) === 1) {
@@ -59,7 +59,7 @@ $base_project_disk_name && cd $base_project_dir && php bin/m cron:task:run
         }
     }
 
-    function remove(string $name): array
+    public function remove(string $name): array
     {
         # 删除脚本
         if (Env::path_framework_generated . $name . '-cron.bat') {
@@ -75,7 +75,7 @@ $base_project_disk_name && cd $base_project_dir && php bin/m cron:task:run
         return ['status' => false, 'msg' => '[' . PHP_OS . '] ' . __('系统计划任务 %1 尚未安装！请执行：php bin/m cron:install 安装计划任务！', $name), 'result' => []];
     }
 
-    function exist(string $name): bool
+    public function exist(string $name): bool
     {
         $data = $this->system->win_exec("schtasks /query /tn $name");
         if (count($data['output']) === 5) {

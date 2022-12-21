@@ -6,5 +6,5 @@ File: Knob Chart
 */
 
 $(function () {
-  $('[data-plugin="knob"]').knob();
+    $('[data-plugin="knob"]').knob();
 });

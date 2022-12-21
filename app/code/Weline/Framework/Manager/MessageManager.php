@@ -28,7 +28,8 @@ class MessageManager
 
     public function __construct(
         Session $session
-    ) {
+    )
+    {
         $this->session = $session;
     }
 
@@ -58,7 +59,7 @@ class MessageManager
         return (bool)$this->session->getData('has-exception');
     }
 
-    public function addSuccess(string $msg = '', string $class = 'success', string  $title = '')
+    public function addSuccess(string $msg = '', string $class = 'success', string $title = '')
     {
         $title = $title ?: __('操作成功！');
         $this->session->addData('system-message', $this->processMessage($msg, $title, $class));

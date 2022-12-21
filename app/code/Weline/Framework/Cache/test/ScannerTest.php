@@ -21,13 +21,14 @@ class ScannerTest extends TestCase
     public function testScanAppCaches()
     {
         $scanner = new Scanner();
-        $data = $scanner->scanAppCaches();
+        $data    = $scanner->scanAppCaches();
         assertIsArray($data);
     }
+
     public function testScanFrameworkCaches()
     {
         $scanner = new Scanner();
-        $data = $scanner->scanFrameworkCaches();
+        $data    = $scanner->scanFrameworkCaches();
         assertIsArray($data);
     }
 }

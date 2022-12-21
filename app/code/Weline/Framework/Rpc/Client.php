@@ -32,11 +32,13 @@ class Client
     /**
      * @DESC          # 返回当前对象
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午3:06
      * 参数区：
+     *
      * @param $url
+     *
      * @return Client
      */
     public static function instance($url)
@@ -47,12 +49,14 @@ class Client
     /**
      * @DESC          # 魔术方法调用
      *
-     * @AUTH  秋枫雁飞
+     * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 30/9/2022 下午3:06
      * 参数区：
+     *
      * @param $name
      * @param $arguments
+     *
      * @return false|string|void
      */
     public function __call($name, $arguments)

@@ -26,8 +26,9 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     public function __construct(
         Printing $printing,
         System   $system
-    ) {
-        $this->system = $system;
+    )
+    {
+        $this->system   = $system;
         $this->printing = $printing;
     }
 

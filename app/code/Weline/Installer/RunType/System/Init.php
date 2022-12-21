@@ -16,11 +16,11 @@ class Init
 {
     public function run(array $params)
     {
-        if (! isset($params['admin']) || ! isset($params['api_admin'])) {
+        if (!isset($params['admin']) || !isset($params['api_admin'])) {
             throw new Exception('参数不完整！');
         }
         $env_instance = \Weline\Framework\App\Env::getInstance();
-        if (! is_file($env_instance::path_ENV_FILE)) {
+        if (!is_file($env_instance::path_ENV_FILE)) {
             throw new Exception('不存在的环境！');
         }
         $env = require $env_instance::path_ENV_FILE;
@@ -38,6 +38,6 @@ class Init
         return ['data' => [
             'admin'     => $params['admin'],
             'api_admin' => $params['api_admin'],
-        ], 'hasErr' => false, 'msg' => '-------  配置环境初始化...  -------'];
+        ], 'hasErr'    => false, 'msg' => '-------  配置环境初始化...  -------'];
     }
 }

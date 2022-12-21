@@ -27,7 +27,7 @@ class Indexer extends Model
     public const fields_MODEL  = 'model';
     public const fields_TABLE  = 'table';
 
-    public const indexer       = 'weline_indexer';
+    public const indexer = 'weline_indexer';
 
     public function setup(ModelSetup $setup, Context $context): void
     {

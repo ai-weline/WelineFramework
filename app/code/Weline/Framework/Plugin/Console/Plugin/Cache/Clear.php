@@ -27,8 +27,9 @@ class Clear implements \Weline\Framework\Console\CommandInterface
 
     public function __construct(
         PluginCache $pluginCache,
-        Printing $printing
-    ) {
+        Printing    $printing
+    )
+    {
         $this->pluginCache = $pluginCache->create();
         $this->printing    = $printing;
     }

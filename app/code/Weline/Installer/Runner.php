@@ -29,10 +29,10 @@ class Runner
 
     public function installDb(array $params = []): array
     {
-        if (! CLI) {
+        if (!CLI) {
             /**@var Request $request */
             $request = ObjectManager::getInstance(Request::class);
-            $params= $request->getParams();
+            $params  = $request->getParams();
         }
         /**@var $installConfig InstallConfig */
         $installConfig = ObjectManager::getInstance(InstallConfig::class);
@@ -57,10 +57,10 @@ class Runner
 
     public function systemInit(array $params = []): array
     {
-        if (! CLI) {
+        if (!CLI) {
             /**@var Request $request */
             $request = ObjectManager::getInstance(Request::class);
-            $params= $request->getParams();
+            $params  = $request->getParams();
         }
         /**@var $init Init */
         $init = ObjectManager::getInstance(Init::class);

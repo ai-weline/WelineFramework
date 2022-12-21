@@ -23,7 +23,8 @@ class RouterRewrite implements \Weline\Framework\Event\ObserverInterface
 
     public function __construct(
         UrlRewrite $urlRewrite
-    ) {
+    )
+    {
         $this->urlRewrite = $urlRewrite;
     }
 

@@ -5,7 +5,7 @@ Contact: 秋枫雁飞(aiweline) 1714255949@qq.com
 File: Datatables Js File
 */
 
-$(document).ready(function() {
+$(document).ready(function () {
     $('#datatable').DataTable({
         "language": {
             "paginate": {
@@ -16,7 +16,7 @@ $(document).ready(function() {
         "drawCallback": function () {
             $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
         }
-        
+
     });
 
     //Buttons examples
@@ -37,7 +37,7 @@ $(document).ready(function() {
     table.buttons().container()
         .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
-        $(".dataTables_length select").addClass('form-select form-select-sm');
+    $(".dataTables_length select").addClass('form-select form-select-sm');
 
     // Multi Selection Datatable
     $('#selection-datatable').DataTable({
@@ -70,9 +70,9 @@ $(document).ready(function() {
     });
 
     table.buttons().container()
-            .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
+        .appendTo('#datatable-buttons_wrapper .col-md-6:eq(0)');
 
-            $(".dataTables_length select").addClass('form-select form-select-sm');
+    $(".dataTables_length select").addClass('form-select form-select-sm');
 
 
     // Alternative Pagination Datatable
@@ -87,9 +87,9 @@ $(document).ready(function() {
 
     // Scroll Vertical Datatable
     $('#scroll-vertical-datatable').DataTable({
-        "scrollY":        "350px",
+        "scrollY": "350px",
         "scrollCollapse": true,
-        "paging":         false,
+        "paging": false,
         "language": {
             "paginate": {
                 "previous": "<i class='mdi mdi-chevron-left'>",
@@ -113,10 +113,10 @@ $(document).ready(function() {
             $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
             $(".dataTables_length select").addClass('form-select form-select-sm');
         },
-        "columnDefs": [ {
+        "columnDefs": [{
             "visible": false,
             "targets": -1
-        } ]
+        }]
     });
 
     // State Saving Datatable
@@ -130,7 +130,7 @@ $(document).ready(function() {
         },
         "drawCallback": function () {
             $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
-            $(".dataTables_length select").addClass('form-select form-select-sm'); 
+            $(".dataTables_length select").addClass('form-select form-select-sm');
         }
     });
-} );
+});

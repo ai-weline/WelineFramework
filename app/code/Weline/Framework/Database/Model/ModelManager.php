@@ -33,7 +33,8 @@ class ModelManager
     public function __construct(
         ModuleFileReader $moduleReader,
         Printing         $printing
-    ) {
+    )
+    {
         $this->moduleReader = $moduleReader;
         $this->printing     = $printing;
     }

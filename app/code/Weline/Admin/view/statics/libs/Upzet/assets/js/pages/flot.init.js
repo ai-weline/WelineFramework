@@ -11,7 +11,8 @@ $(function () {
     // Bar Chart
     if ($('#flot-bar-1').length) {
         $.plot("#flot-bar-1", [{
-            data: [[0, 3], [2, 8], [4, 5], [6, 13], [8, 5], [10, 7], [12, 4], [14, 6]]}], 
+                data: [[0, 3], [2, 8], [4, 5], [6, 13], [8, 5], [10, 7], [12, 4], [14, 6]]
+            }],
             {
                 series: {
                     bars: {
@@ -24,7 +25,7 @@ $(function () {
                 grid: {
                     borderWidth: 1,
                     borderColor: 'rgba(123, 145, 158,0.1)',
-                    labelMargin : 15,
+                    labelMargin: 15,
                 },
                 yaxis: {
                     tickColor: 'rgba(123, 145, 158,0.1)',
@@ -75,23 +76,23 @@ $(function () {
         }], {
             grid: {
                 show: true,
-				aboveData: false,
-				labelMargin: 5,
-				axisMargin: 0,
-				borderWidth: 1,
-				minBorderMargin: 5,
-				clickable: true,
-				hoverable: true,
-				autoHighlight: false,
-				mouseActiveRadius: 20,
-				borderColor: 'rgba(123, 145, 158,0.1)'
+                aboveData: false,
+                labelMargin: 5,
+                axisMargin: 0,
+                borderWidth: 1,
+                minBorderMargin: 5,
+                clickable: true,
+                hoverable: true,
+                autoHighlight: false,
+                mouseActiveRadius: 20,
+                borderColor: 'rgba(123, 145, 158,0.1)'
             },
             series: {
-				stack: 0
+                stack: 0
             },
             legend: {
-				show: false,
-			},
+                show: false,
+            },
             yaxis: {
                 tickColor: 'rgba(123, 145, 158,0.1)',
                 font: {
@@ -123,72 +124,72 @@ $(function () {
         var retCust = [[0, 1], [1, 2], [2, 5], [3, 3], [4, 5], [5, 6], [6, 9]];
 
         var plot = $.plot($('#flot-line-1'), [
-        {
-            data: newCust,
-            label: 'New Customer',
-            color: '#3d8ef8'
-        },
-        {
-            data: retCust,
-            label: 'Returning Customer',
-            color: '#f1b44c'
-        }],
-        {
-            series: {
-                lines: {
-                    show: true,
-                    lineWidth: 1
+                {
+                    data: newCust,
+                    label: 'New Customer',
+                    color: '#3d8ef8'
                 },
-                shadowSize: 0
-            },
-            points: {
-                show: false,
-            },
-            legend: {
-                position: "ne",
-				margin : [0, -32],
-				noColumns : 0,
-				labelBoxBorderColor : null,
-				labelFormatter : function(label, series) {
-					// just add some space to labes
-					return '' + label + '&nbsp;&nbsp;';
-				},
-				width : 30,
-				height : 2
-            },
-            grid: {
-                hoverable: true,
-                clickable: true,
-                borderColor: 'rgba(123, 145, 158,0.1)',
-                borderWidth: 0,
-                labelMargin: 5,
-                backgroundColor: 'transparent'
-            },
-            yaxis: {
-                min: 0,
-                max: 15,
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
+                {
+                    data: retCust,
+                    label: 'Returning Customer',
+                    color: '#f1b44c'
+                }],
+            {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 1
+                    },
+                    shadowSize: 0
+                },
+                points: {
+                    show: false,
+                },
+                legend: {
+                    position: "ne",
+                    margin: [0, -32],
+                    noColumns: 0,
+                    labelBoxBorderColor: null,
+                    labelFormatter: function (label, series) {
+                        // just add some space to labes
+                        return '' + label + '&nbsp;&nbsp;';
+                    },
+                    width: 30,
+                    height: 2
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+                    borderColor: 'rgba(123, 145, 158,0.1)',
+                    borderWidth: 0,
+                    labelMargin: 5,
+                    backgroundColor: 'transparent'
+                },
+                yaxis: {
+                    min: 0,
+                    max: 15,
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                xaxis: {
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                tooltip: true, //activate tooltip
+                tooltipOpts: {
+                    content: "%s : %y.0",
+                    shifts: {
+                        x: -30,
+                        y: -50
+                    }
                 }
-            },
-            xaxis: {
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            tooltip: true, //activate tooltip
-            tooltipOpts: {
-                content: "%s : %y.0",
-                shifts: {
-                    x: -30,
-                    y: -50
-                }
-            }
-        });
+            });
     }
 
     // Line chart 2
@@ -196,78 +197,78 @@ $(function () {
         var newCust2 = [[0, 2], [1, 3], [2, 6], [3, 5], [4, 7], [5, 8], [6, 10]];
         var retCust2 = [[0, 1], [1, 2], [2, 5], [3, 3], [4, 5], [5, 6], [6, 9]];
         var plot = $.plot($('#flot-line-2'), [
-        {
-            data: newCust2,
-            label: 'New Customer',
-            color: '#fb4d53'
-        },
-        {
-            data: retCust2,
-            label: 'Returning Customer',
-            color: '#0db4d6'
-        }],
-        {
-            series: {
-                lines: {
-                    show: true,
-                    lineWidth: 0
+                {
+                    data: newCust2,
+                    label: 'New Customer',
+                    color: '#fb4d53'
                 },
-                splines: {
-                    show: true,
-                    tension: 0.4,
-                    lineWidth: 1,
-                    //fill: 0.4
+                {
+                    data: retCust2,
+                    label: 'Returning Customer',
+                    color: '#0db4d6'
+                }],
+            {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 0
+                    },
+                    splines: {
+                        show: true,
+                        tension: 0.4,
+                        lineWidth: 1,
+                        //fill: 0.4
+                    },
+                    shadowSize: 0
                 },
-                shadowSize: 0
-            },
-            points: {
-                show: false,
-            },
-            legend: {
-                position: "ne",
-				margin : [0, -32],
-				noColumns : 0,
-				labelBoxBorderColor : null,
-				labelFormatter : function(label, series) {
-					// just add some space to labes
-					return '' + label + '&nbsp;&nbsp;';
-				},
-				width : 30,
-				height : 2
-            },
-            tooltip: true, //activate tooltip
-            tooltipOpts: {
-                content: "%s : %y.0",
-                shifts: {
-                    x: -30,
-                    y: -50
+                points: {
+                    show: false,
+                },
+                legend: {
+                    position: "ne",
+                    margin: [0, -32],
+                    noColumns: 0,
+                    labelBoxBorderColor: null,
+                    labelFormatter: function (label, series) {
+                        // just add some space to labes
+                        return '' + label + '&nbsp;&nbsp;';
+                    },
+                    width: 30,
+                    height: 2
+                },
+                tooltip: true, //activate tooltip
+                tooltipOpts: {
+                    content: "%s : %y.0",
+                    shifts: {
+                        x: -30,
+                        y: -50
+                    }
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+                    borderColor: 'rgba(123, 145, 158,0.1)',
+                    borderWidth: 0,
+                    labelMargin: 5,
+                    backgroundColor: 'transparent'
+                },
+                yaxis: {
+                    min: 0,
+                    max: 20,
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                xaxis: {
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
                 }
-            },
-            grid: {
-                hoverable: true,
-                clickable: true,
-                borderColor: 'rgba(123, 145, 158,0.1)',
-                borderWidth: 0,
-                labelMargin: 5,
-                backgroundColor: 'transparent'
-            },
-            yaxis: {
-                min: 0,
-                max: 20,
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            xaxis: {
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            }
-        });
+            });
     }
 
     // Line chart 3
@@ -276,72 +277,72 @@ $(function () {
         var retCust3 = [[0, 8], [1, 5], [2, 6], [3, 8], [4, 4], [5, 3], [6, 6]];
 
         var plot = $.plot($('#flot-line-3'), [
-        {
-            data: newCust3,
-            label: 'New Customer',
-            color: '#f1734f'
-        },
-        {
-            data: retCust3,
-            label: 'Returning Customer',
-            color: '#11c46e'
-        }],
-        {
-            series: {
-                lines: {
-                    show: true,
-                    lineWidth: 2
+                {
+                    data: newCust3,
+                    label: 'New Customer',
+                    color: '#f1734f'
                 },
-                shadowSize: 0
-            },
-            points: {
-                show: true,
-            },
-            legend: {
-                position: "ne",
-				margin : [0, -32],
-				noColumns : 0,
-				labelBoxBorderColor : null,
-				labelFormatter : function(label, series) {
-					// just add some space to labes
-					return '' + label + '&nbsp;&nbsp;';
-				},
-				width : 30,
-				height : 2
-            },
-            tooltip: true, //activate tooltip
-            tooltipOpts: {
-                content: "%s : %y.0",
-                shifts: {
-                    x: -30,
-                    y: -50
+                {
+                    data: retCust3,
+                    label: 'Returning Customer',
+                    color: '#11c46e'
+                }],
+            {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 2
+                    },
+                    shadowSize: 0
+                },
+                points: {
+                    show: true,
+                },
+                legend: {
+                    position: "ne",
+                    margin: [0, -32],
+                    noColumns: 0,
+                    labelBoxBorderColor: null,
+                    labelFormatter: function (label, series) {
+                        // just add some space to labes
+                        return '' + label + '&nbsp;&nbsp;';
+                    },
+                    width: 30,
+                    height: 2
+                },
+                tooltip: true, //activate tooltip
+                tooltipOpts: {
+                    content: "%s : %y.0",
+                    shifts: {
+                        x: -30,
+                        y: -50
+                    }
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+                    borderColor: 'rgba(123, 145, 158,0.1)',
+                    borderWidth: 0,
+                    labelMargin: 5,
+                    backgroundColor: 'transparent'
+                },
+                yaxis: {
+                    min: 0,
+                    max: 15,
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                xaxis: {
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
                 }
-            },
-            grid: {
-                hoverable: true,
-                clickable: true,
-                borderColor: 'rgba(123, 145, 158,0.1)',
-                borderWidth: 0,
-                labelMargin: 5,
-                backgroundColor: 'transparent'
-            },
-            yaxis: {
-                min: 0,
-                max: 15,
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            xaxis: {
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            }
-        });
+            });
     }
 
     // Line chart 4
@@ -349,227 +350,227 @@ $(function () {
         var newCust4 = [[0, 10], [1, 7], [2, 8], [3, 9], [4, 6], [5, 5], [6, 7]];
         var retCust4 = [[0, 8], [1, 5], [2, 6], [3, 8], [4, 4], [5, 3], [6, 6]];
         var plot = $.plot($('#flot-line-4'), [
-        {
-            data: newCust4,
-            label: 'New Customer',
-            color: '#008080'
-        },
-        {
-            data: retCust4,
-            label: 'Returning Customer',
-            color: '#564ab1'
-        }],
-        {
-            series: {
-                lines: {
-                    show: false
+                {
+                    data: newCust4,
+                    label: 'New Customer',
+                    color: '#008080'
                 },
-                splines: {
+                {
+                    data: retCust4,
+                    label: 'Returning Customer',
+                    color: '#564ab1'
+                }],
+            {
+                series: {
+                    lines: {
+                        show: false
+                    },
+                    splines: {
+                        show: true,
+                        tension: 0.4,
+                        lineWidth: 2,
+                        //fill: 0.4
+                    },
+                    shadowSize: 0
+                },
+                points: {
                     show: true,
-                    tension: 0.4,
-                    lineWidth: 2,
-                    //fill: 0.4
                 },
-                shadowSize: 0
-            },
-            points: {
-                show: true,
-            },
-            legend: {
-                position: "ne",
-				margin : [0, -32],
-				noColumns : 0,
-				labelBoxBorderColor : null,
-				labelFormatter : function(label, series) {
-					// just add some space to labes
-					return '' + label + '&nbsp;&nbsp;';
-				},
-				width : 30,
-				height : 2
-            },
-            grid: {
-                hoverable: true,
-                clickable: true,
-                borderColor: 'rgba(123, 145, 158,0.1)',
-                borderWidth: 0,
-                labelMargin: 5,
-                backgroundColor: 'transparent'
-            },
-            yaxis: {
-                min: 0,
-                max: 15,
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            xaxis: {
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            tooltip: true, //activate tooltip
-            tooltipOpts: {
-                content: "%s : %y.0",
-                shifts: {
-                    x: -30,
-                    y: -50
-                }
-            },
-        });
+                legend: {
+                    position: "ne",
+                    margin: [0, -32],
+                    noColumns: 0,
+                    labelBoxBorderColor: null,
+                    labelFormatter: function (label, series) {
+                        // just add some space to labes
+                        return '' + label + '&nbsp;&nbsp;';
+                    },
+                    width: 30,
+                    height: 2
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+                    borderColor: 'rgba(123, 145, 158,0.1)',
+                    borderWidth: 0,
+                    labelMargin: 5,
+                    backgroundColor: 'transparent'
+                },
+                yaxis: {
+                    min: 0,
+                    max: 15,
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                xaxis: {
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                tooltip: true, //activate tooltip
+                tooltipOpts: {
+                    content: "%s : %y.0",
+                    shifts: {
+                        x: -30,
+                        y: -50
+                    }
+                },
+            });
     }
 
     // Area chart 1
     if ($('#flot-area-1').length) {
         var plot = $.plot($('#flot-area-1'), [
-        {
-            data: newCust,
-            label: 'New Customer',
-            color: '#0db4d6'
-        },
-        {
-            data: retCust,
-            label: 'Returning Customer',
-            color: '#4E6577'
-        }],
-        {
-            series: {
-                lines: {
-                    show: true,
-                    lineWidth: 0,
-                    fill: 0.8
+                {
+                    data: newCust,
+                    label: 'New Customer',
+                    color: '#0db4d6'
                 },
-                shadowSize: 0
-            },
-            points: {
-                show: false,
-            },
-            legend: {
-                position: "ne",
-				margin : [0, -32],
-				noColumns : 0,
-				labelBoxBorderColor : null,
-				labelFormatter : function(label, series) {
-					// just add some space to labes
-					return '' + label + '&nbsp;&nbsp;';
-				},
-				width : 30,
-				height : 2
-            },
-            grid: {
-                hoverable: true,
-                clickable: true,
-                borderColor: 'rgba(123, 145, 158,0.1)',
-                borderWidth: 0,
-                labelMargin: 5,
-                backgroundColor: 'transparent'
-            },
-            yaxis: {
-                min: 0,
-                max: 15,
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            xaxis: {
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            tooltip: true, //activate tooltip
-            tooltipOpts: {
-                content: "%s : %y.0",
-                shifts: {
-                    x: -30,
-                    y: -50
-                }
-            },
-        });
+                {
+                    data: retCust,
+                    label: 'Returning Customer',
+                    color: '#4E6577'
+                }],
+            {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 0,
+                        fill: 0.8
+                    },
+                    shadowSize: 0
+                },
+                points: {
+                    show: false,
+                },
+                legend: {
+                    position: "ne",
+                    margin: [0, -32],
+                    noColumns: 0,
+                    labelBoxBorderColor: null,
+                    labelFormatter: function (label, series) {
+                        // just add some space to labes
+                        return '' + label + '&nbsp;&nbsp;';
+                    },
+                    width: 30,
+                    height: 2
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+                    borderColor: 'rgba(123, 145, 158,0.1)',
+                    borderWidth: 0,
+                    labelMargin: 5,
+                    backgroundColor: 'transparent'
+                },
+                yaxis: {
+                    min: 0,
+                    max: 15,
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                xaxis: {
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                tooltip: true, //activate tooltip
+                tooltipOpts: {
+                    content: "%s : %y.0",
+                    shifts: {
+                        x: -30,
+                        y: -50
+                    }
+                },
+            });
     }
 
     // Area chart 2
-    if ($('#flot-area-2').length) { 
+    if ($('#flot-area-2').length) {
         var plot = $.plot($('#flot-area-2'), [
-        {
-            data: newCust,
-            label: 'New Customer',
-            color: '#11c46e'
-        },
-        {
-            data: retCust,
-            label: 'Returning Customer',
-            color: '#38414a'
-        }],
-        {
-            series: {
-                lines: {
-                    show: true,
-                    lineWidth: 0,
-                    fill: 0
+                {
+                    data: newCust,
+                    label: 'New Customer',
+                    color: '#11c46e'
                 },
-                splines: {
-                    show: true,
-                    tension: 0.4,
-                    lineWidth: 0,
-                    fill: 0.8
+                {
+                    data: retCust,
+                    label: 'Returning Customer',
+                    color: '#38414a'
+                }],
+            {
+                series: {
+                    lines: {
+                        show: true,
+                        lineWidth: 0,
+                        fill: 0
+                    },
+                    splines: {
+                        show: true,
+                        tension: 0.4,
+                        lineWidth: 0,
+                        fill: 0.8
+                    },
+                    shadowSize: 0
                 },
-                shadowSize: 0
-            },
-            points: {
-                show: false,
-            },
-            legend: {
-                position: "ne",
-				margin : [0, -32],
-				noColumns : 0,
-				labelBoxBorderColor : 'transparent',
-				labelFormatter : function(label, series) {
-					// just add some space to labes
-					return '' + label + '&nbsp;&nbsp;';
-				},
-				width : 30,
-				height : 2
-            },
-            grid: {
-                hoverable: true,
-                clickable: true,
-                borderColor: 'rgba(123, 145, 158,0.1)',
-                borderWidth: 0,
-                labelMargin: 5,
-                backgroundColor: 'transparent'
-            },
-            yaxis: {
-                min: 0,
-                max: 15,
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            xaxis: {
-                tickColor: 'rgba(123, 145, 158,0.1)',
-                font: {
-                    color: '#7b919e',
-                    size: 10
-                }
-            },
-            tooltip: true, //activate tooltip
-            tooltipOpts: {
-                content: "%s : %y.0",
-                shifts: {
-                    x: -30,
-                    y: -50
-                }
-            },
-        });
+                points: {
+                    show: false,
+                },
+                legend: {
+                    position: "ne",
+                    margin: [0, -32],
+                    noColumns: 0,
+                    labelBoxBorderColor: 'transparent',
+                    labelFormatter: function (label, series) {
+                        // just add some space to labes
+                        return '' + label + '&nbsp;&nbsp;';
+                    },
+                    width: 30,
+                    height: 2
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+                    borderColor: 'rgba(123, 145, 158,0.1)',
+                    borderWidth: 0,
+                    labelMargin: 5,
+                    backgroundColor: 'transparent'
+                },
+                yaxis: {
+                    min: 0,
+                    max: 15,
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                xaxis: {
+                    tickColor: 'rgba(123, 145, 158,0.1)',
+                    font: {
+                        color: '#7b919e',
+                        size: 10
+                    }
+                },
+                tooltip: true, //activate tooltip
+                tooltipOpts: {
+                    content: "%s : %y.0",
+                    shifts: {
+                        x: -30,
+                        y: -50
+                    }
+                },
+            });
     }
 
 
@@ -603,53 +604,53 @@ $(function () {
 
     var plot4 = $.plot('#flot-realtime-1', [getRandomData()], {
         colors: ['#fb4d53'],
-        series : {
-            grow : {
-                active : false
+        series: {
+            grow: {
+                active: false
             }, //disable auto grow
-            shadowSize : 0, // drawing is faster without shadows
-            lines : {
-                show : true,
-                fill : false,
-                lineWidth : 2,
-                steps : false
+            shadowSize: 0, // drawing is faster without shadows
+            lines: {
+                show: true,
+                fill: false,
+                lineWidth: 2,
+                steps: false
             }
         },
-        grid : {
-            show : true,
-            aboveData : false,
-            color : '#dcdcdc',
-            labelMargin : 15,
-            axisMargin : 0,
-            borderWidth : 0,
-            borderColor : null,
-            minBorderMargin : 5,
-            clickable : true,
-            hoverable : true,
-            autoHighlight : false,
-            mouseActiveRadius : 20
+        grid: {
+            show: true,
+            aboveData: false,
+            color: '#dcdcdc',
+            labelMargin: 15,
+            axisMargin: 0,
+            borderWidth: 0,
+            borderColor: null,
+            minBorderMargin: 5,
+            clickable: true,
+            hoverable: true,
+            autoHighlight: false,
+            mouseActiveRadius: 20
         },
-        tooltip : true, //activate tooltip
-        tooltipOpts : {
-            content : "Value is : %y.0" + "%",
-            shifts : {
-                x : -30,
-                y : -50
+        tooltip: true, //activate tooltip
+        tooltipOpts: {
+            content: "Value is : %y.0" + "%",
+            shifts: {
+                x: -30,
+                y: -50
             }
         },
-        yaxis : {
+        yaxis: {
             axisLabel: "Response Time (ms)",
-            min : 0,
-            max : 100,
+            min: 0,
+            max: 100,
             tickColor: 'rgba(123, 145, 158,0.1)',
             font: {
                 color: '#7b919e',
                 size: 10
             }
         },
-        xaxis : {
+        xaxis: {
             axisLabel: "Point Value (1000)",
-            show : true,
+            show: true,
             tickColor: 'rgba(123, 145, 158,0.1)',
             font: {
                 color: '#7b919e',
@@ -660,53 +661,53 @@ $(function () {
 
     var plot5 = $.plot('#flot-realtime-2', [getRandomData()], {
         colors: ['#3d8ef8'],
-        series : {
-            grow : {
-                active : false
+        series: {
+            grow: {
+                active: false
             }, //disable auto grow
-            shadowSize : 0, // drawing is faster without shadows
-            lines : {
-                show : true,
-                fill : 0.3,
-                lineWidth : 1,
-                steps : false
+            shadowSize: 0, // drawing is faster without shadows
+            lines: {
+                show: true,
+                fill: 0.3,
+                lineWidth: 1,
+                steps: false
             }
         },
-        grid : {
-            show : true,
-            aboveData : false,
-            color : '#dcdcdc',
-            labelMargin : 15,
-            axisMargin : 0,
-            borderWidth : 0,
-            borderColor : null,
-            minBorderMargin : 5,
-            clickable : true,
-            hoverable : true,
-            autoHighlight : false,
-            mouseActiveRadius : 20
+        grid: {
+            show: true,
+            aboveData: false,
+            color: '#dcdcdc',
+            labelMargin: 15,
+            axisMargin: 0,
+            borderWidth: 0,
+            borderColor: null,
+            minBorderMargin: 5,
+            clickable: true,
+            hoverable: true,
+            autoHighlight: false,
+            mouseActiveRadius: 20
         },
-        tooltip : true, //activate tooltip
-        tooltipOpts : {
-            content : "Value is : %y.0" + "%",
-            shifts : {
-                x : -30,
-                y : -50
+        tooltip: true, //activate tooltip
+        tooltipOpts: {
+            content: "Value is : %y.0" + "%",
+            shifts: {
+                x: -30,
+                y: -50
             }
         },
-        yaxis : {
+        yaxis: {
             axisLabel: "Response Time (ms)",
-            min : 0,
-            max : 100,
+            min: 0,
+            max: 100,
             tickColor: 'rgba(123, 145, 158,0.1)',
             font: {
                 color: '#7b919e',
                 size: 10
             }
         },
-        xaxis : {
+        xaxis: {
             axisLabel: "Point Value (1000)",
-            show : true,
+            show: true,
             tickColor: 'rgba(123, 145, 158,0.1)',
             font: {
                 color: '#7b919e',
@@ -733,11 +734,11 @@ $(function () {
 
     /**************** PIE CHART *******************/
     var piedata = [
-        { label: "Series 1", data: [[1, 40]], color: '#3d8ef8' },
-        { label: "Series 2", data: [[1, 30]], color: '#7c8a96' },
-        { label: "Series 3", data: [[1, 50]], color: '#11c46e' },
-        { label: "Series 4", data: [[1, 70]], color: '#f1b44c' },
-        { label: "Series 5", data: [[1, 80]], color: '#36B3E3' }
+        {label: "Series 1", data: [[1, 40]], color: '#3d8ef8'},
+        {label: "Series 2", data: [[1, 30]], color: '#7c8a96'},
+        {label: "Series 3", data: [[1, 50]], color: '#11c46e'},
+        {label: "Series 4", data: [[1, 70]], color: '#f1b44c'},
+        {label: "Series 5", data: [[1, 80]], color: '#36B3E3'}
     ];
 
     $.plot('#flot-pie', piedata, {
@@ -783,12 +784,12 @@ $(function () {
         legend: {
             show: false,
         },
-        tooltip : false, //activate tooltip
-        tooltipOpts : {
-            content : "Value is : %y.0" + "%",
-            shifts : {
-                x : -30,
-                y : -50
+        tooltip: false, //activate tooltip
+        tooltipOpts: {
+            content: "Value is : %y.0" + "%",
+            shifts: {
+                x: -30,
+                y: -50
             }
         },
     });
@@ -804,9 +805,9 @@ $(function () {
     // Charts show tooltips
     function showTooltip(x, y, contents) {
         $('<div id="tooltip" class="tooltipflot">' + contents + '</div>').css({
-            position : 'absolute',
-            top : y + 5,
-            left : x + 5
+            position: 'absolute',
+            top: y + 5,
+            left: x + 5
         }).appendTo("body").fadeIn(200);
     }
 
@@ -990,6 +991,7 @@ $(function () {
     var data2 = GenerateSeries(100);
     var data3 = GenerateSeries(200);
     var dataset = [data1, data2, data3];
+
     function GenerateSeries(added) {
         var data = [];
         var start = 100 + added;
@@ -1002,6 +1004,7 @@ $(function () {
         }
         return data;
     }
+
     var options = {
         series: {
             stack: true,
@@ -1035,6 +1038,7 @@ $(function () {
         tooltip: true,
     };
     var plot;
+
     function ToggleSeries() {
         var d = [];
         $("#toggle-chart input[type='checkbox']").each(function () {
@@ -1063,6 +1067,7 @@ $(function () {
         });
         $.plot($("#toggle-chart #toggle-chartContainer"), d, options);
     }
+
     $("#toggle-chart input").change(function () {
         ToggleSeries();
     });

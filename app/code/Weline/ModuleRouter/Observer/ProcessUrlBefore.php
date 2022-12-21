@@ -27,8 +27,9 @@ class ProcessUrlBefore implements \Weline\Framework\Event\ObserverInterface
 
     public function __construct(
         ModuleRouterCache $moduleRouterCache,
-        private Request $request
-    ) {
+        private Request   $request
+    )
+    {
         $this->moduleRouterCache = $moduleRouterCache->create();
     }
 

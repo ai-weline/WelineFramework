@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -19,23 +20,24 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class CronTask extends \Weline\Framework\Database\Model
 {
-    const fields_NAME                 = 'name';
-    const fields_MODULE               = 'module';
-    const fields_CLASS                = 'class';
-    const fields_TIP                  = 'tip';
-    const fields_CRON_TIME            = 'cron_time';
-    const fields_STATUS               = 'status';
-    const fields_RUNTIME              = 'runtime';
-    const fields_BLOCK_TIME           = 'block_time';
-    const fields_BLOCK_TIMES          = 'block_times';
-    const fields_BLOCK_UNLOCK_TIMEOUT = 'block_unlock_timeout';
-    const fields_RUN_TIME             = 'run_time';
-    const fields_RUN_DATE             = 'run_date';
-    const fields_NEXT_RUN_DATE        = 'next_run_date';
-    const fields_PRE_RUN_DATE         = 'pre_run_date';
-    const fields_RUN_TIMES            = 'run_times';
-    const fields_RUNTIME_ERROR        = 'runtime_error';
-    const fields_RUNTIME_ERROR_DATE   = 'runtime_error_date';
+    public const fields_NAME                 = 'name';
+    public const fields_MODULE               = 'module';
+    public const fields_CLASS                = 'class';
+    public const fields_TIP                  = 'tip';
+    public const fields_CRON_TIME            = 'cron_time';
+    public const fields_STATUS               = 'status';
+    public const fields_RUNTIME              = 'runtime';
+    public const fields_BLOCK_TIME           = 'block_time';
+    public const fields_BLOCK_TIMES          = 'block_times';
+    public const fields_BLOCK_UNLOCK_TIMEOUT = 'block_unlock_timeout';
+    public const fields_RUN_TIME             = 'run_time';
+    public const fields_RUN_DATE             = 'run_date';
+    public const fields_NEXT_RUN_DATE        = 'next_run_date';
+    public const fields_MAX_NEXT_RUN_DATE    = 'max_next_run_date';
+    public const fields_PRE_RUN_DATE         = 'pre_run_date';
+    public const fields_RUN_TIMES            = 'run_times';
+    public const fields_RUNTIME_ERROR        = 'runtime_error';
+    public const fields_RUNTIME_ERROR_DATE   = 'runtime_error_date';
 
     /**
      * @inheritDoc
@@ -74,6 +76,7 @@ class CronTask extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_RUN_TIME, TableInterface::column_type_VARCHAR, 20, 'default 0', '运行时间戳')
                   ->addColumn(self::fields_RUN_DATE, TableInterface::column_type_DATETIME, 0, 'default null', '运行日期')
                   ->addColumn(self::fields_NEXT_RUN_DATE, TableInterface::column_type_DATETIME, 0, 'default null', '下次运行时间')
+                  ->addColumn(self::fields_MAX_NEXT_RUN_DATE, TableInterface::column_type_DATETIME, 0, 'default null', '最大下次运行时间（超过可能阻塞无法执行）')
                   ->addColumn(self::fields_PRE_RUN_DATE, TableInterface::column_type_DATETIME, 0, 'default null', '上次运行时间')
                   ->addColumn(self::fields_RUN_TIMES, TableInterface::column_type_INTEGER, 0, 'default 0', '运行次数')
                   ->addColumn(self::fields_TIP, TableInterface::column_type_TEXT, 0, '', '任务描述')

@@ -22,7 +22,8 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
 
     public function __construct(
         Printing $printing
-    ) {
+    )
+    {
         $this->printing = $printing;
     }
 
@@ -65,7 +66,7 @@ class Compiler implements \Weline\Framework\Console\CommandInterface
     public function getTypes(bool $to_string = false)
     {
         $data = [
-            'less' => __('编译less静态资源！'),
+            'less'      => __('编译less静态资源！'),
             'requireJs' => __('静态文件：require.config.js编译文件！'),
         ];
         if ($to_string) {

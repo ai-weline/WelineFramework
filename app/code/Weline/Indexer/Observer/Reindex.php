@@ -23,9 +23,10 @@ class Reindex implements \Weline\Framework\Event\ObserverInterface
 
     public function __construct(
         \Weline\Indexer\Model\Indexer $indexer,
-        Printing $printing
-    ) {
-        $this->indexer = $indexer;
+        Printing                      $printing
+    )
+    {
+        $this->indexer  = $indexer;
         $this->printing = $printing;
     }
 
@@ -43,7 +44,7 @@ class Reindex implements \Weline\Framework\Event\ObserverInterface
             foreach ($args_indexers as $args_indexer) {
                 $indexers = $this->indexer->where('name', $args_indexer)->select()->fetch();
                 if (!$indexers) {
-                    $this->printing->error('索引器 '.$args_indexer.' 找不到');
+                    $this->printing->error('索引器 ' . $args_indexer . ' 找不到');
                     continue;
                 }
                 foreach ($indexers as $indexer) {
@@ -61,7 +62,7 @@ class Reindex implements \Weline\Framework\Event\ObserverInterface
         } else {
             # 检索Model模型
             $indexers = $this->indexer->select()->fetch();
-            /**@var Indexer $indexer*/
+            /**@var Indexer $indexer */
             foreach ($indexers as $indexer) {
                 $this->printing->note("开始重建索引：{$indexer['name']}");
                 if (class_exists($indexer->getModel())) {

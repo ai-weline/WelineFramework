@@ -24,7 +24,7 @@ class Install implements InstallInterface
         $db = $setup->getDb();
         /*主题表*/
         $printer->warning('安装数据库表：' . self::table_THEME);
-        if (! $db->tableExist(self::table_THEME)) {
+        if (!$db->tableExist(self::table_THEME)) {
             $setup->getDb()->createTable(
                 self::table_THEME,
                 '主题表'

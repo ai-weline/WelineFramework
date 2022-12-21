@@ -273,12 +273,12 @@ interface QueryInterface
      *
      * 参数区：
      *
-     * @param array $data                [数据]
-     * @param array $exist_update_fields [数组：存在则更新字段] 检测到这些字段对应的值已经存在则更新
+     * @param array        $data                [数据]
+     * @param array|string $exist_update_fields [数组：存在则更新字段] 检测到这些字段对应的值已经存在则更新
      *
      * @return QueryInterface
      */
-    public function insert(array $data, array $exist_update_fields = []): QueryInterface;
+    public function insert(array $data, array|string $exist_update_fields = []): QueryInterface;
 
     /**
      * @DESC         |删除

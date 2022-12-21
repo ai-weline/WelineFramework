@@ -1,20 +1,24 @@
-.header-wapper{
+.header-wapper {
     height: 6vh;
     border-bottom: 1px solid gray;
 }
-.avatar{
+
+.avatar {
     height: 6vh;
     float: right;
 }
-.avatar>img{
+
+.avatar > img {
     width: 100%;
     height: 100%;
 }
-.menu{
+
+.menu {
     width: 10%;
     float: left;
 }
-.menu ul{
+
+.menu ul {
     width: 10%;
     float: left;
 }

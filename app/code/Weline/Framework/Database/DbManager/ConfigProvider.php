@@ -52,7 +52,7 @@ class ConfigProvider extends DataObject implements ConfigProviderInterface
             $this->addSlavesConfig($slaves);
         }
         # 主数据库
-        $master = $db_conf['master']??$db_conf;
+        $master = $db_conf['master'] ?? $db_conf;
         parent::__construct($master);
     }
 

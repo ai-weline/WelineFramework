@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,28 +17,28 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Schedule implements ScheduleInterface
 {
-    function create(string $name): array
+    public function create(string $name): array
     {
         return $this->getScheduler()->create($name);
     }
 
-    function run(string $name): array
+    public function run(string $name): array
     {
         return $this->getScheduler()->run($name);
     }
 
-    function remove(string $name): array
+    public function remove(string $name): array
     {
         return $this->getScheduler()->remove($name);
     }
 
-    function getScheduler(): ScheduleInterface
+    public function getScheduler(): ScheduleInterface
     {
         $cron_class = IS_WIN ? 'Windows\Schtasks' : 'Linux\Crontab';
         return ObjectManager::getInstance("Weline\Cron\Schedule\\$cron_class");
     }
 
-    function exist(string $name): bool
+    public function exist(string $name): bool
     {
         return $this->getScheduler()->exist("schtasks /query /tn $name");
     }

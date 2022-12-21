@@ -34,7 +34,6 @@ class Set extends \Weline\Admin\Controller\BaseController
             $this->themeConfig->setThemeConfig($data);
             return $this->fetchJson($this->success());
         } catch (\Exception $exception) {
-            p($exception->getMessage());
             return $this->fetchJson($this->exception($exception));
         }
     }

@@ -31,7 +31,8 @@ class Clear implements \Weline\Framework\Console\CommandInterface
     public function __construct(
         Scanner  $scanner,
         Printing $printing
-    ) {
+    )
+    {
         $this->scanner  = $scanner;
         $this->printing = $printing;
     }

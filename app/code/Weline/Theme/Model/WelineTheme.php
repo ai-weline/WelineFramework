@@ -39,7 +39,7 @@ class WelineTheme extends Model
 
 //    protected $table = Install::table_THEME; # 如果需要设置特殊表名 需要加前缀
 
-    private ?WelineTheme $theme=null;
+    private ?WelineTheme $theme = null;
 
     /**
      * @DESC          # 获取激活的主题 有缓存

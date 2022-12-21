@@ -6,10 +6,11 @@
   th {
     font-weight: $font-weight-bold;
   }
-  th:last-child ,
-  tr:last-child  {
+
+  th:last-child,
+  tr:last-child {
     td {
-        border: 0;
+      border: 0;
     }
   }
 }

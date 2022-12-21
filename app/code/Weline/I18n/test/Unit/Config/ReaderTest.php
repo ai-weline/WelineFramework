@@ -21,7 +21,7 @@ class ReaderTest extends TestCore
 {
     public function testGetAllI18ns()
     {
-        /**@var Reader $i18nReader*/
+        /**@var Reader $i18nReader */
         $i18nReader = ObjectManager::getInstance(Reader::class);
         assertIsArray($i18nReader->getAllI18ns(), __('Weline_I18n:语言包读取'));
     }

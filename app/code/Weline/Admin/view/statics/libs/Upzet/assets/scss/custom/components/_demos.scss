@@ -128,6 +128,7 @@
 
 .card-radio-input {
   display: none;
+
   &:checked + .card-radio {
     border-color: $primary !important;
   }
@@ -136,6 +137,7 @@
 .navs-carousel {
   .owl-nav {
     margin-top: 16px;
+
     button {
       width: 30px;
       height: 30px;

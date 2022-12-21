@@ -2,40 +2,43 @@
 // _nav.scss
 // 
 
-.nav-tabs,.nav-pills {
+.nav-tabs, .nav-pills {
   > li {
-      > a {
-          color: $gray-600;
-      }
+    > a {
+      color: $gray-600;
+    }
   }
 }
 
 .nav-pills {
   > a {
-      color: $gray-600;  
+    color: $gray-600;
   }
 }
 
 
 // Nav tab custom
 
-.nav-tabs-custom{
-  .nav-item{
+.nav-tabs-custom {
+  .nav-item {
     margin: 0px 7px;
     position: relative;
 
-    &:first-child{
+    &:first-child {
       margin-left: 0px;
     }
-    &:last-child{
+
+    &:last-child {
       margin-right: 0px;
     }
 
-    .nav-link{
+    .nav-link {
       background-color: $gray-300;
-      &.active{
+
+      &.active {
         color: $primary;
-        &:after{
+
+        &:after {
           transform: scale(1);
         }
       }
@@ -58,15 +61,16 @@
 
 // vertical nav
 
-.vertical-nav{
-  .nav{
-      .nav-link{
-          padding: 24px 16px;
-          text-align: center;
-          margin-bottom: 8px;
-          .nav-icon{
-              font-size: 24px;
-          }
+.vertical-nav {
+  .nav {
+    .nav-link {
+      padding: 24px 16px;
+      text-align: center;
+      margin-bottom: 8px;
+
+      .nav-icon {
+        font-size: 24px;
       }
+    }
   }
 }

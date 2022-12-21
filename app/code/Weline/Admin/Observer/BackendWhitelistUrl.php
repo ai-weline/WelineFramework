@@ -21,7 +21,8 @@ class BackendWhitelistUrl implements \Weline\Framework\Event\ObserverInterface
 
     public function __construct(
         Url $url
-    ) {
+    )
+    {
         $this->url = $url;
     }
 
@@ -30,8 +31,8 @@ class BackendWhitelistUrl implements \Weline\Framework\Event\ObserverInterface
      */
     public function execute(Event $event)
     {
-        /**@var DataObject $data*/
-        $data = $event->getData('data');
+        /**@var DataObject $data */
+        $data      = $event->getData('data');
         $whitelist = $data->getData('whitelist_url');
         $data->setData('whitelist_url', array_merge($whitelist, [
             $this->url->getBackendUrl('admin/login/post'),

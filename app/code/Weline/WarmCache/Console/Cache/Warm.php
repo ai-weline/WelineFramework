@@ -33,8 +33,8 @@ class Warm implements CommandInterface
         $this->printing->warning(__('缓存预热开始...'));
         foreach ($frontend_routers as $frontend_router => $router_data) {
             $frontend_router = explode('::', $frontend_router);
-            $frontend_url =  array_shift($frontend_router);
-            $method = 'get';
+            $frontend_url    = array_shift($frontend_router);
+            $method          = 'get';
             if ($frontend_router) {
                 $method = strtolower(array_shift($frontend_router));
             }

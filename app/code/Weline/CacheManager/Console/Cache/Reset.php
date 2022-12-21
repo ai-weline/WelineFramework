@@ -32,15 +32,17 @@ class Reset implements \Weline\Framework\Console\CommandInterface
 
     /**
      * Flush 初始函数...
-     * @param Scanner $scanner
+     *
+     * @param Scanner  $scanner
      * @param Printing $printing
-     * @param System $system
+     * @param System   $system
      */
     public function __construct(
-        Scanner $scanner,
+        Scanner  $scanner,
         Printing $printing,
-        System $system
-    ) {
+        System   $system
+    )
+    {
         $this->scanner  = $scanner;
         $this->printing = $printing;
         $this->system   = $system;

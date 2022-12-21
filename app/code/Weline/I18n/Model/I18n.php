@@ -27,7 +27,7 @@ class I18n
      */
     private Reader $reader;
 
-    private CacheInterface $i18nCache;
+    public CacheInterface $i18nCache;
 
     /**
      * I18n 初始函数...
@@ -62,14 +62,13 @@ class I18n
         }
         $locales = Locales::getLocales();
         foreach ($locales as $locale) {
-            $locale = strtolower($locale);
-            if (strtolower($locale_code) === $locale) {
+            if (strtolower($locale_code) === strtolower($locale)) {
                 $this->i18nCache->set($locale_code, $locale);
                 return $locale;
             }
         }
-        $this->i18nCache->set($locale_code, 'zh_cn');
-        return 'zh_cn';
+        $this->i18nCache->set($locale_code, 'zh_CN');
+        return 'zh_CN';
     }
 
     /**
@@ -94,19 +93,21 @@ class I18n
         return $locals;
     }
 
-    public function getLocalesWithFlags(int $width = 42, int $height = 0, string $lang_code = 'zh_hans_cn')
+    public function getLocalesWithFlags(int $width = 42, int $height = 0, string $lang_code = 'zh_Hans_CN', bool $installed = true)
     {
-        $cache_key = 'getLocalesWithFlags' . $lang_code . $width . $height;
+        $cache_key = 'getLocalesWithFlags' . $lang_code . $width . $height . (string)$installed;
         if ($data = $this->i18nCache->get($cache_key)) {
-//            return $data;
+            return $data;
         }
-        # TODO 排除非启用的语言包
-        /**@var Scan $scan */
-        $install_packs_path = glob(Env::path_LANGUAGE_PACK . '*' . DS . '*', GLOB_ONLYDIR);
-        $install_packs      = [];
-        foreach ($install_packs_path as $path) {
-            $path_arr        = explode(DS, $path);
-            $install_packs[] = array_pop($path_arr);
+        if ($installed) {
+            # 排除非启用的语言包
+            /**@var Scan $scan */
+            $install_packs_path = glob(Env::path_LANGUAGE_PACK . '*' . DS . '*', GLOB_ONLYDIR);
+            $install_packs      = [];
+            foreach ($install_packs_path as $path) {
+                $path_arr        = explode(DS, $path);
+                $install_packs[] = array_pop($path_arr);
+            }
         }
         $no_scale = false;
         if ($width == 0 && $height == 0) {
@@ -117,7 +118,7 @@ class I18n
         foreach (countries() as $code => $country) {
             $country = country($code);
             foreach ($country->getLocales() as $locale) {
-                if (!in_array($locale, $install_packs)) {
+                if ($installed && !in_array($locale, $install_packs)) {
                     continue;
                 }
                 $svg      = $country->getFlag();
@@ -143,8 +144,53 @@ class I18n
                 }
             }
         }
-        $this->i18nCache->set($cache_key, $locals);
+        $this->i18nCache->set($cache_key, $locals, 0);
         return $locals;
+    }
+
+    public function getCountryFlagWithLocal(string $local_code = 'zh_Hans_CN', int $width = 42, int $height = 0)
+    {
+        $cache_key = 'getCountryFlagWithLocal' . $local_code . $width . $height;
+        if ($data = $this->i18nCache->get($cache_key)) {
+            if (is_array($data)) {
+                return $data;
+            }
+        }
+        $no_scale = false;
+        if ($width == 0 && $height == 0) {
+            $no_scale = true;
+        }
+        $lang_locals = $this->getLocals($local_code);
+        foreach (countries() as $code => $country) {
+            $country = country($code);
+            foreach ($country->getLocales() as $locale) {
+                if ($locale === $local_code) {
+                    $svg      = $country->getFlag();
+                    $svg_xml  = simplexml_load_string($svg);
+                    $o_width  = $svg_xml->attributes()->width ?? 42;
+                    $o_height = $svg_xml->attributes()->height ?? 32;
+                    if (!$no_scale) {
+                        if ($width === 0) {
+                            $scale = intval($o_height) / $height;
+                            $width = intval($o_width) / $scale;
+                        }
+                        if ($height === 0) {
+                            $scale  = intval($o_width) / $width;
+                            $height = intval($o_height) / $scale;
+                        }
+                    }
+
+                    $svg_xml->attributes()->width  = $width;
+                    $svg_xml->attributes()->height = $height;
+                    $svg                           = $svg_xml->asXML();
+                    $local                         = ['name' => $lang_locals[$locale], 'flag' => $svg];
+                    $this->i18nCache->set($cache_key, $local, 0);
+                    return $local;
+                }
+            }
+        }
+        $this->i18nCache->set($cache_key, [], 0);
+        return [];
     }
 
     /**

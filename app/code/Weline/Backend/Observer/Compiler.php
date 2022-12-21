@@ -17,7 +17,7 @@ use Weline\Framework\View\Template;
 
 class Compiler implements \Weline\Framework\Event\ObserverInterface
 {
-    public const area = 'backend';
+    public const area            = 'backend';
     public const require_js_file = 'base' . DS . 'require.configs.js';
     public const require_js_type = 'require.config.js';
 
@@ -27,7 +27,7 @@ class Compiler implements \Weline\Framework\Event\ObserverInterface
     public function execute(Event $event)
     {
         $eventData = $event->getEvenData();
-        $area = $eventData->getArea();
+        $area      = $eventData->getArea();
         if (self::area === $area) {
             $type = $eventData->getType();
             switch ($type):

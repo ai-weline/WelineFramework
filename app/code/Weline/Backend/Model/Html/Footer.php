@@ -26,7 +26,8 @@ class Footer implements HtmlInterface
 
     public function __construct(
         Config $backendConfig
-    ) {
+    )
+    {
         $this->backendConfig = $backendConfig;
     }
 
@@ -42,7 +43,7 @@ class Footer implements HtmlInterface
      */
     public function getHtml(): string
     {
-        return Template::getInstance()->tmp_replace(($this->backendConfig->getConfig(self::key, self::module) ?? '').$this->_html);
+        return Template::getInstance()->tmp_replace(($this->backendConfig->getConfig(self::key, self::module) ?? '') . $this->_html);
     }
 
     /**

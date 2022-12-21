@@ -10,9 +10,9 @@ $(function () {
     let table_edit = $('.table-edits tr');
     table_edit.editable({
         /*选择数据*/
-         dropdowns: {
-             is_system: ['0', '1']
-           },
+        dropdowns: {
+            is_system: ['0', '1']
+        },
         edit: function (values) {
             $(".edit i", this)
                 .removeClass('fa-pencil-alt')
@@ -41,7 +41,7 @@ $(function () {
             $.ajax({
                 url: window.url('system/menus/save'),
                 type: 'post',
-                dataType:'json',
+                dataType: 'json',
                 data: JSON.stringify(data),
                 success: async (res) => {
                     console.log(res);

@@ -19,7 +19,8 @@ class PhpCsFixer implements \Weline\Framework\Console\CommandInterface
 
     public function __construct(
         Printing $printing
-    ) {
+    )
+    {
         $this->printing = $printing;
     }
 
@@ -32,8 +33,8 @@ class PhpCsFixer implements \Weline\Framework\Console\CommandInterface
         $show = true;
         /*剥离参数选项*/
         if (in_array('no-show', $args)) {
-            foreach ($args as $key=>$arg) {
-                if ('no-show'===$arg) {
+            foreach ($args as $key => $arg) {
+                if ('no-show' === $arg) {
                     unset($args[$key]);
                 }
             }

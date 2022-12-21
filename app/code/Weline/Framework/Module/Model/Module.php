@@ -103,7 +103,7 @@ class Module extends DataObject
         if (is_array($router)) {
             $this->setData(self::router, $router);
         } else {
-            $this->addData([self::router=> $router]);
+            $this->addData([self::router => $router]);
         }
         $this->router = $router;
         return $this;

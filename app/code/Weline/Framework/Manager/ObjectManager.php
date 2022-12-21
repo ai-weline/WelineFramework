@@ -130,7 +130,7 @@ class ObjectManager implements ManagerInterface
 //        if (str_contains($new_class, 'Aiweline\Bbs\Controller\Account\BaseController')) {
 //            p($arguments);
 //        }
-        $refClass                  = self::$reflections[$class] ?? self::$reflections[$class] = new ReflectionClass($new_class);
+        $refClass = self::$reflections[$class] ?? self::$reflections[$class] = new ReflectionClass($new_class);
 //        if ($refClass->isAbstract()) {
 //            throw new Exception(__('抽象类无法被实例化：%1', $class));
 //        }
@@ -342,7 +342,7 @@ class ObjectManager implements ManagerInterface
             }
             $method_params = array_merge($method_params, $params);
             $instance      = $instance->newInstanceArgs($method_params);
-            $instance = self::initClassInstance($class, $instance);
+            $instance      = self::initClassInstance($class, $instance);
         } else {
             $instance = new ReflectionClass($new_class);
             $instance = self::initClassInstance($class, $instance);
@@ -351,6 +351,7 @@ class ObjectManager implements ManagerInterface
         }
         return $instance;
     }
+
     /**
      * @Desc         | 创建实例并运行
      * @param        $class

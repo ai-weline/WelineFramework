@@ -20,7 +20,7 @@ class ModuleRouterReaderTest extends TestCase
 {
     public function testRead()
     {
-        /**@var ModuleRouterReader $obj*/
+        /**@var ModuleRouterReader $obj */
         $obj = ObjectManager::getInstance(ModuleRouterReader::class);
         p($obj->read());
     }

@@ -60,12 +60,16 @@ abstract class Query implements QueryInterface
         return $this;
     }
 
-    public function insert(array $data, array $exist_update_fields = []): QueryInterface
+    public function insert(array $data, array|string $exist_update_fields = []): QueryInterface
     {
         if ($exist_update_fields) {
             $this->exist_update_sql = 'ON DUPLICATE KEY UPDATE ';
-            foreach ($exist_update_fields as $field) {
-                $this->exist_update_sql .= "`$field`=VALUES(`$field`),";
+            if (is_string($exist_update_fields)) {
+                $this->exist_update_sql .= "`$exist_update_fields`=VALUES(`$exist_update_fields`),";
+            } else {
+                foreach ($exist_update_fields as $field) {
+                    $this->exist_update_sql .= "`$field`=VALUES(`$field`),";
+                }
             }
             $this->exist_update_sql = trim($this->exist_update_sql, ',');
         }
@@ -168,7 +172,7 @@ abstract class Query implements QueryInterface
 //            } else {
 //                $this->wheres[] = [$field];
 //            }
-            if(is_array($value)){
+            if (is_array($value)) {
                 foreach ($value as $item) {
                     $where_array = [$field, $condition, $item, $where_logic];
                     # 检测条件数组 下角标 必须为数字
@@ -177,7 +181,7 @@ abstract class Query implements QueryInterface
                     $this->checkConditionString($where_array);
                     $this->wheres[] = $where_array;
                 }
-            }else{
+            } else {
                 $where_array = [$field, $condition, $value, $where_logic];
                 # 检测条件数组 下角标 必须为数字
                 $this->checkWhereArray($where_array, 0);
