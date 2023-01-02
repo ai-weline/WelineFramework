@@ -1,0 +1,6 @@
+还未开发：
+
+要涉及所有module目录下设置Component目录，
+下面所有的类继承ComponentInterface，
+可以收集到系统中，提供给开发者使用。
+方便所安装的所有Component方便其他模块调用。

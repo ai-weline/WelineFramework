@@ -1,0 +1,29 @@
+<!--
+============================================================================================================ 
+模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Component\view\blocks\form\search.phtml START
+============================================================================================================
+ -->
+<form class='app-search d-none d-lg-block' onkeydown='searchKeyDown(event)' method='<?=$method ??'';?>' action='<?=$action ??'';?>'>
+    <div class='position-relative'>
+        <input type='text' id='<?=$id ??'';?>' name='<?=$keyword ??'';?>' class='form-control' placeholder='<?=$placeholder ??'';?>' value='<?=$value ??'';?>'>
+        <span class='ri-search-line'></span>
+    </div>
+    <?php if($params  && !empty($params )): ?>
+        <?php foreach($params  as $key => $v):?>
+            <input type="hidden" name="<?=$key ??'';?>" value="<?=$v ??'';?>">
+        <?php endforeach;?>
+    <?php endif; ?>
+</form>
+<script type='text/javascript'>
+    function searchKeyDown(ev) {
+        ev = ev || window.event;
+        if (ev.keyCode === 13) {
+            $('#<?=$id ??'';?>').submit()
+        }
+    }
+</script>
+<!--
+=========================================================================================================================
+模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Component\view\tpl\\en_US\blocks\form\com_search.phtml END
+=========================================================================================================================
+-->

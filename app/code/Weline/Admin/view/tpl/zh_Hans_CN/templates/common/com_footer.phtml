@@ -1,0 +1,52 @@
+<!--
+============================================================================================================= 
+模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\templates\common\footer.phtml START
+=============================================================================================================
+ -->
+<?php
+/**@var \Weline\Framework\View\Template $this */
+?>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span12">
+            <div class="footer-wapper">
+                <?php echo framework_view_process_block([
+    0 => 'Weline\\Backend\\Block\\Version',
+]);?>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Account pages -->
+
+<!-- JAVASCRIPT -->
+<!--<script src="/Weline/Admin/view/statics/assets/libs/jquery/jquery.min.js"></script>-->
+<script src="/Weline/Admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/metismenu/metisMenu.min.js"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/simplebar/simplebar.min.js"></script>
+<script src="/Weline/Admin/view/statics/assets/libs/node-waves/waves.min.js"></script>
+
+<script src="/Weline/Admin/view/statics/assets/js/app.js"></script>
+<!--
+=============================================================================================================== 
+模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Backend\view\templates\public\footer.phtml START
+===============================================================================================================
+ -->
+<?php echo framework_view_process_block([
+    0 => 'Weline\\Backend\\Block\\Footer\\Base',
+]);?>
+<!--加载配置页脚-->
+<?php
+/**@var \Weline\Framework\View\Template $this */
+echo $this->getFooter()->getHtml();
+?>
+<!--
+=================================================================================================================================
+模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Backend\view\tpl\\zh_Hans_CN\templates\public\com_footer.phtml END
+=================================================================================================================================
+-->
+<!--
+===============================================================================================================================
+模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_footer.phtml END
+===============================================================================================================================
+-->

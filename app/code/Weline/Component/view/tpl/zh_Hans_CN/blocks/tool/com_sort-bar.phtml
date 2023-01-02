@@ -1,0 +1,27 @@
+<!--
+============================================================================================================== 
+模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Component\view\blocks\tool\sort-bar.phtml START
+==============================================================================================================
+ -->
+<div class='container-fluid'>
+    <nav class='navbar navbar-light navbar-expand-lg topnav-menu'>
+        <div class='collapse navbar-collapse' id='topnav-menu-content'>
+            <ul class='navbar-nav'>
+                <!--循环条件-->
+                <?php foreach($sorts  as $sort):?>
+                    <li class='nav-item <?php if($sort['target'] ):echo "active";endif;?>'>
+                        <a class="nav-link" href='<?=$sort['href'] ??'';?>'><?=$sort['name'] ??'';?><?=$sort['icon'] ??'';?></a>
+                    </li>
+                <?php endforeach;?>
+            </ul>
+            <a class='nav-link' href='<?=$action ??'';?>' data-tag='<?=$sort['tag']['sort'] ??'';?>'>
+                清空条件
+            </a>
+        </div>
+    </nav>
+</div>
+<!--
+================================================================================================================================
+模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Component\view\tpl\\zh_Hans_CN\blocks\tool\com_sort-bar.phtml END
+================================================================================================================================
+-->
