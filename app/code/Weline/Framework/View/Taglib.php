@@ -51,6 +51,9 @@ class Taglib
 
     public function checkFilter(string $name, string $filter = '|', $default = '\'\''): array
     {
+        if (str_contains($name, PHP_EOL)) {
+            $name = str_replace(array("\r\n", "\r", "\n", "\t",' '), '', $name);
+        }
         if (str_contains($name, $filter)) {
             $name_arr = explode('|', $name);
             $name     = $name_arr[0];
@@ -796,7 +799,7 @@ class Taglib
 
                     if (isset($customTag[2])) {
                         $customTag[2] = str_replace(PHP_EOL, '', $customTag[2]);
-                        $customTag[2] = str_replace(array("\r\n", "\r", "\n", "\t"), '', $customTag[2]);
+                        $customTag[2] = str_replace(array("\r\n", "\r", "\n", "\t",PHP_EOL), '', $customTag[2]);
                     }
                     # 标签支持匹配->
                     $customTag[1]       = $rawAttributes;
