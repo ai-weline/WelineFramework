@@ -10,6 +10,7 @@
 namespace Weline\Framework\Http;
 
 
+use JetBrains\PhpStorm\NoReturn;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -17,7 +18,7 @@ class Response implements ResponseInterface
 {
     private Response $instance;
 
-    private array $headers = ['WELINE-USER-LANG' => 'zh_Hans_CN'];
+    private array $headers = [];
 
     public function setHeader(string $header_key, string $header_value): static
     {
@@ -82,7 +83,7 @@ class Response implements ResponseInterface
         exit();
     }
 
-    public function redirect(string $url, $code = 200): void
+    #[NoReturn] public function redirect(string $url, $code = 200): void
     {
         http_response_code($code);
         Header("Location:$url");

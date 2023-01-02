@@ -4,11 +4,15 @@
 $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
 ?>
 <?php
-$host                               = $this->request->getBaseHost() . '/';
-$base_host                          = $this->request->getPrePath();
+$host      = $this->request->getBaseHost() . '/';
+$base_host = $this->request->getPrePath();
+//$http_host                          = explode('.', $this->request->getServer('HTTP_HOST'));
+//$domain                             = array_pop($http_host);
+//$domain                             = array_pop($http_host) . '.' . $domain;
 $base_router                        = $this->request->getRouterData('router');
 $current_module                     = $this->request->getModuleName();
-$base_backend_url_host              = $this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('admin') . '/';
+$base_backend                       = \Weline\Framework\App\Env::getInstance()->getConfig('admin');
+$base_backend_url_host              = $this->request->getBaseHost() . '/' . $base_backend . '/';
 $base_backend_api_host              = $this->request->getBaseHost() . '/' . \Weline\Framework\App\Env::getInstance()->getConfig('api_admin') . '/';
 $env_model                          = \Weline\Framework\App\Env::getInstance()->getConfig('deploy');
 $theme_path                         = \Weline\Framework\App\Env::getInstance()->getTheme()['path'];
@@ -26,8 +30,8 @@ endif;
 ?>
 <!--加载require常用js模块-->
 <!--<script src='@static(Weline_Frontend::base/require.configs.js)'></script>-->
-<js>Weline_Backend::/backend/lib/jquery/3.6.0/jquery.js</js>
-<js>Weline_Backend::/backend/lib/jquery/cookie/jquery.cookie.js</js>
+<w:js>Weline_Backend::/backend/lib/jquery/3.6.0/jquery.js</w:js>
+<w:js>Weline_Backend::/js/cookie.js</w:js>
 <script>
     window.site = {
         host: '{{host}}',
@@ -37,8 +41,8 @@ endif;
         base_backend_api_host: '{{base_backend_api_host}}',
         base_backend_url_host: '{{ base_backend_url_host }}',
         base_router: '{{base_router}}',
-        i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
-        themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
+        i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getWords())?>,
+        themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>,
     }
     window.media = (path, module = '{{current_module}}') => {
         module = module.replace('_', '/')
@@ -53,10 +57,6 @@ endif;
             path = path.slice(1)
         }
         return path;
-    }
-    window.lang = (lang) => {
-        $.cookie('WELINE-USER-LANG', lang, {path: '/'});
-        window.location.reload();
     }
     window.url = (path) => {
         return window.backend_url(path);
@@ -75,6 +75,11 @@ endif;
     }
     window.backend_api = (path) => {
         return '{{base_backend_api_host}}' + window.path(path);
+    }
+
+    function selectLanguage(lang) {
+        setCookie('WELINE-USER-LANG', lang, 7, {path: '/{{base_backend}}'/*, domain: '{{domain}}'*/});
+        window.location.reload();
     }
 
     /**
@@ -96,13 +101,61 @@ endif;
     /**
      * 翻译函数
      * @param phrase
+     * @param arguments {*}
      * @returns {*}
      * @private
      */
-    function __(phrase) {
+    function phrase(phrase, arguments = null) {
         if (window.site.i18n[phrase] !== undefined) {
             phrase = window.site.i18n[phrase]
+        } else {
+            window.site.i18n[phrase] = phrase
+        }
+        if (arguments) {
+            switch (arguments.constructor) {
+                case String:
+                    phrase = phrase.replace(/%1/g, arguments)
+                    break;
+                case Object:
+                    for (let argument_key in arguments) {
+                        let arg = arguments[argument_key]
+                        let regExp = new RegExp(eval('/%' + argument_key + '/g'));
+                        phrase = phrase.replace(regExp, arg)
+                    }
+                    break;
+                case Array:
+                    for (let argument_key in arguments) {
+                        let arg = arguments[argument_key]
+                        argument_key = 1 + parseInt(argument_key)
+                        let regExp = new RegExp(eval('/%' + argument_key + '/g'));
+                        phrase = phrase.replace(regExp, arg)
+                    }
+                    break;
+            }
         }
         return phrase
     }
+
+    /**
+     * 翻译短语函数
+     * @param word
+     * @param arguments {*}
+     * @returns {*}
+     * @private
+     */
+    function __(word, arguments = null) {
+        return phrase(word, arguments)
+    }
+
+    /**
+     * 翻译函数
+     * @param word
+     * @param arguments {*}
+     * @returns {*}
+     * @private
+     */
+    function lang(word, arguments = null) {
+        return phrase(word, arguments)
+    }
+
 </script>

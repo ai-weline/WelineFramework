@@ -135,6 +135,8 @@ class Template extends DataObject
             $this->view_dir = $this->request->getRouterData('module_path') . DataInterface::dir . DS;
         }
             $this->getData('title') ?? $this->setData('title', $this->request->getModuleName());
+        $this->setData('req', $this->request->getParams());
+        $this->setData('env', Env::getInstance()->getConfig());
 
             $this->theme ?? $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
             $this->eventsManager ?? $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
@@ -391,7 +393,6 @@ class Template extends DataObject
             throw $exception;
         }
         /** Get output buffer. */
-        # FIXME 是否显示模板路径
         return ob_get_clean();
     }
 
@@ -428,7 +429,7 @@ class Template extends DataObject
         return $this->getUrlObject()->getUrl($path, $params, $merge_query);
     }
 
-    public function getAdminUrl(string $path, array|bool $params = [], bool $merge_query = false): string
+    public function getBackendUrl(string $path, array|bool $params = [], bool $merge_query = false): string
     {
         return $this->getUrlObject()->getBackendUrl($path, $params, $merge_query);
     }

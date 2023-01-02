@@ -6,8 +6,3 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <block>Weline\Backend\Block\Header\Base</block>
 <!--加载require常用js模块-->
 <!--<script src='@static(Weline_Frontend::base/require.configs.js)'></script>-->
-<script>
-    window.site = {
-        themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>
-    }
-</script>

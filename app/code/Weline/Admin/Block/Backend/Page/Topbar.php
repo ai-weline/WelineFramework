@@ -15,12 +15,15 @@ use Weline\Admin\Session\AdminSession;
 use Weline\Backend\Model\BackendUser;
 use Weline\Backend\Model\Config;
 use Weline\Framework\Database\AbstractModel;
+use Weline\Framework\Http\Cookie;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\View\Data\DataInterface;
 use Weline\Framework\View\Template;
+use Weline\I18n\Model\I18n;
 
 class Topbar extends \Weline\Framework\View\Block
 {
-    public string $_template = 'Weline_Admin::backend/public/topbar.phtml';
+    public string $_template = 'Weline_Admin::backend/public/top-bar.phtml';
     private Config $config;
     private AdminSession $session;
     private ?BackendUser $user = null;
@@ -31,6 +34,24 @@ class Topbar extends \Weline\Framework\View\Block
         $this->session = $session;
         parent::__construct($data);
         $this->getUser();
+    }
+
+    public function __init()
+    {
+        parent::__init();
+        $languages = $this->getI18n()->getLocalesWithFlagsDisplaySelf(0, 22);
+        $this->assign('languages', $languages);
+        $current_language = ['code' => 'zh_Hans_CN', 'name' => '中文', 'flag' => ''];
+        if (isset($languages[Cookie::getLang()])) {
+            $current_language         = $languages[Cookie::getLang()];
+            $current_language['code'] = Cookie::getLang();
+        }
+        $this->assign('current_language', $current_language);
+    }
+
+    public function getI18n(): I18n
+    {
+        return ObjectManager::getInstance(I18n::class);
     }
 
     public function getAvatar()

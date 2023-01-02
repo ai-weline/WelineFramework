@@ -30,7 +30,19 @@ class Request extends Request\RequestAbstract implements RequestInterface
         }
     }
 
-    public function checkParam(bool $check_param = true)
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/12/23 23:11
+     * 参数区：
+     *
+     * @param bool $check_param
+     *
+     * @return bool
+     */
+    public function checkParam(bool $check_param = true): bool
     {
         $this->check_param = $check_param;
         return $this->check_param;
@@ -150,6 +162,9 @@ class Request extends Request\RequestAbstract implements RequestInterface
     {
         if ($this->check_param) {
             if ($result === null) {
+                if (PROD) {
+                    $this->_response->redirect(404);
+                }
                 throw new Exception(__('未提供参数：%1', $key));
             }
         }

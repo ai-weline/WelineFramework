@@ -117,10 +117,10 @@ class App
             define('DEBUG', false);
         }
         // 调试模式
-        if (!defined('UMASK')) {
-            define('UMASK', 0022);
+        if (!defined('SYSTEM_UMASK')) {
+            define('SYSTEM_UMASK', 0022);
         }
-        umask(UMASK);
+        umask(SYSTEM_UMASK);
         // 通用加载
         \Weline\Framework\Common\Loader::load();
         // ############################# 环境配置 #####################

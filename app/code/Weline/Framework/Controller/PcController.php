@@ -12,6 +12,7 @@ namespace Weline\Framework\Controller;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Console\Console\Dev\Debug;
 use Weline\Framework\Controller\Cache\ControllerCache;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
@@ -47,18 +48,20 @@ class PcController extends Core
 
     /**
      * @param string|int $url url或者http状态码
+     * @param array      $params
+     * @param bool       $merge_params
      *
      * @return void
-     * @throws Exception
-     * @throws \ReflectionException
+     * @throws Null
      */
-    public function redirect(string|int $url): void
+    public function redirect(string|int $url, array $params = [], bool $merge_params = false): void
     {
         if (is_string($url)) {
             if ($this->_url->isLink($url)) {
-                $this->request->getResponse()->redirect($url);
+                $this->request->getResponse()->redirect($url . (str_contains($url, '?') ? '&' : '') . http_build_query($params));
             } else {
-                $this->request->getResponse()->redirect($this->request->isBackend() ? $this->_url->getBackendUrl($url) : $this->_url->getUrl($url));
+                $this->request->getResponse()->redirect($this->request->isBackend() ? $this->_url->getBackendUrl($url, $params, $merge_params) :
+                                                            $this->_url->getUrl($url, $params, $merge_params));
             }
         } elseif ($url = 404) {
             $this->request->getResponse()->responseHttpCode($url);
@@ -146,8 +149,7 @@ class PcController extends Core
      * @param array|string|null $value
      *
      * @return PcController
-     * @throws Exception
-     * @throws \ReflectionException
+     * @throws NUll
      */
     public function assign(array|string $tpl_var, mixed $value = null): static
     {
@@ -172,8 +174,7 @@ class PcController extends Core
      * @param array       $data
      *
      * @return mixed
-     * @throws Exception
-     * @throws \ReflectionException
+     * @throws Null
      */
     protected function fetch(string $fileName = null, array $data = []): mixed
     {
@@ -203,6 +204,7 @@ class PcController extends Core
      * @param array|bool $data
      *
      * @return string
+     * @throws Null
      */
     protected function fetchJson(mixed $data): string
     {
@@ -259,7 +261,7 @@ class PcController extends Core
 //
     public function exception(\Exception $exception, string $msg = '请求异常！', mixed $data = '', int $code = 403): mixed
     {
-        if (PROD) {
+        if (!DEBUG) {
             return $this->getMessageManager()->addException($exception);
         } else {
             $return_data['data']      = DEV ? $data : '';

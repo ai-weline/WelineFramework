@@ -9,6 +9,7 @@
 
 namespace Weline\Framework\Database;
 
+use http\Cookie;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
@@ -28,7 +29,6 @@ use Weline\Framework\Output\Debug\Printing;
  * Class AbstractModel
  * @method AbstractModel|QueryInterface identity(string $field)
  * @method AbstractModel|QueryInterface table(string $table_name)
- * @method AbstractModel|QueryInterface update(array $data, string $condition_field = 'id')
  * @method AbstractModel|QueryInterface fields(string $fields)
  * @method AbstractModel|QueryInterface join(string $table, string $condition, string $type = 'left')
  * @method AbstractModel|QueryInterface where(array|string $field, mixed $value = null, string $con = '=', string $logic = 'AND')
@@ -83,6 +83,8 @@ abstract class AbstractModel extends DataObject
     public string $_primary_key = '';
     public string $_primary_key_default = 'id';
     public array $_fields = [];
+    # 装载join模型时字段数据，用于字段冲突
+    public array $_join_model_fields = [];
     private array $_model_fields = [];
     private array $_model_fields_data = [];
 
@@ -98,7 +100,7 @@ abstract class AbstractModel extends DataObject
     private array $_fetch_data = [];
     public array $items = [];
     private mixed $_query_data = null;
-    private array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
+    public array $pagination = ['page' => 1, 'pageSize' => 20, 'totalSize' => 0, 'lastPage' => 0];
 
     # Flag
     private bool $use_cache = false;
@@ -477,6 +479,30 @@ abstract class AbstractModel extends DataObject
     }
 
     /**
+     * @DESC          # 更新
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/12/24 2:03
+     * 参数区：
+     *
+     * @param array|string|null $field
+     * @param string            $condition_field
+     *
+     * @return $this
+     * @throws Null
+     */
+    public function update(array|string $field = null, string $condition_field = 'id'): static
+    {
+        if ($field) {
+            $this->getQuery()->update($field, $condition_field);
+        } else {
+            $this->getQuery()->update($this->getModelData(), $condition_field);
+        }
+        return $this;
+    }
+
+    /**
      * @DESC         |保存方法
      *
      * 参数区：
@@ -485,9 +511,7 @@ abstract class AbstractModel extends DataObject
      * @param string|null              $sequence
      *
      * @return bool
-     * @throws Exception
-     * @throws ModelException
-     * @throws \ReflectionException
+     * @throws NUll
      */
     public function save(array|bool|AbstractModel $data = [], string $sequence = null): bool
     {
@@ -520,6 +544,7 @@ abstract class AbstractModel extends DataObject
             if ($this->getId()) {
                 # 暂时解决主键已经存在且是字符串，无法新增的问题，强制检测主键是否存在
                 if (!is_numeric($this->getId())) {
+                    $this->unique_data[$this->_primary_key] = $this->getId();
                     $this->force_check_flag = true;
                 }
                 # 是否强制检查
@@ -1053,6 +1078,13 @@ abstract class AbstractModel extends DataObject
         }
         $this->_model_fields = array_merge($fields, $this->_model_fields);
         $this->_model_fields = array_unique($this->_model_fields);
+        // 遇到as读取最后一个
+        foreach ($this->_model_fields as $key => &$model_field) {
+            if (str_contains($model_field, 'as')) {
+                $model_field = explode('as', $model_field);
+                $model_field = trim(array_pop($model_field), ' ');
+            }
+        }
         return $this;
     }
 
@@ -1168,7 +1200,6 @@ abstract class AbstractModel extends DataObject
         if (empty($params)) {
             $params = ObjectManager::getInstance(Request::class)->getGet();
         }
-
         $this->setQuery($this->getQuery()->pagination($page, $pageSize, $params));
         $this->pagination = $this->getQuery()->pagination;
         $this->setData('pagination', $this->getPagination());
@@ -1205,7 +1236,7 @@ abstract class AbstractModel extends DataObject
         $this->pagination['hasNextPage'] = $hasNextPage;
         /**@var Request $request */
         $request                  = ObjectManager::getInstance(Request::class);
-        $this->pagination['lang'] = $request->getHeader('WELINE-USER-LANG');
+        $this->pagination['lang'] = \Weline\Framework\Http\Cookie::getLangLocal();
         $this->pagination['uri']  = $request->getUri();
 
         # 页码缓存
@@ -1352,15 +1383,25 @@ PAGINATION;
         if (empty($condition)) {
             $condition = "`main_table`.`{$this->getIdField()}`={$alias}.`{$model->getIdField()}`";
         }
+        if (empty($this->_join_model_fields)) {
+            $this->_join_model_fields = $this->getModelFields();
+        }
         if ($fields === '*') {
-            $model_fields = '';
+            $model_fields = "";
             foreach ($model->getModelFields() as $modelField) {
-                $model_fields .= $modelField . ',';
+                if (in_array($modelField, $this->_join_model_fields)) {
+                    $model_fields .= "`$alias`.$modelField as {$alias}_{$modelField},";
+                } else {
+                    $this->_join_model_fields[] = $modelField;
+                    $model_fields               .= "`$alias`.$modelField,";
+                }
             }
             $model_fields = rtrim($model_fields, ',');
+            $query->fields($query->fields ? $query->fields . ',' . $model_fields : $model_fields);
             $this->bindModelFields(explode(',', $model_fields));
         } else {
             $this->bindModelFields(explode(',', $fields));
+            $query->fields(($query->fields !== '*') ? $query->fields . ',' . $fields : $fields);
         }
         $query->join($model_table . ($alias ? " {$alias}" : ''), $condition, $type);
         return $this->bindQuery($query);
@@ -1402,6 +1443,7 @@ PAGINATION;
     private function checkUpdateOrInsert(): mixed
     {
         $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
+
         # 存在更新
         if (isset($check_result[$this->_primary_key])) {
             $this->setId($check_result[$this->_primary_key]);
@@ -1410,6 +1452,7 @@ PAGINATION;
             $save_result = $this->getQuery()->where($this->unique_data)
                                 ->update($data)
                                 ->fetch();
+//            p($save_result->getLastSql());
         } else {
             $save_result = $this->getQuery()
                                 ->insert($this->getModelData())
@@ -1417,4 +1460,15 @@ PAGINATION;
         }
         return $save_result;
     }
+
+//    public function removeWhere(string $field): static
+//    {
+//        $query = $this->getQuery();
+//        foreach ($query->wheres as $key => $where) {
+//            if ($where[0] === $field) {
+//                unset($query->wheres[$key]);
+//            }
+//        }
+//        return $this;
+//    }
 }

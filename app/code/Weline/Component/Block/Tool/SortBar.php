@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace Weline\Component\Block\Tool;
 
-use Weline\Framework\System\Security\Encrypt;
+use Weline\Component\ComponentInterface;
 
-class SortBar extends \Weline\Framework\View\Block
+class SortBar extends \Weline\Framework\View\Block implements ComponentInterface
 {
     public const default_sorts = [
         'default' => [
@@ -35,14 +35,17 @@ class SortBar extends \Weline\Framework\View\Block
     private array $sort_data = [];
     protected string $_template = 'Weline_Component::tool/sort-bar.phtml';
 
-    public function __init()
+    public function __init(): void
     {
         parent::__init();
-        $action = $this->request->getUrlBuilder()->getUrl();
+        $action = $this->getData('action');
+        if ($action) {
+            $action = $this->request->isBackend() ? $this->getBackendUrl($this->getData('action')) : $this->getUrl($this->getData('action'));
+        }
         # 查看排序器缓存
         $sorter_name = $this->getData('sorter');# 排序器名字，用于读取映射缓存
         if (empty($sorter_name)) {
-            throw new \Exception(__('排序器属性sorter不能为空，示例：%1', htmlentities('<w:block class=\'Weline\Component\Block\Tool\SortBar\' up_icon="mdi mdi-arrow-up" down_icon="mdi mdi-arrow-down" sorts="hot=>viewed:desc,price=>price:asc"  sorter="index_sorter"/>')));
+            throw new \Exception(__('排序器属性sorter不能为空，示例：%1', $this->doc()));
         }
         $this->assign('sorts', $this->getSorts($sorter_name));
         $this->assign('action', $action);
@@ -117,5 +120,23 @@ class SortBar extends \Weline\Framework\View\Block
             $this->_cache->set($sorter_name, $sorts);
         }
         return $sorts;
+    }
+
+    public function doc(): string
+    {
+        return htmlspecialchars($this->tmp_replace('
+<h3><lang>排序组件：快速构建排序按钮</lang></h3>
+<w:block class="Weline\Component\Block\Tool\SortBar"
+action="*/demo/listing"
+up_icon="mdi mdi-arrow-up"
+down_icon="mdi mdi-arrow-down"
+sorts="hot=>viewed:desc,price=>price:asc"
+sorter="index_sorter"/>
+<div>
+[action]: <lang>排序点击时请求的地址</lang> <br>
+[sorts]: hot=>viewed:desc,price=>price:asc <lang>结构说明：参数名=>映射的字段:排序方法 英文逗号隔开每个排序</lang><br>
+[sorter]: <lang>控制器获取对应sorter可以获取这些排序字段</lang>
+</div>
+'));
     }
 }

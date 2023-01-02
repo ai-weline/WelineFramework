@@ -9,6 +9,8 @@
 
 namespace Weline\I18n;
 
+use Weline\Framework\Http\Cookie;
+
 class Parser
 {
     public static function parse(string $words, array $args): string
@@ -16,8 +18,7 @@ class Parser
         // 读取语言环境 TODO 翻译环境 数据库 对应用户的翻译
         /**@var \Weline\Framework\Http\Request $request */
         $request = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Http\Request::class);
-        $lang    = $request->getHeader('WELINE-USER-LANG');
-        p($lang);
+        $lang    = Cookie::getLangLocal();
 //        p($request);
         // 只缓存 收集来的 翻译文件 以及翻译包
         /**@var $cache \Weline\Framework\Cache\CacheInterface */

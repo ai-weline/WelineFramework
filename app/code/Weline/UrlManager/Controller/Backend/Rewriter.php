@@ -56,7 +56,7 @@ class Rewriter extends \Weline\Framework\App\Controller\BackendController
             $this->getMessageManager()->addError($e->getMessage());
         }
         $this->getMessageManager()->addSuccess(__('重写成功！'));
-//        $this->redirect($this->request->getAdminUrl('/url-manager/backend/url/listing'));
+//        $this->redirect($this->request->getBackendUrl('/url-manager/backend/url/listing'));
         $this->redirect($this->_url->getBackendUrl('url-manager/backend/rewriter'));
     }
 

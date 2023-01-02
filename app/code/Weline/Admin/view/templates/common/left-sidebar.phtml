@@ -24,7 +24,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                     foreach ($menus as $menu) {
                         if (empty($menu->getAction()) && empty($menu->getParentSource()) && empty($menu->getPid())) {
                             ?>
-                            <li class="menu-title"><i class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getTitle()) ?></span></li>
+                            <li class="menu-title" data-source='{{menu.source}}'><i
+                                        class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getTitle()) ?></span></li>
                             <?php
                         }
                         $submenus = $menu->getSubMenu();
@@ -34,8 +35,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                             if (empty($level_3_menus)) {
                                 if ('/' === $submenu->getAction()) {
                                     ?>
-                                    <li>
-                                        <a href="<?= $submenu->getUrl() ?>" class="waves-effect">
+                                    <li data-source='{{submenu.source}}'>
+                                        <a href="<?= $submenu->getUrl() ?>" data-source="{{submenu.source}}" class="waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
                                             <span><?= $submenu->getTitle() ?></span>
@@ -44,8 +45,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                     <?php
                                 } else {
                                     ?>
-                                    <li>
-                                        <a href="<?= $submenu->getUrl() ?>" class=" waves-effect">
+                                    <li data-source='{{submenu.source}}'>
+                                        <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}' class=" waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i>
                                             <span><?= $submenu->getTitle() ?></span>
                                         </a>
@@ -55,8 +56,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                             } else {
                                 if ('/' === $submenu->getAction()) {
                                     ?>
-                                    <li>
-                                        <a href="<?= $submenu->getUrl() ?>" class="waves-effect">
+                                    <li data-source='{{submenu.source}}'>
+                                        <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}' class="waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
                                             <span><?= $submenu->getTitle() ?></span>
@@ -65,8 +66,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                     <?php
                                 } else {
                                     ?>
-                                    <li>
-                                        <a href="javascript: void(0);"
+                                    <li data-source='{{submenu.source}}'>
+                                        <a href="javascript: void(0);" data-source='{{submenu.source}}'
                                            class="has-arrow waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i>
                                             <span><?= $submenu->getTitle() ?></span>
@@ -76,8 +77,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                             /**@var \Weline\Backend\Model\Menu $level_3_menu */
                                             foreach ($level_3_menus as $level_3_menu) {
                                                 ?>
-                                                <li>
-                                                    <a href="<?= $level_3_menu->getUrl() ?>"><i
+                                                <li data-source='{{level_3_menu.source}}'>
+                                                    <a href="<?= $level_3_menu->getUrl() ?>" data-source='{{level_3_menu.source}}'><i
                                                                 class="<?= $level_3_menu->getIcon() ?>"></i><?= $level_3_menu->getTitle() ?>
                                                     </a>
                                                 </li>

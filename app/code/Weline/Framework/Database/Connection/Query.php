@@ -17,6 +17,8 @@ use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Api\Connection\QueryInterface;
 use Weline\Framework\Database\Exception\DbException;
 use Weline\Framework\Database\Connection\Query\QueryTrait;
+use Weline\Framework\Database\Exception\SqlParserException;
+use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
 
 use function DeepCopy\deep_copy;
@@ -79,8 +81,9 @@ abstract class Query implements QueryInterface
             $this->insert = $data;
         }
         $fields = '(';
-        if (isset($this->insert[0])) {
-            foreach ($this->insert[0] as $field => $value) {
+        if (count($this->insert)) {
+            $first_insert = $this->insert[array_key_first($this->insert)];
+            foreach ($first_insert as $field => $value) {
                 $fields .= "`$field`,";
             }
         }
@@ -134,7 +137,14 @@ abstract class Query implements QueryInterface
 
     public function fields(string $fields): QueryInterface
     {
-        $this->fields = $fields;
+        if ($this->fields === '*') {
+            $this->fields = $fields;
+        } else {
+            $this->fields = $fields .',' . $this->fields;
+            $fields       = explode(',', $this->fields);
+            $fields       = array_unique($fields);
+            $this->fields = implode(',', $fields);
+        }
         return $this;
     }
 
@@ -189,7 +199,6 @@ abstract class Query implements QueryInterface
                 $this->checkConditionString($where_array);
                 $this->wheres[] = $where_array;
             }
-
         }
         return $this;
     }
@@ -255,6 +264,7 @@ abstract class Query implements QueryInterface
         $this->fetch_type = 'find';
         $this->fields     = "count({$field}) as `{$alias}`";
         $this->prepareSql('find');
+//        p($this->getLastSql());
         $result = $this->fetch();
         if (isset($result[$alias])) {
             $result = $result[$alias];

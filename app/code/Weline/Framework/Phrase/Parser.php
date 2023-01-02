@@ -15,6 +15,7 @@ use Weline\Framework\Manager\ObjectManager;
 
 class Parser
 {
+    public const PARSER_WORDS_CACHE_KEY = 'PARSER_WORDS_CACHE_KEY';
     protected static array $words = [];
 
     /**
@@ -54,25 +55,22 @@ class Parser
      *
      * @param string $words
      *
-     * @return mixed|string
+     * @return string
      * @throws \Weline\Framework\App\Exception
-     * @throws \Weline\Framework\Exception\Core
-     * @throws \ReflectionException
      */
-    protected static function processWords(string $words)
+    protected static function processWords(string $words): string
     {
-        self::getI18nWords();
+        self::getWords();
         // 如果有就替换
         if (isset(self::$words[$words])) {
             $words = self::$words[$words];
         } else {
             self::$words[$words] = $words;
         }
-
         return $words;
     }
 
-    public static function getI18nWords()
+    public static function getWords()
     {
         // 仅加载一次翻译到对象self::$words
         if (empty(self::$words)) {
@@ -88,6 +86,7 @@ class Parser
             $eventsManager->dispatch('Framework_phrase::get_words_file', ['file_data' => $file_data]);
             $words_file = $file_data->getData('file_path');
             $cache_key  = $words_file;
+
             # 非实时翻译
             if (!CLI && $translate_mode !== 'online' && $phrase_words = $phraseCache->get($cache_key)) {
                 self::$words = $phrase_words;

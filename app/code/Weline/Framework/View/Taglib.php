@@ -410,7 +410,7 @@ class Taglib
                             case 'tag-self-close-with-attrs':
                                 if (!isset($attributes['class']) || !$attributes['class']) {
                                     $template_html = htmlentities($tag_data[0]);
-                                    throw new TemplateException(__("block标签语法使用错误:[{$template_html}]：未指定block类。示例：%1", htmlentities("<block class='Weline\Demo\Block\Demo' template='Weline_Demo::templates/demo.phtml' cache='300'/>")));
+                                    throw new TemplateException(__("block标签语法使用错误:[{$template_html}]：未指定block类。示例：%1", htmlentities("<block class='Weline\Demo\Block\Demo' template='Weline_Demo::templates/demo.phtml' />")));
                                 }
                                 $result = '<?php echo framework_view_process_block(' . w_var_export($attributes, true) . ');?>';
                                 break;
@@ -585,21 +585,21 @@ class Taglib
                             case 'tag':
                                 $data = $this->varParser(str_replace(' ', '', $tag_data[2]));
                                 if (str_starts_with($data, '"') || str_starts_with($data, "'")) {
-                                    return "<?=\$this->getAdminUrl({$data})?>";
+                                    return "<?=\$this->getBackendUrl({$data})?>";
                                 } else {
-                                    return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
+                                    return "<?=\$this->getBackendUrl({$this->varParser($data)})?>";
                                 }
                             // no break
                             case 'tag-start':
-                                return "<?=\$this->getAdminUrl(";
+                                return "<?=\$this->getBackendUrl(";
                             case 'tag-end':
                                 return ")?>";
                             default:
                                 $data = str_replace(' ', '', $tag_data[1]);
                                 if (str_starts_with($data, '"') || str_starts_with($data, "'")) {
-                                    return "<?=\$this->getAdminUrl({$data})?>";
+                                    return "<?=\$this->getBackendUrl({$data})?>";
                                 } else {
-                                    return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
+                                    return "<?=\$this->getBackendUrl({$this->varParser($data)})?>";
                                 }
                         }
                     }
@@ -614,21 +614,21 @@ class Taglib
                             case 'tag':
                                 $data = $this->varParser(str_replace(' ', '', $tag_data[2]));
                                 if (str_starts_with($data, '"') || str_starts_with($data, "'")) {
-                                    return "<?=\$this->getAdminUrl({$data})?>";
+                                    return "<?=\$this->getBackendUrl({$data})?>";
                                 } else {
-                                    return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
+                                    return "<?=\$this->getBackendUrl({$this->varParser($data)})?>";
                                 }
                             // no break
                             case 'tag-start':
-                                return "<?=\$this->getAdminUrl(";
+                                return "<?=\$this->getBackendUrl(";
                             case 'tag-end':
                                 return ")?>";
                             default:
                                 $data = str_replace(' ', '', $tag_data[1]);
                                 if (str_starts_with($data, '"') || str_starts_with($data, "'")) {
-                                    return "<?=\$this->getAdminUrl({$data})?>";
+                                    return "<?=\$this->getBackendUrl({$data})?>";
                                 } else {
-                                    return "<?=\$this->getAdminUrl({$this->varParser($data)})?>";
+                                    return "<?=\$this->getBackendUrl({$this->varParser($data)})?>";
                                 }
                         }
                     }
@@ -781,16 +781,16 @@ class Taglib
                     $originalTag = $customTag[0];
                     if (isset($customTag[1])) {
                         $customTag[1] = str_replace(PHP_EOL, '', $customTag[1]);
-                        $customTag[1] = str_replace(array("\r\n", "\r", "\n", "\t"), '', $customTag[1]);
+//                        if (('@tag{}' === $tag_key) || ('@tag()' === $tag_key)) {
+//                            $customTag[1] = str_replace(array("\r\n", "\r", "\n", "\t"), '', $customTag[1]);
+//                        } else {
+//                            $customTag[1] = str_replace(array("\r\n", "\r", "\n", "\t"), '', $customTag[1]);
+//                        }
                     }
+
                     $rawAttributes = $customTag[1] ?? '';
                     # 如果有属性接下来的字母就不会和标签紧贴着，而如果没有属性那么应该是>括号和标签紧贴着，如果都不是说明并非tag标签
-                    if ($rawAttributes && (
-                            'tag' === $tag_key ||
-                            'tar-start' === $tag_key ||
-                            'tag-self-close-with-attrs' === $tag_key ||
-                            'tag-self-close' === $tag_key
-                        ) && !str_starts_with($rawAttributes, ' ')) {
+                    if ($rawAttributes && ('tag' === $tag_key || 'tar-start' === $tag_key || 'tag-self-close-with-attrs' === $tag_key || 'tag-self-close' === $tag_key) && !str_starts_with($rawAttributes, ' ')) {
                         continue;
                     }
 

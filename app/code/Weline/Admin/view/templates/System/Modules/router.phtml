@@ -35,12 +35,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
 
     <!--页头工具条 开始-->
-    <w:block class='Weline\Admin\Block\Backend\Page\Topbar' cache='300'/>
+    <w:block class='Weline\Admin\Block\Backend\Page\Topbar'/>
     <!--页头工具条 结束-->
 
     <!-- ========== Topnav Start ========== -->
     <!--页头菜单栏 开始-->
-    <w:block class='Weline\Admin\Block\Backend\Page\Topnav' cache='300'/>
+    <w:block class='Weline\Admin\Block\Backend\Page\Topnav'/>
     <!--页头菜单栏 结束-->
 
     <!-- ========== Left Sidebar Start ========== -->
@@ -74,7 +74,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                     </div>
                 </div>
                 <!-- end page title -->
-
+                <!-- start page message -->
+                <div class='row'>
+                    <template>Weline_Component::message.phtml</template>
+                </div> <!-- end message -->
                 <div class="row">
                     <div class="col-12">
                         <div class="card">
@@ -132,7 +135,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                     </td>
                                                     <td style='width: 100px'>
                                                         <a class='btn btn-primary btn-lg'
-                                                           href="<?= $this->getAdminUrl('backend/system/config/set?key=' . \Weline\Backend\Config\KeysInterface::key_start_page_path . '&value=' . $path) ?>"
+                                                           href="<?= $this->getBackendUrl('backend/system/config/set?key=' . \Weline\Backend\Config\KeysInterface::key_start_page_path . '&value=' . $path) ?>"
                                                            title='<?= __('设为开始页面') ?>'>
                                                             <?= __('设为开始页面') ?>
                                                         </a>

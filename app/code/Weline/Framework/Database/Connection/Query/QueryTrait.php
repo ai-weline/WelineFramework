@@ -18,6 +18,7 @@ use Weline\Framework\Database\ConnectionFactory;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Cache\DbCache;
 use Weline\Framework\Database\Exception\DbException;
+use Weline\Framework\Database\Model;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -122,7 +123,7 @@ trait QueryTrait
      */
     private function checkConditionString(array $where_array): string
     {
-        if (in_array($where_array[1], $this->conditions)) {
+        if (in_array(strtolower($where_array[1]), $this->conditions)) {
             return $where_array[1];
         } else {
             $this->exceptionHandle(__('当前错误的条件操作符：%1 ,当前的条件数组：%2, 允许的条件符：%3', [$where_array[1], '["' . implode('","', $where_array) . '"]', '["' . implode('","', $this->conditions) . '"]']));
@@ -172,7 +173,21 @@ trait QueryTrait
                         if (null === $where[2]) {
                             $wheres .= '(' . $where[0] . ') ' . $logic;
                         } else {
-                            $where[0] = '`' . str_replace('.', '`.`', $where[0]) . '`';
+                            $quote = '`';
+                            # 复杂参数转化
+                            if (str_contains($where[0], '(')) {
+                                $quote = '';
+                                $param = str_replace('(', '_', $param);
+                            }
+                            if (str_contains($where[0], ')')) {
+                                $quote = '';
+                                $param = str_replace(')', '_', $param);
+                            }
+                            if (str_contains($where[0], ',')) {
+                                $quote = '';
+                                $param = str_replace(',', '_', $param);
+                            }
+                            $where[0] = $quote . (($quote === '`') ? str_replace('.', '`.`', $where[0]) : $where[0]) . $quote;
                             # 处理带别名的参数键
                             $param                      = str_replace('.', '__', $param) . $key;
                             $this->bound_values[$param] = (string)$where[2];

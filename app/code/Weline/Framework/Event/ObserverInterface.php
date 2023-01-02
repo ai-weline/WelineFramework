@@ -18,7 +18,6 @@ interface ObserverInterface
      *
      * @param Event $event
      *
-     * @return mixed
      */
     public function execute(Event $event);
 }

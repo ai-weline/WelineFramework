@@ -1,9 +1,11 @@
 <?php
 /**@var \Weline\Framework\View\Template $this */
 /**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
-$themeConfig                        = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
-$host                               = $this->request->getBaseHost() . '/';
-$domain                             = $this->request->getServer('SERVER_NAME');
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
+$host        = $this->request->getBaseHost() . '/';
+//$http_host                               = explode('.', $this->request->getServer('HTTP_HOST'));
+//$domain                             = array_pop($http_host);
+//$domain                             = array_pop($http_host) .'.'. $domain;
 $base_host                          = $this->request->getPrePath();
 $base_router                        = $this->request->getRouterData('router');
 $current_module                     = $this->request->getModuleName();
@@ -35,7 +37,7 @@ endif;
         env_model_media_base_path_template: '{{env_model_media_base_path_template}}',
         base_host: '{{base_host}}',
         base_router: '{{base_router}}',
-        i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getI18nWords())?>,
+        i18n: <?= json_encode(Weline\Framework\Phrase\Parser::getWords())?>,
         themeConfig: <?=json_encode($themeConfig->getThemeConfig()) ?? '{}';?>,
     }
     window.media = (path, module = '{{current_module}}') => {
@@ -56,6 +58,9 @@ endif;
     window.url = (path) => {
         return '{{host}}' + window.path(path);
     }
+    window.frontend_url = (path) => {
+        return '{{host}}' + window.path(path);
+    }
     window.api = (path) => {
         return '{{host}}' + window.path(path);
     }
@@ -63,8 +68,8 @@ endif;
         return '{{host}}' + window.path(path);
     }
 
-    function lang(lang) {
-        setCookie('WELINE-USER-LANG', lang, {path: '/', domain: '.{{domain}}'});
+    function selectLanguage(lang) {
+        setCookie('WELINE-USER-LANG', lang, 7, {path: '/'/*, domain: '{{domain}}'*/});
         window.location.reload();
     }
 
@@ -87,13 +92,66 @@ endif;
     /**
      * 翻译函数
      * @param phrase
+     * @param arguments {*}
      * @returns {*}
      * @private
      */
-    function __(phrase) {
+    function phrase(phrase, arguments = null) {
         if (window.site.i18n[phrase] !== undefined) {
             phrase = window.site.i18n[phrase]
+        } else {
+            window.site.i18n[phrase] = phrase
+        }
+        if (arguments) {
+            switch (arguments.constructor) {
+                case String:
+                    phrase = phrase.replace(/%1/g, arguments)
+                    break;
+                case Object:
+                    for (let argument_key in arguments) {
+                        let arg = arguments[argument_key]
+                        let regExp = new RegExp(eval('/%' + argument_key + '/g'));
+                        phrase = phrase.replace(regExp, arg)
+                    }
+                    break;
+                case Array:
+                    for (let argument_key in arguments) {
+                        let arg = arguments[argument_key]
+                        argument_key = 1 + parseInt(argument_key)
+                        let regExp = new RegExp(eval('/%' + argument_key + '/g'));
+                        phrase = phrase.replace(regExp, arg)
+                    }
+                    break;
+            }
         }
         return phrase
     }
+
+    /**
+     * 翻译短语函数
+     * @param word
+     * @param arguments {*}
+     * @returns {*}
+     * @private
+     */
+    function __(word, arguments = null) {
+        return phrase(word, arguments)
+    }
+
+    /**
+     * 翻译函数
+     * @param word
+     * @param arguments {*}
+     * @returns {*}
+     * @private
+     */
+    function lang(word, arguments = null) {
+        return phrase(word, arguments)
+    }
+
 </script>
+<!--加载配置页头-->
+<?php
+echo $this->getHeader()->getHtml();
+?>
+<hook>head</hook>

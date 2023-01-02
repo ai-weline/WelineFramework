@@ -350,6 +350,11 @@ class Core
         /**@var \Weline\Framework\Controller\Core $dispatch */
 //        $dispatch->assign($this->request->getData());
         $result = call_user_func([$dispatch, $method], /*...$this->request->getParams()*/);
+        # ----------事件：处理url之前 开始------------
+        /**@var EventsManager $eventManager */
+        $eventManager = ObjectManager::getInstance(EventsManager::class);
+        $resultData   = new DataObject(['result' => $result, 'route' => $this]);
+        $eventManager->dispatch('Weline_Framework_Router::route_after', ['data' => $resultData]);
 //        file_put_contents(__DIR__.'/'.$cache_key.'.html', $result);
         /** Get output buffer. */
         $this->cache->set($cache_key, $result, 5);

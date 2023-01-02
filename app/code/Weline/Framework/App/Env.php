@@ -270,7 +270,7 @@ class Env extends DataObject
             return $this->config;
         }
 
-        return isset($this->config[$name]) ? $this->config[$name] : $default;
+        return $this->config[$name] ?? $default;
     }
 
     public function getTheme()

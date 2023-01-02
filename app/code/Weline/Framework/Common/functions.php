@@ -66,7 +66,7 @@ if (!function_exists('__')) {
      *
      * @return string
      */
-    function __(string $words, array|string $args = null): string
+    function __(string $words, array|string|int $args = null): string
     {
         return \Weline\Framework\Phrase\Parser::parse($words, $args);
     }
