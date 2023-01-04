@@ -42,7 +42,7 @@ interface QueryInterface
         self::attr_TABLE_ALIA       => 'main_table',
         self::attr_INSERT           => [],
         self::attr_JOIN             => [],
-        self::attr_FIELD            => '*',
+        self::attr_FIELD            => 'main_table.*',
         self::attr_UPDATE           => [],
         self::attr_WHERE            => [],
         self::attr_BOUND_VALUE      => [],
@@ -55,7 +55,7 @@ interface QueryInterface
     public const query_vars = [
         self::attr_INSERT           => [],
         self::attr_JOIN             => [],
-        self::attr_FIELD            => '*',
+        self::attr_FIELD            => 'main_table.*',
         self::attr_UPDATE           => [],
         self::attr_WHERE            => [],
         self::attr_BOUND_VALUE      => [],

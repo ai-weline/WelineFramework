@@ -1397,11 +1397,13 @@ PAGINATION;
                 }
             }
             $model_fields = rtrim($model_fields, ',');
-            $query->fields($query->fields ? $query->fields . ',' . $model_fields : $model_fields);
             $this->bindModelFields(explode(',', $model_fields));
+            $query->fields(($query->fields !== '*') ? $query->fields . ',' . $model_fields : $model_fields);
+            $query->fields($query->fields . ',' . $model_fields);
         } else {
             $this->bindModelFields(explode(',', $fields));
-            $query->fields(($query->fields !== '*') ? $query->fields . ',' . $fields : $fields);
+//            $query->fields(($query->fields !== '*') ? $query->fields . ',' . $fields : $fields);
+            $query->fields($query->fields . ',' . $fields);
         }
         $query->join($model_table . ($alias ? " {$alias}" : ''), $condition, $type);
         return $this->bindQuery($query);

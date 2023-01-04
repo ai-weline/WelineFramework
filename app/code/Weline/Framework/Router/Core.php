@@ -14,6 +14,7 @@ use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Http\Cookie;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Router\Cache\RouterCache;
@@ -333,7 +334,7 @@ class Core
             $this->request->getResponse()->noRouter();
         }
         # 全页缓存
-        $cache_key = $this->cache->buildWithRequestKey('router_route_fpc_cache_key_');
+        $cache_key = $this->cache->buildWithRequestKey('router_route_fpc_cache_key_'.Cookie::getLangLocal());
         if (PROD && $html = $this->cache->get($cache_key)) {
             return $html;
         }
