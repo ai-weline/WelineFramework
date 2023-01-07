@@ -40,9 +40,9 @@ class System
             }
             $linux_to_win = [
                 'rm '  => ' del ',
-                ' -f ' => ' /F ',
+                ' -f ' => ' /S/Q ',
                 'cp '  => ' xcopy ',
-                ' -r ' => ' /S/Q ',
+                ' -r ' => '  ',
             ];
 
 
@@ -109,16 +109,7 @@ class System
 
     public function input(): bool|string
     {
-        // 判断系统
-        if (IS_WIN) {
-            $input = fread(STDIN, 1024);
-        } else {
-            $fp    = fopen('/dev/stdin', 'r');
-            $input = fgets($fp, 1024);
-            fclose($fp);
-        }
-
-        return $input;
+        return fread(STDIN, 1024);
     }
 
     /**

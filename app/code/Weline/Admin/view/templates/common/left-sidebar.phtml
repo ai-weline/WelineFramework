@@ -39,7 +39,7 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                         <a href="<?= $submenu->getUrl() ?>" data-source="{{submenu.source}}" class="waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
-                                            <span><?= $submenu->getTitle() ?></span>
+                                            <span><?= __($submenu->getTitle()); ?></span>
                                         </a>
                                     </li>
                                     <?php
@@ -48,7 +48,7 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                     <li data-source='{{submenu.source}}'>
                                         <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}' class=" waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i>
-                                            <span><?= $submenu->getTitle() ?></span>
+                                            <span><?= __($submenu->getTitle()) ?></span>
                                         </a>
                                     </li>
                                     <?php
@@ -60,7 +60,7 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                         <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}' class="waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
-                                            <span><?= $submenu->getTitle() ?></span>
+                                            <span><?= __($submenu->getTitle()) ?></span>
                                         </a>
                                     </li>
                                     <?php
@@ -70,7 +70,7 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                         <a href="javascript: void(0);" data-source='{{submenu.source}}'
                                            class="has-arrow waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i>
-                                            <span><?= $submenu->getTitle() ?></span>
+                                            <span><?= __($submenu->getTitle()) ?></span>
                                         </a>
                                         <ul class="sub-menu" aria-expanded="false">
                                             <?php
@@ -79,7 +79,7 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                                 ?>
                                                 <li data-source='{{level_3_menu.source}}'>
                                                     <a href="<?= $level_3_menu->getUrl() ?>" data-source='{{level_3_menu.source}}'><i
-                                                                class="<?= $level_3_menu->getIcon() ?>"></i><?= $level_3_menu->getTitle() ?>
+                                                                class="<?= $level_3_menu->getIcon() ?>"></i><?= __($level_3_menu->getTitle()) ?>
                                                     </a>
                                                 </li>
                                                 <?php

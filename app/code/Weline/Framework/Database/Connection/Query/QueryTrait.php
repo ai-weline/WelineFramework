@@ -219,7 +219,7 @@ trait QueryTrait
                     $insert_key += 1;
                     $values     .= '(';
                     foreach ($insert as $insert_field => $insert_value) {
-                        $insert_bound_key                      = ":{$insert_field}_field_{$insert_key}";
+                        $insert_bound_key                      = ":".md5("{$insert_field}_field_{$insert_key}");
                         $this->bound_values[$insert_bound_key] = $insert_value;
                         $values                                .= "$insert_bound_key , ";
                     }
@@ -236,7 +236,7 @@ trait QueryTrait
                 # 设置where条件
                 $identity_values = array_column($this->updates, $this->identity_field);
                 if ($identity_values) {
-                    $identity_values_key                      = ':identity_values_key';
+                    $identity_values_key                      = ':'.md5('identity_values_key');
                     $identity_values_str                      = implode(',', $identity_values);
                     $this->bound_values[$identity_values_key] = $identity_values_str;
                     $wheres                                   .= ($wheres ? " AND " : 'WHERE ') . "$this->identity_field IN ( $identity_values_key )";
@@ -259,11 +259,11 @@ trait QueryTrait
                             foreach ($this->updates as $update_key => $line) {
                                 # 主键值
                                 $update_key                                     += 1;
-                                $identity_field_column_key                      = ":{$this->identity_field}_{$column}_key_{$update_key}";
+                                $identity_field_column_key                      = ":".md5("{$this->identity_field}_{$column}_key_{$update_key}");
                                 $this->bound_values[$identity_field_column_key] = $line[$this->identity_field];
 
                                 # 更新键值
-                                $identity_field_column_value                      = ":update_{$column}_value_{$update_key}";
+                                $identity_field_column_value                      = ":".md5("update_{$column}_value_{$update_key}");
                                 $this->bound_values[$identity_field_column_value] = $line[$column];
                                 # 组装
                                 $updates .= sprintf("WHEN %s THEN %s ", $identity_field_column_key, $identity_field_column_value);
@@ -276,7 +276,7 @@ trait QueryTrait
                             throw new SqlParserException(__('更新条数大于一条时请使用示例更新：$query->table("demo")->identity("id")->update(["id"=>1,"name"=>"测试1"])->update(["id"=>2,"name"=>"测试2"])或者update中指定条件字段id：$query->table("demo")->update([["id"=>1,"name"=>"测试1"],["id"=>2,"name"=>"测试2"]],"id")'));
                         }
                         foreach ($this->updates[0] as $update_field => $field_value) {
-                            $update_key                      = ":$update_field";
+                            $update_key                      = ":".md5($update_field);
                             $update_field                    = $this->parserFiled($update_field);
                             $this->bound_values[$update_key] = $field_value;
                             $updates                         .= "$update_field = $update_key,";

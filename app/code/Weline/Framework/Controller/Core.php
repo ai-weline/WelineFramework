@@ -99,20 +99,17 @@ class Core implements Data\DataInterface
     }
 
 
-    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
     public function success(string $msg = '请求成功！', mixed $data = '', int $code = 200): array
     {
         return ['msg' => $msg, 'data' => $data, 'code' => $code];
     }
 
-    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
     public function error(string $msg = '请求失败！', mixed $data = '', int $code = 404): array
     {
         return ['msg' => $msg, 'data' => $data, 'code' => $code];
     }
 
 
-    #[\JetBrains\PhpStorm\ArrayShape(['msg' => "string", 'data' => "\Exception", 'code' => "int"])]
     public function exception(\Exception $exception, string $msg = '请求失败！', mixed $data = '', int $code = 403): mixed
     {
         $return_data['data']      = $data;

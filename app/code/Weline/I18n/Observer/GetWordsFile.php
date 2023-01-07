@@ -15,6 +15,7 @@ use Weline\Framework\App\Env;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\Event;
 use Weline\Framework\Http\Cookie;
+use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Output\Debug\Printing;
 use Weline\I18n\Model\I18n;
@@ -25,6 +26,10 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
      * @var I18n
      */
     private I18n $i18n;
+    /**
+     * @var \Weline\Framework\Http\Request
+     */
+    private Request $request;
 
     /**
      * GetWordsFile 初始函数...
@@ -32,10 +37,12 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
      * @param I18n $i18n
      */
     public function __construct(
-        I18n $i18n
+        I18n $i18n,
+        Request $request
     )
     {
         $this->i18n = $i18n;
+        $this->request = $request;
     }
 
     /**
@@ -46,44 +53,27 @@ class GetWordsFile implements \Weline\Framework\Event\ObserverInterface
         /**@var DataObject $words_file_data */
         $words_file_data = $event->getData('file_data');
 //        $words_file      = $words_file_data->getData('file_path');
-        // 用户语言优先
-        $lang = Cookie::getLang();
+
         // 翻译收集
-        $translate_mode = Env::getInstance()->getConfig('translate_mode');
-        if ($translate_mode === 'online') {
-            try {
-                $this->i18n->convertToLanguageFile();
-            } catch (\Exception $e) {
-                /**@var Printing $debug */
-                $debug = ObjectManager::getInstance(Printing::class);
-                $debug->debug($e->getMessage());
-                if (CLI) {
-                    throw $e;
-                }
+        try {
+            $this->i18n->convertToLanguageFile();
+        } catch (\Exception $e) {
+            /**@var Printing $debug */
+            $debug = ObjectManager::getInstance(Printing::class);
+            $debug->debug($e->getMessage());
+            if (CLI) {
+                throw $e;
             }
         }
+        // 用户语言优先
+        $lang = Cookie::getLang();
         // 默认中文
         if ($lang) {
             $words_file = Env::path_TRANSLATE_FILES_PATH . $lang . '.php';
         } else {
             $words_file = Env::path_TRANSLATE_DEFAULT_FILE;
         }
-        # 检测词典文件是否准确生成
-        if (is_file($words_file)) {
-            $words_file_data->setData('file_path', $words_file);
-        } elseif ($translate_mode !== 'online') {
-            # 没有生成 且不是 实时翻译模式
-            try {
-                $this->i18n->convertToLanguageFile();
-            } catch (\Exception $e) {
-                /**@var Printing $debug */
-                $debug = ObjectManager::getInstance(Printing::class);
-                $debug->debug($e->getMessage());
-                if (CLI) {
-                    throw $e;
-                }
-            }
-            $words_file_data->setData('file_path', $words_file);
-        }
+        # 词典文件
+        $words_file_data->setData('file_path', $words_file);
     }
 }

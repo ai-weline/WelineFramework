@@ -11,6 +11,8 @@ namespace Weline\Framework\Phrase;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\Http\Cookie;
+use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 
 class Parser
@@ -79,18 +81,17 @@ class Parser
             $phraseCache    = ObjectManager::getInstance(\Weline\Framework\Phrase\Cache\PhraseCache::class . 'Factory');
             $translate_mode = Env::getInstance()->getConfig('translate_mode');
 
-            # 事件分配
-            /**@var \Weline\Framework\Event\EventsManager $eventsManager */
-            $eventsManager = ObjectManager::getInstance(\Weline\Framework\Event\EventsManager::class);
-            $file_data     = new DataObject(['file_path' => Env::path_TRANSLATE_DEFAULT_FILE]);
-            $eventsManager->dispatch('Framework_phrase::get_words_file', ['file_data' => $file_data]);
-            $words_file = $file_data->getData('file_path');
-            $cache_key  = $words_file;
-
+            $cache_key = 'phrase_locale_words_'.Cookie::getLangLocal();
             # 非实时翻译
-            if (!CLI && $translate_mode !== 'online' && $phrase_words = $phraseCache->get($cache_key)) {
+            if ($translate_mode !== 'online' && $phrase_words = $phraseCache->get($cache_key)) {
                 self::$words = $phrase_words;
             } else {
+                # 事件分配
+                /**@var \Weline\Framework\Event\EventsManager $eventsManager */
+                $eventsManager = ObjectManager::getInstance(\Weline\Framework\Event\EventsManager::class);
+                $file_data     = new DataObject(['file_path' => Env::path_TRANSLATE_DEFAULT_FILE]);
+                $eventsManager->dispatch('Framework_phrase::get_words_file', ['file_data' => $file_data]);
+                $words_file = $file_data->getData('file_path');
                 # 实时翻译
                 if (is_file($words_file)) {
                     try {

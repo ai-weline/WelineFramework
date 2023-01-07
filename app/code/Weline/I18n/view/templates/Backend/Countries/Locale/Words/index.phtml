@@ -111,6 +111,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                 </h4>
                                 <p class='card-title-desc'>
                                     <lang>根据地区翻译来自前端采集到的词.</lang>
+                                <p>
+                                    <lang>只需要在前端或者后端刷新页面，或者使用命令：php bin/m cache:warm 也可以收集到大部分词。</lang>
+                                </p>
+                                <p>
+                                    <lang>提示：使用词典收集功能请先开启在线收集词语功能。开启命令：php bin/m translate:model:set online</lang>
+                                </p>
                                 </p>
                                 <p class="card-title-desc">
                                     <lang>展示语言：</lang>
@@ -122,17 +128,33 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                     .code}}">
                                         <lang>更新</lang>
                                     </a>
-
                                     <span class='fas fa-question-circle' data-trigger='hover' data-toggle='popover'
                                           data-content='@lang(刷新来自前端采集到的词。)'></span>
                                     <a href="@backend-url('*/backend/countries/locale/words/collect')?country_code={{req.country_code}}&code={{req
                                     .code}}">
                                         <lang>导出语言包</lang>
+                                        <lang>（尚未开发）</lang>
+                                    </a>
+                                    <a href="@backend-url('*/backend/countries/locale/words/collect')?country_code={{req.country_code}}&code={{req
+                                    .code}}">
+                                        <lang>导入语言包</lang>
+                                        <lang>（尚未开发）</lang>
                                     </a>
                                     <a class="text-warning" href="@backend-url('*/backend/countries/locale/words/push')?country_code={{req
                                     .country_code}}&code={{req
                                     .code}}">
                                         <lang>发布</lang>
+                                    </a>
+                                    <lang>在线收集词典功能状态：</lang><lang>{{translate_mode}}</lang>
+                                    <a class="text-info" href="@backend-url('*/backend/countries/locale/words/enable')?country_code={{req
+                                    .country_code}}&code={{req
+                                    .code}}">
+                                        <lang>实时</lang>
+                                    </a>
+                                    <a class="text-info" href="@backend-url('*/backend/countries/locale/words/disable')?country_code={{req
+                                    .country_code}}&code={{req
+                                    .code}}">
+                                        <lang>缓存</lang>
                                     </a>
                                 </p>
                                 <div class='table-rep-plugin'>
@@ -184,9 +206,8 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                         </td>
                                                         <td class='co-name'>{{word.word}}</td>
                                                         <td data-field='translate' data-word='{{word.word}}' data-code="{{req.code}}"
-                                                            data-country-code="{{req.country_code}}"
-                                                            data-md5="{{word.md5}}"
-                                                            class='co-name'>{{word.translate}}</td>
+                                                            data-country-code="{{req.country_code}}" data-md5="{{word.md5}}" class='co-name'>{{word
+                                                            .translate}}</td>
                                                         <td class='co-name'>{{word.create_time}}</td>
                                                         <td class='co-name'>{{locale.update_time}}</td>
                                                         <td class='co-action'>

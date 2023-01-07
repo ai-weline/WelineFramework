@@ -334,7 +334,7 @@ class Core
             $this->request->getResponse()->noRouter();
         }
         # 全页缓存
-        $cache_key = $this->cache->buildWithRequestKey('router_route_fpc_cache_key_'.Cookie::getLangLocal());
+        $cache_key = $this->cache->buildWithRequestKey('router_route_fpc_cache_key_' . Cookie::getLangLocal());
         if (PROD && $html = $this->cache->get($cache_key)) {
             return $html;
         }
@@ -355,7 +355,7 @@ class Core
         /**@var EventsManager $eventManager */
         $eventManager = ObjectManager::getInstance(EventsManager::class);
         $resultData   = new DataObject(['result' => $result, 'route' => $this]);
-        $eventManager->dispatch('Weline_Framework_Router::route_after', ['data' => $resultData]);
+        $eventManager->dispatch('Framework_Router::route_after', ['data' => $resultData]);
 //        file_put_contents(__DIR__.'/'.$cache_key.'.html', $result);
         /** Get output buffer. */
         $this->cache->set($cache_key, $result, 5);

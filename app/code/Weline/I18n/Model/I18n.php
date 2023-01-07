@@ -160,9 +160,9 @@ class I18n
         return $locals;
     }
 
-    public function getLocalesWithFlagsDisplaySelf(int $width = 42, int $height = 0, bool $installed = true)
+    public function getLocalesWithFlagsDisplaySelf(string $display_locale_code = 'zh_Hans_CN', int $width = 42, int $height = 0, bool $installed = true)
     {
-        $cache_key = 'getLocalesWithFlags' . $width . $height . (string)$installed;
+        $cache_key = 'getLocalesWithFlags' . $width . $height . (string)$installed . $display_locale_code;
         if ($data = $this->i18nCache->get($cache_key)) {
             return $data;
         }
@@ -207,7 +207,12 @@ class I18n
                 $svg_xml->attributes()->height = $height;
                 $svg                           = $svg_xml->asXML();
                 if (isset($lang_locals[$locale])) {
-                    $locals[$locale] = ['name' => $this->getLocaleName($locale, $locale), 'flag' => $svg];
+                    if ($display_locale_code === $locale) {
+                        $name = $this->getLocaleName($locale, $locale);
+                    } else {
+                        $name = $this->getLocaleName($locale, $display_locale_code) . "({$this->getLocaleName($locale, $locale)})";
+                    }
+                    $locals[$locale] = ['name' => $name, 'flag' => $svg];
                 }
             }
         }
@@ -399,9 +404,7 @@ class I18n
     public function convertToLanguageFile(): void
     {
         $locals_words = $this->getLocalsWords();
-        $words        = [];
         foreach ($locals_words as $local => $locals_word) {
-            $words          = array_merge($words, $locals_word);
             $words_filename = Env::path_TRANSLATE_FILES_PATH . $local . '.php';
             $file           = new \Weline\Framework\System\File\Io\File();
             $file->open($words_filename, $file::mode_w);

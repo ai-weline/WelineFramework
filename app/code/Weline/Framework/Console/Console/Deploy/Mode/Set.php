@@ -57,8 +57,8 @@ class Set extends CommandAbstract
                 $deploy_upgrade->execute();
                 break;
             case 'dev':
-                $this->printer->note('正在执行清理模板缓存...');
                 $this->cleanTplComDir();
+                $this->printer->note('正在执行清理模板缓存...');
                 break;
             default:
                 $this->printer->error(' ╮(๑•́ ₃•̀๑)╭  ：错误的部署模式：' . $param);

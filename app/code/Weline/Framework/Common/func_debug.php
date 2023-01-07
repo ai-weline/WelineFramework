@@ -252,6 +252,33 @@ if (!function_exists('dd')) {
     function dd($data)
     {
         echo dnl($data);
+        // 执行时间
+        $exe_time = microtime(true) - START_TIME;
+        $isCli    = (PHP_SAPI === 'cli');
+        $echo_pre = ($isCli ? PHP_EOL : '<pre>');
+        echo $echo_pre;
+        $parent_call_info = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $parent_call_info = array_reverse($parent_call_info);
+        foreach ($parent_call_info as $key => $item) {
+            if (is_array($item)) {
+                foreach ($item as $k => $i) {
+                    $end_line = '';
+                    if (isset($item['line']) && 'file' === $k) {
+                        $end_line = ':' . $item['line'];
+                    }
+                    $k     = "【{$k}】";
+                    $i_str = is_string($i) ? $i . $end_line : json_encode($i) . $end_line;
+                    print_r("{$k} " . $i_str . ($isCli ? PHP_EOL : '<br>'));
+                }
+                echo '---------------------------------------------------------' . ($isCli ? PHP_EOL : '<br>');
+            } else {
+                $key      = str_pad($key, 12, '-', STR_PAD_BOTH);
+                $item_str = is_string($item) ? $item : json_encode($item);
+                print_r("{$key}");
+                echo '---------------------------------------------------------' . ($isCli ? PHP_EOL : '<br>');
+            }
+        }
+        echo $exe_time.PHP_EOL;
         exit;
     }
 

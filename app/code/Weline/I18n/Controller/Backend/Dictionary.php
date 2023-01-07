@@ -32,4 +32,18 @@ class Dictionary extends BaseController
         $this->assign('pagination', $this->dictionary->getPagination());
         return $this->fetch();
     }
+
+    function getDelete()
+    {
+        $this->dictionary->beginTransaction();
+        try {
+            $this->dictionary->load($this->request->getGet('word'))->delete();
+            $this->dictionary->commit();
+            $this->getMessageManager()->addSuccess(__('删除成功！'));
+        } catch (\Exception $exception) {
+            $this->dictionary->rollBack();
+            $this->getMessageManager()->addException($exception);
+        }
+        $this->redirect($this->request->getReferer());
+    }
 }

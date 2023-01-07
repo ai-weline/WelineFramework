@@ -545,7 +545,7 @@ abstract class AbstractModel extends DataObject
                 # 暂时解决主键已经存在且是字符串，无法新增的问题，强制检测主键是否存在
                 if (!is_numeric($this->getId())) {
                     $this->unique_data[$this->_primary_key] = $this->getId();
-                    $this->force_check_flag = true;
+                    $this->force_check_flag                 = true;
                 }
                 # 是否强制检查
                 if ($this->force_check_flag) {
@@ -914,6 +914,9 @@ abstract class AbstractModel extends DataObject
         return $this->_fetch_data;
     }
 
+    /**
+     * @return \Weline\Framework\Database\Model[]
+     */
     public function getItems(): array
     {
         return $this->items;

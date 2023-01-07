@@ -12,8 +12,9 @@ declare(strict_types=1);
 namespace Weline\Backend\Controller\ThemeConfig;
 
 use Weline\Backend\Block\ThemeConfig;
+use Weline\Framework\App\Controller\BackendController;
 
-class Set extends \Weline\Admin\Controller\BaseController
+class Set extends BackendController
 {
     private ThemeConfig $themeConfig;
 

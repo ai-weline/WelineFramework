@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Weline\UrlManager\Controller\Backend;
 
 use Weline\Framework\Manager\ObjectManager;
+use Weline\ModuleManager\Model\Module;
 use Weline\UrlManager\Model\UrlManager;
 use Weline\UrlManager\Model\UrlRewrite;
 
@@ -28,11 +29,18 @@ class Url extends \Weline\Framework\App\Controller\BackendController
         if ($q) {
             $urlManager->where('path', "%{$q}%", 'like');
         }
-        $urlManager->pagination(
+        $urlManager->joinModel(
+            Module::class,
+            'm',
+            'main_table.module_id=m.module_id',
+            'left',
+            'm.name as module_name'
+        )->pagination(
             $this->request->getParam('page', 1),
             $this->request->getParam('pageSize', 10),
             $this->request->getParams()
-        )->select()->fetch();
+        )->select()
+         ->fetch();
         /**@var UrlRewrite $item */
         $items = $urlManager->getItems();
         foreach ($items as &$item) {

@@ -48,7 +48,7 @@ class Dictionary extends \Weline\Framework\Database\Model
 //        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable()
-                  ->addColumn(self::fields_ID, TableInterface::column_type_TEXT, null, 'not null unique', '词')
+                  ->addColumn(self::fields_ID, TableInterface::column_type_VARCHAR, 255, 'primary key not null', '词')
                   ->addColumn(self::fields_IS_BACKEND, TableInterface::column_type_INTEGER, 1, 'not null default 0', '是否后端：0，前端；1、后端')
                   ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'default null', '模组名')
                   ->create();

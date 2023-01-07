@@ -11,7 +11,6 @@ namespace Weline\Framework\View;
 
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
-use Weline\Framework\App\System;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Controller\PcController;
 use Weline\Framework\DataObject\DataObject;
@@ -22,15 +21,10 @@ use Weline\Framework\Http\Cookie;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
-use Weline\Framework\Module\ModuleInterface;
-use Weline\Framework\Output\Debug\Printing;
 use Weline\Framework\Session\Session;
 use Weline\Framework\Ui\FormKey;
 use Weline\Framework\View\Cache\ViewCache;
 use Weline\Framework\View\Data\DataInterface;
-use Weline\Framework\View\Data\HtmlInterface;
-use Weline\Framework\View\Exception\TemplateException;
-use Weline\SystemConfig\Model\SystemConfig;
 
 class Template extends DataObject
 {
@@ -218,8 +212,8 @@ class Template extends DataObject
      */
     public function convertFetchFileName(string $fileName): array
     {
-        $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName';
-        $tplFile_cache_key     = $this->view_dir . $fileName . '_tplFile';
+        $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName'.Cookie::getLangLocal();
+        $tplFile_cache_key     = $this->view_dir . $fileName . '_tplFile'.Cookie::getLangLocal();
         $comFileName           = '';
         $tplFile               = '';
         # 让非生产环境实时读取文件
@@ -230,7 +224,7 @@ class Template extends DataObject
         # 测试
 //        file_put_contents(__DIR__ . '/test.txt', $comFileName . PHP_EOL, FILE_APPEND);
         // 编译文件不存在的时候 重新对文件进行处理 防止每次都处理
-        if (empty($comFileName) || empty($tplFile)) {
+        if (!is_file($comFileName) || !is_file($tplFile)) {
             // 解析模板路由
             if ('/' !== DS) {
                 $fileName = str_replace('/', DS, $fileName);

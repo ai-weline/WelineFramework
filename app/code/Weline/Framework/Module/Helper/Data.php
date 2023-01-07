@@ -9,7 +9,10 @@
 
 namespace Weline\Framework\Module\Helper;
 
+use Weline\Framework\Acl\Acl;
 use Weline\Framework\App\Env;
+use Weline\Framework\DataObject\DataObject;
+use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Register\RegisterDataInterface;
@@ -59,13 +62,13 @@ class Data extends AbstractHelper
      *
      * 参数区：
      *
-     * @param array  $modules
-     * @param string $name
-     * @param string $router
+     * @param array  $modules 【模组列表指针】
+     * @param string $path    【模组路径】
+     * @param string $name    【模组名】
+     * @param string $router  【控制器路径】
      *
-     * @throws \Weline\Framework\App\Exception
-     * @throws \Weline\Framework\Console\ConsoleException
      * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
     public function registerModuleRouter(array &$modules, string $path, string $name, string $router)
     {
@@ -85,13 +88,20 @@ class Data extends AbstractHelper
                     $baseRouter  = trim($router . $baseRouter, '/');
 
                     $this->parent_class_arr = [];// 清空父类信息
-                    $ctl_data               = $this->parserController($api_class);
+                    $ctl_data               = $this->parserController($api_class, $name, $router);
                     if (empty($ctl_data)) {
                         continue;
                     }
+                    $data = new DataObject($ctl_data);
+                    if(isset($ctl_data['attributes'])&&$ctl_data['attributes']){
+                        $this->getEvenManager()->dispatch('Weline_Module::controller_class_attributes', ['data' =>
+                                                                                                             $data, 'type' =>
+                                                                                                             'api']);
+                    }
+                    $ctl_data    = $data->getData();
                     $ctl_methods = $ctl_data['methods'];
                     $ctl_area    = $ctl_data['area'];
-                    foreach ($ctl_methods as $method) {
+                    foreach ($ctl_methods as $method => $attributes) {
                         // 分析请求方法
                         $request_method             = null;
                         $rule_method                = $method;
@@ -125,18 +135,30 @@ class Data extends AbstractHelper
                         # 模块路由解析
                         $routers = is_string($router) ? [$router] : $router;
                         foreach ($routers as $router_) {
-                            // 路由注册+
-                            Register::register(RegisterDataInterface::ROUTER, $name, [
+                            $route  = $rule_router . ($request_method ? '::' . $request_method : '');
+                            $params = [
                                 'type'           => DataInterface::type_API,
                                 'area'           => $ctl_area,
                                 'module'         => $name,
                                 'base_router'    => $router_,
-                                'router'         => $rule_router . ($request_method ? '::' . $request_method : ''),
+                                'router'         => $route,
                                 'class'          => $api_class,
                                 'module_path'    => $path,
                                 'method'         => $method,
                                 'request_method' => $request_method,
-                            ]);
+                            ];
+                            $data   = new DataObject($params);
+                            /**@var \ReflectionAttribute $attribute */
+                            foreach ($attributes as $attribute) {
+                                $this->getEvenManager()->dispatch('Weline_Module::controller_method_attributes', [
+                                    'data'            => $data,
+                                    'type'            => 'api',
+                                    'attribute'       => $attribute,
+                                    'controller_data' => $ctl_data
+                                ]);
+                            }
+                            // 路由注册+
+                            Register::register(RegisterDataInterface::ROUTER, $name, $params);
                         }
                     }
                 }
@@ -156,14 +178,19 @@ class Data extends AbstractHelper
                     $baseRouter = trim($router . $baseRouter, '/');
 
                     $this->parent_class_arr = [];// 清空父类信息
-                    $ctl_data               = $this->parserController($pc_class);
+                    $ctl_data               = $this->parserController($pc_class, $name, $router);
                     if (empty($ctl_data)) {
                         continue;
                     }
-
+                    $data = new DataObject($ctl_data);
+                    if(isset($ctl_data['attributes'])&&$ctl_data['attributes']){
+                        $this->getEvenManager()->dispatch('Weline_Module::controller_class_attributes', ['data' =>
+                                                                                                             $data, 'type' => 'pc']);
+                    }
+                    $ctl_data    = $data->getData();
                     $ctl_methods = $ctl_data['methods'];
                     $ctl_area    = $ctl_data['area'];
-                    foreach ($ctl_methods as $method) {
+                    foreach ($ctl_methods as $method => $attributes) {
                         // 分析请求方法
                         $request_method             = '';
                         $rule_method                = $method;
@@ -197,23 +224,40 @@ class Data extends AbstractHelper
                         # 模块路由解析
                         $routers = is_string($router) ? [$router] : $router;
                         foreach ($routers as $router_) {
-                            // 路由注册+
-                            Register::register(RegisterDataInterface::ROUTER, $name, [
+                            $route  = $rule_router . ($request_method ? '::' . $request_method : '');
+                            $params = [
                                 'type'           => DataInterface::type_PC,
                                 'area'           => $ctl_area,
                                 'module'         => $name,
                                 'base_router'    => $router_,
-                                'router'         => $rule_router . ($request_method ? '::' . $request_method : ''),
+                                'router'         => $route,
                                 'class'          => $pc_class,
                                 'method'         => $method,
                                 'module_path'    => $path,
                                 'request_method' => $request_method,
-                            ]);
+                            ];
+                            $data   = new DataObject($params);
+                            /**@var \ReflectionAttribute $attribute */
+                            foreach ($attributes as $attribute) {
+                                $this->getEvenManager()->dispatch('Weline_Module::controller_method_attributes', [
+                                    'data'            => $data,
+                                    'type'            => 'pc',
+                                    'attribute'       => $attribute,
+                                    'controller_data' => $ctl_data,
+                                ]);
+                            }
+                            // 路由注册+
+                            Register::register(RegisterDataInterface::ROUTER, $name, $params);
                         }
                     }
                 }
             }
         }
+    }
+
+    public function getEvenManager(): EventsManager
+    {
+        return ObjectManager::getInstance(EventsManager::class);
     }
 
     /**
@@ -265,11 +309,13 @@ class Data extends AbstractHelper
      * 参数区：
      *
      * @param string $class
+     * @param        $module_name
+     * @param        $router
      *
      * @return array
      * @throws \ReflectionException
      */
-    private function parserController(string $class)
+    private function parserController(string $class, $module_name, $router)
     {
         // 默认前端控制器
 //        $ctl_area = \Weline\Framework\Controller\Data\DataInterface::type_pc_FRONTEND;
@@ -281,7 +327,8 @@ class Data extends AbstractHelper
                     continue;
                 }
                 if ($method->isPublic()) {
-                    $controller_methods[] = $method->getName();
+                    $attributes                             = $method->getAttributes();
+                    $controller_methods[$method->getName()] = $attributes;
                 }
             }
             // 存在父类则过滤父类方法
@@ -299,17 +346,25 @@ class Data extends AbstractHelper
                         continue;
                     }
                     if ($method->isPublic()) {
-                        $parent_methods[] = $method->getName();
+                        $method_attributes                  = $method->getAttributes();
+                        $parent_methods[$method->getName()] = $method_attributes;
                     }
                 }
-                $controller_methods = array_diff($controller_methods, $parent_methods);
+                $controller_methods = array_merge($parent_methods, $controller_methods);
                 // 实例化类
                 if (!$parent_class->isAbstract()) {
-                    $this->parent_class_arr = array_merge($this->parent_class_arr, $this->parserController($parent_class->getName())['area']);
+                    $this->parent_class_arr = array_merge($this->parent_class_arr, $this->parserController($parent_class->getName(), $module_name, $router)['area']);
                 }
             }
 
-            return ['area' => array_unique($this->parent_class_arr), 'methods' => $controller_methods];
+            return [
+                'area'        => array_unique($this->parent_class_arr),
+                'methods'     => $controller_methods,
+                'attributes'  => $reflect->getAttributes(),
+                'class'       => $class,
+                'module_name' => $module_name,
+                'router'      => $router,
+            ];
         } else {
             return [];
         }

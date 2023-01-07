@@ -63,7 +63,6 @@ class Handle implements RegisterInterface
      * @return array
      * @throws Exception
      */
-    #[\JetBrains\PhpStorm\ArrayShape(['router' => "mixed|string", 'rule' => "array"])]
     public function register(string $type, string $module_name, array|string $param, string $version = '', string $description = ''): array
     {
         $controller = explode('Controller', $param['class']);

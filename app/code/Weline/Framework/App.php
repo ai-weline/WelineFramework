@@ -198,19 +198,8 @@ class App
                     throw new Exception(__('系统错误：%1', $e->getMessage()));
                 }
             } else {
-                //                    $cache     = (new ObjectCache())->create();
-//                    $cache_key = 'framework_system_container_cache';
+                // FIXME 可以尝试缓存所有容器内容
                 $result = ObjectManager::getInstance(\Weline\Framework\Router\Core::class)->start();
-                //                /**@var ObjectManager $container */
-//                if (!DEV && $container = $cache->get($cache_key)) {
-//                    $result = $container::getInstance(\Weline\Framework\Router\Core::class)->start();
-                ////                    p();
-//                } else {
-//                    $container = ObjectManager::getInstance();
-//                    $result    = $container::getInstance(\Weline\Framework\Router\Core::class)->start();
-//                    $cache->set($cache_key, $container);
-                ////                    p();
-//                }
                 exit($result);
             }
         }

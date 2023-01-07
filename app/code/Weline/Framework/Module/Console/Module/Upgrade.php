@@ -15,7 +15,9 @@ use Weline\Framework\App\System;
 use Weline\Framework\Console\CommandAbstract;
 use Weline\Framework\Event\EventsManager;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Module\Handle;
 use Weline\Framework\Module\Helper\Data;
+use Weline\Framework\Module\Model\Module;
 use Weline\Framework\Output\Cli\Printing;
 use Weline\Framework\System\File\App\Scanner as AppScanner;
 
@@ -99,11 +101,33 @@ class Upgrade extends CommandAbstract
         $all_modules = [];
         // 扫描代码
         list($vendor, $dependencies) = $this->scanner->scanAppModules();
-        foreach ($dependencies as $module_name => $module) {
-            $register = $module['register'] ?? '';
+        // 注册模组
+        $this->printer->note(__('1)注册模组'));
+        foreach ($dependencies as $module_name => $module_data) {
+            $register = $module_data['register'] ?? '';
             if (is_file($register)) {
                 require $register;
+            }else{
+                unset($dependencies[$module_name]);
             }
+        }
+        $modules = Env::getInstance()->getModuleList(true);
+        /**@var Handle $module_handle*/
+        $module_handle = ObjectManager::getInstance(Handle::class);
+        // 安装Setup信息
+        $this->printer->note(__('2)安装Setup信息'));
+        foreach ($modules as $module_name => $module) {
+            $module_handle->setupInstall(new Module($module));
+        }
+        // 注册模型数据库信息
+        $this->printer->note(__('3)注册模型数据库信息'));
+        foreach ($modules as $module_name => $module) {
+            $module_handle->setupModel(new Module($module));
+        }
+        // 注册路由信息
+        $this->printer->note(__('3)注册路由信息'));
+        foreach ($modules as $module_name => $module) {
+            $module_handle->registerRoute(new Module($module));
         }
         $this->printer->note('模块更新完毕！');
         $i += 1;

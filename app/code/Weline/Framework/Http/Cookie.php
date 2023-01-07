@@ -41,19 +41,9 @@ class Cookie
     {
         // 用户语言优先
         $lang = $_COOKIE['WELINE-USER-LANG'] ?? null;
-//        dd($_SERVER);
-//        dd($_COOKIE);
         // 默认网站语言
         if (empty($lang)) {
             $lang = self::get('WELINE-WEBSITE-LANG', 'zh_Hans_CN');
-            if (!CLI) {
-                $options = [
-                    'domain' => $_SERVER['SERVER_NAME'],
-                    'path'=>'/'
-                ];
-//                self::set('WELINE-WEBSITE-LANG', self::get('WELINE-WEBSITE-LANG', 'zh_Hans_CN'), 3600 * 24 * 7, $options);
-//                self::set('WELINE-USER-LANG', $lang, 3600 * 24 * 7, $options);
-            }
         }
         return $lang;
     }

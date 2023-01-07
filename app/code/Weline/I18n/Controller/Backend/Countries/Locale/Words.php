@@ -13,8 +13,11 @@ declare(strict_types=1);
 
 namespace Weline\I18n\Controller\Backend\Countries\Locale;
 
+use Weline\Framework\App\Env;
+use Weline\Framework\App\System;
 use Weline\Framework\Http\Cookie;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Phrase\Cache\PhraseCache;
 use Weline\I18n\Cache\I18nCache;
 use Weline\I18n\Controller\Backend\BaseController;
 use Weline\I18n\Model\Countries;
@@ -65,11 +68,23 @@ class Words extends BaseController
             } catch (\Exception $exception) {
                 $this->dictionary->rollBack();
                 $this->getMessageManager()->addException($exception);
-                $this->redirect('*/backend/countries/locale/words', $this->request->getParams());
+                $this->redirect('*/backend/countries/locales', $this->request->getParams());
             }
         }
     }
 
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2023/1/4 23:14
+     * 参数区：
+     * @return mixed
+     * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
+     */
+    #[\Weline\Framework\Acl\Acl('i18n_words', '1i8n词典管理', 'i18n', '')]
     public function index()
     {
         $locale_code = $this->request->getGet('code');
@@ -105,6 +120,7 @@ class Words extends BaseController
         $this->assign('words', $this->localeDictionary->getItems());
         $this->assign('pagination', $this->localeDictionary->getPagination());
         $this->assign('total', $this->localeDictionary->pagination['totalSize']);
+        $this->assign('translate_mode', __(Env::getInstance()->getConfig('translate_mode')));
         return $this->fetch();
     }
 
@@ -126,20 +142,25 @@ class Words extends BaseController
         $collected_words = array_merge($words, $this->i18n->getCollectedWords());
         foreach ($collected_words as $key => $collected_word) {
             unset($collected_words[$key]);
-            $collected_words[] = [
-                $this->localeDictionary::fields_WORD        => $key,
-                $this->localeDictionary::fields_LOCALE_CODE => $locale_code,
-                $this->localeDictionary::fields_MD5         => md5($locale_code . $key),
-                $this->localeDictionary::fields_TRANSLATE   => $key,
-            ];
+            $key = trim($key);
+            if($key){
+                $collected_words[] = [
+                    $this->localeDictionary::fields_WORD        => $key,
+                    $this->localeDictionary::fields_LOCALE_CODE => $locale_code,
+                    $this->localeDictionary::fields_MD5         => md5($locale_code . $key),
+                    $this->localeDictionary::fields_TRANSLATE   => $key,
+                ];
+            }
         }
-        $this->localeDictionary->beginTransaction();
-        try {
-            $this->localeDictionary->insert($collected_words, $this->localeDictionary::fields_MD5)->fetch()->commit();
-            $this->getMessageManager()->addSuccess(__('词典收集成功！一共更新 %1 个词。', count($collected_words)));
-        } catch (\Exception $exception) {
-            $this->localeDictionary->rollBack();
-            $this->getMessageManager()->addException($exception);
+        if($collected_words){
+            $this->localeDictionary->beginTransaction();
+            try {
+                $this->localeDictionary->insert($collected_words, $this->localeDictionary::fields_MD5)->fetch()->commit();
+                $this->getMessageManager()->addSuccess(__('词典收集成功！一共更新 %1 个词。', count($collected_words)));
+            } catch (\Exception $exception) {
+                $this->localeDictionary->rollBack();
+                $this->getMessageManager()->addException($exception);
+            }
         }
         $this->redirect('*/backend/countries/locale/words', $this->request->getParams());
     }
@@ -193,7 +214,7 @@ class Words extends BaseController
 
     public function push()
     {
-        $code = $this->request->getParam('code');
+        $code   = $this->request->getParam('code');
         $locale = $this->locale->where([
                                            $this->locale::fields_IS_ACTIVE  => 1,
                                            $this->locale::fields_IS_INSTALL => 1,
@@ -209,13 +230,14 @@ class Words extends BaseController
         $i18n_dir = APP_PATH . 'i18n' . DS . 'WelineFramework' . DS;
         $pack_dir = $i18n_dir . $code . DS;
         if (!is_dir($pack_dir)) {
-            mkdir($pack_dir, 775, true);
+            mkdir($pack_dir, 0775, true);
         }
         // 语言包注册文件
         $register_file = $pack_dir . 'register.php';
         if (!is_file($register_file)) {
             touch($register_file);
         }
+        $pack_document         = $this->i18n->getLocaleName($locale->getId(), Cookie::getLangLocal()) . "({$this->i18n->getLocaleName($locale->getId(),$locale->getId())})";
         $register_file_content = <<<REGISTER_CONTENT
 <?php
 
@@ -232,7 +254,7 @@ Register::register(
     Register::I18N,
     __DIR__,
     '1.0.1',
-    '系统安装包'
+    '{$pack_document}'
 );
 
 REGISTER_CONTENT;
@@ -253,7 +275,38 @@ REGISTER_CONTENT;
         /**@var \Weline\Framework\Cache\CacheInterface $i18n */
         $i18n = ObjectManager::getInstance(I18nCache::class . 'Factory');
         $i18n->clear();
+        /**@var \Weline\Framework\Cache\CacheInterface $phrase */
+        $phrase = ObjectManager::getInstance(PhraseCache::class . 'Factory');
+        $phrase->clear();
+        $this->getMessageManager()->addSuccess(__('成功清理i18n缓存！'));
+        // 清理生成的模板缓存文件
+        /**@var System $system */
+        $system = ObjectManager::getInstance(System::class);
+        $system->exec('rm -rf ' . Env::path_framework_generated_complicate);
+        $this->getMessageManager()->addSuccess(__('成功清理系统模板缓存文件！'));
         $this->getMessageManager()->addSuccess(__('成功发布！'));
         $this->redirect('*/backend/countries/locale/words', $this->request->getParams());
+    }
+
+    public function enable()
+    {
+        try {
+            Env::getInstance()->setConfig('translate_mode', 'online');
+            $this->getMessageManager()->addSuccess(__('成功开启！'));
+        } catch (\Exception $exception) {
+            $this->getMessageManager()->addException($exception);
+        }
+        $this->redirect('*/backend/countries/locale/words', $this->request->getGet());
+    }
+
+    public function disable()
+    {
+        try {
+            Env::getInstance()->setConfig('translate_mode', 'default');
+            $this->getMessageManager()->addSuccess(__('成功禁用！'));
+        } catch (\Exception $exception) {
+            $this->getMessageManager()->addException($exception);
+        }
+        $this->redirect('*/backend/countries/locale/words', $this->request->getGet());
     }
 }

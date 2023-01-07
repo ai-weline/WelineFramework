@@ -13,7 +13,12 @@ declare(strict_types=1);
 
 namespace Weline\I18n\Controller\Backend;
 
+use Weline\Framework\App\Env;
+use Weline\Framework\App\System;
 use Weline\Framework\Http\Cookie;
+use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Phrase\Cache\PhraseCache;
+use Weline\I18n\Cache\I18nCache;
 use Weline\I18n\Model\Countries\Locale\Name;
 use Weline\I18n\Model\I18n;
 use Weline\I18n\Model\Locale;
@@ -30,7 +35,7 @@ class Countries extends BaseController
         Locale                       $locale,
         I18n                         $i18n,
         \Weline\I18n\Model\Countries $countries,
-        Name $localeName
+        Name                         $localeName
     )
     {
         parent::__construct($locale, $i18n);
@@ -197,6 +202,7 @@ class Countries extends BaseController
             $this->redirect('*/backend/countries');
         }
         try {
+            $this->countries->clearQuery();
             $this->countries->load($this->countries::fields_CODE, $code);
             if (!$this->countries->getId()) {
                 $this->getMessageManager()->addWarning(__('国家不存在！国家代码：%1', $code));
@@ -205,6 +211,26 @@ class Countries extends BaseController
             $this->countries->setData($this->countries::fields_IS_ACTIVE, 0)->save(true);
             $this->getMessageManager()->addSuccess(__('成功禁用国家！国家：%1（%2）', [$this->countries->getData(Name::fields_DISPLAY_NAME),
                                                                                    $this->countries->getData($this->countries::fields_CODE)]));
+            // FIXME 禁用应当删除对应语言的翻译包
+            $country_locales = $this->locale->where($this->locale::fields_COUNTRY_CODE, $code)->select()->fetch()->getItems();
+            $pack_dir        = Env::path_LANGUAGE_PACK;
+            /**@var System $system */
+            $system = ObjectManager::getInstance(System::class);
+            /**@var */
+            foreach ($country_locales as $country_locale) {
+                $locale_dirs = glob($pack_dir . '*' . DS . $country_locale->getData($this->locale::fields_ID), GLOB_ONLYDIR);
+                foreach ($locale_dirs as $locale_dir) {
+                    $result = $system->exec('rm -rf ' . $locale_dir);
+                }
+            }
+            // 清理i18n缓存
+            /**@var \Weline\Framework\Cache\CacheInterface $i18n */
+            $i18n = ObjectManager::getInstance(I18nCache::class . 'Factory');
+            $i18n->clear();
+            /**@var \Weline\Framework\Cache\CacheInterface $phrase */
+            $phrase = ObjectManager::getInstance(PhraseCache::class . 'Factory');
+            $phrase->clear();
+            $this->getMessageManager()->addWarning(__('该国家下的所有安装包已删除！'));
         } catch (\Exception $exception) {
             $this->getMessageManager()->addException($exception);
         }

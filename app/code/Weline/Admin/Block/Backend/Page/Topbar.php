@@ -39,7 +39,7 @@ class Topbar extends \Weline\Framework\View\Block
     public function __init()
     {
         parent::__init();
-        $languages = $this->getI18n()->getLocalesWithFlagsDisplaySelf(0, 22);
+        $languages = $this->getI18n()->getLocalesWithFlagsDisplaySelf(Cookie::getLangLocal(), 0, 22);
         $this->assign('languages', $languages);
         $current_language = ['code' => 'zh_Hans_CN', 'name' => '中文', 'flag' => ''];
         if (isset($languages[Cookie::getLang()])) {

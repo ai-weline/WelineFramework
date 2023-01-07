@@ -20,7 +20,7 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
 {
     public const dir = 'Cache';
 
-    #[\JetBrains\PhpStorm\ArrayShape(['app_caches' => "array", 'framework_caches' => "array"])] public function getCaches(): array
+    public function getCaches(): array
     {
         $app_caches = $this->scanAppCaches();
 
@@ -81,10 +81,15 @@ class Scanner extends \Weline\Framework\System\File\App\Scanner
             $class            = Register::parserModuleVendor($vendor) . '\\' . Register::parserModuleName($module) . '\\' . implode('\\', $cache_class_dirs);
             if (class_exists($class)) {
                 try {
-                    $obj = ObjectManager::getInstance(rtrim($class, 'Factory') . 'Factory');
+                    $obj_class = $class;
+                    if(!str_ends_with($obj_class, 'Factory')){
+                        $obj_class .= 'Factory';
+                    }
+                    $obj = ObjectManager::getInstance($obj_class);
                 } catch (\Exception $e) {
                     $obj = null;
                 }
+
                 if ($obj instanceof CacheInterface) {
                     $app_caches[] = [
                         'class' => $class,

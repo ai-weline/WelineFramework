@@ -245,7 +245,6 @@ class PcController extends Core
     }
 
 
-//    #[\JetBrains\PhpStorm\ArrayShape(['msg' => 'string', 'data' => 'mixed|string', 'code' => 'int'])]
 //    public function success(string $msg = '请求成功！', mixed $data = '', int $code = 200,string $url=''): array
 //    {
 //

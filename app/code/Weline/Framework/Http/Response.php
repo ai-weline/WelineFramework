@@ -10,7 +10,6 @@
 namespace Weline\Framework\Http;
 
 
-use JetBrains\PhpStorm\NoReturn;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Manager\ObjectManager;
 
@@ -83,7 +82,7 @@ class Response implements ResponseInterface
         exit();
     }
 
-    #[NoReturn] public function redirect(string $url, $code = 200): void
+    public function redirect(string $url, $code = 200): void
     {
         http_response_code($code);
         Header("Location:$url");
