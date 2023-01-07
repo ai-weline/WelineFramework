@@ -140,6 +140,7 @@ class Upgrade extends CommandAbstract
         # 模组命令
         $active_modules = Env::getInstance()->getActiveModules();
         $command_files  = [];
+        unset($active_modules['Weline_Framework']);
         foreach ($active_modules as $module_name => $module) {
             $pattern = $module['base_path'] . 'Console' . DS . '*';
             $files   = [];
