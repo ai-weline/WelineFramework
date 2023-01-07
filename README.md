@@ -2,6 +2,8 @@
 # WelineFramework
 
 #### 介绍
+测试环境：https://weline-framework-dev.aiweline.com/ 随时在开发测试，有可能会访问不了
+测试后台：https://weline-framework-dev.aiweline.com/admin_123/admin
 
 微蓝WelineFramework框架！
 ~~~
@@ -42,7 +44,6 @@ composer下载源码
 ~~~
 composer create-project aiweline/weline-framework WelineFramework --prefer-dist
 ~~~
-
 ###一、项目安装
 
     1.  WEB项目部署
@@ -56,44 +57,6 @@ composer create-project aiweline/weline-framework WelineFramework --prefer-dist
     4.  其他命令 php bin/m 回车可见
 
 ### 框架目的
-
-为解决PHP框架性能和优雅不能共存的问题解决。
-
-#### 更新说明
-```angular2html
-# 1.0.2
-1、新增自动化单元测试命令。php bin/m phpunit:run
-2、新增计划任务调度系统。php bin/m cron:* 系列任务调度操作命令
-```
-
-# 1.0.1
-```markdown
-1. 更新I18n国际化__()函数收集并在模块（可指定模块）生成翻译（可指定要翻译的语言）语言翻译文件。
-2. 需新增IP封锁系统，框架Security模块在框架入口处封死机器IP.
-3. 使用加入less对css进行编译。
-4. i18n国际化翻译。
-5. 事件管理可直接传非对象常值，无需构建对象（完成事件Wrapper）。
-6. 新增主题静态文件继承功能。
-7. 开发模式模型（Model）字段顺序映射到数据库。
-8. 全页缓存：将一个路由映射的页面缓存，无需每次解析组件进行映射（通俗就是将各个模板进行合并成一个完整页面文件进行缓存）。
-9. 增加后台管理界面；
-10. 设计资源权限管理系统；
-11. 使用加入less对css进行编译。
-12. 静态资源编译,减少服务器可执行代码量，增加性能。（处理中...）
-13. 配置xml化
-14. 新增事件观察者机制（event.xml)
-15. 新增命令简化机制.
-16. 框架缓存系统完成！
-17. 事件Event观察者Observer模式
-18. 插件机制
-19. 完成主题功能
-20. 完成i18n翻译功能
-21. 对象缓存
-22. 新增工厂类模式
-```
-
-测试环境：http://weline-framework-dev.aiweline.com/
-
 黑白主题：
 暗黑：
 ![img.png](pub/readme/img.png)
@@ -132,8 +95,37 @@ composer create-project aiweline/weline-framework WelineFramework --prefer-dist
 
     1.  框架可快速实现Rest Api,前后端。
     2.  后期会自带开发文档模块。
+    
+    
+#### 更新说明
 
+# 1.0.1
+```markdown
+1. 更新I18n国际化__()函数收集并在模块（可指定模块）生成翻译（可指定要翻译的语言）语言翻译文件。
+2. 需新增IP封锁系统，框架Security模块在框架入口处封死机器IP.
+3. 使用加入less对css进行编译。
+4. i18n国际化翻译。
+5. 事件管理可直接传非对象常值，无需构建对象（完成事件Wrapper）。
+6. 新增主题静态文件继承功能。
+7. 开发模式模型（Model）字段顺序映射到数据库。
+8. 全页缓存：将一个路由映射的页面缓存，无需每次解析组件进行映射（通俗就是将各个模板进行合并成一个完整页面文件进行缓存）。
+9. 增加后台管理界面；
+10. 设计资源权限管理系统；
+11. 使用加入less对css进行编译。
+12. 静态资源编译,减少服务器可执行代码量，增加性能。（处理中...）
+13. 配置xml化
+14. 新增事件观察者机制（event.xml)
+15. 新增命令简化机制.
+16. 框架缓存系统完成！
+17. 事件Event观察者Observer模式
+18. 插件机制
+19. 完成主题功能
+20. 完成i18n翻译功能
+21. 对象缓存
+22. 新增工厂类模式
+```
 #### 参与贡献
+
 1.  Fork 本仓库
 2.  新建 Feat_xxx 分支
 3.  提交代码
