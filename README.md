@@ -62,13 +62,18 @@ composer create-project aiweline/weline-framework WelineFramework --prefer-dist
 
 ### 框架特性
 跨平台支持：Windows/linux。
-1、自带后台
 
-1) acl权限管理。get,post,delete,update等方法精细级别访问控制器。
+##1、自带后台
 
-2）url管理。实现任何链接seo自由重写。
+#1) acl权限管理。
 
-3) i18n全球化词典管理。可自行安装国家地区，并收集前端词典进行翻译，运营人员即可完成翻译，也可以自行开发对接第三方api做自动化翻译。
+get,post,delete,update等方法精细级别访问控制器。
+
+#2）url管理。
+实现任何链接seo自由重写。
+
+#3) i18n全球化词典管理。
+可自行安装国家地区，并收集前端词典进行翻译，运营人员即可完成翻译，也可以自行开发对接第三方api做自动化翻译。
 
 4）缓存控制器。分类型缓存管理，可以单独针对某个缓存进行管理。
 
