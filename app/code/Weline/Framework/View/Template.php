@@ -124,13 +124,15 @@ class Template extends DataObject
 
     public function init()
     {
-        $this->request = ObjectManager::getInstance(Request::class);
-        if (empty($this->view_dir)) {
-            $this->view_dir = $this->request->getRouterData('module_path') . DataInterface::dir . DS;
+        if (!CLI) {
+            $this->request = ObjectManager::getInstance(Request::class);
+            if (empty($this->view_dir)) {
+                $this->view_dir = $this->request->getRouterData('module_path') . DataInterface::dir . DS;
+            }
+                $this->getData('title') ?? $this->setData('title', $this->request->getModuleName());
+            $this->setData('req', $this->request->getParams());
+            $this->setData('env', Env::getInstance()->getConfig());
         }
-            $this->getData('title') ?? $this->setData('title', $this->request->getModuleName());
-        $this->setData('req', $this->request->getParams());
-        $this->setData('env', Env::getInstance()->getConfig());
 
             $this->theme ?? $this->theme = Env::getInstance()->getConfig('theme', Env::default_theme_DATA);
             $this->eventsManager ?? $this->eventsManager = ObjectManager::getInstance(EventsManager::class);
@@ -212,8 +214,8 @@ class Template extends DataObject
      */
     public function convertFetchFileName(string $fileName): array
     {
-        $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName'.Cookie::getLangLocal();
-        $tplFile_cache_key     = $this->view_dir . $fileName . '_tplFile'.Cookie::getLangLocal();
+        $comFileName_cache_key = $this->view_dir . $fileName . '_comFileName' . Cookie::getLangLocal();
+        $tplFile_cache_key     = $this->view_dir . $fileName . '_tplFile' . Cookie::getLangLocal();
         $comFileName           = '';
         $tplFile               = '';
         # 让非生产环境实时读取文件
@@ -330,10 +332,10 @@ class Template extends DataObject
      * @return bool|void
      * @throws \Exception
      */
-    public function fetch(string $fileName)
+    public function fetch(string $fileName,array $data=[])
     {
         /** Get output buffer. */
-        return $this->fetchHtml($fileName);
+        return $this->fetchHtml($fileName,$data);
     }
 
     /**

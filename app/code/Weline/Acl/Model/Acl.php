@@ -13,13 +13,15 @@ declare(strict_types=1);
 namespace Weline\Acl\Model;
 
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class Acl extends \Weline\Framework\Database\Model
 {
-    public const fields_ID            = 'acl_id';
+    public const fields_ID            = 'source_id';
     public const fields_ACL_ID        = 'acl_id';
+    public const fields_SOURCE_ID     = 'source_id';
     public const fields_SOURCE_NAME   = 'source_name';
     public const fields_DOCUMENT      = 'document';
     public const fields_PARENT_SOURCE = 'parent_source';
@@ -30,6 +32,11 @@ class Acl extends \Weline\Framework\Database\Model
     public const fields_MODULE        = 'module';
     public const fields_CLASS         = 'class';
     public const fields_TYPE          = 'type';
+    public const fields_ICON          = 'icon';
+    public const fields_IS_ENBAVLE    = 'is_enable';
+
+
+    public const type_MENUS = 'menus';
 
     public function setAclId(string $acl_id): static
     {
@@ -86,7 +93,12 @@ class Acl extends \Weline\Framework\Database\Model
         return $this->setData(self::fields_TYPE, $type);
     }
 
-    public function getAclId(): string
+    public function setIcon(string $icon): static
+    {
+        return $this->setData(self::fields_ICON, $icon);
+    }
+
+    public function getAclId(): int
     {
         return $this->getData(self::fields_ACL_ID);
     }
@@ -103,7 +115,7 @@ class Acl extends \Weline\Framework\Database\Model
 
     public function getParentSource(): string
     {
-        return $this->getData(self::fields_PARENT_SOURCE);
+        return $this->getData(self::fields_PARENT_SOURCE) ?: '';
     }
 
     public function getRouter(): string
@@ -141,6 +153,11 @@ class Acl extends \Weline\Framework\Database\Model
         return $this->getData(self::fields_TYPE);
     }
 
+    public function getIcon(): string
+    {
+        return $this->getData(self::fields_ICON);
+    }
+
     /**
      * @inheritDoc
      */
@@ -166,14 +183,19 @@ class Acl extends \Weline\Framework\Database\Model
         if (!$setup->tableExist()) {
             $setup->createTable()
                   ->addColumn(
-                      self::fields_ID,
+                      self::fields_ACL_ID,
                       TableInterface::column_type_INTEGER,
                       null, 'primary key auto_increment', 'ACL权限ID'
                   )
                   ->addColumn(
+                      self::fields_SOURCE_ID,
+                      TableInterface::column_type_VARCHAR,
+                      127, 'not null unique', 'ACL资源ID'
+                  )
+                  ->addColumn(
                       self::fields_SOURCE_NAME,
                       TableInterface::column_type_VARCHAR,
-                      255, 'not null unique', 'ACL资源名称'
+                      255, 'not null', 'ACL资源名称'
                   )
                   ->addColumn(
                       self::fields_DOCUMENT,
@@ -188,7 +210,7 @@ class Acl extends \Weline\Framework\Database\Model
                   ->addColumn(
                       self::fields_ROUTER,
                       TableInterface::column_type_VARCHAR,
-                      255, 'not null', 'ACL路由前缀'
+                      60, 'not null', 'ACL路由前缀'
                   )
                   ->addColumn(
                       self::fields_REWRITE,
@@ -218,8 +240,19 @@ class Acl extends \Weline\Framework\Database\Model
                   ->addColumn(
                       self::fields_TYPE,
                       TableInterface::column_type_VARCHAR,
-                      12, 'not null', '类型'
+                      120, 'not null', '类型'
                   )
+                  ->addColumn(
+                      self::fields_ICON,
+                      TableInterface::column_type_VARCHAR,
+                      255, 'not null', '图片，可以是链接'
+                  )
+                  ->addColumn(
+                      self::fields_IS_ENBAVLE,
+                      TableInterface::column_type_SMALLINT,
+                      255, 'default 1', '是否允许'
+                  )
+                  ->addAdditional('ENGINE=MyIsam;')
                   ->create();
         }
     }

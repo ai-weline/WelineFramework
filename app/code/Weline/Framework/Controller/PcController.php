@@ -54,7 +54,7 @@ class PcController extends Core
      * @return void
      * @throws Null
      */
-    public function redirect(string|int $url, array $params = [], bool $merge_params = false): void
+    protected function redirect(string|int $url, array $params = [], bool $merge_params = false): void
     {
         if (is_string($url)) {
             if ($this->_url->isLink($url)) {
@@ -68,12 +68,12 @@ class PcController extends Core
         }
     }
 
-    public function getEventManager(): EventsManager
+    protected function getEventManager(): EventsManager
     {
         return ObjectManager::getInstance(EventsManager::class);
     }
 
-    public function isAllowed(): void
+    protected function isAllowed(): void
     {
         /**@var Session $session */
         $session = ObjectManager::getInstance(Session::class);
@@ -85,7 +85,7 @@ class PcController extends Core
         }
     }
 
-    public function getControllerCache(): CacheInterface
+    protected function getControllerCache(): CacheInterface
     {
         if (!isset($this->controllerCache)) {
             $this->controllerCache = ObjectManager::getInstance(ControllerCache::class)->create();
@@ -100,7 +100,7 @@ class PcController extends Core
      *
      * @return PcController
      */
-    public function setTemplate(Template $template): static
+    protected function setTemplate(Template $template): static
     {
         $this->_template = $template;
 
@@ -118,7 +118,7 @@ class PcController extends Core
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function getData(string $key = null): mixed
+    protected function getData(string $key = null): mixed
     {
         return $this->getTemplate()->getData($key);
     }
@@ -132,7 +132,7 @@ class PcController extends Core
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function getTemplate(): Template
+    protected function getTemplate(): Template
     {
         if (!isset($this->_template)) {
             $this->_template = Template::getInstance()->init();
@@ -151,7 +151,7 @@ class PcController extends Core
      * @return PcController
      * @throws NUll
      */
-    public function assign(array|string $tpl_var, mixed $value = null): static
+    protected function assign(array|string $tpl_var, mixed $value = null): static
     {
         if (is_string($tpl_var)) {
             $this->getTemplate()->assign($tpl_var, $value);
@@ -218,7 +218,7 @@ class PcController extends Core
      *
      * @return string
      */
-    public function getViewBaseDir(): string
+    protected function getViewBaseDir(): string
     {
         $cache_key = 'module_of_' . $this::class;
         // 设置缓存，以免每次都去反射解析控制器的模块基础目录
@@ -239,7 +239,7 @@ class PcController extends Core
         return $module_dir;
     }
 
-    public function getMessageManager(): MessageManager
+    protected function getMessageManager(): MessageManager
     {
         return $this->_objectManager::getInstance(MessageManager::class);
     }
@@ -258,7 +258,7 @@ class PcController extends Core
 //    }
 //
 //
-    public function exception(\Exception $exception, string $msg = '请求异常！', mixed $data = '', int $code = 403): mixed
+    protected function exception(\Exception $exception, string $msg = '请求异常！', mixed $data = '', int $code = 403): mixed
     {
         if (!DEBUG) {
             return $this->getMessageManager()->addException($exception);

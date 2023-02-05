@@ -94,7 +94,7 @@ class ModelSetup
      */
     public function alterTable(string $comment = '', string $new_table_name = ''): Alter
     {
-        return $this->ddl_table->alterTable()->forTable($this->model->getTable(), $this->model->_primary_key, $comment, $new_table_name);
+        return $this->ddl_table->setConnection($this->model->getConnection())->alterTable()->forTable($this->model->getTable(), $this->model->_primary_key, $comment, $new_table_name);
     }
 
     /**
@@ -162,6 +162,7 @@ class ModelSetup
      * @param string $table_name
      *
      * @return bool
+     * @throws Null
      */
     public function dropTable(string $table_name = ''): bool
     {
@@ -172,7 +173,29 @@ class ModelSetup
             $this->query('DROP TABLE IF EXISTS ' . $table_name);
             return true;
         } catch (\Exception $exception) {
-            return false;
+            throw $exception;
+        }
+    }
+    /**
+     * @DESC         |忽略约束删除表
+     *
+     * 参数区：
+     *
+     * @param string $table_name
+     *
+     * @return bool
+     * @throws Null
+     */
+    public function forceDropTable(string $table_name = ''): bool
+    {
+        if (empty($table_name)) {
+            $table_name = $this->model->getTable();
+        }
+        try {
+            $this->query('SET FOREIGN_KEY_CHECKS = 0;DROP TABLE IF EXISTS ' . $table_name.';SET FOREIGN_KEY_CHECKS = 1;');
+            return true;
+        } catch (\Exception $exception) {
+            throw $exception;
         }
     }
 
@@ -187,9 +210,7 @@ class ModelSetup
      * @param string $sql
      *
      * @return mixed
-     * @throws Exception
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\Database\Exception\LinkException
+     * @throws NUll
      */
     public function query(string $sql): mixed
     {

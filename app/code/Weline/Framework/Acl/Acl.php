@@ -12,39 +12,41 @@ declare(strict_types=1);
 
 namespace Weline\Framework\Acl;
 
-use Weline\Framework\Console\Cli;
+use Weline\Framework\Attribute\RouterAttributeInterface;
 use Weline\Framework\DataObject\DataObject;
 use Weline\Framework\Event\EventsManager;
+use Weline\Framework\Http\Request;
 use Weline\Framework\Manager\ObjectManager;
 
-#[\Attribute] class Acl extends DataObject
+#[\Attribute] class Acl extends DataObject implements RouterAttributeInterface
 {
     /**
      * 给路由上权限控制
      *
+     * @param string $source_id
      * @param string $source_name
+     * @param string $icon
      * @param string $document
      * @param string $parent_source
      * @param string $rewrite
      *
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\App\Exception
      */
-    public function __construct(string $source_name, string $document, string $parent_source, string $rewrite = '')
+    public function __construct(string $source_id, string $source_name, string $icon, string $document, string $parent_source = '', string $rewrite =
+    '')
     {
         parent::__construct([
-                                'source_name'   => $source_name,
-                                'document'      => $document,
+                                'source_id'     => $source_id,
+                                'source_name'   => __($source_name),
+                                'icon'          => $icon,
+                                'document'      => __($document),
                                 'parent_source' => $parent_source,
                                 'rewrite'       => $rewrite,
                             ]);
-        if (!CLI) {
-            dd($this->getData());
-            /**@var EventsManager $eventsManager */
-            $eventsManager = ObjectManager::getInstance(EventsManager::class);
-            $eventsManager->dispatch('Weline_Acl::control', ['data' => $this]);
-        }
+    }
 
+    function setSourceId(string $source_id): Acl
+    {
+        return $this->setData('source_id', $source_id);
     }
 
     function setModule(string $module_name): Acl
@@ -80,6 +82,21 @@ use Weline\Framework\Manager\ObjectManager;
     function setType(string $type = ''): Acl
     {
         return $this->setData('type', $type);
+    }
+
+    function setIcon(string $icon): Acl
+    {
+        return $this->setData('icon', $icon);
+    }
+
+    function setParentSource(string $parent_source = ''): Acl
+    {
+        return $this->setData('parent_source', $parent_source);
+    }
+
+    function getSourceId(): string
+    {
+        return $this->getData('source_id');
     }
 
     function getModule(): string
@@ -122,16 +139,43 @@ use Weline\Framework\Manager\ObjectManager;
         return $this->getData('type');
     }
 
+    function getIcon(): string
+    {
+        return $this->getData('icon');
+    }
+
     function getParentSource(): string
     {
         return $this->getData('parent_source');
     }
 
-    function execute(): void
+    function execute(): ?string
     {
+
+        // 检测参数
+        /**@var Request $request */
+        $request = ObjectManager::getInstance(Request::class);
+        $this->setType($request->getData('router/class/area'))
+             ->setModule($request->getModuleName())
+             ->setRouter($request->getData('router/router'))
+             ->setMethod($request->getMethod())
+             ->setClass($request->getData('router/class/name'))
+             ->setRoute(str_replace($request->getPrePath(), '', $request->getBaseUrl()));
         // ACL控制器事件分配
         /**@var EventsManager $eventsManager */
         $eventsManager = ObjectManager::getInstance(EventsManager::class);
         $eventsManager->dispatch('Framework_Acl::dispatch', ['data' => $this]);
+        return $this->getResult();
+    }
+
+    public function setResult(string $result): static
+    {
+        $this->setData(self::result_key, $result);
+        return $this;
+    }
+
+    public function getResult(): ?string
+    {
+        return $this->getData(self::result_key);
     }
 }

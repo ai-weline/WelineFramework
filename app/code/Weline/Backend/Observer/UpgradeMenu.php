@@ -14,6 +14,7 @@ namespace Weline\Backend\Observer;
 use Weline\Backend\Config\MenuXmlReader;
 use Weline\Backend\Model\Menu;
 use Weline\Framework\Event\Event;
+use Weline\Framework\Manager\ObjectManager;
 
 class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
 {
@@ -64,7 +65,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                         $menu[Menu::fields_ID] = $menuModel->getId();
                     }
                     $menuModel->clearData();
-                    $result = $menuModel->setData($menu)->forceCheck(true)->save();
+                    $result = $menuModel->setData($menu)->save(true);
                     # 2 检查自身是否被别的模块作为父分类
                     $menuModel->clearData();
                     if ($this_menu_id = $menuModel->getId() && $is_others_parent = $menuModel->where(Menu::fields_PARENT_SOURCE, $menu[Menu::fields_SOURCE])->select()->fetch()) {
@@ -124,5 +125,43 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 }
             }
         }
+        // 更新菜单到权限表
+        $all_menus = $this->menu->clear()->order('order', 'ASC')->select()->fetchOrigin();
+        $acl_items = [];
+        foreach ($all_menus as $menu) {
+            $acl_items[] = [
+                \Weline\Acl\Model\Acl::fields_SOURCE_ID     => $menu['source'],
+                \Weline\Acl\Model\Acl::fields_PARENT_SOURCE => $menu['parent_source'],
+                \Weline\Acl\Model\Acl::fields_TYPE          => 'menus',
+                \Weline\Acl\Model\Acl::fields_CLASS         => '',
+                \Weline\Acl\Model\Acl::fields_MODULE        => $menu['module'],
+                \Weline\Acl\Model\Acl::fields_SOURCE_NAME   => $menu['title'],
+                \Weline\Acl\Model\Acl::fields_ROUTER        => '',
+                \Weline\Acl\Model\Acl::fields_ROUTE         => trim($menu['action'],'/'),
+                \Weline\Acl\Model\Acl::fields_METHOD        => 'GET',
+                \Weline\Acl\Model\Acl::fields_DOCUMENT      => $menu['is_system'] ? __('系统菜单') : __('用户菜单'),
+                \Weline\Acl\Model\Acl::fields_REWRITE       => '',
+                \Weline\Acl\Model\Acl::fields_ICON          => $menu['icon'],
+                \Weline\Acl\Model\Acl::fields_IS_ENBAVLE    => $menu['is_enable'],
+            ];
+        }
+        /**@var \Weline\Acl\Model\Acl $alcModel */
+        $alcModel = ObjectManager::getInstance(\Weline\Acl\Model\Acl::class);
+        $alcModel->insert(
+            $acl_items,
+            [
+                $alcModel::fields_SOURCE_NAME,
+                $alcModel::fields_ROUTE,
+                $alcModel::fields_METHOD,
+                $alcModel::fields_MODULE,
+                $alcModel::fields_REWRITE,
+                $alcModel::fields_ROUTER,
+                $alcModel::fields_DOCUMENT,
+                $alcModel::fields_PARENT_SOURCE,
+                $alcModel::fields_CLASS,
+                $alcModel::fields_TYPE,
+                $alcModel::fields_ICON,
+            ])
+                 ->fetch();
     }
 }

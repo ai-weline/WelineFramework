@@ -24,7 +24,7 @@ class Core implements Data\DataInterface
 
     private mixed $_module;
 
-    public function noRouter()
+    protected function noRouter()
     {
         $this->getRequest()->getResponse()->noRouter();
     }
@@ -51,7 +51,7 @@ class Core implements Data\DataInterface
      *
      * @return $this
      */
-    public function setModuleInfo(mixed $module): static
+    public function __setModuleInfo(mixed $module): static
     {
         $this->_module = $module;
         return $this;
@@ -66,7 +66,7 @@ class Core implements Data\DataInterface
      * 参数区：
      * @return string
      */
-    public function getModule(): mixed
+    protected function getModule(): mixed
     {
         return $this->_module;
     }
@@ -77,7 +77,7 @@ class Core implements Data\DataInterface
      * @throws Exception
      * @throws \ReflectionException
      */
-    public function getObjectManager(): ObjectManager
+    protected function getObjectManager(): ObjectManager
     {
         if (!isset($this->_objectManager)) {
             $this->_objectManager = ObjectManager::getInstance();
@@ -89,7 +89,7 @@ class Core implements Data\DataInterface
     /**
      * @return Printing
      */
-    public function getDebug(): Printing
+    protected function getDebug(): Printing
     {
         if (!isset($this->_debug)) {
             $this->_debug = new Printing();
@@ -99,18 +99,18 @@ class Core implements Data\DataInterface
     }
 
 
-    public function success(string $msg = '请求成功！', mixed $data = '', int $code = 200): array
+    protected function success(string $msg = '请求成功！', mixed $data = '', int $code = 200): array
     {
         return ['msg' => $msg, 'data' => $data, 'code' => $code];
     }
 
-    public function error(string $msg = '请求失败！', mixed $data = '', int $code = 404): array
+    protected function error(string $msg = '请求失败！', mixed $data = '', int $code = 404): array
     {
         return ['msg' => $msg, 'data' => $data, 'code' => $code];
     }
 
 
-    public function exception(\Exception $exception, string $msg = '请求失败！', mixed $data = '', int $code = 403): mixed
+    protected function exception(\Exception $exception, string $msg = '请求失败！', mixed $data = '', int $code = 403): mixed
     {
         $return_data['data']      = $data;
         $return_data['exception'] = DEV ? $exception : $exception->getMessage();

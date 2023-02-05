@@ -36,6 +36,12 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     public function index()
     {
         if ($this->session->isLogin()) {
+            // 有来源网址就跳回来源网址
+            if ($referer = $this->session->getData('referer')) {
+                if($this->request->getUrlPath($referer)!==$this->request->getUrlPath()){
+                    $this->redirect($referer);
+                }
+            }
             $this->redirect($this->_url->getBackendUrl('admin'));
         }
         $this->session->setData('referer', $this->request->getServer('HTTP_REFERER'));
@@ -57,6 +63,12 @@ class Login extends \Weline\Framework\App\Controller\BackendController
         # 已经登录直接进入后台
 //        $this->session->logout();
         if ($this->session->isLogin()) {
+            // 有来源网址就跳回来源网址
+            if ($referer = $this->session->getData('referer')) {
+                if($this->request->getUrlPath($referer)!==$this->request->getUrlPath()){
+                    $this->redirect($referer);
+                }
+            }
             $this->redirect($this->_url->getBackendUrl('admin'));
         }
         if (!$this->request->isPost()) {
@@ -121,10 +133,13 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                               ->save();
             $this->messageManager->addError(__('登录凭据错误！'));
         }
-        # 跳转首页
+        // 有来源网址就跳回来源网址
         if ($referer = $this->session->getData('referer')) {
-            $this->redirect($referer);
+            if($this->request->getUrlPath($referer)!==$this->request->getUrlPath()){
+                $this->redirect($referer);
+            }
         }
+        # 跳转首页
         $this->redirect($this->_url->getBackendUrl('admin'));
     }
 

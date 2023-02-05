@@ -21,7 +21,7 @@ class BackendSession extends \Weline\Framework\App\Session\BackendSession
         return parent::login($user->getUsername(), $user->getId());
     }
 
-    public function getLoginUser(string $model = BackendUser::class): ?AbstractModel
+    public function getLoginUser(string $model = BackendUser::class): AbstractModel|BackendUser
     {
         return parent::getLoginUser($model);
     }

@@ -69,11 +69,16 @@ class EventsManager
      * @param array  $data
      *
      * @return $this
+     * @throws null
      */
-    public function dispatch(string $eventName, array $data = []): static
+    public function dispatch(string $eventName, mixed $data = []): static
     {
-        $data['observers']        = $this->getEventObservers($eventName);
-        $this->events[$eventName] = (new Event($data))->setName($eventName);
+        if (is_array($data)) {
+            $data['observers']        = $this->getEventObservers($eventName);
+            $this->events[$eventName] = (new Event($data))->setName($eventName);
+        } else {
+            $this->events[$eventName] = (new Event(['data' => $data, 'observers' => $this->getEventObservers($eventName)]))->setName($eventName);
+        }
         $this->events[$eventName]->dispatch();
 
         return $this;

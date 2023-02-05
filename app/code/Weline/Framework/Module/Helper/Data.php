@@ -92,13 +92,6 @@ class Data extends AbstractHelper
                     if (empty($ctl_data)) {
                         continue;
                     }
-                    $data = new DataObject($ctl_data);
-                    if(isset($ctl_data['attributes'])&&$ctl_data['attributes']){
-                        $this->getEvenManager()->dispatch('Weline_Module::controller_class_attributes', ['data' =>
-                                                                                                             $data, 'type' =>
-                                                                                                             'api']);
-                    }
-                    $ctl_data    = $data->getData();
                     $ctl_methods = $ctl_data['methods'];
                     $ctl_area    = $ctl_data['area'];
                     foreach ($ctl_methods as $method => $attributes) {
@@ -182,12 +175,6 @@ class Data extends AbstractHelper
                     if (empty($ctl_data)) {
                         continue;
                     }
-                    $data = new DataObject($ctl_data);
-                    if(isset($ctl_data['attributes'])&&$ctl_data['attributes']){
-                        $this->getEvenManager()->dispatch('Weline_Module::controller_class_attributes', ['data' =>
-                                                                                                             $data, 'type' => 'pc']);
-                    }
-                    $ctl_data    = $data->getData();
                     $ctl_methods = $ctl_data['methods'];
                     $ctl_area    = $ctl_data['area'];
                     foreach ($ctl_methods as $method => $attributes) {
@@ -239,11 +226,12 @@ class Data extends AbstractHelper
                             $data   = new DataObject($params);
                             /**@var \ReflectionAttribute $attribute */
                             foreach ($attributes as $attribute) {
-                                $this->getEvenManager()->dispatch('Weline_Module::controller_method_attributes', [
+                                $this->getEvenManager()->dispatch('Weline_Module::controller_attributes', [
                                     'data'            => $data,
                                     'type'            => 'pc',
                                     'attribute'       => $attribute,
                                     'controller_data' => $ctl_data,
+                                    'params'=>$params,
                                 ]);
                             }
                             // 路由注册+
@@ -323,12 +311,11 @@ class Data extends AbstractHelper
             $reflect            = new \ReflectionClass($class);
             $controller_methods = [];
             foreach ($reflect->getMethods() as $method) {
-                if (is_int(strpos($method->getName(), '__'))) {
-                    continue;
-                }
-                if ($method->isPublic()) {
-                    $attributes                             = $method->getAttributes();
-                    $controller_methods[$method->getName()] = $attributes;
+                if (!is_int(strpos($method->getName(), '__'))) {
+                    if ($method->isPublic()) {
+                        $attributes                             = $method->getAttributes();
+                        $controller_methods[$method->getName()] = $attributes;
+                    }
                 }
             }
             // 存在父类则过滤父类方法
@@ -342,12 +329,11 @@ class Data extends AbstractHelper
                 $this->parent_class_arr = array_merge($this->parent_class_arr, $controller_class);
                 $parent_methods         = [];
                 foreach ($parent_class->getMethods() as $method) {
-                    if (is_int(strpos($method->getName(), '__'))) {
-                        continue;
-                    }
-                    if ($method->isPublic()) {
-                        $method_attributes                  = $method->getAttributes();
-                        $parent_methods[$method->getName()] = $method_attributes;
+                    if (!is_int(strpos($method->getName(), '__'))) {
+                        if ($method->isPublic()) {
+                            $method_attributes                  = $method->getAttributes();
+                            $parent_methods[$method->getName()] = $method_attributes;
+                        }
                     }
                 }
                 $controller_methods = array_merge($parent_methods, $controller_methods);

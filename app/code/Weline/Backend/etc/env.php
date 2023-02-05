@@ -13,6 +13,7 @@ return [
     'router'       => 'backend',
     // 依赖
     'dependencies' => [
+        'Weline_Acl',
         'Weline_SystemConfig'
     ]
 ];

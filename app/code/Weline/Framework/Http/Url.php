@@ -141,7 +141,7 @@ class Url implements UrlInterface
 
     public function isLink($path): bool
     {
-        if (str_starts_with($path, 'https://') || str_starts_with($path, 'http://')) {
+        if (str_starts_with($path, 'https://') || str_starts_with($path, 'http://') || str_starts_with($path, '//')) {
             return true;
         }
         return false;

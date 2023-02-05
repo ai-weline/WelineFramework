@@ -372,6 +372,11 @@ abstract class RequestAbstract extends RequestFilter
         return $this->getBaseHost() . array_shift($url_exp);
     }
 
+    function getFullUrl():string
+    {
+        return $this->getServer('REQUEST_SCHEME').'://'.$this->getServer('SERVER_NAME') . $this->getServer('REQUEST_URI');
+    }
+
     public function getBaseUri(): string
     {
         $uri     = $this->getUri();

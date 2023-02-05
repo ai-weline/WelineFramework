@@ -12,10 +12,22 @@ declare(strict_types=1);
 
 namespace Weline\Acl\Controller\Backend;
 
-#[\Weline\Framework\Acl\Acl('acl', '管理权限', '')]
+use Weline\Framework\Manager\ObjectManager;
+
+#[\Weline\Framework\Acl\Acl('Weline_Acl::acl', '管理权限','mdi mdi-security', '')]
 class Acl extends \Weline\Admin\Controller\BaseController
 {
-    function listing(){
-
+    function getIndex()
+    {
+        /**@var \Weline\Acl\Model\Acl $aclModel*/
+        $aclModel = ObjectManager::getInstance(\Weline\Acl\Model\Acl::class);
+        if($search = $this->request->getGet('search')){
+            $aclModelFields = implode(',', $aclModel->getModelFields());
+            $aclModel->where('CONCAT('.$aclModelFields.')','%'.$search.'%','like');
+        }
+        $aclModel->pagination()->select()->fetch();
+        $this->assign('acls',$aclModel->getItems());
+        $this->assign('pagination',$aclModel->getPagination());
+        return $this->fetch('index');
     }
 }

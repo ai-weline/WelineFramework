@@ -105,9 +105,10 @@ class Taglib
             $pieces    = explode('.', $var);
             $has_piece = false;
             if (count($pieces) > 1) {
-                if (PROD) {
-                    $name_str .= '(';
-                }
+//                if (PROD) {
+//                    $name_str .= '(';
+//                }
+                $name_str .= '(';
                 $has_piece = true;
             }
             foreach ($pieces as $key => $piece) {
@@ -126,15 +127,16 @@ class Taglib
 //            if($has_piece) {
 //                $name_str .= ")??{$default}";
 //            }
-            if (DEV) {
-                if ($default === '\'\'') {
-                    $name_str = $name_str . ' ';
-                } else {
-                    $name_str = $has_piece ? "({$name_str}?:{$default}) " : $name_str . ' ';
-                }
-            } else {
-                $name_str = $has_piece ? "{$name_str}??{$default}) " : $name_str . ' ';
-            }
+//            if (DEV) {
+//                if ($default === '\'\'') {
+//                    $name_str = $name_str . ' ';
+//                } else {
+//                    $name_str = $has_piece ? "({$name_str}?:{$default}) " : $name_str . ' ';
+//                }
+//            } else {
+//                $name_str = $has_piece ? "{$name_str}??{$default}) " : $name_str . ' ';
+//            }
+            $name_str = $has_piece ? "{$name_str}??{$default}) " : $name_str . ' ';
 //            $name_str = $default ? "({$name_str}?? {$default}) " : ($has_piece ? "({$name_str}??'') " : $name_str . ' ');
         }
 

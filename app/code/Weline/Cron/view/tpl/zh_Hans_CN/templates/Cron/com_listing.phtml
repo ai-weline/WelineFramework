@@ -180,36 +180,49 @@ if (!$themeConfig->getThemeConfig('topnav')):
                     <?php
                     /**@var \Weline\Backend\Model\Menu $menuModel */
                     $menuModel = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Model\Menu::class);
-                    $menus     = $menuModel->getMenuTree();
+                    // 获取菜单类型的角色资源
+                    /**@var \Weline\Backend\Session\BackendSession $session */
+                    $session = ObjectManager::getInstance(\Weline\Backend\Session\BackendSession::class);
+                    /**@var \Weline\Backend\Model\BackendUser $user */
+                    $user = $session->getLoginUser();
+                    $role = $user->getRoleModel();
+
+                    /**@var \Weline\Acl\Model\RoleAccess $roleAccessModel */
+                    $roleAccessModel = ObjectManager::getInstance(\Weline\Acl\Model\RoleAccess::class);
+                    $roleAccessMenus = $menuModel->getMenuTreeByRole($role);
                     /**@var \Weline\Backend\Model\Menu $menu */
-                    foreach ($menus as $menu) {
+                    foreach ($roleAccessMenus as $menu) {
+                        if (!$menu->isEnable()) {
+                            continue;
+                        }
+
                         if (empty($menu->getAction()) && empty($menu->getParentSource()) && empty($menu->getPid())) {
                             ?>
-                            <li class="menu-title" data-source='<?=$menu['source'] ??'';?>'><i
+                            <li class="menu-title" data-source='<?=($menu['source']??'') ??'';?>'><i
                                         class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getTitle()) ?></span></li>
                             <?php
                         }
-                        $submenus = $menu->getSubMenu();
+                        $submenus = $menu->getSubMenuByRole();
                         /**@var \Weline\Backend\Model\Menu $submenu */
                         foreach ($submenus as $submenu) {
-                            $level_3_menus = $submenu->getSubMenu();
+                            $level_3_menus = $submenu->getSubMenuByRole();
                             if (empty($level_3_menus)) {
                                 if ('/' === $submenu->getAction()) {
                                     ?>
-                                    <li data-source='<?=$submenu['source'] ??'';?>'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source="<?=$submenu['source'] ??'';?>" class="waves-effect">
+                                    <li data-source='<?=($submenu['source']??'') ??'';?>'>
+                                        <a href="<?= $submenu->getUrl() ?>" data-source="<?=($submenu['source']??'') ??'';?>" class="waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
-                                            <span><?= $submenu->getTitle() ?></span>
+                                            <span><?= __($submenu->getTitle()); ?></span>
                                         </a>
                                     </li>
                                     <?php
                                 } else {
                                     ?>
-                                    <li data-source='<?=$submenu['source'] ??'';?>'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source='<?=$submenu['source'] ??'';?>' class=" waves-effect">
+                                    <li data-source='<?=($submenu['source']??'') ??'';?>'>
+                                        <a href="<?= $submenu->getUrl() ?>" data-source='<?=($submenu['source']??'') ??'';?>' class=" waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i>
-                                            <span><?= $submenu->getTitle() ?></span>
+                                            <span><?= __($submenu->getTitle()) ?></span>
                                         </a>
                                     </li>
                                     <?php
@@ -217,30 +230,30 @@ if (!$themeConfig->getThemeConfig('topnav')):
                             } else {
                                 if ('/' === $submenu->getAction()) {
                                     ?>
-                                    <li data-source='<?=$submenu['source'] ??'';?>'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source='<?=$submenu['source'] ??'';?>' class="waves-effect">
+                                    <li data-source='<?=($submenu['source']??'') ??'';?>'>
+                                        <a href="<?= $submenu->getUrl() ?>" data-source='<?=($submenu['source']??'') ??'';?>' class="waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
-                                            <span><?= $submenu->getTitle() ?></span>
+                                            <span><?= __($submenu->getTitle()) ?></span>
                                         </a>
                                     </li>
                                     <?php
                                 } else {
                                     ?>
-                                    <li data-source='<?=$submenu['source'] ??'';?>'>
-                                        <a href="javascript: void(0);" data-source='<?=$submenu['source'] ??'';?>'
+                                    <li data-source='<?=($submenu['source']??'') ??'';?>'>
+                                        <a href="javascript: void(0);" data-source='<?=($submenu['source']??'') ??'';?>'
                                            class="has-arrow waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i>
-                                            <span><?= $submenu->getTitle() ?></span>
+                                            <span><?= __($submenu->getTitle()) ?></span>
                                         </a>
                                         <ul class="sub-menu" aria-expanded="false">
                                             <?php
                                             /**@var \Weline\Backend\Model\Menu $level_3_menu */
                                             foreach ($level_3_menus as $level_3_menu) {
                                                 ?>
-                                                <li data-source='<?=$level_3_menu['source'] ??'';?>'>
-                                                    <a href="<?= $level_3_menu->getUrl() ?>" data-source='<?=$level_3_menu['source'] ??'';?>'><i
-                                                                class="<?= $level_3_menu->getIcon() ?>"></i><?= $level_3_menu->getTitle() ?>
+                                                <li data-source='<?=($level_3_menu['source']??'') ??'';?>'>
+                                                    <a href="<?= $level_3_menu->getUrl() ?>" data-source='<?=($level_3_menu['source']??'') ??'';?>'><i
+                                                                class="<?= $level_3_menu->getIcon() ?>"></i><?= __($level_3_menu->getTitle()) ?>
                                                     </a>
                                                 </li>
                                                 <?php
@@ -390,48 +403,48 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                         <tbody>
                                         <?php foreach($tasks  as $task):?>
                                             <tr>
-                                                <td><?=$task['id'] ??'';?></td>
-                                                <td><?=$task['name'] ??'';?></td>
-                                                <td><?=$task['module'] ??'';?></td>
-                                                <td><?=$task['class'] ??'';?></td>
-                                                <td><?=$task['cron_time'] ??'';?></td>
-                                                <td style="color: <?php if($task['status'] === 'success' ):echo 'green';endif;?> <?php if($task['status'] ===                                                'lock' ):echo 'red';endif;?> <?php if($task['status'] ===                                                'pending' ):echo 'blue';endif;?>"><?=$task['status'] ??'';?>
+                                                <td><?=($task['id']??'') ??'';?></td>
+                                                <td><?=($task['name']??'') ??'';?></td>
+                                                <td><?=($task['module']??'') ??'';?></td>
+                                                <td><?=($task['class']??'') ??'';?></td>
+                                                <td><?=($task['cron_time']??'') ??'';?></td>
+                                                <td style="color: <?php if(($task['status']??'') === 'success' ):echo 'green';endif;?> <?php if(($task['status']??'') ===                                                'lock' ):echo 'red';endif;?> <?php if(($task['status']??'') ===                                                'pending' ):echo 'blue';endif;?>"><?=($task['status']??'') ??'';?>
                                                 </td>
-                                                <td><?=$task['runtime'] ??'';?></td>
-                                                <td class="<?php if($task['block_time'] ):echo 'text-danger';endif;?>">
+                                                <td><?=($task['runtime']??'') ??'';?></td>
+                                                <td class="<?php if(($task['block_time']??'') ):echo 'text-danger';endif;?>">
                                                     <?php echo $task['block_time'];?>
                                                     s
                                                 </td>
-                                                <td><?=$task['block_unlock_timeout'] ??'';?>
+                                                <td><?=($task['block_unlock_timeout']??'') ??'';?>
                                                     分钟
                                                 </td>
-                                                <td class="<?php if($task['block_time'] ):echo 'text-danger';endif;?>"><?=$task['block_times'] ??'';?>
+                                                <td class="<?php if(($task['block_time']??'') ):echo 'text-danger';endif;?>"><?=($task['block_times']??'') ??'';?>
                                                     次
                                                 </td>
-                                                <td><?=$task['run_time'] ??'';?></td>
-                                                <td><?=$task['run_date'] ??'';?></td>
-                                                <td><?=$task['next_run_date'] ??'';?></td>
-                                                <td><?=$task['pre_run_date'] ??'';?></td>
-                                                <td><?=$task['run_times'] ??'';?></td>
-                                                <td><?=$task['tip'] ??'';?></td>
-                                                <td style="color: <?php if($task['runtime_error'] ):echo 'red';endif;?>">
-                                                    <?=$task['runtime_error'] ??'';?> <?php if($task['out_time'] ):?><lang>任务停止<?=$task['out_time'] ??'';?>小时<?php endif;?></lang>
+                                                <td><?=($task['run_time']??'') ??'';?></td>
+                                                <td><?=($task['run_date']??'') ??'';?></td>
+                                                <td><?=($task['next_run_date']??'') ??'';?></td>
+                                                <td><?=($task['pre_run_date']??'') ??'';?></td>
+                                                <td><?=($task['run_times']??'') ??'';?></td>
+                                                <td><?=($task['tip']??'') ??'';?></td>
+                                                <td style="color: <?php if(($task['runtime_error']??'') ):echo 'red';endif;?>">
+                                                    <?=($task['runtime_error']??'') ??'';?> <?php if(($task['out_time']??'') ):?><lang>任务停止<?=($task['out_time']??'') ??'';?>小时<?php endif;?></lang>
                                                 </td>
-                                                <td style="color: <?php if($task['runtime_error_date'] ):echo 'red';endif;?>"><?=$task['runtime_error_date'] ??'';?></td>
-                                                <td><?=$task['create_time'] ??'';?></td>
-                                                <td><?=$task['update_time'] ??'';?></td>
+                                                <td style="color: <?php if(($task['runtime_error_date']??'') ):echo 'red';endif;?>"><?=($task['runtime_error_date']??'') ??'';?></td>
+                                                <td><?=($task['create_time']??'') ??'';?></td>
+                                                <td><?=($task['update_time']??'') ??'';?></td>
                                                 <td>
-                                                    <?php if($task['status'] === 'block' ):?>
+                                                    <?php if(($task['status']??'') === 'block' ):?>
                                                         <form action="<?=$this->getBackendUrl('*/cron/unlock')?>" method="post">
-                                                            <input type="hidden" name="task_id" value="<?=$task['id'] ??'';?>">
+                                                            <input type="hidden" name="task_id" value="<?=($task['id']??'') ??'';?>">
                                                             <button class='btn btn-primary'>
                                                                 解锁
                                                             </button>
                                                         </form>
                                                         <?php else:?>
                                                         <form action="<?=$this->getBackendUrl('*/cron/lock')?>" method='post'>
-                                                            <input type='hidden' name='task_id' value='<?=$task['id'] ??'';?>'>
-                                                            <button class='btn btn-primary'>锁定 <?=$task['block_unlock_timeout'] ??'';?>
+                                                            <input type='hidden' name='task_id' value='<?=($task['id']??'') ??'';?>'>
+                                                            <button class='btn btn-primary'>锁定 <?=($task['block_unlock_timeout']??'') ??'';?>
                                                                 分钟
                                                             </button>
                                                         </form>

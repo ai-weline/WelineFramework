@@ -9,12 +9,12 @@
             <ul class='navbar-nav'>
                 <!--循环条件-->
                 <?php foreach($sorts  as $sort):?>
-                    <li class='nav-item <?php if($sort['target'] ):echo "active";endif;?>'>
-                        <a class="nav-link" href='<?=$sort['href'] ??'';?>'><?=$sort['name'] ??'';?><?=$sort['icon'] ??'';?></a>
+                    <li class='nav-item <?php if(($sort['target']??'') ):echo "active";endif;?>'>
+                        <a class="nav-link" href='<?=($sort['href']??'') ??'';?>'><?=($sort['name']??'') ??'';?><?=($sort['icon']??'') ??'';?></a>
                     </li>
                 <?php endforeach;?>
             </ul>
-            <a class='nav-link' href='<?=$action ??'';?>' data-tag='<?=$sort['tag']['sort'] ??'';?>'>
+            <a class='nav-link' href='<?=$action ??'';?>' data-tag='<?=($sort['tag']['sort']??'') ??'';?>'>
                 清空条件
             </a>
         </div>

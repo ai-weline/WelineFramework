@@ -9,5 +9,5 @@
 
 return [
     'router'       => 'acl',
-    'dependencies' => ['Weline_Admin']
+    'dependencies' => ['Weline_Backend', 'Weline_Admin']
 ];

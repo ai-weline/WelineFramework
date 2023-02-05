@@ -48,9 +48,17 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $this->check_param;
     }
 
-    public function getUrlPath(): string
+    public function getUrlPath(string $url = ''): string
     {
+        if ($url) {
+            return parse_url($url)['path'] ?? '';
+        }
         return $this->parse_url()['path'] ?? "";
+    }
+
+    public function getRouteUrlPath(string $url=''): string
+    {
+        return str_replace('/' . $this->getAreaRouter() . '/', '', $this->getUrlPath($url));
     }
 
     /**
@@ -61,7 +69,7 @@ class Request extends Request\RequestAbstract implements RequestInterface
         return $this->getRouterData('module_path');
     }
 
-    public function getHeader(string $key = null)
+    public function getHeader(string $key = null): array|string|null
     {
         if (empty($key)) {
             return $this->getServer(self::HEADER);

@@ -96,10 +96,9 @@ trait QueryTrait
      * @param array $where_array
      * @param mixed $f_key
      *
-     * @throws DbException
-     * @throws \Weline\Framework\App\Exception
+     * @throws null
      */
-    private function checkWhereArray(array $where_array, mixed $f_key)
+    private function checkWhereArray(array $where_array, mixed $f_key): void
     {
         foreach ($where_array as $f_item_key => $f_item_value) {
             if (!is_numeric($f_item_key)) {
@@ -119,7 +118,7 @@ trait QueryTrait
      * @param array $where_array
      *
      * @return string
-     * @throws DbException
+     * @throws null
      */
     private function checkConditionString(array $where_array): string
     {
@@ -137,8 +136,7 @@ trait QueryTrait
      * @EMAIL aiweline@qq.com
      * @DateTime: 2021/8/17 22:52
      * 参数区：
-     * @throws SqlParserException
-     * @throws DbException
+     * @throws null
      */
     private function prepareSql($action): void
     {

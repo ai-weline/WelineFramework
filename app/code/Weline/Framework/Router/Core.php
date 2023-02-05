@@ -309,7 +309,7 @@ class Core
             // 检测注册方法
             /**@var \Weline\Framework\Controller\Core $dispatch */
             $dispatch = ObjectManager::getInstance($class_name);
-            $dispatch->setModuleInfo($router);
+            $dispatch->__setModuleInfo($router);
             $method = $router['class']['method'] ?: 'index';
             # 检测控制器方法
             if (!method_exists($dispatch, $method)) {
@@ -347,10 +347,24 @@ class Core
 
         $this->request->setRouter($this->router);
         list($dispatch, $method) = $this->getController($this->router);
-        $dispatch = ObjectManager::getInstance($dispatch);
+        // 解析注解
+        $dispatchReflection = ObjectManager::getReflectionInstance($dispatch);
+        $attributes = $dispatchReflection->getAttributes();
+        foreach ($attributes as $attribute) {
+            $dispatchAttribute = ObjectManager::getInstance($attribute->getName(),$attribute->getArguments());
+            if(method_exists($dispatchAttribute, 'execute')){
+                $result = $dispatchAttribute->execute();
+                if($result){
+                    return $result;
+                }
+            }
+        }
         /**@var \Weline\Framework\Controller\Core $dispatch */
 //        $dispatch->assign($this->request->getData());
-        $result = call_user_func([$dispatch, $method], /*...$this->request->getParams()*/);
+        /**@var EventsManager $eventManager */
+        $eventManager = ObjectManager::getInstance(EventsManager::class);
+        $eventManager->dispatch('Framework_Router::route_before', ['route'=>$this]);
+        $result = call_user_func([ObjectManager::getInstance($dispatch), $method], /*...$this->request->getParams()*/);
         # ----------事件：处理url之前 开始------------
         /**@var EventsManager $eventManager */
         $eventManager = ObjectManager::getInstance(EventsManager::class);

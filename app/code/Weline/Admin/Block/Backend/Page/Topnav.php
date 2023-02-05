@@ -36,7 +36,7 @@ class Topnav extends \Weline\Framework\View\Block
         }
     }
 
-    public function render()
+    public function render():string
     {
         if ($this->themeConfig->getThemeConfig('topnav')) {
             return parent::render();

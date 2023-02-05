@@ -2,9 +2,17 @@
 <menus xmlns:xs="http://www.w3.org/2001/XMLSchema-instance"
        xs:noNamespaceSchemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd"
        xs:schemaLocation="urn:weline:module:Weline_Backend::etc/xsd/menu.xsd">
-    <!--面板-->
+    <!--系统-->
+    <!--系统-面板-->
     <add source="Weline_Admin::system_dashboard" name="system_dashboard" title="面板" action="admin"
          parent="Weline_Backend::system_menu" icon="mdi mdi-desktop-mac-dashboard" order="1"/>
+    <!--系统-用户-->
+    <add source="Weline_Admin::system_user" name="system_user" title="管理员" action="admin/backend/user/listing"
+         parent="Weline_Backend::system_menu" icon="fas fa-user-shield" order="2"/>
+    <add source="Weline_Admin::system_user_listing" name="system_user_listing" title="用户" action="admin/backend/user/listing"
+         parent="Weline_Admin::system_user" icon="fas fa-users-cog" order="1"/>
+    <add source="Weline_Admin::system_user_assign_role" name="system_user_assign_role" title="角色归配" action="admin/backend/user/assignRole"
+         parent="Weline_Admin::system_user" icon="ri-shield-keyhole-line" order="2"/>
     <!--菜单管理-->
     <add source="Weline_Admin::system_menu_manager" name="system_menu_manager" title="菜单管理" action="admin/system/menus"
          parent="Weline_Backend::system_menu" icon="ri-menu-line" order="100"/>

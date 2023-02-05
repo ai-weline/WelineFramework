@@ -50,7 +50,7 @@ class Countries extends BaseController
         if ($search = $this->request->getGet('search')) {
             $code = $this->countries::fields_CODE;
             $name = Name::fields_DISPLAY_NAME;
-            $this->countries->where("CONCAT(main_table.{$code},cln.{$name})", "%{$search}%", 'LIKE');
+            $this->countries->where("CONCAT_WS(main_table.{$code},cln.{$name})", "%{$search}%", 'LIKE');
         }
         $this->countries->where('cln.' . $this->localeNames::fields_DISPLAY_LOCALE_CODE, Cookie::getLangLocal());
     }
@@ -59,7 +59,6 @@ class Countries extends BaseController
     {
         // 已安装国家
         $installed_countries = $this->countries
-            ->where(Name::fields_DISPLAY_LOCALE_CODE, Cookie::getLangLocal())
             ->where(\Weline\I18n\Model\Countries::fields_IS_INSTALL, 1)
             ->pagination()
             ->select()

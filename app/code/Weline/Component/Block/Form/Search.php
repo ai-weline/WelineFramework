@@ -50,7 +50,7 @@ class Search extends \Weline\Framework\View\Block implements ComponentInterface
         $data['keyword']     = $data['keyword'] ?? 'keyword';
         $data['method']      = $data['method'] ?? 'GET';
         $data['placeholder'] = $data['placeholder'] ??__( '回车搜索');
-        $data['value']       = $this->request->getGet($data['keyword']) ?:$data['value'];
+        $data['value']       = $this->request->getGet($data['keyword']) ?:$data['value']??'';
         $this->assign($data);
     }
 

@@ -269,7 +269,7 @@ interface QueryInterface
     public function select(): QueryInterface;
 
     /**
-     * @DESC         |插入
+     * @DESC         |插入 作为批量使用更新插入时请将表引擎设置为 ENGINE=InnoDB;改成ENGINE=MyIsam;可以解决这个问题，或者自行设置批量插入sql
      *
      * 参数区：
      *

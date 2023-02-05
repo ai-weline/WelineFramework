@@ -26,6 +26,7 @@ use Weline\I18n\Model\Dictionary;
 use Weline\I18n\Model\I18n;
 use Weline\I18n\Model\Locale;
 
+#[\Weline\Framework\Acl\Acl('Weline_I18n::i18n','国际化I18n管理', 'ri-translate','国际化I18n管理')]
 class Words extends BaseController
 {
     /**
@@ -84,12 +85,12 @@ class Words extends BaseController
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      */
-    #[\Weline\Framework\Acl\Acl('i18n_words', '1i8n词典管理', 'i18n', '')]
-    public function index()
+    #[\Weline\Framework\Acl\Acl('Weline_I18n::i18n_words', '1i8n词典管理','mdi mdi-bookshelf', '1i8n词典管理')]
+    public function index(): mixed
     {
         $locale_code = $this->request->getGet('code');
         // 查询已安装并且已经激活的地方代码
-        $locale = $this->locale->where(
+        $locale = $this->locale->clear()->where(
             [
                 $this->locale::fields_CODE       => $locale_code,
                 $this->locale::fields_IS_ACTIVE  => 1,

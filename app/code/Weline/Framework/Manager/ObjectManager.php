@@ -88,8 +88,7 @@ class ObjectManager implements ManagerInterface
      * @param bool   $cache     是否缓存
      *
      * @return mixed
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\App\Exception
+     * @throws null
      */
     public static function getInstance(string $class = '', array $arguments = [], bool $shared = true, bool $cache = false): mixed
     {
