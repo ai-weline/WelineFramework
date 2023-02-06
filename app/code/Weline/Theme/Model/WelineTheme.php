@@ -187,6 +187,7 @@ class WelineTheme extends Model
 
     public function install(ModelSetup $setup, Context $context): void
     {
+//        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->getPrinting()->warning('安装数据库表：' . $this->getTable());
             $setup->createTable(

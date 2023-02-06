@@ -75,6 +75,10 @@ class UserRole extends \Weline\Framework\Database\Model
             $this->setData(self::fields_ID, 1)
                  ->setData(self::fields_ROLE_ID, 1)
                  ->save(true);
+            // 分配管理
+            $this->setData(self::fields_ID, 2)
+                 ->setData(self::fields_ROLE_ID, 2)
+                 ->save(true);
         }
     }
 

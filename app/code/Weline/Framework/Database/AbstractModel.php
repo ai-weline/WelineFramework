@@ -717,7 +717,7 @@ abstract class AbstractModel extends DataObject
         }
         $this->_model_fields_data = [];
         $this->_bind_model_fields = [];
-//        $this->_model_fields = [];
+        $this->_model_fields      = [];
         $this->clearDataObject();
         $this->setFetchData([]);
         $this->getQuery()->clear();
@@ -1102,7 +1102,7 @@ abstract class AbstractModel extends DataObject
         return $_fields;
     }
 
-    public function bindModelFields(array $fields): static
+    public function bindModelFields(array $fields, string $alias = ''): static
     {
         foreach ($fields as $key => $bind_field) {
             if (in_array($bind_field, $this->_model_fields)) {
@@ -1114,8 +1114,11 @@ abstract class AbstractModel extends DataObject
         // 遇到as读取最后一个
         foreach ($model_fields as $key => $model_field) {
             if (str_contains($model_field, 'as')) {
-                $model_field               = explode('as', $model_field);
-                $model_field               = trim(array_pop($model_field), ' ');
+                $model_field = explode('as', $model_field);
+                $model_field = trim(array_pop($model_field), ' ');
+                if ($alias) {
+                    $model_field = ltrim($model_field, $alias . '_');
+                };
                 $this->_model_fields[$key] = $model_field;
             }
         }
@@ -1421,21 +1424,20 @@ PAGINATION;
             $this->_join_model_fields = $this->getModelFields();
         }
         if ($fields === '*') {
-            $model_fields = "";
+            $model_fields = '';
             foreach ($model->getModelFields() as $modelField) {
                 if (in_array($modelField, $this->_join_model_fields)) {
-                    $model_fields                .= "`$alias`.$modelField as {$alias}_{$modelField},";
-                    $this->_bind_model_fields["`$alias`".$modelField]  = "`$alias`.$modelField as {$alias}_{$modelField}";
-                    $model->_bind_model_fields["`$alias`".$modelField] = "`$alias`.$modelField as {$alias}_{$modelField}";
+                    $model_fields                                        .= "`$alias`.$modelField as {$alias}_{$modelField},";
+                    $this->_bind_model_fields["`$alias`" . $modelField]  = "`$alias`.$modelField as {$alias}_{$modelField}";
+                    $model->_bind_model_fields["`$alias`" . $modelField] = "`$alias`.$modelField as {$alias}_{$modelField}";
                 } else {
-                    $this->_join_model_fields[]  = $modelField;
-                    $this->_bind_model_fields["`$alias`".$modelField]  = "`$alias`.$modelField";
-                    $model->_bind_model_fields["`$alias`".$modelField] = "`$alias`.$modelField";
-                    $model_fields                .= "`$alias`.$modelField,";
+                    $this->_bind_model_fields["`$alias`" . $modelField]  = "`$alias`.$modelField";
+                    $model->_bind_model_fields["`$alias`" . $modelField] = "`$alias`.$modelField";
+                    $model_fields                                        .= "`$alias`.$modelField,";
                 }
             }
             $model_fields = rtrim($model_fields, ',');
-            $this->bindModelFields(explode(',', $model_fields));
+            $this->bindModelFields(explode(',', $model_fields), $alias);
 
             if ($this->_bind_model_fields) {
                 $model_fields .= ',' . (implode(',', $this->_bind_model_fields));
@@ -1444,7 +1446,7 @@ PAGINATION;
             $query->fields(($query->fields !== '*') ? $query->fields . ',' . $model_fields : $model_fields);
             $query->fields($query->fields . ',' . $model_fields);
         } else {
-            $this->bindModelFields(explode(',', $fields));
+            $this->bindModelFields(explode(',', $fields), $alias);
 //            $query->fields(($query->fields !== '*') ? $query->fields . ',' . $fields : $fields);
             $query->fields($query->fields . ',' . $fields);
         }

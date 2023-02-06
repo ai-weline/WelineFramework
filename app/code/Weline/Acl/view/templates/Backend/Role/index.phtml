@@ -141,12 +141,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                                     <input type='hidden' name='id' value='{{role.role_id}}'>
                                                                     <input type='submit' class='btn btn-danger btn-sm' value='@lang{删除}'>
                                                                 </form>
-                                                                <a class='btn btn-sm btn-info' href="@backend-url('*/backend/role/edit')?id={{role
-                                                            .role_id}}">
+                                                                <a class='btn btn-sm btn-info' href="@backend-url('*/backend/role/edit')?id={{role.role_id}}">
                                                                     <lang>编辑</lang>
                                                                 </a>
-                                                                <a class='btn btn-sm btn-secondary' href="@backend-url('*/backend/role/assign')?id={{role
-                                                            .role_id}}">
+                                                                <a class='btn btn-sm btn-secondary' href="@backend-url('*/backend/role/assign')?id={{role.role_id}}">
                                                                     <lang>权限管理</lang>
                                                                 </a>
                                                             </div>

@@ -57,23 +57,23 @@ class Create extends TableAbstract implements CreateInterface
         $type         = strtoupper($type);
         switch ($type) {
             case self::index_type_DEFAULT:
-                $this->indexes[] = "INDEX `{$name}`(`{$column}`) {$index_method} {$comment}," . PHP_EOL;
+                $this->indexes[] = "INDEX `{$name}`(`{$column}`) {$index_method} {$comment}" . PHP_EOL;
 
                 break;
             case self::index_type_FULLTEXT:
-                $this->indexes[] = "FULLTEXT INDEX `{$name}`(`{$column}`) {$index_method} {$comment}," . PHP_EOL;
+                $this->indexes[] = "FULLTEXT INDEX `{$name}`(`{$column}`) {$index_method} {$comment}" . PHP_EOL;
 
                 break;
             case self::index_type_UNIQUE:
-                $this->indexes[] = "UNIQUE INDEX `{$name}`(`{$column}`) {$index_method} {$comment}," . PHP_EOL;
+                $this->indexes[] = "UNIQUE INDEX `{$name}`(`{$column}`) {$index_method} {$comment}" . PHP_EOL;
 
                 break;
             case self::index_type_SPATIAL:
-                $this->indexes[] = "SPATIAL INDEX `{$name}`(`{$column}`) {$index_method} {$comment}," . PHP_EOL;
+                $this->indexes[] = "SPATIAL INDEX `{$name}`(`{$column}`) {$index_method} {$comment}" . PHP_EOL;
 
                 break;
             case self::index_type_KEY:
-                $this->indexes[] = "KEY IDX `{$name}`(`{$column}`) {$index_method} {$comment}," . PHP_EOL;
+                $this->indexes[] = "KEY IDX `{$name}`(`{$column}`) {$index_method} {$comment}" . PHP_EOL;
 
                 break;
             case self::index_type_MULTI:
@@ -131,16 +131,17 @@ class Create extends TableAbstract implements CreateInterface
         $fields_str = rtrim($fields_str, PHP_EOL);
         // 索引
         $indexes_str = implode(',', $this->indexes);
-        if ($indexes_str) {
-            $fields_str .= ',';
-        }
         $indexes_str = rtrim($indexes_str, PHP_EOL);
         // 外键
         $foreign_key_str = implode(','.PHP_EOL, $this->foreign_keys);
-        if ($foreign_key_str) {
+        $foreign_key_str = rtrim($foreign_key_str, PHP_EOL);
+        // 组装结尾逗号
+        if ($this->indexes) {
+            $fields_str .= ',';
+        }
+        if ($this->foreign_keys) {
             $indexes_str .= ',';
         }
-        $foreign_key_str = rtrim($foreign_key_str, PHP_EOL);
         if ($this->constraints) {
             $foreign_key_str .= ',';
         }
@@ -150,7 +151,7 @@ CREATE TABLE {$this->table}(
  {$fields_str}
  {$indexes_str}
  {$foreign_key_str}
- {$this->constraints}
+ {$this->constraints}                 
 ) {$comment} {$this->additional}
 createSQL;
         try {

@@ -389,7 +389,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                             foreach ($tree->getSub() as $sub) {
                                                 $method = $sub->getMethod() ? "({$sub->getMethod()})" : '';
                                                 $attr   = getLiAttr($sub);
-                                                $result .= "<li id='{$sub->getAclId()}' {$attr}>{$sub->getSourceName()}{$method}";
+                                                $result .= "<li id='{$sub->getId()}' {$attr}>{$sub->getSourceName()}{$method}";
                                                 $result .= getTreeNode($sub);
                                                 $result .= '</li>';
                                             }
@@ -429,9 +429,10 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                                 ''      => __('其他')
                                             };
                                         }
-                                        $desc.="({$acl->getId()})";
+                                        $desc.="({$acl->getSourceId()})";
                                         $access = $acl->getData('access') ? 'true' : 'false';
-                                        return " class='show_tooltip' title='{$desc}' data-jstree='{\"opened\":true,\"selected\":{$access},
+//                                        $disabled = $acl->getData('a_role_id') ? 'false' : 'true';
+                                        return " class='show_tooltip' title='{$desc}' data-jstree='{\"disabled\":false,\"opened\":true,\"selected\":{$access},
                                         \"icon\":\"$icon\"}' ";
                                     }
 

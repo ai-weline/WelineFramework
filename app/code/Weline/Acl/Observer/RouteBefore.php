@@ -86,7 +86,7 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                         $message->addWarning(__('你无权进行该操作！已将你带回来源网址！'));
                         $request->_response->redirect($referer);
                     }
-                    /**@var EventsManager $event*/
+                    /**@var EventsManager $event */
                     $event = ObjectManager::getInstance(EventsManager::class);
                     $event->dispatch('Weline_Acl::no_access_redirect_before');
                     $request->_response->noRouter();
@@ -114,7 +114,7 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                             $message->addWarning(__('你没有任何权限！请联系管理员！'));
                             $request->_response->redirect($referer);
                         }
-                        /**@var EventsManager $event*/
+                        /**@var EventsManager $event */
                         $event = ObjectManager::getInstance(EventsManager::class);
                         $event->dispatch('Weline_Acl::no_access_redirect_before');
                         $request->_response->noRouter();
@@ -161,6 +161,7 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                                                 $can_referer = false;
                                             }
                                         }
+
                                         // 没有权限又存在于acl控制列表中
                                         if ($can_referer) {
                                             /**@var MessageManager $message */
@@ -169,15 +170,15 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                                             $request->_response->redirect($referer);
                                         } else {
                                             // 找一个有权限的get请求路由访问
-                                            $this->findAccessUrlRouteToRedirect($request,$access_sources);
+                                            $this->findAccessUrlRouteToRedirect($request, $access_sources);
                                         }
-                                        /**@var EventsManager $event*/
+                                        /**@var EventsManager $event */
                                         $event = ObjectManager::getInstance(EventsManager::class);
                                         $event->dispatch('Weline_Acl::no_access_redirect_before');
                                         $request->_response->noRouter();
                                     } else {
                                         // 找一个有权限的get请求路由访问
-                                        $this->findAccessUrlRouteToRedirect($request,$access_sources);
+                                        $this->findAccessUrlRouteToRedirect($request, $access_sources);
                                     }
                                 } else {
                                     // 判断referer是否可跳转，解决无限重定向问题
@@ -194,9 +195,9 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                                         $request->_response->redirect($referer);
                                     } else {
                                         // 找一个有权限的get请求路由访问
-                                        $this->findAccessUrlRouteToRedirect($request,$access_sources);
+                                        $this->findAccessUrlRouteToRedirect($request, $access_sources);
                                     }
-                                    /**@var EventsManager $event*/
+                                    /**@var EventsManager $event */
                                     $event = ObjectManager::getInstance(EventsManager::class);
                                     $event->dispatch('Weline_Acl::no_access_redirect_before');
                                     $request->_response->noRouter();
@@ -212,13 +213,13 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
     private function findAccessUrlRouteToRedirect(Request &$request, array &$access_sources)
     {
         foreach ($access_sources as $access_source) {
-            if ($access_source['route']) {
+            if ((strtolower($access_source['method']) === 'get' || $access_source['method'] === '') && $access_source['route']) {
                 $request->_response->redirect($request->getPrePath() . trim($access_source['route'], '/'));
             }
         }
         // 没有任何可使用权限
         $this->session->logout();
-        /**@var EventsManager $event*/
+        /**@var EventsManager $event */
         $event = ObjectManager::getInstance(EventsManager::class);
         $event->dispatch('Weline_Acl::no_access_redirect_before');
         $request->_response->noRouter();

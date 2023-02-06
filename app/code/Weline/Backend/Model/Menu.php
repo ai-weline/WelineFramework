@@ -221,7 +221,7 @@ class Menu extends \Weline\Framework\Database\Model
         if (!$this->isBackend()) {
             $url = '/' . trim($this->getAction(), '/');
         } else {
-            $url = $this->url->getBackendUrl('/'.trim($this->getAction(), '/'));
+            $url = $this->url->getBackendUrl('/' . trim($this->getAction(), '/'));
         }
         return $url ?? '';
     }
@@ -286,11 +286,12 @@ class Menu extends \Weline\Framework\Database\Model
             // 以子权限扫描所有权限的父级
             $roleAccesses = $this->clear()
                                  ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-                                 ->joinModel(RoleAccess::class, 'ra', 'ra.acl_id=a.acl_id')
+                                 ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
                                  ->where('ra.' . RoleAccess::fields_ROLE_ID, $role->getId(0))
                                  ->where('main_table.pid', 0, '<>')
                                  ->select()
-                                 ->fetchOrigin();
+                                 ->fetch()
+                                 ->getItems();
             $hasIds       = [];
             $top_menus    = [];
             // 归并所有相同父级的权限,同时筛选出父级权限资源递归出子权限
@@ -307,8 +308,12 @@ class Menu extends \Weline\Framework\Database\Model
             }
 
             foreach ($mergerParentAcl as $parentSource => $acls) {
-                $menu     = $this->clear()->load('source', $parentSource);
-                $menu->setData('sub_menu_by_role',$acls);
+                foreach ($acls as &$acl) {
+                    $this->getSubMenusByRole($acl, $role);
+                }
+                $menu = $this->clear()->load('source', $parentSource);
+                $menu->setData('sub_menu_by_role', $acls);
+                $menu->setData('sub', $acls);
                 $top_menu = $this->findTopMenu($menu);
                 if (!in_array($top_menu->getData('id'), $hasIds)) {
                     $top_menus[] = $top_menu;
@@ -318,7 +323,7 @@ class Menu extends \Weline\Framework\Database\Model
         } else {
             $top_menus = $this->clear()
                               ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-                              ->joinModel(RoleAccess::class, 'ra', 'ra.acl_id=a.acl_id')
+                              ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
                               ->where('main_table.pid', 0)
                               ->select()
                               ->fetch()
@@ -353,7 +358,7 @@ class Menu extends \Weline\Framework\Database\Model
             return $menuData;
         } else {
             $parent = $this->clear()->load('id', $menuData->getPid());
-            $parent->setData('sub_menu_by_role',[$menuData]);
+            $parent->setData('sub_menu_by_role', [$menuData]);
             return $this->findTopMenu($parent);
         }
     }
@@ -376,7 +381,7 @@ class Menu extends \Weline\Framework\Database\Model
     {
         $this->clear()
              ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-             ->joinModel(RoleAccess::class, 'ra', 'ra.acl_id=a.acl_id')
+             ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
              ->where('main_table.pid', $menu->getData('id'));
         if ($role->getId() !== 1) {
             $this->where('ra.role_id', $role->getId());
@@ -389,7 +394,7 @@ class Menu extends \Weline\Framework\Database\Model
                 $has_ids[] = $sub_menu->getData('id');
                 $this->clear()
                      ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-                     ->joinModel(RoleAccess::class, 'ra', 'ra.acl_id=a.acl_id')
+                     ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
                      ->where($this::fields_PID, $sub_menu->getData('id'));
                 if ($role->getId() !== 1) {
                     $this->where('ra.role_id', $role->getId());
@@ -404,36 +409,11 @@ class Menu extends \Weline\Framework\Database\Model
                     }
                 }
             }
-            $menu = $menu->setData('sub_menu_by_role', $sub_menus);
+            $menu = $menu->setData('sub_menu_by_role', $sub_menus)->setData('sub', $sub_menus);
         } else {
-            $menu = $menu->setData('sub_menu_by_role', []);
+            $menu = $menu->setData('sub_menu_by_role', [])->setData('sub', []);
         }
 
-        // TODO 再检测没有权限的子菜单,都没有权限才给空$menu = $menu->setData('sub_menu_by_role', []);
-//        {
-//            $has_ids = implode(',', $has_ids);
-//            $subs    = $this->clear()
-//                            ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-//                            ->joinModel(RoleAccess::class, 'ra', 'ra.acl_id=a.acl_id')
-//                            ->where("main_table.id not in ({$has_ids})")
-//                            ->where('main_table.pid', $menu->getData('id'))
-//                            ->select()
-//                            ->fetch()
-//                            ->getItems();
-//            d($subs);
-//            if ($subs) {
-//                /**@var \Weline\Backend\Model\Menu $sub */
-//                foreach ($subs as $key => &$sub) {
-//                    $has = $this->getSubMenusByRole($sub, $role);
-//                    if (!$has->getSubMenuByRole()) {
-//                        unset($subs[$key]);
-//                    }
-//                }
-//                $menu = $menu->setData('sub_menu_by_role', $subs);
-//            } else {
-//                $menu = $menu->setData('sub_menu_by_role', []);
-//            }
-//        }
         return $menu;
     }
 }

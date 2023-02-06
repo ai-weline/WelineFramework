@@ -57,8 +57,13 @@ class ControllerAttributes implements \Weline\Framework\Event\ObserverInterface
                 if ($controller_attribute->getName() === \Weline\Framework\Acl\Acl::class) {
                     /**@var \Weline\Framework\Acl\Acl $acl */
                     $acl = ObjectManager::make($controller_attribute->getName(), $controller_attribute->getArguments());
+                    $route = explode('::', $data->getData('router'));
+                    if(count($route)>1){
+                        array_pop($route);
+                    }
+                    $route = implode('', $route);
                     $acl->setModule($data->getData('module'))
-                        ->setRoute($data->getData('router'))
+                        ->setRoute($route)
                         ->setRouter($data->getData('base_router'))
                         ->setClass($data->getData('class'))
                         ->setMethod($data->getData('request_method'))
@@ -86,8 +91,13 @@ class ControllerAttributes implements \Weline\Framework\Event\ObserverInterface
             if (empty($acl->getParentSource())) {
                 $acl->setParentSource($parent_acl_source);
             }
+            $route = explode('::', $data->getData('router'));
+            if(count($route)>1){
+                array_pop($route);
+            }
+            $route = implode('', $route);
             $acl->setModule($data->getData('module'))
-                ->setRoute($data->getData('router'))
+                ->setRoute($route)
                 ->setRouter($data->getData('base_router'))
                 ->setClass($data->getData('class'))
                 ->setMethod($data->getData('request_method'))

@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace Weline\Acl\Model;
 
+use Weline\Backend\Model\BackendUser;
+use Weline\Backend\Model\Menu;
+use Weline\Backend\Session\BackendSession;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
@@ -20,9 +23,9 @@ use Weline\Framework\Setup\Db\ModelSetup;
 class RoleAccess extends \Weline\Framework\Database\Model
 {
 
-    public const fields_ID      = 'role_id';
+    public const fields_ID = 'role_id';
     public const fields_ROLE_ID = Role::fields_ID;
-    public const fields_ACL_ID  = Acl::fields_ACL_ID;
+    public const fields_SOURCE_ID = Acl::fields_ID;
 
     private array $exist = [];
 
@@ -47,31 +50,31 @@ class RoleAccess extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-//        $setup->dropTable();
+        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable()
-                  ->addColumn(
-                      self::fields_ROLE_ID,
-                      TableInterface::column_type_INTEGER,
-                      null,
-                      'not null',
-                      '角色ID'
-                  )
-                  ->addColumn(
-                      self::fields_ACL_ID,
-                      TableInterface::column_type_INTEGER,
-                      null,
-                      'not null',
-                      '资源ID'
-                  )
-                  ->addForeignKey(
-                      'ROLE_ACCESS_ROLE_ID',
-                      self::fields_ROLE_ID,
-                      $this->getTable('role'),
-                      Role::fields_ID,
-                      true
-                  )
-                  ->addConstraints("primary key (role_id,acl_id)")
+                ->addColumn(
+                    self::fields_ROLE_ID,
+                    TableInterface::column_type_INTEGER,
+                    null,
+                    'not null',
+                    '角色ID'
+                )
+                ->addColumn(
+                    self::fields_SOURCE_ID,
+                    TableInterface::column_type_VARCHAR,
+                    255,
+                    'not null',
+                    '资源ID'
+                )
+                ->addForeignKey(
+                    'ROLE_ACCESS_ROLE_ID',
+                    self::fields_ROLE_ID,
+                    $this->getTable('role'),
+                    Role::fields_ID,
+                    true
+                )
+                ->addConstraints("primary key (role_id,source_id)")
                 /*
                   ->addForeignKey(
                       'ROLE_ACCESS_ID',
@@ -80,7 +83,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
                       Acl::fields_ACL_ID,
                       true
                   )*/
-                  ->create();
+                ->create();
         }
     }
 
@@ -92,11 +95,11 @@ class RoleAccess extends \Weline\Framework\Database\Model
      * @DateTime: 2023/1/19 22:16
      * 参数区：
      *
-     * @param string     $main_field
-     * @param string     $parent_id_field
+     * @param string $main_field
+     * @param string $parent_id_field
      * @param string|int $parent_id_value
-     * @param string     $order_field
-     * @param string     $order_sort
+     * @param string $order_field
+     * @param string $order_sort
      *
      * @return \Weline\Acl\Model\RoleAccess[]
      * @throws null
@@ -109,9 +112,13 @@ class RoleAccess extends \Weline\Framework\Database\Model
         string     $order_sort = 'ASC'
     ): array
     {
+        /**@var BackendUser $user */
+        $user = ObjectManager::getInstance(BackendSession::class)->getLoginUser();
+        if (!$user) {
+            return [];
+        }
         /**@var \Weline\Acl\Model\Role $roleModel */
-        $roleModel = ObjectManager::getInstance(Role::class);
-        $this->getEvenManager()->dispatch('Weline_Acl::check_role', $roleModel);
+        $roleModel = $user->getRoleModel();
         // 超管
         if ($roleModel->getId() === 1) {
             /**@var \Weline\Acl\Model\Acl $aclModel */
@@ -126,18 +133,18 @@ class RoleAccess extends \Weline\Framework\Database\Model
             if (empty($roleModel->getId())) {
                 return [];
             }
-            return $this->getRoleAccessTree($roleModel);
+            return $this->getAccessTreeByRole($roleModel);
         }
     }
 
     public function getRoleAccessList(Role $roleModel): array
     {
         return $this->joinModel($roleModel, 'r', 'main_table.role_id=r.role_id')
-                    ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
-                    ->where('main_table.role_id', $roleModel->getId())
-                    ->select()
-                    ->fetch()
-                    ->getItems();
+            ->joinModel(Acl::class, 'a', 'main_table.source_id=a.source_id')
+            ->where('main_table.role_id', $roleModel->getId())
+            ->select()
+            ->fetch()
+            ->getItems();
     }
 
     public function getRoleNotAccessList(Role $roleModel): array
@@ -150,79 +157,140 @@ class RoleAccess extends \Weline\Framework\Database\Model
             ->fetchOrigin();
     }
 
-    public function getRoleAccessTree(\Weline\Acl\Model\Role &$roleModel): array
-    {
-        // 顶层 TODO 角色权限树读取问题
-        /**@var \Weline\Acl\Model\RoleAccess[] $trees */
-        $trees = $this->joinModel($roleModel, 'r', 'main_table.role_id=r.role_id')
-                      ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
-                      ->where('main_table.role_id', $roleModel->getId())
-                      ->where('a.parent_source', '')
-                      ->select()
-                      ->fetch()
-                      ->getItems();
-        $this->exist = [];
-        foreach ($trees as &$tree) {
-            $this->exist[] = $tree->getData('acl_id');
-            $tree = $tree->getRoleAccessSubs(
-                $tree,
-                $roleModel,
-                Acl::fields_SOURCE_ID,
-                Acl::fields_PARENT_SOURCE,
-                Acl::fields_ACL_ID,
-                'ASC'
-            );
-        }
-        return $trees;
-    }
-
     /**
      * @DESC          # 获取角色权限树
      *
      * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
-     * @DateTime: 2023/1/19 21:59
+     * @DateTime: 2022/2/9 0:38
      * 参数区：
-     *
-     * @param \Weline\Acl\Model\RoleAccess $model
-     * @param \Weline\Acl\Model\Role       $roleModel
-     * @param string                       $main_field
-     * @param string                       $parent_id_field
-     * @param string                       $order_field
-     * @param string                       $order_sort
-     *
-     * @return \Weline\Acl\Model\RoleAccess
      */
-    function getRoleAccessSubs(
-        RoleAccess &$model,
-        Role       &$roleModel,
-        string     $main_field = '',
-        string     $parent_id_field = 'parent_id',
-        string     $order_field = 'position',
-        string     $order_sort = 'ASC'
-    ): RoleAccess
+    public function getAccessTreeByRole(Role $role): array
     {
-        $main_field = $main_field ?: $this::fields_ID;
-        if ($subs = $this->clear()
-                         ->joinModel($roleModel, 'r', 'main_table.role_id=r.role_id')
-                         ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
-                         ->where($parent_id_field, $model->getData($main_field) ?: '')
-                         ->where('main_table.' . Role::fields_ROLE_ID, $roleModel->getId(0))
-                         ->order($order_field, $order_sort)
-                         ->select()
-                         ->fetch()
-                         ->getItems()
-        ) {
-            foreach ($subs as &$sub) {
-                if(!in_array($sub->getData('acl_id'), $this->exist)){
-                    $this->exist[] = $sub->getData('acl_id');
-                    $sub = $this->getRoleAccessSubs($sub, $roleModel, $main_field, $parent_id_field, $order_field, $order_sort);
+        $top_acls = [];
+        if ($role->getId() !== 1) {
+            // 以子权限扫描所有权限的父级
+            $roleAccesses = $this->clear()
+                ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
+                ->where('main_table.' . RoleAccess::fields_ROLE_ID, $role->getId(0))
+                ->where('a.parent_source', '', '<>')
+                ->select()
+                ->fetch()
+                ->getItems();
+            $hasIds       = [];
+            // 归并所有相同父级的权限,同时筛选出父级权限资源递归出子权限
+            $mergerParentAcl = [];
+            /**@var RoleAccess|Acl $roleAccess*/
+            foreach ($roleAccesses as $roleAccess) {
+                $parentSource = $roleAccess->getParentSource();
+                // 顶层资源,找出对应是否有权限的子权限
+                if (empty($parentSource)) {
+                    $top_acls[] = $this->getSubAccessesByRole($roleAccess, $role);
+                } else {
+                    // 归并需要查找父级的子权限
+                    $mergerParentAcl[$parentSource][] = $roleAccess;
                 }
             }
-            $model = $model->setData('sub', $subs);
+            foreach ($mergerParentAcl as $parentSource => $acls) {
+                foreach ($acls as &$acl_) {
+                    $this->getSubAccessesByRole($acl_, $role);
+                }
+                $acl = $this->clear()->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id','right')
+                            ->where('a.source_id', $parentSource)->find()->fetch();
+                $acl->setData('sub_accesses_by_role', $acls);
+                $acl->setData('sub', $acls);
+                $top_acl = $this->findTopAccesses($acl);
+                if (!in_array($top_acl->getData('source_id'), $hasIds)) {
+                    $top_acls[] = $top_acl;
+                    $hasIds[]   = $top_acl->getData('source_id');
+                }
+            }
         } else {
-            $model = $model->setData('sub', []);
+            /**@var \Weline\Acl\Model\Acl $aclModel */
+            $aclModel = ObjectManager::getInstance(\Weline\Acl\Model\Acl::class);
+            $top_acls = $aclModel->getTree(
+                $aclModel::fields_SOURCE_ID,
+                $aclModel::fields_PARENT_SOURCE,
+                '',
+                $aclModel::fields_ACL_ID
+            );
         }
-        return $model;
+        return $top_acls;
+    }
+
+    /**
+     * @DESC          # 查找顶层菜单
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2023/1/31 23:25
+     * 参数区：
+     *
+     *
+     */
+    private function findTopAccesses(RoleAccess|Acl &$acl): RoleAccess
+    {
+        $aclData = clone $acl;
+        if (empty($aclData->getParentSource())) {
+            return $aclData;
+        } else {
+            $parent = $this->clear()->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id','right')
+                ->where('a.source_id', $aclData->getParentSource())->find()->fetch();
+            $parent->setData('sub_accesses_by_role', [$aclData]);
+            $parent->setData('sub', [$aclData]);
+            return $this->findTopAccesses($parent);
+        }
+    }
+
+    /**
+     * @DESC          # 获取角色权限子菜单
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/20 23:18
+     * 参数区：
+     * @return Acl[]
+     */
+    public function getSubAccessByRole(): array
+    {
+        return $this->getData('sub_accesses_by_role') ?? [];
+    }
+
+    public function getSubAccessesByRole(RoleAccess|Acl &$acl, Role &$role): RoleAccess
+    {
+        $this->clear()
+            ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
+            ->where('a.parent_source', $acl->getSourceId());
+        if ($role->getId() !== 1) {
+            $this->where('main_table.role_id', $role->getId());
+        }
+
+        // 有权限的
+        if ($sub_acls = $this->select()->fetch()->getItems()) {
+            /**@var RoleAccess|Acl $sub_acl */
+            foreach ($sub_acls as &$sub_acl) {
+                $this->clear()
+                    ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
+                    ->where('a.' . Acl::fields_PARENT_SOURCE, $sub_acl->getSourceId());
+                if ($role->getId() !== 1) {
+                    $this->where('main_table.role_id', $role->getId());
+                }
+                $has_sub_acls = $this
+                    ->select()
+                    ->fetch()
+                    ->getItems();
+                foreach ($has_sub_acls as $has_sub_acl) {
+                    if ($has_sub_acl->getId()) {
+                        $sub_acl = $this->getSubAccessesByRole($sub_acl, $role);
+                    }
+                }
+            }
+            $acl = $acl->setData('sub_accesses_by_role', $sub_acls);
+            $acl = $acl->setData('sub', $sub_acls);
+        } else {
+            $acl = $acl->setData('sub_accesses_by_role', []);
+            $acl = $acl->setData('sub', []);
+        }
+        return $acl;
     }
 }

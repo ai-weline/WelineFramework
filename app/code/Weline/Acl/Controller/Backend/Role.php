@@ -14,6 +14,7 @@ namespace Weline\Acl\Controller\Backend;
 
 use Weline\Acl\Cache\AclCache;
 use Weline\Acl\Model\RoleAccess;
+use Weline\Backend\Model\BackendUser;
 use Weline\Backend\Session\BackendSession;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Exception\Core;
@@ -119,6 +120,7 @@ class Role extends \Weline\Admin\Controller\BaseController
         if (!$id) {
             $this->redirect(404);
         }
+
         $role = clone $this->role->load($id);
         if (!$role->getId()) {
             $this->getMessageManager()->addWarning(__('角色已不存在！'));
@@ -185,7 +187,7 @@ class Role extends \Weline\Admin\Controller\BaseController
         foreach ($acl_ids as $acl_id) {
             $acls[] = [
                 RoleAccess::fields_ROLE_ID => $role_id,
-                RoleAccess::fields_ACL_ID  => $acl_id,
+                RoleAccess::fields_SOURCE_ID  => $acl_id,
             ];
         }
         /**@var RoleAccess $roleAccessModel */
@@ -194,7 +196,7 @@ class Role extends \Weline\Admin\Controller\BaseController
         try {
             $roleAccessModel->where(\Weline\Acl\Model\Role::fields_ROLE_ID, $role_id)->delete();
             if ($acls) {
-                $roleAccessModel->clearData()->insert($acls, [RoleAccess::fields_ROLE_ID, RoleAccess::fields_ACL_ID])->fetch();
+                $roleAccessModel->clearData()->insert($acls, [RoleAccess::fields_ROLE_ID, RoleAccess::fields_SOURCE_ID])->fetch();
             }
             $roleAccessModel->commit();
             $this->getMessageManager()->addSuccess(__('权限分配成功！'));

@@ -17,7 +17,7 @@ use Weline\Backend\Model\Backend\Acl\UserRole;
 use Weline\Backend\Model\BackendUser;
 use Weline\Framework\Manager\ObjectManager;
 
-#[\Weline\Framework\Acl\Acl('user', '用户管理', '管理后台用户','')]
+#[\Weline\Framework\Acl\Acl('Weline_Admin::system_user_listing', '用户管理', '管理后台用户','')]
 class User extends \Weline\Framework\App\Controller\BackendController
 {
     private \Weline\Backend\Model\BackendUser $backendUser;
@@ -29,7 +29,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
         $this->backendUser = $backendUser->clearData();
     }
 
-    #[\Weline\Framework\Acl\Acl('user_listing', '管理员列表', '','查看管理后台用户列表')]
+    #[\Weline\Framework\Acl\Acl('Weline_Admin::system_user_listing', '管理员列表', '','查看管理后台用户列表')]
     function listing()
     {
         if ($search = $this->request->getGet('search')) {
@@ -42,7 +42,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch();
     }
 
-    #[\Weline\Framework\Acl\Acl('user_add', '管理员添加界面','', '添加管理员界面访问')]
+    #[\Weline\Framework\Acl\Acl('Weline_Admin::system_user_add', '管理员添加界面','', '添加管理员界面访问')]
     function getAdd()
     {
         $this->assign('user', $this->backendUser->clearData()->setData($this->session->getData('user'))->getData());
@@ -50,7 +50,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch('form');
     }
 
-    #[\Weline\Framework\Acl\Acl('user_edit', '管理员修改界面','', '修改管理员界面访问')]
+    #[\Weline\Framework\Acl\Acl('Weline_Admin::system_user_edit', '管理员修改界面','', '修改管理员界面访问')]
     function getEdit()
     {
         $this->assign('user', $this->backendUser->load($this->request->getGet('id'))->getData());
@@ -58,7 +58,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch('form');
     }
 
-    #[\Weline\Framework\Acl\Acl('user_edit_post', '管理员修改请求','', '修改管理员请求')]
+    #[\Weline\Framework\Acl\Acl('Weline_Admin::system_user_edit_post', '管理员修改请求','', '修改管理员请求')]
     function postEdit()
     {
         try {
@@ -78,7 +78,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
         }
     }
 
-    #[\Weline\Framework\Acl\Acl('user_add_post', '管理员添加请求','', '请求添加管理员')]
+    #[\Weline\Framework\Acl\Acl('Weline_Admin::system_user_add_post', '管理员添加请求','', '请求添加管理员')]
     function postAdd()
     {
         try {
@@ -96,7 +96,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
         }
     }
 
-    #[\Weline\Framework\Acl\Acl('assign_role', '管理员角色归配','', '将管理员分配到角色')]
+    #[\Weline\Framework\Acl\Acl('Weline_Admin::system_assign_role', '管理员角色归配','', '将管理员分配到角色')]
     function getAssignRole()
     {
         /**@var Role $role */
@@ -116,7 +116,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch('assign_role');
     }
 
-    #[\Weline\Framework\Acl\Acl('assign_role_post', '管理员角色归配请求','', '请求归配')]
+    #[\Weline\Framework\Acl\Acl('Weline_Admin::system_assign_role_post', '管理员角色归配请求','', '请求归配')]
     function postAssignRole()
     {
         if ($this->session->getLoginUserID() === $this->request->getGet('user_id')) {

@@ -57,9 +57,9 @@ class BackendUser extends \Weline\Framework\Database\Model
 //        $setup->forceDropTable();
         if (!$setup->tableExist()) {
             $setup->createTable('管理员表')
-                  ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'auto_increment primary key', '用户ID')
+                  ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, null, 'auto_increment primary key', '用户ID')
                   ->addColumn(self::fields_email, TableInterface::column_type_VARCHAR, 255, 'not null unique', '邮箱')
-                  ->addColumn(self::fields_username, TableInterface::column_type_VARCHAR, 60, '', '用户名')
+                  ->addColumn(self::fields_username, TableInterface::column_type_VARCHAR, 128, '', '用户名')
                   ->addColumn(self::fields_password, TableInterface::column_type_VARCHAR, 255, '', '密码')
                   ->addColumn(self::fields_avatar, TableInterface::column_type_VARCHAR, 255, '', '头像')
                   ->addColumn(self::fields_login_ip, TableInterface::column_type_VARCHAR, 16, '', '登录IP')
@@ -69,8 +69,12 @@ class BackendUser extends \Weline\Framework\Database\Model
                   ->addAdditional('ENGINE=MyIsam;')
                   ->create();
 
-            # 初始化一个账户
+            # 初始化超管和管理员账户
             $this->setUsername('秋枫雁飞')
+                 ->setEmail('system@weline.com')
+                 ->setPassword('admin')
+                 ->save();
+            $this->clear()->setUsername('admin')
                  ->setEmail('admin@weline.com')
                  ->setPassword('admin')
                  ->save();
@@ -173,7 +177,7 @@ class BackendUser extends \Weline\Framework\Database\Model
         }
         /**@var \Weline\Backend\Model\Backend\Acl\UserRole $userRole */
         $userRole = ObjectManager::getInstance(UserRole::class);
-        $userRole->joinModel(Role::class, 'r', 'main_table.role_id=r.role_id')
+        $userRole->clear()->joinModel(Role::class, 'r', 'main_table.role_id=r.role_id')
                  ->where('main_table.' . self::fields_ID, $this->getId())
                  ->find()->fetch();
         $this->setData('user_role', $userRole);
