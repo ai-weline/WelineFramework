@@ -50,7 +50,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-        $setup->dropTable();
+//        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable()
                 ->addColumn(
@@ -75,14 +75,6 @@ class RoleAccess extends \Weline\Framework\Database\Model
                     true
                 )
                 ->addConstraints("primary key (role_id,source_id)")
-                /*
-                  ->addForeignKey(
-                      'ROLE_ACCESS_ID',
-                      self::fields_ACL_ID,
-                      $this->getTable('acl'),
-                      Acl::fields_ACL_ID,
-                      true
-                  )*/
                 ->create();
         }
     }
@@ -152,7 +144,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
         /**@var Acl $acl */
         $acl = ObjectManager::getInstance(Acl::class);
         return $acl
-            ->where("acl_id not in (select acl_id from {$this->getTable()} where {$this->getTable()}.role_id='{$roleModel->getId()}')")
+            ->where("source_id not in (select source_id from {$this->getTable()} where {$this->getTable()}.role_id='{$roleModel->getId()}')")
             ->select()
             ->fetchOrigin();
     }
@@ -171,7 +163,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
         if ($role->getId() !== 1) {
             // 以子权限扫描所有权限的父级
             $roleAccesses = $this->clear()
-                ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
+                ->joinModel(Acl::class, 'a', 'main_table.source_id=a.source_id')
                 ->where('main_table.' . RoleAccess::fields_ROLE_ID, $role->getId(0))
                 ->where('a.parent_source', '', '<>')
                 ->select()
@@ -180,7 +172,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
             $hasIds       = [];
             // 归并所有相同父级的权限,同时筛选出父级权限资源递归出子权限
             $mergerParentAcl = [];
-            /**@var RoleAccess|Acl $roleAccess*/
+            /**@var RoleAccess|Acl $roleAccess */
             foreach ($roleAccesses as $roleAccess) {
                 $parentSource = $roleAccess->getParentSource();
                 // 顶层资源,找出对应是否有权限的子权限
@@ -195,14 +187,15 @@ class RoleAccess extends \Weline\Framework\Database\Model
                 foreach ($acls as &$acl_) {
                     $this->getSubAccessesByRole($acl_, $role);
                 }
-                $acl = $this->clear()->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id','right')
-                            ->where('a.source_id', $parentSource)->find()->fetch();
+                $acl = $this->clear()->fields('main_table.*')->joinModel(Acl::class, 'a', 'main_table.source_id=a.source_id', 'right')
+                    ->where('a.source_id', $parentSource)->find()->fetch();
                 $acl->setData('sub_accesses_by_role', $acls);
                 $acl->setData('sub', $acls);
                 $top_acl = $this->findTopAccesses($acl);
-                if (!in_array($top_acl->getData('source_id'), $hasIds)) {
+                if (!in_array($top_acl->getData('a_source_id'), $hasIds)) {
+                    $top_acl->setData('source_id', $top_acl->getData('a_source_id'));
                     $top_acls[] = $top_acl;
-                    $hasIds[]   = $top_acl->getData('source_id');
+                    $hasIds[]   = $top_acl->getData('a_source_id');
                 }
             }
         } else {
@@ -234,7 +227,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
         if (empty($aclData->getParentSource())) {
             return $aclData;
         } else {
-            $parent = $this->clear()->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id','right')
+            $parent = $this->clear()->joinModel(Acl::class, 'a', 'main_table.source_id=a.source_id', 'right')
                 ->where('a.source_id', $aclData->getParentSource())->find()->fetch();
             $parent->setData('sub_accesses_by_role', [$aclData]);
             $parent->setData('sub', [$aclData]);
@@ -259,7 +252,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
     public function getSubAccessesByRole(RoleAccess|Acl &$acl, Role &$role): RoleAccess
     {
         $this->clear()
-            ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
+            ->joinModel(Acl::class, 'a', 'main_table.source_id=a.source_id')
             ->where('a.parent_source', $acl->getSourceId());
         if ($role->getId() !== 1) {
             $this->where('main_table.role_id', $role->getId());
@@ -270,7 +263,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
             /**@var RoleAccess|Acl $sub_acl */
             foreach ($sub_acls as &$sub_acl) {
                 $this->clear()
-                    ->joinModel(Acl::class, 'a', 'main_table.acl_id=a.acl_id')
+                    ->joinModel(Acl::class, 'a', 'main_table.source_id=a.source_id')
                     ->where('a.' . Acl::fields_PARENT_SOURCE, $sub_acl->getSourceId());
                 if ($role->getId() !== 1) {
                     $this->where('main_table.role_id', $role->getId());

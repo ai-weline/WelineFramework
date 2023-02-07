@@ -144,7 +144,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             foreach ($tree->getSub() as $sub) {
                                                 $method = $sub->getMethod() ? "({$sub->getMethod()})" : '';
                                                 $attr   = getLiAttr($sub);
-                                                $result .= "<li id='{$sub->getId()}' {$attr}>{$sub->getSourceName()}{$method}";
+                                                $result .= "<li id='{$sub->getSourceId()}' {$attr}>{$sub->getSourceName()}{$method}";
                                                 $result .= getTreeNode($sub);
                                                 $result .= '</li>';
                                             }

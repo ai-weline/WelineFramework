@@ -1,7 +1,7 @@
 <!--
-================================================================================================================= 
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Acl\view\templates\Backend\Role\assign.phtml START
-=================================================================================================================
+============================================================================================================ 
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Acl\view\templates\Backend\Role\assign.phtml START
+============================================================================================================
  -->
 <?php
 /**@var \Weline\Framework\View\Template $this */
@@ -19,9 +19,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <head>
     <title>权限分配</title>
     <!--
-=========================================================================================================== 
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\templates\common\head.phtml START
-===========================================================================================================
+====================================================================================================== 
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\templates\common\head.phtml START
+======================================================================================================
  -->
 <?php
 /**@var \Weline\Framework\View\Template $this */
@@ -84,9 +84,9 @@ echo $this->getHeader()->getHtml();
 ?>
 
 <!--
-=============================================================================================================================
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_head.phtml END
-=============================================================================================================================
+========================================================================================================================
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_head.phtml END
+========================================================================================================================
 -->
     <!--树形选择-->
     <link rel='stylesheet' href='/Weline/Acl/view/statics/libs/vakata-jstree-3.3.14-0/dist/themes/default/style.min.css'/>
@@ -96,9 +96,9 @@ echo $this->getHeader()->getHtml();
 
 <!--页头工具条 开始-->
 <!--
-=================================================================================================================== 
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\templates\common\page\loading.phtml START
-===================================================================================================================
+============================================================================================================== 
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\templates\common\page\loading.phtml START
+==============================================================================================================
  -->
 <?php
 /**@var \Weline\Framework\View\Template $this */
@@ -124,9 +124,9 @@ echo $this->getHeader()->getHtml();
     })
 </script>
 <!--
-=====================================================================================================================================
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\page\com_loading.phtml END
-=====================================================================================================================================
+================================================================================================================================
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\page\com_loading.phtml END
+================================================================================================================================
 -->
 <!--页头工具条 结束-->
 
@@ -152,9 +152,9 @@ echo $this->getHeader()->getHtml();
     <!-- ========== Left Sidebar Start ========== -->
     <!--左侧菜单栏 开始-->
     <!--
-=================================================================================================================== 
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\templates\common\left-sidebar.phtml START
-===================================================================================================================
+============================================================================================================== 
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\templates\common\left-sidebar.phtml START
+==============================================================================================================
  -->
 <?php
 /**@var \Weline\Framework\View\Template $this */
@@ -271,9 +271,9 @@ if (!$themeConfig->getThemeConfig('topnav')):
     </div>
 <?php endif; ?>
 <!--
-=====================================================================================================================================
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_left-sidebar.phtml END
-=====================================================================================================================================
+================================================================================================================================
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_left-sidebar.phtml END
+================================================================================================================================
 -->
     <!--左侧菜单栏 结束-->
 
@@ -323,17 +323,17 @@ if (!$themeConfig->getThemeConfig('topnav')):
                 <!-- start page message -->
                 <div class='row'>
                     <!--
-=========================================================================================================== 
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Component\view\templates\message.phtml START
-===========================================================================================================
+====================================================================================================== 
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Component\view\templates\message.phtml START
+======================================================================================================
  -->
 <?php
 echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Manager\MessageManager::class);
 ?>
 <!--
-=============================================================================================================================
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Component\view\tpl\\zh_Hans_CN\templates\com_message.phtml END
-=============================================================================================================================
+========================================================================================================================
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Component\view\tpl\\zh_Hans_CN\templates\com_message.phtml END
+========================================================================================================================
 -->
                 </div> <!-- end message -->
                 <div class='row'>
@@ -389,7 +389,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                             foreach ($tree->getSub() as $sub) {
                                                 $method = $sub->getMethod() ? "({$sub->getMethod()})" : '';
                                                 $attr   = getLiAttr($sub);
-                                                $result .= "<li id='{$sub->getId()}' {$attr}>{$sub->getSourceName()}{$method}";
+                                                $result .= "<li id='{$sub->getSourceId()}' {$attr}>{$sub->getSourceName()}{$method}";
                                                 $result .= getTreeNode($sub);
                                                 $result .= '</li>';
                                             }
@@ -471,9 +471,9 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
 <!-- END layout-wrapper -->
 <!--右边栏-->
 <!--
-==================================================================================================================== 
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\templates\common\right-sidebar.phtml START
-====================================================================================================================
+=============================================================================================================== 
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\templates\common\right-sidebar.phtml START
+===============================================================================================================
  -->
 <?php
 /**@var \Weline\Framework\View\Template $this */
@@ -771,9 +771,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!-- Right bar overlay-->
 <div class="rightbar-overlay"></div>
 <!--
-======================================================================================================================================
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_right-sidebar.phtml END
-======================================================================================================================================
+=================================================================================================================================
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_right-sidebar.phtml END
+=================================================================================================================================
 -->
 <!--树形选择-->
 <script src='/Weline/Acl/view/statics/libs/vakata-jstree-3.3.14-0/dist/jstree.min.js'></script>
@@ -803,9 +803,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     })
 </script>
 <!--
-============================================================================================================= 
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\templates\common\footer.phtml START
-=============================================================================================================
+======================================================================================================== 
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\templates\common\footer.phtml START
+========================================================================================================
  -->
 <?php
 /**@var \Weline\Framework\View\Template $this */
@@ -832,9 +832,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
 <script src="/Weline/Admin/view/statics/assets/js/app.js"></script>
 <!--
-=============================================================================================================== 
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Backend\view\templates\public\footer.phtml START
-===============================================================================================================
+========================================================================================================== 
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Backend\view\templates\public\footer.phtml START
+==========================================================================================================
  -->
 <?php echo framework_view_process_block([
     0 => 'Weline\\Backend\\Block\\Footer\\Base',
@@ -845,20 +845,20 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 echo $this->getFooter()->getHtml();
 ?>
 <!--
-=================================================================================================================================
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Backend\view\tpl\\zh_Hans_CN\templates\public\com_footer.phtml END
-=================================================================================================================================
+============================================================================================================================
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Backend\view\tpl\\zh_Hans_CN\templates\public\com_footer.phtml END
+============================================================================================================================
 -->
 <!--
-===============================================================================================================================
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_footer.phtml END
-===============================================================================================================================
+==========================================================================================================================
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Admin\view\tpl\\zh_Hans_CN\templates\common\com_footer.phtml END
+==========================================================================================================================
 -->
 </body>
 </html>
 
 <!--
-===================================================================================================================================
-模板文件：D:\wwwroot\dev-bbs.aiweline.com\app\code\Weline\Acl\view\tpl\\zh_Hans_CN\templates\Backend\Role\com_assign.phtml END
-===================================================================================================================================
+==============================================================================================================================
+模板文件：D:\wwwroot\WelineFramework\app\code\Weline\Acl\view\tpl\\zh_Hans_CN\templates\Backend\Role\com_assign.phtml END
+==============================================================================================================================
 -->

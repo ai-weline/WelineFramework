@@ -306,12 +306,12 @@ class Menu extends \Weline\Framework\Database\Model
                     $mergerParentAcl[$parentSource][] = $roleAccess;
                 }
             }
-
             foreach ($mergerParentAcl as $parentSource => $acls) {
                 foreach ($acls as &$acl) {
                     $this->getSubMenusByRole($acl, $role);
                 }
-                $menu = $this->clear()->load('source', $parentSource);
+                $menu = clone $this->clear()->load('source', $parentSource);
+
                 $menu->setData('sub_menu_by_role', $acls);
                 $menu->setData('sub', $acls);
                 $top_menu = $this->findTopMenu($menu);
@@ -328,11 +328,10 @@ class Menu extends \Weline\Framework\Database\Model
                               ->select()
                               ->fetch()
                               ->getItems();
-        }
-
-        /**@var \Weline\Backend\Model\Menu $top_menu */
-        foreach ($top_menus as &$top_menu) {
-            $top_menu = $this->getSubMenusByRole($top_menu, $role);
+            /**@var \Weline\Backend\Model\Menu $top_menu */
+            foreach ($top_menus as &$top_menu) {
+                $top_menu = $this->getSubMenusByRole($top_menu, $role);
+            }
         }
         return $top_menus;
     }
@@ -351,7 +350,7 @@ class Menu extends \Weline\Framework\Database\Model
      * @throws \ReflectionException
      * @throws \Weline\Framework\Exception\Core
      */
-    private function findTopMenu(Menu $menu): Menu
+    private function findTopMenu(Menu &$menu): Menu
     {
         $menuData = clone $menu;
         if ($menuData->getPid() === 0) {
@@ -359,6 +358,7 @@ class Menu extends \Weline\Framework\Database\Model
         } else {
             $parent = $this->clear()->load('id', $menuData->getPid());
             $parent->setData('sub_menu_by_role', [$menuData]);
+            $parent->setData('sub', [$menuData]);
             return $this->findTopMenu($parent);
         }
     }
