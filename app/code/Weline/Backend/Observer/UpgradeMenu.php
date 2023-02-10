@@ -59,7 +59,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                     # 先查询一遍
                     /**@var Menu $menuModel */
                     $this->menu->clearData();
-                    $menuModel = $this->menu->where(Menu::fields_NAME, $menu[Menu::fields_NAME])->find()->fetch();
+                    $menuModel = $this->menu->where(Menu::fields_SOURCE, $menu[Menu::fields_SOURCE])->find()->fetch();
                     # 保存时检测查询数据，存在则更新
                     if ($menuModel->getId()) {
                         $menu[Menu::fields_ID] = $menuModel->getId();

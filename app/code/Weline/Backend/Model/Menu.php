@@ -25,7 +25,7 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Menu extends \Weline\Framework\Database\Model
 {
-    public const primary_key = 'name';
+    public const primary_key = 'source';
 
     public const fields_NAME          = 'name';
     public const fields_TITLE         = 'title';
