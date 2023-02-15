@@ -68,12 +68,16 @@ abstract class RequestAbstract extends RequestFilter
         $this->area_router = array_shift($url_arr);
     }
 
-    public function parse_url(): bool|int|array|string|null
+    public function parse_url(string $url = ''): bool|int|array|string|null
     {
-        if (empty($this->parse_url)) {
-            $this->parse_url = parse_url(rtrim($this->getUri(), '/'));
+        if (empty($url)) {
+            if (empty($this->parse_url)) {
+                $this->parse_url = parse_url(rtrim($this->getUri(), '/'));
+            }
+            return $this->parse_url;
+        } else {
+            return parse_url(rtrim($url, '/'));
         }
-        return $this->parse_url;
     }
 
     /**
@@ -372,9 +376,9 @@ abstract class RequestAbstract extends RequestFilter
         return $this->getBaseHost() . array_shift($url_exp);
     }
 
-    function getFullUrl():string
+    function getFullUrl(): string
     {
-        return $this->getServer('REQUEST_SCHEME').'://'.$this->getServer('SERVER_NAME') . $this->getServer('REQUEST_URI');
+        return $this->getServer('REQUEST_SCHEME') . '://' . $this->getServer('SERVER_NAME') . $this->getServer('REQUEST_URI');
     }
 
     public function getBaseUri(): string

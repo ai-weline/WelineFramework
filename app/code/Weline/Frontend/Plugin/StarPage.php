@@ -28,9 +28,9 @@ class StarPage
         $this->cache = $cacheFactory->create();
     }
 
-    public function beforeGetUrlPath(\Weline\Framework\Http\Request $request)
+    public function beforeGetUrlPath(\Weline\Framework\Http\Request $request,$url='')
     {
-        $result = $request->parse_url()['path'] ?? '';
+        $result = $request->parse_url($url)['path'] ?? '';
         if (empty($result)) {
             $result = $this->cache->get(KeysInterface::cache_start_page_path);
             if (empty($result)) {
