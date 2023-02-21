@@ -61,7 +61,6 @@ class Login extends \Weline\Framework\App\Controller\BackendController
     public function postPost()
     {
         # 已经登录直接进入后台
-//        $this->session->logout();
         if ($this->session->isLogin()) {
             // 有来源网址就跳回来源网址
             if ($referer = $this->session->getData('referer')) {
@@ -71,6 +70,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             }
             $this->redirect($this->_url->getBackendUrl('admin'));
         }
+
         if (!$this->request->isPost()) {
             # get请求404
             $this->request->getResponse()->noRouter();
@@ -80,6 +80,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $this->messageManager->addError(__('异常的登录操作！'));
             $this->redirect($this->_url->getBackendUrl('/admin/login'));
         }
+
         $adminUsernameUser = $this->helper->getRequestBackendUser();
         if (!$adminUsernameUser->getId()) {
             $this->messageManager->addError(__('账户不存在！'));
@@ -119,7 +120,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
             $this->redirect($this->_url->getBackendUrl('/admin/login'));
         }
         # 尝试登录
-        $password = trim($this->request->getParam('password'));
+        $password = $this->request->getParam('password');
         if ($adminUsernameUser->getPassword() && password_verify($password, $adminUsernameUser->getPassword())) {
             # SESSION登录用户
             $this->session->login($adminUsernameUser, (int)$adminUsernameUser->getId());
@@ -132,6 +133,7 @@ class Login extends \Weline\Framework\App\Controller\BackendController
                               ->setAttemptIp($this->request->clientIP())
                               ->save();
             $this->messageManager->addError(__('登录凭据错误！'));
+            $this->logout();
         }
         // 有来源网址就跳回来源网址
         if ($referer = $this->session->getData('referer')) {

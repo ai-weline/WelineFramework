@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -25,7 +26,6 @@ use Weline\Framework\Manager\ObjectManager;
 
 class RouteBefore implements \Weline\Framework\Event\ObserverInterface
 {
-
     /**
      * @var \Weline\Backend\Session\BackendSession
      */
@@ -39,7 +39,7 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
      */
     private CacheInterface $aclCache;
 
-    function __construct(
+    public function __construct(
         BackendSession $session,
         WhiteAclSource $whiteAclSource,
         AclCache       $aclCache
@@ -76,16 +76,10 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
             $referer = $request->getReferer();
             if (!in_array(strtolower($uri), $white_lists)) {
                 $role        = $this->session->getLoginUser()->getRoleModel();
-                $can_referer = $referer && ($request->getFullUrl() !== $referer);
+                $can_referer = $referer && ($request->getFullUrl() !== $referer) && $this->session->isLogin();
                 // 是否具有角色
                 if (empty($role->getId())) {
                     $this->session->logout();
-                    if ($can_referer) {
-                        /**@var MessageManager $message */
-                        $message = ObjectManager::getInstance(MessageManager::class);
-                        $message->addWarning(__('你无权进行该操作！已将你带回来源网址！'));
-                        $request->_response->redirect($referer);
-                    }
                     /**@var EventsManager $event */
                     $event = ObjectManager::getInstance(EventsManager::class);
                     $event->dispatch('Weline_Acl::no_access_redirect_before');
@@ -94,26 +88,30 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                 // 非超管
                 if ($role->getId() !== 1) {
                     // 已有的权限
-                    $access_sources = $this->session->getData('access_sources');
-                    if (empty($access_sources)) {
-                        // 检测角色中是否有此路由
-                        $access_sources = $role->getAccess();
-                        /**@var \Weline\Acl\Model\RoleAccess $access_source */
-                        foreach ($access_sources as $key => $access_source) {
-                            unset($access_sources[$key]);
-                            $access_sources[] = $access_source->getData();
-                        }
-                        $this->session->setData('access_sources', $access_sources);
+//                    $access_sources = $this->session->getData('access_sources');
+//                    if (empty($access_sources)) {
+//                        // 检测角色中是否有此路由
+//                        $access_sources = $role->getAccess();
+//                        /**@var \Weline\Acl\Model\RoleAccess $access_source */
+//                        foreach ($access_sources as $key => $access_source) {
+//                            unset($access_sources[$key]);
+//                            $access_sources[] = $access_source->getData();
+//                        }
+//                        $this->session->setData('access_sources', $access_sources);
+//                    }
+                    // 检测角色中是否有此路由
+                    $access_sources = $role->getAccess();
+                    /**@var \Weline\Acl\Model\RoleAccess $access_source */
+                    foreach ($access_sources as $key => $access_source) {
+                        unset($access_sources[$key]);
+                        $access_sources[] = $access_source->getData();
                     }
                     // 没有任何权限的后台用户404，等待超管给权限，否则后台都没办法进入
                     if (empty($access_sources)) {
-                        if ($can_referer) {
-                            $this->session->logout();
-                            /**@var MessageManager $message */
-                            $message = ObjectManager::getInstance(MessageManager::class);
-                            $message->addWarning(__('你没有任何权限！请联系管理员！'));
-                            $request->_response->redirect($referer);
-                        }
+                        $this->session->logout();
+                        /**@var MessageManager $message */
+                        $message = ObjectManager::getInstance(MessageManager::class);
+                        $message->addWarning(__('你没有任何权限！请联系管理员！'));
                         /**@var EventsManager $event */
                         $event = ObjectManager::getInstance(EventsManager::class);
                         $event->dispatch('Weline_Acl::no_access_redirect_before');
@@ -137,7 +135,6 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                             }
                         }
                     }
-
                     // 检测没有权限的情况下是否该路由存在于acl系统控制中
                     if (!$has_access) {
                         // 读取所有资源路径
@@ -149,19 +146,28 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                             $acl_sources = $aclModel->select()->fetchOrigin();
                             $this->aclCache->set($all_acl_cache_key, $acl_sources);
                         }
+
                         foreach ($acl_sources as $acl_source) {
                             // 路由匹配
                             if ($uri === $acl_source['route']) {
                                 // 方法匹配
                                 if ($acl_source['method']) {
                                     if ($request->getMethod() === $acl_source['method']) {
-                                        // 判断referer是否可跳转，解决无限重定向问题
-                                        foreach ($acl_sources as $acl_source_item) {
-                                            if ($acl_source_item['route'] === $request->getRouteUrlPath($referer)) {
+                                        if ($can_referer) {
+                                            // 判断referer是否可跳转，解决无限重定向问题
+                                            $referer_in_access = false;
+                                            foreach ($access_sources as $access_source) {
+                                                if ($access_source['route'] === $request->getUrlPath($referer)) {
+                                                    $referer_in_access = true;
+                                                    break;
+                                                }
+                                            }
+                                            if ($referer_in_access) {
+                                                $can_referer = true;
+                                            } else {
                                                 $can_referer = false;
                                             }
                                         }
-
                                         // 没有权限又存在于acl控制列表中
                                         if ($can_referer) {
                                             /**@var MessageManager $message */
@@ -181,9 +187,18 @@ class RouteBefore implements \Weline\Framework\Event\ObserverInterface
                                         $this->findAccessUrlRouteToRedirect($request, $access_sources);
                                     }
                                 } else {
-                                    // 判断referer是否可跳转，解决无限重定向问题
-                                    foreach ($acl_sources as $acl_source_item) {
-                                        if ($acl_source_item['route'] === $request->getUrlPath($referer)) {
+                                    if ($can_referer) {
+                                        // 判断referer是否可跳转，解决无限重定向问题
+                                        $referer_in_access = false;
+                                        foreach ($access_sources as $access_source) {
+                                            if ($access_source['route'] === $request->getUrlPath($referer)) {
+                                                $referer_in_access = true;
+                                                break;
+                                            }
+                                        }
+                                        if ($referer_in_access) {
+                                            $can_referer = true;
+                                        } else {
                                             $can_referer = false;
                                         }
                                     }

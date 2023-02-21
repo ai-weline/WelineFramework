@@ -41,7 +41,7 @@ class Data extends \Weline\Framework\App\Helper
     {
         $username = $this->request->getParam('username');
         try {
-            return clone $this->adminUser->load('username', $username);
+            return clone $this->adminUser->clear()->load('username', $username);
         } catch (\Exception $exception) {
             return $this->adminUser;
         }

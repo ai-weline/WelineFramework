@@ -10,8 +10,8 @@
 -->
 <html lang="en">
 <head>
+    <title>WelineFramework 登录面板</title>
     @template(Weline_Admin::common/head.phtml)
-    <title>Weline Admin 登录面板</title>
 </head>
 
 <body class="bg-pattern">
@@ -24,10 +24,10 @@
                     <div class="card-body p-4">
                         <div class="">
                             <div class="text-center">
-                                <a href="../../../../../../../index.html" class="">
-                                    <img src="@static(Weline_Backend::img/logo.png)" alt="" height="24"
+                                <a href="@backend-url('')" class="">
+                                    <img src="@static(Weline_Backend::img/logo.png)" alt="" height="125"
                                          class="weline-logo auth-logo logo-dark mx-auto">
-                                    <img src="@static(Weline_Backend::img/logo.png)" alt="" height="24"
+                                    <img src="@static(Weline_Backend::img/logo.png)" alt="" height="125"
                                          class="weline-logo auth-logo logo-light mx-auto">
                                 </a>
                             </div>
@@ -44,13 +44,13 @@
                                     <div class="col-md-12">
                                         <div class="mb-4">
                                             <label class="form-label" for="username"><?= __('管理员') ?></label>
-                                            <input type="text" class="form-control" id="username" name="username" value="秋枫雁飞"
+                                            <input type="text" class="form-control" id="username" name="username" value=""
                                                    placeholder="<?= __('输入管理员') ?>">
                                         </div>
                                         <div class="mb-4">
                                             <label class="form-label" for="userpassword"><?= __('密码') ?></label>
                                             <input type="password" class="form-control" id="userpassword"
-                                                   name="password" value="admin"
+                                                   name="password" value=""
                                                    placeholder="<?= __('输入密码') ?>">
                                         </div>
                                         <div class="row">

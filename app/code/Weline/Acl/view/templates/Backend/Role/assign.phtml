@@ -122,7 +122,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             <?php
                                             $attr = getLiAttr($tree);
                                             ?>
-                                            <li id='{{tree.acl_id}}' {{attr}}>{{tree.source_name}}
+                                            <li id='{{tree.source_id}}' {{attr}}>{{tree.source_name}}
                                                 <if condition="tree.method">
                                                     ({{tree.method}})
                                                 </if>
@@ -185,7 +185,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             };
                                         }
                                         $desc.="({$acl->getSourceId()})";
-                                        $access = $acl->getData('access') ? 'true' : 'false';
+                                        $access = $acl->getData('role_id') ? 'true' : 'false';
 //                                        $disabled = $acl->getData('a_role_id') ? 'false' : 'true';
                                         return " class='show_tooltip' title='{$desc}' data-jstree='{\"disabled\":false,\"opened\":true,\"selected\":{$access},
                                         \"icon\":\"$icon\"}' ";

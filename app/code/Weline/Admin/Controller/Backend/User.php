@@ -45,7 +45,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
     #[\Weline\Framework\Acl\Acl('Weline_Admin::system_user_add', '管理员添加界面','', '添加管理员界面访问')]
     function getAdd()
     {
-        $this->assign('user', $this->backendUser->clearData()->setData($this->session->getData('user'))->getData());
+        $this->assign('user',  $this->backendUser->clearData()->setData($this->session->getData('user'))->getData());
         $this->assign('action', $this->request->getUrlBuilder()->getBackendUrl('*/backend/user/add', $this->request->getGet()));
         return $this->fetch('form');
     }
@@ -53,7 +53,8 @@ class User extends \Weline\Framework\App\Controller\BackendController
     #[\Weline\Framework\Acl\Acl('Weline_Admin::system_user_edit', '管理员修改界面','', '修改管理员界面访问')]
     function getEdit()
     {
-        $this->assign('user', $this->backendUser->load($this->request->getGet('id'))->getData());
+        $user = clone $this->backendUser->clear()->load($this->request->getGet('id'));
+        $this->assign('edit_user', $user);
         $this->assign('action', $this->request->getUrlBuilder()->getBackendUrl('*/backend/user/edit', $this->request->getGet()));
         return $this->fetch('form');
     }
@@ -84,7 +85,7 @@ class User extends \Weline\Framework\App\Controller\BackendController
         try {
             $this->backendUser->clearData()->setUsername($this->request->getPost('username'))
                               ->setEmail($this->request->getPost('email'))
-                              ->setPassword($this->request->getPost('password'))
+                              ->setPassword(trim($this->request->getPost('password')))
                               ->save(true);
             $this->getMessageManager()->addSuccess(__('添加成功！'));
             $this->redirect('*/backend/user/edit', ['id' => $this->backendUser->getId()]);

@@ -47,9 +47,12 @@ class Role extends \Weline\Admin\Controller\BaseController
     #[\Weline\Framework\Acl\Acl('Weline_Acl::acl_role_add', '角色添加', '', '')]
     function add()
     {
-        if ($this->request->isGet()) return $this->fetch('form');
+        if ($this->request->isGet()) {
+            return $this->fetch('form');
+        }
+
         if ($this->request->isPost()) {
-            $role = $this->role->where($this->role::fields_ROLE_NAME, $this->request->getPost('role_name'))->find()->fetch();
+            $role = $this->role->clear()->where($this->role::fields_ROLE_NAME, $this->request->getPost('role_name'))->find()->fetch();
             if ($role->getId()) {
                 $this->getMessageManager()->addWarning(__('角色已存在！'));
                 $this->assign('action', $this->request->getUrlBuilder()->getBackendUrl('*/backend/role/add'));
@@ -57,7 +60,7 @@ class Role extends \Weline\Admin\Controller\BaseController
             }
             try {
                 $this->role->setData($this->request->getPost())
-                           ->save(true, $this->role::fields_ROLE_NAME);
+                    ->save(true, $this->role::fields_ROLE_NAME);
             } catch (\Exception $exception) {
                 $this->getMessageManager()->addException($exception);
             }
@@ -75,12 +78,12 @@ class Role extends \Weline\Admin\Controller\BaseController
             if (!$id) {
                 $this->redirect(404);
             }
-            $role = $this->role->load($id);
+            $role = clone $this->role->clear()->load($id);
             if (!$role->getId()) {
                 $this->getMessageManager()->addWarning(__('角色已不存在！'));
             } else {
                 $this->assign('action', $this->request->getUrlBuilder()->getBackendUrl('*/backend/role/edit'));
-                $this->assign('role', $role);
+                $this->assign('edit_role', $role);
             }
             return $this->fetch('form');
         }
@@ -131,10 +134,10 @@ class Role extends \Weline\Admin\Controller\BaseController
         // 可分配权限
         /**@var \Weline\Acl\Model\RoleAccess $roleAccessModel */
         $roleAccessModel = ObjectManager::getInstance(\Weline\Acl\Model\RoleAccess::class);
-        $trees           = $roleAccessModel->clear()->getTree();
+        $trees           = $roleAccessModel->clear()->getTreeWithRole($role);
         // 当前角色权限
         $current_accesses = $roleAccessModel->clearData()->getRoleAccessList($role);
-        $this->checkAccess($trees, $current_accesses);
+//        $this->checkAccess($trees, $current_accesses);
         $this->assign('trees', $trees);
         $this->assign('current_accesses', $current_accesses);
         // 当前用户角色
@@ -142,35 +145,6 @@ class Role extends \Weline\Admin\Controller\BaseController
         $session = ObjectManager::getInstance(BackendSession::class);
         $this->assign('user_role', $session->getLoginUser()->getRole());
         return $this->fetch('assign');
-    }
-
-
-    /**
-     * @DESC          # 方法描述
-     *
-     * @AUTH    秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2023/1/19 23:26
-     * 参数区：
-     *
-     * @param \Weline\Acl\Model\RoleAccess[] $trees
-     * @param \Weline\Acl\Model\RoleAccess[] $current_accesses
-     */
-    private function checkAccess(array &$trees, array &$current_accesses)
-    {
-        foreach ($trees as &$tree) {
-            $tree->setData('access', false);
-            foreach ($current_accesses as &$current_access) {
-                if ($tree->getData('acl_id') === $current_access->getData('acl_id')) {
-                    $tree->setData('access', true);
-                    $current_access->setData('access', true);
-                }
-                /**@var RoleAccess[] $subs */
-                if ($subs = $tree->getSub()) {
-                    $this->checkAccess($subs, $current_accesses);
-                }
-            }
-        }
     }
 
     #[\Weline\Framework\Acl\Acl('Weline_Acl::acl_role_assign_post', '角色权限分配', '', '')]
@@ -187,7 +161,7 @@ class Role extends \Weline\Admin\Controller\BaseController
         foreach ($acl_ids as $acl_id) {
             $acls[] = [
                 RoleAccess::fields_ROLE_ID => $role_id,
-                RoleAccess::fields_SOURCE_ID  => $acl_id,
+                RoleAccess::fields_SOURCE_ID => $acl_id,
             ];
         }
         /**@var RoleAccess $roleAccessModel */

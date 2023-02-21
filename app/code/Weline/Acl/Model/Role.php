@@ -20,10 +20,15 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Role extends \Weline\Framework\Database\Model
 {
-    public const fields_ID               = 'role_id';
-    public const fields_ROLE_ID          = 'role_id';
-    public const fields_ROLE_NAME        = 'role_name';
+    public const fields_ID = 'role_id';
+    public const fields_ROLE_ID = 'role_id';
+    public const fields_ROLE_NAME = 'role_name';
     public const fields_ROLE_DESCRIPTION = 'role_description';
+
+    function getId(mixed $default = 0)
+    {
+        return (int)parent::getId($default);
+    }
 
     function setRoleName(string $name): Role
     {
@@ -71,36 +76,36 @@ class Role extends \Weline\Framework\Database\Model
 //        $setup->query('SET foreign_key_checks = 1;');
         if (!$setup->tableExist()) {
             $setup->createTable()
-                  ->addColumn(
-                      self::fields_ID,
-                      TableInterface::column_type_INTEGER,
-                      null,
-                      'primary key auto_increment',
-                      '角色ID'
-                  )
-                  ->addColumn(
-                      self::fields_ROLE_NAME,
-                      TableInterface::column_type_VARCHAR,
-                      128,
-                      'not null unique', '角色名'
-                  )
-                  ->addColumn(
-                      self::fields_ROLE_DESCRIPTION,
-                      TableInterface::column_type_TEXT,
-                      null,
-                      '',
-                      '角色描述'
-                  )
-                  ->create();
+                ->addColumn(
+                    self::fields_ID,
+                    TableInterface::column_type_INTEGER,
+                    null,
+                    'primary key auto_increment',
+                    '角色ID'
+                )
+                ->addColumn(
+                    self::fields_ROLE_NAME,
+                    TableInterface::column_type_VARCHAR,
+                    128,
+                    'not null unique', '角色名'
+                )
+                ->addColumn(
+                    self::fields_ROLE_DESCRIPTION,
+                    TableInterface::column_type_TEXT,
+                    null,
+                    '',
+                    '角色描述'
+                )
+                ->create();
             // 创建超管
             $this->setId(1)
-                 ->setRoleName('超级管理员')
-                 ->setRoleDescription('拥有所有权限的超管角色')
-                 ->save(true);
+                ->setRoleName('超级管理员')
+                ->setRoleDescription('拥有所有权限的超管角色')
+                ->save(true);
             $this->setId(2)
-                 ->setRoleName('管理员')
-                 ->setRoleDescription('拥有部分特殊权限的管理角色')
-                 ->save(true);
+                ->setRoleName('管理员')
+                ->setRoleDescription('拥有部分特殊权限的管理角色')
+                ->save(true);
         }
     }
 
@@ -143,6 +148,6 @@ class Role extends \Weline\Framework\Database\Model
     {
         /**@var \Weline\Acl\Model\RoleAccess $roleAccess */
         $roleAccess = ObjectManager::getInstance(RoleAccess::class);
-        return  $roleAccess->getRoleNotAccessList($this);
+        return $roleAccess->getRoleNotAccessList($this);
     }
 }

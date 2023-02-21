@@ -288,19 +288,20 @@ class Menu extends \Weline\Framework\Database\Model
                                  ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
                                  ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
                                  ->where('ra.' . RoleAccess::fields_ROLE_ID, $role->getId(0))
-                                 ->where('main_table.pid', 0, '<>')
+//                                 ->where('main_table.pid', 0, '<>')
+                                 ->order('main_table.order', 'ASC')
                                  ->select()
                                  ->fetch()
                                  ->getItems();
-            $hasIds       = [];
             $top_menus    = [];
             // 归并所有相同父级的权限,同时筛选出父级权限资源递归出子权限
             $mergerParentAcl = [];
+            /**@var \Weline\Backend\Model\Menu $roleAccess */
             foreach ($roleAccesses as $roleAccess) {
                 $parentSource = $roleAccess['parent_source'];
                 // 顶层资源,找出对应是否有权限的子权限
                 if (empty($parentSource)) {
-                    $top_menus[] = $this->getSubMenusByRole($roleAccess, $role);
+                    $top_menus[$roleAccess->getSource()] = $this->getSubMenusByRole($roleAccess, $role);
                 } else {
                     // 归并需要查找父级的子权限
                     $mergerParentAcl[$parentSource][] = $roleAccess;
@@ -315,16 +316,17 @@ class Menu extends \Weline\Framework\Database\Model
                 $menu->setData('sub_menu_by_role', $acls);
                 $menu->setData('sub', $acls);
                 $top_menu = $this->findTopMenu($menu);
-                if (!in_array($top_menu->getData('id'), $hasIds)) {
-                    $top_menus[] = $top_menu;
-                    $hasIds[]    = $top_menu->getData('id');
+                if (!isset($top_menus[$top_menu->getSource()])) {
+                    $top_menus[$top_menu->getSource()] = $top_menu;
                 }
             }
+            rsort($top_menus);
         } else {
             $top_menus = $this->clear()
                               ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
                               ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
                               ->where('main_table.pid', 0)
+                              ->order('main_table.order', 'ASC')
                               ->select()
                               ->fetch()
                               ->getItems();

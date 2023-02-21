@@ -19,66 +19,70 @@ if (!$themeConfig->getThemeConfig('topnav')):
                     <?php
                     /**@var \Weline\Backend\Model\Menu $menuModel */
                     $menuModel = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Model\Menu::class);
-                    // 获取菜单类型的角色资源
-                    /**@var \Weline\Backend\Session\BackendSession $session */
-                    $session = ObjectManager::getInstance(\Weline\Backend\Session\BackendSession::class);
-                    /**@var \Weline\Backend\Model\BackendUser $user */
-                    $user = $session->getLoginUser();
-                    $role = $user->getRoleModel();
+    // 获取菜单类型的角色资源
+    /**@var \Weline\Backend\Session\BackendSession $session */
+    $session = ObjectManager::getInstance(\Weline\Backend\Session\BackendSession::class);
+    /**@var \Weline\Backend\Model\BackendUser $user */
+    $user = $session->getLoginUser();
+    $role = $user->getRoleModel();
 
-                    /**@var \Weline\Acl\Model\RoleAccess $roleAccessModel */
-                    $roleAccessModel = ObjectManager::getInstance(\Weline\Acl\Model\RoleAccess::class);
-                    $roleAccessMenus = $menuModel->getMenuTreeByRole($role);
-                    /**@var \Weline\Backend\Model\Menu $menu */
-                    foreach ($roleAccessMenus as $menu) {
-                        if (!$menu->isEnable()) {
-                            continue;
-                        }
+    /**@var \Weline\Acl\Model\RoleAccess $roleAccessModel */
+    $roleAccessModel = ObjectManager::getInstance(\Weline\Acl\Model\RoleAccess::class);
+    $roleAccessMenus = $menuModel->getMenuTreeByRole($role);
+    /**@var \Weline\Backend\Model\Menu $menu */
+    foreach ($roleAccessMenus as $menu) {
+        if (!$menu->isEnable()) {
+            continue;
+        }
 
-                        if (empty($menu->getAction()) && empty($menu->getParentSource()) && empty($menu->getPid())) {
-                            ?>
+        if (empty($menu->getParentSource())) {
+            ?>
                             <li class="menu-title" data-source='{{menu.source}}'><i
-                                        class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getTitle()) ?></span></li>
+                                        class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getTitle()) ?></span>
+                            </li>
                             <?php
-                        }
-                        $submenus = $menu->getSubMenuByRole();
-                        /**@var \Weline\Backend\Model\Menu $submenu */
-                        foreach ($submenus as $submenu) {
-                            $level_3_menus = $submenu->getSubMenuByRole();
-                            if (empty($level_3_menus)) {
-                                if ('/' === $submenu->getAction()) {
-                                    ?>
+        }
+        $submenus = $menu->getSubMenuByRole();
+        /**@var \Weline\Backend\Model\Menu $submenu */
+        foreach ($submenus as $submenu) {
+            $level_3_menus = $submenu->getSubMenuByRole();
+            if (empty($level_3_menus)) {
+                if ('/' === $submenu->getAction()) {
+                    ?>
                                     <li data-source='{{submenu.source}}'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source="{{submenu.source}}" class="waves-effect">
+                                        <a href="<?= $submenu->getUrl() ?>" data-source="{{submenu.source}}"
+                                           class="waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
                                             <span><?= __($submenu->getTitle()); ?></span>
                                         </a>
                                     </li>
                                     <?php
-                                } else {
-                                    ?>
+                } else {
+                    ?>
                                     <li data-source='{{submenu.source}}'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}' class=" waves-effect">
+                                        <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}'
+                                           class=" waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i>
                                             <span><?= __($submenu->getTitle()) ?></span>
                                         </a>
                                     </li>
                                     <?php
-                                }
-                            } else {
-                                if ('/' === $submenu->getAction()) {
-                                    ?>
+                }
+            } else {
+                if ('/' === $submenu->getAction()) {
+                    ?>
                                     <li data-source='{{submenu.source}}'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}' class="waves-effect">
+                                        <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}'
+                                           class="waves-effect">
                                             <i class="<?= $submenu->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
                                             <span><?= __($submenu->getTitle()) ?></span>
                                         </a>
                                     </li>
                                     <?php
-                                } else {
-                                    ?>
+                } else {
+                    ?>
                                     <li data-source='{{submenu.source}}'>
                                         <a href="javascript: void(0);" data-source='{{submenu.source}}'
                                            class="has-arrow waves-effect">
@@ -87,25 +91,26 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                         </a>
                                         <ul class="sub-menu" aria-expanded="false">
                                             <?php
-                                            /**@var \Weline\Backend\Model\Menu $level_3_menu */
-                                            foreach ($level_3_menus as $level_3_menu) {
-                                                ?>
+                            /**@var \Weline\Backend\Model\Menu $level_3_menu */
+                            foreach ($level_3_menus as $level_3_menu) {
+                                ?>
                                                 <li data-source='{{level_3_menu.source}}'>
-                                                    <a href="<?= $level_3_menu->getUrl() ?>" data-source='{{level_3_menu.source}}'><i
+                                                    <a href="<?= $level_3_menu->getUrl() ?>"
+                                                       data-source='{{level_3_menu.source}}'><i
                                                                 class="<?= $level_3_menu->getIcon() ?>"></i><?= __($level_3_menu->getTitle()) ?>
                                                     </a>
                                                 </li>
                                                 <?php
-                                            }
-                                            ?>
+                            }
+                    ?>
                                         </ul>
                                     </li>
                                     <?php
-                                }
-                            }
-                        }
-                    }
-                    ?>
+                }
+            }
+        }
+    }
+?>
                 </ul>
             </div>
             <!-- Sidebar -->

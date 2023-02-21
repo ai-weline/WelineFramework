@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -16,13 +17,13 @@ use Weline\Backend\Model\BackendUser;
 use Weline\Backend\Model\Menu;
 use Weline\Backend\Session\BackendSession;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class RoleAccess extends \Weline\Framework\Database\Model
 {
-
     public const fields_ID = 'role_id';
     public const fields_ROLE_ID = Role::fields_ID;
     public const fields_SOURCE_ID = Acl::fields_ID;
@@ -98,12 +99,11 @@ class RoleAccess extends \Weline\Framework\Database\Model
      */
     public function getTree(
         string     $main_field = '',
-        string     $parent_id_field = 'parent_id',
-        string|int $parent_id_value = 0,
-        string     $order_field = 'position',
+        string     $parent_id_field = 'parent_source',
+        string|int $parent_id_value = '',
+        string     $order_field = 'source_id',
         string     $order_sort = 'ASC'
-    ): array
-    {
+    ): array {
         /**@var BackendUser $user */
         $user = ObjectManager::getInstance(BackendSession::class)->getLoginUser();
         if (!$user) {
@@ -119,7 +119,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
                 $aclModel::fields_SOURCE_ID,
                 $aclModel::fields_PARENT_SOURCE,
                 '',
-                $aclModel::fields_ACL_ID
+                $aclModel::fields_SOURCE_ID
             );
         } else {
             if (empty($roleModel->getId())) {
@@ -127,6 +127,111 @@ class RoleAccess extends \Weline\Framework\Database\Model
             }
             return $this->getAccessTreeByRole($roleModel);
         }
+    }
+
+    /**
+     * @DESC          # 获取树形菜单【携带角色权限信息】
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/7/3 8:49
+     * 参数区：
+     *
+     * @param string $main_field 主要字段
+     * @param string $parent_id_field 父级字段
+     * @param string|int $parent_id_value 父级字段值【用于判别顶层数据】
+     * @param string $order_field 排序字段
+     * @param string $order_sort 排序方式
+     *
+     * @return array
+     */
+    public function getTreeWithRole(
+        ?Role      $role = null,
+        string     $main_field = 'main_table.source_id',
+        string     $parent_id_field = 'parent_source',
+        string|int $parent_id_value = '',
+        string     $order_field = 'source_id',
+        string     $order_sort = 'ASC'
+    ): array {
+        $main_field = $main_field ?: $this::fields_ID;
+        $top_menus = $this->clearData()
+            ->joinModel(Acl::class, 'a', 'a.source_id=main_table.source_id and main_table.role_id=' . $role->getId(''), 'right')
+            ->where($parent_id_field, $parent_id_value)
+            ->order($order_field, $order_sort)
+            ->select()
+            ->fetch()
+            ->getItems();
+        foreach ($top_menus as &$top_menu) {
+            $top_menu->setData('source_id', $top_menu->getData('a_source_id'));
+            $top_menu = $this->getSubsWithRole($role, $top_menu, $main_field, $parent_id_field, $order_field, $order_sort);
+        }
+        return $top_menus;
+    }
+
+    /**
+     * @DESC          # 方法描述
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/2/20 23:18
+     * 参数区：
+     * @return \Weline\Framework\Database\Model[]
+     */
+    public function getSub(): array
+    {
+        return $this->getData('sub') ?? [];
+    }
+
+    /**
+     * @DESC          # 获取子节点
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2022/7/3 8:57
+     * 参数区：
+     *
+     * @param Model $model 模型
+     * @param string $main_field 主要字段
+     * @param string $parent_id_field 父级字段
+     * @param string $order_field 排序字段
+     * @param string $order_sort 排序方式
+     *
+     * @return Model
+     */
+    public function getSubsWithRole(
+        Role   &$role,
+        Model  &$model,
+        string $main_field = 'main_table.source_id',
+        string $parent_id_field = 'parent_id',
+        string $order_field = 'position',
+        string $order_sort = 'ASC'
+    ): Model {
+        $main_field = $main_field ?: $this::fields_ID;
+        $model->setData('source_id', $model->getData('a_source_id'));
+        if ($subs = $this->clear()
+            ->joinModel(Acl::class, 'a', 'a.source_id=main_table.source_id and main_table.role_id=' . $role->getId(''), 'right')
+            ->where($parent_id_field, $model->getData('a_source_id'))
+            ->order($order_field, $order_sort)
+            ->select()
+            ->fetch()
+            ->getItems()
+        ) {
+            foreach ($subs as &$sub) {
+                $sub->setData('source_id', $sub->getData('a_source_id'));
+                $has_sub_menu = $this->clear()
+                    ->joinModel(Acl::class, 'a', 'a.source_id=main_table.source_id and main_table.role_id=' . $role->getId(''), 'right')
+                    ->where($parent_id_field, $sub->getData('a_source_id'))
+                    ->find()
+                    ->fetch();
+                if ($has_sub_menu->getData('a_source_id')) {
+                    $sub = $this->getSubsWithRole($role, $sub, $main_field, $parent_id_field, $order_field, $order_sort);
+                }
+            }
+            $model = $model->setData('sub', $subs);
+        } else {
+            $model = $model->setData('sub', []);
+        }
+        return $model;
     }
 
     public function getRoleAccessList(Role $roleModel): array
@@ -205,7 +310,7 @@ class RoleAccess extends \Weline\Framework\Database\Model
                 $aclModel::fields_SOURCE_ID,
                 $aclModel::fields_PARENT_SOURCE,
                 '',
-                $aclModel::fields_ACL_ID
+                $aclModel::fields_SOURCE_ID
             );
         }
         return $top_acls;

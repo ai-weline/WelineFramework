@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /*
@@ -17,7 +18,6 @@ use Weline\Framework\Manager\ObjectManager;
 
 class AclRegisterObserver implements \Weline\Framework\Event\ObserverInterface
 {
-
     /**
      * @inheritDoc
      */
@@ -39,7 +39,8 @@ class AclRegisterObserver implements \Weline\Framework\Event\ObserverInterface
                 $alcModel::fields_DOCUMENT,
                 $alcModel::fields_PARENT_SOURCE,
                 $alcModel::fields_CLASS,
-            ])
+            ]
+        )
             ->fetch();
     }
 }

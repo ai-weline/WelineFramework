@@ -101,9 +101,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         <div class='col-md-6'>
                                             <div class='mb-3'>
                                                 <label class='form-label' for='role_name'><lang>角色名</lang></label>
-                                                <input type='hidden' name="role_id" value='{{role.role_id}}'>
+                                                <if condition="edit_role.role_id">
+                                                    <input type='hidden' name="role_id" value='{{edit_role.role_id}}'>
+                                                </if>
                                                 <input type='text' class='form-control' name="role_name" id='role_name'
-                                                       placeholder='@lang{请输入角色名}' value='{{role.role_name}}'
+                                                       placeholder='@lang{请输入角色名}' value='{{edit_role.role_name}}'
                                                        required>
                                                 <div class='valid-feedback'>
                                                     <lang>角色名称验证成功</lang>
@@ -118,7 +120,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 <label class='form-label' for='role_description'><lang>角色描述</lang></label>
                                                 <textarea type='text' class='form-control' name="role_description" id='role_description'
                                                        placeholder='@lang{请输入角色描述}'
-                                                          required>{{role.role_description}}</textarea>
+                                                          required>{{edit_role.role_description}}</textarea>
                                                 <div class='valid-feedback'>
                                                     <lang>角色描述验证成功</lang>
                                                 </div>
@@ -172,6 +174,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
 <!-- Init js -->
 <script src='@static(Weline_Admin::assets/js/pages/table-responsive.init.js)'></script>
+<!-- parsleyjs -->
+<script src='@static(Weline_Admin::assets/libs/parsleyjs/parsley.min.js)'></script>
+<!-- validation init -->
+<script src='@static(Weline_Admin::assets/js/pages/form-validation.init.js)'></script>
 @template(Weline_Admin::common/footer.phtml)
 </body>
 </html>

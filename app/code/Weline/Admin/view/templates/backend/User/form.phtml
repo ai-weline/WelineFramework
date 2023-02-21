@@ -90,7 +90,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                             <div class='card-body'>
                                 <h4 class='card-title'>
                                     <lang>
-                                        <if condition='user.user_id'>
+                                        <if condition='edit_user.user_id'>
                                             <lang>编辑</lang>
                                             <else/>
                                             <lang>新增</lang>
@@ -100,7 +100,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                 </h4>
                                 <p class='card-title-desc'>
                                     <lang>
-                                        <if condition='user.user_id'>
+                                        <if condition='edit_user.user_id'>
                                             <lang>编辑</lang>
                                             <else/>
                                             <lang>新增</lang>
@@ -114,9 +114,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         <div class='col-md-6'>
                                             <div class='mb-3'>
                                                 <label class='form-label' for='username'><lang>用户名</lang></label>
-                                                <input type='hidden' name="user_id" value='{{user.user_id}}'>
+                                                <input type='hidden' name="user_id" value='{{edit_user.user_id}}'>
                                                 <input type='text' class='form-control' name="username" id='username'
-                                                       placeholder='@lang{请输入用户名}' value='{{user.username}}'
+                                                       placeholder='@lang{请输入用户名}' value='{{edit_user.username}}'
                                                        required>
                                                 <div class='valid-feedback'>
                                                     <lang>用户名称验证成功</lang>
@@ -128,7 +128,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             <div class='mb-3'>
                                                 <label class='form-label' for='email'><lang>邮箱</lang></label>
                                                 <input type='text' class='form-control' name="email" id='email'
-                                                       placeholder='@lang{请输入邮箱}' value='{{user.email}}'
+                                                       placeholder='@lang{请输入邮箱}' value='{{edit_user.email}}'
                                                        required>
                                                 <div class='valid-feedback'>
                                                     <lang>邮箱验证成功</lang>
