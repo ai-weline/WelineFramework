@@ -134,7 +134,7 @@ class Template extends DataObject
             $req['get'] = $this->request->getGet();
             $req['post'] = $this->request->getPost();
             $this->setData('req', $req);
-            $this->setData('cookie', Cookie::all());
+            $this->setData('cookie', Cookie::get());
             $this->setData('env', Env::getInstance()->getConfig());
         }
 
