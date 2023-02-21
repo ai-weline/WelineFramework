@@ -71,9 +71,9 @@ interface CreateInterface extends TableInterface
      *
      * @param string       $type         【索引类型】
      * @param string       $name         【索引名】
-     * @param array|string $column
+     * @param array|string $column       【索引列】
      * @param string       $comment      【索引注释】
-     * @param string       $index_method 【索引类型】
+     * @param string       $index_method 【索引方式】
      *
      * @return CreateInterface
      */
