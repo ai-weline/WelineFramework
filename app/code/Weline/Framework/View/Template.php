@@ -130,7 +130,11 @@ class Template extends DataObject
                 $this->view_dir = $this->request->getRouterData('module_path') . DataInterface::dir . DS;
             }
                 $this->getData('title') ?? $this->setData('title', $this->request->getModuleName());
-            $this->setData('req', $this->request->getParams());
+            $req = (array)$this->request->getParams();
+            $req['get'] = $this->request->getGet();
+            $req['post'] = $this->request->getPost();
+            $this->setData('req', $req);
+            $this->setData('cookie', Cookie::all());
             $this->setData('env', Env::getInstance()->getConfig());
         }
 
