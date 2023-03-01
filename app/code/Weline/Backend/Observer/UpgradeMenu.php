@@ -98,7 +98,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                     }
                 }
                 $menu[Menu::fields_PID] = $menu[Menu::fields_PID] ?? 0;
-                $result                 = $menuModel->setData($menu)->forceCheck(true)->save();
+                $result                 = $menuModel->setData($menu)->save(true);
                 # 2 检查自身是否被别的模块作为父分类
                 $menuModel->clearData();
                 if ($this_menu_id = $menuModel->getId() && $is_others_parent = $menuModel->where(Menu::fields_PARENT_SOURCE, $menu[Menu::fields_SOURCE])->select()->fetch()) {
@@ -143,6 +143,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 \Weline\Acl\Model\Acl::fields_REWRITE       => '',
                 \Weline\Acl\Model\Acl::fields_ICON          => $menu['icon'],
                 \Weline\Acl\Model\Acl::fields_IS_ENBAVLE    => $menu['is_enable'],
+                \Weline\Acl\Model\Acl::fields_IS_BACKEND    => $menu['is_backend'],
             ];
         }
         /**@var \Weline\Acl\Model\Acl $alcModel */
@@ -161,6 +162,7 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
                 $alcModel::fields_CLASS,
                 $alcModel::fields_TYPE,
                 $alcModel::fields_ICON,
+                $alcModel::fields_IS_BACKEND,
             ])
                  ->fetch();
     }
