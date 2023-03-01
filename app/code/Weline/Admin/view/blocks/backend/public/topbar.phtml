@@ -67,19 +67,40 @@
             </div>
 
             <div class="dropdown d-none d-sm-inline-block">
-                <!-- 语言 -->
-                <button type='button' class='btn header-item waves-effect'
-                        data-bs-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                    {{current_language.flag}}<span class='align-middle'> {{current_language.name}}</span>
+                <button type="button" class="btn header-item waves-effect"
+                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="" src="@static(Weline_Admin::assets/images/flags/zh_CN.jfif)" alt="<?= __('头部语言') ?>"
+                         height="16">
                 </button>
-                <div class='dropdown-menu dropdown-menu-end languages'>
-                    <foreach name='languages' item='language' key='code'>
-                        <!-- item-->
-                        <a href='javascript:selectLanguage("{{code}}");'
-                           class='dropdown-item notify-item @if{current_language.code == code=>"active"}'>
-                            {{language.flag}}<span class='align-middle'> {{language.name}}</span>
-                        </a>
-                    </foreach>
+                <div class="dropdown-menu dropdown-menu-end">
+                    <!-- item-->
+                    <a href='javascript:void(0);' class='dropdown-item notify-item'>
+                        <img src='@static(Weline_Admin::assets/images/flags/zh_CN.jfif)' alt='user-image' class='me-1'
+                             height='12'> <span class='align-middle'><?= __('中国') ?></span>
+                    </a>
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <img src="@static(Weline_Admin::assets/images/flags/spain.jpg)" alt="user-image" class="me-1"
+                             height="12"> <span class="align-middle">Spanish</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <img src="@static(Weline_Admin::assets/images/flags/germany.jpg)" alt="user-image" class="me-1"
+                             height="12"> <span class="align-middle">German</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <img src="@static(Weline_Admin::assets/images/flags/italy.jpg)" alt="user-image" class="me-1"
+                             height="12"> <span class="align-middle">Italian</span>
+                    </a>
+
+                    <!-- item-->
+                    <a href="javascript:void(0);" class="dropdown-item notify-item">
+                        <img src="@static(Weline_Admin::assets/images/flags/russia.jpg)" alt="user-image" class="me-1"
+                             height="12"> <span class="align-middle">Russian</span>
+                    </a>
                 </div>
             </div>
 
@@ -159,15 +180,15 @@
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-<!--                    <a class="dropdown-item" href="#"><i class="ri-user-line align-middle me-1"></i>--><?//= __('资料') ?><!--</a>-->
-<!--                    <a class="dropdown-item" href="#"><i-->
-<!--                                class="ri-wallet-2-line align-middle me-1"></i> --><?//= __('我的钱包') ?><!--</a>-->
-<!--                    <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end mt-1">11</span><i-->
-<!--                                class="ri-settings-2-line align-middle me-1"></i> --><?//= __('设置') ?><!--</a>-->
-<!--                    <a class="dropdown-item" href="#"><i-->
-<!--                                class="ri-lock-unlock-line align-middle me-1"></i> --><?//= __('锁定屏幕') ?><!--</a>-->
-<!--                    <div class="dropdown-divider"></div>-->
-                    <a class="dropdown-item text-danger" href="<?= $this->getBackendUrl('admin/login/logout') ?>"><i
+                    <a class="dropdown-item" href="#"><i class="ri-user-line align-middle me-1"></i><?= __('资料') ?></a>
+                    <a class="dropdown-item" href="#"><i
+                                class="ri-wallet-2-line align-middle me-1"></i> <?= __('我的钱包') ?></a>
+                    <a class="dropdown-item d-block" href="#"><span class="badge bg-success float-end mt-1">11</span><i
+                                class="ri-settings-2-line align-middle me-1"></i> <?= __('设置') ?></a>
+                    <a class="dropdown-item" href="#"><i
+                                class="ri-lock-unlock-line align-middle me-1"></i> <?= __('锁定屏幕') ?></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="<?= $this->getAdminUrl('admin/login/logout') ?>"><i
                                 class="ri-shut-down-line align-middle me-1 text-danger"></i> <?= __('退出') ?></a>
                 </div>
             </div>

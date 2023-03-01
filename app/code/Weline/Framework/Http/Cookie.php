@@ -23,11 +23,8 @@ class Cookie
         setcookie($key, $value, time() + $expire, ...$_options);
     }
 
-    public static function get(string $key = null, $default = null)
+    public static function get(string $key, $default = null)
     {
-        if (empty($key)) {
-            return $_COOKIE;
-        }
         return $_COOKIE[$key] ?? $default;
     }
 

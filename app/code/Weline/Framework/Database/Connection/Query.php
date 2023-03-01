@@ -40,6 +40,8 @@ abstract class Query implements QueryInterface
     public array $bound_values = [];
     public string $limit = '';
     public array $order = [];
+    public string $group_by = '';
+    public string $having = '';
 
     private ?PDOStatement $PDOStatement = null;
     public string $sql = '';
@@ -247,6 +249,18 @@ abstract class Query implements QueryInterface
             $field = $this->parserFiled($field);
         }
         $this->order[$field] = $sort;
+        return $this;
+    }
+
+    public function group(string $fields): QueryInterface
+    {
+        $this->group_by = 'group by '.$fields;
+        return $this;
+    }
+
+    public function having(string $having): QueryInterface
+    {
+        $this->having = 'having '.$having;
         return $this;
     }
 

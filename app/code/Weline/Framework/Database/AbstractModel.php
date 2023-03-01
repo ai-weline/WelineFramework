@@ -209,6 +209,12 @@ abstract class AbstractModel extends DataObject
         return $this->connection;
     }
 
+    public function setConnection(ConnectionFactory $connection): static
+    {
+        $this->connection = $connection;
+        return $this;
+    }
+
     private function processModelDbConnection(string $filename)
     {
         # 读取模组名称
@@ -426,8 +432,7 @@ abstract class AbstractModel extends DataObject
      * @param null       $value             字段的值，只读取主键就不填
      *
      * @return mixed
-     * @throws \ReflectionException
-     * @throws \Weline\Framework\Exception\Core
+     * @throws null
      */
     public function load(int|string $field_or_pk_value, $value = null): AbstractModel
     {

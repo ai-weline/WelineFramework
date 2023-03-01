@@ -19,98 +19,104 @@ if (!$themeConfig->getThemeConfig('topnav')):
                     <?php
                     /**@var \Weline\Backend\Model\Menu $menuModel */
                     $menuModel = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Model\Menu::class);
-    // 获取菜单类型的角色资源
-    /**@var \Weline\Backend\Session\BackendSession $session */
-    $session = ObjectManager::getInstance(\Weline\Backend\Session\BackendSession::class);
-    /**@var \Weline\Backend\Model\BackendUser $user */
-    $user = $session->getLoginUser();
-    $role = $user->getRoleModel();
+                    // 获取菜单类型的角色资源
+                    /**@var \Weline\Backend\Session\BackendSession $session */
+                    $session = ObjectManager::getInstance(\Weline\Backend\Session\BackendSession::class);
+                    /**@var \Weline\Backend\Model\BackendUser $user */
+                    $user = $session->getLoginUser();
+                    $role = $user->getRoleModel();
 
-    /**@var \Weline\Acl\Model\RoleAccess $roleAccessModel */
-    $roleAccessModel = ObjectManager::getInstance(\Weline\Acl\Model\RoleAccess::class);
-    $roleAccessMenus = $menuModel->getMenuTreeByRole($role);
-    /**@var \Weline\Backend\Model\Menu $menu */
-    foreach ($roleAccessMenus as $menu) {
-        if (!$menu->isEnable()) {
-            continue;
-        }
-
-        if (empty($menu->getParentSource())) {
-            ?>
+                    /**@var \Weline\Acl\Model\RoleAccess $roleAccessModel */
+                    $roleAccessModel = ObjectManager::getInstance(\Weline\Acl\Model\RoleAccess::class);
+                    $roleAccessMenus = $menuModel->getMenuTreeByRole($role);
+                    /**@var \Weline\Acl\Model\Acl $menu */
+                    foreach ($roleAccessMenus as $menu) {
+                        if (!$menu->getData('is_enable')) {
+                            continue;
+                        }
+                        if (empty($menu->getParentSource())) {
+                            ?>
                             <li class="menu-title" data-source='{{menu.source}}'><i
-                                        class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getTitle()) ?></span>
+                                        class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getSourceName()) ?></span>
                             </li>
                             <?php
-        }
-        $submenus = $menu->getSubMenuByRole();
-        /**@var \Weline\Backend\Model\Menu $submenu */
-        foreach ($submenus as $submenu) {
-            $level_3_menus = $submenu->getSubMenuByRole();
-            if (empty($level_3_menus)) {
-                if ('/' === $submenu->getAction()) {
-                    ?>
-                                    <li data-source='{{submenu.source}}'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source="{{submenu.source}}"
+                        }
+                        $subacls = $menu->getSub();
+                        /**@var \Weline\Acl\Model\Acl $subacl */
+                        foreach ($subacls as $subacl) {
+                            if ($subacl->getType() !== 'menus') {
+                                continue;
+                            }
+                            $level_3_acls = $subacl->getSub();
+                            if (empty($level_3_acls)) {
+                                if ('/' === $subacl->getAction()) {
+                                    ?>
+                                    <li data-source='{{subacl.source}}'>
+                                        <a href="<?= $subacl->getUrl() ?>" data-source="{{subacl.source}}"
                                            class="waves-effect">
-                                            <i class="<?= $submenu->getIcon() ?>"></i><span
+                                            <i class="<?= $subacl->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
-                                            <span><?= __($submenu->getTitle()); ?></span>
+                                            <span><?= __($subacl->getSourceName()) ?></span>
                                         </a>
                                     </li>
                                     <?php
-                } else {
-                    ?>
-                                    <li data-source='{{submenu.source}}'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}'
+                                } else {
+                                    ?>
+                                    <li data-source='{{subacl.source}}'>
+                                        <a href="<?= $subacl->getUrl() ?>" data-source='{{subacl.source}}'
                                            class=" waves-effect">
-                                            <i class="<?= $submenu->getIcon() ?>"></i>
-                                            <span><?= __($submenu->getTitle()) ?></span>
+                                            <i class="<?= $subacl->getIcon() ?>"></i>
+                                            <span><?= __($subacl->getSourceName()) ?></span>
                                         </a>
                                     </li>
                                     <?php
-                }
-            } else {
-                if ('/' === $submenu->getAction()) {
-                    ?>
-                                    <li data-source='{{submenu.source}}'>
-                                        <a href="<?= $submenu->getUrl() ?>" data-source='{{submenu.source}}'
+                                }
+                            } else {
+                                if ('/' === $subacl->getAction()) {
+                                    ?>
+                                    <li data-source='{{subacl.source}}'>
+                                        <a href="<?= $subacl->getUrl() ?>" data-source='{{subacl.source}}'
                                            class="waves-effect">
-                                            <i class="<?= $submenu->getIcon() ?>"></i><span
+                                            <i class="<?= $subacl->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
-                                            <span><?= __($submenu->getTitle()) ?></span>
+                                            <span><?= __($subacl->getSourceName()) ?></span>
                                         </a>
                                     </li>
                                     <?php
-                } else {
-                    ?>
-                                    <li data-source='{{submenu.source}}'>
-                                        <a href="javascript: void(0);" data-source='{{submenu.source}}'
+                                } else {
+                                    ?>
+                                    <li data-source='{{subacl.source}}'>
+                                        <a href="javascript: void(0);" data-source='{{subacl.source}}'
                                            class="has-arrow waves-effect">
-                                            <i class="<?= $submenu->getIcon() ?>"></i>
-                                            <span><?= __($submenu->getTitle()) ?></span>
+                                            <i class="<?= $subacl->getIcon() ?>"></i>
+                                            <span><?= __($subacl->getSourceName()) ?></span>
                                         </a>
-                                        <ul class="sub-menu" aria-expanded="false">
+                                        <ul class="sub-acl" aria-expanded="false">
                                             <?php
-                            /**@var \Weline\Backend\Model\Menu $level_3_menu */
-                            foreach ($level_3_menus as $level_3_menu) {
-                                ?>
-                                                <li data-source='{{level_3_menu.source}}'>
-                                                    <a href="<?= $level_3_menu->getUrl() ?>"
-                                                       data-source='{{level_3_menu.source}}'><i
-                                                                class="<?= $level_3_menu->getIcon() ?>"></i><?= __($level_3_menu->getTitle()) ?>
+                                            /**@var \Weline\Backend\Model\acl $level_3_acl */
+                                            foreach ($level_3_acls as $level_3_acl) {
+                                                if ($level_3_acl->getType() !== 'menus') {
+                                                    continue;
+                                                }
+                                                ?>
+                                                <li data-source='{{level_3_acl.source}}'>
+                                                    <a href="<?= $level_3_acl->getUrl() ?>"
+                                                       data-source='{{level_3_acl.source}}'><i
+                                                                class="<?= $level_3_acl->getIcon() ?>"></i>
+                                                        <?= __($level_3_acl->getSourceName()) ?>
                                                     </a>
                                                 </li>
                                                 <?php
-                            }
-                    ?>
+                                            }
+                                            ?>
                                         </ul>
                                     </li>
                                     <?php
-                }
-            }
-        }
-    }
-?>
+                                }
+                            }
+                        }
+                    }
+                    ?>
                 </ul>
             </div>
             <!-- Sidebar -->

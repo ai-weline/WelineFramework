@@ -13,30 +13,43 @@ declare(strict_types=1);
 namespace Weline\Acl\Model;
 
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
 class Acl extends \Weline\Framework\Database\Model
 {
-    public const fields_ID            = 'source_id';
-    public const fields_ACL_ID        = 'acl_id';
-    public const fields_SOURCE_ID     = 'source_id';
-    public const fields_SOURCE_NAME   = 'source_name';
-    public const fields_DOCUMENT      = 'document';
+    public const fields_ID = 'source_id';
+    public const fields_ACL_ID = 'acl_id';
+    public const fields_SOURCE_ID = 'source_id';
+    public const fields_SOURCE_NAME = 'source_name';
+    public const fields_DOCUMENT = 'document';
     public const fields_PARENT_SOURCE = 'parent_source';
-    public const fields_ROUTER        = 'router';
-    public const fields_ROUTE         = 'route';
-    public const fields_METHOD        = 'method';
-    public const fields_REWRITE       = 'rewrite';
-    public const fields_MODULE        = 'module';
-    public const fields_CLASS         = 'class';
-    public const fields_TYPE          = 'type';
-    public const fields_ICON          = 'icon';
-    public const fields_IS_ENBAVLE    = 'is_enable';
+    public const fields_ROUTER = 'router';
+    public const fields_ROUTE = 'route';
+    public const fields_METHOD = 'method';
+    public const fields_REWRITE = 'rewrite';
+    public const fields_MODULE = 'module';
+    public const fields_CLASS = 'class';
+    public const fields_TYPE = 'type';
+    public const fields_ICON = 'icon';
+    public const fields_IS_ENBAVLE = 'is_enable';
+    public const fields_IS_BACKEND = 'is_backend';
 
 
     public const type_MENUS = 'menus';
+
+
+    private Url $url;
+
+    public function __init()
+    {
+        parent::__init();
+        if (!isset($this->url)) {
+            $this->url = ObjectManager::getInstance(Url::class);
+        }
+    }
 
     public function setAclId(string $acl_id): static
     {
@@ -158,6 +171,22 @@ class Acl extends \Weline\Framework\Database\Model
         return $this->getData(self::fields_ICON);
     }
 
+    public function getUrl(): string
+    {
+        if (!$this->isBackend()) {
+            $url = '/' . trim($this->getRoute(), '/');
+        } else {
+            $url = $this->url->getBackendUrl('/' . trim($this->getRoute(), '/'));
+        }
+        return $url ?? '';
+    }
+
+    public function isBackend(): bool
+    {
+        return (bool)$this->getData(self::fields_IS_BACKEND);
+    }
+
+
     /**
      * @inheritDoc
      */
@@ -241,6 +270,11 @@ class Acl extends \Weline\Framework\Database\Model
                       self::fields_TYPE,
                       TableInterface::column_type_VARCHAR,
                       120, 'not null', '类型'
+                  )
+                  ->addColumn(
+                      self::fields_IS_BACKEND,
+                      TableInterface::column_type_INTEGER,
+                      1, 'default 1', '是否后台'
                   )
                   ->addColumn(
                       self::fields_ICON,

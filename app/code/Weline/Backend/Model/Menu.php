@@ -18,6 +18,7 @@ use Weline\Backend\Cache\BackendCache;
 use Weline\Framework\App\Env;
 use Weline\Framework\Cache\CacheInterface;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Exception\Core;
 use Weline\Framework\Http\Url;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
@@ -79,7 +80,7 @@ class Menu extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_NAME, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单名')
                   ->addColumn(self::fields_TITLE, TableInterface::column_type_VARCHAR, 60, 'not null', '菜单标题')
                   ->addColumn(self::fields_PID, TableInterface::column_type_INTEGER, 0, '', '父级ID')
-                  ->addColumn(self::fields_SOURCE, TableInterface::column_type_VARCHAR, 255, '', '资源')
+                  ->addColumn(self::fields_SOURCE, TableInterface::column_type_VARCHAR, 255, 'unique', '资源')
                   ->addColumn(self::fields_PARENT_SOURCE, TableInterface::column_type_VARCHAR, 255, 'not null', '父级资源')
                   ->addColumn(self::fields_ACTION, TableInterface::column_type_VARCHAR, 255, 'not null', '动作URL')
                   ->addColumn(self::fields_MODULE, TableInterface::column_type_VARCHAR, 255, 'not null', '模块')
@@ -272,6 +273,11 @@ class Menu extends \Weline\Framework\Database\Model
         return $menu;
     }
 
+    static private function Acl(): Acl
+    {
+        return ObjectManager::getInstance(Acl::class);
+    }
+
     /**
      * @DESC          # 获取角色菜单树
      *
@@ -282,55 +288,58 @@ class Menu extends \Weline\Framework\Database\Model
      */
     public function getMenuTreeByRole(Role $role): array
     {
+        $model = self::Acl();
         if ($role->getId() !== 1) {
             // 以子权限扫描所有权限的父级
-            $roleAccesses = $this->clear()
-                                 ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-                                 ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
-                                 ->where('ra.' . RoleAccess::fields_ROLE_ID, $role->getId(0))
-//                                 ->where('main_table.pid', 0, '<>')
-                                 ->order('main_table.order', 'ASC')
-                                 ->select()
-                                 ->fetch()
-                                 ->getItems();
-            $top_menus    = [];
+            $roleAccesses = $model->clear()
+                                  ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
+                                  ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
+                                  ->where('ra.' . RoleAccess::fields_ROLE_ID, $role->getId(0))
+                                  ->select()
+                                  ->fetch()
+                                  ->getItems();
             // 归并所有相同父级的权限,同时筛选出父级权限资源递归出子权限
             $mergerParentAcl = [];
-            /**@var \Weline\Backend\Model\Menu $roleAccess */
+            $top_menus       = [];
+            /**@var Acl[] $roleAccesses */
             foreach ($roleAccesses as $roleAccess) {
-                $parentSource = $roleAccess['parent_source'];
-                // 顶层资源,找出对应是否有权限的子权限
-                if (empty($parentSource)) {
-                    $top_menus[$roleAccess->getSource()] = $this->getSubMenusByRole($roleAccess, $role);
+                $source = $roleAccess['parent_source'];
+                $this->getSubMenusByRole($roleAccess, $role);
+                if (empty($source)) {
+                    $top_menus[$roleAccess->getSourceId()] = $this->getSubMenusByRole($roleAccess, $role);
                 } else {
                     // 归并需要查找父级的子权限
-                    $mergerParentAcl[$parentSource][] = $roleAccess;
+                    if (!isset($mergerParentAcl[$source])) {
+                        $mergerParentAcl[$source][] = $this->getSubMenusByRole($roleAccess, $role);
+                    }
                 }
             }
             foreach ($mergerParentAcl as $parentSource => $acls) {
-                foreach ($acls as &$acl) {
-                    $this->getSubMenusByRole($acl, $role);
-                }
-                $menu = clone $this->clear()->load('source', $parentSource);
-
-                $menu->setData('sub_menu_by_role', $acls);
+                /**@var Acl $menu */
+                $menu = clone $model->clear()
+                                    ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
+                                    ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
+                                    ->where('main_table.source_id', $parentSource)
+                                    ->find()
+                                    ->fetch();
                 $menu->setData('sub', $acls);
-                $top_menu = $this->findTopMenu($menu);
-                if (!isset($top_menus[$top_menu->getSource()])) {
-                    $top_menus[$top_menu->getSource()] = $top_menu;
+                $menu->setData('sub_menu_by_role', $acls);
+                # 父级可能会相同，相同则合并
+                $menu = $this->findTopMenu($menu, $role);
+                if (!isset($top_menus[$menu->getSourceId()])) {
+                    $top_menus[$menu->getSourceId()] = $menu;
                 }
             }
-            rsort($top_menus);
         } else {
-            $top_menus = $this->clear()
-                              ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-                              ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
-                              ->where('main_table.pid', 0)
-                              ->order('main_table.order', 'ASC')
-                              ->select()
-                              ->fetch()
-                              ->getItems();
-            /**@var \Weline\Backend\Model\Menu $top_menu */
+            $top_menus = $model->clear()
+                               ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
+                               ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
+                               ->where('main_table.parent_source=""', null, '=', 'or')
+                               ->where('main_table.parent_source is null or main_table.parent_source=""')
+                               ->select()
+                               ->fetch()
+                               ->getItems();
+            /**@var Acl $top_menu */
             foreach ($top_menus as &$top_menu) {
                 $top_menu = $this->getSubMenusByRole($top_menu, $role);
             }
@@ -346,22 +355,30 @@ class Menu extends \Weline\Framework\Database\Model
      * @DateTime: 2023/1/31 23:25
      * 参数区：
      *
-     * @param \Weline\Backend\Model\Menu $menu
+     * @param Acl $acl
+     * @param     $role
      *
-     * @return \Weline\Backend\Model\Menu
+     * @return Acl
+     * @throws Core
      * @throws \ReflectionException
-     * @throws \Weline\Framework\Exception\Core
      */
-    private function findTopMenu(Menu &$menu): Menu
+    private function findTopMenu(Acl &$acl, &$role): Acl
     {
-        $menuData = clone $menu;
-        if ($menuData->getPid() === 0) {
-            return $menuData;
+        $aclData = clone $acl;
+        if ($aclData->getParentSource() === '' || $aclData->getParentSource() === null) {
+            return $aclData;
         } else {
-            $parent = $this->clear()->load('id', $menuData->getPid());
-            $parent->setData('sub_menu_by_role', [$menuData]);
-            $parent->setData('sub', [$menuData]);
-            return $this->findTopMenu($parent);
+            $parent  = clone
+            self::Acl()->clear()->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
+                ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
+                ->where('main_table.source_id', $aclData->getParentSource())
+                ->find()
+                ->fetch();
+            # 如果角色没有该父级分类的权限，展示时要保证每级分类都有子分类。否则会造成顶级分类下的子分类没有权限而不展示，但是子分类下确实有权限的问题
+            $sub = [$aclData];
+            $parent->setData('sub', $sub)
+                   ->setData('sub_menu_by_role', $sub);
+            return $this->findTopMenu($parent, $role);
         }
     }
 
@@ -379,43 +396,27 @@ class Menu extends \Weline\Framework\Database\Model
         return $this->getData('sub_menu_by_role') ?? [];
     }
 
-    public function getSubMenusByRole(\Weline\Backend\Model\Menu &$menu, Role $role): Menu
+    public function getSubMenusByRole(Acl &$acl, Role &$role): Acl
     {
-        $this->clear()
-             ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-             ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
-             ->where('main_table.pid', $menu->getData('id'));
+        $model = self::Acl()->clear()
+                     ->joinModel(RoleAccess::class, 'ra', 'main_table.source_id=ra.source_id', 'left')
+                     ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source', 'left')
+                     ->where('main_table.parent_source', $acl->getId(''))
+                     ->group('main_table.source_id');
         if ($role->getId() !== 1) {
-            $this->where('ra.role_id', $role->getId());
+            $model->where('ra.role_id', $role->getId(0));
         }
         // 有权限的
-        $has_ids = [];
-        if ($sub_menus = $this->order('order', 'ASC')->select()->fetch()->getItems()) {
-            /**@var \Weline\Backend\Model\Menu $sub_menu */
-            foreach ($sub_menus as &$sub_menu) {
-                $has_ids[] = $sub_menu->getData('id');
-                $this->clear()
-                     ->joinModel(Acl::class, 'a', 'main_table.source=a.source_id')
-                     ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=a.source_id')
-                     ->where($this::fields_PID, $sub_menu->getData('id'));
-                if ($role->getId() !== 1) {
-                    $this->where('ra.role_id', $role->getId());
-                }
-                $has_sub_menus = $this
-                    ->order('order', 'ASC')
-                    ->select()
-                    ->fetch()->getItems();
-                foreach ($has_sub_menus as $has_sub_menu) {
-                    if ($has_sub_menu->getData('id')) {
-                        $sub_menu = $this->getSubMenusByRole($sub_menu, $role);
-                    }
-                }
+        if ($sub_acls = $model->order('menu.order', 'ASC')->select()->fetch()->getItems()) {
+            /**@var Acl $sub_acl */
+            foreach ($sub_acls as &$sub_acl) {
+                $sub_acl = $this->getSubMenusByRole($sub_acl, $role);
             }
-            $menu = $menu->setData('sub_menu_by_role', $sub_menus)->setData('sub', $sub_menus);
+            $acl = $acl->setData('sub_menu_by_role', $sub_acls)->setData('sub', $sub_acls);
         } else {
-            $menu = $menu->setData('sub_menu_by_role', [])->setData('sub', []);
+            $acl = $acl->setData('sub_menu_by_role', [])->setData('sub', []);
         }
 
-        return $menu;
+        return $acl;
     }
 }

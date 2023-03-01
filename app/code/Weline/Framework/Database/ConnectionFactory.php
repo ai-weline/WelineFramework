@@ -93,18 +93,21 @@ class ConnectionFactory
      */
     public function create(): static
     {
-        $db_type = $this->configProvider->getDbType();
-        $dsn     = "{$db_type}:host={$this->configProvider->getHostName()}:{$this->configProvider->getHostPort()};dbname={$this->configProvider->getDatabase()};charset={$this->configProvider->getCharset()};collate={$this->configProvider->getCollate()}";
-        if (!in_array($db_type, PDO::getAvailableDrivers())) {
-            throw new LinkException(__('驱动不存在：%1,可用驱动列表：%2，更多驱动配置请转到php.ini中开启。', [$db_type, implode(',', PDO::getAvailableDrivers())]));
-        }
-        try {
-            //初始化一个Connection对象
-            $this->connection = new PDO($dsn, $this->configProvider->getUsername(), $this->configProvider->getPassword(), $this->configProvider->getOptions());
+        if (!$this->connection) {
+            $db_type = $this->configProvider->getDbType();
+            $dsn     = "{$db_type}:host={$this->configProvider->getHostName()}:{$this->configProvider->getHostPort()};dbname={$this->configProvider->getDatabase()};charset={$this->configProvider->getCharset()};collate={$this->configProvider->getCollate()}";
+            if (!in_array($db_type, PDO::getAvailableDrivers())) {
+                throw new LinkException(__('驱动不存在：%1,可用驱动列表：%2，更多驱动配置请转到php.ini中开启。', [$db_type, implode(',', PDO::getAvailableDrivers())]));
+            }
+            try {
+                //初始化一个Connection对象
+                $this->connection = new PDO($dsn, $this->configProvider->getUsername(), $this->configProvider->getPassword(), $this->configProvider->getOptions());
 //            $this->connection->exec("set names {$this->configProvider->getCharset()} COLLATE {$this->configProvider->getCollate()}");
-        } catch (PDOException $e) {
-            throw new LinkException($e->getMessage());
+            } catch (PDOException $e) {
+                throw new LinkException($e->getMessage());
+            }
         }
+
         return $this;
     }
 
