@@ -40,7 +40,7 @@ class ModelManager
     }
 
 
-    public function update(Module $module, Context $context, string $type)
+    public function update(Module $module, Context $context, string $type): void
     {
         if (!in_array($type, ['setup', 'upgrade', 'install'])) {
             throw new Exception(__('$type允许的值不在：%1 中', "'setup','upgrade','install'"));

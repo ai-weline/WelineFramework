@@ -29,5 +29,5 @@ interface ManagerInterface
      *
      * @return mixed
      */
-    public static function getInstance();
+    public static function getInstance(): mixed;
 }

@@ -111,12 +111,13 @@ class ObjectManager implements ManagerInterface
         }
 
         // 类名规则处理
-        $class_cache_key = $class . '_cache_key';
-        $new_class       = self::$cache->get($class_cache_key);
-        if (empty($new_class)) {
-            $new_class = self::parserClass($class);
-            self::$cache->set($class_cache_key, $new_class);
-        }
+        $new_class = self::parserClass($class);
+//        $class_cache_key = $class . '_cache_key';
+//        $new_class       = self::$cache->get($class_cache_key);
+//        if (empty($new_class)) {
+//            $new_class = self::parserClass($class);
+//            self::$cache->set($class_cache_key, $new_class);
+//        }
 
         # 兼容原类参数，做到只修改特定参数
         if ($arguments) {
@@ -264,7 +265,7 @@ class ObjectManager implements ManagerInterface
         return self::$instances[$class];
     }
 
-    public static function getIs()
+    public static function getInstances(): array
     {
         return self::$instances;
     }
@@ -275,6 +276,7 @@ class ObjectManager implements ManagerInterface
      * @param string $class
      *
      * @return string
+     * @throws \Weline\Framework\App\Exception
      */
     public static function parserClass(string $class): string
     {
