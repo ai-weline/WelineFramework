@@ -301,34 +301,34 @@ class Menu extends \Weline\Framework\Database\Model
             // 归并所有相同父级的权限,同时筛选出父级权限资源递归出子权限
             $mergerParentAcl = [];
             $top_menus       = [];
+            $checked_menus   = [];
             /**@var Acl[] $roleAccesses */
             foreach ($roleAccesses as $roleAccess) {
-                $source = $roleAccess['parent_source'];
-                $this->getSubMenusByRole($roleAccess, $role);
+                $source     = $roleAccess['parent_source'];
                 if (empty($source)) {
-                    $top_menus[$roleAccess->getSourceId()] = $this->getSubMenusByRole($roleAccess, $role);
+                    $roleAccess = $this->getSubMenusByRole($roleAccess, $role);
+                    $top_menus[$roleAccess->getSourceId()]     = $roleAccess;
+                    $checked_menus[$roleAccess->getSourceId()] = $roleAccess;
                 } else {
                     // 归并需要查找父级的子权限
                     if (!isset($mergerParentAcl[$source])) {
-                        $mergerParentAcl[$source][] = $this->getSubMenusByRole($roleAccess, $role);
+                        /**@var Acl $menu */
+                        $menu = clone $model->clear()
+                                            ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
+                                            ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
+                                            ->where('main_table.source_id', $source)
+                                            ->find()
+                                            ->fetch();
+                        $roleAccess = $this->getSubMenusByRole($menu, $role);
+                        $checked_menus[$menu->getSourceId()] = $roleAccess;
+                        $mergerParentAcl[$source] = $roleAccess;
                     }
                 }
             }
             foreach ($mergerParentAcl as $parentSource => $acls) {
-                /**@var Acl $menu */
-                $menu = clone $model->clear()
-                                    ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
-                                    ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
-                                    ->where('main_table.source_id', $parentSource)
-                                    ->find()
-                                    ->fetch();
-                $menu->setData('sub', $acls);
-                $menu->setData('sub_menu_by_role', $acls);
                 # 父级可能会相同，相同则合并
-                $menu = $this->findTopMenu($menu, $role);
-                if (!isset($top_menus[$menu->getSourceId()])) {
-                    $top_menus[$menu->getSourceId()] = $menu;
-                }
+                $menu                            = $this->findTopMenu($acls, $role, $checked_menus);
+                $top_menus[$menu->getSourceId()] = $menu;
             }
         } else {
             $top_menus = $model->clear()
@@ -362,23 +362,53 @@ class Menu extends \Weline\Framework\Database\Model
      * @throws Core
      * @throws \ReflectionException
      */
-    private function findTopMenu(Acl &$acl, &$role): Acl
+    private function findTopMenu(Acl &$acl, Role &$role, array &$checked_menus): Acl
     {
-        $aclData = clone $acl;
-        if ($aclData->getParentSource() === '' || $aclData->getParentSource() === null) {
-            return $aclData;
+        if ($acl->getParentSource() === '' || $acl->getParentSource() === null) {
+            if (isset($checked_menus[$acl->getSourceId()])) {
+                /**@var \Weline\Acl\Model\Acl $existAcl */
+                $existAcl     = $checked_menus[$acl->getSourceId()];
+                $existSubAcls = $existAcl->getSub();
+                $sub          = $acl->getSub();
+                foreach ($existSubAcls as $existSubAcl) {
+                    foreach ($sub as $key => $item) {
+                        if ($existSubAcl->getId() === $item->getId()) {
+                            unset($sub[$key]);
+                        }
+                    }
+                }
+                $acl->setData('sub', array_merge($sub, $existSubAcls));
+                $acl->setData('sub_menu_by_role', array_merge($sub, $existSubAcls));
+            }
+            return $acl;
         } else {
-            $parent  = clone
+            $parent = clone
             self::Acl()->clear()->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
                 ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
-                ->where('main_table.source_id', $aclData->getParentSource())
+                ->where('main_table.source_id', $acl->getParentSource())
                 ->find()
                 ->fetch();
             # 如果角色没有该父级分类的权限，展示时要保证每级分类都有子分类。否则会造成顶级分类下的子分类没有权限而不展示，但是子分类下确实有权限的问题
-            $sub = [$aclData];
-            $parent->setData('sub', $sub)
-                   ->setData('sub_menu_by_role', $sub);
-            return $this->findTopMenu($parent, $role);
+            $sub = [$acl];
+            if (isset($checked_menus[$parent->getSourceId()])) {
+                /**@var \Weline\Acl\Model\Acl $existAcl */
+                $existAcl     = $checked_menus[$parent->getSourceId()];
+                $existSubAcls = $existAcl->getSub();
+                foreach ($existSubAcls as $existSubAcl) {
+                    foreach ($sub as $key => $item) {
+                        if ($existSubAcl->getId() === $item->getId()) {
+                            unset($sub[$key]);
+                        }
+                    }
+                }
+                $parent->setData('sub', array_merge($sub, $existSubAcls));
+                $parent->setData('sub_menu_by_role', array_merge($sub, $existSubAcls));
+            } else {
+                $parent->setData('sub', $sub)
+                       ->setData('sub_menu_by_role', $sub);
+            }
+            $checked_menus[$parent->getId()] = $parent;
+            return $this->findTopMenu($parent, $role, $checked_menus);
         }
     }
 
