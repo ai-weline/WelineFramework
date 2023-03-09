@@ -2,7 +2,7 @@
 # WelineFramework
 
 #### 介绍
-测试环境：https://weline-framework-dev.aiweline.com/ 随时在开发测试，有可能会访问不了
+测试环境：https://weline-framework-dev.aiweline.com/ 
 测试后台：https://weline-framework-dev.aiweline.com/admin_123/admin
 
 微蓝WelineFramework框架！
