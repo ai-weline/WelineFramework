@@ -18,10 +18,12 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Entity extends \Weline\Framework\Database\Model
 {
-    public const fields_ID    = 'code';
-    public const fields_code  = 'code';
-    public const fields_name  = 'name';
-    public const fields_class = 'class';
+    public const fields_ID                     = 'code';
+    public const fields_code                   = 'code';
+    public const fields_name                   = 'name';
+    public const fields_class                  = 'class';
+    public const fields_entity_id_field_type   = 'entity_id_field_type';
+    public const fields_entity_id_field_length = 'entity_id_field_length';
 
     /**
      * @inheritDoc
@@ -65,6 +67,18 @@ class Entity extends \Weline\Framework\Database\Model
                       255,
                       'not null',
                       '实体类')
+                  ->addColumn(
+                      self::fields_entity_id_field_type,
+                      TableInterface::column_type_VARCHAR,
+                      60,
+                      'not null',
+                      '实体ID字段类型')
+                  ->addColumn(
+                      self::fields_entity_id_field_length,
+                      TableInterface::column_type_SMALLINT,
+                      5,
+                      'not null',
+                      '实体ID字段长度')
                   ->create();
         }
     }
@@ -72,5 +86,55 @@ class Entity extends \Weline\Framework\Database\Model
     public function getAttribute(string $code)
     {
 
+    }
+
+    public function getCode(): string
+    {
+        return $this->getData(self::fields_code);
+    }
+
+    public function setCode(string $code): static
+    {
+        return $this->setData(self::fields_code, $code);
+    }
+
+    public function getName(): string
+    {
+        return $this->getData(self::fields_name);
+    }
+
+    public function setName(string $name): static
+    {
+        return $this->setData(self::fields_name, $name);
+    }
+
+    public function getClass(): string
+    {
+        return $this->getData(self::fields_class);
+    }
+
+    public function setClass(string $class): static
+    {
+        return $this->setData(self::fields_class, $class);
+    }
+
+    public function getEntityIdFieldType(): string
+    {
+        return $this->getData(self::fields_entity_id_field_type);
+    }
+
+    public function setEntityIdFieldType(string $entity_id_field_type): static
+    {
+        return $this->setData(self::fields_entity_id_field_type, $entity_id_field_type);
+    }
+
+    public function getEntityIdFieldLength(): int
+    {
+        return intval($this->getData(self::fields_entity_id_field_length));
+    }
+
+    public function setEntityIdFieldLength(int $entity_id_field_length): static
+    {
+        return $this->setData(self::fields_entity_id_field_length, $entity_id_field_length);
     }
 }

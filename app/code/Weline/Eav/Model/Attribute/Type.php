@@ -18,9 +18,11 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Type extends \Weline\Framework\Database\Model
 {
-    public const fields_ID   = 'code';
-    public const fields_code = 'code';
-    public const fields_name = 'name';
+    public const fields_ID           = 'code';
+    public const fields_code         = 'code';
+    public const fields_name         = 'name';
+    public const fields_field_type   = 'field_type';
+    public const fields_field_length = 'field_length';
 
     /**
      * @inheritDoc
@@ -53,11 +55,86 @@ class Type extends \Weline\Framework\Database\Model
                       'primary key',
                       '类型代码')
                   ->addColumn(
-                      self::fields_code,
+                      self::fields_name,
                       TableInterface::column_type_VARCHAR,
                       60,
                       'not null',
-                      '类型名');
+                      '类型名')
+                  ->addColumn(
+                      self::fields_field_type,
+                      TableInterface::column_type_VARCHAR,
+                      60,
+                      'not null',
+                      '数据库字段类型')
+                  ->addColumn(
+                      self::fields_field_length,
+                      TableInterface::column_type_SMALLINT,
+                      5,
+                      'not null',
+                      '数据库字段长度')
+                  ->create();
+            $this->insert([
+                              [
+                                  self::fields_code         => 'input_string_60',
+                                  self::fields_field_type   => TableInterface::column_type_VARCHAR,
+                                  self::fields_field_length => '60',
+                                  self::fields_name         => '字符串输入（60字节）',
+                              ],
+                              [
+                                  self::fields_code         => 'input_int',
+                                  self::fields_field_type   => TableInterface::column_type_INTEGER,
+                                  self::fields_field_length => 0,
+                                  self::fields_name         => '数字输入',
+                              ],
+                              [
+                                  self::fields_code         => 'input_bool',
+                                  self::fields_field_type   => TableInterface::column_type_SMALLINT,
+                                  self::fields_field_length => 1,
+                                  self::fields_name         => '布尔值输入',
+                              ],
+                          ],
+                          self::fields_code
+            )->fetch();
         }
+    }
+
+    function getName(): string
+    {
+        return $this->getData(self::fields_name) ?: '';
+    }
+
+    function setName(string $name): static
+    {
+        return $this->setData(self::fields_name, $name);
+    }
+
+    function getCode(): string
+    {
+        return $this->getData(self::fields_code) ?: '';
+    }
+
+    function setCode(string $code): static
+    {
+        return $this->setData(self::fields_code, $code);
+    }
+
+    function getFieldType(): string
+    {
+        return $this->getData(self::fields_field_type) ?: '';
+    }
+
+    function setFieldType(string $field_type): static
+    {
+        return $this->setData(self::fields_field_type, $field_type);
+    }
+
+    function getFieldLength(): int
+    {
+        return intval($this->getData(self::fields_field_length));
+    }
+
+    function setFieldLength(int $field_length): static
+    {
+        return $this->setData(self::fields_field_length, $field_length);
     }
 }

@@ -35,8 +35,8 @@ class AiwelineHelloWorld extends Model
         }
         $context->getPrinter()->note('执行安装...');
         $setup->createTable(
-            $setup->getTable(),
-            '开发测试'
+            '开发测试',
+            $setup->getTable()
         )->addColumn(
             'entity_id',
             CreateInterface::column_type_INTEGER,

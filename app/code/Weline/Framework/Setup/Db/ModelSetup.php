@@ -35,11 +35,11 @@ class ModelSetup
     /**
      * Setup constructor.
      *
-     * @param ConfigProvider $configProvider
-     * @param DdlFactory     $ddl_table
+     * @param \Weline\Framework\Output\Cli\Printing $printing
+     * @param DdlFactory                            $ddl_table
      *
-     * @throws Exception
      * @throws \ReflectionException
+     * @throws \Weline\Framework\App\Exception
      */
     public function __construct(
         Printing   $printing,
@@ -74,12 +74,15 @@ class ModelSetup
      * 参数区：
      *
      * @param string $comment
+     * @param string $table
      *
      * @return Table\Create
      */
-    public function createTable(string $comment = ''): Table\Create
+    public function createTable(string $comment = '', string $table = ''): Table\Create
     {
-        return $this->ddl_table->setConnection($this->model->getConnection())->createTable()->createTable($this->model->getOriginTableName(), $comment);
+        return $this->ddl_table->setConnection($this->model->getConnection())
+                               ->createTable()
+                               ->createTable($table ?: $this->model->getOriginTableName(), $comment);
     }
 
     /**
@@ -176,6 +179,7 @@ class ModelSetup
             throw $exception;
         }
     }
+
     /**
      * @DESC         |忽略约束删除表
      *
@@ -192,7 +196,7 @@ class ModelSetup
             $table_name = $this->model->getTable();
         }
         try {
-            $this->query('SET FOREIGN_KEY_CHECKS = 0;DROP TABLE IF EXISTS ' . $table_name.';SET FOREIGN_KEY_CHECKS = 1;');
+            $this->query('SET FOREIGN_KEY_CHECKS = 0;DROP TABLE IF EXISTS ' . $table_name . ';SET FOREIGN_KEY_CHECKS = 1;');
             return true;
         } catch (\Exception $exception) {
             throw $exception;

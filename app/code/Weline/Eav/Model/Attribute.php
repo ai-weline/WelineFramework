@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Weline\Eav\Model;
 
+use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
@@ -19,12 +20,11 @@ use Weline\Framework\Setup\Db\ModelSetup;
 class Attribute extends \Weline\Framework\Database\Model
 {
 
-    public const fields_ID     = 'attribute_id';
-    public const fields_entity = 'entity';
-    public const fields_code   = 'code';
-    public const fields_name   = 'name';
-    public const fields_type   = 'type';
-
+    public const fields_ID                   = 'code';
+    public const fields_code                 = 'code';
+    public const fields_name                 = 'name';
+    public const fields_type                 = 'type';
+    public const fields_entity               = 'entity';
     /**
      * @inheritDoc
      */
@@ -46,7 +46,7 @@ class Attribute extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-//        $setup->dropTable();
+        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable('属性表')
                   ->addColumn(
@@ -81,5 +81,55 @@ class Attribute extends \Weline\Framework\Database\Model
                       '类型')
                   ->create();
         }
+    }
+
+    function getEntity(): string
+    {
+        return $this->getData(self::fields_entity) ?: '';
+    }
+
+
+    function setEntity(string $entity): static
+    {
+        return $this->setData(self::fields_entity, $entity);
+    }
+
+    function getCode(): string
+    {
+        return $this->getData(self::fields_code) ?: '';
+    }
+
+    function setCode(string $code): static
+    {
+        return $this->setData(self::fields_code, $code);
+    }
+
+    function getType(): string
+    {
+        return $this->getData(self::fields_type) ?: '';
+    }
+
+    function setType(string $type): static
+    {
+        return $this->setData(self::fields_type, $type);
+    }
+
+
+    function getName(): string
+    {
+        return $this->getData(self::fields_name) ?: '';
+    }
+
+    function setName(string $name): static
+    {
+        return $this->setData(self::fields_name, $name);
+    }
+
+    function getValue()
+    {
+        if (!$this->getData(self::fields_entity)) {
+            throw new Exception(__('该模型没有实体！'));
+        }
+
     }
 }

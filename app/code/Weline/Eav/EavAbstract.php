@@ -61,6 +61,40 @@ abstract class EavAbstract implements EavInterface
     /**
      * @inheritDoc
      */
+
+    public function getEntityFieldIdType(): string
+    {
+        return $this::entity_id_field_type;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getAttribute(string $code, int|string $entity_id = null): Attribute
+    {
+        $this->attribute->clear()
+                        ->where($this->attribute::fields_entity, $this->getEntityCode())
+                        ->where($this->attribute::fields_code, $code);
+        if ($entity_id) {
+            $this->attribute->joinModel(
+                Attribute\Type\Value::class,
+                'v',
+                'main_table.code=v.attribute'
+            )->where(Attribute\Type\Value::fields_entity_id, $entity_id);
+        }
+        return $this->attribute
+            ->find()
+            ->fetch();
+    }
+
+    public function getValue()
+    {
+
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function addAttribute(string $code, string $name, string $type): bool
     {
         return $this->attribute->setData(
@@ -76,13 +110,6 @@ abstract class EavAbstract implements EavInterface
         ])->save();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getAttribute(string $code,int|string $entity_id=null): Attribute
-    {
-
-    }
 
     /**
      * @inheritDoc
@@ -122,7 +149,7 @@ abstract class EavAbstract implements EavInterface
      */
     public function getEntityCode(): string
     {
-        return self::entity_code;
+        return $this::entity_code;
     }
 
     /**
@@ -130,6 +157,6 @@ abstract class EavAbstract implements EavInterface
      */
     public function getEntityName(): string
     {
-        return self::entity_name;
+        return $this::entity_name;
     }
 }
