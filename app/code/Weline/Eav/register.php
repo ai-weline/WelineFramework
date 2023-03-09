@@ -11,8 +11,8 @@ use Weline\Framework\Register\Register;
 
 Register::register(
     Register::MODULE,
-    'Weline_FrameworkTest',
+    'Weline_Eav',
     __DIR__,
     '1.0.1',
-    '<a href="https://bbs.aiweline.com">官网</a>框架测试。'
+    '<a href="https://bbs.aiweline.com">Eav数据库模型</a>'
 );
