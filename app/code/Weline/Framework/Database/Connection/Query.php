@@ -139,10 +139,10 @@ abstract class Query implements QueryInterface
 
     public function fields(string $fields): QueryInterface
     {
-        if ($this->fields === '*') {
+        if ($this->fields === '*' || $this->fields === 'main_table.*') {
             $this->fields = $fields;
         } else {
-            $this->fields = $fields .',' . $this->fields;
+            $this->fields = $fields . ',' . $this->fields;
             $fields       = explode(',', $this->fields);
             $fields       = array_unique($fields);
             $this->fields = implode(',', $fields);
@@ -254,13 +254,13 @@ abstract class Query implements QueryInterface
 
     public function group(string $fields): QueryInterface
     {
-        $this->group_by = 'group by '.$fields;
+        $this->group_by = 'group by ' . $fields;
         return $this;
     }
 
     public function having(string $having): QueryInterface
     {
-        $this->having = 'having '.$having;
+        $this->having = 'having ' . $having;
         return $this;
     }
 

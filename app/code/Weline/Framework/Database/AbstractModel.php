@@ -528,7 +528,7 @@ abstract class AbstractModel extends DataObject
             $this->force_check_flag = $data;
             if ($sequence) {
                 $this->force_check_fields[] = $sequence;
-            } else {
+            } else if (empty($this->force_check_fields)) {
                 $this->force_check_fields[] = $this->_primary_key;
             }
         }
@@ -546,7 +546,7 @@ abstract class AbstractModel extends DataObject
         // 保存前
         $this->save_before();
         // save之前事件
-        $this->getEvenManager()->dispatch($this->processTable() . '_model_save_before', ['model' => $this]);
+        $this->getEvenManager()->dispatch($this->getTable() . '_model_save_before', ['model' => $this]);
         $this->getQuery()->beginTransaction();
         try {
             if ($this->getId()) {
@@ -679,8 +679,10 @@ abstract class AbstractModel extends DataObject
             $this->getEvenManager()->dispatch($this->processTable() . '_model_delete_before', ['model' => $this]);
             $this->getQuery()->where($this->_primary_key, $this->getId())->delete()->fetch();
         } else {
-            $this->getEvenManager()->dispatch($this->processTable() . '_model_delete_before', ['model' => $this]);
-            $this->getQuery()->delete()->fetch();
+            if ($this->getQuery()->wheres) {
+                $this->getEvenManager()->dispatch($this->processTable() . '_model_delete_before', ['model' => $this]);
+                $this->getQuery()->delete()->fetch();
+            }
         }
         $this->clearData();
         // load之之后事件

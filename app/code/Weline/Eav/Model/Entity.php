@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Weline\Eav\Model;
 
 use Weline\Framework\Database\Api\Db\TableInterface;
+use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
@@ -85,7 +86,13 @@ class Entity extends \Weline\Framework\Database\Model
 
     public function getAttribute(string $code)
     {
-
+        /**@var \Weline\Eav\Model\Attribute $attributeModel */
+        $attributeModel = ObjectManager::getInstance(Attribute::class);
+        $attributeModel->where(Attribute::fields_entity, $this->getCode())
+                       ->where(Attribute::fields_code, $code)
+                       ->find()
+                       ->fetch();
+        return $attributeModel;
     }
 
     public function getCode(): string

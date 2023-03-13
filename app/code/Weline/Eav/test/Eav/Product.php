@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Weline\Eav\test\Eav;
 
-use Weline\Eav\EavAbstract;
-use Weline\Eav\Model\Attribute;
-use Weline\Eav\Model\Entity;
+use Weline\Eav\AbstractEav;
 
-class Product extends EavAbstract
+class Product extends AbstractEav
 {
+    const entity_code = 'test';
+    const entity_name = '测试实体';
 }

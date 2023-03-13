@@ -17,9 +17,21 @@ use Weline\Eav\Model\Entity;
 
 interface EavInterface
 {
-    const entity_code = '';
-    const entity_name = '';
-    const entity_id_field_type = '';
+    const  entity_code            = '';
+    const  entity_name            = '';
+    const  entity_id_field_type   = '';
+    const  entity_id_field_length = 0;
+
+    /**
+     * @DESC          # 获取实体名
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2023/3/6 22:16
+     * 参数区：
+     * @return string
+     */
+    public function getEntityName(): string;
 
     /**
      * @DESC          # 获取实体代码
@@ -44,15 +56,15 @@ interface EavInterface
     public function getEntityFieldIdType(): string;
 
     /**
-     * @DESC          # 获取实体名
+     * @DESC          # 获取实体实体ID字段长度
      *
      * @AUTH    秋枫雁飞
      * @EMAIL aiweline@qq.com
      * @DateTime: 2023/3/6 22:16
      * 参数区：
-     * @return string
+     * @return int
      */
-    public function getEntityName(): string;
+    public function getEntityFieldIdLength(): int;
 
     /**
      * @DESC          # 获取实体

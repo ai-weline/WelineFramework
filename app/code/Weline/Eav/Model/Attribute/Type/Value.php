@@ -17,7 +17,9 @@ use Weline\Eav\Model\Attribute;
 use Weline\Eav\Model\Entity;
 use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
+use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
+use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
@@ -46,13 +48,29 @@ class Value extends \Weline\Framework\Database\Model
      */
     public function setAttribute(Attribute $attribute): static
     {
-        if (empty($attribute->getEntity())) {
-            throw new Exception(__('实体不存在！'));
-        }
-        if (empty($attribute->getCode())) {
+        if (empty($attribute->getId())) {
             throw new Exception(__('属性不存在！'));
         }
         $this->attribute = $attribute;
+        $this->setData(self::fields_attribute, $attribute->getCode());
+        return $this;
+    }
+
+    /**
+     * @DESC          # 设置值属性
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2023/3/9 22:35
+     * 参数区：
+     *
+     * @param string $code
+     *
+     * @return $this
+     */
+    public function setAttributeCode(string $code): static
+    {
+        $this->setData(self::fields_attribute, $code);
         return $this;
     }
 
@@ -67,11 +85,15 @@ class Value extends \Weline\Framework\Database\Model
 
     public function getTable(string $table = ''): string
     {
+        if ($table) {
+            return parent::getTable($table);
+        }
         if (!$this->attribute) {
             throw new Exception(__('属性不存在！'));
         }
         $table = 'eav_' . $this->attribute->getEntity() . '_' . $this->attribute->getType();
-        return parent::getTable($table);
+        $this->origin_table_name = parent::getTable($table);
+        return $this->origin_table_name;
     }
 
     /**
@@ -109,20 +131,14 @@ class Value extends \Weline\Framework\Database\Model
             /**@var \Weline\Eav\EavInterface $eavEntity */
             $eavEntity = ObjectManager::getInstance($eav);
             if ($eavEntity instanceof EavInterface) {
-                if (empty($eavEntity->getEntityCode())) {
-                    throw new Exception(__('实体没有代码：entity_code,涉及实体类：%1', $eav));
-                }
-                if (empty($eavEntity->getEntityName())) {
-                    throw new Exception(__('实体没有名称：entity_name,涉及实体类：%1', $eav));
-                }
-
                 $entity->clear()
                        ->setData(
                            [
-                               $entity::fields_ID                   => $eavEntity->getEntityCode(),
-                               $entity::fields_class                => $eav,
-                               $entity::fields_name                 => $eavEntity->getEntityName(),
-                               $entity::fields_entity_id_field_type => $eavEntity->getEntityFieldIdType(),
+                               $entity::fields_ID                     => $eavEntity->getEntityCode(),
+                               $entity::fields_class                  => $eav,
+                               $entity::fields_name                   => $eavEntity->getEntityName(),
+                               $entity::fields_entity_id_field_type   => $eavEntity->getEntityFieldIdType(),
+                               $entity::fields_entity_id_field_length => $eavEntity->getEntityFieldIdLength(),
                            ]
                        )
                        ->save(true);
@@ -140,7 +156,7 @@ class Value extends \Weline\Framework\Database\Model
         foreach ($entities as $entity) {
             /**@var \Weline\Eav\Model\Attribute\Type $type */
             foreach ($types as $type) {
-                $eav_entity_type_table = 'eav_' . $entity->getCode() . '_' . $type->getCode();
+                $eav_entity_type_table = $setup->getTable('eav_' . $entity->getCode() . '_' . $type->getCode());
                 if (!$setup->tableExist($eav_entity_type_table)) {
                     $setup->createTable('实体' . $entity->getCode() . '的Eav模型' . $type->getCode() . '类型数据表', $eav_entity_type_table)
                           ->addColumn(
@@ -175,5 +191,35 @@ class Value extends \Weline\Framework\Database\Model
                 }
             }
         }
+    }
+
+    function setValueId(int $value_id): static
+    {
+        return $this->setData(self::fields_ID, $value_id);
+    }
+
+    function getValueId(): int
+    {
+        return intval($this->getData(self::fields_ID));
+    }
+
+    function setEntityId(string|int $id): static
+    {
+        return $this->setData(self::fields_entity_id, $id);
+    }
+
+    function getEntityId(): int|string
+    {
+        return $this->getData(self::fields_entity_id);
+    }
+
+    function setValue(string|int $value): static
+    {
+        return $this->setData(self::fields_value, $value);
+    }
+
+    function getValue(): string|int
+    {
+        return $this->getData(self::fields_value);
     }
 }
