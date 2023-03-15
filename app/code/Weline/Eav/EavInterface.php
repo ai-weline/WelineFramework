@@ -67,17 +67,6 @@ interface EavInterface
     public function getEntityFieldIdLength(): int;
 
     /**
-     * @DESC          # 获取实体
-     *
-     * @AUTH    秋枫雁飞
-     * @EMAIL aiweline@qq.com
-     * @DateTime: 2023/3/6 20:50
-     * 参数区：
-     * @return Entity
-     */
-    public function getEntity(): Entity;
-
-    /**
      * @DESC          # 添加属性
      *
      * @AUTH    秋枫雁飞
@@ -115,11 +104,12 @@ interface EavInterface
      * @DateTime: 2023/3/6 21:36
      * 参数区：
      *
-     * @param string $code 属性代码
+     * @param string $code         属性代码
+     * @param bool   $remove_value 卸载该属性【所有值】
      *
      * @return bool
      */
-    public function unsetAttribute(string $code): bool;
+    public function unsetAttribute(string $code, bool $remove_value = false): bool;
 
     /**
      * @DESC          # 返回单个属性
@@ -133,9 +123,9 @@ interface EavInterface
      *
      * @param int|string|null $entity_id 实体的具体ID【例如产品ID,分类ID,具体要看实体是哪个】
      *
-     * @return \Weline\Eav\Model\Attribute
+     * @return \Weline\Eav\Model\Attribute|null
      */
-    public function getAttribute(string $code, int|string $entity_id = null): Attribute;
+    public function getAttribute(string $code, int|string $entity_id = null): Attribute|null;
 
     /**
      * @DESC          # 返回多个属性

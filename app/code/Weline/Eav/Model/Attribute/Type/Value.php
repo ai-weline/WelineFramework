@@ -12,14 +12,10 @@ declare(strict_types=1);
 
 namespace Weline\Eav\Model\Attribute\Type;
 
-use Weline\Eav\EavInterface;
 use Weline\Eav\Model\Attribute;
 use Weline\Eav\Model\Entity;
-use Weline\Framework\App\Env;
 use Weline\Framework\App\Exception;
-use Weline\Framework\Database\AbstractModel;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
-use Weline\Framework\Database\Exception\ModelException;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
@@ -53,6 +49,7 @@ class Value extends \Weline\Framework\Database\Model
         }
         $this->attribute = $attribute;
         $this->setData(self::fields_attribute, $attribute->getCode());
+        $this->getTable();
         return $this;
     }
 
@@ -91,7 +88,7 @@ class Value extends \Weline\Framework\Database\Model
         if (!$this->attribute) {
             throw new Exception(__('属性不存在！'));
         }
-        $table = 'eav_' . $this->attribute->getEntity() . '_' . $this->attribute->getType();
+        $table                   = 'eav_' . $this->attribute->getEntity() . '_' . $this->attribute->getType();
         $this->origin_table_name = parent::getTable($table);
         return $this->origin_table_name;
     }
@@ -119,32 +116,8 @@ class Value extends \Weline\Framework\Database\Model
     {
         /**@var \Weline\Eav\Model\Entity $entity */
         $entity = ObjectManager::getInstance(\Weline\Eav\Model\Entity::class);
-        /**@var \Weline\Framework\Module\Config\ModuleFileReader $moduleFileReader */
-        $moduleFileReader = ObjectManager::getInstance(\Weline\Framework\Module\Config\ModuleFileReader::class);
 
-        $modules = Env::getInstance()->getActiveModules();
-        $eavs    = [];
-        foreach ($modules as $module) {
-            $eavs = array_merge($eavs, $moduleFileReader->readClass($module['base_path'], 'Model' . DS . 'Eav'));
-        }
-        foreach ($eavs as $eav) {
-            /**@var \Weline\Eav\EavInterface $eavEntity */
-            $eavEntity = ObjectManager::getInstance($eav);
-            if ($eavEntity instanceof EavInterface) {
-                $entity->clear()
-                       ->setData(
-                           [
-                               $entity::fields_ID                     => $eavEntity->getEntityCode(),
-                               $entity::fields_class                  => $eav,
-                               $entity::fields_name                   => $eavEntity->getEntityName(),
-                               $entity::fields_entity_id_field_type   => $eavEntity->getEntityFieldIdType(),
-                               $entity::fields_entity_id_field_length => $eavEntity->getEntityFieldIdLength(),
-                           ]
-                       )
-                       ->save(true);
-            }
-        }
-        // 创建对应实体类型表
+        // 创建对应实体类型值表
         /**@var \Weline\Framework\Setup\Db\ModelSetup $setup */
         $setup = ObjectManager::getInstance(\Weline\Framework\Setup\Db\ModelSetup::class);
         /**@var \Weline\Eav\Model\Attribute\Type $type */
@@ -157,20 +130,14 @@ class Value extends \Weline\Framework\Database\Model
             /**@var \Weline\Eav\Model\Attribute\Type $type */
             foreach ($types as $type) {
                 $eav_entity_type_table = $setup->getTable('eav_' . $entity->getCode() . '_' . $type->getCode());
+                $setup->dropTable($eav_entity_type_table);
                 if (!$setup->tableExist($eav_entity_type_table)) {
                     $setup->createTable('实体' . $entity->getCode() . '的Eav模型' . $type->getCode() . '类型数据表', $eav_entity_type_table)
-                          ->addColumn(
-                              self::fields_ID,
-                              TableInterface::column_type_INTEGER,
-                              0,
-                              'primary key auto_increment',
-                              '值ID'
-                          )
                           ->addColumn(
                               self::fields_attribute,
                               TableInterface::column_type_VARCHAR,
                               60,
-                              'not null',
+                              'not null ',
                               '属性'
                           )
                           ->addColumn(
@@ -187,6 +154,8 @@ class Value extends \Weline\Framework\Database\Model
                               'not null',
                               '实体值'
                           )
+                          ->addConstraints('primary key(`' . self::fields_attribute . '`,`' . self::fields_entity_id . '`,`'
+                                           . self::fields_value . '`)')
                           ->create();
                 }
             }

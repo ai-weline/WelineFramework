@@ -13,9 +13,7 @@ declare(strict_types=1);
 namespace Weline\Eav\test;
 
 use Weline\Eav\Model\Attribute;
-use Weline\Eav\Model\Eav\Test;
-use Weline\Eav\Model\Entity;
-use Weline\Eav\test\Eav\Product;
+use Weline\Eav\Model\Test;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;
 use function PHPUnit\Framework\assertTrue;
@@ -24,42 +22,52 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
 {
     private Test $test;
     private Attribute $attribute;
+    const multi_attr  = 'test_multi';
+    const single_attr = 'test_single';
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->test      = ObjectManager::getInstance(Test::class);
+        $this->test      = ObjectManager::getInstance(Test::class)->load(1);
         $this->attribute = ObjectManager::getInstance(Attribute::class);
         $this->value     = ObjectManager::getInstance(Attribute\Type\Value::class);
     }
 
     function testAddAttribute()
     {
-        $this->test->unsetAttribute('test');
-        $assertion = $this->test->addAttribute('test', '测试', 'input_int');
+        $this->test->unsetAttribute(self::single_attr);
+        $assertion = $this->test->addAttribute(self::single_attr, '测试', 'input_int');
         self::assertTrue($assertion, 'Eav添加属性测试');
     }
 
-    function testAddMultiValueAttribute()
+    function testAddMultiAttribute()
     {
-        $this->test->unsetAttribute('test_multi');
-        $assertion = $this->test->addAttribute('test_multi', '测试(多值属性)', 'input_int', true);
-        self::assertTrue($assertion, 'Eav添加属性测试(多值属性)');
+        $this->test->unsetAttribute(self::multi_attr);
+        $assertion = $this->test->addAttribute(self::multi_attr, '测试(多值属性)', 'input_int', true);
+        self::assertTrue($assertion, 'Eav添加属性测试');
     }
 
     function testGetAttribute()
     {
         $this->testAddAttribute();
-        $result = $this->test->getAttribute('test');
-        self::assertTrue($result->getId() === 'test', '获取属性');
+        $result = $this->test->getAttribute(self::single_attr);
+        self::assertTrue($result->getId() === self::single_attr, '获取属性');
+    }
+
+    function testGetAttributes()
+    {
+        $this->testAddAttribute();
+        $this->testAddMultiAttribute();
+        $result = $this->test->getAttributes();
+        self::assertIsArray($result, '获取所有属性');
     }
 
     function testSetAttribute()
     {
-        $attribute = $this->test->getAttribute('test');
+        $attribute = $this->test->getAttribute(self::single_attr);
         $attribute->setName('测试修改属性名1');
         $assertion1 = $this->test->setAttribute($attribute);
-        $attribute  = $this->test->getAttribute('test_multi');
+        $attribute  = $this->test->getAttribute(self::multi_attr);
         $attribute->setName('测试修改属性名(多值)');
         $assertion2 = $this->test->setAttribute($attribute);
         self::assertTrue($assertion1 && $assertion2, 'Eav设置属性测试');
@@ -67,9 +75,9 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
 
     function testSetSingleValueAttributeValue()
     {
-        $attribute = $this->test->getAttribute('test');
+        $attribute = $this->test->getAttribute(self::single_attr);
         try {
-            $attribute->setValue(1, 1);
+            $attribute->setValue(1, 2);
             assertTrue(true, '设置单值属性值');
         } catch (Exception $e) {
             assertTrue(false, '设置单值属性值：' . $e->getMessage());
@@ -79,10 +87,9 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
 
     function testSetMultiValueAttributeValue()
     {
-        // FIXME 多值属性
-        $attribute = $this->test->getAttribute('test');
+        $attribute = $this->test->getAttribute(self::multi_attr);
         try {
-            $attribute->setValue(1, 1);
+            $attribute->setValue(1, [1, 3, 5]);
             assertTrue(true, '设置单值属性值');
         } catch (Exception $e) {
             assertTrue(false, '设置单值属性值：' . $e->getMessage());
@@ -90,18 +97,51 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
 
     }
 
-    function testGetAttributeByEntity()
+    function testGetSingleValueAttributeValueByEntity()
     {
         $this->testAddAttribute();
-        $result = $this->test->getAttribute('test', 1);
-        self::assertTrue(($result->getId() === 'test') && ($result->getValue()), '获取实体属性');
+        $this->testSetSingleValueAttributeValue();
+        $result = $this->test->getAttribute(self::single_attr, 1);
+        self::assertTrue($result->getData(Attribute::value_key) === 2, '获取实体属性');
+    }
+    function testGetMultiValueAttributeValueByEntity()
+    {
+        $this->testAddMultiAttribute();
+        $this->testSetMultiValueAttributeValue();
+        $result = $this->test->getAttribute(self::multi_attr, 1);
+        self::assertTrue($result->getData(Attribute::value_key) === [1, 3, 5], '获取实体属性');
     }
 
-    function testGetAttributes()
-    {
-        $result = $this->test->getAttributes();
-        self::assertIsArray($result, 'Eav获取所有属性');
-        $result = $this->test->getAttributes(1, 1);
-        self::assertIsArray($result, 'Eav获取实例所有属性');
+    function testUnsetAttribute(){
+        $this->testAddAttribute();
+        $this->testAddMultiAttribute();
+        $this->testSetSingleValueAttributeValue();
+        $this->testSetMultiValueAttributeValue();
+        $s1 = $this->test->unsetAttribute(self::single_attr);
+        $s2 = $this->test->unsetAttribute(self::multi_attr);
+        $a1 = $this->test->getAttribute(self::single_attr);
+        $a2 = $this->test->getAttribute(self::multi_attr);
+        if($a1->getValue()===2){
+            $s1 = true;
+        }
+        if($a2->getValue()===[1, 3, 5]){
+            $s1 = true;
+        }
+        $this->testAddAttribute();
+        $this->testAddMultiAttribute();
+        $this->testSetSingleValueAttributeValue();
+        $this->testSetMultiValueAttributeValue();
+        $this->test->unsetAttribute(self::single_attr,true);
+        $this->test->unsetAttribute(self::multi_attr,true);
+
+        $a1 = $this->test->getAttribute(self::single_attr);
+        $a2 = $this->test->getAttribute(self::multi_attr);
+        if($a1->getValue()===2){
+            $s1 = false;
+        }
+        if($a2->getValue()===[1, 3, 5]){
+            $s1 = false;
+        }
+        assertTrue($s1&&$s2,'删除属性成功');
     }
 }

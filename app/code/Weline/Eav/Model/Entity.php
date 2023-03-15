@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Weline\Eav\Model;
 
+use Weline\Eav\EavInterface;
+use Weline\Framework\App\Env;
 use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
@@ -31,7 +33,35 @@ class Entity extends \Weline\Framework\Database\Model
      */
     public function setup(ModelSetup $setup, Context $context): void
     {
-        $this->install($setup, $context);
+        if (!$setup->tableExist()) {
+            $this->install($setup, $context);
+        }
+        // 安装实体
+        /**@var \Weline\Framework\Module\Config\ModuleFileReader $moduleFileReader */
+        $moduleFileReader = ObjectManager::getInstance(\Weline\Framework\Module\Config\ModuleFileReader::class);
+
+        $modules = Env::getInstance()->getActiveModules();
+        $eavs    = [];
+        foreach ($modules as $module) {
+            $eavs = array_merge($eavs, $moduleFileReader->readClass($module['base_path'], 'Model'));
+        }
+        foreach ($eavs as $eav) {
+            /**@var \Weline\Eav\EavInterface $eavEntity */
+            $eavEntity = ObjectManager::getInstance($eav);
+            if ($eavEntity instanceof EavInterface) {
+                $this->clear()
+                     ->setData(
+                         [
+                             self::fields_ID                     => $eavEntity->getEntityCode(),
+                             self::fields_class                  => $eav,
+                             self::fields_name                   => $eavEntity->getEntityName(),
+                             self::fields_entity_id_field_type   => $eavEntity->getEntityFieldIdType(),
+                             self::fields_entity_id_field_length => $eavEntity->getEntityFieldIdLength(),
+                         ]
+                     )
+                     ->save(true);
+            }
+        }
     }
 
     /**
@@ -144,4 +174,5 @@ class Entity extends \Weline\Framework\Database\Model
     {
         return $this->setData(self::fields_entity_id_field_length, $entity_id_field_length);
     }
+
 }

@@ -17,15 +17,18 @@ use Weline\Eav\Model\Attribute;
 use Weline\Eav\Model\Entity;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Cache\CacheInterface;
+use Weline\Framework\Database\Model;
 use Weline\Framework\Exception\Core;
 use Weline\Framework\Manager\ObjectManager;
 
-abstract class AbstractEav implements EavInterface
+abstract class EavModel extends Model implements EavInterface
 {
     public string $entity_code = '';
     public string $entity_name = '';
     public string $entity_id_field_type = '';
     public int $entity_id_field_length = 0;
+
+
     /**
      * @var \Weline\Eav\Model\Entity
      */
@@ -39,19 +42,24 @@ abstract class AbstractEav implements EavInterface
      */
     private Attribute $attribute;
 
+    private array $attributes = [];
+
     function __construct(
         Entity    $entity,
         EavCache  $eavCache,
-        Attribute $attribute
+        Attribute $attribute,
+                  $data = [],
     )
     {
         $this->entity    = $entity;
         $this->eavCache  = $eavCache->create();
         $this->attribute = $attribute;
+        parent::__construct($data);
     }
 
     function __init()
     {
+        parent::__init();
         if (empty($this->entity_code) && empty($this::entity_code)) {
             throw new Exception(__('Eav模型未设置实体代码entity_code常量或者未设置entity_code属性。Eav类：%1', $this::class));
         }
@@ -86,52 +94,40 @@ abstract class AbstractEav implements EavInterface
         return $this->entity_id_field_length ?: $this::entity_id_field_length;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getEntity(): Entity
-    {
-        if ($entity = $this->eavCache->get($this->getEntityCode())) {
-            return $entity;
-        }
-        $entity = $this->entity->load($this->getEntityCode());
-        $this->eavCache->set($this->getEntityCode(), $entity);
-        return $entity;
-    }
 
     /**
      * @inheritDoc
      */
-    public function getAttribute(string $code, int|string $entity_id = null): Attribute
+    public function getAttribute(string $code, int|string $entity_id = null): Attribute|null
     {
+        // 如果已经有属性则直接返回
+        /**@var Attribute $attribute */
+        $attribute = $this->attributes[$code] ?? null;
+        if ($attribute) {
+            if ($entity_id && !$attribute->getData($attribute::value_key)) {
+                $attribute = $attribute->getValue($entity_id, true);
+            }
+            return $attribute;
+        }
+        // 如果当前实体有ID则读取属性时跟随读取属性值
+        if (!$entity_id) {
+            $entity_id = $this->getId();
+        }
+        // 查找属性
         $this->attribute->clear()
                         ->where($this->attribute::fields_entity, $this->getEntityCode())
                         ->where($this->attribute::fields_code, $code)
-                        ->find()->fetch();
+                        ->find()
+                        ->fetch();
         if (!$this->attribute->getId()) {
-            $this->attribute->setData('values', []);
-            return $this->attribute;
+            return null;
         }
-        $attribute = clone $this->attribute;
+        $this->attribute->current_setEntity($this);
         if ($entity_id) {
-            /**@var \Weline\Eav\Model\Attribute\Type\Value $valueModel */
-            $valueModel = ObjectManager::getInstance(Attribute\Type\Value::class);
-            $valueModel->setAttribute($attribute);
-            $this->attribute->clear()
-                            ->fields('main_table.code,main_table.entity,main_table.name,main_table.type,v.value')
-                            ->where($this->attribute::fields_entity, $this->getEntityCode())
-                            ->where($this->attribute::fields_code, $code);
-            $this->attribute->joinModel(
-                $valueModel,
-                'v',
-                "main_table.code=v.attribute and v.entity_id='{$entity_id}'",
-                'left', 'v.value'
-            );
+            $this->attribute = $this->attribute->getValue($entity_id, true);
         }
-        $attribute->setData('values', $this->attribute
-            ->select()
-            ->fetch());
-        return $attribute;
+        $this->attributes[$code] = clone $this->attribute;
+        return $this->attributes[$code];
     }
 
     /**
@@ -139,11 +135,32 @@ abstract class AbstractEav implements EavInterface
      */
     public function getAttributes(): array
     {
-        return $this->attribute
+        // 获取缓存属性
+        $cache_key  = $this->getEntityCode() . '-attributes';
+        $attributes = $this->eavCache->get($cache_key);
+        if ($attributes) {
+            foreach ($attributes as &$attribute) {
+                /**@var Attribute $attribute */
+                $attribute = ObjectManager::make(Attribute::class, ['data' => $attribute]);
+                $attribute->current_setEntity($this->getEntity());
+            }
+            return $attributes;
+        }
+        // 数据库读取属性
+        $attributes = $this->attribute
             ->where($this->attribute::fields_entity, $this->getEntityCode())
             ->select()
             ->fetch()
             ->getItems();
+        $cache_data = [];
+        foreach ($attributes as $attribute) {
+            $cache_data[] = $attribute->getData();
+            /**@var Attribute $attribute */
+            $attribute->current_setEntity($this);
+        }
+        // 缓存属性
+        $this->eavCache->set($cache_key, $cache_data, 300);
+        return $attributes;
     }
 
     /**
@@ -184,7 +201,7 @@ abstract class AbstractEav implements EavInterface
      */
     public function setAttribute(Attribute $attribute): bool
     {
-        if ($attribute->getEntity() !== $this->getEntityCode()) {
+        if ($attribute->current_getEntity()->getEntityCode() !== $this->getEntityCode()) {
             throw new Exception(__('警告：属性不属于当前Eav实体！当前实体：%1，当前属性：%2，当前属性所属实体：%3',
                                    [
                                        $this->getEntityCode(),
@@ -193,6 +210,9 @@ abstract class AbstractEav implements EavInterface
                                    ]
                                 )
             );
+        }
+        if ($attribute->getValue()) {
+            $attribute->unsetData('value');
         }
         return $attribute->save(true);
     }
@@ -236,13 +256,39 @@ abstract class AbstractEav implements EavInterface
     /**
      * @inheritDoc
      */
-    public function unsetAttribute(string $code): bool
+    public function unsetAttribute(string $code, bool $remove_value = false): bool
     {
         try {
+            if ($remove_value) {
+                $this->attribute->w_getValueModel()
+                                ->where('attribute', $code)
+                                ->delete();
+            }
             $this->attribute->load($code)->delete();
             return true;
         } catch (\ReflectionException|Exception|Core $e) {
+            if(DEV) throw $e;
             return false;
         }
+    }
+
+
+    /**
+     * @DESC          # Eav: 获取实体
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2023/3/15 22:43
+     * 参数区：
+     * @return \Weline\Eav\Model\Entity
+     */
+    public function eav_getEntity(): \Weline\Eav\Model\Entity
+    {
+        if ($entity = $this->eavCache->get($this->getEntityCode())) {
+            return $entity;
+        }
+        $entity = $this->entity->load($this->getEntityCode());
+        $this->eavCache->set($this->getEntityCode(), $entity);
+        return $entity;
     }
 }
