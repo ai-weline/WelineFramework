@@ -45,11 +45,15 @@ try {
         echo '<pre>';
         echo '应用启动失败：<b style="color: red">' . $exception->getMessage() . '</b>' . PHP_EOL;
         echo '错误信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
-        var_dump($exception->getTrace());
+//        var_dump($exception->getTrace());
         if (DEBUG) {
             echo 'DEBUG信息：' . PHP_EOL . $exception->getTraceAsString() . PHP_EOL;
             echo '<pre>';
             var_dump(debug_backtrace());
+            echo '</pre>';
+            echo 'DEBUG 堆栈追踪信息：' . PHP_EOL;
+            echo '<pre>';
+            var_dump($exception->getTrace());
         }
     } else {
         echo '<pre>';
@@ -57,4 +61,3 @@ try {
         exit(0);
     }
 }
-//php bin/m system:install --db-type=mysql --db-hostname=127.0.0.1 --db-database=tongji --db-username=tongji --db-password=tongji
