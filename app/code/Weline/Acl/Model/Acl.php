@@ -208,6 +208,7 @@ class Acl extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
+        $setup->query('TRUNCATE TABLE ' . $this->getTable());
 //        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable()

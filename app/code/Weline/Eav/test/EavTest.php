@@ -144,4 +144,6 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
         }
         assertTrue($s1&&$s2,'删除属性成功');
     }
+
+    //FIXME 完成属性值匹配读写
 }
