@@ -28,18 +28,18 @@ class Menu extends \Weline\Framework\Database\Model
 {
     public const primary_key = 'source';
 
-    public const fields_NAME          = 'name';
-    public const fields_TITLE         = 'title';
-    public const fields_PID           = 'pid';
-    public const fields_SOURCE        = 'source';
+    public const fields_NAME = 'name';
+    public const fields_TITLE = 'title';
+    public const fields_PID = 'pid';
+    public const fields_SOURCE = 'source';
     public const fields_PARENT_SOURCE = 'parent_source';
-    public const fields_ACTION        = 'action';
-    public const fields_MODULE        = 'module';
-    public const fields_ICON          = 'icon';
-    public const fields_ORDER         = 'order';
-    public const fields_IS_SYSTEM     = 'is_system';
-    public const fields_IS_ENABLE     = 'is_enable';
-    public const fields_IS_BACKEND    = 'is_backend';
+    public const fields_ACTION = 'action';
+    public const fields_MODULE = 'module';
+    public const fields_ICON = 'icon';
+    public const fields_ORDER = 'order';
+    public const fields_IS_SYSTEM = 'is_system';
+    public const fields_IS_ENABLE = 'is_enable';
+    public const fields_IS_BACKEND = 'is_backend';
 
     private Url $url;
 
@@ -304,24 +304,25 @@ class Menu extends \Weline\Framework\Database\Model
             $checked_menus   = [];
             /**@var Acl[] $roleAccesses */
             foreach ($roleAccesses as $roleAccess) {
-                $source     = $roleAccess['parent_source'];
+                $source = $roleAccess['parent_source'];
                 if (empty($source)) {
-                    $roleAccess = $this->getSubMenusByRole($roleAccess, $role);
+                    $roleAccess                                = $this->getSubMenusByRole($roleAccess, $role);
                     $top_menus[$roleAccess->getSourceId()]     = $roleAccess;
                     $checked_menus[$roleAccess->getSourceId()] = $roleAccess;
                 } else {
                     // 归并需要查找父级的子权限
                     if (!isset($mergerParentAcl[$source])) {
                         /**@var Acl $menu */
-                        $menu = clone $model->clear()
-                                            ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
-                                            ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
-                                            ->where('main_table.source_id', $source)
-                                            ->find()
-                                            ->fetch();
-                        $roleAccess = $this->getSubMenusByRole($menu, $role);
+                        $menu                                = clone $model->clear()
+                                                                           ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
+                                                                           ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
+                                                                           ->where('main_table.source_id', $source)
+                                                                           ->order('menu.order', 'asc')
+                                                                           ->find()
+                                                                           ->fetch();
+                        $roleAccess                          = $this->getSubMenusByRole($menu, $role);
                         $checked_menus[$menu->getSourceId()] = $roleAccess;
-                        $mergerParentAcl[$source] = $roleAccess;
+                        $mergerParentAcl[$source]            = $roleAccess;
                     }
                 }
             }
@@ -334,10 +335,10 @@ class Menu extends \Weline\Framework\Database\Model
             $top_menus = $model->clear()
                                ->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
                                ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
-                               ->where('main_table.parent_source=""', null, '=', 'or')
                                ->where('main_table.parent_source is null or main_table.parent_source=""')
-                               ->select()
-                               ->fetch()
+                               ->order('menu.order', 'asc')
+                               ->group('main_table.acl_id')
+                               ->select()->fetch()
                                ->getItems();
             /**@var Acl $top_menu */
             foreach ($top_menus as &$top_menu) {
@@ -356,8 +357,8 @@ class Menu extends \Weline\Framework\Database\Model
      * 参数区：
      *
      * @param Acl $acl
-     * @param     $role
-     *
+     * @param Role $role
+     * @param array $checked_menus
      * @return Acl
      * @throws Core
      * @throws \ReflectionException
@@ -386,6 +387,7 @@ class Menu extends \Weline\Framework\Database\Model
             self::Acl()->clear()->joinModel(RoleAccess::class, 'ra', 'ra.source_id=main_table.source_id')
                 ->joinModel(Menu::class, 'menu', 'ra.source_id=menu.source')
                 ->where('main_table.source_id', $acl->getParentSource())
+                ->order('menu.order', 'asc')
                 ->find()
                 ->fetch();
             # 如果角色没有该父级分类的权限，展示时要保证每级分类都有子分类。否则会造成顶级分类下的子分类没有权限而不展示，但是子分类下确实有权限的问题
