@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Weline\Eav\test;
 
-use Weline\Eav\Model\Attribute;
+use Weline\Eav\Model\EavAttribute;
 use Weline\Eav\Model\Test;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;
@@ -21,7 +21,7 @@ use function PHPUnit\Framework\assertTrue;
 class EavTest extends \Weline\Framework\UnitTest\TestCore
 {
     private Test $test;
-    private Attribute $attribute;
+    private EavAttribute $attribute;
     const multi_attr  = 'test_multi';
     const single_attr = 'test_single';
 
@@ -29,8 +29,8 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
     {
         parent::setUp();
         $this->test      = ObjectManager::getInstance(Test::class)->load(1);
-        $this->attribute = ObjectManager::getInstance(Attribute::class);
-        $this->value     = ObjectManager::getInstance(Attribute\Type\Value::class);
+        $this->attribute = ObjectManager::getInstance(EavAttribute::class);
+        $this->value     = ObjectManager::getInstance(\Weline\Eav\Model\EavAttribute\Type\Value::class);
     }
 
     function testAddAttribute()
@@ -51,7 +51,7 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
     {
         $this->testAddAttribute();
         $result = $this->test->getAttribute(self::single_attr);
-        self::assertTrue($result->getId() === self::single_attr, '获取属性');
+        self::assertTrue($result->getCode() === self::single_attr, '获取属性');
     }
 
     function testGetAttributes()
@@ -64,9 +64,11 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
 
     function testSetAttribute()
     {
+        $this->testAddAttribute();
         $attribute = $this->test->getAttribute(self::single_attr);
         $attribute->setName('测试修改属性名1');
         $assertion1 = $this->test->setAttribute($attribute);
+        $this->testAddMultiAttribute();
         $attribute  = $this->test->getAttribute(self::multi_attr);
         $attribute->setName('测试修改属性名(多值)');
         $assertion2 = $this->test->setAttribute($attribute);
@@ -102,14 +104,14 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
         $this->testAddAttribute();
         $this->testSetSingleValueAttributeValue();
         $result = $this->test->getAttribute(self::single_attr, 1);
-        self::assertTrue($result->getData(Attribute::value_key) === 2, '获取实体属性');
+        self::assertTrue($result->getData(EavAttribute::value_key) === 2, '获取实体属性');
     }
     function testGetMultiValueAttributeValueByEntity()
     {
         $this->testAddMultiAttribute();
         $this->testSetMultiValueAttributeValue();
         $result = $this->test->getAttribute(self::multi_attr, 1);
-        self::assertTrue($result->getData(Attribute::value_key) === [1, 3, 5], '获取实体属性');
+        self::assertTrue($result->getData(EavAttribute::value_key) === [1, 3, 5], '获取实体属性');
     }
 
     function testUnsetAttribute(){
@@ -117,15 +119,15 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
         $this->testAddMultiAttribute();
         $this->testSetSingleValueAttributeValue();
         $this->testSetMultiValueAttributeValue();
-        $s1 = $this->test->unsetAttribute(self::single_attr);
-        $s2 = $this->test->unsetAttribute(self::multi_attr);
+        $s1 = false;
+        $s2 = false;
         $a1 = $this->test->getAttribute(self::single_attr);
         $a2 = $this->test->getAttribute(self::multi_attr);
-        if($a1->getValue()===2){
+        if(intval($a1->getValue())==2){
             $s1 = true;
         }
-        if($a2->getValue()===[1, 3, 5]){
-            $s1 = true;
+        if($a2->getValue()==[1, 3, 5]){
+            $s2 = true;
         }
         $this->testAddAttribute();
         $this->testAddMultiAttribute();
@@ -136,14 +138,13 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
 
         $a1 = $this->test->getAttribute(self::single_attr);
         $a2 = $this->test->getAttribute(self::multi_attr);
-        if($a1->getValue()===2){
+        if($a1){
             $s1 = false;
         }
-        if($a2->getValue()===[1, 3, 5]){
+        if($a2){
             $s1 = false;
         }
+
         assertTrue($s1&&$s2,'删除属性成功');
     }
-
-    //FIXME 完成属性值匹配读写
 }

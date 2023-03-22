@@ -19,12 +19,13 @@ use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
-class Entity extends \Weline\Framework\Database\Model
+class EavEntity extends \Weline\Framework\Database\Model
 {
-    public const fields_ID                     = 'code';
+    public const fields_ID                     = 'entity_id';
     public const fields_code                   = 'code';
     public const fields_name                   = 'name';
     public const fields_class                  = 'class';
+    public const fields_is_system              = 'is_system';
     public const fields_entity_id_field_type   = 'entity_id_field_type';
     public const fields_entity_id_field_length = 'entity_id_field_length';
 
@@ -33,6 +34,7 @@ class Entity extends \Weline\Framework\Database\Model
      */
     public function setup(ModelSetup $setup, Context $context): void
     {
+//        $setup->dropTable();
         if (!$setup->tableExist()) {
             $this->install($setup, $context);
         }
@@ -52,14 +54,16 @@ class Entity extends \Weline\Framework\Database\Model
                 $this->clear()
                      ->setData(
                          [
-                             self::fields_ID                     => $eavEntity->getEntityCode(),
+                             self::fields_code                     => $eavEntity->getEntityCode(),
                              self::fields_class                  => $eav,
                              self::fields_name                   => $eavEntity->getEntityName(),
+                             self::fields_is_system              => 1,
                              self::fields_entity_id_field_type   => $eavEntity->getEntityFieldIdType(),
                              self::fields_entity_id_field_length => $eavEntity->getEntityFieldIdLength(),
                          ]
                      )
-                     ->save(true);
+                    ->forceCheck(true,$this->getModelFields())
+                     ->save();
             }
         }
     }
@@ -82,14 +86,20 @@ class Entity extends \Weline\Framework\Database\Model
             $setup->createTable('Eav实体表')
                   ->addColumn(
                       self::fields_ID,
+                      TableInterface::column_type_INTEGER,
+                      0,
+                      'primary key auto_increment',
+                      '实体ID')
+                  ->addColumn(
+                      self::fields_code,
                       TableInterface::column_type_VARCHAR,
                       60,
-                      'primary key',
+                      'not null unique',
                       '实体代码')
                   ->addColumn(
                       self::fields_name,
                       TableInterface::column_type_VARCHAR,
-                      60,
+                      255,
                       'not null',
                       '实体名')
                   ->addColumn(
@@ -110,16 +120,22 @@ class Entity extends \Weline\Framework\Database\Model
                       5,
                       'not null',
                       '实体ID字段长度')
+                  ->addColumn(
+                      self::fields_is_system,
+                      TableInterface::column_type_SMALLINT,
+                      1,
+                      'default 0',
+                      '是否系统生成')
                   ->create();
         }
     }
 
     public function getAttribute(string $code)
     {
-        /**@var \Weline\Eav\Model\Attribute $attributeModel */
-        $attributeModel = ObjectManager::getInstance(Attribute::class);
-        $attributeModel->where(Attribute::fields_entity, $this->getCode())
-                       ->where(Attribute::fields_code, $code)
+        /**@var \Weline\Eav\Model\EavAttribute $attributeModel */
+        $attributeModel = ObjectManager::getInstance(EavAttribute::class);
+        $attributeModel->where(EavAttribute::fields_entity, $this->getCode())
+                       ->where(EavAttribute::fields_code, $code)
                        ->find()
                        ->fetch();
         return $attributeModel;
@@ -153,6 +169,14 @@ class Entity extends \Weline\Framework\Database\Model
     public function setClass(string $class): static
     {
         return $this->setData(self::fields_class, $class);
+    }
+
+    public function isSystem(bool $is_system = null): bool|static
+    {
+        if (is_bool($is_system)) {
+            return $this->setData(self::fields_is_system, $is_system);
+        }
+        return (bool)$this->getData(self::fields_is_system);
     }
 
     public function getEntityIdFieldType(): string

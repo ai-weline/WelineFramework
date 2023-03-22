@@ -10,10 +10,10 @@ declare(strict_types=1);
  * 日期：2023/3/6 23:01:21
  */
 
-namespace Weline\Eav\Model\Attribute\Type;
+namespace Weline\Eav\Model\EavAttribute\Type;
 
-use Weline\Eav\Model\Attribute;
-use Weline\Eav\Model\Entity;
+use Weline\Eav\Model\EavAttribute;
+use Weline\Eav\Model\EavEntity;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Manager\ObjectManager;
@@ -27,7 +27,7 @@ class Value extends \Weline\Framework\Database\Model
     public const fields_entity_id = 'entity_id';
     public const fields_value     = 'value';
 
-    private ?Attribute $attribute = null;
+    private ?EavAttribute $attribute = null;
 
     /**
      * @DESC          # 设置值属性
@@ -37,12 +37,12 @@ class Value extends \Weline\Framework\Database\Model
      * @DateTime: 2023/3/9 22:35
      * 参数区：
      *
-     * @param \Weline\Eav\Model\Attribute $attribute
+     * @param \Weline\Eav\Model\EavAttribute $attribute
      *
      * @return $this
      * @throws null
      */
-    public function setAttribute(Attribute $attribute): static
+    public function setAttribute(EavAttribute $attribute): static
     {
         if (empty($attribute->getId())) {
             throw new Exception(__('属性不存在！'));
@@ -76,7 +76,7 @@ class Value extends \Weline\Framework\Database\Model
         if ($this->attribute) {
             return $this->attribute;
         }
-        $this->attribute = ObjectManager::getInstance(Attribute::class);
+        $this->attribute = ObjectManager::getInstance(EavAttribute::class);
         return $this->attribute->load($this->getData(self::fields_attribute));
     }
 
@@ -114,20 +114,20 @@ class Value extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-        /**@var \Weline\Eav\Model\Entity $entity */
-        $entity = ObjectManager::getInstance(\Weline\Eav\Model\Entity::class);
+        /**@var \Weline\Eav\Model\EavEntity $entity */
+        $entity = ObjectManager::getInstance(\Weline\Eav\Model\EavEntity::class);
 
         // 创建对应实体类型值表
         /**@var \Weline\Framework\Setup\Db\ModelSetup $setup */
         $setup = ObjectManager::getInstance(\Weline\Framework\Setup\Db\ModelSetup::class);
-        /**@var \Weline\Eav\Model\Attribute\Type $type */
-        $type = ObjectManager::getInstance(Attribute\Type::class);
+        /**@var \Weline\Eav\Model\EavAttribute\Type $type */
+        $type = ObjectManager::getInstance(\Weline\Eav\Model\EavAttribute\Type::class);
 
         $types    = $type->select()->fetch()->getItems();
         $entities = $entity->clear()->select()->fetch()->getItems();
-        /**@var Entity $entity */
+        /**@var EavEntity $entity */
         foreach ($entities as $entity) {
-            /**@var \Weline\Eav\Model\Attribute\Type $type */
+            /**@var \Weline\Eav\Model\EavAttribute\Type $type */
             foreach ($types as $type) {
                 $eav_entity_type_table = $setup->getTable('eav_' . $entity->getCode() . '_' . $type->getCode());
                 $setup->dropTable($eav_entity_type_table);

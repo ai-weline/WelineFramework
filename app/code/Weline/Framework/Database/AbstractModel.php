@@ -1147,7 +1147,7 @@ abstract class AbstractModel extends DataObject
     public function getModelData(string $field = ''): array|string
     {
         if (empty($this->_model_fields_data) && $data = $this->getData()) {
-            $need_fill_fields = [];
+//            $need_fill_fields = [];
             foreach ($this->getModelFields() as $key => $val) {
                 if (isset($data[$val])) {
                     $field_data = $data[$val];
@@ -1209,6 +1209,30 @@ abstract class AbstractModel extends DataObject
         } else {
             $this->_model_fields_data[$key] = $value;
             $this->setData($key, $value);
+        }
+        return $this;
+    }
+
+    /**
+     * @DESC          # 设置模型数据
+     *
+     * @AUTH    秋枫雁飞
+     * @EMAIL aiweline@qq.com
+     * @DateTime: 2021/11/16 17:09
+     * 参数区：
+     *
+     * @param array|string $key
+     *
+     * @return AbstractModel
+     */
+    public function unsetModelData(array|string $key): static
+    {
+        if (is_array($key)) {
+            foreach ($key as $item) {
+                unset($this->_model_fields_data[$item]);
+            }
+        } else {
+            unset($this->_model_fields_data[$key]);
         }
         return $this;
     }
@@ -1497,13 +1521,13 @@ PAGINATION;
     private function checkUpdateOrInsert(): mixed
     {
         if ($this->unique_data) {
-            $check_result = $this->getQuery()->where($this->unique_data)->find()->fetch();
+            $check_result = $this->getQuery()->where($this->unique_data)->find()->fetchOrigin();
         } else {
             $check_result = [];
         }
         # 存在更新
-        if (isset($check_result[$this->_primary_key])) {
-            $this->setId($check_result[$this->_primary_key]);
+        if (isset($check_result[$this->_primary_key]) || $this->getId()) {
+            if (!$this->getId()) $this->setId($check_result[$this->_primary_key]);
             $data = $this->getModelData();
             unset($data[$this->_primary_key]);
             $save_result = $this->getQuery()->where($this->unique_data)

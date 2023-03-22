@@ -14,29 +14,32 @@ namespace Weline\Eav\Model;
 
 use Weline\Eav\EavInterface;
 use Weline\Eav\EavModel;
-use Weline\Eav\Model\Attribute\Type\Value;
+use Weline\Eav\Model\EavAttribute\Type\Value;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
-use function PHPUnit\Framework\throwException;
+use const Weline\Eav\Model\DEV;
 
-class Attribute extends \Weline\Framework\Database\Model
+class EavAttribute extends \Weline\Framework\Database\Model
 {
 
-    public const fields_ID              = 'code';
+    public const fields_ID              = 'attribute_id';
     public const fields_code            = 'code';
     public const fields_name            = 'name';
     public const fields_type            = 'type';
+    public const fields_set_id          = 'set_id';
+    public const fields_group_id        = 'group_id';
     public const fields_entity          = 'entity';
     public const fields_multiple_valued = 'multiple_valued';
+    public const fields_has_option      = 'has_option';
+    public const fields_is_system       = 'is_system';
+    public const fields_is_enable       = 'is_enable';
 
     const value_key        = 'value';
-    const value_origin_key = 'origin_value';
     const value_keys       = [
         self::value_key,
-        self::value_origin_key
     ];
 
     private ?Value $value = null;
@@ -71,12 +74,12 @@ class Attribute extends \Weline\Framework\Database\Model
                       TableInterface::column_type_INTEGER,
                       0,
                       'primary key auto_increment',
-                      'ID')
+                      '属性ID')
                   ->addColumn(
                       self::fields_code,
                       TableInterface::column_type_VARCHAR,
                       60,
-                      'unique',
+                      'not null unique',
                       '代码')
                   ->addColumn(
                       self::fields_entity,
@@ -102,6 +105,36 @@ class Attribute extends \Weline\Framework\Database\Model
                       0,
                       'default 0',
                       '是否多值')
+                  ->addColumn(
+                      self::fields_group_id,
+                      TableInterface::column_type_INTEGER,
+                      0,
+                      'default 0',
+                      '属性组ID')
+                  ->addColumn(
+                      self::fields_set_id,
+                      TableInterface::column_type_INTEGER,
+                      0,
+                      'default 0',
+                      '属性集ID')
+                  ->addColumn(
+                      self::fields_has_option,
+                      TableInterface::column_type_SMALLINT,
+                      1,
+                      'default 0',
+                      '是否多值')
+                  ->addColumn(
+                      self::fields_is_system,
+                      TableInterface::column_type_SMALLINT,
+                      1,
+                      'default 0',
+                      '是否系统生成')
+                  ->addColumn(
+                      self::fields_is_enable,
+                      TableInterface::column_type_SMALLINT,
+                      1,
+                      'default 1',
+                      '是否启用')
                   ->create();
         }
     }
@@ -148,6 +181,30 @@ class Attribute extends \Weline\Framework\Database\Model
         return $this->setData(self::fields_name, $name);
     }
 
+    public function hasOption(bool $has_option = null): bool|static
+    {
+        if (is_bool($has_option)) {
+            return $this->setData(self::fields_has_option, $has_option);
+        }
+        return (bool)$this->getData(self::fields_has_option);
+    }
+
+    public function isSystem(bool $is_system = null): bool|static
+    {
+        if (is_bool($is_system)) {
+            return $this->setData(self::fields_is_system, $is_system);
+        }
+        return (bool)$this->getData(self::fields_is_system);
+    }
+
+    public function isEnable(bool $is_enable = null): bool|static
+    {
+        if (is_bool($is_enable)) {
+            return $this->setData(self::fields_is_enable, $is_enable);
+        }
+        return (bool)$this->getData(self::fields_is_enable);
+    }
+
     function getMultipleValued(): bool
     {
         return (bool)$this->getData(self::fields_multiple_valued);
@@ -180,18 +237,16 @@ class Attribute extends \Weline\Framework\Database\Model
                 "main_table.code=v.attribute and v.entity_id='{$entity_id}'",
                 'left', 'v.value'
             );
+            // FIXME 解决值添加到了data数组内部问题
             if ($attribute->getMultipleValued()) {
-                $valueModels = $attribute->select()->fetch()->getItems();
-                $values      = [];
-                foreach ($valueModels as $valueModel) {
-                    $values[] = $valueModel->getData(Attribute\Type\Value::fields_value);
+                $values = $attribute->select()->fetchOrigin();
+                foreach ($values as $key=> &$item) {
+                    $item=$item['value'];
                 }
                 $attribute->setData($this::value_key, $values);
-                $attribute->setData($this::value_origin_key, $valueModels);
             } else {
-                $valueModel = $attribute->find()->fetch();
-                $attribute->setData($this::value_key, $valueModel->getData(Attribute\Type\Value::fields_value));
-                $attribute->setData($this::value_origin_key, $valueModel);
+                $value = $attribute->find()->fetchOrigin();
+                $attribute->setData($this::value_key, $value[0]['value']??[]);
             }
             if ($object) {
                 return $attribute;
@@ -212,16 +267,16 @@ class Attribute extends \Weline\Framework\Database\Model
      * @DateTime: 2023/3/13 20:19
      * 参数区：
      *
-     * @param string|int                                              $entity_id entity_id：1 或者 'entity_id_code'
+     * @param string|int                                                 $entity_id entity_id：1 或者 'entity_id_code'
      *
-     * @param \Weline\Eav\Model\Attribute\Type\Value|array|string|int $value     entity_id值：Array:[1,2,3...] 或者 1 或者 ‘1’
+     * @param \Weline\Eav\Model\EavAttribute\Type\Value|array|string|int $value     entity_id值：Array:[1,2,3...] 或者 1 或者 ‘1’
      *
-     * @return \Weline\Eav\Model\Attribute
+     * @return \Weline\Eav\Model\EavAttribute
      * @throws \ReflectionException
      * @throws \Weline\Framework\App\Exception
      * @throws \Weline\Framework\Exception\Core
      */
-    function setValue(string|int $entity_id, Attribute\Type\Value|array|string|int $value): static
+    function setValue(string|int $entity_id, \Weline\Eav\Model\EavAttribute\Type\Value|array|string|int $value): static
     {
         if (is_string($value) || is_int($value)) {
             $this->w_getValueModel()->where(['entity_id' => $entity_id, 'attribute' => $this->getCode()])->delete();
@@ -280,13 +335,13 @@ class Attribute extends \Weline\Framework\Database\Model
      * @EMAIL aiweline@qq.com
      * @DateTime: 2023/3/15 21:13
      * 参数区：
-     * @return \Weline\Eav\Model\Attribute\Type\Value
+     * @return \Weline\Eav\Model\EavAttribute\Type\Value
      */
-    function w_getValueModel(): Attribute\Type\Value
+    function w_getValueModel(): \Weline\Eav\Model\EavAttribute\Type\Value
     {
         if (!$this->value) {
-            /**@var \Weline\Eav\Model\Attribute\Type\Value $valueModel */
-            $valueModel = ObjectManager::getInstance(Attribute\Type\Value::class);
+            /**@var \Weline\Eav\Model\EavAttribute\Type\Value $valueModel */
+            $valueModel = ObjectManager::getInstance(\Weline\Eav\Model\EavAttribute\Type\Value::class);
             $valueModel->setAttribute($this);
             $this->value = $valueModel;
         }
@@ -306,7 +361,7 @@ class Attribute extends \Weline\Framework\Database\Model
      *
      * @return $this
      */
-    public function current_setEntity(EavModel|\Weline\Eav\EavInterface &$entity): Attribute
+    public function current_setEntity(EavModel|\Weline\Eav\EavInterface &$entity): EavAttribute
     {
         $this->currentEntity = $entity;
         return $this;

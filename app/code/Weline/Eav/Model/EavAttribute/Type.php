@@ -10,7 +10,7 @@ declare(strict_types=1);
  * 日期：2023/3/6 21:28:26
  */
 
-namespace Weline\Eav\Model\Attribute;
+namespace Weline\Eav\Model\EavAttribute;
 
 use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Setup\Data\Context;

@@ -12,8 +12,7 @@ declare(strict_types=1);
 
 namespace Weline\Eav;
 
-use Weline\Eav\Model\Attribute;
-use Weline\Eav\Model\Entity;
+use Weline\Eav\Model\EavAttribute;
 
 interface EavInterface
 {
@@ -90,11 +89,11 @@ interface EavInterface
      * @DateTime: 2023/3/6 21:34
      * 参数区：
      *
-     * @param \Weline\Eav\Model\Attribute $attribute
+     * @param \Weline\Eav\Model\EavAttribute $attribute
      *
      * @return bool
      */
-    public function setAttribute(Attribute $attribute): bool;
+    public function setAttribute(EavAttribute $attribute): bool;
 
     /**
      * @DESC          # 卸载属性
@@ -123,9 +122,9 @@ interface EavInterface
      *
      * @param int|string|null $entity_id 实体的具体ID【例如产品ID,分类ID,具体要看实体是哪个】
      *
-     * @return \Weline\Eav\Model\Attribute|null
+     * @return \Weline\Eav\Model\EavAttribute|null
      */
-    public function getAttribute(string $code, int|string $entity_id = null): Attribute|null;
+    public function getAttribute(string $code, int|string $entity_id = null): EavAttribute|null;
 
     /**
      * @DESC          # 返回多个属性
@@ -134,7 +133,7 @@ interface EavInterface
      * @EMAIL aiweline@qq.com
      * @DateTime: 2023/3/6 20:52
      * 参数区：
-     * @return \Weline\Eav\Model\Attribute[]
+     * @return \Weline\Eav\Model\EavAttribute[]
      */
     public function getAttributes(): array;
 }
