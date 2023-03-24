@@ -1521,10 +1521,11 @@ PAGINATION;
     private function checkUpdateOrInsert(): mixed
     {
         if ($this->unique_data) {
-            $check_result = $this->getQuery()->where($this->unique_data)->find()->fetchOrigin();
+            $check_result = $this->getQuery()->where($this->unique_data)->find()->fetchOrigin()[0]??[];
         } else {
             $check_result = [];
         }
+
         # 存在更新
         if (isset($check_result[$this->_primary_key]) || $this->getId()) {
             if (!$this->getId()) $this->setId($check_result[$this->_primary_key]);
