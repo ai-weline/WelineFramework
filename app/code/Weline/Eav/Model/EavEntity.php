@@ -15,11 +15,13 @@ namespace Weline\Eav\Model;
 use Weline\Eav\EavInterface;
 use Weline\Framework\App\Env;
 use Weline\Framework\Database\Api\Db\TableInterface;
+use Weline\Framework\Database\Model;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\Module\Config\ModuleFileReader;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
 
-class EavEntity extends \Weline\Framework\Database\Model
+class EavEntity extends Model
 {
     public const fields_ID                     = 'entity_id';
     public const fields_code                   = 'code';
@@ -40,7 +42,7 @@ class EavEntity extends \Weline\Framework\Database\Model
         }
         // 安装实体
         /**@var \Weline\Framework\Module\Config\ModuleFileReader $moduleFileReader */
-        $moduleFileReader = ObjectManager::getInstance(\Weline\Framework\Module\Config\ModuleFileReader::class);
+        $moduleFileReader = ObjectManager::getInstance(ModuleFileReader::class);
 
         $modules = Env::getInstance()->getActiveModules();
         $eavs    = [];
@@ -54,7 +56,7 @@ class EavEntity extends \Weline\Framework\Database\Model
                 $this->clear()
                      ->setData(
                          [
-                             self::fields_code                     => $eavEntity->getEntityCode(),
+                             self::fields_code                   => $eavEntity->getEntityCode(),
                              self::fields_class                  => $eav,
                              self::fields_name                   => $eavEntity->getEntityName(),
                              self::fields_is_system              => 1,
@@ -62,7 +64,7 @@ class EavEntity extends \Weline\Framework\Database\Model
                              self::fields_entity_id_field_length => $eavEntity->getEntityFieldIdLength(),
                          ]
                      )
-                    ->forceCheck(true,$this->getModelFields())
+                     ->forceCheck(true, $this::fields_code)
                      ->save();
             }
         }
