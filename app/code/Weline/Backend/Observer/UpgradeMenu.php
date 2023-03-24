@@ -11,12 +11,14 @@ declare(strict_types=1);
 
 namespace Weline\Backend\Observer;
 
+use Weline\Acl\Model\Acl;
 use Weline\Backend\Config\MenuXmlReader;
 use Weline\Backend\Model\Menu;
 use Weline\Framework\Event\Event;
+use Weline\Framework\Event\ObserverInterface;
 use Weline\Framework\Manager\ObjectManager;
 
-class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
+class UpgradeMenu implements ObserverInterface
 {
     private \Weline\Backend\Model\Menu $menu;
     private MenuXmlReader $menuReader;
@@ -130,40 +132,30 @@ class UpgradeMenu implements \Weline\Framework\Event\ObserverInterface
         $acl_items = [];
         foreach ($all_menus as $menu) {
             $acl_items[] = [
-                \Weline\Acl\Model\Acl::fields_SOURCE_ID     => $menu['source'],
-                \Weline\Acl\Model\Acl::fields_PARENT_SOURCE => $menu['parent_source'],
-                \Weline\Acl\Model\Acl::fields_TYPE          => 'menus',
-                \Weline\Acl\Model\Acl::fields_CLASS         => '',
-                \Weline\Acl\Model\Acl::fields_MODULE        => $menu['module'],
-                \Weline\Acl\Model\Acl::fields_SOURCE_NAME   => $menu['title'],
-                \Weline\Acl\Model\Acl::fields_ROUTER        => '',
-                \Weline\Acl\Model\Acl::fields_ROUTE         => trim($menu['action'],'/'),
-                \Weline\Acl\Model\Acl::fields_METHOD        => 'GET',
-                \Weline\Acl\Model\Acl::fields_DOCUMENT      => $menu['is_system'] ? __('系统菜单') : __('用户菜单'),
-                \Weline\Acl\Model\Acl::fields_REWRITE       => '',
-                \Weline\Acl\Model\Acl::fields_ICON          => $menu['icon'],
-                \Weline\Acl\Model\Acl::fields_IS_ENBAVLE    => $menu['is_enable'],
-                \Weline\Acl\Model\Acl::fields_IS_BACKEND    => $menu['is_backend'],
+                Acl::fields_SOURCE_ID     => $menu['source'],
+                Acl::fields_PARENT_SOURCE => $menu['parent_source'],
+                Acl::fields_TYPE          => 'menus',
+                Acl::fields_CLASS         => '',
+                Acl::fields_MODULE        => $menu['module'],
+                Acl::fields_SOURCE_NAME   => $menu['title'],
+                Acl::fields_ROUTER        => '',
+                Acl::fields_ROUTE         => trim($menu['action'],'/'),
+                Acl::fields_METHOD        => 'GET',
+                Acl::fields_DOCUMENT      => $menu['is_system'] ? __('系统菜单') : __('用户菜单'),
+                Acl::fields_REWRITE       => '',
+                Acl::fields_ICON          => $menu['icon'],
+                Acl::fields_IS_ENBAVLE    => $menu['is_enable'],
+                Acl::fields_IS_BACKEND    => $menu['is_backend'],
             ];
         }
-        /**@var \Weline\Acl\Model\Acl $alcModel */
-        $alcModel = ObjectManager::getInstance(\Weline\Acl\Model\Acl::class);
-        $alcModel->insert(
-            $acl_items,
-            [
-                $alcModel::fields_SOURCE_NAME,
-                $alcModel::fields_ROUTE,
-                $alcModel::fields_METHOD,
-                $alcModel::fields_MODULE,
-                $alcModel::fields_REWRITE,
-                $alcModel::fields_ROUTER,
-                $alcModel::fields_DOCUMENT,
-                $alcModel::fields_PARENT_SOURCE,
-                $alcModel::fields_CLASS,
-                $alcModel::fields_TYPE,
-                $alcModel::fields_ICON,
-                $alcModel::fields_IS_BACKEND,
-            ])
-                 ->fetch();
+
+        if($acl_items){
+            /**@var \Weline\Acl\Model\Acl $alcModel */
+            $alcModel = ObjectManager::getInstance(Acl::class);
+            $alcModel->insert(
+                $acl_items,
+                $alcModel->getModelFields())
+                     ->fetch();
+        }
     }
 }
