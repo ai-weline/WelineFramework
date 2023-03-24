@@ -13,16 +13,18 @@ declare(strict_types=1);
 namespace Weline\Eav\test;
 
 use Weline\Eav\Model\EavAttribute;
+use Weline\Eav\Model\EavAttribute\Type\Value;
 use Weline\Eav\Model\Test;
 use Weline\Framework\App\Exception;
 use Weline\Framework\Manager\ObjectManager;
+use Weline\Framework\UnitTest\TestCore;
 use function PHPUnit\Framework\assertTrue;
 
-class EavTest extends \Weline\Framework\UnitTest\TestCore
+class EavTest extends TestCore
 {
     private Test $test;
-    private EavAttribute $attribute;
     const multi_attr  = 'test_multi';
+    const multi_attr_has_option  = 'test_multi_has_option';
     const single_attr = 'test_single';
 
     public function setUp(): void
@@ -30,7 +32,7 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
         parent::setUp();
         $this->test      = ObjectManager::getInstance(Test::class)->load(1);
         $this->attribute = ObjectManager::getInstance(EavAttribute::class);
-        $this->value     = ObjectManager::getInstance(\Weline\Eav\Model\EavAttribute\Type\Value::class);
+        $this->value     = ObjectManager::getInstance(Value::class);
     }
 
     function testAddAttribute()
@@ -45,6 +47,12 @@ class EavTest extends \Weline\Framework\UnitTest\TestCore
         $this->test->unsetAttribute(self::multi_attr);
         $assertion = $this->test->addAttribute(self::multi_attr, '测试(多值属性)', 'input_int', true);
         self::assertTrue($assertion, 'Eav添加属性测试');
+    }
+    function testAddMultiAttributeHasOption()
+    {
+        $this->test->unsetAttribute(self::multi_attr_has_option);
+        $assertion = $this->test->addAttribute(self::multi_attr_has_option, '测试(多值特定配置项属性)', 'input_int', true,true);
+        self::assertTrue($assertion, 'Eav添加多值特定配置项属性测试');
     }
 
     function testGetAttribute()
