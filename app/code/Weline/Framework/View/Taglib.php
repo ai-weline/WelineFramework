@@ -328,14 +328,14 @@ class Taglib
                         case '@tag()':
                             $content_arr = explode('|', $tag_data[1]);
                             $name        = $this->varParser($this->checkVar($content_arr[0]));
-                            return "<?php if(isset({$name}) && !empty({$name}))echo '" . $template->tmp_replace(trim($content_arr[1] ?? '')) . "'?>";
+                            return "<?php if(!empty({$name}))echo '" . $template->tmp_replace(trim($content_arr[1] ?? '')) . "'?>";
                         case 'tag-start':
                             if (!isset($attributes['name'])) {
                                 $template_html = htmlentities($tag_data[0]);
                                 throw new TemplateException(__("empty标签需要设置name属性:[$template_html]例如：%1", htmlentities('<empty name="catalogs"><li>没有数据</li></empty>')));
                             }
                             $name = $this->varParser($this->checkVar($attributes['name']));
-                            return '<?php if(isset(' . $name . ') && !empty(' . $name . ') ): ?>';
+                            return '<?php if(!empty(' . $name . ') ): ?>';
                         case 'tag-end':
                             return '<?php endif; ?>';
                         default:
