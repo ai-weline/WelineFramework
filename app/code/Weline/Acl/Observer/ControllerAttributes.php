@@ -40,7 +40,6 @@ class ControllerAttributes implements \Weline\Framework\Event\ObserverInterface
         $type = $event->getData('type');
         /**@var \Weline\Framework\DataObject\DataObject $data */
         $data = $event->getData('data');
-//        dd($data);
         /**@var \ReflectionAttribute $attribute */
         $attribute = $event->getData('attribute');
         $controller_attributes = $event->getData('controller_data/attributes');
