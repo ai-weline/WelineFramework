@@ -114,11 +114,14 @@ class App
         }
         // 调试模式
         if (!defined('DEBUG')) {
-            if(!empty($_GET['debug'])){
+            if (!empty($_GET['debug'])) {
                 define('DEBUG', true);
-            }else{
+            } else {
                 define('DEBUG', false);
             }
+        }
+        if (DEBUG) {
+            $_GET['debug'] = 1;
         }
 
         // 系统UMASK
