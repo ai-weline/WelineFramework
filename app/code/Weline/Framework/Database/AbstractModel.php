@@ -543,6 +543,7 @@ abstract class AbstractModel extends DataObject
                 }
             }
         }
+
         // 保存前
         $this->save_before();
         // save之前事件
@@ -1527,14 +1528,13 @@ PAGINATION;
         }
 
         # 存在更新
-        if (isset($check_result[$this->_primary_key]) || $this->getId()) {
+        if (isset($check_result[$this->_primary_key])) {
             if (!$this->getId()) $this->setId($check_result[$this->_primary_key]);
             $data = $this->getModelData();
             unset($data[$this->_primary_key]);
             $save_result = $this->getQuery()->where($this->unique_data)
                                 ->update($data)
                                 ->fetch();
-//            p($save_result->getLastSql());
         } else {
             $save_result = $this->getQuery()
                                 ->insert($this->getModelData())
