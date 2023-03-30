@@ -43,9 +43,13 @@
     "friendsofphp/php-cs-fixer": "^3.8",
     "weline/module-website-monitoring": "^1.0.0",
     "weline/module-theme-fancy": "^1.0",
+    "weline/module-backend": "^1.0",
+    "weline/module-admin": "^1.0",
+    "weline/module-smtp": "^1.0",
+    "weline/module-theme": "^1.0",
+    "weline/framework": "^1.0",
     "rinvex/countries": "^8.1",
-    "mtdowling/cron-expression": "^1.2",
-    "phpmailer/phpmailer": "^6.6"
+    "mtdowling/cron-expression": "^1.2"
   },
   "opcache-autoloader": true,
   "apcu-autoloader": true,

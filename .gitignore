@@ -18,7 +18,11 @@
 /app/*/*/view/tpl/*
 /pub/static/*
 /var/*
-/generated/*
+/generated/code/*
+/generated/language/*
+/generated/routers/*
+/generated/commands.php
+/generated/functions.php
 .user.ini
 .phpunit.result.cache
 .php_cs.cache
