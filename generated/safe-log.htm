@@ -1,0 +1,86 @@
+<br><br>操作IP: 127.0.0.1<br>操作时间: %2022-%10-%30 %16:%Oct:%th<br>操作页面:/pub/index.php<br>提交方式: POST<br>提交参数: content<br>提交数据: <p><strong>where简单查询</strong></p>
+<p>$users = $model-&gt;where('name','张三')-&gt;select()-&gt;fetch();</p>
+<p><strong>where条件表达式查询</strong>：</p>
+<p>$users = $model-&gt;where('name','张三','=')-&gt;select()-&gt;fetch();</p>
+<p><strong>where多条件表达式逻辑链接查询</strong>：</p>
+<p>$users = $model-&gt;where('name','张三','=','and&rsquo;)-&gt;select()-&gt;fetch();</p>
+<p><strong>where字段名筛选查询：</strong></p>
+<p>$users = $model-&gt;where('name',['张三'，&lsquo;李四&rsquo;])-&gt;select()-&gt;fetch();</p>
+<p><code></code></p>
+<pre>&lt;?php<br />declare(strict_types=1);<br /><br />/*<br /> * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。<br /> * 作者：Admin<br /> * 邮箱：aiweline@qq.com<br /> * 网址：aiweline.com<br /> * 论坛：https://bbs.aiweline.com<br /> * 日期：2022/10/30 15:05:57<br /> */<br /><br />namespace Weline\Cron\Controller;<br /><br />use Weline\Cron\Helper\CronStatus;<br />use Weline\Cron\Model\CronTask;<br />use Weline\Framework\Exception\Core;<br /><br />class Cron extends \Weline\Framework\App\Controller\BackendController<br />{<br />    /**<br />     * @var \Weline\Cron\Model\CronTask<br />     */<br />    private CronTask $cronTask;<br /><br />    function __construct(<br />        CronTask $cronTask<br />    )<br />    {<br />        $this-&gt;cronTask = $cronTask;<br />    }<br /><br />    function listing()<br />    {<br />        $listings = $this-&gt;cronTask-&gt;pagination()-&gt;select()-&gt;fetch();<br />        $this-&gt;assign('tasks', $listings-&gt;getOriginData());<br />        $this-&gt;assign('pagination', $listings-&gt;getPagination());<br />        $this-&gt;assign('total', $listings-&gt;getPaginationData()['totalSize']);<br />        return $this-&gt;fetch();<br />    }<br /><br />    function lock(): string<br />    {<br />        $task_id = $this-&gt;request-&gt;getPost('task_id');<br />        try {<br />            $task = $this-&gt;cronTask-&gt;load($task_id);<br />            $task-&gt;setData($task::fields_STATUS, CronStatus::BLOCK-&gt;value)<br />                 -&gt;save();<br />            return $this-&gt;fetchJson($this &gt; $this-&gt;success(__('锁定任务：%1', $task-&gt;getData('name'))));<br />        } catch (\ReflectionException|Core $e) {<br />            return $this-&gt;fetchJson($this-&gt;error($e-&gt;getMessage()));<br />        }<br />    }<br /><br />    function unlock(): string<br />    {<br />        $task_id = $this-&gt;request-&gt;getPost('task_id');<br />        try {<br />            $task = $this-&gt;cronTask-&gt;load($task_id);<br />            $task-&gt;setData($task::fields_STATUS, CronStatus::PENDING-&gt;value)<br />                 -&gt;save();<br />            return $this-&gt;fetchJson($this &gt; $this-&gt;success(__('解锁任务：%1', $task-&gt;getData('name'))));<br />        } catch (\ReflectionException|Core $e) {<br />            return $this-&gt;fetchJson($this-&gt;error($e-&gt;getMessage()));<br />        }<br />    }<br />}</pre>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<br><br>操作IP: 127.0.0.1<br>操作时间: %2022-%10-%30 %16:%Oct:%th<br>操作页面:/pub/index.php<br>提交方式: POST<br>提交参数: content<br>提交数据: <p><strong>where简单查询</strong></p>
+<p><code>$users = $model-&gt;where('name','张三')-&gt;select()-&gt;fetch();</code></p>
+<p><strong>where条件表达式查询</strong>：</p>
+<p><code>$users = $model-&gt;where('name','张三','=')-&gt;select()-&gt;fetch();</code></p>
+<p><strong>where多条件表达式逻辑链接查询</strong>：</p>
+<p><code>$users = $model-&gt;where('name','张三','=','and&rsquo;)-&gt;select()-&gt;fetch();</code></p>
+<p><strong>where字段名筛选查询：</strong></p>
+<p><code>$users = $model-&gt;where('name',['张三'，&lsquo;李四&rsquo;])-&gt;select()-&gt;fetch();</code></p>
+<p><code></code></p>
+<p><code></code></p>
+<pre>&lt;?php<br />declare(strict_types=1);<br /><br />/*<br /> * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。<br /> * 作者：Admin<br /> * 邮箱：aiweline@qq.com<br /> * 网址：aiweline.com<br /> * 论坛：https://bbs.aiweline.com<br /> * 日期：2022/10/30 15:05:57<br /> */<br /><br />namespace Weline\Cron\Controller;<br /><br />use Weline\Cron\Helper\CronStatus;<br />use Weline\Cron\Model\CronTask;<br />use Weline\Framework\Exception\Core;<br /><br />class Cron extends \Weline\Framework\App\Controller\BackendController<br />{<br />    /**<br />     * @var \Weline\Cron\Model\CronTask<br />     */<br />    private CronTask $cronTask;<br /><br />    function __construct(<br />        CronTask $cronTask<br />    )<br />    {<br />        $this-&gt;cronTask = $cronTask;<br />    }<br /><br />    function listing()<br />    {<br />        $listings = $this-&gt;cronTask-&gt;pagination()-&gt;select()-&gt;fetch();<br />        $this-&gt;assign('tasks', $listings-&gt;getOriginData());<br />        $this-&gt;assign('pagination', $listings-&gt;getPagination());<br />        $this-&gt;assign('total', $listings-&gt;getPaginationData()['totalSize']);<br />        return $this-&gt;fetch();<br />    }<br /><br />    function lock(): string<br />    {<br />        $task_id = $this-&gt;request-&gt;getPost('task_id');<br />        try {<br />            $task = $this-&gt;cronTask-&gt;load($task_id);<br />            $task-&gt;setData($task::fields_STATUS, CronStatus::BLOCK-&gt;value)<br />                 -&gt;save();<br />            return $this-&gt;fetchJson($this &gt; $this-&gt;success(__('锁定任务：%1', $task-&gt;getData('name'))));<br />        } catch (\ReflectionException|Core $e) {<br />            return $this-&gt;fetchJson($this-&gt;error($e-&gt;getMessage()));<br />        }<br />    }<br /><br />    function unlock(): string<br />    {<br />        $task_id = $this-&gt;request-&gt;getPost('task_id');<br />        try {<br />            $task = $this-&gt;cronTask-&gt;load($task_id);<br />            $task-&gt;setData($task::fields_STATUS, CronStatus::PENDING-&gt;value)<br />                 -&gt;save();<br />            return $this-&gt;fetchJson($this &gt; $this-&gt;success(__('解锁任务：%1', $task-&gt;getData('name'))));<br />        } catch (\ReflectionException|Core $e) {<br />            return $this-&gt;fetchJson($this-&gt;error($e-&gt;getMessage()));<br />        }<br />    }<br />}</pre>
+<p><code></code></p>
+<p>&nbsp;</p>
+<p><code></code></p>
+<br><br>操作IP: 127.0.0.1<br>操作时间: %2022-%10-%30 %16:%Oct:%th<br>操作页面:/pub/index.php<br>提交方式: POST<br>提交参数: content<br>提交数据: <p><strong>where简单查询</strong></p>
+<p><code>$users = $model-&gt;where('name','张三')-&gt;select()-&gt;fetch();</code></p>
+<p><strong>where条件表达式查询</strong>：</p>
+<p><code>$users = $model-&gt;where('name','张三','=')-&gt;select()-&gt;fetch();</code></p>
+<p><strong>where多条件表达式逻辑链接查询</strong>：</p>
+<p><code>$users = $model-&gt;where('name','张三','=','and&rsquo;)-&gt;select()-&gt;fetch();</code></p>
+<p><strong>where字段名筛选查询：</strong></p>
+<p><code>$users = $model-&gt;where('name',['张三'，&lsquo;李四&rsquo;])-&gt;select()-&gt;fetch();</code></p>
+<p><code></code></p>
+<p><code></code></p>
+<pre><br />declare(strict_types=1);<br /><br />/*<br /> * 本文件由 秋枫雁飞 编写，所有解释权归Aiweline所有。<br /> * 作者：Admin<br /> * 邮箱：aiweline@qq.com<br /> * 网址：aiweline.com<br /> * 论坛：https://bbs.aiweline.com<br /> * 日期：2022/10/30 15:05:57<br /> */<br /><br />namespace Weline\Cron\Controller;<br /><br />use Weline\Cron\Helper\CronStatus;<br />use Weline\Cron\Model\CronTask;<br />use Weline\Framework\Exception\Core;<br /><br />class Cron extends \Weline\Framework\App\Controller\BackendController<br />{<br />    /**<br />     * @var \Weline\Cron\Model\CronTask<br />     */<br />    private CronTask $cronTask;<br /><br />    function __construct(<br />        CronTask $cronTask<br />    )<br />    {<br />        $this-&gt;cronTask = $cronTask;<br />    }<br /><br />    function listing()<br />    {<br />        $listings = $this-&gt;cronTask-&gt;pagination()-&gt;select()-&gt;fetch();<br />        $this-&gt;assign('tasks', $listings-&gt;getOriginData());<br />        $this-&gt;assign('pagination', $listings-&gt;getPagination());<br />        $this-&gt;assign('total', $listings-&gt;getPaginationData()['totalSize']);<br />        return $this-&gt;fetch();<br />    }<br /><br />    function lock(): string<br />    {<br />        $task_id = $this-&gt;request-&gt;getPost('task_id');<br />        try {<br />            $task = $this-&gt;cronTask-&gt;load($task_id);<br />            $task-&gt;setData($task::fields_STATUS, CronStatus::BLOCK-&gt;value)<br />                 -&gt;save();<br />            return $this-&gt;fetchJson($this &gt; $this-&gt;success(__('锁定任务：%1', $task-&gt;getData('name'))));<br />        } catch (\ReflectionException|Core $e) {<br />            return $this-&gt;fetchJson($this-&gt;error($e-&gt;getMessage()));<br />        }<br />    }<br /><br />    function unlock(): string<br />    {<br />        $task_id = $this-&gt;request-&gt;getPost('task_id');<br />        try {<br />            $task = $this-&gt;cronTask-&gt;load($task_id);<br />            $task-&gt;setData($task::fields_STATUS, CronStatus::PENDING-&gt;value)<br />                 -&gt;save();<br />            return $this-&gt;fetchJson($this &gt; $this-&gt;success(__('解锁任务：%1', $task-&gt;getData('name'))));<br />        } catch (\ReflectionException|Core $e) {<br />            return $this-&gt;fetchJson($this-&gt;error($e-&gt;getMessage()));<br />        }<br />    }<br />}</pre>
+<p><code></code></p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<br><br>操作IP: 127.0.0.1<br>操作时间: %2022-%10-%30 %17:%Oct:%th<br>操作页面:/pub/index.php<br>提交方式: POST<br>提交参数: content<br>提交数据: <p><strong>update特性：可自动识别更新或者插入</strong></p>
+<p><strong>普通更新：</strong></p>
+<p><code><strong>$model-&gt;where('name','张三')-&gt;update(['name'=&gt;'张三']);</strong></code></p>
+<p><strong>自识别更新：</strong></p>
+<p><strong>1)根据主键:自动检测更新</strong></p>
+<p><code><strong>$model-&gt;setData('id',1)-&gt;setData('age',27)-&gt;save(true);</strong></code></p>
+<p><strong>2）自己设置字段识别更新。</strong></p>
+<p><code><strong>$model-&gt;setData('name','张三',true)-&gt;setData('age',27)-&gt;save();</strong></code></p>
+<br><br>操作IP: 127.0.0.1<br>操作时间: %2022-%10-%30 %17:%Oct:%th<br>操作页面:/pub/index.php<br>提交方式: POST<br>提交参数: content<br>提交数据: <p><strong>update特性：可自动识别更新或者插入</strong></p>
+<p><strong>普通更新：</strong></p>
+<p><code>$model-&gt;where('name','张三')-&gt;update(['name'=&gt;'张三']);</code></p>
+<p><strong>自识别更新：</strong></p>
+<p><strong>1)根据主键:自动检测更新</strong></p>
+<p><code>$model-&gt;setData('id',1)-&gt;setData('age',27)-&gt;save(true);</code></p>
+<p><strong>2）自己设置字段识别更新。</strong></p>
+<p><code>$model-&gt;setData('name','张三',true)-&gt;setData('age',27)-&gt;save();</code></p>
+<br><br>操作IP: 127.0.0.1<br>操作时间: %2022-%10-%30 %17:%Oct:%th<br>操作页面:/pub/index.php<br>提交方式: POST<br>提交参数: content<br>提交数据: <p><strong>update特性：可自动识别更新或者插入</strong></p>
+<p><strong>普通更新：</strong></p>
+<p><code>$model-&gt;where('name','张三')-&gt;update(['name'=&gt;'张三']);</code></p>
+<p><strong>自识别更新：</strong></p>
+<p><strong>1)根据主键:自动检测更新</strong></p>
+<p><code>$model-&gt;setData('id',1)-&gt;setData('age',27)-&gt;save(true);</code></p>
+<p><strong>2）自己设置字段识别更新。</strong></p>
+<p>$model-&gt;setData('name','张三',true)-&gt;setData('age',27)-&gt;save();</p>
+<p>3）批量更新</p>
+<p>&nbsp;</p>
+<br><br>操作IP: 127.0.0.1<br>操作时间: %2022-%10-%30 %17:%Oct:%th<br>操作页面:/pub/index.php<br>提交方式: POST<br>提交参数: content<br>提交数据: <p><strong>update特性：可自动识别更新或者插入</strong></p>
+<p><strong>普通更新：</strong></p>
+<p><code>$model-&gt;where('name','张三')-&gt;update(['name'=&gt;'张三']);</code></p>
+<p><strong>自识别更新：</strong></p>
+<p><strong>1)根据主键:自动检测更新</strong></p>
+<p><code>$model-&gt;setData('id',1)-&gt;setData('age',27)-&gt;save(true);</code></p>
+<p><strong>2）自己设置字段识别更新。</strong></p>
+<p><code>$model-&gt;setData('name','张三',true)-&gt;setData('age',27)-&gt;save();</code></p>
+<p>3）批量更新</p>
+<p>&nbsp;</p>
+<br><br>操作IP: 127.0.0.1<br>操作时间: %2022-%10-%30 %17:%Oct:%th<br>操作页面:/pub/index.php<br>提交方式: POST<br>提交参数: content<br>提交数据: <p><strong>特性：可自动识别更新或者插入</strong></p>
+<p><strong>普通更新：</strong></p>
+<p><code>$model-&gt;where('name','张三')-&gt;update(['name'=&gt;'张三'])-&gt;fetch();</code></p>
+<p><strong>自识别更新：</strong></p>
+<p><strong>1)根据主键:自动检测更新</strong></p>
+<p><code>$model-&gt;setData('id',1)-&gt;setData('age',27)-&gt;save(true);</code></p>
+<p><strong>2）自己设置字段识别更新。</strong></p>
+<p><code>$model-&gt;setData('name','张三',true)-&gt;setData('age',27)-&gt;save();</code></p>
+<p>3）批量更新</p>
+<p>&nbsp;</p>
