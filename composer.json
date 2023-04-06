@@ -63,8 +63,7 @@
     "weline/module-smtp": "^1.0",
     "weline/module-theme": "^1.0",
     "weline/framework": "^1.0",
-    "rinvex/countries": "^8.1",
-    "mtdowling/cron-expression": "^1.2"
+    "rinvex/countries": "^8.1"
   },
   "opcache-autoloader": true,
   "apcu-autoloader": true,
