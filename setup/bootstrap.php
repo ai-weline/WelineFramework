@@ -15,7 +15,6 @@ require 'check.php';
 if (!defined('BP')) {
     define("BP", dirname(__DIR__) . DIRECTORY_SEPARATOR);
 }
-const DEV = true;
 // 第三方代码目录
 if (!defined('VENDOR_PATH')) {
     define('VENDOR_PATH', BP . 'vendor' . DIRECTORY_SEPARATOR);
