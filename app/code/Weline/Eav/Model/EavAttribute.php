@@ -20,7 +20,6 @@ use Weline\Framework\Database\Api\Db\Ddl\TableInterface;
 use Weline\Framework\Manager\ObjectManager;
 use Weline\Framework\Setup\Data\Context;
 use Weline\Framework\Setup\Db\ModelSetup;
-use const Weline\Eav\Model\DEV;
 
 class EavAttribute extends \Weline\Framework\Database\Model
 {
@@ -37,8 +36,8 @@ class EavAttribute extends \Weline\Framework\Database\Model
     public const fields_is_system       = 'is_system';
     public const fields_is_enable       = 'is_enable';
 
-    const value_key        = 'value';
-    const value_keys       = [
+    const value_key  = 'value';
+    const value_keys = [
         self::value_key,
     ];
 
@@ -144,6 +143,11 @@ class EavAttribute extends \Weline\Framework\Database\Model
         return $this->getData(self::fields_entity) ?: '';
     }
 
+    function loadByCode(string $code)
+    {
+        return $this->load('code', $code);
+    }
+
 
     function setEntity(string $entity): static
     {
@@ -240,13 +244,13 @@ class EavAttribute extends \Weline\Framework\Database\Model
             // FIXME 解决值添加到了data数组内部问题
             if ($attribute->getMultipleValued()) {
                 $values = $attribute->select()->fetchOrigin();
-                foreach ($values as $key=> &$item) {
-                    $item=$item['value'];
+                foreach ($values as $key => &$item) {
+                    $item = $item['value'];
                 }
                 $attribute->setData($this::value_key, $values);
             } else {
                 $value = $attribute->find()->fetchOrigin();
-                $attribute->setData($this::value_key, $value[0]['value']??[]);
+                $attribute->setData($this::value_key, $value[0]['value'] ?? []);
             }
             if ($object) {
                 return $attribute;

@@ -22,11 +22,6 @@ switch ($_GET['action']) {
         echo json_encode(coverData($data));
 
         break;
-    case 'install':
-        $data = $runner->systemInstall();
-        echo json_encode(coverData($data));
-
-        break;
     case 'init_env':
         // 配置生成
         $data = $runner->systemInit();

@@ -1,17 +1,9 @@
 <div class="container">
     <div class="form-box"  >
-        <h2>Step 4: 环境初始化</h2>
-        <form id="init_env" action="/setup/installer.php" method="post" onsubmit="return false;"
-              onclick="checkEnv('init_env','init_env','✖')">
-            <div class="user-box">
-                <input type="text" name="admin" required="" value="admin_123">
-                <label>PC后台入口</label>
-            </div>
-            <div class="user-box">
-                <input type="text" name="api_admin" required="" value="rest_123">
-                <label>REST API后台入口</label>
-            </div>
-            <button value="提交" type="submit">
+        <h2>Step 4: 环境整理</h2>
+        <form id="install_ok" action="/setup/installer.php" onsubmit="return false;"
+              onclick="checkEnv('install_ok','install_ok','✖')">
+            <button value="开始整理" type="submit">
                 <span></span>
                 <span></span>
                 提交
@@ -20,6 +12,6 @@
             </button>
             <div class="console"></div>
         </form>
-        <a id="next" class="next-button" href="/setup?step=step-5">下一步</a>
+        <a id="next" class="next-button" href="/">开始</a>
     </div>
 </div>

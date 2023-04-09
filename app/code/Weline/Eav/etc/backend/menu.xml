@@ -15,4 +15,12 @@
          parent="Weline_Eav::eav"
          icon="mdi mdi-apache-kafka"
          order="2"/>
+    <add source="Weline_Eav::eav_attribute_group" name="eav_attribute_group" title="属性组" action="/eav/backend/attribute/group"
+         parent="Weline_Eav::eav"
+         icon="mdi mdi-select-group"
+         order="3"/>
+    <add source="Weline_Eav::eav_attribute_set" name="eav_attribute_set" title="属性集" action="/eav/backend/attribute/set"
+         parent="Weline_Eav::eav"
+         icon="mdi mdi-package-variant"
+         order="4"/>
 </menus>

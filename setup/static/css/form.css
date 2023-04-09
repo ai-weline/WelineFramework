@@ -16,7 +16,19 @@
     color: #fff;
     text-align: center;
 }
-
+#db_form{
+    text-align: center;
+}
+.db-config-container{
+    display: flex;
+    justify-content: space-evenly;
+    width: 80%;
+    margin: 0 auto;
+}
+.db-config-container>div{
+    width: 50%;
+    padding: 4rem;
+}
 .form-box .user-box {
     position: relative;
 }

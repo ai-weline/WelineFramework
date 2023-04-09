@@ -1,0 +1,247 @@
+<?php
+/**@var \Weline\Framework\View\Template $this */
+/**@var \Weline\Backend\Block\ThemeConfig $themeConfig */
+$themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Backend\Block\ThemeConfig::class);
+?>
+<!DOCTYPE html>
+<!--
+ *@Author       秋枫雁飞
+ *@Email        aiweline@qq.com
+ *@Forum        https://bbs.aiweline.com
+ *@DESC         后台共用头部
+-->
+<html lang='en' <?= ('rtl' === $themeConfig->getThemeModel()) ? " dir=\"rtl\"" : '' ?>>
+<head>
+    @template(Weline_Admin::common/head.phtml)
+    <title><?= __('Weline Admin 管理面板') ?></title>
+</head>
+
+<body <?= $themeConfig->getLayouts() ?? ''; ?>>
+
+<!--页头工具条 开始-->
+@template(Weline_Admin::common/page/loading.phtml)
+<!--页头工具条 结束-->
+
+<!-- <body data-layout="horizontal" data-topbar="dark"> -->
+
+<!-- 开始 页面 -->
+<div id="layout-wrapper">
+
+
+    <!--页头工具条 开始-->
+    <w:block class='Weline\Admin\Block\Backend\Page\Topbar'/>
+    <!--页头工具条 结束-->
+
+    <!-- ========== Topnav Start ========== -->
+    <!--页头菜单栏 开始-->
+    <w:block class='Weline\Admin\Block\Backend\Page\Topnav'/>
+    <!--页头菜单栏 结束-->
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <!--左侧菜单栏 开始-->
+    @template(Weline_Admin::common/left-sidebar.phtml)
+    <!--左侧菜单栏 结束-->
+
+
+    <!-- ============================================================== -->
+    <!-- Start right Content here -->
+    <!-- ============================================================== -->
+    <div class="main-content">
+
+        <div class='page-content'>
+            <div class='container-fluid'>
+                <!-- start page title -->
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class='page-title-box d-sm-flex align-items-center justify-content-between'>
+                            <h4 class='mb-sm-0'>
+                                <lang>i18n国际化>国家</lang>
+                            </h4>
+
+                            <div class='page-title-right'>
+                                <ol class='breadcrumb m-0'>
+                                    <li class='breadcrumb-item'><a href='javascript: void(0);'>
+                                            <lang>系统配置</lang>
+                                        </a></li>
+                                    <li class='breadcrumb-item'>
+                                        <a href="@backend-url('*/backend/countries')">
+                                            <lang>i18n国际化</lang>
+                                        </a>
+                                    </li>
+                                    <li class='breadcrumb-item'>
+                                        <a href="@backend-url('*/backend/countries')">
+                                            <lang>国家</lang>
+                                        </a>
+                                    </li>
+                                </ol>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+                <!-- start page message -->
+                <div class='row'>
+                    <template>Weline_Component::message.phtml</template>
+                </div> <!-- end message -->
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class='card'>
+                            <div class='card-body'>
+                                <h4 class='card-title'>
+                                    <lang>属性</lang><if condition="attribute.attribute_id">编辑<else/>添加</if>
+                                </h4>
+                                <p class='card-title-desc'>
+                                    <lang>属性表单</lang>
+                                </p>
+                                <p class="card-title-desc">
+                                    <lang>属性信息编辑,属性修改时某些信息是不能修改的，否则数据结构会异常。但是你可以删除这个属性然后使用相同的属性代码（code）创建其他类型的属性。</lang>
+                                </p>
+                                <form class='needs-validation' novalidate=''>
+                                    <!--基础信息-->
+                                    <div class='row'>
+                                        <div class='col-md-4'>
+                                            <div class='mb-3'>
+                                                <label class='form-label' for='validationCode'><lang>属性代码</lang></label>
+                                                <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3'
+                                                       id='validationCode' placeholder='@lang{属性代码}'
+                                                       value='{{attribute.code}}'
+                                                       required='' @if{attribute=>"disabled"}>
+                                                <div class='valid-feedback'>
+                                                    <lang>填写正确！</lang>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-md-4'>
+                                            <div class='mb-3'>
+                                                <label class='form-label' for='validationEntity'><lang>关联实体</lang></label>
+                                                <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3'
+                                                       id='validationEntity' placeholder='@lang{关联实体}'
+                                                       value='{{attribute.entity}}'
+                                                       required='' @if{attribute=>'disabled'}>
+                                                <div class='valid-feedback'>
+                                                    <lang>填写正确！</lang>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-md-4'>
+                                            <div class='mb-3'>
+                                                <label class='form-label' for='validationName'>
+                                                    <lang>属性名</lang>
+                                                </label>
+                                                <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3' id='validationName'
+                                                       placeholder='@lang{属性名(最短三个字符)}' required='' value='{{attribute.name}}'>
+                                                <div class='invalid-feedback'>
+                                                    <lang>请正确填写属性名！(最短三个字符)</lang>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class='row'>
+                                        <div class='col-md-4'>
+                                            <div class='mb-3'>
+                                                <label class='form-label' for='validationType'><lang>属性类型</lang></label>
+                                                <select class='form-control' id='validationType' maxlength='25' required='' @if{attribute=>'disabled'}>
+                                                    <foreach name="types" item="type">
+                                                        <option value="{{type.code}}" @if{attribute.type==type.code=>'selected'}>
+                                                            {{type.name}}
+                                                        </option>
+                                                    </foreach>
+                                                </select>
+                                                <div class='invalid-feedback'>
+                                                    <lang>必须选择一个类型</lang>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--高级信息-->
+                                    <div class='accordion' id='accordionAdvanced'>
+                                        <div class='accordion-item'>
+                                            <h2 class='accordion-header' id='headingOne'>
+                                                <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapseAdvanced'
+                                                        aria-expanded='true' aria-controls='collapseAdvanced'>
+                                                    <lang>高级设置</lang>
+                                                </button>
+                                            </h2>
+                                            <div id='collapseAdvanced' class='accordion-collapse collapse show' aria-labelledby='headingAdvanced'
+                                                 data-bs-parent='#accordionAdvanced'>
+                                                <div class='accordion-body'>
+                                                    <div class='row'>
+                                                        <div class='col-md-4'>
+                                                            <div class='mb-3'>
+                                                                <label class='form-label' for='validationType'>
+                                                                    <lang>是否多值</lang>
+                                                                </label>
+                                                                <select class='form-control' id='validationType' required=''
+                                                                        @if{attribute=>'disabled'}>
+                                                                    <option value="0" @if{attribute.multiple_valued === 0 =>'selected'}>单值</option>
+                                                                    <option value="1" @if{attribute.multiple_valued === 1 =>'selected'}>多值</option>
+                                                                </select>
+                                                                <div class='invalid-feedback'>
+                                                                    <lang>必须选择一个多值类型</lang>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-4'>
+                                                            <div class='mb-3'>
+                                                                <label class='form-label' for='validationGroup'>
+                                                                    <lang>分组</lang>
+                                                                </label>
+                                                                <select class='form-control' id='validationGroup' required=''>
+                                                                    <foreach name="groups" item="group">
+                                                                        <option value='{{group.group_id}}' @if{attribute.group_id ===
+                                                                                group.group_id=>'selected'}>{{group.name}}</option>
+                                                                    </foreach>
+                                                                </select>
+                                                                <div class='invalid-feedback'>
+                                                                    <lang>必须选择一个组</lang>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class='btn btn-primary' type='submit'>Submit form</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+            </div> <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <script>document.write(new Date().getFullYear())</script>
+                        © Weline.
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="text-sm-end d-none d-sm-block">
+                            Crafted with <i class="mdi mdi-heart text-danger"></i> By <a
+                                    href="https://www.aiweline.com/">秋枫雁飞(aiweline)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- end main content-->
+
+</div>
+<!-- END layout-wrapper -->
+<!--右边栏-->
+@template(Weline_Admin::common/right-sidebar.phtml)
+
+<!-- Table Editable plugin -->
+<script src="@static(Weline_Admin::assets/libs/table-edits/build/table-edits.min.js)"></script>
+<script src="@static(Weline_Admin::assets/js/pages/menus/table-editable.init.js)"></script>
+<script src='@static(Weline_Admin::/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js)'></script>
+@template(Weline_Admin::common/footer.phtml)
+</body>
+</html>

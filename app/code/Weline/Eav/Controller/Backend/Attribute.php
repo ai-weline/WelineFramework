@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Weline\Eav\Controller\Backend;
 
 use Weline\Eav\Model\EavAttribute;
+use Weline\Eav\Model\EavAttribute\Group;
 use Weline\Framework\Manager\ObjectManager;
 
 class Attribute extends \Weline\Framework\App\Controller\BackendController
@@ -36,5 +37,31 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
         $this->assign('attributes', $attributes);
         $this->assign('pagination', $this->eavAttribute->getPagination());
         return $this->fetch();
+    }
+
+    function edit()
+    {
+        $code      = $this->request->getGet('code');
+        $attribute = $this->eavAttribute->loadByCode($code);
+        $this->assign('attribute', $attribute);
+        $this->init_form();
+        return $this->fetch('form');
+    }
+
+    function add()
+    {
+        $this->init_form();
+        return $this->fetch('form');
+    }
+
+    protected function init_form(){
+        /**@var \Weline\Eav\Model\EavAttribute\Type $typeModel*/
+        $typeModel = ObjectManager::getInstance(EavAttribute\Type::class);
+        $types = $typeModel->select()->fetchOrigin();
+        $this->assign('types', $types);
+        /**@var Group $grouModel*/
+        $groupModel = ObjectManager::getInstance(Group::class);
+        $groups = $groupModel->select()->fetchOrigin();
+        $this->assign('groups', $groups);
     }
 }

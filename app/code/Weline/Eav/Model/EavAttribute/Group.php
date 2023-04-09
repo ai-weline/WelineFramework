@@ -10,7 +10,7 @@ declare(strict_types=1);
  * 日期：2023/3/22 19:38:43
  */
 
-namespace Weline\Eav\Model\EavAttribute\Set;
+namespace Weline\Eav\Model\EavAttribute;
 
 use Weline\Framework\Database\Api\Db\TableInterface;
 use Weline\Framework\Setup\Data\Context;
@@ -22,6 +22,7 @@ class Group extends \Weline\Framework\Database\Model
     public const fields_group_id = 'group_id';
     public const fields_set_id   = 'set_id';
     public const fields_name     = 'name';
+    public const fields_code     = 'code';
     public const fields_entity   = 'entity';
 
     /**
@@ -45,11 +46,13 @@ class Group extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
+//        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable('属性组')
                   ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', '属性组ID')
                   ->addColumn(self::fields_set_id, TableInterface::column_type_INTEGER, 0, 'not null', '属性集ID')
                   ->addColumn(self::fields_name, TableInterface::column_type_VARCHAR, 225, 'not null unique', '属性组名')
+                  ->addColumn(self::fields_code, TableInterface::column_type_VARCHAR, 225, 'not null unique', '属性组代码')
                   ->addColumn(self::fields_entity, TableInterface::column_type_VARCHAR, 225, 'not null', '实体')
                   ->create();
         }
