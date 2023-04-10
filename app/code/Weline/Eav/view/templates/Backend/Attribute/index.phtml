@@ -104,10 +104,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                 <div class='table-rep-plugin'>
                                     <!-- search form -->
                                     <div class='row'>
-                                        <div class='col-12'>
+                                        <div class='col-6'>
                                             <block class='Weline\Component\Block\Form\Search' id='entity-search'
                                                    action='*/backend/attribute' method='get' keyword='search' value='name'
                                                    placeholder='请输入关键词'></block>
+                                        </div>
+                                        <div class='col-6'>
+                                            <a class="btn btn-primary pull-right" href="@backend-url('*/backend/attribute/add')"><lang>添加属性</lang></a>
                                         </div>
                                     </div>
                                     <!-- end search form -->

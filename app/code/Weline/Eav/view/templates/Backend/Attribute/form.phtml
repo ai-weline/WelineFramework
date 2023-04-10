@@ -55,22 +55,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                     <div class='col-12'>
                         <div class='page-title-box d-sm-flex align-items-center justify-content-between'>
                             <h4 class='mb-sm-0'>
-                                <lang>i18n国际化>国家</lang>
+                                <lang>Eav</lang>><lang>属性</lang>
                             </h4>
 
                             <div class='page-title-right'>
                                 <ol class='breadcrumb m-0'>
                                     <li class='breadcrumb-item'><a href='javascript: void(0);'>
-                                            <lang>系统配置</lang>
+                                            <lang>Eav</lang>
                                         </a></li>
                                     <li class='breadcrumb-item'>
-                                        <a href="@backend-url('*/backend/countries')">
-                                            <lang>i18n国际化</lang>
-                                        </a>
-                                    </li>
-                                    <li class='breadcrumb-item'>
-                                        <a href="@backend-url('*/backend/countries')">
-                                            <lang>国家</lang>
+                                        <a href="@backend-url('*/backend/attribute')">
+                                            <lang>属性</lang>
                                         </a>
                                     </li>
                                 </ol>
@@ -97,16 +92,16 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                 <p class="card-title-desc">
                                     <lang>属性信息编辑,属性修改时某些信息是不能修改的，否则数据结构会异常。但是你可以删除这个属性然后使用相同的属性代码（code）创建其他类型的属性。</lang>
                                 </p>
-                                <form class='needs-validation' novalidate=''>
+                                <form class='needs-validation' novalidate='' action="{{action}}" method="post">
                                     <!--基础信息-->
                                     <div class='row'>
                                         <div class='col-md-4'>
                                             <div class='mb-3'>
                                                 <label class='form-label' for='validationCode'><lang>属性代码</lang></label>
                                                 <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3'
-                                                       id='validationCode' placeholder='@lang{属性代码}'
+                                                       id='validationCode' placeholder='@lang{属性代码}' name="code"
                                                        value='{{attribute.code}}'
-                                                       required='' @if{attribute=>"disabled"}>
+                                                       required='' @if{attribute.attribute_id=>"disabled"}>
                                                 <div class='valid-feedback'>
                                                     <lang>填写正确！</lang>
                                                 </div>
@@ -116,9 +111,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             <div class='mb-3'>
                                                 <label class='form-label' for='validationEntity'><lang>关联实体</lang></label>
                                                 <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3'
-                                                       id='validationEntity' placeholder='@lang{关联实体}'
+                                                       id='validationEntity' placeholder='@lang{关联实体}' name="entity"
                                                        value='{{attribute.entity}}'
-                                                       required='' @if{attribute=>'disabled'}>
+                                                       required='' @if{attribute.attribute_id=>'disabled'}>
                                                 <div class='valid-feedback'>
                                                     <lang>填写正确！</lang>
                                                 </div>
@@ -130,7 +125,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                     <lang>属性名</lang>
                                                 </label>
                                                 <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3' id='validationName'
-                                                       placeholder='@lang{属性名(最短三个字符)}' required='' value='{{attribute.name}}'>
+                                                       placeholder='@lang{属性名(最短三个字符)}' required='' name="name" value='{{attribute.name}}'>
                                                 <div class='invalid-feedback'>
                                                     <lang>请正确填写属性名！(最短三个字符)</lang>
                                                 </div>
@@ -141,9 +136,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         <div class='col-md-4'>
                                             <div class='mb-3'>
                                                 <label class='form-label' for='validationType'><lang>属性类型</lang></label>
-                                                <select class='form-control' id='validationType' maxlength='25' required='' @if{attribute=>'disabled'}>
+                                                <select class='form-control' id='validationType' name='type' required='' @if{attribute.attribute_id=>'disabled'}>
                                                     <foreach name="types" item="type">
-                                                        <option value="{{type.code}}" @if{attribute.type==type.code=>'selected'}>
+                                                        <option value="{{type.code}}" @if{attribute.type === type.code=>'selected'}>
                                                             {{type.name}}
                                                         </option>
                                                     </foreach>
@@ -155,7 +150,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </div>
                                     </div>
                                     <!--高级信息-->
-                                    <div class='accordion' id='accordionAdvanced'>
+                                    <div class='accordion mb-3' id='accordionAdvanced'>
                                         <div class='accordion-item'>
                                             <h2 class='accordion-header' id='headingOne'>
                                                 <button class='accordion-button' type='button' data-bs-toggle='collapse' data-bs-target='#collapseAdvanced'
@@ -172,10 +167,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                                 <label class='form-label' for='validationType'>
                                                                     <lang>是否多值</lang>
                                                                 </label>
-                                                                <select class='form-control' id='validationType' required=''
-                                                                        @if{attribute=>'disabled'}>
-                                                                    <option value="0" @if{attribute.multiple_valued === 0 =>'selected'}>单值</option>
-                                                                    <option value="1" @if{attribute.multiple_valued === 1 =>'selected'}>多值</option>
+                                                                <select class='form-control' id='validationType' required='' name="multiple_valued"
+                                                                        @if{attribute.attribute_id=>'disabled'}>
+                                                                    <option value="0" @if{attribute.multiple_valued == 0 =>'selected'}>单值</option>
+                                                                    <option value="1" @if{attribute.multiple_valued == 1 =>'selected'}>多值</option>
                                                                 </select>
                                                                 <div class='invalid-feedback'>
                                                                     <lang>必须选择一个多值类型</lang>
@@ -187,10 +182,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                                 <label class='form-label' for='validationGroup'>
                                                                     <lang>分组</lang>
                                                                 </label>
-                                                                <select class='form-control' id='validationGroup' required=''>
+                                                                <select class='form-control' id='validationGroup' required='' name="group_id">
                                                                     <foreach name="groups" item="group">
-                                                                        <option value='{{group.group_id}}' @if{attribute.group_id ===
-                                                                                group.group_id=>'selected'}>{{group.name}}</option>
+                                                                        <option value='{{group.group_id}}'
+                                                                                @if{attribute.group_id == group.group_id=>'selected'}>
+                                                                            {{group.name}}
+                                                                        </option>
                                                                     </foreach>
                                                                 </select>
                                                                 <div class='invalid-feedback'>
@@ -198,12 +195,94 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <div class='col-md-4'>
+                                                            <div class='mb-3'>
+                                                                <label class='form-label' for='validationSet'>
+                                                                    <lang>属性集</lang>
+                                                                </label>
+                                                                <select class='form-control' id='validationSet' required='' name="set_id">
+                                                                    <foreach name='sets' item='set'>
+                                                                        <option value='{{set.set_id}}'
+                                                                                @if{attribute.set_id == set.set_id=>'selected'}>
+                                                                            {{set.name}}
+                                                                        </option>
+                                                                    </foreach>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-4'>
+                                                            <div class='mb-3'>
+                                                                <label class='form-label' for='validationOption'>
+                                                                    <lang>是否有配置项</lang>
+                                                                </label>
+                                                                <select class='form-control' id='validationOption' required='' name="has_option"
+                                                                        @if{attribute.attribute_id=>'disabled'}>
+                                                                    <option value='0'
+                                                                            @if{attribute.has_option == 0=>'selected'}>
+                                                                        <lang>没有特定配置项</lang>
+                                                                    </option>
+                                                                    <option value='1'
+                                                                            @if{attribute.has_option == 1=>'selected'}>
+                                                                        <lang>有特定配置项</lang>
+                                                                    </option>
+                                                                </select>
+                                                                <span class="help-block"><lang>有配置项则只能选择配置项内设置的值，没有配置项可以输入任意值。</lang></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-4'>
+                                                            <div class='mb-3'>
+                                                                <label class='form-label' for='validationSystem'>
+                                                                    <lang>是否是系统生成</lang>
+                                                                </label>
+                                                                <select class='form-control' id='validationSystem' required='' name='is_system'
+                                                                        disabled>
+                                                                    <option value='0'
+                                                                            @if{attribute.is_system == 0=>'selected'}>
+                                                                        <lang>非系统属性</lang>
+                                                                    </option>
+                                                                    <option value='1'
+                                                                            @if{attribute.is_system == 1=>'selected'}>
+                                                                        <lang>系统属性</lang>
+                                                                    </option>
+                                                                </select>
+                                                                <span class='help-block'><lang>仅做标记是否由系统生成，或者非系统生成（用户自定义）。</lang></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class='col-md-4'>
+                                                            <div class='mb-3'>
+                                                                <label class='form-label' for='validationEnable'>
+                                                                    <lang>是否启用</lang>
+                                                                </label>
+                                                                <select class='form-control' id='validationEnable' required='' name='is_enable'>
+                                                                    <option value='0'
+                                                                            @if{attribute.is_enable == 0=>'selected'}>
+                                                                        <lang>禁用</lang>
+                                                                    </option>
+                                                                    <option value='1'
+                                                                            @if{attribute.is_enable == 1=>'selected'}>
+                                                                        <lang>启用</lang>
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <button class='btn btn-primary' type='submit'>Submit form</button>
+                                    <button class='btn btn-primary' type='submit'>
+                                        <empty
+                                                name='attribute'>
+                                            <lang>添加</lang>
+                                            <else/>
+                                            <lang>编辑</lang>
+                                        </empty>
+                                    </button>
+                                    <notempty name='attribute'>
+                                        <a class='btn btn-info' href="@backend-url('*/backend/attribute/add')">
+                                            <lang>继续新增</lang>
+                                        </a>
+                                    </notempty>
                                 </form>
                             </div>
                         </div>
