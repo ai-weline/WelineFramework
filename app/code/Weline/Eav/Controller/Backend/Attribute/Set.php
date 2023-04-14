@@ -43,14 +43,25 @@ class Set extends \Weline\Framework\App\Controller\BackendController
     {
         if ($this->request->isPost()) {
             try {
+                $this->validatePost();
                 $this->set->setData($this->request->getPost())
-                          ->save(true);
+                          ->save();
                 $this->getMessageManager()->addSuccess(__('添加成功！'));
+                $this->session->delete('eav_set');
+                $this->redirect($this->_url->getBackendUrl('*/backend/attribute/set/edit',
+                                                           [
+                                                               'code'        => $this->request->getPost('code'),
+                                                               'entity_code' => $this->request->getPost('entity_code')
+                                                           ]));
             } catch (\Exception $exception) {
-                $this->getMessageManager()->addWarning(__('添加异常！'));
+                $this->getMessageManager()->addWarning(__('添加异常！可能已存在该属性集！'));
+                $this->session->setData('eav_set', $this->request->getPost());
                 if (DEBUG || DEV) $this->getMessageManager()->addException($exception);
+                $this->redirect($this->_url->getCurrentUrl());
             }
-            $this->redirect($this->_url->getBackendUrl('*/backend/attribute/set/edit', ['code' => $this->request->getPost('code')]));
+        }
+        if ($set = $this->session->getData('eav_set')) {
+            $this->assign('set', $set);
         }
         $this->init_form();
         return $this->fetch('form');
@@ -60,15 +71,20 @@ class Set extends \Weline\Framework\App\Controller\BackendController
     {
         if ($this->request->isPost()) {
             try {
+                $this->validatePost();
                 $this->set->setData($this->request->getPost())
-                          ->save(true);
+                          ->forceCheck(true, [$this->set::fields_code, $this->set::fields_entity_code])
+                          ->save();
                 $this->getMessageManager()->addSuccess(__('修改成功！'));
+                $this->session->delete('eav_set');
             } catch (\Exception $exception) {
                 $this->getMessageManager()->addWarning(__('修改异常！'));
+                $this->session->setData('eav_set', $this->request->getPost());
                 if (DEBUG || DEV) $this->getMessageManager()->addException($exception);
             }
             $this->redirect($this->_url->getBackendUrl('*/backend/attribute/set/edit', ['code' => $this->request->getPost('code')]));
         }
+        $this->validateGet();
         $this->init_form();
         return $this->fetch('form');
     }
@@ -84,11 +100,50 @@ class Set extends \Weline\Framework\App\Controller\BackendController
         $this->redirect($this->_url->getBackendUrl('*/backend/attribute/set'));
     }
 
+    function getApiSearch(): string
+    {
+        $entity_code = $this->request->getGet('entity_code');
+        $json        = ['items' => [], 'entity_code' => $entity_code];
+        if (empty($entity_code)) {
+            return $this->fetchJson($json);
+        }
+        $sets          = $this->set->where('entity_code', $entity_code)
+                                   ->select()
+                                   ->fetchOrigin();
+        $json['items'] = $sets;
+        return $this->fetchJson($json);
+    }
+
+    protected function validateGet(): void
+    {
+        $code        = $this->request->getGet('code');
+        $entity_code = $this->request->getGet('entity_code');
+        if (empty($code) || empty($entity_code)) {
+            $this->getMessageManager()->addWarning(__('参数异常！'));
+            $this->session->setData('eav_set', $this->request->getPost());
+            $this->redirect($this->_url->getBackendUrl('*/backend/attribute/set'));
+        }
+    }
+
+    protected function validatePost(): void
+    {
+        $code        = $this->request->getPost('code');
+        $entity_code = $this->request->getPost('entity_code');
+        if (empty($code) || empty($entity_code)) {
+            $this->getMessageManager()->addWarning(__('参数异常！'));
+            $this->session->setData('eav_set', $this->request->getPost());
+            $this->redirect($this->_url->getCurrentUrl());
+        }
+    }
+
     protected function init_form()
     {
         // 属性集
         if ($set_code = $this->request->getGet('code')) {
             $set = $this->set->load('code', $set_code);
+            $this->assign('set', $set);
+        }
+        if ($set = $this->session->getData('eav_set')) {
             $this->assign('set', $set);
         }
         // 实体

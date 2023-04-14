@@ -14,5 +14,9 @@ Register::register(
     RegisterDataInterface::MODULE,
     'Aiweline_WebStore',
     __DIR__,
-    '1.0.0'
+    '1.0.0',
+    '网店',
+    [
+        'Weline_Eav'
+    ]
 );

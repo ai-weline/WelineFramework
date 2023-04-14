@@ -51,13 +51,13 @@ class Type extends \Weline\Framework\Database\Model
                   ->addColumn(
                       self::fields_code,
                       TableInterface::column_type_VARCHAR,
-                      60,
+                      255,
                       'primary key',
                       '类型代码')
                   ->addColumn(
                       self::fields_name,
                       TableInterface::column_type_VARCHAR,
-                      60,
+                      255,
                       'not null',
                       '类型名')
                   ->addColumn(

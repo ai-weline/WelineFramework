@@ -18,11 +18,10 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Option extends \Weline\Framework\Database\Model
 {
-    public const fields_ID        = 'option_id';
-    public const fields_attribute = 'attribute';
+    public const fields_ID        = 'code';
+    public const fields_CODE      = 'code';
+    public const fields_attribute_code = 'attribute_code';
     public const fields_name      = 'name';
-    public const fields_entity    = 'entity';
-    public const fields_option    = 'option';
 
     /**
      * @inheritDoc
@@ -45,13 +44,12 @@ class Option extends \Weline\Framework\Database\Model
      */
     public function install(ModelSetup $setup, Context $context): void
     {
-        $setup->dropTable();
+//        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable('属性配置项')
-                  ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', '配置ID')
-                  ->addColumn(self::fields_attribute, TableInterface::column_type_VARCHAR, 255, 'not null', '相关属性')
+                  ->addColumn(self::fields_ID, TableInterface::column_type_VARCHAR, 255, 'primary key', '配置项代码')
+                  ->addColumn(self::fields_attribute_code, TableInterface::column_type_VARCHAR, 255, 'not null', '相关属性')
                   ->addColumn(self::fields_name, TableInterface::column_type_VARCHAR, 255, 'not null', '配置名')
-                  ->addColumn(self::fields_option, TableInterface::column_type_VARCHAR, 255, 'not null', '配置项')
                   ->create();
         }
     }

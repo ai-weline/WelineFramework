@@ -23,7 +23,7 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class EavEntity extends Model
 {
-    public const fields_ID                     = 'entity_id';
+    public const fields_ID                     = 'code';
     public const fields_code                   = 'code';
     public const fields_name                   = 'name';
     public const fields_class                  = 'class';
@@ -88,15 +88,9 @@ class EavEntity extends Model
             $setup->createTable('Eav实体表')
                   ->addColumn(
                       self::fields_ID,
-                      TableInterface::column_type_INTEGER,
-                      0,
-                      'primary key auto_increment',
-                      '实体ID')
-                  ->addColumn(
-                      self::fields_code,
                       TableInterface::column_type_VARCHAR,
-                      60,
-                      'not null unique',
+                      255,
+                      'primary key',
                       '实体代码')
                   ->addColumn(
                       self::fields_name,

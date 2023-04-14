@@ -55,8 +55,17 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                     <div class='col-12'>
                         <div class='page-title-box d-sm-flex align-items-center justify-content-between'>
                             <h4 class='mb-sm-0'>
-                                <lang>Eav</lang> > <lang>属性组</lang> > <lang>属性</lang> <notempty
-                                        name="group"><lang>编辑</lang><else/><lang>添加</lang></notempty>
+                                <lang>Eav</lang>
+                                >
+                                <lang>属性组</lang>
+                                >
+                                <lang>属性</lang>
+                                <notempty
+                                        name="group">
+                                    <lang>编辑</lang>
+                                    <else/>
+                                    <lang>添加</lang>
+                                </notempty>
                             </h4>
 
                             <div class='page-title-right'>
@@ -93,7 +102,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                         <div class='card'>
                             <div class='card-body'>
                                 <h4 class='card-title'>
-                                    <lang>属性组</lang><notempty name="group">编辑<else/>添加</notempty>
+                                    <lang>属性组</lang>
+                                    <notempty name="group">编辑
+                                        <else/>
+                                        添加
+                                    </notempty>
                                 </h4>
                                 <p class='card-title-desc'>
                                     <lang>属性组表单</lang>
@@ -102,15 +115,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                     <lang>属性组信息编辑。</lang>
                                 </p>
                                 <form class='needs-validation' novalidate='' action="{{action}}" method="post">
-                                    <!--存在基础信息时-->
-                                    <notempty name="group">
-                                        <input type="text" name="group_id" value="{{group.group_id}}" class="sr-only">
-                                    </notempty>
                                     <!--基础信息-->
                                     <div class='row'>
                                         <div class='col-md-3'>
                                             <div class='mb-3'>
-                                                <label class='form-label' for='validationName'><lang>组名</lang></label>
+                                                <label class='form-label' for='validationName'>
+                                                    <lang>组名</lang>
+                                                </label>
                                                 <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3'
                                                        id='validationName' placeholder='@lang{组名}'
                                                        value='{{group.name}}' name="name"
@@ -122,7 +133,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </div>
                                         <div class='col-md-3'>
                                             <div class='mb-3'>
-                                                <label class='form-label' for='validationCode'><lang>组代码</lang></label>
+                                                <label class='form-label' for='validationCode'>
+                                                    <lang>组代码</lang>
+                                                </label>
                                                 <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3'
                                                        id='validationCode' placeholder='@lang{组代码}'
                                                        value='{{group.code}}' name="code"
@@ -134,12 +147,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </div>
                                         <div class='col-md-3'>
                                             <div class='mb-3'>
-                                                <label class='form-label' for='validationEntity'><lang>实体</lang></label>
-                                                <select type='text' class='form-control' name="entity"  data-parsley-minlength='3'
-                                                       id='validationEntity'
-                                                       required=''>
+                                                <label class='form-label' for='validationEntity'>
+                                                    <lang>实体</lang>
+                                                </label>
+                                                <select type='text' class='form-control' name="entity_code" data-parsley-minlength='3'
+                                                        id='validationEntity'
+                                                        required=''>
                                                     <foreach name="entities">
-                                                        <option value="{{v.code}}" @if{group.entity === v.code => 'selected'}>{{v.name}}</option>
+                                                        <option value="{{v.code}}" @if{group.entity_code === v.code=> 'selected'}>{{v.name}}</option>
                                                     </foreach>
                                                 </select>
                                                 <div class='valid-feedback'>
@@ -149,13 +164,12 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                         </div>
                                         <div class='col-md-3'>
                                             <div class='mb-3'>
-                                                <label class='form-label' for='validationEntity'><lang>属性集</lang></label>
-                                                <select type='text' class='form-control' name="set_id"  data-parsley-minlength='3'
-                                                       id='validationEntity'
-                                                       required=''>
-                                                    <foreach name="sets">
-                                                        <option value="{{v.set_id}}" @if{group.set_id === v.set_id => 'selected'}>{{v.name}}</option>
-                                                    </foreach>
+                                                <label class='form-label' for='validationSet'>
+                                                    <lang>属性集</lang>
+                                                </label>
+                                                <select type='text' class='form-control' name="set_code" data-parsley-minlength='3'
+                                                        id='validationSet'
+                                                        required='required' data-selected="{{group.set_code}}">
                                                 </select>
                                                 <div class='valid-feedback'>
                                                     <lang>填写正确！</lang>
@@ -163,8 +177,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             </div>
                                         </div>
                                     </div>
-                                    <button class='btn btn-primary' type='submit'><empty
-                                                name="group"><lang>添加</lang><else/><lang>编辑</lang></empty></button>
+                                    <button class='btn btn-primary' type='submit'>
+                                        <empty
+                                                name="group">
+                                            <lang>添加</lang>
+                                            <else/>
+                                            <lang>编辑</lang>
+                                        </empty>
+                                    </button>
                                     <notempty name='group'>
                                         <a class='btn btn-info' href="@backend-url('*/backend/attribute/group/add')">
                                             <lang>继续新增</lang>
@@ -198,11 +218,36 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
     </div>
     <!-- end main content-->
-
 </div>
 <!-- END layout-wrapper -->
 <!--右边栏-->
 @template(Weline_Admin::common/right-sidebar.phtml)
+<script>
+    let validationEntity = $('#validationEntity')
+    validationEntity.change(function () {
+        let selectedOption = $(this).find(':selected').val();
+        renderAttributeSet(selectedOption)
+    });
+    // 初始化
+    let initSelected = validationEntity.find(':selected').val()
+    let validationSet = $('#validationSet')
+    renderAttributeSet(initSelected)
+
+    function renderAttributeSet(entity_code) {
+        $.get("@backend-url('*/backend/attribute/set/apiSearch')?entity_code=" + entity_code).then((res) => {
+            let items = res['items']
+            validationSet.empty()
+            for (const itemsKey in items) {
+                let item = items[itemsKey]
+                let selected = '';
+                if (validationSet.attr('data-selected') === item.code) {
+                    selected = 'selected';
+                }
+                validationSet.append("<option value='" + item.code + "' " + selected + ">" + window.lang(item.name) + "</option>")
+            }
+        })
+    }
+</script>
 @template(Weline_Admin::common/footer.phtml)
 </body>
 </html>

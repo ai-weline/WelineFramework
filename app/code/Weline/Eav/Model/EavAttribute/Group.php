@@ -18,12 +18,11 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Group extends \Weline\Framework\Database\Model
 {
-    public const fields_ID       = 'group_id';
-    public const fields_group_id = 'group_id';
-    public const fields_set_id   = 'set_id';
-    public const fields_name     = 'name';
-    public const fields_code     = 'code';
-    public const fields_entity   = 'entity';
+    public const fields_ID          = 'code';
+    public const fields_name        = 'name';
+    public const fields_code        = 'code';
+    public const fields_set_code    = 'set_code';
+    public const fields_entity_code = 'entity_code';
 
     /**
      * @inheritDoc
@@ -49,11 +48,18 @@ class Group extends \Weline\Framework\Database\Model
 //        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable('属性组')
-                  ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', '属性组ID')
-                  ->addColumn(self::fields_set_id, TableInterface::column_type_INTEGER, 0, 'not null', '属性集ID')
-                  ->addColumn(self::fields_name, TableInterface::column_type_VARCHAR, 225, 'not null unique', '属性组名')
-                  ->addColumn(self::fields_code, TableInterface::column_type_VARCHAR, 225, 'not null unique', '属性组代码')
-                  ->addColumn(self::fields_entity, TableInterface::column_type_VARCHAR, 225, 'not null', '实体')
+                  ->addColumn(self::fields_ID, TableInterface::column_type_VARCHAR, 255, 'not null', '属性组代码')
+                  ->addColumn(self::fields_set_code, TableInterface::column_type_VARCHAR, 255, 'not null', '属性集代码')
+                  ->addColumn(self::fields_name, TableInterface::column_type_VARCHAR, 255, 'not null', '属性组名')
+                  ->addColumn(self::fields_entity_code, TableInterface::column_type_VARCHAR, 255, 'not null', '实体')
+                  ->addConstraints('PRIMARY KEY (`' . self::fields_ID . '`,`' . self::fields_set_code . '`,`' . self::fields_entity_code . '`)')
+                  ->addIndex(
+                      TableInterface::index_type_KEY,
+                      'EAV_GROUP_KEY',
+                      [self::fields_code, self::fields_entity_code, self::fields_set_code],
+                      '组KEY索引',
+                      ''
+                  )
                   ->create();
         }
     }

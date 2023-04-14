@@ -128,11 +128,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                     <td class='co-name'>
                                                         <div class="d-flex gap-2">
                                                             <a class='btn btn-info' href="@backend-url('*/backend/attribute/group/edit',
-                                                                ['code'=>$group['code']])">
+                                                                ['code'=>$group['code'],'entity_code'=>$group['entity_code'],'set_code'=>$group['set_code']])">
                                                                 <lang>修改</lang>
                                                             </a>
                                                             <a class='btn btn-danger' href="@backend-url('*/backend/attribute/group/delete',
-                                                                ['code'=>$group['code']])">
+                                                                ['code'=>$group['code'],'entity_code'=>$group['entity_code'],'set_code'=>$group['set_code']])">
                                                                 <lang>删除</lang>
                                                             </a>
                                                         </div>

@@ -14,6 +14,7 @@ namespace Weline\Eav\Controller\Backend;
 
 use Weline\Eav\Model\EavAttribute;
 use Weline\Eav\Model\EavAttribute\Group;
+use Weline\Eav\Model\EavEntity;
 use Weline\Framework\Manager\ObjectManager;
 
 class Attribute extends \Weline\Framework\App\Controller\BackendController
@@ -41,6 +42,7 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
 
     function add()
     {
+        // FIXME 只需要分组信息即可
         if ($this->request->isPost()) {
             try {
                 $group_id = $this->request->getPost('group_id');
@@ -59,6 +61,7 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
                 $this->session->delete('attribute');
             } catch (\Exception $exception) {
                 $this->getMessageManager()->addWarning(__('添加异常！'));
+                $this->session->setData('attribute', $this->request->getPost());
                 if (DEBUG || DEV) $this->getMessageManager()->addException($exception);
             }
             $this->redirect($this->_url->getBackendUrl('*/backend/attribute/edit', ['code' => $this->request->getPost('code')]));
@@ -126,6 +129,10 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
         $setModel = ObjectManager::getInstance(EavAttribute\Set::class);
         $sets     = $setModel->select()->fetchOrigin();
         $this->assign('sets', $sets);
+        /**@var EavEntity $eavEntityModel */
+        $eavEntityModel = ObjectManager::getInstance(EavEntity::class);
+        $entities     = $eavEntityModel->select()->fetchOrigin();
+        $this->assign('entities', $entities);
         // 链接
         $this->assign('action', $this->_url->getCurrentUrl());
     }

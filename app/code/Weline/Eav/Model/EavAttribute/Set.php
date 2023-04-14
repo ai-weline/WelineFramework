@@ -18,10 +18,10 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Set extends \Weline\Framework\Database\Model
 {
-    public const fields_ID     = 'set_id';
-    public const fields_code   = 'code';
-    public const fields_entity = 'entity';
-    public const fields_name   = 'name';
+    public const fields_ID          = 'code';
+    public const fields_code        = 'code';
+    public const fields_entity_code = 'entity_code';
+    public const fields_name        = 'name';
 
     /**
      * @inheritDoc
@@ -47,10 +47,12 @@ class Set extends \Weline\Framework\Database\Model
 //        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable(__('属性集表'))
-                  ->addColumn(self::fields_ID, TableInterface::column_type_INTEGER, 0, 'primary key auto_increment', __('属性集ID'))
-                  ->addColumn(self::fields_entity, TableInterface::column_type_VARCHAR, 255, 'not null', __('实体'))
-                  ->addColumn(self::fields_code, TableInterface::column_type_VARCHAR, 255, 'not null unique', __('属性集代码'))
-                  ->addColumn(self::fields_name, TableInterface::column_type_VARCHAR, 255, 'not null unique', __('属性集名'))
+                  ->addColumn(self::fields_ID, TableInterface::column_type_VARCHAR, 255, 'not null', __('属性集代码'))
+                  ->addColumn(self::fields_entity_code, TableInterface::column_type_VARCHAR, 255, 'not null', __('实体'))
+                  ->addColumn(self::fields_code, TableInterface::column_type_VARCHAR, 255, 'not null', __('属性集代码'))
+                  ->addColumn(self::fields_name, TableInterface::column_type_VARCHAR, 255, 'not null', __('属性集名'))
+                  ->addIndex(TableInterface::index_type_KEY, 'EAV_SET_KEY', [self::fields_entity_code, self::fields_code], 'Eav属性集索引')
+                  ->addConstraints('PRIMARY KEY (`' . self::fields_code . '`,`' . self::fields_entity_code . '`)')
                   ->create();
         }
     }
