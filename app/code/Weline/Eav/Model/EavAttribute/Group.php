@@ -24,6 +24,8 @@ class Group extends \Weline\Framework\Database\Model
     public const fields_set_code    = 'set_code';
     public const fields_entity_code = 'entity_code';
 
+    public array $_unit_primary_keys = ['entity_code'];
+
     /**
      * @inheritDoc
      */
@@ -52,11 +54,11 @@ class Group extends \Weline\Framework\Database\Model
                   ->addColumn(self::fields_set_code, TableInterface::column_type_VARCHAR, 255, 'not null', '属性集代码')
                   ->addColumn(self::fields_name, TableInterface::column_type_VARCHAR, 255, 'not null', '属性组名')
                   ->addColumn(self::fields_entity_code, TableInterface::column_type_VARCHAR, 255, 'not null', '实体')
-                  ->addConstraints('PRIMARY KEY (`' . self::fields_ID . '`,`' . self::fields_set_code . '`,`' . self::fields_entity_code . '`)')
+                  ->addConstraints('PRIMARY KEY (`' . self::fields_ID . '`,`' . self::fields_entity_code . '`)')
                   ->addIndex(
                       TableInterface::index_type_KEY,
                       'EAV_GROUP_KEY',
-                      [self::fields_code, self::fields_entity_code, self::fields_set_code],
+                      [self::fields_code, self::fields_entity_code],
                       '组KEY索引',
                       ''
                   )

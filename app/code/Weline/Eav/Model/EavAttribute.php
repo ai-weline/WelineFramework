@@ -30,7 +30,7 @@ class EavAttribute extends \Weline\Framework\Database\Model
     public const fields_type            = 'type';
     public const fields_set_code        = 'set_code';
     public const fields_group_code      = 'group_code';
-    public const fields_entity_code          = 'entity_code';
+    public const fields_entity_code     = 'entity_code';
     public const fields_multiple_valued = 'multiple_valued';
     public const fields_has_option      = 'has_option';
     public const fields_is_system       = 'is_system';
@@ -40,6 +40,8 @@ class EavAttribute extends \Weline\Framework\Database\Model
     const value_keys = [
         self::value_key,
     ];
+
+    public array $_unit_primary_keys = ['entity_code'];
 
     private ?Value $value = null;
     private ?EavModel $currentEntity = null;
@@ -68,12 +70,6 @@ class EavAttribute extends \Weline\Framework\Database\Model
 //        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable('属性表')
-                  ->addColumn(
-                      self::fields_ID,
-                      TableInterface::column_type_VARCHAR,
-                      255,
-                      'primary key',
-                      '属性ID')
                   ->addColumn(
                       self::fields_code,
                       TableInterface::column_type_VARCHAR,
@@ -134,13 +130,14 @@ class EavAttribute extends \Weline\Framework\Database\Model
                       1,
                       'default 1',
                       '是否启用')
+                  ->addConstraints('PRIMARY KEY(' . self::fields_code . ',' . self::fields_entity_code . ')')
                   ->create();
         }
     }
 
     function getEntity(): string
     {
-        return $this->getData(self::fields_entity) ?: '';
+        return $this->getData(self::fields_entity_code) ?: '';
     }
 
     function loadByCode(string $code)
@@ -151,7 +148,7 @@ class EavAttribute extends \Weline\Framework\Database\Model
 
     function setEntity(string $entity): static
     {
-        return $this->setData(self::fields_entity, $entity);
+        return $this->setData(self::fields_entity_code, $entity);
     }
 
     function getCode(): string
@@ -233,7 +230,7 @@ class EavAttribute extends \Weline\Framework\Database\Model
             $valueModel->setAttribute($this);
             $attribute->clearQuery()
                       ->fields('main_table.code,main_table.entity,main_table.name,main_table.type,v.value')
-                      ->where($attribute::fields_entity, $attribute->getEntity())
+                      ->where($attribute::fields_entity_code, $attribute->getEntity())
                       ->where($attribute::fields_code, $attribute->getCode());
             $attribute->joinModel(
                 $valueModel,

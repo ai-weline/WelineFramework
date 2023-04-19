@@ -18,10 +18,11 @@ use Weline\Framework\Setup\Db\ModelSetup;
 
 class Option extends \Weline\Framework\Database\Model
 {
-    public const fields_ID        = 'code';
-    public const fields_CODE      = 'code';
+    public const fields_ID             = 'code';
+    public const fields_CODE           = 'code';
     public const fields_attribute_code = 'attribute_code';
-    public const fields_name      = 'name';
+    public const fields_entity_code    = 'entity_code';
+    public const fields_name           = 'name';
 
     /**
      * @inheritDoc
@@ -47,9 +48,11 @@ class Option extends \Weline\Framework\Database\Model
 //        $setup->dropTable();
         if (!$setup->tableExist()) {
             $setup->createTable('属性配置项')
-                  ->addColumn(self::fields_ID, TableInterface::column_type_VARCHAR, 255, 'primary key', '配置项代码')
+                  ->addColumn(self::fields_ID, TableInterface::column_type_VARCHAR, 255, 'not null', '配置项代码')
                   ->addColumn(self::fields_attribute_code, TableInterface::column_type_VARCHAR, 255, 'not null', '相关属性')
+                  ->addColumn(self::fields_entity_code, TableInterface::column_type_VARCHAR, 255, 'not null', '相关实体')
                   ->addColumn(self::fields_name, TableInterface::column_type_VARCHAR, 255, 'not null', '配置名')
+                  ->addConstraints('primary key (' . self::fields_ID . ',' . self::fields_attribute_code . ',' . self::fields_entity_code . ')')
                   ->create();
         }
     }

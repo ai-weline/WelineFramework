@@ -137,7 +137,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             <foreach name="attributes" item="attribute" key="key">
                                                 <tr>
                                                     <td>{{attribute.code}}</td>
-                                                    <td class='co-name'>{{attribute.entity}}</td>
+                                                    <td class='co-name'>{{attribute.entity_code}}</td>
                                                     <td class='co-name'>{{attribute.name}}</td>
                                                     <td class='co-name'>{{attribute.type}}</td>
                                                     <td class='co-name'>{{attribute.multiple_valued}}</td>
@@ -152,21 +152,23 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                         <div class="d-flex gap-2">
                                                             <empty name="attribute.is_system">
                                                                 <a class="btn btn-info" href="@backend-url('*/backend/attribute/edit',
-                                                                ['code'=>$attribute['code']])">
+                                                                ['code'=>$attribute['code'],'entity_code'=>$attribute['entity_code']])">
                                                                     <lang>修改</lang>
                                                                 </a>
                                                                 <a class="btn btn-danger" href="@backend-url('*/backend/attribute/delete',
-                                                                ['code'=>$attribute['code']])">
+                                                                ['code'=>$attribute['code'],'entity_code'=>$attribute['entity_code']])">
                                                                     <lang>删除</lang>
                                                                 </a>
                                                                 <else/>
                                                                 <b class="text-danger"><lang>系统实体</lang></b>
                                                             </empty>
                                                             <notempty name="attribute.has_option">
-                                                                <a class='btn btn-primary'
-                                                                   href="@backend-url('*/backend/attribute/option',['code'=>$attribute['code']])">
-                                                                    <lang>配置项</lang>
-                                                                </a>
+                                                                <button type='button' class='btn btn-primary btn-sm waves-effect waves-light'
+                                                                        data-bs-toggle='modal'
+                                                                        data-code="{{attribute.code}}"
+                                                                        data-entity_code="{{attribute.entity_code}}"
+                                                                        data-bs-target='#optionConfig'>配置项
+                                                                </button>
                                                             </notempty>
 
                                                         </div>
@@ -220,6 +222,75 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
 <!-- Init js -->
 <script src='@static(Weline_Admin::assets/js/pages/table-responsive.init.js)'></script>
+<!-- 配置项弹窗 -->
+<div id='optionConfig' class='modal fade' tabindex='-1'
+     aria-labelledby='#optionConfig'
+     aria-hidden='true'>
+    <div class='modal-dialog modal-xl'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h5 class='modal-title' id='optionConfigLabel'><lang>属性配置项弹窗</lang></h5>
+                <button type='button' class='btn-close' data-bs-dismiss='modal'
+                        aria-label='@lang{关闭}'></button>
+            </div>
+            <div class='modal-body'>
+                <h5>配置属性的配置项</h5>
+                <div>
+                    <table>
+                        <thread>
+                            <th>代码</th>
+                            <th>配置项</th>
+                            <th>所属实体代码</th>
+                            <th>创建时间</th>
+                            <th>更新时间</th>
+                            <th>操作</th>
+                        </thread>
+
+                        <tbody id="attributeOption">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class='modal-footer'>
+                <button type='button' class='btn btn-light waves-effect' data-bs-dismiss='modal'>
+                    <lang>关闭</lang>
+                </button>
+                <button type='button' class='btn btn-primary waves-effect waves-light'>
+                    <lang>保存更改</lang>
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+<script>
+    $('#optionConfig').on('show.bs.modal', function (event) {
+        showLoading();
+        // 触发的按钮
+        let button = event.relatedTarget
+        let attribute_code = button.getAttribute('data-code')
+        let entity_code = button.getAttribute('data-entity_code')
+        $.ajax({
+            url:'@backend-url("*/backend/attribute/option/search")?entity_code={entity_code}&attribute_code={attribute_code}'.replace
+            ('{entity_code}',entity_code).replace('{attribute_code}',attribute_code)
+            ,success:(res)=>{
+                let attributeOption = $('#attributeOption')
+                attributeOption.empty()
+                let options = res['option']
+                if(options){
+                    for (let option in options){
+                        console.log()
+                        attributeOption.append()
+                    }
+                }
+                attributeOption.append('')
+                console.log(res)
+            }
+        })
+        hideLoading();
+    })
+</script>
+<!-- 配置项弹窗 -->
 @template(Weline_Admin::common/footer.phtml)
 </body>
 </html>

@@ -23,6 +23,8 @@ class Set extends \Weline\Framework\Database\Model
     public const fields_entity_code = 'entity_code';
     public const fields_name        = 'name';
 
+    public array $_unit_primary_keys = ['entity_code'];
+
     /**
      * @inheritDoc
      */

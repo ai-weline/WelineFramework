@@ -34,6 +34,9 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
         if ($search = $this->request->getGet('search')) {
             $this->eavAttribute->where('concat(code,entity,name,type)', "%$search%", 'like');
         }
+        if ($entity = $this->request->getGet('entity')) {
+            $this->eavAttribute->where('entity_code', $entity);
+        }
         $attributes = $this->eavAttribute->pagination()->select()->fetchOrigin();
         $this->assign('attributes', $attributes);
         $this->assign('pagination', $this->eavAttribute->getPagination());
@@ -42,29 +45,37 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
 
     function add()
     {
-        // FIXME 只需要分组信息即可
         if ($this->request->isPost()) {
             try {
-                $group_id = $this->request->getPost('group_id');
-                $set_id   = $this->request->getPost('set_id');
+                $group_code  = $this->request->getPost('group_code');
+                $entity_code = $this->request->getPost('entity_code');
                 /**@var Group $groupModel */
                 $groupModel = ObjectManager::getInstance(Group::class);
-                $group      = $groupModel->where('set_id', $set_id)->where('group_id', $group_id)->find()->fetchOrigin();
-                if (!$group) {
+                $group      = $groupModel->where('code', $group_code)
+                                         ->where('entity_code', $entity_code)
+                                         ->find()
+                                         ->fetch();
+                if (!$group->getId()) {
                     $this->getMessageManager()->addWarning(__('分组不在所选属性集内！'));
                     $this->session->setData('attribute', $this->request->getPost());
                     $this->redirect($this->_url->getCurrentUrl());
                 }
-                $this->eavAttribute->setData($this->request->getPost())
-                                   ->save(true);
+                $data             = $this->request->getPost();
+                $data['set_code'] = $group->getData('set_code');
+                $this->eavAttribute->setData($data)
+                                   ->save();
                 $this->getMessageManager()->addSuccess(__('添加成功！'));
                 $this->session->delete('attribute');
             } catch (\Exception $exception) {
                 $this->getMessageManager()->addWarning(__('添加异常！'));
                 $this->session->setData('attribute', $this->request->getPost());
                 if (DEBUG || DEV) $this->getMessageManager()->addException($exception);
+                $this->redirect('*/backend/attribute/add');
             }
-            $this->redirect($this->_url->getBackendUrl('*/backend/attribute/edit', ['code' => $this->request->getPost('code')]));
+            $this->redirect($this->_url->getBackendUrl('*/backend/attribute/edit', [
+                'code'        => $this->request->getPost('code'),
+                'entity_code' => $this->request->getPost('entity_code'),
+            ]));
         }
         if ($data = $this->session->getData('attribute')) {
             $this->assign('attribute', $data);
@@ -77,25 +88,32 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
     {
         if ($this->request->isPost()) {
             try {
-                $group_id = $this->request->getPost('group_id',0);
-                $set_id   = $this->request->getPost('set_id',0);
+                $group_code  = $this->request->getPost('group_code', '');
+                $entity_code = $this->request->getPost('entity_code', '');
                 /**@var Group $groupModel */
                 $groupModel = ObjectManager::getInstance(Group::class);
-                $group      = $groupModel->where('set_id', $set_id)->where('group_id', $group_id)->find()->fetchOrigin();
-                if (!$group) {
+                $group      = $groupModel->where('code', $group_code)
+                                         ->where('entity_code', $entity_code)
+                                         ->find()
+                                         ->fetch();
+                if (!$group->getId()) {
                     $this->getMessageManager()->addWarning(__('分组不在所选属性集内！'));
                     $this->session->setData('attribute', $this->request->getPost());
                     $this->redirect($this->_url->getCurrentUrl());
                 }
-                $this->eavAttribute->setData($this->request->getPost())
-                                   ->save(true);
+                $data             = $this->request->getPost();
+                $data['set_code'] = $group->getData('set_code');
+                $this->eavAttribute->setData($data)->save(true);
                 $this->getMessageManager()->addSuccess(__('修改成功！'));
                 $this->session->delete('attribute');
             } catch (\Exception $exception) {
                 $this->getMessageManager()->addWarning(__('修改异常！'));
                 if (DEBUG || DEV) $this->getMessageManager()->addException($exception);
             }
-            $this->redirect($this->_url->getBackendUrl('*/backend/attribute/edit', ['code' => $this->request->getPost('code')]));
+            $this->redirect('*/backend/attribute/edit', [
+                'code'        => $this->request->getPost('code'),
+                'entity_code' => $this->request->getPost('entity_code'),
+            ]);
         }
         $this->init_form();
         return $this->fetch('form');
@@ -115,7 +133,7 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
     protected function init_form()
     {
         if ($code = $this->request->getGet('code')) {
-            $this->assign('attribute', $this->eavAttribute->load('code',$code));
+            $this->assign('attribute', $this->eavAttribute->load('code', $code));
         }
         /**@var \Weline\Eav\Model\EavAttribute\Type $typeModel */
         $typeModel = ObjectManager::getInstance(EavAttribute\Type::class);
@@ -123,15 +141,14 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
         $this->assign('types', $types);
         /**@var Group $grouModel */
         $groupModel = ObjectManager::getInstance(Group::class);
-        $groups     = $groupModel->select()->fetchOrigin();
+        $groups     = $groupModel
+            ->joinModel(EavEntity::class, 'entity', 'main_table.entity_code=entity.code', 'left', 'entity.name as entity_name')
+            ->select()
+            ->fetchOrigin();
         $this->assign('groups', $groups);
-        /**@var EavAttribute\Set $setModel */
-        $setModel = ObjectManager::getInstance(EavAttribute\Set::class);
-        $sets     = $setModel->select()->fetchOrigin();
-        $this->assign('sets', $sets);
         /**@var EavEntity $eavEntityModel */
         $eavEntityModel = ObjectManager::getInstance(EavEntity::class);
-        $entities     = $eavEntityModel->select()->fetchOrigin();
+        $entities       = $eavEntityModel->select()->fetchOrigin();
         $this->assign('entities', $entities);
         // 链接
         $this->assign('action', $this->_url->getCurrentUrl());
