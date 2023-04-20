@@ -38,4 +38,12 @@ class Entity extends \Weline\Framework\App\Controller\BackendController
         $this->assign('pagination', $this->eavEntity->getPagination());
         return $this->fetch();
     }
+
+    function search(): string
+    {
+        if ($search = $this->request->getGet('search')) {
+            $this->eavEntity->where('concat(code,name,class)', "%$search%", 'like');
+        }
+        return $this->fetchJson(['items'=>$this->eavEntity->select()->fetchOrigin()]);
+    }
 }
