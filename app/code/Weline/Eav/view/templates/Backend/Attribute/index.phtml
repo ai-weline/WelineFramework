@@ -17,6 +17,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     <link href="@static(Weline_Admin::/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.css)" rel="stylesheet"/>
     <!-- Responsive Table css -->
     <link href='@static(Weline_Admin::assets/libs/admin-resources/rwd-table/rwd-table.min.css)' rel='stylesheet' type='text/css'/>
+    <link href='@static(Weline_Eav::css/attribute.css)' rel='stylesheet' type='text/css'/>
     <title><?= __('Weline Admin 管理面板') ?></title>
 </head>
 
@@ -110,7 +111,39 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                    placeholder='请输入关键词'></block>
                                         </div>
                                         <div class='col-6'>
-                                            <a class="btn btn-primary pull-right" href="@backend-url('*/backend/attribute/add')"><lang>添加属性</lang></a>
+                                            <button class='btn btn-primary pull-right' type='button' data-bs-toggle='offcanvas'
+                                                    data-bs-target='#offcanvasRightAdd' aria-controls='offcanvasRightAdd'>
+                                                <lang>添加</lang>
+                                            </button>
+                                            <!-- offcanvasRightAdd -->
+                                            <div class='offcanvas offcanvas-end w-75' tabindex='-1' id='offcanvasRightAdd'
+                                                 aria-labelledby='offcanvasRightAddLabel'>
+                                                <div class='offcanvas-header'>
+                                                    <h5 id='offcanvasRightAddLabel'><lang>添加属性</lang></h5>
+                                                    <button type='button' class='btn-close text-reset' data-bs-dismiss='offcanvas'
+                                                            aria-label='@lang{关闭}'></button>
+                                                </div>
+                                                <div class='offcanvas-body'>
+                                                    <!--写一个刷新iframe的按钮-->
+                                                    <div class="row">
+                                                        <div class="btn btn-group-justified">
+                                                            <button class='btn btn-info pull-right' onclick='flushIframe()'>
+                                                                <lang>刷新</lang>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <iframe id="attributeAddIframe" class="w-100 h-100"
+                                                            src="@backend-url('*/backend/attribute/add')"
+                                                            frameborder="0"></iframe>
+                                                    <script>
+                                                        function flushIframe(){
+                                                            let iframe = $('#attributeAddIframe');
+                                                            iframe.attr('src',iframe.attr('src'))
+                                                        }
+                                                    </script>
+                                                </div>
+                                            </div>
+<!--                                            <a class="btn btn-primary pull-right" href="@backend-url('*/backend/attribute/add')"><lang>添加属性</lang></a>-->
                                         </div>
                                     </div>
                                     <!-- end search form -->

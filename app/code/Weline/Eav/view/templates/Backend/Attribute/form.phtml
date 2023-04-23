@@ -16,6 +16,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     <title><?= __('Weline Admin 管理面板') ?></title>
     <!-- twitter-bootstrap-wizard css -->
     <link rel='stylesheet' href='@static(Weline_Admin::assets/libs/twitter-bootstrap-wizard/prettify.css)'>
+
 </head>
 
 <body <?= $themeConfig->getLayouts() ?? ''; ?>>
@@ -28,355 +29,250 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
 <!-- 开始 页面 -->
 <div id="layout-wrapper">
+    <div class='page-content'>
+        <div class='container-fluid'>
+            <!-- start page message -->
+            <div class='row'>
+                <template>Weline_Component::message.phtml</template>
+            </div> <!-- end message -->
+            <div class='row'>
+                <div class='col-lg-12'>
+                    <div class='card'>
+                        <div class='card-body'>
+                            <h4 class='card-title mb-4'>创建属性进度</h4>
 
-
-    <!--页头工具条 开始-->
-    <w:block class='Weline\Admin\Block\Backend\Page\Topbar'/>
-    <!--页头工具条 结束-->
-
-    <!-- ========== Topnav Start ========== -->
-    <!--页头菜单栏 开始-->
-    <w:block class='Weline\Admin\Block\Backend\Page\Topnav'/>
-    <!--页头菜单栏 结束-->
-
-    <!-- ========== Left Sidebar Start ========== -->
-    <!--左侧菜单栏 开始-->
-    @template(Weline_Admin::common/left-sidebar.phtml)
-    <!--左侧菜单栏 结束-->
-
-
-    <!-- ============================================================== -->
-    <!-- Start right Content here -->
-    <!-- ============================================================== -->
-    <div class="main-content">
-
-        <div class='page-content'>
-            <div class='container-fluid'>
-                <!-- start page title -->
-                <div class='row'>
-                    <div class='col-12'>
-                        <div class='page-title-box d-sm-flex align-items-center justify-content-between'>
-                            <h4 class='mb-sm-0'>
-                                <lang>Eav</lang>
-                                >
-                                <lang>属性</lang>
-                            </h4>
-
-                            <div class='page-title-right'>
-                                <ol class='breadcrumb m-0'>
-                                    <li class='breadcrumb-item'><a href='javascript: void(0);'>
-                                            <lang>Eav</lang>
-                                        </a></li>
-                                    <li class='breadcrumb-item'>
-                                        <a href="@backend-url('*/backend/attribute')">
-                                            <lang>属性</lang>
+                            <div id='progrss-wizard' class='twitter-bs-wizard'>
+                                <ul class='twitter-bs-wizard-nav nav-justified'>
+                                    <li class='nav-item'>
+                                        <a href='#progress-select-entity' class='nav-link @if{req.type==="progress-select-entity"=>"active"}'
+                                           data-toggle='tab'>
+                                            <span class='step-number'>01</span>
+                                            <span class='step-title'><lang>选择实体</lang></span>
                                         </a>
                                     </li>
-                                </ol>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <!-- end page title -->
-                <!-- start page message -->
-                <div class='row'>
-                    <template>Weline_Component::message.phtml</template>
-                </div> <!-- end message -->
-                <div class='row'>
-                    <div class='col-12'>
-                        <div class='card'>
-                            <div class='card-body'>
-                                <h4 class='card-title'>
-                                    <lang>属性</lang>
-                                    <if condition="attribute.attribute_id">编辑
-                                        <else/>
-                                        添加
-                                    </if>
-                                </h4>
-                                <p class='card-title-desc'>
-                                    <lang>属性表单</lang>
-                                </p>
-                                <p class="card-title-desc">
-                                    <lang>
-                                        属性信息编辑,属性修改时某些信息是不能修改的，否则数据结构会异常。但是你可以删除这个属性然后使用相同的属性代码（code）创建其他类型的属性。
-                                    </lang>
-                                </p>
-                                <form class='needs-validation' novalidate='' action="{{action}}" method="post">
-                                    <!--基础信息-->
-                                    <div class='row'>
-                                        <!--代码-->
-                                        <div class='col-md-4'>
-                                            <div class='mb-3'>
-                                                <label class='form-label' for='validationCode'>
-                                                    <lang>属性代码</lang>
-                                                </label>
-                                                <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3'
-                                                       id='validationCode' placeholder='@lang{属性代码}' name="code"
-                                                       value='{{attribute.code}}'
-                                                       required='' @if{attribute.attribute_id=>"disabled"}>
-                                                <div class='valid-feedback'>
-                                                    <lang>填写正确！</lang>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--属性名-->
-                                        <div class='col-md-4'>
-                                            <div class='mb-3'>
-                                                <label class='form-label' for='validationName'>
-                                                    <lang>属性名</lang>
-                                                </label>
-                                                <input type='text' class='form-control' maxlength='60' data-parsley-minlength='3' id='validationName'
-                                                       placeholder='@lang{属性名(最短三个字符)}' required='' name="name" value='{{attribute.name}}'>
-                                                <div class='invalid-feedback'>
-                                                    <lang>请正确填写属性名！(最短三个字符)</lang>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!--实体-->
-                                        <div class='col-md-4'>
-                                            <div class='mb-3'>
-                                                <label class='form-label' for='validationEntity'>
-                                                    <lang>关联实体</lang>
-                                                </label>
-                                                <select type='text' class='form-control' maxlength='60' data-parsley-minlength='3'
-                                                        id='validationEntity' placeholder='@lang{关联实体}' name='entity_code'
-                                                        value='{{attribute.entity}}'
-                                                        required='' @if{attribute.attribute_id=>'disabled'}>
-                                                    <foreach name='entities'>
-                                                        <option value='{{v.code}}' @if{attribute.entity_code== v.code=>'selected'}>{{v
-                                                            .name}}
-                                                        </option>
-                                                    </foreach>
-                                                </select>
-                                                <div class='valid-feedback'>
-                                                    <lang>填写正确！</lang>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class='row'>
-                                        <div class='col-md-4'>
-                                            <div class='mb-3'>
-                                                <label class='form-label' for='validationType'>
-                                                    <lang>属性类型</lang>
-                                                </label>
-                                                <select class='form-control' id='validationType' name='type' required='' @if{attribute.attribute_id=>'disabled'}>
-                                                    <foreach name="types" item="type">
-                                                        <option value="{{type.code}}" @if{attribute.type== type.code=>'selected'}>
-                                                            {{type.name}}
-                                                        </option>
-                                                    </foreach>
-                                                </select>
-                                                <div class='invalid-feedback'>
-                                                    <lang>必须选择一个类型</lang>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--高级信息-->
-                                    <div class='accordion mb-3' id='accordionAdvanced'>
-                                        <div class='accordion-item'>
-                                            <h2 class='accordion-header' id='headingOne'>
-                                                <button class='accordion-button' type='button' data-bs-toggle='collapse'
-                                                        data-bs-target='#collapseAdvanced'
-                                                        aria-expanded='true' aria-controls='collapseAdvanced'>
-                                                    <lang>高级设置</lang>
-                                                </button>
-                                            </h2>
-                                            <div id='collapseAdvanced' class='accordion-collapse collapse show' aria-labelledby='headingAdvanced'
-                                                 data-bs-parent='#accordionAdvanced'>
-                                                <div class='accordion-body'>
-                                                    <div class='row'>
-                                                        <div class='col-md-4'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='validationType'>
-                                                                    <lang>是否多值</lang>
-                                                                </label>
-                                                                <select class='form-control' id='validationType' required='' name="multiple_valued"
-                                                                        @if{attribute.attribute_id=>'disabled'}>
-                                                                    <option value="0" @if{attribute.multiple_valued== 0=>'selected'}>单值</option>
-                                                                    <option value="1" @if{attribute.multiple_valued== 1=>'selected'}>多值</option>
-                                                                </select>
-                                                                <div class='invalid-feedback'>
-                                                                    <lang>必须选择一个多值类型</lang>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class='col-md-4'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='validationGroup'>
-                                                                    <lang>分组</lang>
-                                                                </label>
-                                                                <select class='form-control' id='validationGroup' required='' name="group_code">
-                                                                    <foreach name="groups" item="group">
-                                                                        <option value='{{group.code}}'
-                                                                                @if{attribute.group_code==group.code &&
-                                                                                attribute.entity_code==group.entity_code=>'selected'}>
-                                                                            {{group.name}}（实体：{{group.entity_name}}）
-                                                                        </option>
-                                                                    </foreach>
-                                                                </select>
-                                                                <div class='invalid-feedback'>
-                                                                    <lang>必须选择一个组</lang>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class='col-md-4'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='validationOption'>
-                                                                    <lang>是否有配置项</lang>
-                                                                </label>
-                                                                <select class='form-control' id='validationOption' required='' name="has_option"
-                                                                        @if{attribute.attribute_id=>'disabled'}>
-                                                                    <option value='0'
-                                                                            @if{attribute.has_option== 0=>'selected'}>
-                                                                        <lang>没有特定配置项</lang>
-                                                                    </option>
-                                                                    <option value='1'
-                                                                            @if{attribute.has_option== 1=>'selected'}>
-                                                                        <lang>有特定配置项</lang>
-                                                                    </option>
-                                                                </select>
-                                                                <span class="help-block"><lang>有配置项则只能选择配置项内设置的值，没有配置项可以输入任意值。</lang></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class='col-md-4'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='validationSystem'>
-                                                                    <lang>是否是系统生成</lang>
-                                                                </label>
-                                                                <select class='form-control' id='validationSystem' required='' name='is_system'
-                                                                        disabled>
-                                                                    <option value='0'
-                                                                            @if{attribute.is_system== 0=>'selected'}>
-                                                                        <lang>非系统属性</lang>
-                                                                    </option>
-                                                                    <option value='1'
-                                                                            @if{attribute.is_system== 1=>'selected'}>
-                                                                        <lang>系统属性</lang>
-                                                                    </option>
-                                                                </select>
-                                                                <span class='help-block'><lang>仅做标记是否由系统生成，或者非系统生成（用户自定义）。</lang></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class='col-md-4'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='validationEnable'>
-                                                                    <lang>是否启用</lang>
-                                                                </label>
-                                                                <select class='form-control' id='validationEnable' required='' name='is_enable'>
-                                                                    <option value='0'
-                                                                            @if{attribute.is_enable== 0=>'selected'}>
-                                                                        <lang>禁用</lang>
-                                                                    </option>
-                                                                    <option value='1'
-                                                                            @if{attribute.is_enable== 1=>'selected'}>
-                                                                        <lang>启用</lang>
-                                                                    </option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class='btn btn-primary' type='submit'>
-                                        <empty
-                                                name='attribute'>
-                                            <lang>添加</lang>
-                                            <else/>
-                                            <lang>编辑</lang>
-                                        </empty>
-                                    </button>
-                                    <notempty name='attribute'>
-                                        <a class='btn btn-info' href="@backend-url('*/backend/attribute/add')">
-                                            <lang>继续新增</lang>
+                                    <li class='nav-item'>
+                                        <a href='#progress-select-set' class='nav-link' data-toggle='tab'>
+                                            <span class='step-number'>02</span>
+                                            <span class='step-title'><lang>选择属性集</lang></span>
                                         </a>
-                                    </notempty>
-                                </form>
-                            </div>
-                        </div>
-                    </div> <!-- end col -->
-                </div> <!-- end row -->
-                <div class='row'>
-                    <div class='col-lg-12'>
-                        <div class='card'>
-                            <div class='card-body'>
-                                <h4 class='card-title mb-4'>创建属性进度</h4>
-
-                                <div id='progrss-wizard' class='twitter-bs-wizard'>
-                                    <ul class='twitter-bs-wizard-nav nav-justified'>
-                                        <li class='nav-item'>
-                                            <a href='#progress-select-entity' class='nav-link' data-toggle='tab'>
-                                                <span class='step-number'>01</span>
-                                                <span class='step-title'><lang>选择实体</lang></span>
-                                            </a>
-                                        </li>
-                                        <li class='nav-item'>
-                                            <a href='#progress-select-set' class='nav-link' data-toggle='tab'>
-                                                <span class='step-number'>02</span>
-                                                <span class='step-title'><lang>选择属性集</lang></span>
-                                            </a>
-                                        </li>
-                                        <li class='nav-item'>
-                                            <a href='#progress-select-group' class='nav-link' data-toggle='tab'>
-                                                <span class='step-number'>03</span>
-                                                <span class='step-title'><lang>选择属性组</lang></span>
-                                            </a>
-                                        </li>
-                                        <li class='nav-item'>
-                                            <a href='#progress-attribute-details' class='nav-link' data-toggle='tab'>
-                                                <span class='step-number'>04</span>
-                                                <span class='step-title'>创建属性</span>
-                                            </a>
-                                        </li>
-                                        <!--如果有配置属性配置项-->
+                                    </li>
+                                    <li class='nav-item'>
+                                        <a href='#progress-select-group' class='nav-link' data-toggle='tab'>
+                                            <span class='step-number'>03</span>
+                                            <span class='step-title'><lang>选择属性组</lang></span>
+                                        </a>
+                                    </li>
+                                    <li class='nav-item'>
+                                        <a href='#progress-attribute-details' class='nav-link' data-toggle='tab'>
+                                            <span class='step-number'>04</span>
+                                            <span class='step-title'>创建属性</span>
+                                        </a>
+                                    </li>
+                                    <!--如果有配置属性配置项-->
+                                    <notempty name='has_option'>
                                         <li class='nav-item'>
                                             <a href='#progress-attribute-option' class='nav-link' data-toggle='tab'>
                                                 <span class='step-number'>05</span>
                                                 <span class='step-title'><lang>配置项</lang></span>
                                             </a>
                                         </li>
-                                    </ul>
+                                    </notempty>
+                                </ul>
 
-                                    <div id='bar' class='progress mt-5'>
-                                        <div class='progress-bar bg-success progress-bar-striped progress-bar-animated'></div>
+                                <div id='bar' class='progress mt-5'>
+                                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated'></div>
+                                </div>
+                                <div class='tab-content twitter-bs-wizard-tab-content'>
+                                    <div class='tab-pane' id='progress-select-entity'>
+                                        <form action="{{action}}" method="post">
+                                            <input type="hidden" name="progress" value="progress-select-entity">
+                                            <input type="hidden" name="next_progress" value="progress-select-set">
+                                            <div class="row">
+                                                <div class="mx-auto col-lg-6 mt-2 mb-4">
+                                                    <div class='input-group'>
+                                                        <input type='search' class='form-control rounded' id='search-entity'
+                                                               placeholder='@lang{请输入要查找的实体名或者实体代码}'
+                                                               aria-label='@lang{请输入要查找的实体名或者实体代码}'
+                                                               aria-describedby='search-addon'/>
+                                                        <button type='button' class='btn btn-outline-primary'
+                                                                onclick='renderSearchEntities(event)'>
+                                                            <lang>搜索实体</lang>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class='mx-auto col-lg-6 mt-2 mb-4'>
+                                                    <div class='input-group'>
+                                                        <select id='search-entity-result' class='form-select form-control rounded'
+                                                                size="10"
+                                                                name="entity_code"
+                                                                data-style='btn-primary' data-width='fit'
+                                                                aria-label='@lang{搜索实体结果}'
+                                                                aria-describedby='search-addon' required>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class='tab-content twitter-bs-wizard-tab-content'>
-                                        <div class='tab-pane' id='progress-select-entity'>
-                                            <form action="{{action}}">
-                                                <div class="row">
-                                                    <div class="mx-auto col-lg-6 mt-2 mb-4">
-                                                        <div class='input-group'>
-                                                            <input type='search' class='form-control rounded' id='search-entity'
-                                                                   placeholder='@lang{请输入要查找的实体名或者实体代码}'
-                                                                   aria-label='@lang{请输入要查找的实体名或者实体代码}'
-                                                                   aria-describedby='search-addon'/>
-                                                            <button type='button' class='btn btn-outline-primary'
-                                                                    onclick='renderSearchEntities(event)'>
-                                                                <lang>搜索实体</lang>
-                                                            </button>
+                                    <div class='tab-pane' id='progress-select-set'>
+                                        <div>
+                                            <form>
+                                                <input type='hidden' name='progress' value='progress-select-set'>
+                                                <input type='hidden' name='next_progress' value='progress-select-group'>
+                                                <div class='row'>
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-pancard-input'>PAN Card</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-pancard-input'>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-vatno-input'>VAT/TIN No.</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-vatno-input'>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <div class='mx-auto col-lg-6 mt-2 mb-4'>
-                                                        <div class='input-group'>
-                                                            <select id='search-entity-result' class='form-select form-control rounded'
-                                                                    size="10"
-                                                                    data-style='btn-primary' data-width='fit'
-                                                                    aria-label='@lang{搜索实体结果}'
-                                                                    aria-describedby='search-addon' required>
-                                                            </select>
+                                                <div class='row'>
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-cstno-input'>CST No.</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-cstno-input'>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-servicetax-input'>Service Tax
+                                                                No.</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-servicetax-input'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-companyuin-input'>Company
+                                                                UIN</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-companyuin-input'>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label'
+                                                                   for='progress-basicpill-declaration-input'>Declaration</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-declaration-input'>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class='tab-pane' id='progress-attribute-details'>
+                                    </div>
+                                    <div class='tab-pane' id='progress-select-group'>
+                                        <div>
+                                            <form>
+                                                <input type='hidden' name='progress' value='progress-select-group'>
+                                                <input type='hidden' name='next_progress' value='progress-attribute-details'>
+                                                <div class='row'>
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-pancard-input'>PAN Card</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-pancard-input'>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-vatno-input'>VAT/TIN No.</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-vatno-input'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-cstno-input'>CST No.</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-cstno-input'>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-servicetax-input'>Service Tax
+                                                                No.</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-servicetax-input'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='row'>
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label' for='progress-basicpill-companyuin-input'>Company
+                                                                UIN</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-companyuin-input'>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class='col-lg-6'>
+                                                        <div class='mb-3'>
+                                                            <label class='form-label'
+                                                                   for='progress-basicpill-declaration-input'>Declaration</label>
+                                                            <input type='text' class='form-control' id='progress-basicpill-declaration-input'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class='tab-pane' id='progress-attribute-details'>
+                                        <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
+                                            <input type='hidden' name='progress' value='progress-attribute-details'>
+                                            <notempty name="has_option">
+                                                <input type='hidden' name='next_progress' value='progress-attribute-option'>
+                                            </notempty>
+                                            <div class='row'>
+                                                <div class='col-lg-6'>
+                                                    <div class='mb-3'>
+                                                        <label class='form-label' for='progress-code'>
+                                                            <lang>属性代码</lang>
+                                                        </label>
+                                                        <input type='text' class='form-control' id='progress-code' name="code"
+                                                               maxlength='60' data-parsley-minlength='3' placeholder="@lang{属性代码}" required>
+                                                        <div class='valid-feedback'>
+                                                            <lang>填写正确！</lang>
+                                                        </div>
+                                                        <div class='valid-feedback'>
+                                                            <lang>请正确填写正确属性代码，最小长度3个字符，最大长度60个字符</lang>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class='col-lg-6'>
+                                                    <div class='mb-3'>
+                                                        <label class='form-label' for='progress-name'>
+                                                            <lang>属性名</lang>
+                                                        </label>
+                                                        <input type='text' class='form-control' id='progress-name' name='name'
+                                                               maxlength='128' data-parsley-minlength='3' placeholder='@lang{属性名}' required>
+                                                        <div class='valid-feedback'>
+                                                            <lang>填写正确！</lang>
+                                                        </div>
+                                                        <div class='valid-feedback'>
+                                                            <lang>请正确填写正确属性代码，最小长度3个字符，最大长度128个字符</lang>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <notempty name='has_option'>
+                                        <div class='tab-pane' id='progress-attribute-option'>
                                             <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
+                                                <input type='hidden' name='progress' value='progress-attribute-details'>
+                                                <input type='hidden' name='next' value='progress-attribute-details'>
                                                 <div class='row'>
                                                     <div class='col-lg-6'>
                                                         <div class='mb-3'>
@@ -384,7 +280,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                                 <lang>属性代码</lang>
                                                             </label>
                                                             <input type='text' class='form-control' id='progress-code' name="code"
-                                                                   maxlength='60' data-parsley-minlength='3' placeholder="@lang{属性代码}">
+                                                                   maxlength='60' data-parsley-minlength='3' placeholder="@lang{属性代码}" required>
                                                             <div class='valid-feedback'>
                                                                 <lang>填写正确！</lang>
                                                             </div>
@@ -399,7 +295,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                                 <lang>属性名</lang>
                                                             </label>
                                                             <input type='text' class='form-control' id='progress-name' name='name'
-                                                                   maxlength='128' data-parsley-minlength='3' placeholder='@lang{属性名}'>
+                                                                   maxlength='128' data-parsley-minlength='3' placeholder='@lang{属性名}' required>
                                                             <div class='valid-feedback'>
                                                                 <lang>填写正确！</lang>
                                                             </div>
@@ -411,170 +307,43 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                 </div>
                                             </form>
                                         </div>
-                                        <div class='tab-pane' id='progress-company-document'>
-                                            <div>
-                                                <form>
-                                                    <div class='row'>
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-pancard-input'>PAN Card</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-pancard-input'>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-vatno-input'>VAT/TIN No.</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-vatno-input'>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row'>
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-cstno-input'>CST No.</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-cstno-input'>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-servicetax-input'>Service Tax
-                                                                    No.</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-servicetax-input'>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row'>
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-companyuin-input'>Company
-                                                                    UIN</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-companyuin-input'>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label'
-                                                                       for='progress-basicpill-declaration-input'>Declaration</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-declaration-input'>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div class='tab-pane' id='progress-bank-detail'>
-                                            <div>
-                                                <form>
-                                                    <div class='row'>
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-namecard-input'>Name on Card</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-namecard-input'>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label>Credit Card Type</label>
-                                                                <select class='form-select'>
-                                                                    <option selected>Select Card Type</option>
-                                                                    <option value='AE'>American Express</option>
-                                                                    <option value='VI'>Visa</option>
-                                                                    <option value='MC'>MasterCard</option>
-                                                                    <option value='DI'>Discover</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row'>
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-cardno-input'>Credit Card
-                                                                    Number</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-cardno-input'>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-card-verification-input'>Card
-                                                                    Verification Number</label>
-                                                                <input type='text' class='form-control'
-                                                                       id='progress-basicpill-card-verification-input'>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class='row'>
-                                                        <div class='col-lg-6'>
-                                                            <div class='mb-3'>
-                                                                <label class='form-label' for='progress-basicpill-expiration-input'>Expiration
-                                                                    Date</label>
-                                                                <input type='text' class='form-control' id='progress-basicpill-expiration-input'>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                        <div class='tab-pane' id='progress-confirm-detail'>
-                                            <div class='row justify-content-center'>
-                                                <div class='col-lg-6'>
-                                                    <div class='text-center'>
-                                                        <div class='mb-4'>
-                                                            <i class='mdi mdi-check-circle-outline text-success display-4'></i>
-                                                        </div>
-                                                        <div>
-                                                            <h5>Confirm Detail</h5>
-                                                            <p class='text-muted'>If several languages coalesce, the grammar of the resulting</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <ul class='pager wizard twitter-bs-wizard-pager-link'>
-                                        <li class='previous'><a href='javascript: void(0);'>
-                                                <lang>返回上一步</lang>
-                                            </a></li>
-                                        <li class='next'><a href='javascript: void(0);' onclick="checkCurrentData(event)">
-                                                <lang>下一步</lang>
-                                            </a></li>
-                                    </ul>
+                                    </notempty>
                                 </div>
+                                <ul class='pager wizard twitter-bs-wizard-pager-link'>
+                                    <li class='previous'><a href='javascript: void(0);'>
+                                            <lang>返回上一步</lang>
+                                        </a></li>
+                                    <li class='next'><a href='javascript: void(0);'>
+                                            <lang>下一步</lang>
+                                        </a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- end row -->
+            </div>
+            <!-- end row -->
 
-            </div> <!-- container-fluid -->
-        </div>
-        <!-- End Page-content -->
+        </div> <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
 
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <script>document.write(new Date().getFullYear())</script>
-                        © Weline.
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="text-sm-end d-none d-sm-block">
-                            Crafted with <i class="mdi mdi-heart text-danger"></i> By <a
-                                    href="https://www.aiweline.com/">秋枫雁飞(aiweline)</a>
-                        </div>
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <script>document.write(new Date().getFullYear())</script>
+                    © Weline.
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end d-none d-sm-block">
+                        Crafted with <i class="mdi mdi-heart text-danger"></i> By <a
+                                href="https://www.aiweline.com/">秋枫雁飞(aiweline)</a>
                     </div>
                 </div>
             </div>
-        </footer>
-
-    </div>
-    <!-- end main content-->
-
+        </div>
+    </footer>
 </div>
 <!-- END layout-wrapper -->
 <!--右边栏-->
@@ -587,7 +356,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <script src='@static(Weline_Admin::assets/libs/twitter-bootstrap-wizard/prettify.js)'></script>
 
 <!-- form wizard init -->
-<script src='@static(Weline_Admin::assets/js/pages/form-wizard.init.js)'></script>
+<script src='@static(Weline_Eav::js/pages/attribute-add/form-wizard.init.js)'></script>
 <script>
     function renderSearchEntities(e) {
         let search_entity = $(e.target)
@@ -600,27 +369,6 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                 search_entity_result.empty()
                 for (const item of items) {
                     search_entity_result.append(`<option value="${item.code}">${item.name}</option>`)
-                }
-            }
-        })
-    }
-
-    function checkCurrentData(e) {
-        $("a[data-toggle='tab']").each((index,item) => {
-            item = $(item)
-            if (item.hasClass('active')) {
-                let form = $(item.attr('href')).find('form')
-                let isValid = true;
-                for (let i = 0; i < form.length; i++) {
-                    if (!form[i].checkValidity()) {
-                        isValid = false;
-                    }
-                }
-                if (isValid) {
-                    form.submit();
-                } else {
-                    // FIXME 解决点击返回
-                    item.click()
                 }
             }
         })

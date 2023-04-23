@@ -46,9 +46,39 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
     function add()
     {
         if ($this->request->isPost()) {
+            $progress      = $this->request->getPost('progress');
+            $next_progress = $this->request->getPost('next_progress');
+            switch ($progress):
+                case 'progress-select-entity':
+                    $this->session->setData('entity_code', $this->request->getPost('entity'));
+                    $this->assign('progress', $next_progress);
+                    break;
+                case 'progress-select-set':
+                    $this->session->setData('set_code', $this->request->getPost('entity'));
+                    $this->assign('progress', $next_progress);
+                    break;
+                case 'progress-select-group':
+                    $this->session->setData('group_code', $this->request->getPost('entity'));
+                    $this->assign('progress', $next_progress);
+                    break;
+                case 'progress-attribute-details':
+                    $this->session->setData('attribute', $this->request->getPost());
+                    $this->assign('progress', $this->request->getPost('has_option') ? $next_progress : '');
+                    break;
+                case 'progress-attribute-option':
+                    $this->session->setData('attribute_option', $this->request->getPost());
+                    $this->assign('progress', '');
+                    break;
+                default:
+                    $entity_code      = $this->session->getData('entity_code');
+                    $set_code         = $this->session->getData('set_code');
+                    $group_code       = $this->session->getData('group_code');
+                    $attribute        = $this->session->getData('attribute');
+                    $attribute_option = $this->session->getData('attribute_option');
+                    // FIXME 保存数据
+            endswitch;
             try {
-                $group_code  = $this->request->getPost('group_code');
-                $entity_code = $this->request->getPost('entity_code');
+
                 /**@var Group $groupModel */
                 $groupModel = ObjectManager::getInstance(Group::class);
                 $group      = $groupModel->where('code', $group_code)
