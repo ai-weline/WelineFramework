@@ -45,20 +45,54 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
 
     function add()
     {
+        $this->assign('progress', $this->session->getData('attribute_add_progress'));
         if ($this->request->isPost()) {
-            $progress      = $this->request->getPost('progress');
+            $progress      = $this->request->getPost('progress', '');
             $next_progress = $this->request->getPost('next_progress');
+            // 记录当前进度
+            $this->session->setData('attribute_add_progress', $progress);
             switch ($progress):
                 case 'progress-select-entity':
-                    $this->session->setData('entity_code', $this->request->getPost('entity'));
+                    /**@var EavEntity $entityModel */
+                    $entityModel = ObjectManager::getInstance(EavEntity::class);
+                    $entity      = $entityModel->where('code', $this->request->getPost('entity_code'))->find()->fetch();
+                    $this->session->setData('eav_entity', $entity->getData());
                     $this->assign('progress', $next_progress);
                     break;
                 case 'progress-select-set':
-                    $this->session->setData('set_code', $this->request->getPost('entity'));
+                    if (!isset($this->session->getData('eav_entity')['code'])) {
+                        $this->getMessageManager()->addWarning(__('请先选择实体！'));
+                        $this->assign('progress', 'progress-select-entity');
+                        break;
+                    }
+                    /**@var EavAttribute\Set $setModel */
+                    $setModel = ObjectManager::getInstance(EavAttribute\Set::class);
+                    $entity   = $setModel->where('code', $this->request->getPost('set_code'))
+                                         ->where('entity_code', $this->session->getData('eav_entity')['code'])
+                                         ->find()
+                                         ->fetch();
+                    $this->session->setData('eav_entity_attribute_set', $entity->getData());
                     $this->assign('progress', $next_progress);
                     break;
                 case 'progress-select-group':
-                    $this->session->setData('group_code', $this->request->getPost('entity'));
+                    if (!isset($this->session->getData('eav_entity')['code'])) {
+                        $this->getMessageManager()->addWarning(__('请先选择实体！'));
+                        $this->assign('progress', 'progress-select-entity');
+                        break;
+                    }
+                    if (!isset($this->session->getData('eav_entity_attribute_set')['code'])) {
+                        $this->getMessageManager()->addWarning(__('请先选择属性集！'));
+                        $this->assign('progress', 'progress-select-set');
+                        break;
+                    }
+                    /**@var EavAttribute\Group $groupModel */
+                    $groupModel = ObjectManager::getInstance(EavAttribute\Group::class);
+                    $group      = $groupModel->where('code', $this->request->getPost('group_code'))
+                                             ->where('entity_code', $this->session->getData('eav_entity')['code'])
+                                             ->where('set_code', $this->session->getData('eav_entity_attribute_set')['code'])
+                                             ->find()
+                                             ->fetch();
+                    $this->session->setData('eav_entity_attribute_set_group', $group->getData());
                     $this->assign('progress', $next_progress);
                     break;
                 case 'progress-attribute-details':
@@ -75,40 +109,51 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
                     $group_code       = $this->session->getData('group_code');
                     $attribute        = $this->session->getData('attribute');
                     $attribute_option = $this->session->getData('attribute_option');
-                    // FIXME 保存数据
+                // FIXME 保存数据
             endswitch;
-            try {
-
-                /**@var Group $groupModel */
-                $groupModel = ObjectManager::getInstance(Group::class);
-                $group      = $groupModel->where('code', $group_code)
-                                         ->where('entity_code', $entity_code)
-                                         ->find()
-                                         ->fetch();
-                if (!$group->getId()) {
-                    $this->getMessageManager()->addWarning(__('分组不在所选属性集内！'));
-                    $this->session->setData('attribute', $this->request->getPost());
-                    $this->redirect($this->_url->getCurrentUrl());
-                }
-                $data             = $this->request->getPost();
-                $data['set_code'] = $group->getData('set_code');
-                $this->eavAttribute->setData($data)
-                                   ->save();
-                $this->getMessageManager()->addSuccess(__('添加成功！'));
-                $this->session->delete('attribute');
-            } catch (\Exception $exception) {
-                $this->getMessageManager()->addWarning(__('添加异常！'));
-                $this->session->setData('attribute', $this->request->getPost());
-                if (DEBUG || DEV) $this->getMessageManager()->addException($exception);
-                $this->redirect('*/backend/attribute/add');
-            }
-            $this->redirect($this->_url->getBackendUrl('*/backend/attribute/edit', [
-                'code'        => $this->request->getPost('code'),
-                'entity_code' => $this->request->getPost('entity_code'),
-            ]));
+//            try {
+//
+//                /**@var Group $groupModel */
+//                $groupModel = ObjectManager::getInstance(Group::class);
+//                $group      = $groupModel->where('code', $group_code)
+//                                         ->where('entity_code', $entity_code)
+//                                         ->find()
+//                                         ->fetch();
+//                if (!$group->getId()) {
+//                    $this->getMessageManager()->addWarning(__('分组不在所选属性集内！'));
+//                    $this->session->setData('attribute', $this->request->getPost());
+//                    $this->redirect($this->_url->getCurrentUrl());
+//                }
+//                $data             = $this->request->getPost();
+//                $data['set_code'] = $group->getData('set_code');
+//                $this->eavAttribute->setData($data)
+//                                   ->save();
+//                $this->getMessageManager()->addSuccess(__('添加成功！'));
+//                $this->session->delete('attribute');
+//            } catch (\Exception $exception) {
+//                $this->getMessageManager()->addWarning(__('添加异常！'));
+//                $this->session->setData('attribute', $this->request->getPost());
+//                if (DEBUG || DEV) $this->getMessageManager()->addException($exception);
+//                $this->redirect('*/backend/attribute/add');
+//            }
+//            $this->redirect($this->_url->getBackendUrl('*/backend/attribute/edit', [
+//                'code'        => $this->request->getPost('code'),
+//                'entity_code' => $this->request->getPost('entity_code'),
+//            ]));
+            // 记录进度
+            $this->session->setData('attribute_add_progress', $progress);
         }
         if ($data = $this->session->getData('attribute')) {
             $this->assign('attribute', $data);
+        }
+        if ($data = $this->session->getData('eav_entity')) {
+            $this->assign('eav_entity', $data);
+        }
+        if ($data = $this->session->getData('eav_entity_attribute_set')) {
+            $this->assign('eav_entity_attribute_set', $data);
+        }
+        if ($data = $this->session->getData('eav_entity_attribute_set_group')) {
+            $this->assign('eav_entity_attribute_set_group', $data);
         }
         $this->init_form();
         return $this->fetch('form');

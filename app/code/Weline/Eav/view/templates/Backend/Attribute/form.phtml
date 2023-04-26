@@ -19,7 +19,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
 </head>
 
-<body <?= $themeConfig->getLayouts() ?? ''; ?>>
+<body <?= $themeConfig->getLayouts() ?? ''; ?> class='bg-transparent'>
 
 <!--页头工具条 开始-->
 @template(Weline_Admin::common/page/loading.phtml)
@@ -29,321 +29,293 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
 <!-- 开始 页面 -->
 <div id="layout-wrapper">
-    <div class='page-content'>
-        <div class='container-fluid'>
-            <!-- start page message -->
-            <div class='row'>
-                <template>Weline_Component::message.phtml</template>
-            </div> <!-- end message -->
-            <div class='row'>
-                <div class='col-lg-12'>
-                    <div class='card'>
-                        <div class='card-body'>
-                            <h4 class='card-title mb-4'>创建属性进度</h4>
+    <!-- start page message -->
+    <div class='row'>
+        <template>Weline_Component::message.phtml</template>
+    </div> <!-- end message -->
+    <div class='row'>
+        <div class='col-lg-12'>
+            <div class='card'>
+                <div class='card-body'>
+                    <div id='progress-wizard' class='twitter-bs-wizard'>
+                        <ul class='twitter-bs-wizard-nav nav-justified'>
+                            <li class='nav-item'>
+                                <a href='#progress-select-entity'
+                                   data-target="@if{progress==='progress-select-entity'=>'1'|'0'}"
+                                   class='nav-link'
+                                   data-progress="{{progress}}"
+                                   data-toggle='tab'>
+                                    <span class='step-number'>01</span>
+                                    <span class='step-title'><lang>选择实体</lang></span>
+                                </a>
+                            </li>
 
-                            <div id='progrss-wizard' class='twitter-bs-wizard'>
-                                <ul class='twitter-bs-wizard-nav nav-justified'>
-                                    <li class='nav-item'>
-                                        <a href='#progress-select-entity' class='nav-link @if{req.type==="progress-select-entity"=>"active"}'
-                                           data-toggle='tab'>
-                                            <span class='step-number'>01</span>
-                                            <span class='step-title'><lang>选择实体</lang></span>
-                                        </a>
-                                    </li>
-                                    <li class='nav-item'>
-                                        <a href='#progress-select-set' class='nav-link' data-toggle='tab'>
-                                            <span class='step-number'>02</span>
-                                            <span class='step-title'><lang>选择属性集</lang></span>
-                                        </a>
-                                    </li>
-                                    <li class='nav-item'>
-                                        <a href='#progress-select-group' class='nav-link' data-toggle='tab'>
-                                            <span class='step-number'>03</span>
-                                            <span class='step-title'><lang>选择属性组</lang></span>
-                                        </a>
-                                    </li>
-                                    <li class='nav-item'>
-                                        <a href='#progress-attribute-details' class='nav-link' data-toggle='tab'>
-                                            <span class='step-number'>04</span>
-                                            <span class='step-title'>创建属性</span>
-                                        </a>
-                                    </li>
-                                    <!--如果有配置属性配置项-->
-                                    <notempty name='has_option'>
-                                        <li class='nav-item'>
-                                            <a href='#progress-attribute-option' class='nav-link' data-toggle='tab'>
-                                                <span class='step-number'>05</span>
-                                                <span class='step-title'><lang>配置项</lang></span>
-                                            </a>
-                                        </li>
-                                    </notempty>
-                                </ul>
+                            <li class='nav-item'>
+                                <a href='#progress-select-set'
+                                   data-target="@if{progress==='progress-select-set'=>'1'|'0'}"
+                                   class='nav-link'
+                                   data-progress='{{progress}}'
+                                   data-toggle='tab'>
+                                    <span class='step-number'>02</span>
+                                    <span class='step-title'><lang>选择属性集</lang></span>
+                                </a>
+                            </li>
+                            <li class='nav-item'>
+                                <a href='#progress-select-group'
+                                   data-target="@if{progress==='progress-select-group'=>'1'|'0'}"
+                                   class='nav-link'
+                                   data-progress='{{progress}}'
+                                   data-toggle='tab'>
+                                    <span class='step-number'>03</span>
+                                    <span class='step-title'><lang>选择属性组</lang></span>
+                                </a>
+                            </li>
+                            <li class='nav-item'>
+                                <a href='#progress-attribute-details'
+                                   data-target="@if{progress==='progress-attribute-details'=>'1'|'0'}"
+                                   class='nav-link'
+                                   data-progress='{{progress}}'
+                                   data-toggle='tab'>
+                                    <span class='step-number'>04</span>
+                                    <span class='step-title'>创建属性</span>
+                                </a>
+                            </li>
+                            <!--如果有配置属性配置项-->
+                            <notempty name='has_option'>
+                                <li class='nav-item'>
+                                    <a href='#progress-attribute-option'
+                                       class='nav-link @if{progress==="progress-attribute-option"=>"active"}' data-toggle='tab'>
+                                        <span class='step-number'>05</span>
+                                        <span class='step-title'><lang>配置项</lang></span>
+                                    </a>
+                                </li>
+                            </notempty>
+                        </ul>
 
-                                <div id='bar' class='progress mt-5'>
-                                    <div class='progress-bar bg-success progress-bar-striped progress-bar-animated'></div>
-                                </div>
-                                <div class='tab-content twitter-bs-wizard-tab-content'>
-                                    <div class='tab-pane' id='progress-select-entity'>
-                                        <form action="{{action}}" method="post">
-                                            <input type="hidden" name="progress" value="progress-select-entity">
-                                            <input type="hidden" name="next_progress" value="progress-select-set">
-                                            <div class="row">
-                                                <div class="mx-auto col-lg-6 mt-2 mb-4">
-                                                    <div class='input-group'>
-                                                        <input type='search' class='form-control rounded' id='search-entity'
-                                                               placeholder='@lang{请输入要查找的实体名或者实体代码}'
-                                                               aria-label='@lang{请输入要查找的实体名或者实体代码}'
-                                                               aria-describedby='search-addon'/>
-                                                        <button type='button' class='btn btn-outline-primary'
-                                                                onclick='renderSearchEntities(event)'>
-                                                            <lang>搜索实体</lang>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class='mx-auto col-lg-6 mt-2 mb-4'>
-                                                    <div class='input-group'>
-                                                        <select id='search-entity-result' class='form-select form-control rounded'
-                                                                size="10"
-                                                                name="entity_code"
-                                                                data-style='btn-primary' data-width='fit'
-                                                                aria-label='@lang{搜索实体结果}'
-                                                                aria-describedby='search-addon' required>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class='tab-pane' id='progress-select-set'>
-                                        <div>
-                                            <form>
-                                                <input type='hidden' name='progress' value='progress-select-set'>
-                                                <input type='hidden' name='next_progress' value='progress-select-group'>
-                                                <div class='row'>
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-pancard-input'>PAN Card</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-pancard-input'>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-vatno-input'>VAT/TIN No.</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-vatno-input'>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class='row'>
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-cstno-input'>CST No.</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-cstno-input'>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-servicetax-input'>Service Tax
-                                                                No.</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-servicetax-input'>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class='row'>
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-companyuin-input'>Company
-                                                                UIN</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-companyuin-input'>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label'
-                                                                   for='progress-basicpill-declaration-input'>Declaration</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-declaration-input'>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class='tab-pane' id='progress-select-group'>
-                                        <div>
-                                            <form>
-                                                <input type='hidden' name='progress' value='progress-select-group'>
-                                                <input type='hidden' name='next_progress' value='progress-attribute-details'>
-                                                <div class='row'>
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-pancard-input'>PAN Card</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-pancard-input'>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-vatno-input'>VAT/TIN No.</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-vatno-input'>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class='row'>
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-cstno-input'>CST No.</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-cstno-input'>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-servicetax-input'>Service Tax
-                                                                No.</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-servicetax-input'>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class='row'>
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-basicpill-companyuin-input'>Company
-                                                                UIN</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-companyuin-input'>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label'
-                                                                   for='progress-basicpill-declaration-input'>Declaration</label>
-                                                            <input type='text' class='form-control' id='progress-basicpill-declaration-input'>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                    <div class='tab-pane' id='progress-attribute-details'>
-                                        <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
-                                            <input type='hidden' name='progress' value='progress-attribute-details'>
-                                            <notempty name="has_option">
-                                                <input type='hidden' name='next_progress' value='progress-attribute-option'>
-                                            </notempty>
-                                            <div class='row'>
-                                                <div class='col-lg-6'>
-                                                    <div class='mb-3'>
-                                                        <label class='form-label' for='progress-code'>
-                                                            <lang>属性代码</lang>
-                                                        </label>
-                                                        <input type='text' class='form-control' id='progress-code' name="code"
-                                                               maxlength='60' data-parsley-minlength='3' placeholder="@lang{属性代码}" required>
-                                                        <div class='valid-feedback'>
-                                                            <lang>填写正确！</lang>
-                                                        </div>
-                                                        <div class='valid-feedback'>
-                                                            <lang>请正确填写正确属性代码，最小长度3个字符，最大长度60个字符</lang>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class='col-lg-6'>
-                                                    <div class='mb-3'>
-                                                        <label class='form-label' for='progress-name'>
-                                                            <lang>属性名</lang>
-                                                        </label>
-                                                        <input type='text' class='form-control' id='progress-name' name='name'
-                                                               maxlength='128' data-parsley-minlength='3' placeholder='@lang{属性名}' required>
-                                                        <div class='valid-feedback'>
-                                                            <lang>填写正确！</lang>
-                                                        </div>
-                                                        <div class='valid-feedback'>
-                                                            <lang>请正确填写正确属性代码，最小长度3个字符，最大长度128个字符</lang>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <notempty name='has_option'>
-                                        <div class='tab-pane' id='progress-attribute-option'>
-                                            <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
-                                                <input type='hidden' name='progress' value='progress-attribute-details'>
-                                                <input type='hidden' name='next' value='progress-attribute-details'>
-                                                <div class='row'>
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-code'>
-                                                                <lang>属性代码</lang>
-                                                            </label>
-                                                            <input type='text' class='form-control' id='progress-code' name="code"
-                                                                   maxlength='60' data-parsley-minlength='3' placeholder="@lang{属性代码}" required>
-                                                            <div class='valid-feedback'>
-                                                                <lang>填写正确！</lang>
-                                                            </div>
-                                                            <div class='valid-feedback'>
-                                                                <lang>请正确填写正确属性代码，最小长度3个字符，最大长度60个字符</lang>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class='col-lg-6'>
-                                                        <div class='mb-3'>
-                                                            <label class='form-label' for='progress-name'>
-                                                                <lang>属性名</lang>
-                                                            </label>
-                                                            <input type='text' class='form-control' id='progress-name' name='name'
-                                                                   maxlength='128' data-parsley-minlength='3' placeholder='@lang{属性名}' required>
-                                                            <div class='valid-feedback'>
-                                                                <lang>填写正确！</lang>
-                                                            </div>
-                                                            <div class='valid-feedback'>
-                                                                <lang>请正确填写正确属性代码，最小长度3个字符，最大长度128个字符</lang>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </notempty>
-                                </div>
-                                <ul class='pager wizard twitter-bs-wizard-pager-link'>
-                                    <li class='previous'><a href='javascript: void(0);'>
-                                            <lang>返回上一步</lang>
-                                        </a></li>
-                                    <li class='next'><a href='javascript: void(0);'>
-                                            <lang>下一步</lang>
-                                        </a></li>
-                                </ul>
-                            </div>
+                        <div id='bar' class='progress mt-5'>
+                            <div class='progress-bar bg-success progress-bar-striped progress-bar-animated'></div>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end row -->
-
-        </div> <!-- container-fluid -->
-    </div>
-    <!-- End Page-content -->
-
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm-6">
-                    <script>document.write(new Date().getFullYear())</script>
-                    © Weline.
-                </div>
-                <div class="col-sm-6">
-                    <div class="text-sm-end d-none d-sm-block">
-                        Crafted with <i class="mdi mdi-heart text-danger"></i> By <a
-                                href="https://www.aiweline.com/">秋枫雁飞(aiweline)</a>
+                        <div class='tab-content twitter-bs-wizard-tab-content'>
+                            <div class='tab-pane' id='progress-select-entity'>
+                                <form action="{{action}}" method="post">
+                                    <notempty name='eav_entity'>
+                                        <input type='hidden' name='selected' value='1'>
+                                    </notempty>
+                                    <input type="hidden" name="progress" value="progress-select-entity">
+                                    <input type="hidden" name="next_progress" value="progress-select-set">
+                                    <div class="row">
+                                        <div class="mx-auto col-lg-6 mt-2 mb-4">
+                                            <div class='input-group'>
+                                                <input type='search' class='form-control rounded' id='search-entity'
+                                                       placeholder='@lang{请输入要查找的实体名或者实体代码}'
+                                                       aria-label='@lang{请输入要查找的实体名或者实体代码}'
+                                                       aria-describedby='search-addon'/>
+                                                <button type='button' class='btn btn-outline-primary'
+                                                        onclick='renderSearchEntities(event)'>
+                                                    <lang>搜索实体</lang>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class='mx-auto col-lg-6 mt-2 mb-4'>
+                                            <div class='input-group'>
+                                                <select id='search-entity-result' class='form-select form-control rounded'
+                                                        size="10"
+                                                        name="entity_code"
+                                                        data-style='btn-primary' data-width='fit'
+                                                        aria-label='@lang{搜索实体结果}'
+                                                        aria-describedby='search-addon' required>
+                                                    <notempty name="eav_entity">
+                                                        <option value="{{eav_entity.code}}" selected>{{eav_entity.name}}</option>
+                                                    </notempty>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class='tab-pane' id='progress-select-set'>
+                                <div>
+                                    <form>
+                                        <notempty name="eav_entity_attribute_set">
+                                            <input type='hidden' name='selected' value='1'>
+                                        </notempty>
+                                        <input type='hidden' name='progress' value='progress-select-set'>
+                                        <input type='hidden' name='next_progress' value='progress-select-group'>
+                                        <div class='row'>
+                                            <div class='mx-auto col-lg-6 mt-2 mb-4'>
+                                                <div class='input-group'>
+                                                    <input type='search' class='form-control rounded' id='search-entity-attribute-set'
+                                                           placeholder='@lang{请输入要查找的 属性集名 或者 属性集代码}'
+                                                           aria-label='@lang{请输入要查找的 属性集名或者 属性集代码}'
+                                                           aria-describedby='search-addon'/>
+                                                    <button type='button' class='btn btn-outline-primary'
+                                                            onclick='renderSearchEntityAttributeSet(event)'>
+                                                        <lang>搜索 {{eav_entity.name}} 属性集</lang>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='row'>
+                                            <div class='mx-auto col-lg-6 mt-2 mb-4'>
+                                                <div class='input-group'>
+                                                    <select id='search-entity-result' class='form-select form-control rounded'
+                                                            size='10'
+                                                            name='set_code'
+                                                            data-style='btn-primary' data-width='fit'
+                                                            aria-label='@lang{搜索 属性集 结果}'
+                                                            aria-describedby='search-addon' required>
+                                                        <notempty name='eav_entity_attribute_set'>
+                                                            <option value='{{eav_entity_attribute_set.code}}' selected>
+                                                                {{eav_entity_attribute_set.name}}
+                                                            </option>
+                                                        </notempty>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class='tab-pane' id='progress-select-group'>
+                                <div>
+                                    <form>
+                                        <notempty name='eav_entity_attribute_set_group'>
+                                            <input type='hidden' name='selected' value='1'>
+                                        </notempty>
+                                        <input type='hidden' name='progress' value='progress-select-group'>
+                                        <input type='hidden' name='next_progress' value='progress-attribute-details'>
+                                        <div class='row'>
+                                            <div class='mx-auto col-lg-6 mt-2 mb-4'>
+                                                <div class='input-group'>
+                                                    <input type='search' class='form-control rounded' id='search-entity-attribute-set-group'
+                                                           placeholder='@lang{请输入要查找的【实体-属性集-属性组】名或者【实体-属性集-属性组】代码}'
+                                                           aria-label='@lang{请输入要查找的【实体-属性集-属性组】名或者【实体-属性集-属性组】代码}'
+                                                           aria-describedby='search-addon'/>
+                                                    <button type='button' class='btn btn-outline-primary'
+                                                            onclick='renderSearchEntityAttributeSetGroup(event)'>
+                                                        <lang>搜索【实体-属性集-属性组】</lang>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='row'>
+                                            <div class='mx-auto col-lg-6 mt-2 mb-4'>
+                                                <div class='input-group'>
+                                                    <select id='search-entity-result' class='form-select form-control rounded'
+                                                            size='10'
+                                                            name='group_code'
+                                                            data-style='btn-primary' data-width='fit'
+                                                            aria-label='@lang{搜索【实体-属性集-属性组】结果}'
+                                                            aria-describedby='search-addon' required>
+                                                        <notempty name='eav_entity_attribute_set_group'>
+                                                            <option value='{{eav_entity_attribute_set_group.code}}' selected>
+                                                                {{eav_entity_attribute_set_group.name}}
+                                                            </option>
+                                                        </notempty>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class='tab-pane' id='progress-attribute-details'>
+                                <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
+                                    <input type='hidden' name='progress' value='progress-attribute-details'>
+                                    <notempty name="has_option">
+                                        <input type='hidden' name='next_progress' value='progress-attribute-option'>
+                                    </notempty>
+                                    <div class='row'>
+                                        <div class='col-lg-6'>
+                                            <div class='mb-3'>
+                                                <label class='form-label' for='progress-code'>
+                                                    <lang>属性代码</lang>
+                                                </label>
+                                                <input type='text' class='form-control' id='progress-code' name="code"
+                                                       maxlength='60' data-parsley-minlength='3' placeholder="@lang{属性代码}" required>
+                                                <div class='valid-feedback'>
+                                                    <lang>填写正确！</lang>
+                                                </div>
+                                                <div class='valid-feedback'>
+                                                    <lang>请正确填写正确属性代码，最小长度3个字符，最大长度60个字符</lang>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-lg-6'>
+                                            <div class='mb-3'>
+                                                <label class='form-label' for='progress-name'>
+                                                    <lang>属性名</lang>
+                                                </label>
+                                                <input type='text' class='form-control' id='progress-name' name='name'
+                                                       maxlength='128' data-parsley-minlength='3' placeholder='@lang{属性名}' required>
+                                                <div class='valid-feedback'>
+                                                    <lang>填写正确！</lang>
+                                                </div>
+                                                <div class='valid-feedback'>
+                                                    <lang>请正确填写正确属性代码，最小长度3个字符，最大长度128个字符</lang>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <notempty name='has_option'>
+                                <div class='tab-pane' id='progress-attribute-option'>
+                                    <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
+                                        <input type='hidden' name='progress' value='progress-attribute-details'>
+                                        <input type='hidden' name='next' value='progress-attribute-details'>
+                                        <div class='row'>
+                                            <div class='col-lg-6'>
+                                                <div class='mb-3'>
+                                                    <label class='form-label' for='progress-code'>
+                                                        <lang>属性代码</lang>
+                                                    </label>
+                                                    <input type='text' class='form-control' id='progress-code' name="code"
+                                                           maxlength='60' data-parsley-minlength='3' placeholder="@lang{属性代码}" required>
+                                                    <div class='valid-feedback'>
+                                                        <lang>填写正确！</lang>
+                                                    </div>
+                                                    <div class='valid-feedback'>
+                                                        <lang>请正确填写正确属性代码，最小长度3个字符，最大长度60个字符</lang>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class='col-lg-6'>
+                                                <div class='mb-3'>
+                                                    <label class='form-label' for='progress-name'>
+                                                        <lang>属性名</lang>
+                                                    </label>
+                                                    <input type='text' class='form-control' id='progress-name' name='name'
+                                                           maxlength='128' data-parsley-minlength='3' placeholder='@lang{属性名}' required>
+                                                    <div class='valid-feedback'>
+                                                        <lang>填写正确！</lang>
+                                                    </div>
+                                                    <div class='valid-feedback'>
+                                                        <lang>请正确填写正确属性代码，最小长度3个字符，最大长度128个字符</lang>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </notempty>
+                        </div>
+                        <ul class='pager wizard twitter-bs-wizard-pager-link'>
+                            <li class='previous'><a href='javascript: void(0);'>
+                                    <lang>返回上一步</lang>
+                                </a></li>
+                            <li class='next'><a href='javascript: void(0);'>
+                                    <lang>下一步</lang>
+                                </a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
-    </footer>
+    </div>
+    <!-- end row -->
 </div>
 <!-- END layout-wrapper -->
 <!--右边栏-->
@@ -358,6 +330,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!-- form wizard init -->
 <script src='@static(Weline_Eav::js/pages/attribute-add/form-wizard.init.js)'></script>
 <script>
+    // 初始化选中步骤
+    $(document).ready(() => {
+        $('.twitter-bs-wizard-nav .nav-link[data-target="1"]').tab('show')
+    })
+
     function renderSearchEntities(e) {
         let search_entity = $(e.target)
         let search = search_entity.val()
@@ -370,9 +347,45 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                 for (const item of items) {
                     search_entity_result.append(`<option value="${item.code}">${item.name}</option>`)
                 }
+                $('#progress-select-entity').find('input[name=\'selected\']').val(0)
             }
         })
     }
+
+    function renderSearchEntityAttributeSet(e) {
+        let search_entity = $(e.target)
+        let search = search_entity.val()
+        $.ajax({
+            url: '@backend-url("*/backend/entity/search")?search=' + search,
+            success: function (res) {
+                let items = res['items']
+                let search_entity_result = $('#search-entity-result')
+                search_entity_result.empty()
+                for (const item of items) {
+                    search_entity_result.append(`<option value="${item.code}">${item.name}</option>`)
+                }
+                $('#progress-select-set').find('input[name=\'selected\']').val(0)
+            }
+        })
+    }
+
+    function renderSearchEntityAttributeSetGroup(e) {
+        let search_entity = $(e.target)
+        let search = search_entity.val()
+        $.ajax({
+            url: '@backend-url("*/backend/entity/search")?search=' + search,
+            success: function (res) {
+                let items = res['items']
+                let search_entity_result = $('#search-entity-result')
+                search_entity_result.empty()
+                for (const item of items) {
+                    search_entity_result.append(`<option value="${item.code}">${item.name}</option>`)
+                }
+                $('#progress-select-set').find('input[name=\'selected\']').val(0)
+            }
+        })
+    }
+
 </script>
 </body>
 </html>
