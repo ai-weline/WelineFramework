@@ -38,21 +38,21 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <meta name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no'>
 <meta content="<?php echo $this->getData('title'); ?>" name='author'/>
 <meta content="<?php echo $this->getData('description'); ?>" name='description'/>
-<link rel="Shortcut Icon" href="/weline/module-backend/view/statics/img/favicon.png?v=50715">
-<link rel="Shortcut Icon" href="/weline/module-backend/view/statics/img/favicon.png?v=50715">
-<link rel="Bookmark" href="/weline/module-backend/view/statics/img/favicon.png?v=50715">
+<link rel="Shortcut Icon" href="/weline/module-backend/view/statics/img/favicon.png?v=61110">
+<link rel="Shortcut Icon" href="/weline/module-backend/view/statics/img/favicon.png?v=61110">
+<link rel="Bookmark" href="/weline/module-backend/view/statics/img/favicon.png?v=61110">
 <!--加载requirejs-->
 <?php if (DEV) : ?>
-    <!--        <script src="/weline/module-backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=41436"></script>-->
+    <!--        <script src="/weline/module-backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=34580"></script>-->
 <?php
 else:
     ?>
-    <!--        <script src="/weline/module-backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=77917"></script>-->
+    <!--        <script src="/weline/module-backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=73193"></script>-->
 <?php
 endif;
 ?>
 <!--加载require常用js模块-->
-<!--<script src="/weline/module-backend/view/statics/base/require.configs.js?v=15861"></script>-->
+<!--<script src="/weline/module-backend/view/statics/base/require.configs.js?v=21394"></script>-->
 <?php echo framework_view_process_block([
     'class' => 'Weline\\Backend\\Block\\Header\\Base',
     'template' => 'Weline_Admin::header/base.phtml',
@@ -60,22 +60,22 @@ endif;
 
 <!--css-->
 <!--loading-->
-<link  href='/weline/module-admin/view/statics/libs/loading/loading.css?v=48713' rel="stylesheet" type="text/css"/>
-<link  href='/weline/module-admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=89225' rel="stylesheet" type="text/css"/>
-<link  href='/weline/module-admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=72508' rel="stylesheet" type="text/css"/>
+<link  href='/weline/module-admin/view/statics/libs/loading/loading.css?v=69686' rel="stylesheet" type="text/css"/>
+<link  href='/weline/module-admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=18276' rel="stylesheet" type="text/css"/>
+<link  href='/weline/module-admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=79145' rel="stylesheet" type="text/css"/>
 <!-- Bootstrap Css -->
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/bootstrap' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet"
       type="text/css"/>
 <!-- Icons Css -->
-<link  href='/weline/module-admin/view/statics/assets/css/icons.min.css?v=47420' rel="stylesheet" type="text/css"/>
+<link  href='/weline/module-admin/view/statics/assets/css/icons.min.css?v=49814' rel="stylesheet" type="text/css"/>
 <!-- App Css-->
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/app' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet" type="text/css"/>
 <!--JS-->
-<script  src='/weline/module-backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=53371'></script>
+<script  src='/weline/module-backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=45329'></script>
 <?php if (DEV): ?>
-<!--        <script src="/weline/module-backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=92349"></script>-->
+<!--        <script src="/weline/module-backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=46192"></script>-->
 <?php endif; ?>
 <!--加载配置页头-->
 <?php
@@ -89,8 +89,9 @@ echo $this->getHeader()->getHtml();
 -->
     <title><?= __('Weline Admin 管理面板') ?></title>
     <!-- twitter-bootstrap-wizard css -->
-    <link rel='stylesheet' href='/weline/module-admin/view/statics/assets/libs/twitter-bootstrap-wizard/prettify.css?v=38884'>
-
+    <link rel='stylesheet' href='/weline/module-admin/view/statics/assets/libs/twitter-bootstrap-wizard/prettify.css?v=75471'>
+    <!-- Sweet Alert-->
+    <link href='/weline/module-admin/view/statics/assets/libs/sweetalert2/sweetalert2.min.css?v=25254' rel='stylesheet' type='text/css'/>
 </head>
 
 <body <?= $themeConfig->getLayouts() ?? ''; ?> class='bg-transparent'>
@@ -165,9 +166,14 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                    data-toggle='tab'>
                                     <span class='step-number'>01</span>
                                     <span class='step-title'>选择实体</span>
+                                    <?php if(!empty($eav_entity ) ): ?>
+                                        <span class="help-block">
+                                            你选择了
+                                            <span class="text-primary"><?=($eav_entity['name']??'') ??'';?></span>
+                                        </span>
+                                    <?php endif; ?>
                                 </a>
                             </li>
-
                             <li class='nav-item'>
                                 <a href='#progress-select-set'
                                    data-target="<?php if($progress   ===  'progress-select-set' ):echo '1'; else: echo '0'; endif;?>"
@@ -176,6 +182,12 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                    data-toggle='tab'>
                                     <span class='step-number'>02</span>
                                     <span class='step-title'>选择属性集</span>
+                                    <?php if(!empty($eav_entity_attribute_set ) ): ?>
+                                        <span class='help-block'>
+                                            你选择了
+                                            <span class='text-primary'><?=($eav_entity_attribute_set['name']??'') ??'';?></span>
+                                        </span>
+                                    <?php endif; ?>
                                 </a>
                             </li>
                             <li class='nav-item'>
@@ -186,6 +198,12 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                    data-toggle='tab'>
                                     <span class='step-number'>03</span>
                                     <span class='step-title'>选择属性组</span>
+                                    <?php if(!empty($eav_entity_attribute_set_group ) ): ?>
+                                        <span class='help-block'>
+                                            你选择了
+                                            <span class='text-primary'><?=($eav_entity_attribute_set_group['name']??'') ??'';?></span>
+                                        </span>
+                                    <?php endif; ?>
                                 </a>
                             </li>
                             <li class='nav-item'>
@@ -196,6 +214,12 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                    data-toggle='tab'>
                                     <span class='step-number'>04</span>
                                     <span class='step-title'>创建属性</span>
+                                    <?php if(!empty($attribute ) ): ?>
+                                        <span class='help-block'>
+                                            你创建了
+                                            <span class='text-primary'><?=($attribute['name']??'') ??'';?>（<?=($attribute['code']??'') ??'';?>）</span>
+                                        </span>
+                                    <?php endif; ?>
                                 </a>
                             </li>
                             <!--如果有配置属性配置项-->
@@ -255,7 +279,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                             </div>
                             <div class='tab-pane' id='progress-select-set'>
                                 <div>
-                                    <form>
+                                    <form action="<?=$action ??'';?>" method="post">
                                         <?php if(!empty($eav_entity_attribute_set ) ): ?>
                                             <input type='hidden' name='selected' value='1'>
                                         <?php endif; ?>
@@ -278,7 +302,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                         <div class='row'>
                                             <div class='mx-auto col-lg-6 mt-2 mb-4'>
                                                 <div class='input-group'>
-                                                    <select id='search-entity-result' class='form-select form-control rounded'
+                                                    <select id='search-entity-attribute-set-result' class='form-select form-control rounded'
                                                             size='10'
                                                             name='set_code'
                                                             data-style='btn-primary' data-width='fit'
@@ -298,7 +322,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                             </div>
                             <div class='tab-pane' id='progress-select-group'>
                                 <div>
-                                    <form>
+                                    <form action="<?=$action ??'';?>" method="post">
                                         <?php if(!empty($eav_entity_attribute_set_group ) ): ?>
                                             <input type='hidden' name='selected' value='1'>
                                         <?php endif; ?>
@@ -321,7 +345,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                         <div class='row'>
                                             <div class='mx-auto col-lg-6 mt-2 mb-4'>
                                                 <div class='input-group'>
-                                                    <select id='search-entity-result' class='form-select form-control rounded'
+                                                    <select id='search-entity-attribute-set-group-result' class='form-select form-control rounded'
                                                             size='10'
                                                             name='group_code'
                                                             data-style='btn-primary' data-width='fit'
@@ -348,10 +372,11 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                     <div class='row'>
                                         <div class='col-lg-6'>
                                             <div class='mb-3'>
-                                                <label class='form-label' for='progress-code'>
+                                                <label class='form-label' for='progress-attribute-code'>
                                                     属性代码
                                                 </label>
-                                                <input type='text' class='form-control' id='progress-code' name="code"
+                                                <input type='text' class='form-control' id='progress-attribute-code'
+                                                       name="code" value="<?=($attribute['code']??'') ??'';?>"
                                                        maxlength='60' data-parsley-minlength='3' placeholder="属性代码" required>
                                                 <div class='valid-feedback'>
                                                     填写正确！
@@ -363,16 +388,151 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                         </div>
                                         <div class='col-lg-6'>
                                             <div class='mb-3'>
-                                                <label class='form-label' for='progress-name'>
+                                                <label class='form-label' for='progress-attribute-name'>
                                                     属性名
                                                 </label>
-                                                <input type='text' class='form-control' id='progress-name' name='name'
+                                                <input type='text' class='form-control' id='progress-attribute-name' name='name'
+                                                       value="<?=($attribute['name']??'') ??'';?>"
                                                        maxlength='128' data-parsley-minlength='3' placeholder='属性名' required>
                                                 <div class='valid-feedback'>
                                                     填写正确！
                                                 </div>
                                                 <div class='valid-feedback'>
                                                     请正确填写正确属性代码，最小长度3个字符，最大长度128个字符
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-lg-6'>
+                                            <div class='mb-3'>
+                                                <label class='form-label' for='validationType'>
+                                                    属性类型
+                                                </label>
+                                                <select class='form-control' id='validationType' name='type' required='' <?php if(($attribute['attribute_id']??'') ):echo 'disabled';endif;?>>
+                                                    <?php foreach($types  as $type):?>
+                                                        <option value='<?=($type['code']??'') ??'';?>' <?php if(($attribute['type']??'') ==  ($type['code']??'') ):echo 'selected';endif;?>>
+                                                            <?=($type['name']??'') ??'';?>
+                                                        </option>
+                                                    <?php endforeach;?>
+                                                </select>
+                                                <div class='invalid-feedback'>
+                                                    必须选择一个类型
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class='col-lg-6'>
+                                            <div class='mb-3'>
+                                                <label class='form-label' for='validationEnable'>
+                                                    是否启用
+                                                </label>
+                                                <select class='form-control' id='validationEnable' required=''
+                                                        name='is_enable'>
+                                                    <option value='0'
+                                                            <?php if(($attribute['is_enable']??'') ==  0 ):echo 'selected';endif;?>>
+                                                        禁用
+                                                    </option>
+                                                    <option value='1'
+                                                            <?php if(($attribute['is_enable']??'') ==  1 ):echo 'selected';endif;?>>
+                                                        启用
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class='col-lg-12'>
+                                            <!--高级信息-->
+                                            <div class='accordion mb-3' id='accordionAdvanced'>
+                                                <div class='accordion-item'>
+                                                    <h2 class='accordion-header' id='headingOne'>
+                                                        <button class='accordion-button' type='button' data-bs-toggle='collapse'
+                                                                data-bs-target='#collapseAdvanced'
+                                                                aria-expanded='true' aria-controls='collapseAdvanced'>
+                                                            高级设置
+                                                        </button>
+                                                    </h2>
+                                                    <div id='collapseAdvanced' class='accordion-collapse collapse show'
+                                                         aria-labelledby='headingAdvanced'
+                                                         data-bs-parent='#accordionAdvanced'>
+                                                        <div class='accordion-body'>
+                                                            <div class='row'>
+                                                                <div class='col-md-4'>
+                                                                    <div class='mb-3'>
+                                                                        <label class='form-label' for='validationType'>
+                                                                            是否多值
+                                                                        </label>
+                                                                        <select class='form-control' id='validationType' required=''
+                                                                                name='multiple_valued'
+                                                                                <?php if(($attribute['attribute_id']??'') ):echo 'disabled';endif;?>>
+                                                                            <option value='0' <?php if(($attribute['multiple_valued']??'') ==  0 ):echo 'selected';endif;?>>单值
+                                                                            </option>
+                                                                            <option value='1' <?php if(($attribute['multiple_valued']??'') ==  1 ):echo 'selected';endif;?>>多值
+                                                                            </option>
+                                                                        </select>
+                                                                        <div class='invalid-feedback'>
+                                                                            必须选择一个多值类型
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class='col-md-4'>
+                                                                    <div class='mb-3'>
+                                                                        <label class='form-label' for='validationGroup'>
+                                                                            分组
+                                                                        </label>
+                                                                        <select class='form-control' id='validationGroup' required=''
+                                                                                name='group_code'>
+                                                                            <?php foreach($groups  as $group):?>
+                                                                                <option value='<?=($group['code']??'') ??'';?>'
+                                                                                        <?php if(($attribute['group_code']??'') == ($group['code']??'')  &&                                                                                         ($attribute['entity_code']??'') == ($group['entity_code']??'') ):echo 'selected';endif;?>>
+                                                                                    <?=($group['name']??'') ??'';?>（实体：<?=($group['entity_name']??'') ??'';?>）
+                                                                                </option>
+                                                                            <?php endforeach;?>
+                                                                        </select>
+                                                                        <div class='invalid-feedback'>
+                                                                            必须选择一个组
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class='col-md-4'>
+                                                                    <div class='mb-3'>
+                                                                        <label class='form-label' for='validationOption'>
+                                                                            是否有配置项
+                                                                        </label>
+                                                                        <select class='form-control' id='validationOption' required=''
+                                                                                name='has_option'
+                                                                                <?php if(($attribute['attribute_id']??'') ):echo 'disabled';endif;?>>
+                                                                            <option value='0'
+                                                                                    <?php if(($attribute['has_option']??'') ==  0 ):echo 'selected';endif;?>>
+                                                                                没有特定配置项
+                                                                            </option>
+                                                                            <option value='1'
+                                                                                    <?php if(($attribute['has_option']??'') ==  1 ):echo 'selected';endif;?>>
+                                                                                有特定配置项
+                                                                            </option>
+                                                                        </select>
+                                                                        <span class='help-block'>有配置项则只能选择配置项内设置的值，没有配置项可以输入任意值。</span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class='col-md-4'>
+                                                                    <div class='mb-3'>
+                                                                        <label class='form-label' for='validationSystem'>
+                                                                            是否是系统生成
+                                                                        </label>
+                                                                        <select class='form-control' id='validationSystem' required=''
+                                                                                name='is_system'
+                                                                                disabled>
+                                                                            <option value='0'
+                                                                                    <?php if(($attribute['is_system']??'') ==  0 ):echo 'selected';endif;?>>
+                                                                                非系统属性
+                                                                            </option>
+                                                                            <option value='1'
+                                                                                    <?php if(($attribute['is_system']??'') ==  1 ):echo 'selected';endif;?>>
+                                                                                系统属性
+                                                                            </option>
+                                                                        </select>
+                                                                        <span class='help-block'>仅做标记是否由系统生成，或者非系统生成（用户自定义）。</span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -702,7 +862,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
         <div class="p-4">
             <div class="mb-2">
-                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-1.png?v=76145" class="img-thumbnail"
+                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-1.png?v=75013" class="img-thumbnail"
                      alt="layout-1">
             </div>
             <div class="form-check form-switch mb-3">
@@ -712,7 +872,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             </div>
 
             <div class="mb-2">
-                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-2.png?v=75390" class="img-thumbnail"
+                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-2.png?v=82245" class="img-thumbnail"
                      alt="layout-2">
             </div>
             <div class="form-check form-switch mb-3">
@@ -722,7 +882,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             </div>
 
             <div class="mb-2">
-                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-3.png?v=98352" class="img-thumbnail"
+                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-3.png?v=81778" class="img-thumbnail"
                      alt="layout-3">
             </div>
             <div class="form-check form-switch mb-5">
@@ -765,13 +925,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!-- end Account pages -->
 
 <!-- JAVASCRIPT -->
-<!--<script src="/weline/module-admin/view/statics/assets/libs/jquery/jquery.min.js?v=94943"></script>-->
-<script src="/weline/module-admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=99163"></script>
-<script src="/weline/module-admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=29536"></script>
-<script src="/weline/module-admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=79939"></script>
-<script src="/weline/module-admin/view/statics/assets/libs/node-waves/waves.min.js?v=12507"></script>
+<!--<script src="/weline/module-admin/view/statics/assets/libs/jquery/jquery.min.js?v=30464"></script>-->
+<script src="/weline/module-admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=73799"></script>
+<script src="/weline/module-admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=19812"></script>
+<script src="/weline/module-admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=24872"></script>
+<script src="/weline/module-admin/view/statics/assets/libs/node-waves/waves.min.js?v=64630"></script>
 
-<script src="/weline/module-admin/view/statics/assets/js/app.js?v=68554"></script>
+<script src="/weline/module-admin/view/statics/assets/js/app.js?v=71682"></script>
 <!--
 ===================================================================================================================== 
 模板文件：E:\WelineFramework\DEV-workspace\vendor\weline\module-backend\view\templates\public\footer.phtml START
@@ -798,18 +958,19 @@ if($this->getFooter()){
 =====================================================================================================================================
 -->
 <!-- twitter-bootstrap-wizard js -->
-<script src='/weline/module-admin/view/statics/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js?v=39075'></script>
+<script src='/weline/module-admin/view/statics/assets/libs/twitter-bootstrap-wizard/jquery.bootstrap.wizard.min.js?v=15871'></script>
 
-<script src='/weline/module-admin/view/statics/assets/libs/twitter-bootstrap-wizard/prettify.js?v=98043'></script>
+<script src='/weline/module-admin/view/statics/assets/libs/twitter-bootstrap-wizard/prettify.js?v=48554'></script>
 
 <!-- form wizard init -->
-<script src='/Weline/Eav/view/statics/js/pages/attribute-add/form-wizard.init.js?v=64082'></script>
-<script>
-    // 初始化选中步骤
-    $(document).ready(() => {
-        $('.twitter-bs-wizard-nav .nav-link[data-target="1"]').tab('show')
-    })
+<script src='/Weline/Eav/view/statics/js/pages/attribute-add/form-wizard.init.js?v=72412'></script>
+<!-- Sweet Alerts js -->
+<script src='/weline/module-admin/view/statics/assets/libs/sweetalert2/sweetalert2.min.js?v=91412'></script>
 
+<!-- Sweet alert init js-->
+<script src='/weline/module-admin/view/statics/assets/js/pages/sweet-alerts.init.js?v=63268'></script>
+<script>
+    /*实体搜索*/
     function renderSearchEntities(e) {
         let search_entity = $(e.target)
         let search = search_entity.val()
@@ -827,39 +988,167 @@ if($this->getFooter()){
         })
     }
 
+    /* 实体属性集搜索 */
     function renderSearchEntityAttributeSet(e) {
-        let search_entity = $(e.target)
-        let search = search_entity.val()
+        let search = $(e.target)
+        search = search.val()
         $.ajax({
-            url: '<?=$this->getBackendUrl("*/backend/entity/search")?>?search=' + search,
+            url: '<?=$this->getBackendUrl("*/backend/attribute/set/search")?>?search=' + search + '&entity_code=<?=($eav_entity['code']??'') ??'';?>',
             success: function (res) {
+                if (res['msg']) {
+                    Swal.fire(
+                        {
+                            title: '警告！',
+                            text: res['msg'],
+                            icon: 'error',
+                            dangerMode: true,
+                            confirmButtonText: '好的'
+                        }
+                    )
+                    return false;
+                }
                 let items = res['items']
-                let search_entity_result = $('#search-entity-result')
-                search_entity_result.empty()
+                let search_entity_attribute_set_result = $('#search-entity-attribute-set-result')
+                search_entity_attribute_set_result.empty()
                 for (const item of items) {
-                    search_entity_result.append(`<option value="${item.code}">${item.name}</option>`)
+                    search_entity_attribute_set_result.append(`<option value="${item.code}">${item.name}</option>`)
                 }
                 $('#progress-select-set').find('input[name=\'selected\']').val(0)
             }
         })
     }
 
+    /* 实体属性集属性组 */
     function renderSearchEntityAttributeSetGroup(e) {
-        let search_entity = $(e.target)
-        let search = search_entity.val()
+        let search = $(e.target)
+        search = search.val()
         $.ajax({
-            url: '<?=$this->getBackendUrl("*/backend/entity/search")?>?search=' + search,
+            url: '<?=$this->getBackendUrl("*/backend/attribute/group/search")?>?search=' + search +
+                '&entity_code=<?=($eav_entity['code']??'') ??'';?>&set_code=<?=($eav_entity_attribute_set['code']??'') ??'';?>',
             success: function (res) {
-                let items = res['items']
-                let search_entity_result = $('#search-entity-result')
-                search_entity_result.empty()
-                for (const item of items) {
-                    search_entity_result.append(`<option value="${item.code}">${item.name}</option>`)
+                if (res['msg']) {
+                    Swal.fire(
+                        {
+                            title: '警告！',
+                            text: res['msg'],
+                            icon: 'error',
+                            dangerMode: true,
+                            confirmButtonText: '好的'
+                        }
+                    )
+                    return false;
                 }
-                $('#progress-select-set').find('input[name=\'selected\']').val(0)
+                let items = res['items']
+                let search_entity_attribute_set_result = $('#search-entity-attribute-set-group-result')
+                search_entity_attribute_set_result.empty()
+                for (const item of items) {
+                    search_entity_attribute_set_result.append(`<option value="${item.code}">${item.name}</option>`)
+                }
+                $('#rogress-select-group').find('input[name=\'selected\']').val(0)
             }
         })
     }
+    // 初始化选中步骤
+    $(document).ready(() => {
+        $('.twitter-bs-wizard-nav .nav-link[data-target="1"]').tab('show')
+        /*延迟期间最多执行一次：优化输入请求过多ajax*/
+        function debounce(func, delay) {
+            let timeoutId;
+            return function (...args) {
+                if (timeoutId) {
+                    clearTimeout(timeoutId);
+                }
+                timeoutId = setTimeout(() => {
+                    func.apply(this, args);
+                    timeoutId = null;
+                }, delay);
+            };
+        }
+
+        function throttle(func, delay) {
+            let timeoutId;
+            let lastExecTime = 0;
+            return function (...args) {
+                const elapsedTime = new Date().getTime() - lastExecTime;
+                if (elapsedTime > delay) {
+                    lastExecTime = new Date().getTime();
+                    func.apply(this, args);
+                } else {
+                    clearTimeout(timeoutId);
+                    timeoutId = setTimeout(() => {
+                        lastExecTime = new Date().getTime();
+                        func.apply(this, args);
+                        timeoutId = null;
+                    }, delay - elapsedTime);
+                }
+            };
+        }
+
+        /*监听属性代码是否可用*/
+        const throttledProgressAttributeCode = debounce((e) => {
+            let search = $(e.target).val()
+            $.ajax({
+                url: '<?=$this->getBackendUrl("*/backend/attribute/search")?>?field=code&limit=1&search=' + search +
+                    '&entity_code=<?=($eav_entity['code']??'') ??'';?>&set_code=<?=($eav_entity_attribute_set['code']??'') ??'';?>&group_code=<?=($eav_entity_attribute_set_group['code']??'') ??'';?>',
+                success: function (res) {
+                    if (res['msg']) {
+                        Swal.fire(
+                            {
+                                title: '警告！',
+                                text: res['msg'],
+                                icon: 'error',
+                                dangerMode: true,
+                                confirmButtonText: '好的'
+                            }
+                        )
+                        return false;
+                    }
+                    let items = res['items']
+                    let attribute_code_input = $('#progress-attribute-code')
+                    if (items.length) {
+                        attribute_code_input.removeClass('border-success')
+                        attribute_code_input.addClass('border-danger')
+                    } else {
+                        attribute_code_input.removeClass('border-danger')
+                        attribute_code_input.addClass('border-success')
+                    }
+                }
+            })
+        }, 500);
+        $('#progress-attribute-code').on('input', throttledProgressAttributeCode)
+        /*监听属性名称是否可用*/
+        const throttledProgressAttributeName = debounce((e) => {
+            let search = $(e.target).val()
+            $.ajax({
+                url: '<?=$this->getBackendUrl("*/backend/attribute/search")?>?field=name&limit=1&search=' + search +
+                    '&entity_code=<?=($eav_entity['code']??'') ??'';?>&set_code=<?=($eav_entity_attribute_set['code']??'') ??'';?>&group_code=<?=($eav_entity_attribute_set_group['code']??'') ??'';?>',
+                success: function (res) {
+                    if (res['msg']) {
+                        Swal.fire(
+                            {
+                                title: '警告！',
+                                text: res['msg'],
+                                icon: 'error',
+                                dangerMode: true,
+                                confirmButtonText: '好的'
+                            }
+                        )
+                        return false;
+                    }
+                    let items = res['items']
+                    let attribute_code_input = $('#progress-attribute-name')
+                    if (items.length) {
+                        attribute_code_input.removeClass('border-success')
+                        attribute_code_input.addClass('border-danger')
+                    } else {
+                        attribute_code_input.removeClass('border-danger')
+                        attribute_code_input.addClass('border-success')
+                    }
+                }
+            })
+        }, 500);
+        $('#progress-attribute-name').on('input', throttledProgressAttributeName)
+    })
 
 </script>
 </body>

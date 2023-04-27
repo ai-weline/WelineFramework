@@ -40,6 +40,30 @@ class Group extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch();
     }
 
+    function getSearch(): string
+    {
+        $entity_code = $this->request->getGet('entity_code');
+        $set_code    = $this->request->getGet('set_code');
+        $search      = $this->request->getGet('search');
+        $json        = ['items' => [], 'entity_code' => $entity_code, 'search' => $search];
+        if (empty($entity_code)) {
+            $json['msg'] = __('请先选择实体后操作！');
+            return $this->fetchJson($json);
+        }
+        if (empty($set_code)) {
+            $json['msg'] = __('请先选择实体属性集后操作！');
+            return $this->fetchJson($json);
+        }
+        $this->group->where('entity_code', $entity_code);
+        if ($search) {
+            $this->group->where('concat(name,code) like \'%' . $search . '%\'');
+        }
+        $groups        = $this->group->select()
+                                     ->fetchOrigin();
+        $json['items'] = $groups;
+        return $this->fetchJson($json);
+    }
+
     function add()
     {
         if ($this->request->isPost()) {

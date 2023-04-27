@@ -114,6 +114,25 @@ class Set extends \Weline\Framework\App\Controller\BackendController
         return $this->fetchJson($json);
     }
 
+    function getSearch(): string
+    {
+        $entity_code = $this->request->getGet('entity_code');
+        $search      = $this->request->getGet('search');
+        $json        = ['items' => [], 'entity_code' => $entity_code, 'search' => $search];
+        if (empty($entity_code)) {
+            $json['msg'] = __('请先选择实体后操作！');
+            return $this->fetchJson($json);
+        }
+        $this->set->where('entity_code', $entity_code);
+        if ($search) {
+            $this->set->where('concat(name,code) like \'%' . $search . '%\'');
+        }
+        $sets          = $this->set->select()
+                                   ->fetchOrigin();
+        $json['items'] = $sets;
+        return $this->fetchJson($json);
+    }
+
     protected function validateGet(): void
     {
         $code        = $this->request->getGet('code');

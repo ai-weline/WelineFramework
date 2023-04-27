@@ -43,6 +43,48 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
         return $this->fetch();
     }
 
+    function getSearch(): string
+    {
+        $field       = $this->request->getGet('field');
+        $limit       = $this->request->getGet('limit');
+        $entity_code = $this->request->getGet('entity_code');
+        $set_code    = $this->request->getGet('set_code');
+        $group_code  = $this->request->getGet('group_code');
+        $search      = $this->request->getGet('search');
+        $json        = ['items' => [], 'entity_code' => $entity_code, 'set_code' => $set_code, 'group_code' => $group_code, 'limit' => $limit, 'search'
+                                =>
+            $search];
+        if (empty($entity_code)) {
+            $json['msg'] = __('请先选择实体后操作！');
+            return $this->fetchJson($json);
+        }
+        if (empty($set_code)) {
+            $json['msg'] = __('请先选择属性集后操作！');
+            return $this->fetchJson($json);
+        }
+        if (empty($group_code)) {
+            $json['msg'] = __('请先选择属性组后操作！');
+            return $this->fetchJson($json);
+        }
+        $this->eavAttribute->where('entity_code', $entity_code)
+                           ->where('set_code', $set_code)
+                           ->where('group_code', $group_code);
+        if ($field && $search) {
+            $this->eavAttribute->where($field, $search);
+            if ($limit) {
+                $this->eavAttribute->limit(1);
+            } else {
+                $this->eavAttribute->limit(100);
+            }
+        } else {
+            return $this->fetchJson($json);
+        }
+        $attributes    = $this->eavAttribute->select()
+                                            ->fetchOrigin();
+        $json['items'] = $attributes;
+        return $this->fetchJson($json);
+    }
+
     function add()
     {
         $this->assign('progress', $this->session->getData('attribute_add_progress'));
@@ -53,6 +95,7 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
             $this->session->setData('attribute_add_progress', $progress);
             switch ($progress):
                 case 'progress-select-entity':
+                    // FIXME 如果重新选择不一样的实体，清空后续的记录
                     /**@var EavEntity $entityModel */
                     $entityModel = ObjectManager::getInstance(EavEntity::class);
                     $entity      = $entityModel->where('code', $this->request->getPost('entity_code'))->find()->fetch();
@@ -97,7 +140,7 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
                     break;
                 case 'progress-attribute-details':
                     $this->session->setData('attribute', $this->request->getPost());
-                    $this->assign('progress', $this->request->getPost('has_option') ? $next_progress : '');
+                    $this->assign('progress', $this->request->getPost('has_option') ? $next_progress : 'progress-attribute-details');
                     break;
                 case 'progress-attribute-option':
                     $this->session->setData('attribute_option', $this->request->getPost());
