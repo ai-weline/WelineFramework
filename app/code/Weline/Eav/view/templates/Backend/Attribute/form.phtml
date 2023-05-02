@@ -105,7 +105,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                 </a>
                             </li>
                             <!--如果有配置属性配置项-->
-                            <notempty name='has_option'>
+                            <notempty name='attribute.has_option'>
                                 <li class='nav-item'>
                                     <a href='#progress-attribute-option'
                                        class='nav-link @if{progress==="progress-attribute-option"=>"active"}' data-toggle='tab'>
@@ -122,9 +122,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                         <div class='tab-content twitter-bs-wizard-tab-content'>
                             <div class='tab-pane' id='progress-select-entity'>
                                 <form action="{{action}}" method="post">
-                                    <notempty name='eav_entity'>
-                                        <input type='hidden' name='selected' value='1'>
-                                    </notempty>
+                                    <input type='hidden' name='selected' value='@has{eav_entity=>1|0}'>
                                     <input type="hidden" name="progress" value="progress-select-entity">
                                     <input type="hidden" name="next_progress" value="progress-select-set">
                                     <div class="row">
@@ -150,9 +148,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                         data-style='btn-primary' data-width='fit'
                                                         aria-label='@lang{搜索实体结果}'
                                                         aria-describedby='search-addon' required>
-                                                    <notempty name="eav_entity">
-                                                        <option value="{{eav_entity.code}}" selected>{{eav_entity.name}}</option>
-                                                    </notempty>
+                                                    <foreach name="entities">
+                                                        <option value='{{v.code}}' @if{eav_entity.code===v.code=>'selected'}>
+                                                            {{v.name}}
+                                                        </option>
+                                                    </foreach>
                                                 </select>
                                             </div>
                                         </div>
@@ -162,9 +162,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                             <div class='tab-pane' id='progress-select-set'>
                                 <div>
                                     <form action="{{action}}" method="post">
-                                        <notempty name="eav_entity_attribute_set">
-                                            <input type='hidden' name='selected' value='1'>
-                                        </notempty>
+                                        <input type='hidden' name='selected' value='@has{eav_entity_attribute_set=>1|0}'>
                                         <input type='hidden' name='progress' value='progress-select-set'>
                                         <input type='hidden' name='next_progress' value='progress-select-group'>
                                         <div class='row'>
@@ -174,7 +172,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                            placeholder='@lang{请输入要查找的 属性集名 或者 属性集代码}'
                                                            aria-label='@lang{请输入要查找的 属性集名或者 属性集代码}'
                                                            aria-describedby='search-addon'/>
-                                                    <button type='button' class='btn btn-outline-primary'
+                                                    <button type='button' class='btn btn-outline-primary' id="renderSearchEntityAttributeSetButton"
                                                             onclick='renderSearchEntityAttributeSet(event)'>
                                                         <lang>搜索 {{eav_entity.name}} 属性集</lang>
                                                     </button>
@@ -190,11 +188,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                             data-style='btn-primary' data-width='fit'
                                                             aria-label='@lang{搜索 属性集 结果}'
                                                             aria-describedby='search-addon' required>
-                                                        <notempty name='eav_entity_attribute_set'>
-                                                            <option value='{{eav_entity_attribute_set.code}}' selected>
-                                                                {{eav_entity_attribute_set.name}}
+                                                        <foreach name='sets'>
+                                                            <option value='{{v.code}}' @if{eav_entity_attribute_set.code===v.code=>'selected'}>
+                                                                {{v.name}}
                                                             </option>
-                                                        </notempty>
+                                                        </foreach>
                                                     </select>
                                                 </div>
                                             </div>
@@ -205,9 +203,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                             <div class='tab-pane' id='progress-select-group'>
                                 <div>
                                     <form action="{{action}}" method="post">
-                                        <notempty name='eav_entity_attribute_set_group'>
-                                            <input type='hidden' name='selected' value='1'>
-                                        </notempty>
+                                        <input type='hidden' name='selected' value='@has{eav_entity_attribute_set_group=>1|0}'>
                                         <input type='hidden' name='progress' value='progress-select-group'>
                                         <input type='hidden' name='next_progress' value='progress-attribute-details'>
                                         <div class='row'>
@@ -218,6 +214,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                            aria-label='@lang{请输入要查找的【实体-属性集-属性组】名或者【实体-属性集-属性组】代码}'
                                                            aria-describedby='search-addon'/>
                                                     <button type='button' class='btn btn-outline-primary'
+                                                            id="renderSearchEntityAttributeSetGroupButton"
                                                             onclick='renderSearchEntityAttributeSetGroup(event)'>
                                                         <lang>搜索【实体-属性集-属性组】</lang>
                                                     </button>
@@ -233,11 +230,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                             data-style='btn-primary' data-width='fit'
                                                             aria-label='@lang{搜索【实体-属性集-属性组】结果}'
                                                             aria-describedby='search-addon' required>
-                                                        <notempty name='eav_entity_attribute_set_group'>
-                                                            <option value='{{eav_entity_attribute_set_group.code}}' selected>
-                                                                {{eav_entity_attribute_set_group.name}}
+                                                        <foreach name='groups'>
+                                                            <option value='{{v.code}}' @if{eav_entity_attribute_set_group.code===v.code=>'selected'}>
+                                                                {{v.name}}
                                                             </option>
-                                                        </notempty>
+                                                        </foreach>
                                                     </select>
                                                 </div>
                                             </div>
@@ -247,10 +244,10 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                             </div>
                             <div class='tab-pane' id='progress-attribute-details'>
                                 <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
-                                    <input type='hidden' name='progress' value='progress-attribute-details'>
-                                    <notempty name="has_option">
-                                        <input type='hidden' name='next_progress' value='progress-attribute-option'>
-                                    </notempty>
+                                    <input type='hidden' name='selected' value='@if{attribute.has_option=>1|0}'>
+                                    <input type='hidden' name='progress' value="progress-attribute-details">
+                                    <input type='hidden' name='next_progress' value="@if{attribute
+                                    .has_option==='1'=>'progress-attribute-option'|'progress_submit'}">
                                     <div class='row'>
                                         <div class='col-lg-6'>
                                             <div class='mb-3'>
@@ -355,26 +352,6 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                                 </div>
                                                                 <div class='col-md-4'>
                                                                     <div class='mb-3'>
-                                                                        <label class='form-label' for='validationGroup'>
-                                                                            <lang>分组</lang>
-                                                                        </label>
-                                                                        <select class='form-control' id='validationGroup' required=''
-                                                                                name='group_code'>
-                                                                            <foreach name='groups' item='group'>
-                                                                                <option value='{{group.code}}'
-                                                                                        @if{attribute.group_code==group.code &&
-                                                                                        attribute.entity_code==group.entity_code=>'selected'}>
-                                                                                    {{group.name}}（实体：{{group.entity_name}}）
-                                                                                </option>
-                                                                            </foreach>
-                                                                        </select>
-                                                                        <div class='invalid-feedback'>
-                                                                            <lang>必须选择一个组</lang>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class='col-md-4'>
-                                                                    <div class='mb-3'>
                                                                         <label class='form-label' for='validationOption'>
                                                                             <lang>是否有配置项</lang>
                                                                         </label>
@@ -422,41 +399,16 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                     </div>
                                 </form>
                             </div>
-                            <notempty name='has_option'>
+                            <notempty name='attribute.has_option'>
                                 <div class='tab-pane' id='progress-attribute-option'>
                                     <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
+                                        <input type='hidden' name='selected' value='@if{attribute_option=>1|0}'>
                                         <input type='hidden' name='progress' value='progress-attribute-details'>
-                                        <input type='hidden' name='next' value='progress-attribute-details'>
+                                        <input type='hidden' name='next' value='progress_submit'>
                                         <div class='row'>
-                                            <div class='col-lg-6'>
-                                                <div class='mb-3'>
-                                                    <label class='form-label' for='progress-code'>
-                                                        <lang>属性代码</lang>
-                                                    </label>
-                                                    <input type='text' class='form-control' id='progress-code' name="code"
-                                                           maxlength='60' data-parsley-minlength='3' placeholder="@lang{属性代码}" required>
-                                                    <div class='valid-feedback'>
-                                                        <lang>填写正确！</lang>
-                                                    </div>
-                                                    <div class='valid-feedback'>
-                                                        <lang>请正确填写正确属性代码，最小长度3个字符，最大长度60个字符</lang>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class='col-lg-6'>
-                                                <div class='mb-3'>
-                                                    <label class='form-label' for='progress-name'>
-                                                        <lang>属性名</lang>
-                                                    </label>
-                                                    <input type='text' class='form-control' id='progress-name' name='name'
-                                                           maxlength='128' data-parsley-minlength='3' placeholder='@lang{属性名}' required>
-                                                    <div class='valid-feedback'>
-                                                        <lang>填写正确！</lang>
-                                                    </div>
-                                                    <div class='valid-feedback'>
-                                                        <lang>请正确填写正确属性代码，最小长度3个字符，最大长度128个字符</lang>
-                                                    </div>
-                                                </div>
+                                            <div class='col-lg-12'>
+                                               <!--FIXME 生成一个表，记录属性options -->
+
                                             </div>
                                         </div>
                                     </form>
@@ -496,6 +448,31 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!-- Sweet alert init js-->
 <script src='@static(Weline_Admin::assets/js/pages/sweet-alerts.init.js)'></script>
 <script>
+
+    function getEntityCode() {
+        let entity_code = '{{eav_entity.code}}';
+        if (entity_code === '') {
+            entity_code = $('#progress-select-entity').find('option:selected').val()
+        }
+        return entity_code;
+    }
+
+    function getSetCode() {
+        let set_code = '{{eav_entity_attribute_set.code}}';
+        if (set_code === '') {
+            set_code = $('#progress-select-set').find('option:selected').val()
+        }
+        return set_code;
+    }
+
+    function getGroupCode() {
+        let group_code = '{{eav_entity_attribute_set_group.code}}';
+        if (group_code === '') {
+            group_code = $('#progress-select-group').find('option:selected').val()
+        }
+        return group_code;
+    }
+
     /*实体搜索*/
     function renderSearchEntities(e) {
         let search_entity = $(e.target)
@@ -518,8 +495,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     function renderSearchEntityAttributeSet(e) {
         let search = $(e.target)
         search = search.val()
+        let entity_code = getEntityCode()
         $.ajax({
-            url: '@backend-url("*/backend/attribute/set/search")?search=' + search + '&entity_code={{eav_entity.code}}',
+            url: '@backend-url("*/backend/attribute/set/search")?search=' + search + '&entity_code=' + entity_code,
             success: function (res) {
                 if (res['msg']) {
                     Swal.fire(
@@ -548,9 +526,11 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     function renderSearchEntityAttributeSetGroup(e) {
         let search = $(e.target)
         search = search.val()
+        let entity_code = getEntityCode()
+        let set_code = getSetCode()
         $.ajax({
             url: '@backend-url("*/backend/attribute/group/search")?search=' + search +
-                '&entity_code={{eav_entity.code}}&set_code={{eav_entity_attribute_set.code}}',
+                '&entity_code=' + entity_code + '&set_code=' + set_code,
             success: function (res) {
                 if (res['msg']) {
                     Swal.fire(
@@ -574,9 +554,45 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             }
         })
     }
+
+    /*监听实体选择*/
+    $('#search-entity-result').on('change', (e) => {
+        let target = $(e.target).find('option:selected')
+        let stepHelper = $('a[class="nav-link active"]')
+        stepHelper.find('.help-block').remove()
+        stepHelper.append(`<span class="help-block">
+                                            ${__('你选择了')}
+                                            <span class="text-primary">${target.text()}</span>
+                                        </span>`)
+        // 渲染下一个
+        $('#renderSearchEntityAttributeSetButton').click()
+    })
+    /*监听属性集选择*/
+    $('#search-entity-attribute-set-result').on('change', (e) => {
+        let target = $(e.target).find('option:selected')
+        let stepHelper = $('a[class="nav-link active"]')
+        stepHelper.find('.help-block').remove()
+        stepHelper.append(`<span class="help-block">
+                                            ${__('你选择了')}
+                                            <span class="text-primary">${target.text()}</span>
+                                        </span>`)
+        // 渲染下一个
+        $('#renderSearchEntityAttributeSetGroupButton').click()
+    })
+    /*监听属性组选择*/
+    $('#search-entity-attribute-set-group-result').on('change', (e) => {
+        let target = $(e.target).find('option:selected')
+        let stepHelper = $('a[class="nav-link active"]')
+        stepHelper.find('.help-block').remove()
+        stepHelper.append(`<span class="help-block">
+                                            ${__('你选择了')}
+                                            <span class="text-primary">${target.text()}</span>
+                                        </span>`)
+    })
     // 初始化选中步骤
     $(document).ready(() => {
         $('.twitter-bs-wizard-nav .nav-link[data-target="1"]').tab('show')
+
         /*延迟期间最多执行一次：优化输入请求过多ajax*/
         function debounce(func, delay) {
             let timeoutId;
@@ -613,9 +629,16 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         /*监听属性代码是否可用*/
         const throttledProgressAttributeCode = debounce((e) => {
             let search = $(e.target).val()
+            let name = $('#progress-attribute-name').val()
+            let stepHelper = $('a[class="nav-link active"]')
+            stepHelper.find('.help-block').remove()
+            stepHelper.append(`<span class="help-block">
+                                            ${__('你选择了')}
+                                            <span class="text-primary">${search}(${name})</span>
+                                        </span>`)
             $.ajax({
                 url: '@backend-url("*/backend/attribute/search")?field=code&limit=1&search=' + search +
-                    '&entity_code={{eav_entity.code}}&set_code={{eav_entity_attribute_set.code}}&group_code={{eav_entity_attribute_set_group.code}}',
+                    '&entity_code=' + getEntityCode() + '&set_code=' + getSetCode() + '&group_code=' + getGroupCode(),
                 success: function (res) {
                     if (res['msg']) {
                         Swal.fire(
@@ -645,9 +668,16 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         /*监听属性名称是否可用*/
         const throttledProgressAttributeName = debounce((e) => {
             let search = $(e.target).val()
+            let code = $('#progress-attribute-code').val()
+            let stepHelper = $('a[class="nav-link active"]')
+            stepHelper.find('.help-block').remove()
+            stepHelper.append(`<span class="help-block">
+                                            ${__('属性数据')}
+                                            <span class="text-primary">${code}(${search})</span>
+                                        </span>`)
             $.ajax({
                 url: '@backend-url("*/backend/attribute/search")?field=name&limit=1&search=' + search +
-                    '&entity_code={{eav_entity.code}}&set_code={{eav_entity_attribute_set.code}}&group_code={{eav_entity_attribute_set_group.code}}',
+                    '&entity_code=' + getEntityCode() + '&set_code=' + getSetCode() + '&group_code=' + getGroupCode(),
                 success: function (res) {
                     if (res['msg']) {
                         Swal.fire(
@@ -674,6 +704,23 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             })
         }, 500);
         $('#progress-attribute-name').on('input', throttledProgressAttributeName)
+
+        // 选择切换配置项时 调整 progress-submit
+        let changeOptionConfig = $('#validationOption')
+        changeOptionConfig.change((e) => {
+            // 获取当前选中的值
+            var selectedValue = $(e.target).find('option:selected').val();
+            // 如果选中1 说明需要配置配置项
+            let attribute_detail_container = $('#progress-attribute-details')
+            let form = attribute_detail_container.find('form')
+            if (form.get(0).reportValidity()) {
+                if(selectedValue === '1'){
+                    form.find('input[name="progress"]').val('progress-attribute-details')
+                    form.find('input[name="next_progress"]').val('progress-attribute-option')
+                }
+                form.submit()
+            }
+        })
     })
 
 </script>

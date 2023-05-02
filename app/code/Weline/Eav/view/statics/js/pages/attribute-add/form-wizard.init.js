@@ -26,8 +26,16 @@ $(document).ready(function () {
             var $current = index + 1;
             var $percent = ($current / $total) * 100;
             $('#progress-wizard').find('.progress-bar').css({width: $percent + '%'});
+            // 如果是最后一页
+            if ($total === $current) {
+                let next = $('.next')
+                next.removeClass('disabled');
+                next.find('a').text(__('提交'));
+            }
         },
         onNext: function (tab, navigation, index) {
+            var $total = navigation.find('li').length;
+            const $current = index;
             let tab_id = $(tab.find('a').get(0)).attr('href')
             let form = $(tab_id).find('form')
             let validate_status = form.get(0).reportValidity()
@@ -35,7 +43,115 @@ $(document).ready(function () {
                 if (form.find('input[name="selected"]').val() === '1') {
                     return true;
                 }
-                form.submit();
+                // ajax提交
+                // 获取表单数据并使用AJAX提交
+                // 获取表单数据
+                const formData = form.serialize();
+                showLoading()
+                let ajaxResult = false
+                // 发送AJAX请求
+                $.ajax({
+                    type: 'POST',
+                    url: form.attr('action') + '?isAjax=true',
+                    data: formData,
+                    async: false,
+                    success: function (response) {
+                        // 成功时的处理
+                        if (response['code'] === 1) {
+                            if ($total === $current) {
+                                // 继续修改提交 保存
+                                form.find('input[name="progress"]').val('progress-submit')
+                                // 获取表单数据
+                                const formDataNew = form.serialize();
+                                $.ajax({
+                                    type: 'POST',
+                                    url: form.attr('action') + '?isAjax=true',
+                                    data: formDataNew,
+                                    async: false,
+                                    success: function (response) {
+                                        // 成功时的处理
+                                        if (response['code'] === 1) {
+                                            Swal.fire(
+                                                {
+                                                    title: __('温馨提示！'),
+                                                    text: response['msg'],
+                                                    icon: 'success',
+                                                    dangerMode: true,
+                                                    confirmButtonText: __('好的')
+                                                }
+                                            )
+                                            // window.location.reload()
+                                            window.parent.location.reload()
+                                        } else {
+                                            Swal.fire(
+                                                {
+                                                    title: __('错误！'),
+                                                    text: response['msg'],
+                                                    icon: 'error',
+                                                    dangerMode: true,
+                                                    confirmButtonText: __('好的')
+                                                }
+                                            )
+                                        }
+                                        hideLoading()
+                                    },
+                                    error: function () {
+                                        // 失败时的处理
+                                        Swal.fire(
+                                            {
+                                                title: __('未知错误！'),
+                                                text: response['msg'],
+                                                icon: 'success',
+                                                dangerMode: true,
+                                                confirmButtonText: __('好的')
+                                            }
+                                        )
+                                        hideLoading()
+                                    }
+                                });
+                                // // 提示
+                                // Swal.fire(
+                                //     {
+                                //         title: __('温馨提示！'),
+                                //         text: response['msg'],
+                                //         icon: 'success',
+                                //         dangerMode: true,
+                                //         confirmButtonText: __('好的')
+                                //     }
+                                // )
+                            }
+                            // 选中
+                            form.append('<input type="hidden" name="selected" value="1"/>')
+                            ajaxResult = true;
+                        } else {
+                            Swal.fire(
+                                {
+                                    title: __('错误！'),
+                                    text: response['msg'],
+                                    icon: 'error',
+                                    dangerMode: true,
+                                    confirmButtonText: __('好的')
+                                }
+                            )
+                            ajaxResult = false;
+                        }
+                        hideLoading()
+                    },
+                    error: function () {
+                        // 失败时的处理
+                        Swal.fire(
+                            {
+                                title: __('未知错误！'),
+                                text: response['msg'],
+                                icon: 'success',
+                                dangerMode: true,
+                                confirmButtonText: __('好的')
+                            }
+                        )
+                        hideLoading()
+                    }
+                });
+                return ajaxResult;
             } else {
                 return false;
             }

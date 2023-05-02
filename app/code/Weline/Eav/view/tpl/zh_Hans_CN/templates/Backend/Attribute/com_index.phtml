@@ -38,21 +38,21 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <meta name='viewport' content='width=device-width, initial-scale=1.0, shrink-to-fit=no'>
 <meta content="<?php echo $this->getData('title'); ?>" name='author'/>
 <meta content="<?php echo $this->getData('description'); ?>" name='description'/>
-<link rel="Shortcut Icon" href="/weline/module-backend/view/statics/img/favicon.png?v=71116">
-<link rel="Shortcut Icon" href="/weline/module-backend/view/statics/img/favicon.png?v=71116">
-<link rel="Bookmark" href="/weline/module-backend/view/statics/img/favicon.png?v=71116">
+<link rel="Shortcut Icon" href="/weline/module-backend/view/statics/img/favicon.png?v=82507">
+<link rel="Shortcut Icon" href="/weline/module-backend/view/statics/img/favicon.png?v=82507">
+<link rel="Bookmark" href="/weline/module-backend/view/statics/img/favicon.png?v=82507">
 <!--加载requirejs-->
 <?php if (DEV) : ?>
-    <!--        <script src="/weline/module-backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=91615"></script>-->
+    <!--        <script src="/weline/module-backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.js?v=79910"></script>-->
 <?php
 else:
     ?>
-    <!--        <script src="/weline/module-backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=69924"></script>-->
+    <!--        <script src="/weline/module-backend/view/statics/backend/lib/requirejs/2.3.6/requirejs.min.js?v=29063"></script>-->
 <?php
 endif;
 ?>
 <!--加载require常用js模块-->
-<!--<script src="/weline/module-backend/view/statics/base/require.configs.js?v=96370"></script>-->
+<!--<script src="/weline/module-backend/view/statics/base/require.configs.js?v=95963"></script>-->
 <?php echo framework_view_process_block([
     'class' => 'Weline\\Backend\\Block\\Header\\Base',
     'template' => 'Weline_Admin::header/base.phtml',
@@ -60,22 +60,22 @@ endif;
 
 <!--css-->
 <!--loading-->
-<link  href='/weline/module-admin/view/statics/libs/loading/loading.css?v=62491' rel="stylesheet" type="text/css"/>
-<link  href='/weline/module-admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=90584' rel="stylesheet" type="text/css"/>
-<link  href='/weline/module-admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=91069' rel="stylesheet" type="text/css"/>
+<link  href='/weline/module-admin/view/statics/libs/loading/loading.css?v=19430' rel="stylesheet" type="text/css"/>
+<link  href='/weline/module-admin/view/statics/backend/lib/bootstrap-5.1.3-dist/css/bootstrap.min.css?v=94566' rel="stylesheet" type="text/css"/>
+<link  href='/weline/module-admin/view/statics/backend/lib/font-awesome-4.7.0/css/font-awesome.min.css?v=50884' rel="stylesheet" type="text/css"/>
 <!-- Bootstrap Css -->
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/bootstrap' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet"
       type="text/css"/>
 <!-- Icons Css -->
-<link  href='/weline/module-admin/view/statics/assets/css/icons.min.css?v=64227' rel="stylesheet" type="text/css"/>
+<link  href='/weline/module-admin/view/statics/assets/css/icons.min.css?v=22451' rel="stylesheet" type="text/css"/>
 <!-- App Css-->
 <link href="<?= $this->fetchTagSourceFile('statics', 'Weline_Admin::assets/css/app' . ($themeConfig->getThemeModel() ? '-' . $themeConfig->getThemeModel() : '') . '.min.css') ?>"
       rel="stylesheet" type="text/css"/>
 <!--JS-->
-<script  src='/weline/module-backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=42823'></script>
+<script  src='/weline/module-backend/view/statics/backend/lib/jquery/3.6.0/jquery.js?v=72004'></script>
 <?php if (DEV): ?>
-<!--        <script src="/weline/module-backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=53508"></script>-->
+<!--        <script src="/weline/module-backend/view/statics/backend/lib/jquery/3.6.0/jquery.map?v=82063"></script>-->
 <?php endif; ?>
 <!--加载配置页头-->
 <?php
@@ -88,10 +88,10 @@ echo $this->getHeader()->getHtml();
 ===================================================================================================================================
 -->
     <!-- jquery.mCustomScrollbar 插件 -->
-    <link href="/weline/module-admin/view/statics/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.css?v=36917" rel="stylesheet"/>
+    <link href="/weline/module-admin/view/statics/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.css?v=57069" rel="stylesheet"/>
     <!-- Responsive Table css -->
-    <link href='/weline/module-admin/view/statics/assets/libs/admin-resources/rwd-table/rwd-table.min.css?v=97395' rel='stylesheet' type='text/css'/>
-    <link href='/Weline/Eav/view/statics/css/attribute.css?v=65406' rel='stylesheet' type='text/css'/>
+    <link href='/weline/module-admin/view/statics/assets/libs/admin-resources/rwd-table/rwd-table.min.css?v=89338' rel='stylesheet' type='text/css'/>
+    <link href='/Weline/Eav/view/statics/css/attribute.css?v=24806' rel='stylesheet' type='text/css'/>
     <title><?= __('Weline Admin 管理面板') ?></title>
 </head>
 
@@ -197,7 +197,7 @@ if (!$themeConfig->getThemeConfig('topnav')):
                         }
                         if (empty($menu->getParentSource())) {
                             ?>
-                            <li class="menu-title" data-source='<?=($menu['source']??'') ??'';?>'><i
+                            <li class="menu-title" data-source='<?=($menu['source']??'') ;?>'><i
                                         class="<?= $menu->getIcon() ?>"></i><span><?= __($menu->getSourceName()) ?></span>
                             </li>
                             <?php
@@ -212,8 +212,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                             if (empty($level_3_acls)) {
                                 if ('/' === $subacl->getAction()) {
                                     ?>
-                                    <li data-source='<?=($subacl['source']??'') ??'';?>'>
-                                        <a href="<?= $subacl->getUrl() ?>" data-source="<?=($subacl['source']??'') ??'';?>"
+                                    <li data-source='<?=($subacl['source']??'') ;?>'>
+                                        <a href="<?= $subacl->getUrl() ?>" data-source="<?=($subacl['source']??'') ;?>"
                                            class="waves-effect">
                                             <i class="<?= $subacl->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
@@ -223,8 +223,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                     <?php
                                 } else {
                                     ?>
-                                    <li data-source='<?=($subacl['source']??'') ??'';?>'>
-                                        <a href="<?= $subacl->getUrl() ?>" data-source='<?=($subacl['source']??'') ??'';?>'
+                                    <li data-source='<?=($subacl['source']??'') ;?>'>
+                                        <a href="<?= $subacl->getUrl() ?>" data-source='<?=($subacl['source']??'') ;?>'
                                            class=" waves-effect">
                                             <i class="<?= $subacl->getIcon() ?>"></i>
                                             <span><?= __($subacl->getSourceName()) ?></span>
@@ -235,8 +235,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                             } else {
                                 if ('/' === $subacl->getAction()) {
                                     ?>
-                                    <li data-source='<?=($subacl['source']??'') ??'';?>'>
-                                        <a href="<?= $subacl->getUrl() ?>" data-source='<?=($subacl['source']??'') ??'';?>'
+                                    <li data-source='<?=($subacl['source']??'') ;?>'>
+                                        <a href="<?= $subacl->getUrl() ?>" data-source='<?=($subacl['source']??'') ;?>'
                                            class="waves-effect">
                                             <i class="<?= $subacl->getIcon() ?>"></i><span
                                                     class="badge rounded-pill bg-primary float-end">3</span>
@@ -246,8 +246,8 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                     <?php
                                 } else {
                                     ?>
-                                    <li data-source='<?=($subacl['source']??'') ??'';?>'>
-                                        <a href="javascript: void(0);" data-source='<?=($subacl['source']??'') ??'';?>'
+                                    <li data-source='<?=($subacl['source']??'') ;?>'>
+                                        <a href="javascript: void(0);" data-source='<?=($subacl['source']??'') ;?>'
                                            class="has-arrow waves-effect">
                                             <i class="<?= $subacl->getIcon() ?>"></i>
                                             <span><?= __($subacl->getSourceName()) ?></span>
@@ -260,9 +260,9 @@ if (!$themeConfig->getThemeConfig('topnav')):
                                                     continue;
                                                 }
                                                 ?>
-                                                <li data-source='<?=($level_3_acl['source']??'') ??'';?>'>
+                                                <li data-source='<?=($level_3_acl['source']??'') ;?>'>
                                                     <a href="<?= $level_3_acl->getUrl() ?>"
-                                                       data-source='<?=($level_3_acl['source']??'') ??'';?>'><i
+                                                       data-source='<?=($level_3_acl['source']??'') ;?>'><i
                                                                 class="<?= $level_3_acl->getIcon() ?>"></i>
                                                         <?= __($level_3_acl->getSourceName()) ?>
                                                     </a>
@@ -356,7 +356,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                     Eav实体：管理实体
                                 </p>
                                 <p class="card-title-desc">
-                                    你可以查看实体，但无法对实体进行编辑，因为实体是数据库设计实现的概念。系统设计之初，实体的概念已经和代码结合，不能删除和修改，只能作为参考。但是你可以尝试新增实体,但并不推荐这种做法。
+                                                                            你可以查看实体，但无法对实体进行编辑，因为实体是数据库设计实现的概念。系统设计之初，实体的概念已经和代码结合，不能删除和修改，只能作为参考。但是你可以尝试新增实体,但并不推荐这种做法。                                    
                                 </p>
                                 <div class='table-rep-plugin'>
                                     <!-- search form -->
@@ -382,7 +382,9 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                             <div class='offcanvas offcanvas-end w-75' tabindex='-1' id='offcanvasRightAdd'
                                                  aria-labelledby='offcanvasRightAddLabel'>
                                                 <div class='offcanvas-header'>
-                                                    <h5 id='offcanvasRightAddLabel'>添加属性</h5>
+                                                    <h5 id='offcanvasRightAddLabel'>
+                                                        添加属性
+                                                    </h5>
                                                     <button type='button' class='btn-close text-reset' data-bs-dismiss='offcanvas'
                                                             aria-label='关闭'></button>
                                                 </div>
@@ -396,17 +398,24 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                                         </div>
                                                     </div>
                                                     <iframe id="attributeAddIframe" class="w-100 h-100"
-                                                            src="<?=$this->getBackendUrl('*/backend/attribute/add')?>"
+                                                            data-src="<?=$this->getBackendUrl('*/backend/attribute/add')?>"
                                                             frameborder="0"></iframe>
                                                     <script>
-                                                        function flushIframe(){
+                                                        function flushIframe() {
                                                             let iframe = $('#attributeAddIframe');
-                                                            iframe.attr('src',iframe.attr('src'))
+                                                            iframe.attr('src', iframe.attr('src'))
                                                         }
                                                     </script>
                                                 </div>
                                             </div>
-<!--                                            <a class="btn btn-primary pull-right" href="<?=$this->getBackendUrl('*/backend/attribute/add')?>">添加属性</a>-->
+                                            <script>
+                                                //show.bs.offcanvas
+                                                let offcanvasRightAdd = $('#offcanvasRightAdd')
+                                                offcanvasRightAdd.on('show.bs.offcanvas', function () {
+                                                    let attributeAddIframe = $('#attributeAddIframe')
+                                                    attributeAddIframe.attr('src',attributeAddIframe.attr('data-src'))
+                                                })
+                                            </script>
                                         </div>
                                     </div>
                                     <!-- end search form -->
@@ -432,35 +441,42 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                             <tbody>
                                             <?php foreach($attributes  as $key => $attribute):?>
                                                 <tr>
-                                                    <td><?=($attribute['code']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['entity_code']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['name']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['type']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['multiple_valued']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['group_id']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['set_id']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['has_option']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['is_system']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['is_enable']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['create_time']??'') ??'';?></td>
-                                                    <td class='co-name'><?=($attribute['update_time']??'') ??'';?></td>
+                                                    <td><?=($attribute['code']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['entity_code']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['name']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['type']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['multiple_valued']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['group_id']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['set_id']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['has_option']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['is_system']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['is_enable']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['create_time']??'') ;?></td>
+                                                    <td class='co-name'><?=($attribute['update_time']??'') ;?></td>
                                                     <td class='co-name'>
                                                         <div class="d-flex gap-2">
                                                             <?php if(empty(($attribute['is_system']??'') )): ?>
                                                                 <a class="btn btn-info" href="<?=$this->getBackendUrl('*/backend/attribute/edit',['code'=>$attribute['code'],'entity_code'=>$attribute['entity_code']])?>">
                                                                     修改
                                                                 </a>
+                                                                <button class='btn btn-primary pull-right' type='button' data-bs-toggle='offcanvas'
+                                                                        data-bs-target='#offcanvasRightAdd' aria-controls='offcanvasRightAdd'>
+                                                                    添加
+                                                                </button>
+
                                                                 <a class="btn btn-danger" href="<?=$this->getBackendUrl('*/backend/attribute/delete',['code'=>$attribute['code'],'entity_code'=>$attribute['entity_code']])?>">
                                                                     删除
                                                                 </a>
-                                                                <?php else:?>
-                                                                <b class="text-danger">系统实体</b>
+                                                                <else/>
+                                                                <b class="text-danger">
+                                                                    系统实体
+                                                                </b>
                                                             <?php endif; ?>
                                                             <?php if(!empty(($attribute['has_option']??'') ) ): ?>
                                                                 <button type='button' class='btn btn-primary btn-sm waves-effect waves-light'
                                                                         data-bs-toggle='modal'
-                                                                        data-code="<?=($attribute['code']??'') ??'';?>"
-                                                                        data-entity_code="<?=($attribute['entity_code']??'') ??'';?>"
+                                                                        data-code="<?=($attribute['code']??'') ;?>"
+                                                                        data-entity_code="<?=($attribute['entity_code']??'') ;?>"
                                                                         data-bs-target='#optionConfig'>配置项
                                                                 </button>
                                                             <?php endif; ?>
@@ -471,7 +487,7 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
                                             <?php endforeach;?>
                                             </tbody>
                                         </table>
-                                        <?=$pagination ??'';?>
+                                        <?=$pagination ;?>
                                     </div>
                                 </div>
                             </div>
@@ -481,7 +497,44 @@ echo \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Framework\Mana
             </div> <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-
+        <!-- offcanvasRightAdd -->
+        <div class='offcanvas offcanvas-end w-75' tabindex='-1' id='offcanvasRight_edit'
+             aria-labelledby='offcanvasRightLabel_edit'>
+            <div class='offcanvas-header'>
+                <h5 id='offcanvasRightLabel_edit'>
+                    添加属性
+                </h5>
+                <button type='button' class='btn-close text-reset' data-bs-dismiss='offcanvas'
+                        aria-label='关闭'></button>
+            </div>
+            <div class='offcanvas-body'>
+                <!--写一个刷新iframe的按钮-->
+                <div class='row'>
+                    <div class='btn btn-group-justified sticky-top'>
+                        <button class='btn btn-info pull-right' onclick='flushIframe_edit()'>
+                            刷新
+                        </button>
+                    </div>
+                </div>
+                <iframe id='attributeIframe_edit' class='w-100 h-100'
+                        data-src="<?=$this->getBackendUrl('*/backend/attribute/edit')?>"
+                        frameborder='0'></iframe>
+                <script>
+                    function flushIframe_edit() {
+                        let iframe = $('#attributeIframe_edit');
+                        iframe.attr('src', iframe.attr('src'))
+                    }
+                </script>
+            </div>
+        </div>
+        <script>
+            //show.bs.offcanvas
+            let offcanvasRightAdd = $('#offcanvasRightAdd')
+            offcanvasRightAdd.on('show.bs.offcanvas', function () {
+                let attributeAddIframe = $('#attributeAddIframe')
+                attributeAddIframe.attr('src', attributeAddIframe.attr('data-src'))
+            })
+        </script>
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
@@ -770,7 +823,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 
         <div class="p-4">
             <div class="mb-2">
-                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-1.png?v=98331" class="img-thumbnail"
+                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-1.png?v=31775" class="img-thumbnail"
                      alt="layout-1">
             </div>
             <div class="form-check form-switch mb-3">
@@ -780,7 +833,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             </div>
 
             <div class="mb-2">
-                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-2.png?v=21907" class="img-thumbnail"
+                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-2.png?v=80775" class="img-thumbnail"
                      alt="layout-2">
             </div>
             <div class="form-check form-switch mb-3">
@@ -790,7 +843,7 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             </div>
 
             <div class="mb-2">
-                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-3.png?v=49219" class="img-thumbnail"
+                <img src="/weline/module-admin/view/statics/assets/images/layouts/layout-3.png?v=39536" class="img-thumbnail"
                      alt="layout-3">
             </div>
             <div class="form-check form-switch mb-5">
@@ -812,14 +865,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 -->
 
 <!-- Table Editable plugin -->
-<script src="/weline/module-admin/view/statics/assets/libs/table-edits/build/table-edits.min.js?v=64653"></script>
-<script src="/weline/module-admin/view/statics/assets/js/pages/menus/table-editable.init.js?v=45892"></script>
-<script src='/weline/module-admin/view/statics/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js?v=63608'></script>
+<script src="/weline/module-admin/view/statics/assets/libs/table-edits/build/table-edits.min.js?v=39039"></script>
+<script src="/weline/module-admin/view/statics/assets/js/pages/menus/table-editable.init.js?v=75757"></script>
+<script src='/weline/module-admin/view/statics/libs/jquery.mCustomScrollbar/jquery.mCustomScrollbar.concat.min.js?v=99068'></script>
 <!-- Responsive Table js -->
-<script src='/weline/module-admin/view/statics/assets/libs/admin-resources/rwd-table/rwd-table.min.js?v=47535'></script>
+<script src='/weline/module-admin/view/statics/assets/libs/admin-resources/rwd-table/rwd-table.min.js?v=73984'></script>
 
 <!-- Init js -->
-<script src='/weline/module-admin/view/statics/assets/js/pages/table-responsive.init.js?v=20161'></script>
+<script src='/weline/module-admin/view/statics/assets/js/pages/table-responsive.init.js?v=58232'></script>
 <!-- 配置项弹窗 -->
 <div id='optionConfig' class='modal fade' tabindex='-1'
      aria-labelledby='#optionConfig'
@@ -827,7 +880,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     <div class='modal-dialog modal-xl'>
         <div class='modal-content'>
             <div class='modal-header'>
-                <h5 class='modal-title' id='optionConfigLabel'>属性配置项弹窗</h5>
+                <h5 class='modal-title' id='optionConfigLabel'>
+                    属性配置项弹窗
+                </h5>
                 <button type='button' class='btn-close' data-bs-dismiss='modal'
                         aria-label='关闭'></button>
             </div>
@@ -869,14 +924,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         let attribute_code = button.getAttribute('data-code')
         let entity_code = button.getAttribute('data-entity_code')
         $.ajax({
-            url:'<?=$this->getBackendUrl("*/backend/attribute/option/search")?>?entity_code={entity_code}&attribute_code={attribute_code}'.replace
-            ('{entity_code}',entity_code).replace('{attribute_code}',attribute_code)
-            ,success:(res)=>{
+            url: '<?=$this->getBackendUrl("*/backend/attribute/option/search")?>?entity_code={entity_code}&attribute_code={attribute_code}'.replace
+            ('{entity_code}', entity_code).replace('{attribute_code}', attribute_code)
+            , success: (res) => {
                 let attributeOption = $('#attributeOption')
                 attributeOption.empty()
                 let options = res['option']
-                if(options){
-                    for (let option in options){
+                if (options) {
+                    for (let option in options) {
                         console.log()
                         attributeOption.append()
                     }
@@ -911,13 +966,13 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
 <!-- end Account pages -->
 
 <!-- JAVASCRIPT -->
-<!--<script src="/weline/module-admin/view/statics/assets/libs/jquery/jquery.min.js?v=68763"></script>-->
-<script src="/weline/module-admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=33414"></script>
-<script src="/weline/module-admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=62185"></script>
-<script src="/weline/module-admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=68406"></script>
-<script src="/weline/module-admin/view/statics/assets/libs/node-waves/waves.min.js?v=64305"></script>
+<!--<script src="/weline/module-admin/view/statics/assets/libs/jquery/jquery.min.js?v=56495"></script>-->
+<script src="/weline/module-admin/view/statics/assets/libs/bootstrap/js/bootstrap.bundle.min.js?v=86404"></script>
+<script src="/weline/module-admin/view/statics/assets/libs/metismenu/metisMenu.min.js?v=77176"></script>
+<script src="/weline/module-admin/view/statics/assets/libs/simplebar/simplebar.min.js?v=10653"></script>
+<script src="/weline/module-admin/view/statics/assets/libs/node-waves/waves.min.js?v=40323"></script>
 
-<script src="/weline/module-admin/view/statics/assets/js/app.js?v=91454"></script>
+<script src="/weline/module-admin/view/statics/assets/js/app.js?v=17736"></script>
 <!--
 ===================================================================================================================== 
 模板文件：E:\WelineFramework\DEV-workspace\vendor\weline\module-backend\view\templates\public\footer.phtml START

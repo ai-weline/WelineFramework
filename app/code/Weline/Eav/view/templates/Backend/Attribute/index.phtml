@@ -100,7 +100,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                     <lang>Eav实体：管理实体</lang>
                                 </p>
                                 <p class="card-title-desc">
-                                    <lang>你可以查看实体，但无法对实体进行编辑，因为实体是数据库设计实现的概念。系统设计之初，实体的概念已经和代码结合，不能删除和修改，只能作为参考。但是你可以尝试新增实体,但并不推荐这种做法。</lang>
+                                    <lang>
+                                        你可以查看实体，但无法对实体进行编辑，因为实体是数据库设计实现的概念。系统设计之初，实体的概念已经和代码结合，不能删除和修改，只能作为参考。但是你可以尝试新增实体,但并不推荐这种做法。
+                                    </lang>
                                 </p>
                                 <div class='table-rep-plugin'>
                                     <!-- search form -->
@@ -119,7 +121,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                             <div class='offcanvas offcanvas-end w-75' tabindex='-1' id='offcanvasRightAdd'
                                                  aria-labelledby='offcanvasRightAddLabel'>
                                                 <div class='offcanvas-header'>
-                                                    <h5 id='offcanvasRightAddLabel'><lang>添加属性</lang></h5>
+                                                    <h5 id='offcanvasRightAddLabel'>
+                                                        <lang>添加属性</lang>
+                                                    </h5>
                                                     <button type='button' class='btn-close text-reset' data-bs-dismiss='offcanvas'
                                                             aria-label='@lang{关闭}'></button>
                                                 </div>
@@ -133,17 +137,24 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                         </div>
                                                     </div>
                                                     <iframe id="attributeAddIframe" class="w-100 h-100"
-                                                            src="@backend-url('*/backend/attribute/add')"
+                                                            data-src="@backend-url('*/backend/attribute/add')"
                                                             frameborder="0"></iframe>
                                                     <script>
-                                                        function flushIframe(){
+                                                        function flushIframe() {
                                                             let iframe = $('#attributeAddIframe');
-                                                            iframe.attr('src',iframe.attr('src'))
+                                                            iframe.attr('src', iframe.attr('src'))
                                                         }
                                                     </script>
                                                 </div>
                                             </div>
-<!--                                            <a class="btn btn-primary pull-right" href="@backend-url('*/backend/attribute/add')"><lang>添加属性</lang></a>-->
+                                            <script>
+                                                //show.bs.offcanvas
+                                                let offcanvasRightAdd = $('#offcanvasRightAdd')
+                                                offcanvasRightAdd.on('show.bs.offcanvas', function () {
+                                                    let attributeAddIframe = $('#attributeAddIframe')
+                                                    attributeAddIframe.attr('src',attributeAddIframe.attr('data-src'))
+                                                })
+                                            </script>
                                         </div>
                                     </div>
                                     <!-- end search form -->
@@ -188,12 +199,19 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                                                                 ['code'=>$attribute['code'],'entity_code'=>$attribute['entity_code']])">
                                                                     <lang>修改</lang>
                                                                 </a>
+                                                                <button class='btn btn-primary pull-right' type='button' data-bs-toggle='offcanvas'
+                                                                        data-bs-target='#offcanvasRightAdd' aria-controls='offcanvasRightAdd'>
+                                                                    <lang>添加</lang>
+                                                                </button>
+
                                                                 <a class="btn btn-danger" href="@backend-url('*/backend/attribute/delete',
                                                                 ['code'=>$attribute['code'],'entity_code'=>$attribute['entity_code']])">
                                                                     <lang>删除</lang>
                                                                 </a>
                                                                 <else/>
-                                                                <b class="text-danger"><lang>系统实体</lang></b>
+                                                                <b class="text-danger">
+                                                                    <lang>系统实体</lang>
+                                                                </b>
                                                             </empty>
                                                             <notempty name="attribute.has_option">
                                                                 <button type='button' class='btn btn-primary btn-sm waves-effect waves-light'
@@ -220,7 +238,44 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
             </div> <!-- container-fluid -->
         </div>
         <!-- End Page-content -->
-
+        <!-- offcanvasRightAdd -->
+        <div class='offcanvas offcanvas-end w-75' tabindex='-1' id='offcanvasRight_edit'
+             aria-labelledby='offcanvasRightLabel_edit'>
+            <div class='offcanvas-header'>
+                <h5 id='offcanvasRightLabel_edit'>
+                    <lang>添加属性</lang>
+                </h5>
+                <button type='button' class='btn-close text-reset' data-bs-dismiss='offcanvas'
+                        aria-label='@lang{关闭}'></button>
+            </div>
+            <div class='offcanvas-body'>
+                <!--写一个刷新iframe的按钮-->
+                <div class='row'>
+                    <div class='btn btn-group-justified sticky-top'>
+                        <button class='btn btn-info pull-right' onclick='flushIframe_edit()'>
+                            <lang>刷新</lang>
+                        </button>
+                    </div>
+                </div>
+                <iframe id='attributeIframe_edit' class='w-100 h-100'
+                        data-src="@backend-url('*/backend/attribute/edit')"
+                        frameborder='0'></iframe>
+                <script>
+                    function flushIframe_edit() {
+                        let iframe = $('#attributeIframe_edit');
+                        iframe.attr('src', iframe.attr('src'))
+                    }
+                </script>
+            </div>
+        </div>
+        <script>
+            //show.bs.offcanvas
+            let offcanvasRightAdd = $('#offcanvasRightAdd')
+            offcanvasRightAdd.on('show.bs.offcanvas', function () {
+                let attributeAddIframe = $('#attributeAddIframe')
+                attributeAddIframe.attr('src', attributeAddIframe.attr('data-src'))
+            })
+        </script>
         <footer class="footer">
             <div class="container-fluid">
                 <div class="row">
@@ -262,7 +317,9 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
     <div class='modal-dialog modal-xl'>
         <div class='modal-content'>
             <div class='modal-header'>
-                <h5 class='modal-title' id='optionConfigLabel'><lang>属性配置项弹窗</lang></h5>
+                <h5 class='modal-title' id='optionConfigLabel'>
+                    <lang>属性配置项弹窗</lang>
+                </h5>
                 <button type='button' class='btn-close' data-bs-dismiss='modal'
                         aria-label='@lang{关闭}'></button>
             </div>
@@ -304,14 +361,14 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
         let attribute_code = button.getAttribute('data-code')
         let entity_code = button.getAttribute('data-entity_code')
         $.ajax({
-            url:'@backend-url("*/backend/attribute/option/search")?entity_code={entity_code}&attribute_code={attribute_code}'.replace
-            ('{entity_code}',entity_code).replace('{attribute_code}',attribute_code)
-            ,success:(res)=>{
+            url: '@backend-url("*/backend/attribute/option/search")?entity_code={entity_code}&attribute_code={attribute_code}'.replace
+            ('{entity_code}', entity_code).replace('{attribute_code}', attribute_code)
+            , success: (res) => {
                 let attributeOption = $('#attributeOption')
                 attributeOption.empty()
                 let options = res['option']
-                if(options){
-                    for (let option in options){
+                if (options) {
+                    for (let option in options) {
                         console.log()
                         attributeOption.append()
                     }

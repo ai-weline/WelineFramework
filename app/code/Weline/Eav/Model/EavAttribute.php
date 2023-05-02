@@ -81,7 +81,19 @@ class EavAttribute extends \Weline\Framework\Database\Model
                       TableInterface::column_type_VARCHAR,
                       255,
                       'not null',
-                      '所属实体')
+                      '所属实体代码')
+                  ->addColumn(
+                      self::fields_set_code,
+                      TableInterface::column_type_VARCHAR,
+                      255,
+                      'not null',
+                      '所属属性集代码')
+                  ->addColumn(
+                      self::fields_group_code,
+                      TableInterface::column_type_VARCHAR,
+                      255,
+                      'not null',
+                      '所属属性组代码')
                   ->addColumn(
                       self::fields_name,
                       TableInterface::column_type_VARCHAR,
@@ -100,18 +112,6 @@ class EavAttribute extends \Weline\Framework\Database\Model
                       0,
                       'default 0',
                       '是否多值')
-                  ->addColumn(
-                      self::fields_group_code,
-                      TableInterface::column_type_VARCHAR,
-                      255,
-                      'not null',
-                      '属性组代码')
-                  ->addColumn(
-                      self::fields_set_code,
-                      TableInterface::column_type_VARCHAR,
-                      255,
-                      'not null',
-                      '属性集代码')
                   ->addColumn(
                       self::fields_has_option,
                       TableInterface::column_type_SMALLINT,
