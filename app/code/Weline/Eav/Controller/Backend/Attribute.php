@@ -180,10 +180,10 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
                     break;
                 case 'progress-attribute-details':
                     $this->session->setData(self::eav_attribute, $this->request->getPost());
-                    $this->assign('progress', 'progress-attribute-details');
                     if ($this->request->getGet('isAjax')) {
                         return $this->fetchJson(['code' => 1, 'msg' => __('属性数据填写成功！')]);
                     }
+                    $this->assign('progress', 'progress-attribute-details');
                     if ($next_progress !== 'progress_submit') {
                         break;
                     }
@@ -328,6 +328,21 @@ class Attribute extends \Weline\Framework\App\Controller\BackendController
         }
         if ($data = $this->session->getData(self::eav_attribute_option)) {
             $this->assign(self::eav_attribute_option, $data);
+        }
+        $entity_code = $this->session->getData('eav_entity')['code'] ?? '';
+        $attribute   = $this->session->getData(self::eav_attribute) ?: [];
+        // 检测如果有has_option则添加options
+        $has_option     = $attribute['has_option'];
+        $attribute_code = $attribute['code'];
+        if ($has_option === '1' && ($entity_code && $attribute_code)) {
+            /**@var \Weline\Eav\Model\EavAttribute\Option $optionModel */
+            $optionModel = ObjectManager::getInstance(EavAttribute\Option::class);
+            $options     = $optionModel->where([
+                                                   'entity_code'    => $entity_code,
+                                                   'attribute_code' => $this->request->getPost('code')
+                                               ])
+                                       ->select()->fetchOrigin();
+            $this->assign('options', $options);
         }
         $this->init_form();
         return $this->fetch('form');

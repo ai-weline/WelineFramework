@@ -402,13 +402,20 @@ $themeConfig = \Weline\Framework\Manager\ObjectManager::getInstance(\Weline\Back
                             <notempty name='attribute.has_option'>
                                 <div class='tab-pane' id='progress-attribute-option'>
                                     <form class='needs-validation' novalidate='' action='{{action}}' method='post'>
-                                        <input type='hidden' name='selected' value='@if{attribute_option=>1|0}'>
-                                        <input type='hidden' name='progress' value='progress-attribute-details'>
+                                        <input type='hidden' name='selected' value='@if{attribute.has_option==="1"=>1|0}'>
+                                        <input type='hidden' name='progress' value='progress-attribute-option'>
                                         <input type='hidden' name='next' value='progress_submit'>
                                         <div class='row'>
                                             <div class='col-lg-12'>
-                                               <!--FIXME 生成一个表，记录属性options -->
-
+                                               <!--生成一个表，记录属性options -->
+                                                table
+                                                <has name="options">
+                                                    <foreach name='options'>
+                                                        <option value='{{v.code}}'>{{v.name}}</option>
+                                                    </foreach>
+                                                    <else/>
+                                                    <span class="help-block"><lang>暂无配置项。</lang></span>
+                                                </has>
                                             </div>
                                         </div>
                                     </form>
